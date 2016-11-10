@@ -1,0 +1,14 @@
+syntax: regexp
+amarjyoti.komodoproject
+^.idea
+^public/uploads/(?!index.php)
+^public/temporary/cache(?!index.php)
+^public/temporary/(?!index.php)
+^public/cron/(?!sendNotificationLock)
+^public/bni-tl-app/(?!index.php)
+error_log
+npm-debug.log
+Thumbs.db
+Thumbs.db.orig
+.DS_Store
+.DS_Store.orig

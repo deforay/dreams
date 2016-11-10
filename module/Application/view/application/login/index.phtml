@@ -1,0 +1,67 @@
+<?php
+use Zend\Session\Container;
+$container = new Container('alert');
+$loginContainer = new Container('credo');
+?>
+<link href="<?php echo $this->basePath().'/assets/css/bootstrap.min.css'; ?>" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" media="all" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath().'/assets/js/deforayValidation.js'; ?>"></script>    
+<script type="text/javascript" src="<?php echo $this->basePath().'/assets/js/jquery.blockUI.js'; ?>"></script>    
+    <div class="container">
+	<br/><br/><br/><br/>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+		    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please sign in to proceed</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form class="" method="post" name="adminLoginInformation" id="adminLoginInformation" action="<?php echo $this->url('login',array('action'=>'index')); ?>" autocomplete="off" onsubmit="return doLogin();return false;">
+                            <fieldset>
+                                <div class="form-group">
+				    <div class="input-group ">
+				    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input type="text"  class="form-control isRequired" placeholder="Employee Name" name="empName" autofocus title="Please enter your name">
+				    </div>
+                                </div>
+                                <div class="form-group">
+				    <div class="input-group">
+				    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    <input class="form-control isRequired" placeholder="Password" name="password" type="password" title="Please enter your password">
+				    </div>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                 <input type="submit" class="btn btn-lg btn-primary btn-block" value="Login" onClick="doLogin();return false;" />
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+       $(document).ready(function() {
+		<?php
+		if (isset($container->alertMsg) && $container->alertMsg != "") {
+		    ?>
+			alert("<?php echo $container->alertMsg; ?>");
+		    <?php
+		    $container->alertMsg = "";
+		    unset($container->alertMsg);
+		}
+		?>
+        });
+       
+	function doLogin(){
+		flag = deforayValidator.init({
+		    formId: 'adminLoginInformation'
+		});
+		
+		if(flag){
+		    document.getElementById('adminLoginInformation').submit();
+		}
+	}
+	
+</script>
