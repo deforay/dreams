@@ -60,16 +60,7 @@ return array(
                     ),
                 ),
             ),
-            'common' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/common[/:action][/][:id]',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Common',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
+            
         ),
     ),
     'service_manager' => array(
@@ -94,14 +85,12 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
-            'Application\Controller\Login' => 'Application\Controller\LoginController',
-            'Application\Controller\Common' => 'Application\Controller\CommonController',
-            'Application\Controller\Cron' => 'Application\Controller\CronController'
+            'Application\Controller\Login' => 'Application\Controller\LoginController'
         ),
     ),
     'controller_plugins' => array(
         'invokables' => array(
-            'HasParams' => 'Application\Controller\Plugin\HasParams'
+            
         )
     ),
     'view_manager' => array(
@@ -124,26 +113,6 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
-                'mail-console-route' => array(
-                    'type'    => 'simple',
-                    'options' => array(
-                        'route'    => 'send-mail',
-                        'defaults' => array(
-                            'controller' => 'Application\Controller\Cron',
-                            'action' => 'send-mail'
-                        ),
-                    ),
-                ),
-                'gcm-console-route' => array(
-                    'type'    => 'simple',
-                    'options' => array(
-                        'route'    => 'gcm-push',
-                        'defaults' => array(
-                            'controller' => 'Application\Controller\Cron',
-                            'action' => 'gcm-push'
-                        ),
-                    ),
-                ),
             ),
         ),
     ),

@@ -1,67 +1,66 @@
-<?php
-use Zend\Session\Container;
-$container = new Container('alert');
-$loginContainer = new Container('credo');
-?>
-<link href="<?php echo $this->basePath().'/assets/css/bootstrap.min.css'; ?>" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" media="all" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo $this->basePath().'/assets/js/deforayValidation.js'; ?>"></script>    
-<script type="text/javascript" src="<?php echo $this->basePath().'/assets/js/jquery.blockUI.js'; ?>"></script>    
-    <div class="container">
-	<br/><br/><br/><br/>
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default">
-		    
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Please sign in to proceed</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form class="" method="post" name="adminLoginInformation" id="adminLoginInformation" action="<?php echo $this->url('login',array('action'=>'index')); ?>" autocomplete="off" onsubmit="return doLogin();return false;">
-                            <fieldset>
-                                <div class="form-group">
-				    <div class="input-group ">
-				    <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    <input type="text"  class="form-control isRequired" placeholder="Employee Name" name="empName" autofocus title="Please enter your name">
-				    </div>
-                                </div>
-                                <div class="form-group">
-				    <div class="input-group">
-				    <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    <input class="form-control isRequired" placeholder="Password" name="password" type="password" title="Please enter your password">
-				    </div>
-                                </div>
-                                <!-- Change this to a button or input when using this as a form -->
-                                 <input type="submit" class="btn btn-lg btn-primary btn-block" value="Login" onClick="doLogin();return false;" />
-                            </fieldset>
-                        </form>
-                    </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dream | </title>
+
+    <!-- Bootstrap -->
+    <link href="../assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../assets/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="../assets/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../assets/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signin"></a>
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form id="loginForm" name="loginForm" method="post" action="<?php echo $this->url('login'); ?>">
+              <h1>Login Form</h1>
+              <div>
+                <input type="text" id="email" name="email" class="form-control" placeholder="Username" required />
+              </div>
+              <div>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
+              </div>
+              <div>
+                <a class="btn btn-default submit" onclick="getLogin();">Log in</a>
+                <a class="reset_pass" href="#">Lost your password?</a>
+              </div>
+
+              <div class="clearfix"></div>
+              
+              <div class="separator">
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-paw"></i> Dream</h1>
+                  <p>©2016 All Rights Reserved.</p>
                 </div>
-            </div>
+              </div>
+            </form>
+          </section>
         </div>
+      </div>
     </div>
-<script type="text/javascript">
-       $(document).ready(function() {
-		<?php
-		if (isset($container->alertMsg) && $container->alertMsg != "") {
-		    ?>
-			alert("<?php echo $container->alertMsg; ?>");
-		    <?php
-		    $container->alertMsg = "";
-		    unset($container->alertMsg);
-		}
-		?>
-        });
-       
-	function doLogin(){
-		flag = deforayValidator.init({
-		    formId: 'adminLoginInformation'
-		});
-		
-		if(flag){
-		    document.getElementById('adminLoginInformation').submit();
-		}
-	}
-	
-</script>
+    <script>
+      function getLogin(){
+        
+      }
+    </script>
+  </body>
+</html>

@@ -9,8 +9,8 @@ return array(
     'modules' => array(
         'Application',
         'Admin',
-        'EdpModuleLayouts',
-        'Api'
+        'Api',
+        'EdpModuleLayouts'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

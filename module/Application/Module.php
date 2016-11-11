@@ -2,7 +2,6 @@
 namespace Application;
 
 use Zend\Session\Container;
-use Application\Model\Acl;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
@@ -29,69 +28,43 @@ class Module{
 
         $baseModel = new ViewModel();
         $baseModel->setTemplate('layout/layout');
-
-        // passing the ACL object 
-        $sm = $event->getApplication()->getServiceManager();
-        $acl = $sm->get('AppAcl');
-        $baseModel->acl = $acl;
-
-
-        $model = new ViewModel();        
-        $model->setTemplate('error/403');
-
-        $baseModel->addChild($model, 'aclError');
-        $baseModel->setTerminal(true);
-
-        $event->setViewModel($baseModel);
-
-        $response = $event->getResponse();
-        $response->setStatusCode(403);
-        
-        $event->setResponse($response);
-        $event->setResult($baseModel);
-        
         return false;
     }
     
     public function preSetter(MvcEvent $e) {
         if(($e->getRouteMatch()->getParam('controller') != 'Application\Controller\Login')){
-        $tempName=explode('Controller',$e->getRouteMatch()->getParam('controller'));
-        if(substr($tempName[0], 0, -1) == 'Application'){
-            $session = new Container('credo');
-            if (!isset($session->employeeId) || $session->employeeId == "") {
-                if( ! $e->getRequest()->isXmlHttpRequest()) {
-                    $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
-                    $response = $e->getResponse();
-                    $response->getHeaders()->addHeaderLine('Location', $url);
-                    $response->setStatusCode(302);
-                    $response->sendHeaders();
-    
-                    // To avoid additional processing
-                    // we can attach a listener for Event Route with a high priority
-                    $stopCallBack = function($event) use ($response) {
-                        $event->stopPropagation();
+            $tempName=explode('Controller',$e->getRouteMatch()->getParam('controller'));
+            if(substr($tempName[0], 0, -1) == 'Application'){
+                $sessionContainer = new Container('employee');
+                if (!isset($sessionContainer->employeeId) || $sessionContainer->employeeId == "") {
+                    if( ! $e->getRequest()->isXmlHttpRequest()) {
+                        $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
+                        $response = $e->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', $url);
+                        $response->setStatusCode(302);
+                        $response->sendHeaders();
+        
+                        // To avoid additional processing
+                        // we can attach a listener for Event Route with a high priority
+                        $stopCallBack = function($event) use ($response) {
+                            $event->stopPropagation();
+                            return $response;
+                        };
+                        //Attach the "break" as a listener with a high priority
+                        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
                         return $response;
-                    };
-                    //Attach the "break" as a listener with a high priority
-                    $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
-                    return $response;
+                    }
+                }
+                
+                if ($e->getRequest()->isXmlHttpRequest()) {
+                    return;
                 }
             }
-            if ($e->getRequest()->isXmlHttpRequest()) {
-                return;
-            }
-        }
         }
     }
     
     public function getServiceConfig() {
         return array(
-            'factories' => array('AppAcl' => function($sm) {
-                    //$resourcesTable = $sm->get('ResourceTable');
-                    //$rolesTable = $sm->get('RolesTable');
-                    //return new Acl($resourcesTable->fetchAllResourceMap(), $rolesTable->fetchRoles());
-                }
-            )
         );
     }
     

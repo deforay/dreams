@@ -1,10 +1,8 @@
 <?php
 namespace EdpModuleLayouts;
 
-class Module
-{
-    public function onBootstrap($e)
-    {
+class Module{
+    public function onBootstrap($e){
         $e->getApplication()->getEventManager()->getSharedManager()->attach('Zend\Mvc\Controller\AbstractController', 'dispatch', function($e) {
             $controller      = $e->getTarget();
             $controllerClass = get_class($controller);

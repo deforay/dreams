@@ -1,37 +1,20 @@
 <?php
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ */
+
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
 
 class LoginController extends AbstractActionController{
-
     public function indexAction(){
-        $logincontainer = new Container('credo');
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $userService = $this->getServiceLocator()->get('EmployeeService');
-            $route = $userService->loginProcess($params);
-            return $this->redirect()->toRoute($route);
-        }
-        if (isset($logincontainer->employeeId) && $logincontainer->employeeId != "") {
-            return $this->redirect()->toRoute("home");
-        } else {
-            $viewModel = new ViewModel();
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
+        return new ViewModel();
     }
-
-    public function logoutAction()
-    {
-        $logincontainer = new Container('credo');
-        $logincontainer->getManager()->getStorage()->clear('credo');
-        return $this->redirect()->toRoute("login");
-    }
-
-
+  
 }
-

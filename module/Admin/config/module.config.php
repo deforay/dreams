@@ -10,7 +10,7 @@
 return array(
     'router' => array(
         'routes' => array(
-             'admin-home' => array(
+             'dashboard' => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/admin[/]',
@@ -44,7 +44,7 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Admin\Controller\Index' => 'Admin\Controller\IndexController',
+            'Admin\Controller\Index' => 'Admin\Controller\IndexController'
         ),
     ),
     'view_manager' => array(
