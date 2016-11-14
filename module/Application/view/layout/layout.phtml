@@ -63,20 +63,20 @@ $alertContainer = new Container('alert');
         <ul class="side-nav fixed clearfix left" id="nav-mobile" style="transform: translateX(0%);">
             <li>
                 <ul class="collapsible" data-collapsible="accordion">
-                     <li class="active">
-                        <div class="collapsible-header waves-effect active">
-                            <a href="<?php echo $this->url('home');?>"><i class="zmdi zmdi-palette zmdi-hc-fw"></i>Dashboard</a>
+                     <li id="dashboardMenu" class="menuAll">
+                        <div class="collapsible-header waves-effect">
+                            <i class="zmdi zmdi-palette zmdi-hc-fw"></i><a href="<?php echo $this->url('home'); ?>">Dashboard</a>
                         </div>
                      </li>
-                    <li class="">
+                    <li id="manageMenu" class="menuAll">
                         <div class="collapsible-header waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw"></i>Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                         <div class="collapsible-body" style="">
                             <ul>
-                                <li>
-                                    <a href="<?php echo $this->url('role');?>">Role</a>
+                                <li class="roleMenu menuAll">
+                                    <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Role</a>
                                 </li>
-                                <li>
-                                    <a href="<?php echo $this->url('employee');?>">Employee</a>
+                                <li class="employeeMenu menuAll">
+                                    <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employee</a>
                                 </li>
                             </ul>
                         </div>
@@ -92,8 +92,10 @@ $alertContainer = new Container('alert');
     </main>
     <footer>
         <div class="row margin">
-            <div class="col s12 m12 l12">
-                <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
+                </div>
             </div>
         </div>
     </footer>
@@ -106,6 +108,20 @@ $alertContainer = new Container('alert');
 <script>
     $(function () {
         ol();
+        //set active link
+        str=$(location).attr('pathname');
+        splitsUrl=str.split("/",4);
+        console.log(splitsUrl);
+        $(".menuAll").removeClass("active");
+        if(splitsUrl[1]=='role'){
+          $("#manageMenu").addClass("active");
+          $(".roleMenu").addClass("active");
+        }else if(splitsUrl[1]=='employee'){
+          $("#manageMenu").addClass("active");
+          $(".employeeMenu").addClass("active");
+        }else{
+            $("#dashboardMenu").addClass("active");
+        }
     });
     $(document).ready(function(){
         <?php
