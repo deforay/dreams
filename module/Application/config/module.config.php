@@ -88,6 +88,17 @@ return array(
                 ),
             ),
             
+            'common' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/common[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Common',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
         ),
     ),
     'service_manager' => array(
@@ -114,7 +125,8 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Login' => 'Application\Controller\LoginController',
             'Application\Controller\Role' => 'Application\Controller\RoleController',
-            'Application\Controller\Employee' => 'Application\Controller\EmployeeController'
+            'Application\Controller\Employee' => 'Application\Controller\EmployeeController',
+            'Application\Controller\Common' => 'Application\Controller\CommonController',
         ),
     ),
     'controller_plugins' => array(

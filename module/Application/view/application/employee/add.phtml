@@ -1,0 +1,99 @@
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Add Employee</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <form id="addEmpForm" name="addEmpForm" method="post" action="<?php echo $this->url('employee',array('action'=>'add')); ?>">
+        <div class="card" id="elements1">
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name">
+                    <label for="employeeName" class="">Employee Name</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code">
+                    <label for="employeeCode" class="">Employee Code</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <select class="material-select" id="role" name="role" title="Please select employee role">
+                        <option value="">-- Select --</option>
+                        <?php
+                        foreach($roleData as $role)
+                        {
+                            ?>
+                            <option value="<?php echo base64_encode($role['role_id']);?>"><?php echo $role['role_name'];?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id"onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter another email id.')">
+                    <label for="email" class="">Email</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number">
+                    <label for="mobile" class="">Contact Number</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number">
+                    <label for="altContact" class="">Alternate Contact</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="password" name="password" type="password" class="validate isRequired" title="Please enter password">
+                    <label for="password" class="">Password</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="confirmPassword" name="password" type="password" class="validate isRequired confirmPassword" title="Please check your password and confirm password are same">
+                    <label for="password" class="">Confirm Password</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <a href="javascript:void(0);" onclick="addEmployee();">Add</a>
+                <a href="<?php echo $this->url('employee'); ?>">Cancel</a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+    duplicateName = true;
+    function addEmployee(){
+        flag = deforayValidator.init({
+               formId: 'addEmpForm'
+        });
+        
+        if(flag){
+            document.getElementById('addEmpForm').submit();
+        }
+    }
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+        checkValue = document.getElementById(obj.id).value;
+        $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+        function(data) {
+            if (data > 0)
+            {
+                alert(msg);
+                duplicateName = false;
+                document.getElementById(obj.id).value = "";
+            }
+            else {
+                duplicateName = true;
+            }
+        });
+    }
+</script>
