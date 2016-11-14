@@ -43,25 +43,25 @@ class Module{
             $tempName=explode('Controller',$e->getRouteMatch()->getParam('controller'));
             if(substr($tempName[0], 0, -1) == 'Application'){
                 $loginContainer = new Container('employee');
-                //if (!isset($loginContainer->employeeId) || $loginContainer->employeeId == "") {
-                //    if( ! $e->getRequest()->isXmlHttpRequest()) {
-                //        $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
-                //        $response = $e->getResponse();
-                //        $response->getHeaders()->addHeaderLine('Location', $url);
-                //        $response->setStatusCode(302);
-                //        $response->sendHeaders();
-                //
-                //        // To avoid additional processing
-                //        // we can attach a listener for Event Route with a high priority
-                //        $stopCallBack = function($event) use ($response) {
-                //            $event->stopPropagation();
-                //            return $response;
-                //        };
-                //        //Attach the "break" as a listener with a high priority
-                //        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
-                //        return $response;
-                //    }
-                //}
+                if (!isset($loginContainer->employeeId) || $loginContainer->employeeId == "") {
+                    if( ! $e->getRequest()->isXmlHttpRequest()) {
+                        $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
+                        $response = $e->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', $url);
+                        $response->setStatusCode(302);
+                        $response->sendHeaders();
+                
+                        // To avoid additional processing
+                        // we can attach a listener for Event Route with a high priority
+                        $stopCallBack = function($event) use ($response) {
+                            $event->stopPropagation();
+                            return $response;
+                        };
+                        //Attach the "break" as a listener with a high priority
+                        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
+                        return $response;
+                    }
+                }
                 
                 if ($e->getRequest()->isXmlHttpRequest()) {
                     return;

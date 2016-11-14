@@ -1,0 +1,63 @@
+<link type="text/css" rel="stylesheet" href="assets/css/jquery.dataTables.min.css"  media="screen"/>
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Roles</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header">
+                    Role List
+                </div>
+                <div class="card-content clearfix">
+                    <table id="demo-table"  class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Office</th>
+                                <th>Age</th>
+                                <th>Start date</th>
+                                <th>Salary</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Office</th>
+                                <th>Age</th>
+                                <th>Start date</th>
+                                <th>Salary</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <td>Tiger Nixon</td>
+                                <td>System Architect</td>
+                                <td>Edinburgh</td>
+                                <td>61</td>
+                                <td>2011/04/25</td>
+                                <td>$320,800</td>
+                            </tr>
+                            <tr>
+                                <td>Garrett Winters</td>
+                                <td>Accountant</td>
+                                <td>Tokyo</td>
+                                <td>63</td>
+                                <td>2011/07/25</td>
+                                <td>$170,750</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+       $("#demo-table").DataTable();
+    });
+</script>

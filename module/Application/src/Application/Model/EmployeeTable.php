@@ -32,8 +32,8 @@ class EmployeeTable extends AbstractTableGateway {
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
                 $loginContainer = new Container('employee');
-                $logincontainer->employeeId = $loginResult->employee_id;
-                $logincontainer->employeeName = ucwords($loginResult->employee_name);
+                $loginContainer->employeeId = $loginResult->employee_id;
+                $loginContainer->employeeName = ucwords($loginResult->employee_name);
                 return 'home';
             }else{
                 $alertContainer->msg = 'The email id or password that you entered is incorrect..!';
