@@ -1,66 +1,77 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+?>
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html class="black">
+    <head lang="en" >
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description" content="Mara Admin Templates">
+        <title>Materialize, Angular Theme</title>
+        <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon32x32.ico">
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/material-design-iconic-font.css">
 
-    <title>Dream | </title>
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="assets/css/mara.min.css"  media="screen"/>
 
-    <!-- Bootstrap -->
-    <link href="../assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="../assets/nprogress/nprogress.css" rel="stylesheet">
-    <!-- Animate.css -->
-    <link href="../assets/animate.css/animate.min.css" rel="stylesheet">
-
-    <!-- Custom Theme Style -->
-    <link href="../assets/css/custom.min.css" rel="stylesheet">
-  </head>
-
-  <body class="login">
-    <div>
-      <a class="hiddenanchor" id="signin"></a>
-      <div class="login_wrapper">
-        <div class="animate form login_form">
-          <section class="login_content">
-            <form id="loginForm" name="loginForm" method="post" action="<?php echo $this->url('login'); ?>">
-              <h1>Login Form</h1>
-              <div>
-                <input type="text" id="email" name="email" class="form-control" placeholder="Username" required />
-              </div>
-              <div>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
-              </div>
-              <div>
-                <a class="btn btn-default submit" onclick="getLogin();">Log in</a>
-                <a class="reset_pass" href="#">Lost your password?</a>
-              </div>
-
-              <div class="clearfix"></div>
-              
-              <div class="separator">
-                <div class="clearfix"></div>
-                <br />
-
-                <div>
-                  <h1><i class="fa fa-paw"></i> Dream</h1>
-                  <p>©2016 All Rights Reserved.</p>
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body class="black">
+        <div class=" center signin-page"  id="full-page">
+            <div class=" black white-text signin-content">
+                <h1 class="center-align mTitle" style="font-family: BaronFont">DREAM</h1>
+                <div class=" white signUpContainer center">
+                  <form id="loginForm" name="loginForm" method="post" action="<?php echo $this->url('login'); ?>">
+                    <div class="signUpContent">
+                        <h6 class="black-text center-align">Sign in with your Dream account:</h6>
+                        <div class="input-field">
+                            <input id="email" name="email" type="text" class="validate black-text isEmail isRequired" title="Please enter your email id">
+                            <label for="email" class="left-align">Email id</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="password" name="password" type="password" class="validate black-text isRequired" title="Please enter your password">
+                            <label for="password" class=" left-align">Password</label>
+                        </div>
+                        <p>
+                            <input type="checkbox" id="terms" />
+                            <label for="terms" class="black-text">Keep me signed in</label>
+                        </p>
+                        <a href="javascript:void(0);" class="waves-effect waves-light btn signInButton" onclick="getLogin();">Sign In</a>
+                    </div>
+                  </form>
                 </div>
-              </div>
-            </form>
-          </section>
+            </div>
         </div>
-      </div>
-    </div>
-    <script>
-      function getLogin(){
-        
-      }
-    </script>
-  </body>
+        <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="assets/js/materialize.js"></script>
+        <script type="text/javascript" src="assets/js/mara.min.js"></script>
+        <script type="text/javascript" src="assets/js/deforayValidation.js"></script>
+        <script>
+          $(document).ready(function() {
+            <?php
+            if (isset($alertContainer->msg) && $alertContainer->msg != "") {
+                ?>
+                   alert("<?php echo $alertContainer->msg; ?>");
+                <?php
+                $alertContainer->msg = "";
+                unset($alertContainer->msg);
+            }
+            ?>
+          });
+          
+          function getLogin(){
+            flag = deforayValidator.init({
+                formId: 'loginForm'
+            });
+            
+            if(flag){
+                document.getElementById('loginForm').submit();
+            }
+          }
+        </script>
+    </body>
 </html>

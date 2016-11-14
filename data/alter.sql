@@ -6,7 +6,7 @@ CREATE TABLE `employee` (
   `password` varchar(500) DEFAULT NULL,
   `role` int(11) NOT NULL,
   `email` varchar(250) DEFAULT NULL,
-  `mobile` int(11) DEFAULT NULL,
+  `mobile` VARCHAR(45) DEFAULT NULL,
   `alt_contact` int(11) DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
   `created_on` datetime NOT NULL

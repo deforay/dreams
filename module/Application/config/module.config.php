@@ -59,6 +59,33 @@ return array(
                         'action' => 'index',
                     ),
                 ),
+            ),'log-out' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/log-out',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Login',
+                        'action' => 'log-out',
+                    ),
+                ),
+            ),'role' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/role[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Role',
+                        'action' => 'index',
+                    ),
+                ),
+            ),'employee' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/employee[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\employee',
+                        'action' => 'index',
+                    ),
+                ),
             ),
             
         ),
@@ -85,7 +112,9 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
-            'Application\Controller\Login' => 'Application\Controller\LoginController'
+            'Application\Controller\Login' => 'Application\Controller\LoginController',
+            'Application\Controller\Role' => 'Application\Controller\RoleController',
+            'Application\Controller\Employee' => 'Application\Controller\EmployeeController'
         ),
     ),
     'controller_plugins' => array(

@@ -20,8 +20,7 @@ return array(
         ),
     ),
     'module_layouts' => array(
-        'Application' => 'layout/layout',
-        'Admin' => 'layout/admin'
+        'Application' => 'layout/layout'
     ),
     'service_manager' => array(
         'factories' => array(

@@ -7,10 +7,7 @@
  */
 return array(
     'modules' => array(
-        'Application',
-        'Admin',
-        'Api',
-        'EdpModuleLayouts'
+        'Application'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

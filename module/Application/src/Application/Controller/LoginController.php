@@ -9,12 +9,32 @@
 
 namespace Application\Controller;
 
+use Zend\Session\Container;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class LoginController extends AbstractActionController{
     public function indexAction(){
-        return new ViewModel();
+        $loginContainer = new Container('employee');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $employeeService = $this->getServiceLocator()->get('EmployeeService');
+            $redirectUrl = $employeeService->getLogin($params);
+            return $this->redirect()->toRoute($redirectUrl);
+        }
+        if (isset($loginContainer->employeeId) && trim($loginContainer->employeeId)!= "") {
+            return $this->redirect()->toRoute("home");
+        }else{
+            $viewModel = new ViewModel();
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
     }
   
+    public function logOutAction(){
+        $loginContainer = new Container('employee');
+        $loginContainer->getManager()->getStorage()->clear('employee');
+        return $this->redirect()->toRoute("login");
+    }
 }

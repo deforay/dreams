@@ -6,6 +6,13 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
+use Application\Service\CommonService;
+use Application\Service\RoleService;
+use Application\Service\EmployeeService;
+
+use Application\Model\RoleTable;
+use Application\Model\EmployeeTable;
+
 class Module{
     public function onBootstrap(MvcEvent $e){
         $eventManager        = $e->getApplication()->getEventManager();
@@ -35,26 +42,26 @@ class Module{
         if(($e->getRouteMatch()->getParam('controller') != 'Application\Controller\Login')){
             $tempName=explode('Controller',$e->getRouteMatch()->getParam('controller'));
             if(substr($tempName[0], 0, -1) == 'Application'){
-                $sessionContainer = new Container('employee');
-                if (!isset($sessionContainer->employeeId) || $sessionContainer->employeeId == "") {
-                    if( ! $e->getRequest()->isXmlHttpRequest()) {
-                        $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
-                        $response = $e->getResponse();
-                        $response->getHeaders()->addHeaderLine('Location', $url);
-                        $response->setStatusCode(302);
-                        $response->sendHeaders();
-        
-                        // To avoid additional processing
-                        // we can attach a listener for Event Route with a high priority
-                        $stopCallBack = function($event) use ($response) {
-                            $event->stopPropagation();
-                            return $response;
-                        };
-                        //Attach the "break" as a listener with a high priority
-                        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
-                        return $response;
-                    }
-                }
+                $loginContainer = new Container('employee');
+                //if (!isset($loginContainer->employeeId) || $loginContainer->employeeId == "") {
+                //    if( ! $e->getRequest()->isXmlHttpRequest()) {
+                //        $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
+                //        $response = $e->getResponse();
+                //        $response->getHeaders()->addHeaderLine('Location', $url);
+                //        $response->setStatusCode(302);
+                //        $response->sendHeaders();
+                //
+                //        // To avoid additional processing
+                //        // we can attach a listener for Event Route with a high priority
+                //        $stopCallBack = function($event) use ($response) {
+                //            $event->stopPropagation();
+                //            return $response;
+                //        };
+                //        //Attach the "break" as a listener with a high priority
+                //        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
+                //        return $response;
+                //    }
+                //}
                 
                 if ($e->getRequest()->isXmlHttpRequest()) {
                     return;
@@ -65,6 +72,19 @@ class Module{
     
     public function getServiceConfig() {
         return array(
+            'factories' => array(
+                'CommonService' => function($sm) {
+                    return new CommonService($sm);
+                },'EmployeeService' => function($sm) {
+                    return new EmployeeService($sm);
+                },
+                
+                'EmployeeTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new EmployeeTable($dbAdapter);
+                    return $table;
+                },
+            ),
         );
     }
     
