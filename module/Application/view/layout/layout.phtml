@@ -5,18 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Dream">
     <title>DREAM</title>
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon32x32.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="">
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/material-design-iconic-font.css">
+    <link rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/material-design-iconic-font.css' ?>">
+    <link type="text/css" rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/jquery.dataTables.min.css' ?>"  media="screen"/>
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="assets/css/mara.min.css"  media="screen"/>
+    <link type="text/css" rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/mara.min.css' ?>"  media="screen"/>
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" type="text/css" href="assets/css/prism.css"/>
-    
-    <script type="text/javascript" src="assets/js/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/prism.css' ?>"/>
+    <style>
+        .wrapper main {
+            margin-bottom:0px !important;
+        }
+    </style>
+    <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
 <body>
 <!--Page load animation-->
@@ -29,7 +34,7 @@
                 <div class="nav-wrapper">
                     <ul class="left">
                         <li>
-                            <a href="index.html" class="brand-logo"><img src="assets/images/logo.png" alt="MARA"></a>
+                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><img src="<?php echo $this->basePath() .'/assets/images/logo.png' ?>" alt="MARA"></a>
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
@@ -39,7 +44,7 @@
                     <ul class="autocomplete-results hide"><li class="result"><span>Alabama</span></li><li class="result"><span>Alaska</span></li><li class="result"><span>Arizona</span></li><li class="result"><span>Arkansas</span></li><li class="result"><span>California</span></li><li class="result"><span>Colorado</span></li><li class="result"><span>Connecticut</span></li><li class="result"><span>District of Columbia</span></li><li class="result"><span>Delaware</span></li><li class="result"><span>Florida</span></li><li class="result"><span>Georgia</span></li><li class="result"><span>Hawaii</span></li><li class="result"><span>Idaho</span></li><li class="result"><span>Indiana</span></li><li class="result"><span>Iowa</span></li><li class="result"><span>Kansas</span></li><li class="result"><span>Kentucky</span></li><li class="result"><span>Louisiana</span></li><li class="result"><span>Maine</span></li></ul></div>
                     <ul class="right hide-on-med-and-down">
                         <li>
-                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span><img class="responsive-img profile-img" src="assets/images/user.png" alt="john"><i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
+                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span><img class="responsive-img profile-img" src="<?php echo $this->basePath() .'/assets/images/user.png' ?>" alt="john"><i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
                                 <li><a href="#"><i class="zmdi zmdi-account-circle"></i>Profile</a></li>
                                 <li><a href="<?php echo $this->url('log-out'); ?>"><i class="material-icons dp48">input</i>Logout</a></li>
                             </ul>
@@ -82,51 +87,16 @@
     <footer>
         <div class="row margin">
             <div class="col s12 m12 l12">
-                <div class="foot4">
-                <div class="f-cont col s6 m6 l3">
-                    <h3>DREAM</h3>
-                    <p>Lorem ipsum dolor</p>
-                    <a href="#" class="f-links">About</a><br>
-                    <a href="#" class="f-links">Terms</a><br>
-                    <a href="#" class="f-links">Careers</a><br>
-                    <a href="#" class="f-links">Contact</a><br>
-                </div>
-                <div class="f-cont f-update col s6 m6 l4">
-                    <h6>Recent uploads</h6>
-                    <p>Bacon ipsum dolor amet bacon jowl tongue turkey. Pork belly t-bone ball tip brisket, ham hock swine rump. Salami ribeye pancetta, meatloaf pastrami sirloin bacon</p>
-                </div>
-                <div class="f-cont col s12 m12 l5">
-                    <h6>Subscribe</h6>
-                    <p>Get monthly updates and free resources.</p>
-                    <div>
-                        <form class="footer-search">
-                            <input class="f-email validate z-depth-1" type="email" placeholder="Email Address">
-                            <a class="btn f-button first-complementary-bg">GO</a>
-                        </form>
-                    </div>
-                </div>
-                <div class="f-cont valign-wrapper f-foot col s12 m12 l12">
-                    <div class="left-align valign col s12 m12 l6">
-                        <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
-                    </div>
-                    <div class="social-icons valign right-align col s6 m6 l6">
-                        <a href="#"><i class="zmdi zmdi-twitter"></i></a>
-                        <a href="#"><i class="zmdi zmdi-dribbble"></i></a>
-                        <a href="#"><i class="zmdi zmdi-vimeo"></i></a>
-                        <a href="#"><i class="zmdi zmdi-instagram"></i></a>
-                        <a href="#"><i class="zmdi zmdi-behance"></i></a>
-                        <a href="#"><i class="zmdi zmdi-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
+                <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
             </div>
         </div>
     </footer>
 </div>
-<script type="text/javascript" src="assets/js/materialize.js"></script>
-
-<script type="text/javascript" src="assets/js/prism.min.js"></script>
-<script type="text/javascript" src="assets/js/mara.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/materialize.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.dataTables.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/prism.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/mara.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/deforayValidation.js' ?>"></script>
 <script>
     $(function () {
         ol();
@@ -186,7 +156,7 @@
         inputDiv.append(searchHtml);
         input.on('keyup', input, function() {
             var $val = input.val().trim(),
-                    $select = $('.autocomplete-results');
+             $select = $('.autocomplete-results');
             $select.css('width',input.width());
             if ($val != '') {
                 $select.children('li').addClass('hide');

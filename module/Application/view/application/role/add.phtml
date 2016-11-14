@@ -1,0 +1,53 @@
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Add Role</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <form id="addRoleForm" name="addRoleForm" method="post" action="<?php echo $this->url('role',array('action'=>'add')); ?>">
+        <div class="card" id="elements1">
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="roleName" name="roleName" type="text" class="validate isRequired" title="Please enter role name">
+                    <label for="normal" class="">Role Name</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <input id="normal" name="roleCode" type="text" class="validate isRequired">
+                    <label for="normal" class="">Role Code</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-padding col m6 s6">
+                    Has Global Access?<br>
+                     <input class="with-gap" name="group1" type="radio" id="radio1"  />
+                     <label for="radio1">Yes </label>
+                     <input class="with-gap" name="group1" type="radio" id="radio2" checked />
+                     <label for="radio1">No </label>
+                </div>
+            </div>
+            <div class="col s6">
+                <div class="input-field col m6 s6">
+                    <textarea id="textarea1" class="materialize-textarea"></textarea>
+                    <label for="textarea1">Role Description</label>
+                </div>
+            </div>
+            <div class="col s6">
+                <a href="javascript:void(0);" onclick="addRole();">Add</a>
+                <a href="<?php echo $this->url('role'); ?>">Cancel</a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+    function addRole(){
+        flag = deforayValidator.init({
+               formId: 'addRoleForm'
+        });
+        
+        if(flag){
+            document.getElementById('addRoleForm').submit();
+        }
+    }
+</script>

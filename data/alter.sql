@@ -17,3 +17,6 @@ ALTER TABLE `employee`
   
 ALTER TABLE `employee`
   MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+  
+--Pal 14/11/2016
