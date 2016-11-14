@@ -83,8 +83,8 @@
             </div>
             <div class="col s6">
                 <input type="hidden" name="employeeId" id="employeeId" value="<?php echo base64_encode($empResult['employee_id']);?>"/>
-                <a href="javascript:void(0);" onclick="editEmployee();">Update</a>
-                <a href="<?php echo $this->url('employee'); ?>">Cancel</a>
+                <a href="javascript:void(0);" onclick="editEmployee();" class="btn">Update</a>
+                <a href="<?php echo $this->url('employee'); ?>" class="btn">Cancel</a>
             </div>
         </div>
         </form>
