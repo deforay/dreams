@@ -1,0 +1,79 @@
+<?php
+use Zend\Session\Container;
+$container = new Container('alert');
+$editAction = '{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center","bSortable":false}';
+?>
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Employee</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header">
+                    Employee List
+                </div>
+                <div class="card-content clearfix">
+                    <table id="employeeTable"  class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Status</th>
+                                <th>Added On</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Status</th>
+                                <th>Added On</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+         <?php
+            if (isset($container->alertMsg) && $container->alertMsg != "") {
+                ?>
+                alert("<?php echo $container->alertMsg; ?>");
+                <?php
+                $container->alertMsg = "";
+                unset($container->alertMsg);
+            }
+    ?>
+       $("#employeeTable").DataTable({
+        "bProcessing": true,
+        "bServerSide": true,
+         "aoColumns": [
+		<?php echo $editAction;?>
+            ],
+        "sAjaxSource": "<?php echo $this->url('employee',array('action' => 'index')); ?>",
+         "fnServerData": function ( sSource, aoData, fnCallback ) {
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+    });
+       
+    });
+</script>

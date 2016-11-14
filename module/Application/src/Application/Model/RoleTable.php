@@ -27,11 +27,9 @@ class RoleTable extends AbstractTableGateway {
                         'role_status'=>'active',
                         );
             $this->insert($data);
-            $roleId  = $this->lastInsertValue;
+            return $this->lastInsertValue;
         }
-      return $roleId;
     }
-    
     public function fetchRoles($parameters){
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
@@ -174,5 +172,10 @@ class RoleTable extends AbstractTableGateway {
             $this->update($data,array('role_id'=>$roleId));
         }
       return $roleId;
+    }
+    public function fetchActiveRoleList()
+    {
+        $query = $this->select(array('role_status'=>'active'));
+        return $query;
     }
 }

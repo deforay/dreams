@@ -79,6 +79,8 @@ class Module{
                     return new RoleService($sm);
                 },'EmployeeService' => function($sm) {
                     return new EmployeeService($sm);
+                },'RoleService' => function($sm) {
+                    return new RoleService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -88,6 +90,11 @@ class Module{
                 },'EmployeeTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new EmployeeTable($dbAdapter);
+                    return $table;
+                },
+                'RoleTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new RoleTable($dbAdapter);
                     return $table;
                 },
             ),

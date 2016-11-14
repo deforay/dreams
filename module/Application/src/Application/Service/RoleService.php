@@ -48,6 +48,12 @@ class RoleService {
         $roleDb = $this->sm->get('RoleTable');
         return $roleDb->fetchRole($roleId);
     }
+    public function getActiveRoleList()
+    {
+        $roleDb = $this->sm->get('RoleTable');
+        $result = $roleDb->fetchActiveRoleList();
+        return $result;
+    }
     
     public function updateRole($params){
         $alertContainer = new Container('alert');
