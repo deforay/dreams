@@ -5,6 +5,7 @@
     <div class="row dashboard-wrapper content-container">
         <form id="editEmpForm" name="editEmpForm" method="post" action="<?php echo $this->url('employee',array('action'=>'edit')); ?>">
         <div class="card" id="elements1">
+            <div class="row">
             <div class="col s6">
                 <div class="input-field col m6 s6">
                     <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>">
@@ -13,10 +14,12 @@
             </div>
             <div class="col s6">
                 <div class="input-field col m6 s6">
-                    <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" value="<?php echo $empResult->employee_code;?>">
+                    <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" value="<?php echo $empResult->employee_code;?>" onblur="checkNameValidation('employee', 'employee_code', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee code that you entered already exist. Please enter another employee code.')">
                     <label for="employeeCode" class="">Employee Code</label>
                 </div>
             </div>
+            </div>
+            <div class="row">
             <div class="col s6">
                 <div class="input-field col m6 s6">
                     <select class="material-select" id="role" name="role" title="Please select employee role">
@@ -38,6 +41,8 @@
                     <label for="email" class="">Email</label>
                 </div>
             </div>
+            </div>
+            <div class="row">
             <div class="col s6">
                 <div class="input-field col m6 s6">
                     <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $empResult->mobile;?>">
@@ -50,6 +55,8 @@
                     <label for="altContact" class="">Alternate Contact</label>
                 </div>
             </div>
+            </div>
+            <div class="row">
             <div class="col s6">
                 <div class="input-field col m6 s6">
                     <input id="password" name="password" type="password" class="validate" title="Please enter password">
@@ -62,6 +69,8 @@
                     <label for="password" class="">Confirm Password</label>
                 </div>
             </div>
+            </div>
+            <div class="row">
             <div class="col s6">
                 <div class="input-field col m6 s6">
                     <select class="material-select" id="status" name="status" title="Please select employee sttaus">
@@ -70,6 +79,7 @@
                         <option value="inactive" <?php echo ($empResult['status'] == 'inactive' ? " selected='selected'" : ""); ?>>Inactive</option>
                     </select>
                 </div>
+            </div>
             </div>
             <div class="col s6">
                 <input type="hidden" name="employeeId" id="employeeId" value="<?php echo base64_encode($empResult['employee_id']);?>"/>

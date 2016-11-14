@@ -172,7 +172,7 @@ class RoleTable extends AbstractTableGateway {
             $this->update($data,array('role_id'=>$roleId));
         }
       return $roleId;
-    
+    }
     public function fetchActiveRoleList()
     {
         $query = $this->select(array('role_status'=>'active'));
