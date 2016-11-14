@@ -1,3 +1,7 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +64,9 @@
             <li>
                 <ul class="collapsible" data-collapsible="accordion">
                      <li class="active">
-                        <div class="collapsible-header waves-effect active"><i class="zmdi zmdi-palette zmdi-hc-fw"></i>Dashboard </div>
+                        <div class="collapsible-header waves-effect active">
+                            <a href="<?php echo $this->url('home');?>"><i class="zmdi zmdi-palette zmdi-hc-fw"></i>Dashboard</a>
+                        </div>
                      </li>
                     <li class="">
                         <div class="collapsible-header waves-effect"><i class="zmdi zmdi-apps zmdi-hc-fw"></i>Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
@@ -102,6 +108,16 @@
         ol();
     });
     $(document).ready(function(){
+        <?php
+        if (isset($alertContainer->msg) && $alertContainer->msg != "") {
+            ?>
+               alert("<?php echo $alertContainer->msg; ?>");
+            <?php
+            $alertContainer->msg = "";
+            unset($alertContainer->msg);
+        }
+        ?>
+            
         $('.material-select').material_select();
         $.curCSS = function (element, attrib, val) {
             $(element).css(attrib, val);
