@@ -28,8 +28,7 @@
                     <select class="material-select" id="role" name="role" title="Please select employee role">
                         <option value="">-- Select --</option>
                         <?php
-                        foreach($roleData as $role)
-                        {
+                        foreach($roleData as $role){
                             ?>
                             <option value="<?php echo base64_encode($role['role_id']);?>"><?php echo $role['role_name'];?></option>
                             <?php
@@ -74,8 +73,8 @@
             </div>
             </div>
             <div class="col s6">
-                <a href="javascript:void(0);" class="btn" onclick="addEmployee();">Add</a>
-                <a href="<?php echo $this->url('employee'); ?>" class="btn">Cancel</a>
+                <a href="javascript:void(0);" class="btn" onclick="addEmployee();">Add</a>&nbsp;&nbsp;
+                <a href="<?php echo $this->url('employee'); ?>">Cancel</a>
             </div>
         </div>
         </form>
