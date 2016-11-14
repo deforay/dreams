@@ -75,13 +75,19 @@ class Module{
             'factories' => array(
                 'CommonService' => function($sm) {
                     return new CommonService($sm);
+                },'RoleService' => function($sm) {
+                    return new RoleService($sm);
                 },'EmployeeService' => function($sm) {
                     return new EmployeeService($sm);
                 },'RoleService' => function($sm) {
                     return new RoleService($sm);
                 },
                 
-                'EmployeeTable' => function($sm) {
+                'RoleTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new RoleTable($dbAdapter);
+                    return $table;
+                },'EmployeeTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new EmployeeTable($dbAdapter);
                     return $table;

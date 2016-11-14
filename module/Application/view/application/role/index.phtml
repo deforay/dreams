@@ -1,3 +1,7 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+?>
 <div id="page-content">
     <div class="row section-header">
         <h4 class="page-title">Roles</h4>
@@ -9,44 +13,19 @@
                     Role List
                 </div>
                 <div class="card-content clearfix">
-                    <table id="demo-table"  class="responsive-table display dataTable">
+                    <table id="roleDataTable"  class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
+                                <th>Role Nmae</th>
+                                <th>Role Code</th>
+                                <th>Has Global Access</th>
+                                <th>Role Description</th>
+                                <th>Role Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Position</th>
-                                <th>Office</th>
-                                <th>Age</th>
-                                <th>Start date</th>
-                                <th>Salary</th>
-                            </tr>
-                        </tfoot>
                         <tbody>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>61</td>
-                                <td>2011/04/25</td>
-                                <td>$320,800</td>
-                            </tr>
-                            <tr>
-                                <td>Garrett Winters</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>63</td>
-                                <td>2011/07/25</td>
-                                <td>$170,750</td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -56,6 +35,27 @@
 </div>
 <script>
     $(document).ready(function() {
-       $("#demo-table").DataTable();
+        $("#roleDataTable").dataTable( {
+        "bProcessing": true,
+        "bServerSide": true,
+         "aoColumns": [
+            {"sClass":"center"},
+            {"sClass":"center"},
+            {"sClass":"center"},
+            {"sClass":"center"},
+            {"sClass":"center"},
+            {"sClass":"center","bSortable":false}
+        ],
+        "sAjaxSource": "<?php echo $this->url('role',array('action' => 'index')); ?>",
+         "fnServerData": function ( sSource, aoData, fnCallback ) {
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+      } );
     });
 </script>

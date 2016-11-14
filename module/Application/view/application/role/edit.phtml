@@ -1,0 +1,71 @@
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Edit Role</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <form id="editRoleForm" name="editRoleForm" method="post" action="<?php echo $this->url('role',array('action'=>'edit')); ?>">
+        <div class="card">
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <input id="roleName" name="roleName" type="text" class="validate isRequired" title="Please enter role name" value="<?php echo $row->role_name; ?>">
+                        <label for="roleName" class="">Role Name *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <input id="normal" name="roleCode" type="text" class="validate isRequired" title="Please enter role code" value="<?php echo $row->role_code; ?>">
+                        <label for="roleCode" class="">Role Code *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-padding col m6 s6">
+                        Has Global Access?<br>
+                         <input class="with-gap" name="hGA" type="radio" id="hGAYes" value="yes" <?php echo($row->has_global_access == "yes")?'checked="checked"':'';  ?>/>
+                         <label for="hGAYes">Yes </label>
+                         <input class="with-gap" name="hGA" type="radio" id="hGANo" value="no" <?php echo($row->has_global_access == "no")?'checked="checked"':'';  ?>/>
+                         <label for="hGANo">No </label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <textarea id="roleDescription" name="roleDescription" class="materialize-textarea"><?php echo $row->role_description; ?></textarea>
+                        <label for="roleDescription">Role Description</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <select id="roleStatus" name="roleStatus" class="material-select">
+                            <option value="active" <?php echo($row->role_status == "active")?'selected="selected"':'';  ?>>Active</option>
+                            <option value="inactive" <?php echo($row->role_status == "inactive")?'selected="selected"':'';  ?>>Inactive</option>
+                        </select>
+                        <label >Role Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <input name="roleId" id="roleId" type="hidden" value="<?php echo base64_encode($row->role_id); ?>"/>
+                    <a href="javascript:void(0);" class="btn" onclick="updateRole();">Update</a>
+                    <a href="<?php echo $this->url('role'); ?>">Cancel</a>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+    function updateRole(){
+        flag = deforayValidator.init({
+               formId: 'editRoleForm'
+        });
+        
+        if(flag){
+            document.getElementById('editRoleForm').submit();
+        }
+    }
+</script>
