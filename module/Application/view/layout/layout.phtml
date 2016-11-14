@@ -111,7 +111,7 @@ $alertContainer = new Container('alert');
         //set active link
         str=$(location).attr('pathname');
         splitsUrl=str.split("/",4);
-        console.log(splitsUrl);
+        //console.log(splitsUrl);
         $(".menuAll").removeClass("active");
         if(splitsUrl[1]=='role'){
           $("#manageMenu").addClass("active");
