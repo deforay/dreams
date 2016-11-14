@@ -10,12 +10,30 @@
 return array(
     'router' => array(
         'routes' => array(
-             'dashboard' => array(
+            'dashboard' => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/admin[/]',
                     'defaults' => array(
                         'controller' => 'Admin\Controller\Index',
+                        'action' => 'index',
+                    ),
+                ),
+            ),'role' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/role[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Role',
+                        'action' => 'index',
+                    ),
+                ),
+            ),'employee' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/employee[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Admin\Controller\Employee',
                         'action' => 'index',
                     ),
                 ),
@@ -44,7 +62,9 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Admin\Controller\Index' => 'Admin\Controller\IndexController'
+            'Admin\Controller\Index' => 'Admin\Controller\IndexController',
+            'Admin\Controller\Role' => 'Admin\Controller\RoleController',
+            'Admin\Controller\Employee' => 'Admin\Controller\EmployeeController'
         ),
     ),
     'view_manager' => array(

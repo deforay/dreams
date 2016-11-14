@@ -2,6 +2,11 @@
 
 namespace Admin;
 
+use Application\Service\CommonService;
+use Application\Service\EmployeeService;
+
+use Application\Model\EmployeeTable;
+
 class Module {
 
     public function getConfig() {
@@ -21,7 +26,17 @@ class Module {
     public function getServiceConfig() {
         return array(
             'factories' => array(
+                'CommonService' => function($sm) {
+                    return new CommonService($sm);
+                },'EmployeeService' => function($sm) {
+                    return new EmployeeService($sm);
+                },
                 
+                'EmployeeTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new EmployeeTable($dbAdapter);
+                    return $table;
+                },
             ),
         );
     }

@@ -59,6 +59,15 @@ return array(
                         'action' => 'index',
                     ),
                 ),
+            ),'log-out' => array(
+                'type'    => 'literal',
+                'options' => array(
+                    'route'    => '/log-out',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Login',
+                        'action' => 'log-out',
+                    ),
+                ),
             ),
             
         ),

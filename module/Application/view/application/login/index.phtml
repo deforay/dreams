@@ -1,3 +1,7 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,10 +35,10 @@
             <form id="loginForm" name="loginForm" method="post" action="<?php echo $this->url('login'); ?>">
               <h1>Login Form</h1>
               <div>
-                <input type="text" id="email" name="email" class="form-control" placeholder="Username" required />
+                <input type="text" id="email" name="email" class="form-control isEmail isRequired" placeholder="Eamil id" title="Please enter your email id"/>
               </div>
               <div>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required />
+                <input type="password" id="password" name="password" class="form-control isRequired" placeholder="Password" title="Please enter your password"/>
               </div>
               <div>
                 <a class="btn btn-default submit" onclick="getLogin();">Log in</a>
@@ -57,9 +61,29 @@
         </div>
       </div>
     </div>
+    <script type="text/javascript" src="<?php echo $this->basePath().'/assets/jquery/dist/jquery.min.js'; ?>"></script>
+    <script type="text/javascript" src="<?php echo $this->basePath().'/assets/js/deforayValidation.js'; ?>"></script>
     <script>
+      $(document).ready(function() {
+        <?php
+        if (isset($alertContainer->msg) && $alertContainer->msg != "") {
+            ?>
+               alert("<?php echo $alertContainer->msg; ?>");
+            <?php
+            $alertContainer->msg = "";
+            unset($alertContainer->msg);
+        }
+        ?>
+      });
+      
       function getLogin(){
+        flag = deforayValidator.init({
+            formId: 'loginForm'
+        });
         
+        if(flag){
+            document.getElementById('loginForm').submit();
+        }
       }
     </script>
   </body>
