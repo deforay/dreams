@@ -50,8 +50,8 @@
             
             <div class="col s6">
                 <input name="roleId" id="roleId" type="hidden" value="<?php echo base64_encode($row->role_id); ?>"/>
-                <a href="javascript:void(0);" class="btn" onclick="updateRole();">Update</a>&nbsp;&nbsp;
-                <a href="<?php echo $this->url('role'); ?>">Cancel</a>
+                <a href="<?php echo $this->url('role'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateRole();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>

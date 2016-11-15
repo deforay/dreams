@@ -1,14 +1,12 @@
 <?php
-use Zend\Session\Container;
-$container = new Container('alert');
 $editAction = '{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sClass":"center","bSortable":false}';
 ?>
 <div id="page-content">
     <div class="row section-header">
         <div class="page-title">
-		  <span style="font-size: 34px;font-weight:400;">Employee</span>
-	      <a style="float: right;margin-right: 2%;" href="<?php echo $this->url('employee',array('action' => 'add')); ?>" class="btn" >Add Employee</a>
-	    </div>
+	    <span style="font-size: 34px;font-weight:400;">Employees</span>
+	    <a style="float: right;margin-right: 2%;" href="<?php echo $this->url('employee',array('action' => 'add')); ?>" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">ADD EMPLOYEE</a>
+	</div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
@@ -17,7 +15,7 @@ $editAction = '{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sCl
                     Employee List
                 </div>
                 <div class="card-content clearfix">
-                    <table id="employeeTable"  class="responsive-table display dataTable">
+                    <table id="employeeDataTable"  class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Employee Name</th>
@@ -40,16 +38,7 @@ $editAction = '{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sCl
 </div>
 <script>
     $(document).ready(function() {
-         <?php
-            if (isset($container->alertMsg) && $container->alertMsg != "") {
-                ?>
-                alert("<?php echo $container->alertMsg; ?>");
-                <?php
-                $container->alertMsg = "";
-                unset($container->alertMsg);
-            }
-    ?>
-       $("#employeeTable").DataTable({
+       $("#employeeDataTable").DataTable({
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
@@ -65,7 +54,6 @@ $editAction = '{"sClass":"center"},{"sClass":"center"},{"sClass":"center"},{"sCl
                     "success": fnCallback
                 });
             }
-    });
-       
+       });
     });
 </script>

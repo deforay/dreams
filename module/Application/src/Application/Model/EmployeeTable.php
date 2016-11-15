@@ -45,27 +45,30 @@ class EmployeeTable extends AbstractTableGateway {
          }
     }
     public function addEmployee($params){
-        $common = new CommonService();
-        $config = new \Zend\Config\Reader\Ini();
-        $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-        $password = sha1($params['password'] . $configResult["password"]["salt"]);
-	$data = array(
-            'employee_name' => $params['employeeName'],
-            'employee_code' => $params['employeeCode'],
-            'mobile' => $params['mobile'],
-            'role' => base64_decode($params['role']),
-            'email' => $params['email'],
-	    'password' => $password,
-            'alt_contact' => $params['altContact'],
-            'status' => 'active',
-            'created_on' => $common->getDateTime()
-        );
-        $this->insert($data);
-        $lastInsertedId = $this->lastInsertValue;
+	$lastInsertedId = 0;
+	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
+	    $common = new CommonService();
+	    $config = new \Zend\Config\Reader\Ini();
+	    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+	    $password = sha1($params['password'] . $configResult["password"]["salt"]);
+	    $data = array(
+		'employee_name' => $params['employeeName'],
+		'employee_code' => $params['employeeCode'],
+		'mobile' => $params['mobile'],
+		'role' => base64_decode($params['role']),
+		'email' => $params['email'],
+		'password' => $password,
+		'alt_contact' => $params['altContact'],
+		'status' => 'active',
+		'created_on' => $common->getDateTime()
+	    );
+	    $this->insert($data);
+	    $lastInsertedId = $this->lastInsertValue;
+	}
 	return $lastInsertedId;
     }
-    public function fetchAllEmployeeList($parameters)
-    {
+    
+    public function fetchAllEmployeeList($parameters){
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -194,42 +197,36 @@ class EmployeeTable extends AbstractTableGateway {
 			$row[] = $aRow['mobile'];
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="btn" style="margin-right: 2px;" title="Edit">Edit</a>';
+			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" title="Edit">Edit</a>';
 			$output['aaData'][] = $row;
 		}
 		return $output;
     }
     
-    public function fetchEmployeeDetail($empid)
-    {
-	    $fetchResult = '';
-	    $fetchResult=$this->select(array('employee_id'=>$empid))->current();
-	    return $fetchResult;
+    public function fetchEmployeeDetail($empid){
+	return $this->select(array('employee_id'=>$empid))->current();
     }
 	
-    public function updateEmployee($params)
-    {
+    public function updateEmployee($params){
+	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
+	    $lastInsertedId = base64_decode($params['employeeId']);
 	    $common = new CommonService();
             $data = array(
-            'employee_name' => $params['employeeName'],
-            'employee_code' => $params['employeeCode'],
-            'mobile' => $params['mobile'],
-            'role' => base64_decode($params['role']),
-            'email' => $params['email'],
-            'alt_contact' => $params['altContact'],
-            'status' => $params['status'],
-        );
-	    if (trim($params['password']) != '')
-	    {
+		'employee_name' => $params['employeeName'],
+		'employee_code' => $params['employeeCode'],
+		'mobile' => $params['mobile'],
+		'role' => base64_decode($params['role']),
+		'email' => $params['email'],
+		'alt_contact' => $params['altContact'],
+		'status' => $params['status']
+            );
+	    if (trim($params['password']) != ''){
 		$config = new \Zend\Config\Reader\Ini();
 		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-		$password = sha1($params['password'] . $configResult["password"]["salt"]);
-		$data = array('password' => $password);
-		$updateResult = $this->update($data,array('employee_id'=>base64_decode($params['employeeId'])));
+		$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 	    }
-		
-        $updateResult = $this->update($data,array('employee_id'=>base64_decode($params['employeeId'])));
-        $lastInsertedId = base64_decode($params['employeeId']);
-		return $lastInsertedId;
+	    $updateResult = $this->update($data,array('employee_id'=>$lastInsertedId));
+	}
+	return $lastInsertedId;
     }
 }
