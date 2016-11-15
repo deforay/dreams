@@ -74,10 +74,13 @@ $alertContainer = new Container('alert');
                         <div class="collapsible-body collapsibleAll collapsibleRoleMenu" style="">
                             <ul>
                                 <li class="roleMenu menuAll">
-                                    <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Role</a>
+                                    <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Roles</a>
                                 </li>
                                 <li class="employeeMenu menuAll">
-                                    <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employee</a>
+                                    <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employees</a>
+                                </li>
+                                <li class="facilityMenu menuAll">
+                                    <a class="facilityMenu menuAll" href="<?php echo $this->url('facility');?>">Facilities</a>
                                 </li>
                             </ul>
                         </div>
@@ -125,6 +128,10 @@ $alertContainer = new Container('alert');
           $("#manageMenu").addClass("active");
           $(".collapsibleRoleMenu").css("display","block");
           $(".employeeMenu").addClass("active");
+        }else if(splitsUrl[1]=='facility'){
+          $("#facilityMenu").addClass("active");
+          $(".collapsibleRoleMenu").css("display","block");
+          $(".facilityMenu").addClass("active");
         }else{
             $("#dashboardMenu").addClass("active");
         }

@@ -56,7 +56,7 @@ return array(
                     'route'    => '/login[/:action]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Login',
-                        'action' => 'index',
+                        'action' => 'index'
                     ),
                 ),
             ),'log-out' => array(
@@ -65,7 +65,7 @@ return array(
                     'route'    => '/log-out',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Login',
-                        'action' => 'log-out',
+                        'action' => 'log-out'
                     ),
                 ),
             ),'role' => array(
@@ -74,7 +74,7 @@ return array(
                     'route' => '/role[/:action][/][:id]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Role',
-                        'action' => 'index',
+                        'action' => 'index'
                     ),
                 ),
             ),'employee' => array(
@@ -83,18 +83,25 @@ return array(
                     'route' => '/employee[/:action][/][:id]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\employee',
-                        'action' => 'index',
+                        'action' => 'index'
                     ),
                 ),
-            ),
-            
-            'common' => array(
+            ),'common' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '/common[/:action][/][:id]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Common',
-                        'action' => 'index',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'facility' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/facility[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Facility',
+                        'action' => 'index'
                     ),
                 ),
             ),
@@ -127,6 +134,7 @@ return array(
             'Application\Controller\Role' => 'Application\Controller\RoleController',
             'Application\Controller\Employee' => 'Application\Controller\EmployeeController',
             'Application\Controller\Common' => 'Application\Controller\CommonController',
+            'Application\Controller\Facility' => 'Application\Controller\FacilityController'
         ),
     ),
     'controller_plugins' => array(

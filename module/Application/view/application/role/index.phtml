@@ -37,13 +37,18 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <span style="font-size: 34px;font-weight:400;">Roles</span>
-        <a style="float: right;margin-right: 2%;" href="<?php echo $this->url('role',array('action' => 'add')); ?>" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" >ADD ROLE</a>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Roles</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Roles</a>
+       </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header">Role List </div>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-grid"></i> Role List
+                 <span style="float:right;"><a href="<?php echo $this->url('role',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Role</a></span>
+                </div>
                 <div class="card-content clearfix">
                     <table id="roleDataTable"  class="responsive-table display dataTable">
                         <thead>

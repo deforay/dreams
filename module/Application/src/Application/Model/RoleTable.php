@@ -149,7 +149,7 @@ class RoleTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['has_global_access']);
            $row[] = ucwords($aRow['role_description']);
            $row[] = ucwords($aRow['role_status']);
-           $row[] = '<a href="/role/edit/' . base64_encode($aRow['role_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit">EDIT </a>';
+           $row[] = '<a href="/role/edit/' . base64_encode($aRow['role_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> EDIT </a>';
            $output['aaData'][] = $row;
        }
        return $output;

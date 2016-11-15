@@ -37,16 +37,17 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="page-title">
-	    <span style="font-size: 34px;font-weight:400;">Employees</span>
-	    <a style="float: right;margin-right: 2%;" href="<?php echo $this->url('employee',array('action' => 'add')); ?>" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">ADD EMPLOYEE</a>
-	</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Employees</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Employees</a>
+       </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header">
-                    Employee List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-grid"></i> Employee List
+		  <span style="float:right;"><a href="<?php echo $this->url('employee',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Employee</a></span>
                 </div>
                 <div class="card-content clearfix">
                     <table id="employeeDataTable"  class="responsive-table display dataTable">
