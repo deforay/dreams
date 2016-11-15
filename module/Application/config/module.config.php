@@ -104,6 +104,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'country' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/country[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Country',
+                        'action' => 'index'
+                    ),
+                ),
             ),
             
         ),
@@ -134,7 +143,8 @@ return array(
             'Application\Controller\Role' => 'Application\Controller\RoleController',
             'Application\Controller\Employee' => 'Application\Controller\EmployeeController',
             'Application\Controller\Common' => 'Application\Controller\CommonController',
-            'Application\Controller\Facility' => 'Application\Controller\FacilityController'
+            'Application\Controller\Facility' => 'Application\Controller\FacilityController',
+            'Application\Controller\Country' => 'Application\Controller\CountryController'
         ),
     ),
     'controller_plugins' => array(

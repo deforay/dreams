@@ -19,7 +19,7 @@ class EmployeeController extends AbstractActionController{
         if ($request->isPost()){
             $parameters = $request->getPost();
             $employeeService = $this->getServiceLocator()->get('EmployeeService');
-            $result = $employeeService->getAllEmployeeList($parameters);
+            $result = $employeeService->getAllEmployees($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }
     }
@@ -28,13 +28,16 @@ class EmployeeController extends AbstractActionController{
         $employeeService=$this->getServiceLocator()->get('EmployeeService');
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $result=$employeeService->addEmployeeData($params);
+            $result=$employeeService->addEmployee($params);
             return $this->_redirect()->toRoute('employee');
         }else{
             $roleService = $this->getServiceLocator()->get('RoleService');
-            $result=$roleService->getActiveRoleList();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $result=$roleService->getActiveRoles();
+            $countryList=$countryService->getActiveCountries();
             return new ViewModel(array(
-            'roleData'=>$result
+            'roleData'=>$result,
+            'countries'=>$countryList
             ));
         }
     }
@@ -43,15 +46,18 @@ class EmployeeController extends AbstractActionController{
         $employeeService=$this->getServiceLocator()->get('EmployeeService');
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $result=$employeeService->updateEmployeeDetails($params);
+            $employeeService->updateEmployee($params);
             return $this->redirect()->toRoute('employee');
         }else{
             $employeeId=base64_decode($this->params()->fromRoute('id'));
-            $result=$employeeService->getEmployeeDetail($employeeId);
+            $result=$employeeService->getEmployee($employeeId);
             $roleService = $this->getServiceLocator()->get('RoleService');
-            $roleResult=$roleService->getActiveRoleList();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $roleResult=$roleService->getActiveRoles();
+            $countryList=$countryService->getActiveCountries();
             return new ViewModel(array(
                 'empResult'=>$result,
+                'countries'=>$countryList,
                 'roleData'=>$roleResult
             ));
         }

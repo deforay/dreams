@@ -44,7 +44,7 @@ class EmployeeTable extends AbstractTableGateway {
             return 'home';
          }
     }
-    public function addEmployee($params){
+    public function addEmployeeDetails($params){
 	$lastInsertedId = 0;
 	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
 	    $common = new CommonService();
@@ -56,6 +56,7 @@ class EmployeeTable extends AbstractTableGateway {
 		'employee_code' => $params['employeeCode'],
 		'mobile' => $params['mobile'],
 		'role' => base64_decode($params['role']),
+		'country' => base64_decode($params['country']),
 		'email' => $params['email'],
 		'password' => $password,
 		'alt_contact' => $params['altContact'],
@@ -68,13 +69,13 @@ class EmployeeTable extends AbstractTableGateway {
 	return $lastInsertedId;
     }
     
-    public function fetchAllEmployeeList($parameters){
+    public function fetchAllEmployees($parameters){
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
 	$common = new CommonService();
-        $aColumns = array('e.employee_name','r.role_name','e.email','e.mobile','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
-        $orderColumns = array('e.employee_name','r.role_name','e.email','e.mobile','e.status','e.created_on');
+        $aColumns = array('e.employee_name','r.role_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+        $orderColumns = array('e.employee_name','r.role_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
 
        /*
         * Paging
@@ -148,7 +149,8 @@ class EmployeeTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('e' => 'employee'))
-		     ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
+		     ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+		     ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
 	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -176,7 +178,8 @@ class EmployeeTable extends AbstractTableGateway {
 
        /* Total data set length */
 		$tQuery = $sql->select()->from(array('e' => 'employee'))
-                              ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
+                              ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+			      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
 	
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -194,6 +197,7 @@ class EmployeeTable extends AbstractTableGateway {
 			$row[] = ucwords($aRow['role_name']);
 			$row[] = $aRow['email'];
 			$row[] = $aRow['mobile'];
+			$row[] = ucwords($aRow['country_name']);
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
 			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> EDIT</a>';
@@ -202,11 +206,11 @@ class EmployeeTable extends AbstractTableGateway {
 		return $output;
     }
     
-    public function fetchEmployeeDetail($empid){
+    public function fetchEmployee($empid){
 	return $this->select(array('employee_id'=>$empid))->current();
     }
 	
-    public function updateEmployee($params){
+    public function updateEmployeeDetails($params){
 	$lastInsertedId = 0;
 	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
 	    $lastInsertedId = base64_decode($params['employeeId']);
@@ -216,6 +220,7 @@ class EmployeeTable extends AbstractTableGateway {
 		'employee_code' => $params['employeeCode'],
 		'mobile' => $params['mobile'],
 		'role' => base64_decode($params['role']),
+		'country' => base64_decode($params['country']),
 		'email' => $params['email'],
 		'alt_contact' => $params['altContact'],
 		'status' => $params['status']
@@ -225,7 +230,7 @@ class EmployeeTable extends AbstractTableGateway {
 		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 		$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 	    }
-	    $updateResult = $this->update($data,array('employee_id'=>$lastInsertedId));
+	    $this->update($data,array('employee_id'=>$lastInsertedId));
 	}
 	return $lastInsertedId;
     }

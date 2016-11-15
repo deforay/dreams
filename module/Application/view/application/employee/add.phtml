@@ -9,14 +9,14 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name">
+                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" onblur="checkNameValidation('employee', 'employee_name', this, null,'The employee name that you entered already exist. Please enter different name.')">
                         <label for="employeeName" class="">Employee Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">code</i>
-                        <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code"  onblur="checkNameValidation('employee', 'employee_code', this, null,'The employee code that you entered already exist. Please enter different code.')">
+                        <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" onblur="checkNameValidation('employee', 'employee_code', this, null,'The employee code that you entered already exist. Please enter different code.')">
                         <label for="employeeCode" class="">Employee Code *</label>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <?php
                             foreach($roleData as $role){
                                 ?>
-                                <option value="<?php echo base64_encode($role['role_id']);?>"><?php echo $role['role_name'];?></option>
+                                <option value="<?php echo base64_encode($role['role_id']);?>"><?php echo ucwords($role['role_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -40,13 +40,29 @@
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="country" class="">Country *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
                         <i class="material-icons prefix">email</i>
                         <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
@@ -54,6 +70,8 @@
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
@@ -61,8 +79,6 @@
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">vpn_key</i>
@@ -70,6 +86,8 @@
                         <label for="password" class="">Password *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">vpn_key</i>

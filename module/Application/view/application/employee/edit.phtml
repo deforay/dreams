@@ -9,7 +9,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>">
+                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>" onblur="checkNameValidation('employee', 'employee_name', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee name that you entered already exist. Please enter different name.')">
                         <label for="employeeName" class="">Employee Name *</label>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <?php
                             foreach($roleData as $role){
                                 ?>
-                                <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($empResult->role == $role['role_id'] ? " selected='selected'" : ""); ?>><?php echo $role['role_name'];?></option>
+                                <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($empResult->role == $role['role_id']) ? " selected='selected'" : ""; ?>><?php echo ucwords($role['role_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -39,14 +39,30 @@
                     </div>
                 </div>
                 <div class="col s6">
+                     <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($empResult->country == $country['country_id']) ? "selected='selected'" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="country" class="">Country *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">email</i>
                         <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $empResult->email;?>" onblur="checkNameValidation('employee', 'email', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee email that you entered already exist. Please enter different email.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
@@ -54,6 +70,8 @@
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
@@ -61,8 +79,6 @@
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">vpn_key</i>
@@ -70,6 +86,8 @@
                         <label for="password" class="">Password *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">vpn_key</i>
@@ -77,16 +95,14 @@
                         <label for="password" class="">Confirm Password *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">live_help</i>
                         <select class="material-select" id="status" name="status" title="Please select employee status">
-                            <option value="active" <?php echo ($empResult->status == 'active' ? " selected='selected'" : ""); ?>>Active</option>
-                            <option value="inactive" <?php echo ($empResult->status == 'inactive' ? " selected='selected'" : ""); ?>>Inactive</option>
+                            <option value="active" <?php echo ($empResult->status == 'active') ? " selected='selected'" : ""; ?>>Active</option>
+                            <option value="inactive" <?php echo ($empResult->status == 'inactive') ? " selected='selected'" : ""; ?>>Inactive</option>
                         </select>
-                        <label for="role" class="">Employee Status *</label>
+                        <label for="status" class="">Employee Status *</label>
                     </div>
                 </div>
             </div>

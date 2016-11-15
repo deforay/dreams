@@ -14,7 +14,7 @@
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <input id="normal" name="roleCode" type="text" class="validate isRequired" title="Please enter role code" value="<?php echo $row->role_code; ?>" onblur="checkNameValidation('role', 'role_code', this, '<?php echo "role_id##" .$row->role_id; ?>','The role code that you entered already exist. Please enter different role code.')">
+                        <input id="roleCode" name="roleCode" type="text" class="validate isRequired" title="Please enter role code" value="<?php echo $row->role_code; ?>" onblur="checkNameValidation('role', 'role_code', this, '<?php echo "role_id##" .$row->role_id; ?>','The role code that you entered already exist. Please enter different role code.')">
                         <label for="roleCode" class="">Role Code *</label>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             <option value="active" <?php echo($row->role_status == "active")?'selected="selected"':'';  ?>>Active</option>
                             <option value="inactive" <?php echo($row->role_status == "inactive")?'selected="selected"':'';  ?>>Inactive</option>
                         </select>
-                        <label >Role Status</label>
+                        <label for="roleStatus">Role Status</label>
                     </div>
                 </div>
             </div>

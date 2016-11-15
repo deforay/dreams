@@ -76,6 +76,9 @@ $alertContainer = new Container('alert');
                                 <li class="roleMenu menuAll">
                                     <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Roles</a>
                                 </li>
+                                <li class="countryMenu menuAll">
+                                    <a class="countryMenu menuAll" href="<?php echo $this->url('country');?>">Countries</a>
+                                </li>
                                 <li class="employeeMenu menuAll">
                                     <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employees</a>
                                 </li>
@@ -124,12 +127,16 @@ $alertContainer = new Container('alert');
           $("#manageMenu").addClass("active");
           $(".collapsibleRoleMenu").css("display","block");
           $(".roleMenu").addClass("active");
+        }else if(splitsUrl[1]=='country'){
+          $("#manageMenu").addClass("active");
+          $(".collapsibleRoleMenu").css("display","block");
+          $(".countryMenu").addClass("active");
         }else if(splitsUrl[1]=='employee'){
           $("#manageMenu").addClass("active");
           $(".collapsibleRoleMenu").css("display","block");
           $(".employeeMenu").addClass("active");
         }else if(splitsUrl[1]=='facility'){
-          $("#facilityMenu").addClass("active");
+          $("#manageMenu").addClass("active");
           $(".collapsibleRoleMenu").css("display","block");
           $(".facilityMenu").addClass("active");
         }else{

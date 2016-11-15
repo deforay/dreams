@@ -19,7 +19,7 @@ class RoleController extends AbstractActionController{
         if ($request->isPost()){
             $parameters = $request->getPost();
             $roleService = $this->getServiceLocator()->get('RoleService');
-            $result = $roleService->getRoles($parameters);
+            $result = $roleService->getAllRoles($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }
     }
@@ -35,6 +35,7 @@ class RoleController extends AbstractActionController{
     }
     
      public function editAction(){
+        $roleService = $this->getServiceLocator()->get('RoleService');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
@@ -43,10 +44,9 @@ class RoleController extends AbstractActionController{
             return $this->redirect()->toRoute('role');
         }
         $roleId=base64_decode($this->params()->fromRoute('id'));
-        $roleService = $this->getServiceLocator()->get('RoleService');
         $result=$roleService->getRole($roleId);
         return new ViewModel(array(
-            'row'=>$result,
+            'row'=>$result
         ));
     }
   

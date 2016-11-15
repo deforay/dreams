@@ -9,9 +9,13 @@ use Zend\View\Model\ViewModel;
 use Application\Service\CommonService;
 use Application\Service\RoleService;
 use Application\Service\EmployeeService;
+use Application\Service\FacilityService;
+use Application\Service\CountryService;
 
 use Application\Model\RoleTable;
 use Application\Model\EmployeeTable;
+use Application\Model\FacilityTable;
+use Application\Model\CountryTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -81,6 +85,10 @@ class Module{
                     return new EmployeeService($sm);
                 },'RoleService' => function($sm) {
                     return new RoleService($sm);
+                },'FacilityService' => function($sm) {
+                    return new FacilityService($sm);
+                },'CountryService' => function($sm) {
+                    return new CountryService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -91,10 +99,17 @@ class Module{
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new EmployeeTable($dbAdapter);
                     return $table;
-                },
-                'RoleTable' => function($sm) {
+                },'RoleTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new RoleTable($dbAdapter);
+                    return $table;
+                },'FacilityTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new FacilityTable($dbAdapter);
+                    return $table;
+                },'CountryTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new CountryTable($dbAdapter);
                     return $table;
                 },
             ),

@@ -35,3 +35,18 @@ ALTER TABLE `role`
   
 --Pal 15/11/2016
 ALTER TABLE `employee` CHANGE `alt_contact` `alt_contact` VARCHAR(45) NULL DEFAULT NULL;
+
+ALTER TABLE `employee` ADD `country` INT(11) NULL DEFAULT NULL AFTER `mobile`;
+
+CREATE TABLE `country` (
+  `country_id` int(11) NOT NULL,
+  `country_name` varchar(255) DEFAULT NULL,
+  `country_code` varchar(255) DEFAULT NULL,
+  `status` varchar(45) DEFAULT NULL
+)
+
+ALTER TABLE `country`
+  ADD PRIMARY KEY (`country_id`);
+  
+ALTER TABLE `country`
+  MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT;

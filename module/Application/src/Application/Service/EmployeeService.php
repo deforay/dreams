@@ -22,12 +22,12 @@ class EmployeeService {
         return $employeeDb->getEmployeeLogin($params);
     }
     
-    public function addEmployeeData($params){
+    public function addEmployee($params){
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
             $db = $this->sm->get('EmployeeTable');
-            $result = $db->addEmployee($params);
+            $result = $db->addEmployeeDetails($params);
             if ($result > 0) {
                 $adapter->commit();
                 $alertContainer = new Container('alert');
@@ -40,22 +40,22 @@ class EmployeeService {
         }
     }
     
-    public function getAllEmployeeList($params){
+    public function getAllEmployees($parameters){
         $empDb = $this->sm->get('EmployeeTable');
-        return $empDb->fetchAllEmployeeList($params);
+        return $empDb->fetchAllEmployees($parameters);
     }
     
-    public function getEmployeeDetail($empId){
+    public function getEmployee($empId){
         $empDb = $this->sm->get('EmployeeTable');
-        return $empDb->fetchEmployeeDetail($empId);
+        return $empDb->fetchEmployee($empId);
     }
     
-    public function updateEmployeeDetails($params){
+    public function updateEmployee($params){
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
             $db = $this->sm->get('EmployeeTable');
-            $result = $db->updateEmployee($params);
+            $result = $db->updateEmployeeDetails($params);
             if ($result > 0) {
                 $adapter->commit();
                 $alertContainer = new Container('alert');

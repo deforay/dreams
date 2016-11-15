@@ -39,20 +39,19 @@ class RoleService {
        }
     }
     
-    public function getRoles($parameters){
+    public function getAllRoles($parameters){
         $roleDb = $this->sm->get('RoleTable');
-        return $roleDb->fetchRoles($parameters);
+        return $roleDb->fetchAllRoles($parameters);
     }
     
     public function getRole($roleId){
         $roleDb = $this->sm->get('RoleTable');
         return $roleDb->fetchRole($roleId);
     }
-    public function getActiveRoleList()
-    {
+    
+    public function getActiveRoles(){
         $roleDb = $this->sm->get('RoleTable');
-        $result = $roleDb->fetchActiveRoleList();
-        return $result;
+        return $roleDb->fetchActiveRoles();
     }
     
     public function updateRole($params){

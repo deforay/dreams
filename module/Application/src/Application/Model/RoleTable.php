@@ -24,13 +24,15 @@ class RoleTable extends AbstractTableGateway {
                         'role_code'=>$params['roleCode'],
                         'has_global_access'=>$params['hGA'],
                         'role_description'=>$params['roleDescription'],
-                        'role_status'=>'active',
+                        'role_status'=>'active'
                         );
             $this->insert($data);
-            return $this->lastInsertValue;
+            $roleId = $this->lastInsertValue;
         }
+      return $roleId;
     }
-    public function fetchRoles($parameters){
+    
+    public function fetchAllRoles($parameters){
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -167,15 +169,14 @@ class RoleTable extends AbstractTableGateway {
                         'role_code'=>$params['roleCode'],
                         'has_global_access'=>$params['hGA'],
                         'role_description'=>$params['roleDescription'],
-                        'role_status'=>$params['roleStatus'],
+                        'role_status'=>$params['roleStatus']
                         );
             $this->update($data,array('role_id'=>$roleId));
         }
       return $roleId;
     }
-    public function fetchActiveRoleList()
-    {
-        $query = $this->select(array('role_status'=>'active'));
-        return $query;
+    
+    public function fetchActiveRoles(){
+        return $this->select(array('role_status'=>'active'));
     }
 }
