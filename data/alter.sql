@@ -1,4 +1,4 @@
---Pal 11/11/2016
+--Pal 14/11/2016
 CREATE TABLE `employee` (
   `employee_id` int(11) NOT NULL,
   `employee_name` varchar(255) DEFAULT NULL,
@@ -18,5 +18,20 @@ ALTER TABLE `employee`
 ALTER TABLE `employee`
   MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT;
   
+CREATE TABLE `role` (
+  `role_id` int(11) NOT NULL,
+  `role_name` varchar(255) DEFAULT NULL,
+  `role_code` varchar(45) DEFAULT NULL,
+  `has_global_access` varchar(45) NOT NULL DEFAULT 'no',
+  `role_description` text,
+  `role_status` varchar(45) DEFAULT NULL
+)
+
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`role_id`);
   
---Pal 14/11/2016
+ALTER TABLE `role`
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+--Pal 15/11/2016
+ALTER TABLE `employee` CHANGE `alt_contact` `alt_contact` VARCHAR(45) NULL DEFAULT NULL;

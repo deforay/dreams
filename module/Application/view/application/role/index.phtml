@@ -1,7 +1,40 @@
-<?php
-use Zend\Session\Container;
-$alertContainer = new Container('alert');
-?>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    pre {
+        max-height: 596px;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+
+    }
+</style>
 <div id="page-content">
     <div class="row section-header">
         <span style="font-size: 34px;font-weight:400;">Roles</span>
@@ -23,6 +56,16 @@ $alertContainer = new Container('alert');
                                 <th>Action</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Role Name</th>
+                                <th>Role Code</th>
+                                <th>Has Global Access</th>
+                                <th>Role Description</th>
+                                <th>Role Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             
                         </tbody>
@@ -56,5 +99,16 @@ $alertContainer = new Container('alert');
                 });
             }
       } );
+      $('.dataTables_filter').empty(); // clears the content generated
+      $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+      $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
     });
 </script>

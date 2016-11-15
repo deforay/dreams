@@ -197,7 +197,7 @@ class EmployeeTable extends AbstractTableGateway {
 			$row[] = $aRow['mobile'];
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" title="Edit">Edit</a>';
+			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit">EDIT</a>';
 			$output['aaData'][] = $row;
 		}
 		return $output;
