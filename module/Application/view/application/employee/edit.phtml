@@ -3,85 +3,95 @@
         <h4 class="page-title">Edit Employee</h4>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editEmpForm" name="editEmpForm" method="post" action="<?php echo $this->url('employee',array('action'=>'edit')); ?>">
-        <div class="card" id="elements1">
+        <form id="editEmployeeForm" name="editEmployeeForm" method="post" action="<?php echo $this->url('employee',array('action'=>'edit')); ?>">
+        <div class="card">
             <div class="row">
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>">
-                    <label for="employeeName" class="">Employee Name</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">person_pin</i>
+                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>">
+                        <label for="employeeName" class="">Employee Name *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">code</i>
+                        <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" value="<?php echo $empResult->employee_code;?>" onblur="checkNameValidation('employee', 'employee_code', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee code that you entered already exist. Please enter different code.')">
+                        <label for="employeeCode" class="">Employee Code *</label>
+                    </div>
                 </div>
             </div>
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" value="<?php echo $empResult->employee_code;?>" onblur="checkNameValidation('employee', 'employee_code', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee code that you entered already exist. Please enter another employee code.')">
-                    <label for="employeeCode" class="">Employee Code</label>
-                </div>
-            </div>
-            </div>
             <div class="row">
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <select class="material-select" id="role" name="role" title="Please select employee role">
-                        <option value="">-- Select --</option>
-                        <?php
-                        foreach($roleData as $role){
-                            ?>
-                            <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($empResult['role'] == $role['role_id'] ? " selected='selected'" : ""); ?>><?php echo $role['role_name'];?></option>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">done_all</i>
+                        <select class="material-select" id="role" name="role" class="isRequired" title="Please select employee role">
+                            <option value="">-- Select --</option>
                             <?php
-                        }
-                        ?>
-                    </select>
+                            foreach($roleData as $role){
+                                ?>
+                                <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($empResult->role == $role['role_id'] ? " selected='selected'" : ""); ?>><?php echo $role['role_name'];?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="role" class="">Employee Role *</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $empResult->email;?>" onblur="checkNameValidation('employee', 'email', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee email that you entered already exist. Please enter another email.')">
-                    <label for="email" class="">Email</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">email</i>
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $empResult->email;?>" onblur="checkNameValidation('employee', 'email', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee email that you entered already exist. Please enter different email.')">
+                        <label for="email" class="">Email *</label>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="row">
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $empResult->mobile;?>">
-                    <label for="mobile" class="">Contact Number</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">stay_primary_portrait</i>
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $empResult->mobile;?>" onblur="checkNameValidation('employee', 'mobile', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee mobile no. that you entered already exist. Please enter different mobile no.')">
+                        <label for="mobile" class="">Contact Number *</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $empResult->alt_contact;?>">
-                    <label for="altContact" class="">Alternate Contact</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">stay_primary_portrait</i>
+                        <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $empResult->alt_contact;?>">
+                        <label for="altContact" class="">Alternate Contact</label>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="row">
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="password" name="password" type="password" class="validate" title="Please enter password">
-                    <label for="password" class="">Password</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input id="password" name="password" type="password" class="validate" title="Please enter password">
+                        <label for="password" class="">Password *</label>
+                    </div>
                 </div>
-            </div>
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <input id="confirmPassword" name="password" type="password" class="validate confirmPassword" title="Please check your password and confirm password are same">
-                    <label for="password" class="">Confirm Password</label>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input id="confirmPassword" name="password" type="password" class="validate confirmPassword" title="Please check your password and confirm password are same">
+                        <label for="password" class="">Confirm Password *</label>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="row">
-            <div class="col s6">
-                <div class="input-field col m6 s6">
-                    <select class="material-select" id="status" name="status" title="Please select employee sttaus">
-                        <option value="">-- Select --</option>
-                        <option value="active" <?php echo ($empResult['status'] == 'active' ? " selected='selected'" : ""); ?>>Active</option>
-                        <option value="inactive" <?php echo ($empResult['status'] == 'inactive' ? " selected='selected'" : ""); ?>>Inactive</option>
-                    </select>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">live_help</i>
+                        <select class="material-select" id="status" name="status" title="Please select employee status">
+                            <option value="active" <?php echo ($empResult->status == 'active' ? " selected='selected'" : ""); ?>>Active</option>
+                            <option value="inactive" <?php echo ($empResult->status == 'inactive' ? " selected='selected'" : ""); ?>>Inactive</option>
+                        </select>
+                        <label for="role" class="">Employee Status *</label>
+                    </div>
                 </div>
             </div>
-            </div>
             <div class="col s6">
-                <input type="hidden" id="employeeId" name="employeeId" value="<?php echo base64_encode($empResult['employee_id']);?>"/>
+                <input type="hidden" id="employeeId" name="employeeId" value="<?php echo base64_encode($empResult->employee_id);?>"/>
                 <a href="<?php echo $this->url('employee'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" onclick="editEmployee();" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">UPDATE</a>&nbsp;&nbsp;
             </div>
@@ -93,28 +103,27 @@
     duplicateName = true;
     function editEmployee(){
         flag = deforayValidator.init({
-               formId: 'editEmpForm'
+               formId: 'editEmployeeForm'
         });
         
         if(flag){
-            document.getElementById('editEmpForm').submit();
+            document.getElementById('editEmployeeForm').submit();
         }
     }
+    
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
         if(checkValue!=''){
-        $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
-        function(data) {
-            if (data > 0)
-            {
-                alert(msg);
-                duplicateName = false;
-                document.getElementById(obj.id).value = "";
-            }
-            else {
-                duplicateName = true;
-            }
-        });
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+            function(data) {
+                if (data > 0){
+                    alert(msg);
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                }else {
+                    duplicateName = true;
+                }
+            });
         }
     }
 </script>

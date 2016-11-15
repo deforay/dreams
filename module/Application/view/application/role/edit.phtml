@@ -8,13 +8,13 @@
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <input id="roleName" name="roleName" type="text" class="validate isRequired" title="Please enter role name" value="<?php echo $row->role_name; ?>">
+                        <input id="roleName" name="roleName" type="text" class="validate isRequired" title="Please enter role name" value="<?php echo $row->role_name; ?>" onblur="checkNameValidation('role', 'role_name', this, '<?php echo "role_id##" .$row->role_id; ?>','The role name that you entered already exist. Please enter different role name.')">
                         <label for="roleName" class="">Role Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <input id="normal" name="roleCode" type="text" class="validate isRequired" title="Please enter role code" value="<?php echo $row->role_code; ?>">
+                        <input id="normal" name="roleCode" type="text" class="validate isRequired" title="Please enter role code" value="<?php echo $row->role_code; ?>" onblur="checkNameValidation('role', 'role_code', this, '<?php echo "role_id##" .$row->role_id; ?>','The role code that you entered already exist. Please enter different role code.')">
                         <label for="roleCode" class="">Role Code *</label>
                     </div>
                 </div>
@@ -65,6 +65,22 @@
         
         if(flag){
             document.getElementById('editRoleForm').submit();
+        }
+    }
+    
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+        checkValue = document.getElementById(obj.id).value;
+        if(checkValue!=''){
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+            function(data) {
+                if (data > 0){
+                    alert(msg);
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                }else {
+                    duplicateName = true;
+                }
+            });
         }
     }
 </script>
