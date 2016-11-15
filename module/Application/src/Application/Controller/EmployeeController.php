@@ -23,6 +23,7 @@ class EmployeeController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }
     }
+    
     public function addAction(){
         $employeeService=$this->getServiceLocator()->get('EmployeeService');
         if($this->getRequest()->isPost()){
@@ -33,25 +34,25 @@ class EmployeeController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $result=$roleService->getActiveRoleList();
             return new ViewModel(array(
-            'roleData'=>$result,
-        ));
+            'roleData'=>$result
+            ));
         }
     }
+    
     public function editAction(){
         $employeeService=$this->getServiceLocator()->get('EmployeeService');
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $result=$employeeService->updateEmployeeDetails($params);
-             return $this->redirect()->toRoute('employee');
-        }
-        else{
+            return $this->redirect()->toRoute('employee');
+        }else{
             $employeeId=base64_decode($this->params()->fromRoute('id'));
             $result=$employeeService->getEmployeeDetail($employeeId);
             $roleService = $this->getServiceLocator()->get('RoleService');
             $roleResult=$roleService->getActiveRoleList();
             return new ViewModel(array(
                 'empResult'=>$result,
-                'roleData'=>$roleResult,
+                'roleData'=>$roleResult
             ));
         }
     }

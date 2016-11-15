@@ -1,10 +1,9 @@
 <?php
 namespace Application\Service;
 
+use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
-use Zend\Session\Container;
-
 
 class EmployeeService {
 
@@ -23,8 +22,7 @@ class EmployeeService {
         return $employeeDb->getEmployeeLogin($params);
     }
     
-    public function addEmployeeData($params)
-    {
+    public function addEmployeeData($params){
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
@@ -32,8 +30,8 @@ class EmployeeService {
             $result = $db->addEmployee($params);
             if ($result > 0) {
                 $adapter->commit();
-                $container = new Container('alert');
-                $container->alertMsg = 'Employee added successfully';
+                $alertContainer = new Container('alert');
+                $alertContainer->msg = 'Employee added successfully.';
             }
         } catch (Exception $exc) {
             $adapter->rollBack();
@@ -42,19 +40,17 @@ class EmployeeService {
         }
     }
     
-    public function getAllEmployeeList($params)
-    {
+    public function getAllEmployeeList($params){
         $empDb = $this->sm->get('EmployeeTable');
         return $empDb->fetchAllEmployeeList($params);
     }
     
-    public function getEmployeeDetail($empId)
-    {
+    public function getEmployeeDetail($empId){
         $empDb = $this->sm->get('EmployeeTable');
         return $empDb->fetchEmployeeDetail($empId);
     }
-    public function updateEmployeeDetails($params)
-    {
+    
+    public function updateEmployeeDetails($params){
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
@@ -62,8 +58,8 @@ class EmployeeService {
             $result = $db->updateEmployee($params);
             if ($result > 0) {
                 $adapter->commit();
-                $container = new Container('alert');
-                $container->alertMsg = 'Employee updated successfully';
+                $alertContainer = new Container('alert');
+                $alertContainer->msg = 'Employee updated successfully.';
             }
         } catch (Exception $exc) {
             $adapter->rollBack();

@@ -72,7 +72,6 @@ class EmployeeTable extends AbstractTableGateway {
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$sessionLogin = new Container('credo');
 	$common = new CommonService();
         $aColumns = array('e.employee_name','r.role_name','e.email','e.mobile','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
         $orderColumns = array('e.employee_name','r.role_name','e.email','e.mobile','e.status','e.created_on');
@@ -149,7 +148,7 @@ class EmployeeTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('e' => 'employee'))
-		->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
+		     ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
 	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -177,7 +176,7 @@ class EmployeeTable extends AbstractTableGateway {
 
        /* Total data set length */
 		$tQuery = $sql->select()->from(array('e' => 'employee'))
-                ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
+                              ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'));
 	
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -208,6 +207,7 @@ class EmployeeTable extends AbstractTableGateway {
     }
 	
     public function updateEmployee($params){
+	$lastInsertedId = 0;
 	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
 	    $lastInsertedId = base64_decode($params['employeeId']);
 	    $common = new CommonService();
@@ -220,7 +220,7 @@ class EmployeeTable extends AbstractTableGateway {
 		'alt_contact' => $params['altContact'],
 		'status' => $params['status']
             );
-	    if (trim($params['password']) != ''){
+	    if (isset($params['password']) && trim($params['password']) != ''){
 		$config = new \Zend\Config\Reader\Ini();
 		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 		$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
