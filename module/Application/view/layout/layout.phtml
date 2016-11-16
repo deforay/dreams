@@ -39,7 +39,7 @@ $alertContainer = new Container('alert');
                 <div class="nav-wrapper">
                     <ul class="left">
                         <li>
-                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><img src="<?php echo $this->basePath() .'/assets/images/logo.png' ?>" alt="MARA"></a>
+                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><h4 class="" style="font-family: BaronFont">DREAM</h4></a>
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
@@ -64,13 +64,13 @@ $alertContainer = new Container('alert');
         <ul class="side-nav fixed clearfix left" id="nav-mobile" style="transform: translateX(0%);">
             <li>
                 <ul class="collapsible" data-collapsible="accordion">
-                     <li id="dashboardMenu" class="menuAll">
+                    <li id="dashboardMenu" class="menuAll">
                         <div class="collapsible-header waves-effect">
-                            <i class="zmdi zmdi-palette zmdi-hc-fw"></i><a href="<?php echo $this->url('home'); ?>">Dashboard</a>
+                            <i class="zmdi zmdi-palette zmdi-hc-fw"></i> <a href="<?php echo $this->url('home'); ?>">Dashboard</a>
                         </div>
-                     </li>
+                    </li>
                     <li id="manageMenu" class="menuAll">
-                        <div class="collapsible-header waves-effect roleMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i>Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                        <div class="collapsible-header waves-effect roleMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                         <div class="collapsible-body collapsibleAll collapsibleRoleMenu" style="">
                             <ul>
                                 <li class="roleMenu menuAll">
@@ -89,6 +89,11 @@ $alertContainer = new Container('alert');
                                     <a class="ancSiteMenu menuAll" href="<?php echo $this->url('anc-site');?>">ANC Sites</a>
                                 </li>
                             </ul>
+                        </div>
+                    </li>
+                    <li id="dataCollectionFormMenu" class="menuAll">
+                        <div class="collapsible-header waves-effect">
+                            <i class="zmdi zmdi-view-list zmdi-hc-fw"></i> <a href="javascript:void(0);">Data Collection</a>
                         </div>
                     </li>
                 </ul>
