@@ -46,7 +46,7 @@
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-grid"></i> Employee List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Employee List
 		  <span style="float:right;"><a href="<?php echo $this->url('employee',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Employee</a></span>
                 </div>
                 <div class="card-content clearfix">
@@ -55,18 +55,20 @@
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Role</th>
+				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
                                 <th>Country</th>
                                 <th>Status</th>
                                 <th>Added On</th>
-                                <th style="width:12%;">Action</th>
+                                <th style="width:25%;">Action</th>
                             </tr>
                         </thead>
 			<tfoot>
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Role</th>
+				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
 				<th>Country</th>
@@ -90,6 +92,7 @@
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
+		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},

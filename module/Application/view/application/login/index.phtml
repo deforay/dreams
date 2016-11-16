@@ -21,16 +21,16 @@ $alertContainer = new Container('alert');
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body class="black">
-        <div class=" center signin-page"  id="full-page">
-            <div class=" black white-text signin-content">
+        <div class="center signin-page"  id="full-page">
+            <div class="black white-text signin-content">
                 <h1 class="center-align mTitle" style="font-family: BaronFont">DREAM</h1>
-                <div class=" white signUpContainer center">
+                <div class="white signUpContainer center">
                   <form id="loginForm" name="loginForm" method="post" action="<?php echo $this->url('login'); ?>">
                     <div class="signUpContent">
                         <h6 class="black-text center-align">Sign in with your Dream account:</h6>
                         <div class="input-field">
-                            <input id="email" name="email" type="text" class="validate black-text isEmail isRequired" title="Please enter your email id">
-                            <label for="email" class="left-align">Email id</label>
+                            <input id="userName" name="userName" type="text" class="validate black-text isRequired" title="Please enter user name">
+                            <label for="userName" class="left-align">User Name</label>
                         </div>
                         <div class="input-field">
                             <input id="password" name="password" type="password" class="validate black-text isRequired" title="Please enter your password">

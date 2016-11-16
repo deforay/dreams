@@ -15,11 +15,51 @@ use Zend\Json\Json;
 
 class FacilityController extends AbstractActionController{
     public function indexAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $parameters = $request->getPost();
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $result = $facilityService->getAllFacilites($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }
     }
     
     public function addAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $facilityService->addFacility($params);
+            return $this->redirect()->toRoute('facility');
+        }
+        $countryService = $this->getServiceLocator()->get('CountryService');
+        $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
+        $countryList=$countryService->getActiveCountries();
+        $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
+            return new ViewModel(array(
+                'countries'=>$countryList,
+                'facilityTypes'=>$facilityTypeList
+            ));
     }
     
     public function editAction(){
+        $facilityService = $this->getServiceLocator()->get('FacilityService');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $facilityService->updateFacility($params);
+            return $this->redirect()->toRoute('facility');
+        }
+        $countryService = $this->getServiceLocator()->get('CountryService');
+        $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
+        $facilityId=base64_decode($this->params()->fromRoute('id'));
+        $result=$facilityService->getFacility($facilityId);
+        $countryList=$countryService->getActiveCountries();
+        $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
+        return new ViewModel(array(
+            'countries'=>$countryList,
+            'facilityTypes'=>$facilityTypeList,
+            'row'=>$result
+        ));
     }
 }

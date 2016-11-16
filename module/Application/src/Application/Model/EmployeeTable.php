@@ -5,7 +5,6 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
-use Zend\Db\Sql\Expression;
 use Application\Service\CommonService;
 
 
@@ -21,32 +20,32 @@ class EmployeeTable extends AbstractTableGateway {
          $alertContainer = new Container('alert');
          $config = new \Zend\Config\Reader\Ini();
          $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-         if(isset($params['email']) && trim($params['email'])!= ''){
+         if(isset($params['userName']) && trim($params['userName'])!= ''){
             $dbAdapter = $this->adapter;
             $sql = new Sql($dbAdapter);
-            $email = trim($params['email']);
+            $userName = trim($params['userName']);
             $password = sha1($params['password'].$configResult["password"]["salt"]);
             $loginQuery = $sql->select()->from(array('e' => 'employee'))
-                              ->where(array('e.email' => $email, 'e.password' => $password));
+                              ->where(array('e.user_name' => $userName, 'e.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
                 $loginContainer = new Container('employee');
                 $loginContainer->employeeId = $loginResult->employee_id;
-                $loginContainer->employeeName = ucwords($loginResult->employee_name);
+                $loginContainer->userName = $loginResult->user_name;
                 return 'home';
             }else{
-                $alertContainer->msg = 'The email id or password that you entered is incorrect..!';
+                $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
                 return 'login';
             }
          }else{
-            $alertContainer->msg = 'Please enter the all the fields..!';
+            $alertContainer->msg = 'Please enter all the require fields..!';
             return 'home';
          }
     }
     public function addEmployeeDetails($params){
 	$lastInsertedId = 0;
-	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
+	if(isset($params['userName']) && trim($params['userName'])!= ''){
 	    $common = new CommonService();
 	    $config = new \Zend\Config\Reader\Ini();
 	    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
@@ -54,12 +53,13 @@ class EmployeeTable extends AbstractTableGateway {
 	    $data = array(
 		'employee_name' => $params['employeeName'],
 		'employee_code' => $params['employeeCode'],
-		'mobile' => $params['mobile'],
-		'role' => base64_decode($params['role']),
-		'country' => base64_decode($params['country']),
-		'email' => $params['email'],
+		'user_name' => $params['userName'],
 		'password' => $password,
+		'role' => base64_decode($params['role']),
+		'email' => $params['email'],
+		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
+		'country' => base64_decode($params['country']),
 		'status' => 'active',
 		'created_on' => $common->getDateTime()
 	    );
@@ -74,8 +74,8 @@ class EmployeeTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	$common = new CommonService();
-        $aColumns = array('e.employee_name','r.role_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
-        $orderColumns = array('e.employee_name','r.role_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
+        $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+        $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
 
        /*
         * Paging
@@ -177,33 +177,34 @@ class EmployeeTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-		$tQuery = $sql->select()->from(array('e' => 'employee'))
-                              ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-			      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-	
-		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-		$iTotal = count($tResult);
-		$output = array(
-			   "sEcho" => intval($parameters['sEcho']),
-			   "iTotalRecords" => $iTotal,
-			   "iTotalDisplayRecords" => $iFilteredTotal,
-			   "aaData" => array()
-		);
-		foreach ($rResult as $aRow) {
-			$row = array();
-			$date = explode(" ",$aRow['created_on']);
-			$row[] = ucwords($aRow['employee_name'])." - ".$aRow['employee_code'];
-			$row[] = ucwords($aRow['role_name']);
-			$row[] = $aRow['email'];
-			$row[] = $aRow['mobile'];
-			$row[] = ucwords($aRow['country_name']);
-			$row[] = ucwords($aRow['status']);
-			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> EDIT</a>';
-			$output['aaData'][] = $row;
-		}
-		return $output;
+	$tQuery = $sql->select()->from(array('e' => 'employee'))
+		      ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+		      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+
+	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+	$iTotal = count($tResult);
+	$output = array(
+		   "sEcho" => intval($parameters['sEcho']),
+		   "iTotalRecords" => $iTotal,
+		   "iTotalDisplayRecords" => $iFilteredTotal,
+		   "aaData" => array()
+	);
+	foreach ($rResult as $aRow) {
+	    $row = array();
+	    $date = explode(" ",$aRow['created_on']);
+	    $row[] = ucwords($aRow['employee_name'])." - ".$aRow['employee_code'];
+	    $row[] = ucwords($aRow['role_name']);
+	    $row[] = $aRow['user_name'];
+	    $row[] = $aRow['email'];
+	    $row[] = $aRow['mobile'];
+	    $row[] = ucwords($aRow['country_name']);
+	    $row[] = ucwords($aRow['status']);
+	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
+	    $row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> EDIT</a>';
+	    $output['aaData'][] = $row;
+	}
+	return $output;
     }
     
     public function fetchEmployee($empid){
@@ -212,17 +213,18 @@ class EmployeeTable extends AbstractTableGateway {
 	
     public function updateEmployeeDetails($params){
 	$lastInsertedId = 0;
-	if(isset($params['employeeName']) && trim($params['employeeName'])!= ''){
+	if(isset($params['userName']) && trim($params['userName'])!= ''){
 	    $lastInsertedId = base64_decode($params['employeeId']);
 	    $common = new CommonService();
             $data = array(
 		'employee_name' => $params['employeeName'],
 		'employee_code' => $params['employeeCode'],
-		'mobile' => $params['mobile'],
+		'user_name' => $params['userName'],
 		'role' => base64_decode($params['role']),
-		'country' => base64_decode($params['country']),
 		'email' => $params['email'],
+		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
+		'country' => base64_decode($params['country']),
 		'status' => $params['status']
             );
 	    if (isset($params['password']) && trim($params['password']) != ''){

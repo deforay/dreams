@@ -39,7 +39,6 @@ class CountryController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
-            $countryService = $this->getServiceLocator()->get('CountryService');
             $countryService->updateCountry($params);
             return $this->redirect()->toRoute('country');
         }

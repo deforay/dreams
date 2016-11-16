@@ -39,7 +39,6 @@ class RoleController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
-            $roleService = $this->getServiceLocator()->get('RoleService');
             $roleService->updateRole($params);
             return $this->redirect()->toRoute('role');
         }

@@ -1,0 +1,152 @@
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Edit Facility</h4>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <form id="editFacilityForm" name="editFacilityForm" method="post" action="<?php echo $this->url('facility',array('action'=>'edit')); ?>">
+        <div class="card">
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">person_pin</i>
+                        <input id="facilityName" name="facilityName" type="text" class="validate isRequired" title="Please enter facility name" value="<?php echo $row->facility_name; ?>">
+                        <label for="facilityName" class="">Facility Name *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">code</i>
+                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter facility code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, null,'The facility code that you entered already exist. Please enter different code.')">
+                        <label for="facilityCode" class="">Facility Code *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">done</i>
+                        <select class="material-select" id="facilityType" name="facilityType" class="isRequired" title="Please select facility type">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($facilityTypes as $facilityType){
+                                ?>
+                                <option value="<?php echo base64_encode($facilityType['facility_type_id']);?>" <?php echo($row->facility_type == $facilityType['facility_type_id'])?'selected="selected"':''; ?>><?php echo ucwords($facilityType['facility_type_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="facilityType" class="">Facility Type *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">email</i>
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter different email id.')">
+                        <label for="email" class="">Email *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">contacts</i>
+                        <input id="contactPerson" name="contactPerson" type="text" class="validate isRequired" title="Please enter contact person name" value="<?php echo $row->contact_person; ?>">
+                        <label for="contactPerson" class="">Contact Person *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">stay_primary_portrait</i>
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('employee', 'mobile', this, null,'The employee mobile no. that you entered already exist. Please enter different mobile no')">
+                        <label for="mobile" class="">Contact Number *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                 <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($row->country == $country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="country" class="">Country *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <textarea id="address" name="address" class="materialize-textarea"><?php echo $row->address; ?></textarea>
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">navigation</i>
+                        <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude" value="<?php echo $row->latitude; ?>">
+                        <label for="latitude" class="">Latitude </label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">navigation</i>
+                        <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude" value="<?php echo $row->longitude; ?>">
+                        <label for="longitude" class="">Longitude </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <select id="facilityStatus" name="facilityStatus" class="material-select">
+                            <option value="active" <?php echo($row->status == "active")?'selected="selected"':'';  ?>>Active</option>
+                            <option value="inactive" <?php echo($row->status == "inactive")?'selected="selected"':'';  ?>>Inactive</option>
+                        </select>
+                        <label for="facilityStatus">Facility Status</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6">
+                <input id="facilityId" name="facilityId" type="hidden" value="<?php echo base64_encode($row->facility_id); ?>"/>
+                <a href="<?php echo $this->url('facility'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateFacility();">UPDATE</a>&nbsp;&nbsp;
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+    duplicateName = true;
+    function updateFacility(){
+        flag = deforayValidator.init({
+            formId: 'editFacilityForm'
+        });
+        
+        if(flag){
+            document.getElementById('editFacilityForm').submit();
+        }
+    }
+    
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+        checkValue = document.getElementById(obj.id).value;
+        if(checkValue!=''){
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+            function(data) {
+                if (data > 0){
+                    alert(msg);
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                }else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+</script>

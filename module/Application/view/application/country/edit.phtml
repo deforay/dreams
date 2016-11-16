@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="col s12">
-                <input name="countryId" id="countryId" type="hidden" value="<?php echo base64_encode($row->country_id); ?>"/>
+                <input id="countryId" name="countryId" type="hidden" value="<?php echo base64_encode($row->country_id); ?>"/>
                 <a href="<?php echo $this->url('country'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addCountry();">UPDATE</a>&nbsp;&nbsp;
             </div>

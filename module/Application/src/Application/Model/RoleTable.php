@@ -5,8 +5,6 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
-use Zend\Db\Sql\Expression;
-use Application\Service\CommonService;
 
 
 class RoleTable extends AbstractTableGateway {

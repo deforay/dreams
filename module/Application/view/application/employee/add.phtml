@@ -9,7 +9,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" onblur="checkNameValidation('employee', 'employee_name', this, null,'The employee name that you entered already exist. Please enter different name.')">
+                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name">
                         <label for="employeeName" class="">Employee Name *</label>
                     </div>
                 </div>
@@ -24,7 +24,30 @@
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <i class="material-icons prefix">done_all</i>
+                        <i class="material-icons prefix">power_settings_new</i>
+                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" onblur="checkNameValidation('employee', 'user_name', this, null,'The user name that you entered already exist. Please enter different name.')">
+                        <label for="userName" class="">User Name *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input id="password" name="password" type="password" class="validate isRequired" title="Please enter password">
+                        <label for="password" class="">Password *</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input id="confirmPassword" name="password" type="password" class="validate isRequired confirmPassword" title="Please check your password and confirm password are same">
+                        <label for="password" class="">Confirm Password *</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m6 s6">
+                        <i class="material-icons prefix">done</i>
                         <select class="material-select" id="role" name="role" class="isRequired" title="Please select employee role">
                             <option value=""> -- Select -- </option>
                             <?php
@@ -36,22 +59,6 @@
                             ?>
                         </select>
                         <label for="role" class="">Employee Role *</label>
-                    </div>
-                </div>
-                <div class="col s6">
-                    <div class="input-field col m6 s6">
-                        <i class="material-icons prefix">room</i>
-                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
-                            <option value=""> -- Select -- </option>
-                            <?php
-                            foreach($countries as $country){
-                                ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                        <label for="country" class="">Country *</label>
                     </div>
                 </div>
             </div>
@@ -79,20 +86,20 @@
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
-                <div class="col s6">
+                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <i class="material-icons prefix">vpn_key</i>
-                        <input id="password" name="password" type="password" class="validate isRequired" title="Please enter password">
-                        <label for="password" class="">Password *</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <div class="input-field col m6 s6">
-                        <i class="material-icons prefix">vpn_key</i>
-                        <input id="confirmPassword" name="password" type="password" class="validate isRequired confirmPassword" title="Please check your password and confirm password are same">
-                        <label for="password" class="">Confirm Password *</label>
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="country" class="">Country *</label>
                     </div>
                 </div>
             </div>

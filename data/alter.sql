@@ -50,3 +50,46 @@ ALTER TABLE `country`
   
 ALTER TABLE `country`
   MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+--Pal 16/11/2016
+ALTER TABLE `employee` ADD `user_name` VARCHAR(255) NULL DEFAULT NULL AFTER `employee_code`;
+
+CREATE TABLE `facility_type` (
+  `facility_type_id` int(11) NOT NULL,
+  `facility_type_name` varchar(255) DEFAULT NULL,
+  `status` varchar(45) DEFAULT NULL
+)
+
+ALTER TABLE `facility_type`
+  ADD PRIMARY KEY (`facility_type_id`);
+  
+ALTER TABLE `facility_type`
+  MODIFY `facility_type_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+INSERT INTO `facility_type` (`facility_type_id`, `facility_type_name`, `status`) VALUES
+(1, 'clinic', 'active'),
+(2, 'lab', 'active'),
+(3, 'hub', 'active');
+
+CREATE TABLE `facility` (
+  `facility_id` int(11) NOT NULL,
+  `facility_name` varchar(255) DEFAULT NULL,
+  `facility_code` varchar(255) DEFAULT NULL,
+  `facility_type` int(11) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact_person` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `latitude` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL
+)
+
+ALTER TABLE `facility`
+  ADD PRIMARY KEY (`facility_id`);
+  
+ALTER TABLE `facility`
+  MODIFY `facility_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `facility` CHANGE `country` `country` INT(11) NULL DEFAULT NULL;
