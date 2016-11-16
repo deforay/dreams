@@ -85,6 +85,9 @@ $alertContainer = new Container('alert');
                                 <li class="facilityMenu menuAll">
                                     <a class="facilityMenu menuAll" href="<?php echo $this->url('facility');?>">Facilities/Labs</a>
                                 </li>
+                                <li class="ancSiteMenu menuAll">
+                                    <a class="ancSiteMenu menuAll" href="<?php echo $this->url('anc-site');?>">ANC Sites</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -139,6 +142,10 @@ $alertContainer = new Container('alert');
           $("#manageMenu").addClass("active");
           $(".collapsibleRoleMenu").css("display","block");
           $(".facilityMenu").addClass("active");
+        }else if(splitsUrl[1]=='anc-site'){
+          $("#manageMenu").addClass("active");
+          $(".collapsibleRoleMenu").css("display","block");
+          $(".ancSiteMenu").addClass("active");
         }else{
             $("#dashboardMenu").addClass("active");
         }

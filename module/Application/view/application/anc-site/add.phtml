@@ -1,23 +1,23 @@
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Add Facility</h4>
+        <h4 class="page-title">Add ANC Site</h4>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="addFacilityForm" name="addFacilityForm" method="post" action="<?php echo $this->url('facility',array('action'=>'add')); ?>">
+        <form id="addAncSiteForm" name="addAncSiteForm" method="post" action="<?php echo $this->url('anc-site',array('action'=>'add')); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="facilityName" name="facilityName" type="text" class="validate isRequired" title="Please enter facility name">
-                        <label for="facilityName" class="">Facility Name *</label>
+                        <input id="ancSiteName" name="ancSiteName" type="text" class="validate isRequired" title="Please enter ANC site name">
+                        <label for="ancSiteName" class="">ANC Site Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">code</i>
-                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter facility code" onblur="checkNameValidation('facility', 'facility_code', this, null,'The facility code that you entered already exist. Please enter different code.')">
-                        <label for="facilityCode" class="">Facility Code *</label>
+                        <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" onblur="checkNameValidation('anc_site', 'anc_site_code', this, null,'The anc site code that you entered already exist. Please enter different code.')">
+                        <label for="ancSiteCode" class="">ANC Site Code *</label>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="facilityType" name="facilityType" class="isRequired" title="Please select facility type">
+                        <select class="material-select" id="ancSiteType" name="ancSiteType" class="isRequired" title="Please select ANC site type">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($facilityTypes as $facilityType){
@@ -35,13 +35,13 @@
                             }
                             ?>
                         </select>
-                        <label for="facilityType" class="">Facility Type *</label>
+                        <label for="facilityType" class="">ANC Site Type *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('facility', 'email', this, null,'The facility email that you entered already exist. Please enter different email id.')">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('anc_site', 'email', this, null,'The anc site email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('facility', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div class="col s6">
-                <a href="<?php echo $this->url('facility'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="<?php echo $this->url('anc-site'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">ADD</a>&nbsp;&nbsp;
             </div>
         </div>
@@ -114,11 +114,11 @@
     duplicateName = true;
     function addFacility(){
         flag = deforayValidator.init({
-            formId: 'addFacilityForm'
+            formId: 'addAncSiteForm'
         });
         
         if(flag){
-            document.getElementById('addFacilityForm').submit();
+            document.getElementById('addAncSiteForm').submit();
         }
     }
     

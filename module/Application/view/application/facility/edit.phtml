@@ -16,7 +16,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">code</i>
-                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter facility code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, null,'The facility code that you entered already exist. Please enter different code.')">
+                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter facility code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The facility code that you entered already exist. Please enter different code.')">
                         <label for="facilityCode" class="">Facility Code *</label>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter different email id.')">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('facility', 'email', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The facility email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('employee', 'mobile', this, null,'The employee mobile no. that you entered already exist. Please enter different mobile no')">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('facility', 'phone_number', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The contact no. that you entered already exist. Please enter different contact no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>

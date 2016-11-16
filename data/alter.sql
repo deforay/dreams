@@ -93,3 +93,24 @@ ALTER TABLE `facility`
   MODIFY `facility_id` int(11) NOT NULL AUTO_INCREMENT;
   
 ALTER TABLE `facility` CHANGE `country` `country` INT(11) NULL DEFAULT NULL;
+
+CREATE TABLE `anc_site` (
+  `anc_site_id` int(11) NOT NULL,
+  `anc_site_name` varchar(255) DEFAULT NULL,
+  `anc_site_code` varchar(255) DEFAULT NULL,
+  `anc_site_type` int(11) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact_person` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `country` int(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `latitude` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL
+)
+
+ALTER TABLE `anc_site`
+  ADD PRIMARY KEY (`anc_site_id`);
+  
+ALTER TABLE `anc_site`
+  MODIFY `anc_site_id` int(11) NOT NULL AUTO_INCREMENT;

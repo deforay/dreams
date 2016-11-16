@@ -12,12 +12,14 @@ use Application\Service\EmployeeService;
 use Application\Service\FacilityService;
 use Application\Service\CountryService;
 use Application\Service\FacilityTypeService;
+use Application\Service\AncSiteService;
 
 use Application\Model\RoleTable;
 use Application\Model\EmployeeTable;
 use Application\Model\FacilityTable;
 use Application\Model\CountryTable;
 use Application\Model\FacilityTypeTable;
+use Application\Model\AncSiteTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -93,6 +95,8 @@ class Module{
                     return new CountryService($sm);
                 },'FacilityTypeService' => function($sm) {
                     return new FacilityTypeService($sm);
+                },'AncSiteService' => function($sm) {
+                    return new AncSiteService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -118,6 +122,10 @@ class Module{
                 },'FacilityTypeTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new FacilityTypeTable($dbAdapter);
+                    return $table;
+                },'AncSiteTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new AncSiteTable($dbAdapter);
                     return $table;
                 },
             ),

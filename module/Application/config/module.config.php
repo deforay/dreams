@@ -113,6 +113,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'anc-site' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/anc-site[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\AncSite',
+                        'action' => 'index'
+                    ),
+                ),
             ),
             
         ),
@@ -144,7 +153,8 @@ return array(
             'Application\Controller\Employee' => 'Application\Controller\EmployeeController',
             'Application\Controller\Common' => 'Application\Controller\CommonController',
             'Application\Controller\Facility' => 'Application\Controller\FacilityController',
-            'Application\Controller\Country' => 'Application\Controller\CountryController'
+            'Application\Controller\Country' => 'Application\Controller\CountryController',
+            'Application\Controller\AncSite' => 'Application\Controller\AncSiteController'
         ),
     ),
     'controller_plugins' => array(
