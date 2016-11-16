@@ -70,8 +70,8 @@ $alertContainer = new Container('alert');
                         </div>
                     </li>
                     <li id="manageMenu" class="menuAll">
-                        <div class="collapsible-header waves-effect roleMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                        <div class="collapsible-body collapsibleAll collapsibleRoleMenu" style="">
+                        <div class="collapsible-header waves-effect manageMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                        <div class="collapsible-body collapsibleAll collapsibleManageMenu" style="">
                             <ul>
                                 <li class="roleMenu menuAll">
                                     <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Roles</a>
@@ -91,9 +91,9 @@ $alertContainer = new Container('alert');
                             </ul>
                         </div>
                     </li>
-                    <li id="dataCollectionFormMenu" class="menuAll">
+                    <li id="dataCollectionMenu" class="menuAll">
                         <div class="collapsible-header waves-effect">
-                            <i class="zmdi zmdi-view-list zmdi-hc-fw"></i> <a href="javascript:void(0);">Data Collection</a>
+                            <i class="zmdi zmdi-view-list zmdi-hc-fw"></i> <a href="<?php echo $this->url('data-collection'); ?>">Data Collection</a>
                         </div>
                     </li>
                 </ul>
@@ -130,27 +130,31 @@ $alertContainer = new Container('alert');
         splitsUrl=str.split("/",4);
         //console.log(splitsUrl);
         $(".menuAll").removeClass("active");
+        $("#manageMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
         if(splitsUrl[1]=='role'){
           $("#manageMenu").addClass("active");
-          $(".collapsibleRoleMenu").css("display","block");
+          $(".collapsibleManageMenu").css("display","block");
           $(".roleMenu").addClass("active");
         }else if(splitsUrl[1]=='country'){
           $("#manageMenu").addClass("active");
-          $(".collapsibleRoleMenu").css("display","block");
+          $(".collapsibleManageMenu").css("display","block");
           $(".countryMenu").addClass("active");
         }else if(splitsUrl[1]=='employee'){
           $("#manageMenu").addClass("active");
-          $(".collapsibleRoleMenu").css("display","block");
+          $(".collapsibleManageMenu").css("display","block");
           $(".employeeMenu").addClass("active");
         }else if(splitsUrl[1]=='facility'){
           $("#manageMenu").addClass("active");
-          $(".collapsibleRoleMenu").css("display","block");
+          $(".collapsibleManageMenu").css("display","block");
           $(".facilityMenu").addClass("active");
         }else if(splitsUrl[1]=='anc-site'){
           $("#manageMenu").addClass("active");
-          $(".collapsibleRoleMenu").css("display","block");
+          $(".collapsibleManageMenu").css("display","block");
           $(".ancSiteMenu").addClass("active");
+        }else if(splitsUrl[1]=='data-collection'){
+          $(".collapsibleManageMenu").css("display","none");
+          $("#dataCollectionMenu").addClass("active");
         }else{
             $("#dashboardMenu").addClass("active");
         }

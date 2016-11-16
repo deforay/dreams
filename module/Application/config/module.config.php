@@ -122,6 +122,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'index'
+                    ),
+                ),
             ),
             
         ),
@@ -154,7 +163,8 @@ return array(
             'Application\Controller\Common' => 'Application\Controller\CommonController',
             'Application\Controller\Facility' => 'Application\Controller\FacilityController',
             'Application\Controller\Country' => 'Application\Controller\CountryController',
-            'Application\Controller\AncSite' => 'Application\Controller\AncSiteController'
+            'Application\Controller\AncSite' => 'Application\Controller\AncSiteController',
+            'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController'
         ),
     ),
     'controller_plugins' => array(
