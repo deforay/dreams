@@ -114,3 +114,5 @@ ALTER TABLE `anc_site`
   
 ALTER TABLE `anc_site`
   MODIFY `anc_site_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `role` DROP `has_global_access`;

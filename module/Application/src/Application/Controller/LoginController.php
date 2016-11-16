@@ -26,7 +26,11 @@ class LoginController extends AbstractActionController{
         if (isset($loginContainer->employeeId) && trim($loginContainer->employeeId)!= "") {
             return $this->redirect()->toRoute("home");
         }else{
-            $viewModel = new ViewModel();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries();
+            $viewModel = new ViewModel(array(
+                'countries'=>$countryList
+            ));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

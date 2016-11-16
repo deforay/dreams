@@ -16,7 +16,12 @@ $alertContainer = new Container('alert');
 
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/mara.min.css' ?>"  media="screen"/>
-
+        <style>
+            select{
+                display:block !important;
+                color:#333;
+            }
+        </style>
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
@@ -35,6 +40,16 @@ $alertContainer = new Container('alert');
                         <div class="input-field">
                             <input id="password" name="password" type="password" class="validate black-text isRequired" title="Please enter your password">
                             <label for="password" class=" left-align">Password</label>
+                        </div>
+                        <div class="input-field">
+                            <select id="country" name="country" class="material-select">
+                               <option value=""> -- Select Country -- (Optional)</option>
+                               <?php
+                               foreach($countries as $country){
+                               ?>
+                                 <option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option>
+                               <?php } ?>
+                            </select>
                         </div>
                         <p>
                             <input type="checkbox" id="terms" />

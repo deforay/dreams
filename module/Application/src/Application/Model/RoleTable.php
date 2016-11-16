@@ -20,7 +20,6 @@ class RoleTable extends AbstractTableGateway {
         if(isset($params['roleName']) && trim($params['roleName'])!= ''){
             $data=array('role_name'=>$params['roleName'],
                         'role_code'=>$params['roleCode'],
-                        'has_global_access'=>$params['hGA'],
                         'role_description'=>$params['roleDescription'],
                         'role_status'=>'active'
                         );
@@ -35,7 +34,7 @@ class RoleTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 
-       $aColumns = array('role_name','role_code','has_global_access','role_description','role_status');
+       $aColumns = array('role_name','role_code','role_description','role_status');
 
        /*
         * Paging
@@ -146,7 +145,6 @@ class RoleTable extends AbstractTableGateway {
            $row = array();
            $row[] = ucwords($aRow['role_name']);
            $row[] = $aRow['role_code'];
-           $row[] = ucwords($aRow['has_global_access']);
            $row[] = ucwords($aRow['role_description']);
            $row[] = ucwords($aRow['role_status']);
            $row[] = '<a href="/role/edit/' . base64_encode($aRow['role_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit </a>';
@@ -165,7 +163,6 @@ class RoleTable extends AbstractTableGateway {
             $roleId = base64_decode($params['roleId']);
             $data=array('role_name'=>$params['roleName'],
                         'role_code'=>$params['roleCode'],
-                        'has_global_access'=>$params['hGA'],
                         'role_description'=>$params['roleDescription'],
                         'role_status'=>$params['roleStatus']
                         );

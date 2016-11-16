@@ -17,32 +17,55 @@ class EmployeeTable extends AbstractTableGateway {
     }
     
     public function getEmployeeLogin($params){
-         $alertContainer = new Container('alert');
-         $config = new \Zend\Config\Reader\Ini();
-         $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-         if(isset($params['userName']) && trim($params['userName'])!= ''){
+        $alertContainer = new Container('alert');
+        $config = new \Zend\Config\Reader\Ini();
+        $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+        if(isset($params['userName']) && trim($params['userName'])!= ''){
             $dbAdapter = $this->adapter;
             $sql = new Sql($dbAdapter);
             $userName = trim($params['userName']);
             $password = sha1($params['password'].$configResult["password"]["salt"]);
+	    $isCountrySelected = false;
+	    if(isset($params['country']) && trim($params['country'])!= ''){
+		$isCountrySelected = true;
+		$selectedCountry = base64_decode($params['country']);
+	    }
             $loginQuery = $sql->select()->from(array('e' => 'employee'))
+                              ->join(array('r'=>'role'),'r.role_id=e.role',array('role_code'))
                               ->where(array('e.user_name' => $userName, 'e.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
-                $loginContainer = new Container('employee');
-                $loginContainer->employeeId = $loginResult->employee_id;
-                $loginContainer->userName = $loginResult->user_name;
-                return 'home';
+		if($isCountrySelected){
+		    if($loginResult->country == $selectedCountry){
+			$loginContainer = new Container('employee');
+			$loginContainer->employeeId = $loginResult->employee_id;
+			$loginContainer->userName = $loginResult->user_name;
+			$loginContainer->roleCode = $loginResult->role_code;
+			$loginContainer->country = $loginResult->country;
+			return 'home';
+		    }else{
+			$alertContainer->msg = 'Please check the country that you have choosen..!';
+                        return 'login';
+		    }
+		}else{
+		    $loginContainer = new Container('employee');
+		    $loginContainer->employeeId = $loginResult->employee_id;
+		    $loginContainer->userName = $loginResult->user_name;
+		    $loginContainer->roleCode = $loginResult->role_code;
+		    $loginContainer->country = $loginResult->country;
+		    return 'home';
+		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
                 return 'login';
             }
-         }else{
+        }else{
             $alertContainer->msg = 'Please enter all the require fields..!';
             return 'home';
-         }
+        }
     }
+    
     public function addEmployeeDetails($params){
 	$lastInsertedId = 0;
 	if(isset($params['userName']) && trim($params['userName'])!= ''){
