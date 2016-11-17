@@ -177,6 +177,14 @@
     </div>
 </div>
 <script>
+    $(document).ready(function(){
+       $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year
+            format: 'dd/mm/yyyy'
+        });
+    });
+    
     $('#ancSite').on('change', function() {
         $('label[for=ancSiteCode]').css({"transform": "translateY(-140%)"});
         $("#ancSiteCode").val($('#ancSite option:selected').data('anc-site-code'));

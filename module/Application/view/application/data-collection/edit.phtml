@@ -28,7 +28,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" onblur="checkNameValidation('data_collection', 'surveillance_id', this, '<?php echo "surveillance_id##" .$row->surveillance_id; ?>','The surveillance id that you entered already exist. Please enter different id.')">
+                        <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" onblur="checkNameValidation('data_collection', 'surveillance_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The surveillance id that you entered already exist. Please enter different id.')">
                         <label for="surveillanceId" class="">Surveillance ID *</label>
                     </div>
                 </div>
@@ -198,6 +198,14 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
     </div>
 </div>
 <script>
+    $(document).ready(function(){
+       $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year
+            format: 'dd/mm/yyyy'
+        });
+    });
+    
     $('#ancSite').on('change', function() {
         $('label[for=ancSiteCode]').css({"transform": "translateY(-140%)"});
         $("#ancSiteCode").val($('#ancSite option:selected').data('anc-site-code'));
