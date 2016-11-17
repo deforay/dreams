@@ -178,23 +178,27 @@ class AncSiteTable extends AbstractTableGateway {
     
     public function updateAncSiteDetails($params){
         $ancSiteId = 0;
-	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
-            $ancSiteId = base64_decode($params['ancSiteId']);
-	    $data = array(
-		'anc_site_name' => $params['ancSiteName'],
-		'anc_site_code' => $params['ancSiteCode'],
-		'anc_site_type' => base64_decode($params['ancSiteType']),
-		'email' => $params['email'],
-		'contact_person' => $params['contactPerson'],
-		'phone_number' => $params['mobile'],
-		'country' => base64_decode($params['country']),
-		'address' => $params['address'],
-		'latitude' => $params['latitude'],
-		'longitude' => $params['longitude'],
-		'status' => $params['ancSiteStatus']
-	    );
-	    $this->update($data,array('anc_site_id'=>$ancSiteId));
-	}
-	return $ancSiteId;
+		if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
+			$ancSiteId = base64_decode($params['ancSiteId']);
+			$data = array(
+			'anc_site_name' => $params['ancSiteName'],
+			'anc_site_code' => $params['ancSiteCode'],
+			'anc_site_type' => base64_decode($params['ancSiteType']),
+			'email' => $params['email'],
+			'contact_person' => $params['contactPerson'],
+			'phone_number' => $params['mobile'],
+			'country' => base64_decode($params['country']),
+			'address' => $params['address'],
+			'latitude' => $params['latitude'],
+			'longitude' => $params['longitude'],
+			'status' => $params['ancSiteStatus']
+			);
+			$this->update($data,array('anc_site_id'=>$ancSiteId));
+		}
+		return $ancSiteId;
     }
+	
+	public function fetchActiveAncSites(){
+		return $this->select(array('status'=>'active'));
+	}
 }

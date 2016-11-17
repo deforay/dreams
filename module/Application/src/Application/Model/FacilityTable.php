@@ -197,4 +197,8 @@ class FacilityTable extends AbstractTableGateway {
 	}
 	return $facilityId;
     }
+	
+	public function fetchActivefacilities(){
+		return $this->select(array('status'=>'active'));
+	}
 }

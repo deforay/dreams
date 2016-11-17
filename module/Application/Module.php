@@ -13,6 +13,7 @@ use Application\Service\FacilityService;
 use Application\Service\CountryService;
 use Application\Service\FacilityTypeService;
 use Application\Service\AncSiteService;
+use Application\Service\DataCollectionService;
 
 use Application\Model\RoleTable;
 use Application\Model\EmployeeTable;
@@ -20,6 +21,8 @@ use Application\Model\FacilityTable;
 use Application\Model\CountryTable;
 use Application\Model\FacilityTypeTable;
 use Application\Model\AncSiteTable;
+use Application\Model\SpecimenRejectionReasonTable;
+use Application\Model\DataCollectionTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -97,6 +100,8 @@ class Module{
                     return new FacilityTypeService($sm);
                 },'AncSiteService' => function($sm) {
                     return new AncSiteService($sm);
+                },'DataCollectionService' => function($sm) {
+                    return new DataCollectionService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -126,6 +131,14 @@ class Module{
                 },'AncSiteTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new AncSiteTable($dbAdapter);
+                    return $table;
+                },'SpecimenRejectionReasonTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new SpecimenRejectionReasonTable($dbAdapter);
+                    return $table;
+                },'DataCollectionTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new DataCollectionTable($dbAdapter);
                     return $table;
                 },
             ),

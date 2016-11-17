@@ -96,7 +96,7 @@ class EmployeeTable extends AbstractTableGateway {
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$common = new CommonService();
+	    $common = new CommonService();
         $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
         $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
 

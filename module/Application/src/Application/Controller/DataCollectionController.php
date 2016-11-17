@@ -15,14 +15,58 @@ use Zend\Json\Json;
 
 class DataCollectionController extends AbstractActionController{
     public function indexAction(){
-        
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $parameters = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result = $dataCollectionService->getAllDataCollections($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }
     }
     
     public function addAction(){
-        
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $dataCollectionService->addDataCollection($params);
+            return $this->redirect()->toRoute('data-collection');
+        }
+        $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+        $commonService = $this->getServiceLocator()->get('CommonService');
+        $facilityService = $this->getServiceLocator()->get('FacilityService');
+        $ancSiteList=$ancSiteService->getActiveAncSites();
+        $rejectionReasonList=$commonService->getActiveRejectionReasons();
+        $facilityList=$facilityService->getActivefacilities();
+        return new ViewModel(array(
+            'ancSites'=>$ancSiteList,
+            'rejectionReasons'=>$rejectionReasonList,
+            'facilities'=>$facilityList
+        ));
     }
     
     public function editAction(){
-        
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $dataCollectionService->updateDataCollection($params);
+            return $this->redirect()->toRoute('data-collection');
+        }
+        $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
+        $result=$dataCollectionService->getDataCollection($dataCollectionId);
+        $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+        $commonService = $this->getServiceLocator()->get('CommonService');
+        $facilityService = $this->getServiceLocator()->get('FacilityService');
+        $ancSiteList=$ancSiteService->getActiveAncSites();
+        $rejectionReasonList=$commonService->getActiveRejectionReasons();
+        $facilityList=$facilityService->getActivefacilities();
+        return new ViewModel(array(
+            'row'=>$result,
+            'ancSites'=>$ancSiteList,
+            'rejectionReasons'=>$rejectionReasonList,
+            'facilities'=>$facilityList
+        ));
     }
 }

@@ -63,4 +63,9 @@ class AncSiteService {
             error_log($exc->getTraceAsString());
         }
     }
+    
+    public function getActiveAncSites(){
+        $ancSiteDb = $this->sm->get('AncSiteTable');
+        return $ancSiteDb->fetchActiveAncSites();
+    }
 }

@@ -96,15 +96,13 @@ class CommonService {
         if (!isset($date) || $date == null || $date == "" || $date == "0000-00-00") {
             return "0000-00-00";
         } else {
-            $dateArray = explode('-', $date);
+            $dateArray = explode('/', $date);
             if (sizeof($dateArray) == 0) {
                 return;
             }
             $newDate = $dateArray[2] . "-";
 
-            $monthsArray = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-            $mon = 1;
-            $mon += array_search(ucfirst($dateArray[1]), $monthsArray);
+            $mon = $dateArray[1];
 
             if (strlen($mon) == 1) {
                 $mon = "0" . $mon;
@@ -114,16 +112,13 @@ class CommonService {
     }
 
     public function humanDateFormat($date) {
-        if ($date == null || $date == "" || $date == "0000-00-00" || $date == "0000-00-00 00:00:00") {
+        if ($date == null || $date == "" || $date == "0000-00-00") {
             return "";
         } else {
             $dateArray = explode('-', $date);
             $newDate = $dateArray[2] . "-";
-
             $monthsArray = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-            $mon = $monthsArray[$dateArray[1] - 1];
-
-            return $newDate .= $mon . "-" . $dateArray[0];
+            return $newDate .=  $monthsArray[($dateArray[1]-1)] . "-" . $dateArray[0];
         }
     }
 
@@ -132,12 +127,9 @@ class CommonService {
             return "";
         } else {
             $dateArray = explode('-', $date);
-            $newDate = $dateArray[2] . "-";
+            $newDate = $dateArray[2] . "/";
 
-            $monthsArray = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-            $mon = $monthsArray[$dateArray[1] - 1];
-
-            return $newDate .= $mon . "-" . $dateArray[0];
+            return $newDate .= $dateArray[1] . "/" . $dateArray[0];
         }
     }
     
@@ -163,6 +155,11 @@ class CommonService {
 
             return $newDate .= $mon . " " . $dateArray[0];
         }
+    }
+    
+    public function getActiveRejectionReasons(){
+        $specimenRejectionReasonDb = $this->sm->get('SpecimenRejectionReasonTable');
+        return $specimenRejectionReasonDb->fetchActiveRejectionReasons();
     }
 }
 

@@ -63,4 +63,9 @@ class FacilityService {
             error_log($exc->getTraceAsString());
         }
     }
+    
+    public function getActivefacilities(){
+        $facilityDb = $this->sm->get('FacilityTable');
+        return $facilityDb->fetchActivefacilities();
+    }
 }
