@@ -236,16 +236,16 @@ class DataCollectionTable extends AbstractTableGateway {
 			$row[] = $aRow['lab_specimen_id'];
 			$row[] = $receiptDateAtCentralLab;
 			 $dataView = '';
-			 if($loginContainer->roleCode== 'DEO' && trim($aRow['lock_state']) == 'lock'){
+			 if($loginContainer->roleCode== 'DEO' && trim($aRow['lock_state'])== 'lock'){
 			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-edit"></i> View</a>';
 			 }else{
 				$dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 			 }
 			 $lockState = '';
 			 if($loginContainer->roleCode!= 'DEO'){
-				if($aRow['lock_state'] == NULL || $aRow['lock_state'] == '' || $aRow['lock_state'] == 'unlock'){
+				if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
 				   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
-				}else if($aRow['lock_state'] == 'lock'){
+				}else if($aRow['lock_state']== 'lock'){
 				   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 				}
 			 }
