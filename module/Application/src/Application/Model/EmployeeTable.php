@@ -25,37 +25,37 @@ class EmployeeTable extends AbstractTableGateway {
             $sql = new Sql($dbAdapter);
             $userName = trim($params['userName']);
             $password = sha1($params['password'].$configResult["password"]["salt"]);
-	    $isCountrySelected = false;
-	    if(isset($params['country']) && trim($params['country'])!= ''){
-		$isCountrySelected = true;
-		$selectedCountry = base64_decode($params['country']);
-	    }
+			$isCountrySelected = false;
+			if(isset($params['country']) && trim($params['country'])!= ''){
+			   $isCountrySelected = true;
+			   $selectedCountry = base64_decode($params['country']);
+			}
             $loginQuery = $sql->select()->from(array('e' => 'employee'))
                               ->join(array('r'=>'role'),'r.role_id=e.role',array('role_code'))
                               ->where(array('e.user_name' => $userName, 'e.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
-		if($isCountrySelected){
-		    if($loginResult->country == $selectedCountry){
-			$loginContainer = new Container('employee');
-			$loginContainer->employeeId = $loginResult->employee_id;
-			$loginContainer->userName = $loginResult->user_name;
-			$loginContainer->roleCode = $loginResult->role_code;
-			$loginContainer->country = $loginResult->country;
-			return 'home';
-		    }else{
-			$alertContainer->msg = 'Please check the country that you have choosen..!';
-                        return 'login';
-		    }
-		}else{
-		    $loginContainer = new Container('employee');
-		    $loginContainer->employeeId = $loginResult->employee_id;
-		    $loginContainer->userName = $loginResult->user_name;
-		    $loginContainer->roleCode = $loginResult->role_code;
-		    $loginContainer->country = $loginResult->country;
-		    return 'home';
-		}
+				if($isCountrySelected){
+					if($loginResult->country == $selectedCountry){
+						$loginContainer = new Container('employee');
+						$loginContainer->employeeId = $loginResult->employee_id;
+						$loginContainer->userName = $loginResult->user_name;
+						$loginContainer->roleCode = $loginResult->role_code;
+						$loginContainer->country = $loginResult->country;
+					   return 'home';
+					}else{
+					   $alertContainer->msg = 'Please check the country that you have choosen..!';
+					   return 'login';
+					}
+				}else{
+					$loginContainer = new Container('employee');
+					$loginContainer->employeeId = $loginResult->employee_id;
+					$loginContainer->userName = $loginResult->user_name;
+					$loginContainer->roleCode = $loginResult->role_code;
+					$loginContainer->country = $loginResult->country;
+					return 'home';
+				}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
                 return 'login';
@@ -67,29 +67,29 @@ class EmployeeTable extends AbstractTableGateway {
     }
     
     public function addEmployeeDetails($params){
-	$lastInsertedId = 0;
-	if(isset($params['userName']) && trim($params['userName'])!= ''){
-	    $common = new CommonService();
-	    $config = new \Zend\Config\Reader\Ini();
-	    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-	    $password = sha1($params['password'] . $configResult["password"]["salt"]);
-	    $data = array(
-		'employee_name' => $params['employeeName'],
-		'employee_code' => $params['employeeCode'],
-		'user_name' => $params['userName'],
-		'password' => $password,
-		'role' => base64_decode($params['role']),
-		'email' => $params['email'],
-		'mobile' => $params['mobile'],
-		'alt_contact' => $params['altContact'],
-		'country' => base64_decode($params['country']),
-		'status' => 'active',
-		'created_on' => $common->getDateTime()
-	    );
-	    $this->insert($data);
-	    $lastInsertedId = $this->lastInsertValue;
-	}
-	return $lastInsertedId;
+		$lastInsertedId = 0;
+		if(isset($params['userName']) && trim($params['userName'])!= ''){
+			$common = new CommonService();
+			$config = new \Zend\Config\Reader\Ini();
+			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+			$password = sha1($params['password'] . $configResult["password"]["salt"]);
+			$data = array(
+			'employee_name' => $params['employeeName'],
+			'employee_code' => $params['employeeCode'],
+			'user_name' => $params['userName'],
+			'password' => $password,
+			'role' => base64_decode($params['role']),
+			'email' => $params['email'],
+			'mobile' => $params['mobile'],
+			'alt_contact' => $params['altContact'],
+			'country' => base64_decode($params['country']),
+			'status' => 'active',
+			'created_on' => $common->getDateTime()
+			);
+			$this->insert($data);
+			$lastInsertedId = $this->lastInsertValue;
+		}
+		return $lastInsertedId;
     }
     
     public function fetchAllEmployees($parameters){
@@ -200,63 +200,63 @@ class EmployeeTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-	$tQuery = $sql->select()->from(array('e' => 'employee'))
-		      ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-		      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-
-	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-	$iTotal = count($tResult);
-	$output = array(
-		   "sEcho" => intval($parameters['sEcho']),
-		   "iTotalRecords" => $iTotal,
-		   "iTotalDisplayRecords" => $iFilteredTotal,
-		   "aaData" => array()
-	);
-	foreach ($rResult as $aRow) {
-	    $row = array();
-	    $date = explode(" ",$aRow['created_on']);
-	    $row[] = ucwords($aRow['employee_name'])." - ".$aRow['employee_code'];
-	    $row[] = ucwords($aRow['role_name']);
-	    $row[] = $aRow['user_name'];
-	    $row[] = $aRow['email'];
-	    $row[] = $aRow['mobile'];
-	    $row[] = ucwords($aRow['country_name']);
-	    $row[] = ucwords($aRow['status']);
-	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
-	    $row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-	    $output['aaData'][] = $row;
-	}
-	return $output;
+		$tQuery = $sql->select()->from(array('e' => 'employee'))
+				  ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+				  ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+	
+		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+		$iTotal = count($tResult);
+		$output = array(
+			   "sEcho" => intval($parameters['sEcho']),
+			   "iTotalRecords" => $iTotal,
+			   "iTotalDisplayRecords" => $iFilteredTotal,
+			   "aaData" => array()
+		);
+		foreach ($rResult as $aRow) {
+			$row = array();
+			$date = explode(" ",$aRow['created_on']);
+			$row[] = ucwords($aRow['employee_name'])." - ".$aRow['employee_code'];
+			$row[] = ucwords($aRow['role_name']);
+			$row[] = $aRow['user_name'];
+			$row[] = $aRow['email'];
+			$row[] = $aRow['mobile'];
+			$row[] = ucwords($aRow['country_name']);
+			$row[] = ucwords($aRow['status']);
+			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
+			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+			$output['aaData'][] = $row;
+		}
+	  return $output;
     }
     
-    public function fetchEmployee($empid){
-	return $this->select(array('employee_id'=>$empid))->current();
+    public function fetchEmployee($employeeId){
+	  return $this->select(array('employee_id'=>$employeeId))->current();
     }
 	
     public function updateEmployeeDetails($params){
-	$lastInsertedId = 0;
-	if(isset($params['userName']) && trim($params['userName'])!= ''){
-	    $lastInsertedId = base64_decode($params['employeeId']);
-	    $common = new CommonService();
-            $data = array(
-		'employee_name' => $params['employeeName'],
-		'employee_code' => $params['employeeCode'],
-		'user_name' => $params['userName'],
-		'role' => base64_decode($params['role']),
-		'email' => $params['email'],
-		'mobile' => $params['mobile'],
-		'alt_contact' => $params['altContact'],
-		'country' => base64_decode($params['country']),
-		'status' => $params['status']
-            );
-	    if (isset($params['password']) && trim($params['password']) != ''){
-		$config = new \Zend\Config\Reader\Ini();
-		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-		$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
-	    }
-	    $this->update($data,array('employee_id'=>$lastInsertedId));
-	}
-	return $lastInsertedId;
+		$employeeId = 0;
+		if(isset($params['userName']) && trim($params['userName'])!= ''){
+			$employeeId = base64_decode($params['employeeId']);
+			$common = new CommonService();
+				$data = array(
+			'employee_name' => $params['employeeName'],
+			'employee_code' => $params['employeeCode'],
+			'user_name' => $params['userName'],
+			'role' => base64_decode($params['role']),
+			'email' => $params['email'],
+			'mobile' => $params['mobile'],
+			'alt_contact' => $params['altContact'],
+			'country' => base64_decode($params['country']),
+			'status' => $params['status']
+				);
+			if (isset($params['password']) && trim($params['password']) != ''){
+			$config = new \Zend\Config\Reader\Ini();
+			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+			$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
+			}
+			$this->update($data,array('employee_id'=>$employeeId));
+		}
+		return $employeeId;
     }
 }

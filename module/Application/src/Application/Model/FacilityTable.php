@@ -17,32 +17,32 @@ class FacilityTable extends AbstractTableGateway {
     
     public function addFacilityDetails($params){
         $lastInsertedId = 0;
-	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-	    $data = array(
-		'facility_name' => $params['facilityName'],
-		'facility_code' => $params['facilityCode'],
-		'facility_type' => base64_decode($params['facilityType']),
-		'email' => $params['email'],
-		'contact_person' => $params['contactPerson'],
-		'phone_number' => $params['mobile'],
-		'country' => base64_decode($params['country']),
-		'address' => $params['address'],
-		'latitude' => $params['latitude'],
-		'longitude' => $params['longitude'],
-		'status' => 'active'
-	    );
-	    $this->insert($data);
-	    $lastInsertedId = $this->lastInsertValue;
-	}
-	return $lastInsertedId;
+		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
+			$data = array(
+			'facility_name' => $params['facilityName'],
+			'facility_code' => $params['facilityCode'],
+			'facility_type' => base64_decode($params['facilityType']),
+			'email' => $params['email'],
+			'contact_person' => $params['contactPerson'],
+			'phone_number' => $params['mobile'],
+			'country' => base64_decode($params['country']),
+			'address' => $params['address'],
+			'latitude' => $params['latitude'],
+			'longitude' => $params['longitude'],
+			'status' => 'active'
+			);
+			$this->insert($data);
+			$lastInsertedId = $this->lastInsertValue;
+		}
+	  return $lastInsertedId;
     }
     
     public function fetchAllFacilites($parameters){
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.contact_person','f.phone_number','c.country_name','f.status');
-        $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.contact_person','f.phone_number','c.country_name','f.status');
+        $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
+        $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
 
        /*
         * Paging
@@ -116,8 +116,8 @@ class FacilityTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('f' => 'facility'))
-		     ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
-		     ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
+		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
+		             ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
 	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -144,32 +144,31 @@ class FacilityTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-	$tQuery = $sql->select()->from(array('f' => 'facility'))
-		      ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
-		      ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-
-	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-	$iTotal = count($tResult);
-	$output = array(
-		   "sEcho" => intval($parameters['sEcho']),
-		   "iTotalRecords" => $iTotal,
-		   "iTotalDisplayRecords" => $iFilteredTotal,
-		   "aaData" => array()
-	);
-	foreach ($rResult as $aRow) {
-            $row = array();
-            $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-            $row[] = ucwords($aRow['facility_type_name']);
-            $row[] = $aRow['email'];
-            $row[] = ucwords($aRow['contact_person']);
-            $row[] = $aRow['phone_number'];
-            $row[] = ucwords($aRow['country_name']);
-            $row[] = ucwords($aRow['status']);
-            $row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-            $output['aaData'][] = $row;
-	}
-	return $output;
+		$tQuery = $sql->select()->from(array('f' => 'facility'))
+					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
+					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
+	
+		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+		$iTotal = count($tResult);
+		$output = array(
+			   "sEcho" => intval($parameters['sEcho']),
+			   "iTotalRecords" => $iTotal,
+			   "iTotalDisplayRecords" => $iFilteredTotal,
+			   "aaData" => array()
+		);
+		foreach ($rResult as $aRow) {
+				$row = array();
+				$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+				$row[] = ucwords($aRow['facility_type_name']);
+				$row[] = $aRow['email'];
+				$row[] = $aRow['phone_number'];
+				$row[] = ucwords($aRow['country_name']);
+				$row[] = ucwords($aRow['status']);
+				$row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+				$output['aaData'][] = $row;
+		}
+	  return $output;
     }
     
     public function fetchFacility($facilityId){
@@ -178,24 +177,24 @@ class FacilityTable extends AbstractTableGateway {
     
     public function updateFacilityDetails($params){
         $facilityId = 0;
-	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-            $facilityId = base64_decode($params['facilityId']);
-	    $data = array(
-		'facility_name' => $params['facilityName'],
-		'facility_code' => $params['facilityCode'],
-		'facility_type' => base64_decode($params['facilityType']),
-		'email' => $params['email'],
-		'contact_person' => $params['contactPerson'],
-		'phone_number' => $params['mobile'],
-		'country' => base64_decode($params['country']),
-		'address' => $params['address'],
-		'latitude' => $params['latitude'],
-		'longitude' => $params['longitude'],
-		'status' => $params['facilityStatus']
-	    );
-	    $this->update($data,array('facility_id'=>$facilityId));
-	}
-	return $facilityId;
+		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
+			$facilityId = base64_decode($params['facilityId']);
+			$data = array(
+			'facility_name' => $params['facilityName'],
+			'facility_code' => $params['facilityCode'],
+			'facility_type' => base64_decode($params['facilityType']),
+			'email' => $params['email'],
+			'contact_person' => $params['contactPerson'],
+			'phone_number' => $params['mobile'],
+			'country' => base64_decode($params['country']),
+			'address' => $params['address'],
+			'latitude' => $params['latitude'],
+			'longitude' => $params['longitude'],
+			'status' => $params['facilityStatus']
+			);
+			$this->update($data,array('facility_id'=>$facilityId));
+		}
+	  return $facilityId;
     }
 	
 	public function fetchActivefacilities(){

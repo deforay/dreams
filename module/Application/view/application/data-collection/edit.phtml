@@ -117,7 +117,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
                             <?php
                             foreach($rejectionReasons as $rejection){
                             ?>
-                              <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo($row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']; ?></option>
+                              <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']; ?></option>
                             <?php } ?>
                         </select>
                         <label for="rejectionReason">Specimen Rejection Code </label>

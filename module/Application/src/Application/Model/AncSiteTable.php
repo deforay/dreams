@@ -17,32 +17,32 @@ class AncSiteTable extends AbstractTableGateway {
     
     public function addAncSiteDetails($params){
         $lastInsertedId = 0;
-	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
-	    $data = array(
-		'anc_site_name' => $params['ancSiteName'],
-		'anc_site_code' => $params['ancSiteCode'],
-		'anc_site_type' => base64_decode($params['ancSiteType']),
-		'email' => $params['email'],
-		'contact_person' => $params['contactPerson'],
-		'phone_number' => $params['mobile'],
-		'country' => base64_decode($params['country']),
-		'address' => $params['address'],
-		'latitude' => $params['latitude'],
-		'longitude' => $params['longitude'],
-		'status' => 'active'
-	    );
-	    $this->insert($data);
-	    $lastInsertedId = $this->lastInsertValue;
-	}
-	return $lastInsertedId;
+		if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
+			$data = array(
+			'anc_site_name' => $params['ancSiteName'],
+			'anc_site_code' => $params['ancSiteCode'],
+			'anc_site_type' => base64_decode($params['ancSiteType']),
+			'email' => $params['email'],
+			'contact_person' => $params['contactPerson'],
+			'phone_number' => $params['mobile'],
+			'country' => base64_decode($params['country']),
+			'address' => $params['address'],
+			'latitude' => $params['latitude'],
+			'longitude' => $params['longitude'],
+			'status' => 'active'
+			);
+			$this->insert($data);
+			$lastInsertedId = $this->lastInsertValue;
+		}
+		return $lastInsertedId;
     }
     
     public function fetchAllAncSites($parameters){
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.contact_person','anc.phone_number','c.country_name','anc.status');
-        $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.contact_person','anc.phone_number','c.country_name','anc.status');
+        $aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
+        $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
 
        /*
         * Paging
@@ -116,8 +116,8 @@ class AncSiteTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('anc' => 'anc_site'))
-		     ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
-		     ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
+		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
+		             ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
 	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -144,32 +144,31 @@ class AncSiteTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-	$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
-		      ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
-		      ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-
-	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-	$iTotal = count($tResult);
-	$output = array(
-		   "sEcho" => intval($parameters['sEcho']),
-		   "iTotalRecords" => $iTotal,
-		   "iTotalDisplayRecords" => $iFilteredTotal,
-		   "aaData" => array()
-	);
-	foreach ($rResult as $aRow) {
-            $row = array();
-            $row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
-            $row[] = ucwords($aRow['facility_type_name']);
-            $row[] = $aRow['email'];
-            $row[] = ucwords($aRow['contact_person']);
-            $row[] = $aRow['phone_number'];
-            $row[] = ucwords($aRow['country_name']);
-            $row[] = ucwords($aRow['status']);
-            $row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-            $output['aaData'][] = $row;
-	}
-	return $output;
+		$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
+					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
+					  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
+	
+		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+		$iTotal = count($tResult);
+		$output = array(
+			   "sEcho" => intval($parameters['sEcho']),
+			   "iTotalRecords" => $iTotal,
+			   "iTotalDisplayRecords" => $iFilteredTotal,
+			   "aaData" => array()
+		);
+		foreach ($rResult as $aRow) {
+				$row = array();
+				$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
+				$row[] = ucwords($aRow['facility_type_name']);
+				$row[] = $aRow['email'];
+				$row[] = $aRow['phone_number'];
+				$row[] = ucwords($aRow['country_name']);
+				$row[] = ucwords($aRow['status']);
+				$row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+				$output['aaData'][] = $row;
+		}
+	  return $output;
     }
     
     public function fetchAncSite($ancSiteId){

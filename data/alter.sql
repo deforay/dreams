@@ -160,3 +160,43 @@ ALTER TABLE `specimen_rejection_reason`
   
 ALTER TABLE `specimen_rejection_reason`
   MODIFY `rejection_reason_id` int(11) NOT NULL AUTO_INCREMENT
+  
+--Pal 18/11/2016
+ALTER TABLE `data_collection` ADD `country` INT(11) NULL DEFAULT NULL AFTER `asante_rapid_recency_assy`;
+
+CREATE TABLE `data_collection_event_log` (
+  `data_collection_event_log_id` int(11) NOT NULL,
+  `data_collection_id` int(11) NOT NULL,
+  `surveillance_id` varchar(45) DEFAULT NULL,
+  `specimen_collected_date` date DEFAULT NULL,
+  `anc_site` int(11) DEFAULT NULL,
+  `anc_patient_id` varchar(45) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `specimen_picked_up_date_at_anc` date DEFAULT NULL,
+  `lab` int(11) DEFAULT NULL,
+  `lab_specimen_id` varchar(45) DEFAULT NULL,
+  `receipt_date_at_central_lab` date DEFAULT NULL,
+  `rejection_reason` int(11) DEFAULT NULL,
+  `final_lag_avidity_odn` varchar(45) DEFAULT NULL,
+  `lag_avidity_result` varchar(45) DEFAULT NULL,
+  `hiv_rna` varchar(45) DEFAULT NULL,
+  `hiv_rna_gt_1000` varchar(45) DEFAULT NULL,
+  `recent_infection` varchar(45) DEFAULT NULL,
+  `result_dispatched_date_to_clinic` date DEFAULT NULL,
+  `asante_rapid_recency_assy` varchar(45) DEFAULT NULL,
+  `country` int(11) DEFAULT NULL,
+  `added_on` datetime DEFAULT NULL,
+  `added_by` int(11) DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+)
+
+ALTER TABLE `data_collection_event_log`
+  ADD PRIMARY KEY (`data_collection_event_log_id`);
+  
+ALTER TABLE `data_collection_event_log`
+  MODIFY `data_collection_event_log_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+ALTER TABLE `data_collection` ADD `lock_state` VARCHAR(45) NULL DEFAULT NULL AFTER `country`, ADD `status` VARCHAR(45) NOT NULL DEFAULT 'pending' AFTER `lock_state`;
+
+ALTER TABLE `data_collection_event_log` ADD `lock_state` VARCHAR(45) NULL DEFAULT NULL AFTER `country`, ADD `status` VARCHAR(45) NOT NULL DEFAULT 'pending' AFTER `lock_state`

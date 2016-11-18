@@ -16,16 +16,16 @@ class CountryTable extends AbstractTableGateway {
     }
     
     public function addCountryDetails($params){
-        $countryId = 0;
+        $lastInsertedId = 0;
         if(isset($params['countryName']) && trim($params['countryName'])!= ''){
             $data=array('country_name'=>$params['countryName'],
                         'country_code'=>$params['countryCode'],
                         'status'=>'active'
                         );
             $this->insert($data);
-            $countryId = $this->lastInsertValue;
+            $lastInsertedId = $this->lastInsertValue;
         }
-      return $countryId;
+      return $lastInsertedId;
     }
     
     public function fetchAllCountries($parameters){

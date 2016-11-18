@@ -23,6 +23,7 @@ use Application\Model\FacilityTypeTable;
 use Application\Model\AncSiteTable;
 use Application\Model\SpecimenRejectionReasonTable;
 use Application\Model\DataCollectionTable;
+use Application\Model\DataCollectionEventLogTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -139,6 +140,10 @@ class Module{
                 },'DataCollectionTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new DataCollectionTable($dbAdapter);
+                    return $table;
+                },'DataCollectionEventLogTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new DataCollectionEventLogTable($dbAdapter);
                     return $table;
                 },
             ),

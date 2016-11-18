@@ -70,4 +70,14 @@ class DataCollectionService {
        }
     }
     
+    public function lockDataCollection($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->lockDataCollectionDetails($params);
+    }
+    
+    public function unlockDataCollection($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->unlockDataCollectionDetails($params);
+    }
+    
 }

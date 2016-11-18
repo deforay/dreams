@@ -16,7 +16,7 @@ class RoleTable extends AbstractTableGateway {
     }
     
     public function addRoleDetails($params){
-        $roleId = 0;
+        $lastInsertedId = 0;
         if(isset($params['roleName']) && trim($params['roleName'])!= ''){
             $data=array('role_name'=>$params['roleName'],
                         'role_code'=>$params['roleCode'],
@@ -24,9 +24,9 @@ class RoleTable extends AbstractTableGateway {
                         'role_status'=>'active'
                         );
             $this->insert($data);
-            $roleId = $this->lastInsertValue;
+            $lastInsertedId = $this->lastInsertValue;
         }
-      return $roleId;
+      return $lastInsertedId;
     }
     
     public function fetchAllRoles($parameters){

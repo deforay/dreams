@@ -45,9 +45,9 @@ class EmployeeService {
         return $employeeDb->fetchAllEmployees($parameters);
     }
     
-    public function getEmployee($empId){
+    public function getEmployee($employeeId){
         $employeeDb = $this->sm->get('EmployeeTable');
-        return $employeeDb->fetchEmployee($empId);
+        return $employeeDb->fetchEmployee($employeeId);
     }
     
     public function updateEmployee($params){

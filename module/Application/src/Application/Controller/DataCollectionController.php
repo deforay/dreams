@@ -50,7 +50,6 @@ class DataCollectionController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $dataCollectionService->updateDataCollection($params);
             return $this->redirect()->toRoute('data-collection');
         }
@@ -68,5 +67,40 @@ class DataCollectionController extends AbstractActionController{
             'rejectionReasons'=>$rejectionReasonList,
             'facilities'=>$facilityList
         ));
+    }
+    
+    public function viewAction(){
+        $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        $result=$dataCollectionService->getDataCollection($dataCollectionId);
+        return new ViewModel(array(
+            'row'=>$result
+        ));
+    }
+    
+    public function lockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->lockDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function unlockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->unlockDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
     }
 }

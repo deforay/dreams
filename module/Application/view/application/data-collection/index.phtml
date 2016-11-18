@@ -49,20 +49,19 @@
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Collection List
 		        <span style="float:right;"><a href="<?php echo $this->url('data-collection',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Data Collection</a></span>
                 </div>
-                <div class="card-content clearfix">
-                    <table id="dataCollectionDataTable"  class="responsive-table display dataTable">
+                <div class="card-content clearfix" style="overflow-x: scroll;">
+                    <table id="dataCollectionDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Surveillance ID</th>
                                 <th>Specimen Collected Date</th>
 				                <th>ANC site</th>
                                 <th>ANC Patient ID</th>
-                                <th>Age</th>
                                 <th>Specimen Picked Up Date at ANC</th>
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
                                 <th>Receipt Date at Central Lab</th>
-                                <th>Action</th>
+                                <th style="width:15% !important;">Action</th>
                             </tr>
                         </thead>
 			            <tfoot>
@@ -71,7 +70,6 @@
                                 <th>Specimen Collected Date</th>
 				                <th>ANC site</th>
                                 <th>ANC Patient ID</th>
-                                <th>Age</th>
 				                <th>Specimen Picked Up Date at ANC</th>
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
@@ -90,11 +88,10 @@
 </div>
 <script>
     $(document).ready(function() {
-       $("#dataCollectionDataTable").DataTable({
+       oTable = $("#dataCollectionDataTable").DataTable({
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
-		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
@@ -129,4 +126,32 @@
                     oTable.fnFilter($(this).val());
                 });
     });
+	
+	function lockDataCollection(ID){
+		 var conf = confirm("Are you sure you want to lock this data collection..?");
+            if(conf){
+                $.post("<?php echo $this->url('data-collection',array('action'=>'lock')); ?>", {dataCollectionId:ID},
+                    function(data){
+                        if($.trim(data) == 0 || $.trim(data) == ''){
+                          alert("OOPS..");
+                        }else{
+                          oTable.draw();
+                        }
+                    });
+            }
+	}
+	
+	function unlockDataCollection(ID){
+		 var conf = confirm("Are you sure you want to unlock this data collection..?");
+            if(conf){
+                $.post("<?php echo $this->url('data-collection',array('action'=>'unlock')); ?>", {dataCollectionId:ID},
+                    function(data){
+                        if($.trim(data) == 0 || $.trim(data) == ''){
+                          alert("OOPS..");
+                        }else{
+                          oTable.draw();
+                        }
+                    });
+            }
+	}
 </script>
