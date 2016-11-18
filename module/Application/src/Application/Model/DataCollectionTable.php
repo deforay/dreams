@@ -41,7 +41,9 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
-            if(!isset($params['lagAvidityResult'])){
+			if(!isset($params['age']) || trim($params['age'])== ''){
+                $params['age'] = NULL;
+            }if(!isset($params['lagAvidityResult'])){
                 $params['lagAvidityResult'] = NULL;
             } if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
@@ -262,7 +264,9 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
-            if(!isset($params['lagAvidityResult'])){
+			if(!isset($params['age']) || trim($params['age'])== ''){
+                $params['age'] = NULL;
+            }if(!isset($params['lagAvidityResult'])){
                 $params['lagAvidityResult'] = NULL;
             } if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
