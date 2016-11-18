@@ -119,7 +119,7 @@ class FacilityTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('f' => 'facility'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	   if($loginContainer->roleCode!= 'CHSC'){
+	   if($loginContainer->roleCode!= 'CSC'){
             $sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
        }
        if (isset($sWhere) && $sWhere != "") {
@@ -150,7 +150,7 @@ class FacilityTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('f' => 'facility'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	    if($loginContainer->roleCode!= 'CHSC'){
+	    if($loginContainer->roleCode!= 'CSC'){
             $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
         }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -208,7 +208,7 @@ class FacilityTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
                                ->where(array('f.status'=>'active'));
-        if($loginContainer->roleCode!= 'CHSC'){
+        if($loginContainer->roleCode!= 'CSC'){
             $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
         }
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);

@@ -170,7 +170,7 @@ class DataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'));
-		if($loginContainer->roleCode!= 'CHSC'){
+		if($loginContainer->roleCode!= 'CSC'){
 			$sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
        if (isset($sWhere) && $sWhere != "") {
@@ -201,7 +201,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 					  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
 					  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'));
-		if($loginContainer->roleCode!= 'CHSC'){
+		if($loginContainer->roleCode!= 'CSC'){
 			$tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -236,13 +236,13 @@ class DataCollectionTable extends AbstractTableGateway {
 			$row[] = $aRow['lab_specimen_id'];
 			$row[] = $receiptDateAtCentralLab;
 			 $dataView = '';
-			 if($loginContainer->roleCode== 'DEO' && trim($aRow['lock_state'])== 'lock'){
+			 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
 			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-edit"></i> View</a>';
 			 }else{
 				$dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 			 }
 			 $lockState = '';
-			 if($loginContainer->roleCode!= 'DEO'){
+			 if($loginContainer->roleCode!= 'LDEO'){
 				if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
 				   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 				}else if($aRow['lock_state']== 'lock'){

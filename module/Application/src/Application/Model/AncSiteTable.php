@@ -119,7 +119,7 @@ class AncSiteTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('anc' => 'anc_site'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	   if($loginContainer->roleCode!= 'CHSC'){
+	   if($loginContainer->roleCode!= 'CSC'){
             $sQuery = $sQuery->where(array('anc.country'=>$loginContainer->country));
        }
        if (isset($sWhere) && $sWhere != "") {
@@ -150,7 +150,7 @@ class AncSiteTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	    if($loginContainer->roleCode!= 'CHSC'){
+	    if($loginContainer->roleCode!= 'CSC'){
             $tQuery = $tQuery->where(array('anc.country'=>$loginContainer->country));
         }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -208,7 +208,7 @@ class AncSiteTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $ancSitesQuery = $sql->select()->from(array('anc' => 'anc_site'))
                              ->where(array('anc.status'=>'active'));
-        if($loginContainer->roleCode!= 'CHSC'){
+        if($loginContainer->roleCode!= 'CSC'){
             $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$loginContainer->country));
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);

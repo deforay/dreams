@@ -177,15 +177,15 @@ class EmployeeTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('e' => 'employee'))
 		             ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
 		             ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-	   if($loginContainer->roleCode== 'COSC'){
+	   if($loginContainer->roleCode== 'CC'){
 		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("COSC","LS","DEO")');
+		  $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
 	   }else if($loginContainer->roleCode== 'LS'){
 		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("LS","DEO")');
-	   }else if($loginContainer->roleCode== 'DEO'){
+		  $sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
+	   }else if($loginContainer->roleCode== 'LDEO'){
 		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("DEO")'); 
+		  $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
 	   }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -215,15 +215,15 @@ class EmployeeTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('e' => 'employee'))
 				      ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
 				      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-	    if($loginContainer->roleCode== 'COSC'){
+	    if($loginContainer->roleCode== 'CC'){
 		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
-		  $sQuery = $tQuery->where('r.role_code IN ("COSC","LS","DEO")');
+		  $sQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LS'){
 		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
-		  $tQuery = $tQuery->where('r.role_code IN ("LS","DEO")');
-	    }else if($loginContainer->roleCode== 'DEO'){
+		  $tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
+	    }else if($loginContainer->roleCode== 'LDEO'){
 		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
-		  $tQuery = $tQuery->where('r.role_code IN ("DEO")'); 
+		  $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
 	    }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
