@@ -25,19 +25,24 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Data Collection View</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Data Collection View</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $this->url('data-collection'); ?>" class="breadcrumb">Data Collections</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Collection View</a>
+        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <div class="data-collection-view card" style="height:838px !important;">
+        <div class="data-collection-view card" style="height:774px !important;">
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="surveillanceId" class="">Surveillance ID </label><br>
                         <p><?php echo $row->surveillance_id; ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="specimenCollectedDate" class="">Specimen Collected Date </label><br>
                         <p><?php echo $specimenCollectionDate; ?></p>
                     </div>
@@ -45,13 +50,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="ancSite">ANC site name </label><br>
                         <p><?php echo ucwords($row->anc_site_name); ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="ancSiteCode" class="">ANC site code </label><br>
                         <p><?php echo $row->anc_site_code; ?></p>
                     </div>
@@ -59,13 +64,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="ancPatientId" class="">ANC Patient ID </label><br>
                         <p><?php echo $row->anc_patient_id; ?></p>
                     </div>
                 </div>
                  <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="age" class="">Age </label><br>
                         <p><?php echo $row->age; ?></p>
                     </div>
@@ -73,13 +78,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
-                        <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label><br><br>
+                    <div class="input-field col m8 s8">
+                        <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label><br>
                         <p><?php echo $specimenPickedUpDateAtAnc; ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="lab">Lab site code/name </label><br>
                          <p><?php echo $row->facility_code.' - '.ucwords($row->facility_name); ?></p>
                     </div>
@@ -87,13 +92,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="labSpecimenId" class="">Lab Specimen ID </label><br>
                         <p><?php echo $row->lab_specimen_id; ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label><br>
                         <p><?php echo $receiptDateAtCentralLab; ?></p>
                     </div>
@@ -101,13 +106,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="rejectionReason">Specimen Rejection Code </label><br>
                         <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label><br>
                         <p><?php echo $row->final_lag_avidity_odn; ?></p>
                     </div>
@@ -115,13 +120,13 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                       <label for="lagAvidityResult" class=""> LAg Avidity Result </label><br>
                       <p><?php echo strtoupper($row->lag_avidity_result); ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
                         <p><?php echo $row->hiv_rna; ?></p>
                     </div>
@@ -129,27 +134,27 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                       <label for="hivRnaGT1000" class=""> HIV RNA >= 1,000 (copies/ml </label><br>
                       <p><?php echo ucfirst($row->hiv_rna_gt_1000); ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
-                      <label for="recentInfection" class=""> Recent Infection (LAg-R & RNA >= 1,000) </label><br><br>
+                    <div class="input-field col m8 s8">
+                      <label for="recentInfection" class=""> Recent Infection (LAg-R & RNA >= 1,000) </label><br>
                       <p><?php echo ucfirst($row->recent_infection); ?></p>
                     </div>
                 </div>
             </div>
             <div class="row" style="margin-bottom:20px !important;">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
-                        <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br><br>
+                    <div class="input-field col m8 s8">
+                        <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
                         <p><?php echo $resultDispatchedDateToClinic; ?></p>
                     </div>
                 </div>
                 <div class="col s6">
-                   <div class="input-field col m6 s6">
+                   <div class="input-field col m8 s8">
                       <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
                       <p><?php echo strtoupper($row->asante_rapid_recency_assy); ?></p>
                     </div>

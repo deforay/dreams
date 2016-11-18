@@ -9,16 +9,16 @@
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="addDataCollectionForm" name="addDataCollectionForm" method="post" action="<?php echo $this->url('data-collection',array('action'=>'add')); ?>">
-        <div class="card" style="height:836px !important;">
+        <div class="card" style="height:816px !important;">
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
                         <label for="surveillanceId" class="">Surveillance ID *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
                         <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
                     </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <select id="ancSite" name="ancSite" class="material-select" title="Please select ANC site">
                             <option value=""> -- Select -- </option>
                             <?php
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code">
                         <label for="ancSiteCode" class="">ANC site code * </label>
                     </div>
@@ -47,13 +47,13 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
                         <label for="ancPatientId" class="">ANC Patient ID * </label>
                     </div>
                 </div>
                  <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="age" name="age" type="text" class="validate checkNum" title="Please enter age">
                         <label for="age" class="">Age </label>
                     </div>
@@ -61,13 +61,13 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
                         <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <select id="lab" name="lab" class="material-select" title="Please select lab site code/name">
                             <option value=""> -- Select -- </option>
                             <?php
@@ -82,13 +82,13 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID">
                         <label for="labSpecimenId" class="">Lab Specimen ID </label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
                         <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
                     </div>
@@ -96,7 +96,7 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code">
                             <option value=""> -- Select -- </option>
                             <?php
@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate" title="Please enter final LAg avidity ODn">
                         <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label>
                     </div>
@@ -117,7 +117,7 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-padding col m6 s6">
+                    <div class="input-padding col m8 s8">
                       LAg Avidity Result<br>
                       <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r"/>
 -                     <label for="lagAvidityResultRecent">R </label>&nbsp;
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="hivRna" name="hivRna" type="text" class="validate" title="Please enter HIV RNA">
                         <label for="hivRna" class="">HIV RNA (copies/ml) </label>
                     </div>
@@ -134,7 +134,7 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-padding col m6 s6">
+                    <div class="input-padding col m8 s8">
                       HIV RNA >= 1,000 (copies/ml)<br>
                       <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes"/>
 -                     <label for="hivRnaGT1000Yes">Yes </label>&nbsp;
@@ -143,7 +143,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-padding col m6 s6">
+                    <div class="input-padding col m8 s8">
                       Recent Infection (LAg-R & RNA >= 1,000)<br>
                       <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes"/>
 -                     <label for="recentInfectionYes">Yes </label>&nbsp;
@@ -154,13 +154,13 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m8 s8">
                         <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
                         <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
                     </div>
                 </div>
                 <div class="col s6">
-                   <div class="input-padding col m6 s6">
+                   <div class="input-padding col m8 s8">
                       Asante Rapid Recency Assay<br>
                       <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssay" type="radio" value="p"/>
 -                     <label for="asanteRapidRecencyAssayP" style="padding-left:22px !important;">P </label>&nbsp;
