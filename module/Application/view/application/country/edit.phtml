@@ -1,6 +1,11 @@
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Edit Country</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Country</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $this->url('country'); ?>" class="breadcrumb">Countries</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Country</a>
+        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="editCountryForm" name="editCountryForm" method="post" action="<?php echo $this->url('country',array('action'=>'edit')); ?>">

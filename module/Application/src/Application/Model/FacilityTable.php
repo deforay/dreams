@@ -38,6 +38,7 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function fetchAllFacilites($parameters){
+		$loginContainer = new Container('employee');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -118,7 +119,9 @@ class FacilityTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('f' => 'facility'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	
+	   if($loginContainer->roleCode!= 'CHSC'){
+            $sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
+       }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -147,7 +150,9 @@ class FacilityTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('f' => 'facility'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	
+	    if($loginContainer->roleCode!= 'CHSC'){
+            $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
+        }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 		$iTotal = count($tResult);
@@ -198,6 +203,15 @@ class FacilityTable extends AbstractTableGateway {
     }
 	
 	public function fetchActivefacilities(){
-		return $this->select(array('status'=>'active'));
+	    $loginContainer = new Container('employee');
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
+                               ->where(array('f.status'=>'active'));
+        if($loginContainer->roleCode!= 'CHSC'){
+            $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
+        }
+        $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
+        return $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	}
 }

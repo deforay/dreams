@@ -20,7 +20,12 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
 ?>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Edit Data Collection</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Data Collection</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $this->url('data-collection'); ?>" class="breadcrumb">Data Collections</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Data Collection</a>
+        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('data-collection',array('action'=>'edit')); ?>">

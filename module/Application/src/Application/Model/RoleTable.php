@@ -172,6 +172,19 @@ class RoleTable extends AbstractTableGateway {
     }
     
     public function fetchActiveRoles(){
-        return $this->select(array('role_status'=>'active'));
+        $loginContainer = new Container('employee');
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $rolesQuery = $sql->select()->from(array('r' => 'role'))
+                          ->where(array('r.role_status'=>'active'));
+        if($loginContainer->roleCode== 'COSC'){
+            $rolesQuery = $rolesQuery->where('r.role_code IN ("COSC","LS","DEO")');
+        }else if($loginContainer->roleCode== 'LS'){
+            $rolesQuery = $rolesQuery->where('r.role_code IN ("LS","DEO")');
+        }else if($loginContainer->roleCode== 'DEO'){
+           $rolesQuery = $rolesQuery->where('r.role_code IN ("DEO")'); 
+        }
+        $rolesQueryStr = $sql->getSqlStringForSqlObject($rolesQuery);
+        return $dbAdapter->query($rolesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

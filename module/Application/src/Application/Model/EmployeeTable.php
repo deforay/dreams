@@ -41,6 +41,7 @@ class EmployeeTable extends AbstractTableGateway {
 						$loginContainer = new Container('employee');
 						$loginContainer->employeeId = $loginResult->employee_id;
 						$loginContainer->userName = $loginResult->user_name;
+						$loginContainer->roleId = $loginResult->role_id;
 						$loginContainer->roleCode = $loginResult->role_code;
 						$loginContainer->country = $loginResult->country;
 					   return 'home';
@@ -52,6 +53,7 @@ class EmployeeTable extends AbstractTableGateway {
 					$loginContainer = new Container('employee');
 					$loginContainer->employeeId = $loginResult->employee_id;
 					$loginContainer->userName = $loginResult->user_name;
+					$loginContainer->roleId = $loginResult->role_id;
 					$loginContainer->roleCode = $loginResult->role_code;
 					$loginContainer->country = $loginResult->country;
 					return 'home';
@@ -96,6 +98,7 @@ class EmployeeTable extends AbstractTableGateway {
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
+	    $loginContainer = new Container('employee');
 	    $common = new CommonService();
         $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
         $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
@@ -172,9 +175,18 @@ class EmployeeTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('e' => 'employee'))
-		     ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-		     ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-	
+		             ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+		             ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+	   if($loginContainer->roleCode== 'COSC'){
+		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where('r.role_code IN ("COSC","LS","DEO")');
+	   }else if($loginContainer->roleCode== 'LS'){
+		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where('r.role_code IN ("LS","DEO")');
+	   }else if($loginContainer->roleCode== 'DEO'){
+		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where('r.role_code IN ("DEO")'); 
+	   }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -201,9 +213,18 @@ class EmployeeTable extends AbstractTableGateway {
 
        /* Total data set length */
 		$tQuery = $sql->select()->from(array('e' => 'employee'))
-				  ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-				  ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
-	
+				      ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
+				      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+	    if($loginContainer->roleCode== 'COSC'){
+		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $tQuery->where('r.role_code IN ("COSC","LS","DEO")');
+	    }else if($loginContainer->roleCode== 'LS'){
+		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $tQuery = $tQuery->where('r.role_code IN ("LS","DEO")');
+	    }else if($loginContainer->roleCode== 'DEO'){
+		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $tQuery = $tQuery->where('r.role_code IN ("DEO")'); 
+	    }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 		$iTotal = count($tResult);

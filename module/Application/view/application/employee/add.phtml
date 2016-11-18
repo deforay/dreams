@@ -1,6 +1,11 @@
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Add Employee</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Employee</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $this->url('employee'); ?>" class="breadcrumb">Employees</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Employee</a>
+        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="addEmployeeForm" name="addEmployeeForm" method="post" action="<?php echo $this->url('employee',array('action'=>'add')); ?>">

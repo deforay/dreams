@@ -1,6 +1,7 @@
 <?php
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
+$loginContainer = new Container('employee');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,21 +72,26 @@ $alertContainer = new Container('alert');
                         <div class="collapsible-header waves-effect manageMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                         <div class="collapsible-body collapsibleAll collapsibleManageMenu" style="">
                             <ul>
-                                <li class="roleMenu menuAll">
-                                    <a class="roleMenu menuAll" href="<?php echo $this->url('role');?>">Roles</a>
-                                </li>
-                                <li class="countryMenu menuAll">
-                                    <a class="countryMenu menuAll" href="<?php echo $this->url('country');?>">Countries</a>
-                                </li>
+                                <?php
+                                if($loginContainer->roleCode =='CHSC'){
+                                ?>
+                                    <li class="countryMenu menuAll">
+                                        <a class="countryMenu menuAll" href="<?php echo $this->url('country');?>">Countries</a>
+                                    </li>
+                                <?php } ?>
                                 <li class="employeeMenu menuAll">
                                     <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employees</a>
                                 </li>
-                                <li class="facilityMenu menuAll">
-                                    <a class="facilityMenu menuAll" href="<?php echo $this->url('facility');?>">Facilities/Labs</a>
-                                </li>
-                                <li class="ancSiteMenu menuAll">
-                                    <a class="ancSiteMenu menuAll" href="<?php echo $this->url('anc-site');?>">ANC Sites</a>
-                                </li>
+                                <?php
+                                if($loginContainer->roleCode =='CHSC' || $loginContainer->roleCode =='COSC' || $loginContainer->roleCode =='LS'){
+                                ?>
+                                    <li class="facilityMenu menuAll">
+                                        <a class="facilityMenu menuAll" href="<?php echo $this->url('facility');?>">Facilities/Labs</a>
+                                    </li>
+                                    <li class="ancSiteMenu menuAll">
+                                        <a class="ancSiteMenu menuAll" href="<?php echo $this->url('anc-site');?>">ANC Sites</a>
+                                    </li>
+                                <?php } ?>
                             </ul>
                         </div>
                     </li>

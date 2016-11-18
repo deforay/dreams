@@ -38,6 +38,7 @@ class AncSiteTable extends AbstractTableGateway {
     }
     
     public function fetchAllAncSites($parameters){
+		$loginContainer = new Container('employee');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -118,7 +119,9 @@ class AncSiteTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('anc' => 'anc_site'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	
+	   if($loginContainer->roleCode!= 'CHSC'){
+            $sQuery = $sQuery->where(array('anc.country'=>$loginContainer->country));
+       }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -147,7 +150,9 @@ class AncSiteTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	
+	    if($loginContainer->roleCode!= 'CHSC'){
+            $tQuery = $tQuery->where(array('anc.country'=>$loginContainer->country));
+        }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 		$iTotal = count($tResult);
@@ -198,6 +203,15 @@ class AncSiteTable extends AbstractTableGateway {
     }
 	
 	public function fetchActiveAncSites(){
-		return $this->select(array('status'=>'active'));
+	    $loginContainer = new Container('employee');
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $ancSitesQuery = $sql->select()->from(array('anc' => 'anc_site'))
+                             ->where(array('anc.status'=>'active'));
+        if($loginContainer->roleCode!= 'CHSC'){
+            $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$loginContainer->country));
+        }
+        $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
+        return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	}
 }

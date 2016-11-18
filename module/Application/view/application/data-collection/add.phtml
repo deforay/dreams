@@ -1,6 +1,11 @@
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Add Data Collection</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Data Collection</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $this->url('data-collection'); ?>" class="breadcrumb">Data Collections</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Data Collection</a>
+        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="addDataCollectionForm" name="addDataCollectionForm" method="post" action="<?php echo $this->url('data-collection',array('action'=>'add')); ?>">
@@ -8,7 +13,7 @@
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m6 s6">
-                        <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.')">
+                        <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
                         <label for="surveillanceId" class="">Surveillance ID *</label>
                     </div>
                 </div>

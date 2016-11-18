@@ -169,6 +169,15 @@ class CountryTable extends AbstractTableGateway {
     }
     
     public function fetchActiveCountries(){
-        return $this->select(array('status'=>'active'));
+        $loginContainer = new Container('employee');
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $countriesQuery = $sql->select()->from(array('c' => 'country'))
+                              ->where(array('c.status'=>'active'));
+        if($loginContainer->roleCode!= 'CHSC'){
+            $countriesQuery = $countriesQuery->where(array('c.country_id'=>$loginContainer->country));
+        }
+        $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);
+        return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }
