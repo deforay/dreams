@@ -16,17 +16,9 @@ $alertContainer = new Container('alert');
 
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/mara.min.css' ?>"  media="screen"/>
-        <style>
-            select{
-                display:block !important;
-                color:#333;
-            }
-        </style>
-        <!--Let browser know website is optimized for mobile-->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body class="black">
-        <div class="center signin-page"  id="full-page">
+        <div class="center signin-page" id="full-page">
             <div class="black white-text signin-content">
                 <h1 class="center-align mTitle" style="font-family: BaronFont">DREAM</h1>
                 <div class="white signUpContainer center">
@@ -42,14 +34,15 @@ $alertContainer = new Container('alert');
                             <label for="password" class=" left-align">Password</label>
                         </div>
                         <div class="input-field">
-                            <select id="country" name="country" class="">
-                               <option value=""> -- Select Country -- (Optional)</option>
+                            <select id="country" name="country" class="validate black-text material-select">
+                               <option value=""> -- Select -- </option>
                                <?php
                                foreach($countries as $country){
                                ?>
                                  <option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option>
                                <?php } ?>
                             </select>
+                            <label for="country" class=" left-align">Country (Optional)</label>
                         </div>
                         <p>
                             <input type="checkbox" id="terms" />
@@ -67,6 +60,7 @@ $alertContainer = new Container('alert');
         <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/deforayValidation.js' ?>"></script>
         <script>
           $(document).ready(function() {
+            $('.material-select').material_select();
             <?php
             if (isset($alertContainer->msg) && $alertContainer->msg != "") {
                 ?>
