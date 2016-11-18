@@ -34,7 +34,7 @@ class EmployeeController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $result=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries();
+            $countryList=$countryService->getActiveCountries('employee');
             return new ViewModel(array(
             'roleData'=>$result,
             'countries'=>$countryList
@@ -54,7 +54,7 @@ class EmployeeController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries();
+            $countryList=$countryService->getActiveCountries('employee');
             return new ViewModel(array(
                 'empResult'=>$result,
                 'countries'=>$countryList,

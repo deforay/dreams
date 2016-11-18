@@ -34,7 +34,7 @@ class AncSiteController extends AbstractActionController{
         }
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
-        $countryList=$countryService->getActiveCountries();
+        $countryList=$countryService->getActiveCountries('anc');
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
             return new ViewModel(array(
                 'countries'=>$countryList,
@@ -54,7 +54,7 @@ class AncSiteController extends AbstractActionController{
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
         $ancSiteId=base64_decode($this->params()->fromRoute('id'));
         $result=$ancSiteService->getAncSite($ancSiteId);
-        $countryList=$countryService->getActiveCountries();
+        $countryList=$countryService->getActiveCountries('anc');
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
         return new ViewModel(array(
             'countries'=>$countryList,

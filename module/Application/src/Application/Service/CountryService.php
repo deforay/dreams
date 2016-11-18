@@ -70,8 +70,8 @@ class CountryService {
        }
     }
     
-    public function getActiveCountries(){
+    public function getActiveCountries($from){
         $countryDb = $this->sm->get('CountryTable');
-        return $countryDb->fetchActiveCountries();
+        return $countryDb->fetchActiveCountries($from);
     }
 }
