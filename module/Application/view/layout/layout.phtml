@@ -25,6 +25,12 @@ $loginContainer = new Container('employee');
             margin-bottom:0px !important;
             padding-bottom:0px !important;
         }
+        .classic-breadcrumbs{
+            padding-top:14px !important;
+        }
+        .classic-breadcrumbs a:last-child {
+          color:#333;
+        }
     </style>
     <script  src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -39,7 +45,7 @@ $loginContainer = new Container('employee');
                 <div class="nav-wrapper">
                     <ul class="left">
                         <li>
-                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><h4 class="" style="font-family: BaronFont;margin: 0.712rem 0 .912rem 0;">DREAM</h4></a>
+                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><h4 class="" style="font-family: BaronFont;margin: 1.192rem 0 .912rem 0;">DREAM</h4></a>
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
