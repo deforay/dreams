@@ -63,10 +63,8 @@ $loginContainer = new Container('employee');
         <ul class="side-nav fixed clearfix left" id="nav-mobile" style="transform: translateX(0%);">
             <li>
                 <ul class="collapsible" data-collapsible="accordion">
-                    <li id="dashboardMenu" class="menuAll">
-                        <div class="collapsible-header waves-effect">
-                            <i class="zmdi zmdi-palette zmdi-hc-fw"></i> <a href="<?php echo $this->url('home'); ?>">Dashboard</a>
-                        </div>
+                    <li class="dashboardMenu" class="menuAll">
+                         <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
                     </li>
                     <li id="manageMenu" class="menuAll">
                         <div class="collapsible-header waves-effect manageMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
@@ -95,10 +93,8 @@ $loginContainer = new Container('employee');
                             </ul>
                         </div>
                     </li>
-                    <li id="dataCollectionMenu" class="menuAll">
-                        <div class="collapsible-header waves-effect">
-                            <i class="zmdi zmdi-view-list zmdi-hc-fw"></i> <a href="<?php echo $this->url('data-collection'); ?>">Data Collection</a>
-                        </div>
+                    <li class="dataCollectionMenu" class="menuAll">
+                        <a href="<?php echo $this->url('data-collection'); ?>" class="dataCollectionMenu menuAll collapsible-header"><i class="zmdi zmdi-view-list zmdi-hc-fw"></i> Data Collection</a>
                     </li>
                 </ul>
             </li>
@@ -158,11 +154,16 @@ $loginContainer = new Container('employee');
           $(".ancSiteMenu").addClass("active");
         }else if(splitsUrl[1]=='data-collection'){
           $(".collapsibleManageMenu").css("display","none");
-          $("#dataCollectionMenu").addClass("active");
+          $(".dataCollectionMenu").addClass("active");
         }else{
-            $("#dashboardMenu").addClass("active");
+            $(".dashboardMenu").addClass("active");
         }
     });
+    
+    $(window).load(function() {
+        $('.zmdi-search').removeClass('active');
+    });
+    
     $(document).ready(function(){
         <?php
         if (isset($alertContainer->msg) && $alertContainer->msg != "") {
@@ -175,9 +176,6 @@ $loginContainer = new Container('employee');
         ?>
             
         $('.material-select').material_select();
-        $.curCSS = function (element, attrib, val) {
-            $(element).css(attrib, val);
-        };
     });
 </script>
 <script>

@@ -269,7 +269,7 @@ class EmployeeTable extends AbstractTableGateway {
 		if(isset($params['userName']) && trim($params['userName'])!= ''){
 			$employeeId = base64_decode($params['employeeId']);
 			$common = new CommonService();
-				$data = array(
+			$data = array(
 			'employee_name' => $params['employeeName'],
 			'employee_code' => $params['employeeCode'],
 			'user_name' => $params['userName'],
@@ -281,9 +281,9 @@ class EmployeeTable extends AbstractTableGateway {
 			'status' => $params['status']
 				);
 			if (isset($params['password']) && trim($params['password']) != ''){
-			$config = new \Zend\Config\Reader\Ini();
-			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-			$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
+				$config = new \Zend\Config\Reader\Ini();
+				$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+				$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 			}
 			$this->update($data,array('employee_id'=>$employeeId));
 		}
