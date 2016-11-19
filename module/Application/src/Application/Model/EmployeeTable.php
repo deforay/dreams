@@ -36,12 +36,15 @@ class EmployeeTable extends AbstractTableGateway {
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
+				if($loginResult->status== 'inactive'){
+					$alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
+					return 'login';
+				}
 				if($isCountrySelected){
 					if($loginResult->country == $selectedCountry){
 						$loginContainer = new Container('employee');
 						$loginContainer->employeeId = $loginResult->employee_id;
 						$loginContainer->userName = $loginResult->user_name;
-						$loginContainer->roleId = $loginResult->role_id;
 						$loginContainer->roleCode = $loginResult->role_code;
 						$loginContainer->country = $loginResult->country;
 					   return 'home';
@@ -53,7 +56,6 @@ class EmployeeTable extends AbstractTableGateway {
 					$loginContainer = new Container('employee');
 					$loginContainer->employeeId = $loginResult->employee_id;
 					$loginContainer->userName = $loginResult->user_name;
-					$loginContainer->roleId = $loginResult->role_id;
 					$loginContainer->roleCode = $loginResult->role_code;
 					$loginContainer->country = $loginResult->country;
 					return 'home';
