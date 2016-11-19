@@ -29,7 +29,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('data-collection',array('action'=>'edit')); ?>">
-        <div class="card" style="height:816px !important;">
+        <div class="card" style="height:908px !important;">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m8 s8">
@@ -190,6 +190,20 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
 -                     <label for="asanteRapidRecencyAssayR" style="padding-left:22px !important;">R </label>&nbsp;
 -                     <input id="asanteRapidRecencyAssayLT" class="with-gap" name="asanteRapidRecencyAssay" type="radio" <?php echo($row->asante_rapid_recency_assy == 'lt')?'checked="checked"':''; ?> value="lt"/>
 -                     <label for="asanteRapidRecencyAssayLT" style="padding-left:22px !important;">LT </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m8 s8">
+                        <select id="status" name="status" class="material-select" title="Please select status">
+                            <?php
+                            foreach($allTestStatus as $testStatus){
+                            ?>
+                              <option value="<?php echo base64_encode($testStatus['test_status_id']); ?>" <?php echo($row->status == $testStatus['test_status_id'])?'selected="selected"':''; ?>><?php echo ucwords($testStatus['test_status_name']); ?></option>
+                            <?php } ?>
+                        </select>
+                        <label for="status">Status </label>
                     </div>
                 </div>
             </div>

@@ -38,6 +38,9 @@ $loginContainer = new Container('employee');
         /*left: -184px*/
 
     }
+	#dataCollectionDataTable_wrapper{
+		overflow-x:scroll;
+	}
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -69,7 +72,8 @@ $loginContainer = new Container('employee');
                                 ?>
                                   <th>Country</th>
 								<?php } ?>
-                                <th style="width:15% !important;">Action</th>
+								<th>Status</th>
+                                <th style="width:170px !important;">Action</th>
                             </tr>
                         </thead>
 			            <tfoot>
@@ -86,6 +90,7 @@ $loginContainer = new Container('employee');
                                 ?>
                                   <th>Country</th>
 								<?php } ?>
+								<th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -116,6 +121,7 @@ $loginContainer = new Container('employee');
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
+		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}
             ],
         "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",

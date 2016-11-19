@@ -161,6 +161,11 @@ class CommonService {
         $specimenRejectionReasonDb = $this->sm->get('SpecimenRejectionReasonTable');
         return $specimenRejectionReasonDb->fetchActiveRejectionReasons();
     }
+    
+    public function getAllTestStatus(){
+        $testStatusDb = $this->sm->get('TestStatusTable');
+        return $testStatusDb->fetchAllTestStatus();
+    }
 }
 
 ?>

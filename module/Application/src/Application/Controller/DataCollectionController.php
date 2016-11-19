@@ -60,11 +60,13 @@ class DataCollectionController extends AbstractActionController{
         $facilityService = $this->getServiceLocator()->get('FacilityService');
         $ancSiteList=$ancSiteService->getActiveAncSites();
         $rejectionReasonList=$commonService->getActiveRejectionReasons();
+        $testStatusList=$commonService->getAllTestStatus();
         $facilityList=$facilityService->getActivefacilities();
         return new ViewModel(array(
             'row'=>$result,
             'ancSites'=>$ancSiteList,
             'rejectionReasons'=>$rejectionReasonList,
+            'allTestStatus'=>$testStatusList,
             'facilities'=>$facilityList
         ));
     }

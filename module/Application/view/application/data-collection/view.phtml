@@ -33,7 +33,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <div class="data-collection-view card" style="height:774px !important;">
+        <div class="data-collection-view card" style="height:856px !important;">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m8 s8">
@@ -146,7 +146,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:20px !important;">
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m8 s8">
                         <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
@@ -157,6 +157,14 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
                    <div class="input-field col m8 s8">
                       <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
                       <p><?php echo strtoupper($row->asante_rapid_recency_assy); ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:20px !important;">
+                <div class="col s6">
+                    <div class="input-field col m8 s8">
+                      <label for="status" class=""> Status </label><br>
+                      <p><?php echo ucwords($row->test_status_name); ?></p>
                     </div>
                 </div>
             </div>

@@ -71,6 +71,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
                         'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
                         'country'=>$loginContainer->country,
+						'status'=>1,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->employeeId
                     );
@@ -94,11 +95,11 @@ class DataCollectionTable extends AbstractTableGateway {
         */
 	    $common = new CommonService();
 		if($loginContainer->roleCode =='CSC'){
-            $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','c.country_name');
-            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','c.country_name');
+            $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','c.country_name','t.test_status_name');
+            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','c.country_name','t.test_status_name');
 		}else{
-			$aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id');
-            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id');
+			$aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','t.test_status_name');
+            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','t.test_status_name');
 		}
 
        /*
@@ -175,7 +176,8 @@ class DataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
-                     ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'));
+                     ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+					 ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
 		if($loginContainer->roleCode!= 'CSC'){
 			$sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
@@ -207,7 +209,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 					  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
 					  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
-					  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'));
+					  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+					  ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
 		if($loginContainer->roleCode!= 'CSC'){
 			$tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
@@ -240,6 +243,7 @@ class DataCollectionTable extends AbstractTableGateway {
 			if($loginContainer->roleCode =='CSC'){
 			   $row[] = ucwords($aRow['country_name']);
 			}
+			$row[] = ucwords($aRow['test_status_name']);
 			 $dataView = '';
 			 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
 			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-edit"></i> View</a>';
@@ -266,6 +270,7 @@ class DataCollectionTable extends AbstractTableGateway {
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                                    ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
+                                   ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
                                    ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
                                    ->where(array('da_c.data_collection_id'=>$dataCollectionId));
 	   $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
@@ -326,7 +331,8 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
-                        'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay']
+                        'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
+                        'status'=>base64_decode($params['status'])
                     );
             $this->update($data,array('data_collection_id'=>$dataCollectionId));
 			//Add new row into data collection event log table

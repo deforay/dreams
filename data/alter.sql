@@ -200,3 +200,32 @@ ALTER TABLE `data_collection_event_log`
 ALTER TABLE `data_collection` ADD `lock_state` VARCHAR(45) NULL DEFAULT NULL AFTER `country`, ADD `status` VARCHAR(45) NOT NULL DEFAULT 'pending' AFTER `lock_state`;
 
 ALTER TABLE `data_collection_event_log` ADD `lock_state` VARCHAR(45) NULL DEFAULT NULL AFTER `country`, ADD `status` VARCHAR(45) NOT NULL DEFAULT 'pending' AFTER `lock_state`
+
+--Pal 19/11/2016
+ALTER TABLE `data_collection` CHANGE `status` `status` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'awaiting';
+
+ALTER TABLE `data_collection` DROP `status`;
+
+ALTER TABLE `data_collection` ADD `status` INT(11) NULL DEFAULT NULL AFTER `lock_state`;
+
+ALTER TABLE `data_collection_event_log` CHANGE `status` `status` INT(11) NULL DEFAULT NULL;
+
+CREATE TABLE `test_status` (
+  `test_status_id` int(11) NOT NULL,
+  `test_status_name` varchar(255) DEFAULT NULL
+)
+
+ALTER TABLE `test_status`
+  ADD PRIMARY KEY (`test_status_id`);
+  
+ALTER TABLE `test_status`
+  MODIFY `test_status_id` int(11) NOT NULL AUTO_INCREMENT
+  
+INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES
+(1, 'Awaiting Clinic Approval'),
+(2, 'Accepted'),
+(3, 'Rejected'),
+(4, 'Hold'),
+(5, 'Sample Reordered'),
+(6, 'Invalid'),
+(7, 'Lost');

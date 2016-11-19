@@ -24,6 +24,7 @@ use Application\Model\AncSiteTable;
 use Application\Model\SpecimenRejectionReasonTable;
 use Application\Model\DataCollectionTable;
 use Application\Model\DataCollectionEventLogTable;
+use Application\Model\TestStatusTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -144,6 +145,10 @@ class Module{
                 },'DataCollectionEventLogTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new DataCollectionEventLogTable($dbAdapter);
+                    return $table;
+                },'TestStatusTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new TestStatusTable($dbAdapter);
                     return $table;
                 },
             ),
