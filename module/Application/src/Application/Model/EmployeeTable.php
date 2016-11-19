@@ -100,8 +100,13 @@ class EmployeeTable extends AbstractTableGateway {
         */
 	    $loginContainer = new Container('employee');
 	    $common = new CommonService();
-        $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
-        $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
+		if($loginContainer->roleCode =='CSC'){
+            $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+            $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
+		}else{
+			$aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+            $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','e.status','e.created_on');
+		}
 
        /*
         * Paging
@@ -242,7 +247,9 @@ class EmployeeTable extends AbstractTableGateway {
 			$row[] = $aRow['user_name'];
 			$row[] = $aRow['email'];
 			$row[] = $aRow['mobile'];
-			$row[] = ucwords($aRow['country_name']);
+			if($loginContainer->roleCode =='CSC'){
+			  $row[] = ucwords($aRow['country_name']);
+			}
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
 			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';

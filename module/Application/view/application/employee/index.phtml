@@ -1,3 +1,7 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('employee');
+?>
 <style>
     .card-default {
         border: 1px solid #eaeaea;
@@ -55,23 +59,31 @@
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Role</th>
-				<th>User Name</th>
+				                <th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-                                <th>Country</th>
+								<?php
+                                if($loginContainer->roleCode =='CSC'){
+                                ?>
+                                  <th>Country</th>
+								<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
-                                <th>Action</th>
+                                <th style="width:80px !important;">Action</th>
                             </tr>
                         </thead>
-			<tfoot>
+			            <tfoot>
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Role</th>
-				<th>User Name</th>
+				                <th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-				<th>Country</th>
+				                <?php
+                                if($loginContainer->roleCode =='CSC'){
+                                ?>
+                                  <th>Country</th>
+								<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th>Action</th>
@@ -97,7 +109,11 @@
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
-		{"sClass":"center"},
+		<?php
+		if($loginContainer->roleCode =='CSC'){
+		?>
+		  {"sClass":"center"},
+		<?php } ?>
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}

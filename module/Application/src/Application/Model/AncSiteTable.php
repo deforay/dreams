@@ -42,8 +42,13 @@ class AncSiteTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
-        $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
+		if($loginContainer->roleCode =='CSC'){
+            $aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
+            $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
+		}else{
+			$aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.phone_number','anc.status');
+            $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.phone_number','anc.status');
+		}
 
        /*
         * Paging
@@ -168,7 +173,9 @@ class AncSiteTable extends AbstractTableGateway {
 				$row[] = ucwords($aRow['facility_type_name']);
 				$row[] = $aRow['email'];
 				$row[] = $aRow['phone_number'];
-				$row[] = ucwords($aRow['country_name']);
+				if($loginContainer->roleCode =='CSC'){
+				   $row[] = ucwords($aRow['country_name']);
+				}
 				$row[] = ucwords($aRow['status']);
 				$row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 				$output['aaData'][] = $row;

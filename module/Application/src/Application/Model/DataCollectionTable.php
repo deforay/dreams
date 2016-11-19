@@ -93,8 +93,13 @@ class DataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	    $common = new CommonService();
-        $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')");
-        $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','da_c.receipt_date_at_central_lab');
+		if($loginContainer->roleCode =='CSC'){
+            $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','c.country_name');
+            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','c.country_name');
+		}else{
+			$aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id');
+            $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id');
+		}
 
        /*
         * Paging
@@ -169,7 +174,8 @@ class DataCollectionTable extends AbstractTableGateway {
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
-                     ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'));
+                     ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
+                     ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'));
 		if($loginContainer->roleCode!= 'CSC'){
 			$sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
@@ -200,7 +206,8 @@ class DataCollectionTable extends AbstractTableGateway {
        /* Total data set length */
 		$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 					  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
-					  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'));
+					  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
+					  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'));
 		if($loginContainer->roleCode!= 'CSC'){
 			$tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
 		}
@@ -223,10 +230,6 @@ class DataCollectionTable extends AbstractTableGateway {
 			if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
 				$specimenPickedUpDateAtAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
 			}
-			$receiptDateAtCentralLab = '';
-			if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
-				$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-			}
 			$row[] = $aRow['surveillance_id'];
 			$row[] = $specimenCollectionDate;
 			$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
@@ -234,7 +237,9 @@ class DataCollectionTable extends AbstractTableGateway {
 			$row[] = $specimenPickedUpDateAtAnc;
 			$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
 			$row[] = $aRow['lab_specimen_id'];
-			$row[] = $receiptDateAtCentralLab;
+			if($loginContainer->roleCode =='CSC'){
+			   $row[] = ucwords($aRow['country_name']);
+			}
 			 $dataView = '';
 			 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
 			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-edit"></i> View</a>';

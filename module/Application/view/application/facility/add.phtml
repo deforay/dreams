@@ -1,3 +1,7 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('employee');
+?>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Facility</div>
@@ -62,7 +66,7 @@
                 <div class="col s6">
                     <div class="input-field col m6 s6">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('facility', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('facility', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.');">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -76,7 +80,7 @@
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($loginContainer->roleCode!= "CSC" && $loginContainer->country ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>

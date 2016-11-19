@@ -42,8 +42,13 @@ class FacilityTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
-        $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
+		if($loginContainer->roleCode =='CSC'){
+           $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
+           $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
+		}else{
+		   $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','f.status');
+           $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','f.status');
+		}
 
        /*
         * Paging
@@ -168,7 +173,9 @@ class FacilityTable extends AbstractTableGateway {
 				$row[] = ucwords($aRow['facility_type_name']);
 				$row[] = $aRow['email'];
 				$row[] = $aRow['phone_number'];
-				$row[] = ucwords($aRow['country_name']);
+				if($loginContainer->roleCode =='CSC'){
+				  $row[] = ucwords($aRow['country_name']);
+				}
 				$row[] = ucwords($aRow['status']);
 				$row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 				$output['aaData'][] = $row;
