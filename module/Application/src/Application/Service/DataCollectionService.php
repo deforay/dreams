@@ -105,4 +105,9 @@ class DataCollectionService {
         }
     }
     
+    public function requestForUnlockDataCollection($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->requestForUnlockDataCollectionDetails($params);
+    }
+    
 }

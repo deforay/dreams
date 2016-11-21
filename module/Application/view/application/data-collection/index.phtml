@@ -176,4 +176,18 @@ $loginContainer = new Container('employee');
                     });
             }
 	}
+	
+	function requestToUnlock(ID){
+		 var conf = confirm("Are you sure you want to send request for unlock this data collection..?");
+            if(conf){
+                $.post("<?php echo $this->url('data-collection',array('action'=>'send-request')); ?>", {dataCollectionId:ID},
+                    function(data){
+                        if($.trim(data) == 0 || $.trim(data) == ''){
+                          alert("OOPS..");
+                        }else{
+                          oTable.draw();
+                        }
+                    });
+            }
+	}
 </script>

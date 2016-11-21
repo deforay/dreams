@@ -229,3 +229,7 @@ INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES
 (5, 'Sample Reordered'),
 (6, 'Invalid'),
 (7, 'Lost');
+
+ALTER TABLE `data_collection` ADD `request_state` VARCHAR(45) NULL DEFAULT NULL AFTER `lock_state`;
+
+ALTER TABLE `data_collection_event_log` ADD `request_state` VARCHAR(45) NULL DEFAULT NULL AFTER `lock_state`;
