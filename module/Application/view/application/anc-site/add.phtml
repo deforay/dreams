@@ -16,14 +16,14 @@ $loginContainer = new Container('employee');
         <div class="card">
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
                         <input id="ancSiteName" name="ancSiteName" type="text" class="validate isRequired" title="Please enter ANC site name">
                         <label for="ancSiteName" class="">ANC Site Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
                         <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" onblur="checkNameValidation('anc_site', 'anc_site_code', this, null,'The anc site code that you entered already exist. Please enter different code.')">
                         <label for="ancSiteCode" class="">ANC Site Code *</label>
@@ -32,9 +32,9 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="ancSiteType" name="ancSiteType" class="isRequired" title="Please select ANC site type">
+                        <select class="material-select isRequired" id="ancSiteType" name="ancSiteType" title="Please select ANC site type">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($facilityTypes as $facilityType){
@@ -48,23 +48,23 @@ $loginContainer = new Container('employee');
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('anc_site', 'email', this, null,'The anc site email that you entered already exist. Please enter different email id.')">
-                        <label for="email" class="">Email *</label>
+                        <input id="email" name="email" type="text" class="validate isEmail" title="Please enter email-id" onblur="checkNameValidation('anc_site', 'email', this, null,'The anc site email that you entered already exist. Please enter different email id.')">
+                        <label for="email" class="">Email </label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">contacts</i>
                         <input id="contactPerson" name="contactPerson" type="text" class="validate isRequired" title="Please enter contact person name">
                         <label for="contactPerson" class="">Contact Person *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
                         <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.');">
                         <label for="mobile" class="">Contact Number *</label>
@@ -73,9 +73,9 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                  <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
-                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                        <select class="material-select isRequired" id="country" name="country" title="Please select country">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($countries as $country){
@@ -89,7 +89,7 @@ $loginContainer = new Container('employee');
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <textarea id="address" name="address" class="materialize-textarea"></textarea>
                         <label for="address">Address</label>
                     </div>
@@ -97,21 +97,21 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
                         <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude">
                         <label for="latitude" class="">Latitude </label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
                         <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude">
                         <label for="longitude" class="">Longitude </label>
                     </div>
                 </div>
             </div>
-            <div class="col s6">
+            <div class="col s12">
                 <a href="<?php echo $this->url('anc-site'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">ADD</a>&nbsp;&nbsp;
             </div>

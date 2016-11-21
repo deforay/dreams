@@ -16,14 +16,14 @@ $loginContainer = new Container('employee');
         <div class="card">
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
                         <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name">
                         <label for="employeeName" class="">Employee Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
                         <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" onblur="checkNameValidation('employee', 'employee_code', this, null,'The employee code that you entered already exist. Please enter different code.')">
                         <label for="employeeCode" class="">Employee Code *</label>
@@ -32,14 +32,14 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
                         <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" onblur="checkNameValidation('employee', 'user_name', this, null,'The user name that you entered already exist. Please enter different name.')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
                         <input id="password" name="password" type="password" class="validate isRequired" title="Please enter password">
                         <label for="password" class="">Password *</label>
@@ -48,16 +48,16 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
                         <input id="confirmPassword" name="password" type="password" class="validate isRequired confirmPassword" title="Please check that your password and confirm password are same">
                         <label for="password" class="">Confirm Password *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="role" name="role" class="isRequired" title="Please select employee role">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select employee role">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($roleData as $role){
@@ -73,14 +73,14 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
                         <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
                         <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('employee', 'mobile', this, null,'The employee mobile no. that you entered already exist. Please enter different mobile no');">
                         <label for="mobile" class="">Contact Number *</label>
@@ -89,16 +89,16 @@ $loginContainer = new Container('employee');
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
                         <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number">
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
                  <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
-                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                        <select class="material-select isRequired" id="country" name="country" title="Please select country">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($countries as $country){
@@ -112,7 +112,7 @@ $loginContainer = new Container('employee');
                     </div>
                 </div>
             </div>
-            <div class="col s6">
+            <div class="col s12">
                 <a href="<?php echo $this->url('employee'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addEmployee();">ADD</a>&nbsp;&nbsp;
             </div>

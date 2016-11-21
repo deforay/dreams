@@ -12,14 +12,14 @@
         <div class="card">
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
                         <input id="ancSiteName" name="ancSiteName" type="text" class="validate isRequired" title="Please enter ANC site name" value="<?php echo $row->anc_site_name; ?>">
                         <label for="ancSiteName" class="">ANC Site Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
                         <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" value="<?php echo $row->anc_site_code; ?>" onblur="checkNameValidation('anc_site', 'anc_site_code', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The anc site code that you entered already exist. Please enter different code.')">
                         <label for="ancSiteCode" class="">ANC Site Code *</label>
@@ -28,9 +28,9 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="ancSiteType" name="ancSiteType" class="isRequired" title="Please select ANC site type">
+                        <select class="material-select isRequired" id="ancSiteType" name="ancSiteType" title="Please select ANC site type">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($facilityTypes as $facilityType){
@@ -44,23 +44,23 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('anc_site', 'email', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The anc site email that you entered already exist. Please enter different email id.')">
-                        <label for="email" class="">Email *</label>
+                        <input id="email" name="email" type="text" class="validate isEmail" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('anc_site', 'email', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The anc site email that you entered already exist. Please enter different email id.')">
+                        <label for="email" class="">Email </label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">contacts</i>
                         <input id="contactPerson" name="contactPerson" type="text" class="validate isRequired" title="Please enter contact person name" value="<?php echo $row->contact_person; ?>">
                         <label for="contactPerson" class="">Contact Person *</label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
                         <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('anc_site', 'phone_number', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The contact no. that you entered already exist. Please enter different contact no.')">
                         <label for="mobile" class="">Contact Number *</label>
@@ -69,9 +69,9 @@
             </div>
             <div class="row">
                  <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
-                        <select class="material-select" id="country" name="country" class="validate isRequired" title="Please select country">
+                        <select class="material-select isRequired" id="country" name="country" title="Please select country">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($countries as $country){
@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <textarea id="address" name="address" class="materialize-textarea"><?php echo $row->address; ?></textarea>
                         <label for="address">Address</label>
                     </div>
@@ -93,14 +93,14 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
                         <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude" value="<?php echo $row->latitude; ?>">
                         <label for="latitude" class="">Latitude </label>
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
                         <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude" value="<?php echo $row->longitude; ?>">
                         <label for="longitude" class="">Longitude </label>
@@ -109,7 +109,7 @@
             </div>
             <div class="row">
                 <div class="col s6">
-                    <div class="input-field col m6 s6">
+                    <div class="input-field col m10 s10">
                         <select id="ancSiteStatus" name="ancSiteStatus" class="material-select">
                             <option value="active" <?php echo($row->status == "active")?'selected="selected"':'';  ?>>Active</option>
                             <option value="inactive" <?php echo($row->status == "inactive")?'selected="selected"':'';  ?>>Inactive</option>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col s6">
+            <div class="col s12">
                 <input id="ancSiteId" name="ancSiteId" type="hidden" value="<?php echo base64_encode($row->anc_site_id); ?>"/>
                 <a href="<?php echo $this->url('anc-site'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">UPDATE</a>&nbsp;&nbsp;
