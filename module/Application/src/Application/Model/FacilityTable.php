@@ -127,6 +127,9 @@ class FacilityTable extends AbstractTableGateway {
 	   if($loginContainer->roleCode!= 'CSC'){
             $sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
        }
+       if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
+	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -158,6 +161,9 @@ class FacilityTable extends AbstractTableGateway {
 	    if($loginContainer->roleCode!= 'CSC'){
             $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
         }
+        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));  
+	}
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 		$iTotal = count($tResult);

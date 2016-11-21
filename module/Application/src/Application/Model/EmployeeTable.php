@@ -25,41 +25,41 @@ class EmployeeTable extends AbstractTableGateway {
             $sql = new Sql($dbAdapter);
             $userName = trim($params['userName']);
             $password = sha1($params['password'].$configResult["password"]["salt"]);
-			$isCountrySelected = false;
-			if(isset($params['country']) && trim($params['country'])!= ''){
-			   $isCountrySelected = true;
-			   $selectedCountry = base64_decode($params['country']);
-			}
+	    $isCountrySelected = false;
+	    if(isset($params['country']) && trim($params['country'])!= ''){
+	       $isCountrySelected = true;
+	       $selectedCountry = base64_decode($params['country']);
+	    }
             $loginQuery = $sql->select()->from(array('e' => 'employee'))
                               ->join(array('r'=>'role'),'r.role_id=e.role',array('role_code'))
                               ->where(array('e.user_name' => $userName, 'e.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
-				if($loginResult->status== 'inactive'){
-					$alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
-					return 'login';
-				}
-				if($isCountrySelected){
-					if($loginResult->country == $selectedCountry){
-						$loginContainer = new Container('employee');
-						$loginContainer->employeeId = $loginResult->employee_id;
-						$loginContainer->userName = $loginResult->user_name;
-						$loginContainer->roleCode = $loginResult->role_code;
-						$loginContainer->country = $loginResult->country;
-					   return 'home';
-					}else{
-					   $alertContainer->msg = 'Please check the country that you have choosen..!';
-					   return 'login';
-					}
-				}else{
-					$loginContainer = new Container('employee');
-					$loginContainer->employeeId = $loginResult->employee_id;
-					$loginContainer->userName = $loginResult->user_name;
-					$loginContainer->roleCode = $loginResult->role_code;
-					$loginContainer->country = $loginResult->country;
-					return 'home';
-				}
+		if($loginResult->status== 'inactive'){
+			$alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
+			return 'login';
+		}
+		if($isCountrySelected){
+			if($loginResult->country == $selectedCountry){
+				$loginContainer = new Container('employee');
+				$loginContainer->employeeId = $loginResult->employee_id;
+				$loginContainer->userName = $loginResult->user_name;
+				$loginContainer->roleCode = $loginResult->role_code;
+				$loginContainer->country = $loginResult->country;
+			   return 'home';
+			}else{
+			   $alertContainer->msg = 'Please check the country that you have choosen..!';
+			   return 'login';
+			}
+		}else{
+			$loginContainer = new Container('employee');
+			$loginContainer->employeeId = $loginResult->employee_id;
+			$loginContainer->userName = $loginResult->user_name;
+			$loginContainer->roleCode = $loginResult->role_code;
+			$loginContainer->country = $loginResult->country;
+			return 'home';
+		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
                 return 'login';
@@ -194,6 +194,9 @@ class EmployeeTable extends AbstractTableGateway {
 		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
 		  $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
 	   }
+	   if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	      $sQuery = $sQuery->where(array('e.country'=>base64_decode($parameters['country'])));
+	    }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -231,6 +234,9 @@ class EmployeeTable extends AbstractTableGateway {
 	    }else if($loginContainer->roleCode== 'LDEO'){
 		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
 		  $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
+	    }
+	    if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	      $tQuery = $tQuery->where(array('e.country'=>base64_decode($parameters['country'])));  
 	    }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

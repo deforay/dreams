@@ -21,6 +21,12 @@ class EmployeeController extends AbstractActionController{
             $employeeService = $this->getServiceLocator()->get('EmployeeService');
             $result = $employeeService->getAllEmployees($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries('employee');
+            return new ViewModel(array(
+                'countries'=>$countryList
+            ));
         }
     }
     

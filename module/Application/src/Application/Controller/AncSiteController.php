@@ -21,6 +21,12 @@ class AncSiteController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $result = $ancSiteService->getAllAncSites($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries('anc');
+            return new ViewModel(array(
+                'countries'=>$countryList
+            ));
         }
     }
     

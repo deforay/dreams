@@ -21,6 +21,12 @@ class FacilityController extends AbstractActionController{
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $result = $facilityService->getAllFacilites($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries('facility');
+            return new ViewModel(array(
+                'countries'=>$countryList
+            ));
         }
     }
     
