@@ -53,30 +53,34 @@ $loginContainer = new Container('employee');
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Collections</a>
        </div>
     </div>
-    <div class="row">
-	<div class="col l12 m12 s12">
-	    <table style="width:100%;">
-		<tr>
-		    <td style="text-align:right;"><h6><strong>Country</strong></h6></td>
-		    <td style="text-align:left;">
-			<select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-                            <option value=""> -- Select -- </option>
-                            <?php
-                            foreach($countries as $country){
-                                ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-		    </td>
-		</tr>
-		<tr>
-		    <td colspan="2" style="text-align:center;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
-		</tr>
-	    </table>
+    <?php
+    if($loginContainer->roleCode =='CSC'){
+    ?>
+	<div class="row">
+	    <div class="col l12 m12 s12">
+		<table style="width:100%;">
+		    <tr>
+			<td style="text-align:right;"><h6><strong>Country</strong></h6></td>
+			<td style="text-align:left;">
+			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
+				<option value=""> -- Select -- </option>
+				<?php
+				foreach($countries as $country){
+				    ?>
+				    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+				    <?php
+				}
+				?>
+			    </select>
+			</td>
+		    </tr>
+		    <tr>
+			<td colspan="2" style="text-align:center;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+		    </tr>
+		</table>
+	    </div>
 	</div>
-    </div>
+    <?php } ?>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
