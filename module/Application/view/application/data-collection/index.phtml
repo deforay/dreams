@@ -62,35 +62,33 @@ $loginContainer = new Container('employee');
                             <tr>
                                 <th>Surveillance ID</th>
                                 <th>Specimen Collected Date</th>
-				                <th>ANC site</th>
+				<th>ANC site</th>
                                 <th>ANC Patient ID</th>
-                                <th>Specimen Picked Up Date at ANC</th>
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC'){
                                 ?>
-                                  <th>Country</th>
-								<?php } ?>
-								<th>Status</th>
-                                <th style="width:170px !important;">Action</th>
+                                 <th>Country</th>
+				<?php } ?>
+				<th>Status</th>
+                                <th style="width:120px !important;">Action</th>
                             </tr>
                         </thead>
-			            <tfoot>
+			<tfoot>
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Specimen Collected Date</th>
-				                <th>ANC site</th>
+				<th>ANC site</th>
                                 <th>ANC Patient ID</th>
-				                <th>Specimen Picked Up Date at ANC</th>
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC'){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
-								<th>Status</th>
+				<?php } ?>
+				<th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -109,7 +107,6 @@ $loginContainer = new Container('employee');
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
-		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},

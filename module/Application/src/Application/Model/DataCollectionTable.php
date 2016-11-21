@@ -95,10 +95,10 @@ class DataCollectionTable extends AbstractTableGateway {
         */
 	    $common = new CommonService();
 		if($loginContainer->roleCode =='CSC'){
-            $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','c.country_name','t.test_status_name');
+            $aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','f.facility_name','f.facility_code','da_c.lab_specimen_id','c.country_name','t.test_status_name');
             $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','c.country_name','t.test_status_name');
 		}else{
-			$aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','t.test_status_name');
+			$aColumns = array('da_c.surveillance_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','f.facility_name','f.facility_code','da_c.lab_specimen_id','t.test_status_name');
             $orderColumns = array('da_c.surveillance_id','da_c.specimen_collected_date','anc.anc_site_name','da_c.anc_patient_id','da_c.specimen_picked_up_date_at_anc','f.facility_name','da_c.lab_specimen_id','t.test_status_name');
 		}
 
@@ -229,15 +229,10 @@ class DataCollectionTable extends AbstractTableGateway {
 			if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 				$specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
 			}
-			$specimenPickedUpDateAtAnc = '';
-			if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
-				$specimenPickedUpDateAtAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-			}
 			$row[] = $aRow['surveillance_id'];
 			$row[] = $specimenCollectionDate;
 			$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
 			$row[] = $aRow['anc_patient_id'];
-			$row[] = $specimenPickedUpDateAtAnc;
 			$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
 			$row[] = $aRow['lab_specimen_id'];
 			if($loginContainer->roleCode =='CSC'){
@@ -247,24 +242,24 @@ class DataCollectionTable extends AbstractTableGateway {
 			 $dataView = '';
 			 $requestView = '';
 			 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
-			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-edit"></i> View</a>';
+			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 				if(trim($aRow['request_state'])== NULL || trim($aRow['request_state'])== ''){
-			       $requestView = '<a href="javascript:void(0);" onclick="requestToUnlock(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Request unlock"><i class="zmdi zmdi-edit"></i> Request Unlock</a>';
+			          $requestView = '<a href="javascript:void(0);" onclick="requestToUnlock(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Request unlock"><i class="zmdi zmdi-long-arrow-right"></i> Request</a>';
 				}else{
-				  $requestView = '<a href="javascript:void(0);" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-edit"></i> Requested </a>';
+				  $requestView = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
 				}
 			 }else{
-				$dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+			    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 			 }
 			 $lockState = '';
 			 $requestedState = '';
 			 if($loginContainer->roleCode!= 'LDEO'){
 				if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
-				   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+				   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
 				}else if($aRow['lock_state']== 'lock'){
-				   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
+				   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
 				   if(trim($aRow['request_state'])== 'requested'){
-					  $requestedState = '<a href="javascript:void(0);" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-edit"></i> Requested </a>';
+					  $requestedState = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
 				   }
 				}
 			 }
