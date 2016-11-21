@@ -38,9 +38,12 @@ $loginContainer = new Container('employee');
         /*left: -184px*/
 
     }
-	#dataCollectionDataTable_wrapper{
-		overflow-x:scroll;
-	}
+    #dataCollectionDataTable_wrapper{
+	overflow-x:scroll;
+    }
+    .select-wrapper{
+	width:60%;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -50,11 +53,35 @@ $loginContainer = new Container('employee');
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Collections</a>
        </div>
     </div>
+    <div class="row">
+	<div class="col l12 m12 s12">
+	    <table style="width:100%;">
+		<tr>
+		    <td style="text-align:right;"><h6><strong>Country</strong></h6></td>
+		    <td style="text-align:left;">
+			<select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan="2" style="text-align:center;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+		</tr>
+	    </table>
+	</div>
+    </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Collection List
-		        <span style="float:right;"><a href="<?php echo $this->url('data-collection',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Data Collection</a></span>
+		    <span style="float:right;"><a href="<?php echo $this->url('data-collection',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Data Collection</a></span>
                 </div>
                 <div class="card-content clearfix">
                     <table id="dataCollectionDataTable" class="responsive-table display dataTable">
@@ -121,8 +148,10 @@ $loginContainer = new Container('employee');
 		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}
             ],
+	"aaSorting": [[ 1, "desc" ]],
         "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
+	    aoData.push({"name": "country", "value": $("#country").val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -147,7 +176,7 @@ $loginContainer = new Container('employee');
     });
 	
 	function lockDataCollection(ID){
-		 var conf = confirm("Are you sure you want to lock this data collection..?");
+	    var conf = confirm("Are you sure you want to lock this data collection..?");
             if(conf){
                 $.post("<?php echo $this->url('data-collection',array('action'=>'lock')); ?>", {dataCollectionId:ID},
                     function(data){
@@ -161,7 +190,7 @@ $loginContainer = new Container('employee');
 	}
 	
 	function unlockDataCollection(ID){
-		 var conf = confirm("Are you sure you want to unlock this data collection..?");
+	    var conf = confirm("Are you sure you want to unlock this data collection..?");
             if(conf){
                 $.post("<?php echo $this->url('data-collection',array('action'=>'unlock')); ?>", {dataCollectionId:ID},
                     function(data){
@@ -175,7 +204,7 @@ $loginContainer = new Container('employee');
 	}
 	
 	function requestToUnlock(ID){
-		 var conf = confirm("Are you sure you want to send request for unlock this data collection..?");
+	    var conf = confirm("Are you sure you want to send request for unlock this data collection..?");
             if(conf){
                 $.post("<?php echo $this->url('data-collection',array('action'=>'send-request')); ?>", {dataCollectionId:ID},
                     function(data){
@@ -186,5 +215,20 @@ $loginContainer = new Container('employee');
                         }
                     });
             }
+	}
+	
+	function searchDataCollectionData(){
+	   oTable.draw();
+	}
+	
+	function extractDataCollectionData(){
+	    $.post("<?php echo $this->url('data-collection',array('action'=>'export-excel')); ?>", {},
+	    function(data){
+		if(data == "" || data == null || data == undefined){
+		    alert('OOPS..Unable to generate excel.');
+		}else{
+		    document.location.href = '/temporary/'+data;
+		}
+	    });
 	}
 </script>

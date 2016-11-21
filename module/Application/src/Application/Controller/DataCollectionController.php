@@ -21,6 +21,12 @@ class DataCollectionController extends AbstractActionController{
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $result = $dataCollectionService->getAllDataCollections($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries('data-collection');
+            return new ViewModel(array(
+                'countries'=>$countryList
+            ));
         }
     }
     
@@ -112,6 +118,19 @@ class DataCollectionController extends AbstractActionController{
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response=$dataCollectionService->requestForUnlockDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function exportExcelAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->exportDataCollectionInExcel($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

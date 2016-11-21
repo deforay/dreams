@@ -89,7 +89,8 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchAllDataCollections($parameters){
-		$loginContainer = new Container('employee');
+	$loginContainer = new Container('employee');
+	$queryContainer = new Container('query');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -177,10 +178,15 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
-					 ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
-		if($loginContainer->roleCode!= 'CSC'){
-			$sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
-		}
+		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+	if($loginContainer->roleCode!= 'CSC'){
+	    $sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
+	}
+	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $sQuery = $sQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
+	}
+	$queryContainer->exportQuery = $sQuery;
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -206,67 +212,70 @@ class DataCollectionTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-		$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-					  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
-					  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
-					  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
-					  ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
-		if($loginContainer->roleCode!= 'CSC'){
-			$tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
+	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
+				  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
+				  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+				  ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
+	if($loginContainer->roleCode!= 'CSC'){
+	    $tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
+	}
+	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
+	}
+	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+	$iTotal = count($tResult);
+	$output = array(
+		   "sEcho" => intval($parameters['sEcho']),
+		   "iTotalRecords" => $iTotal,
+		   "iTotalDisplayRecords" => $iFilteredTotal,
+		   "aaData" => array()
+	);
+	foreach ($rResult as $aRow) {
+		$row = array();
+		$specimenCollectionDate = '';
+		if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+		    $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
 		}
-		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-		$iTotal = count($tResult);
-		$output = array(
-			   "sEcho" => intval($parameters['sEcho']),
-			   "iTotalRecords" => $iTotal,
-			   "iTotalDisplayRecords" => $iFilteredTotal,
-			   "aaData" => array()
-		);
-		foreach ($rResult as $aRow) {
-			$row = array();
-			$specimenCollectionDate = '';
-			if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-				$specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-			}
-			$row[] = $aRow['surveillance_id'];
-			$row[] = $specimenCollectionDate;
-			$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
-			$row[] = $aRow['anc_patient_id'];
-			$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-			$row[] = $aRow['lab_specimen_id'];
-			if($loginContainer->roleCode =='CSC'){
-			   $row[] = ucwords($aRow['country_name']);
-			}
-			$row[] = ucwords($aRow['test_status_name']);
-			 $dataView = '';
-			 $requestView = '';
-			 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
-			    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
-				if(trim($aRow['request_state'])== NULL || trim($aRow['request_state'])== ''){
-			          $requestView = '<a href="javascript:void(0);" onclick="requestToUnlock(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Request unlock"><i class="zmdi zmdi-long-arrow-right"></i> Request</a>';
-				}else{
-				  $requestView = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
-				}
-			 }else{
-			    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-			 }
-			 $lockState = '';
-			 $requestedState = '';
-			 if($loginContainer->roleCode!= 'LDEO'){
-				if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
-				   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
-				}else if($aRow['lock_state']== 'lock'){
-				   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
-				   if(trim($aRow['request_state'])== 'requested'){
-					  $requestedState = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
-				   }
-				}
-			 }
-			$row[] = $dataView.$requestView.$lockState.$requestedState;
-			$output['aaData'][] = $row;
+		$row[] = $aRow['surveillance_id'];
+		$row[] = $specimenCollectionDate;
+		$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
+		$row[] = $aRow['anc_patient_id'];
+		$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+		$row[] = $aRow['lab_specimen_id'];
+		if($loginContainer->roleCode =='CSC'){
+		   $row[] = ucwords($aRow['country_name']);
 		}
-	  return $output;
+		$row[] = ucwords($aRow['test_status_name']);
+		 $dataView = '';
+		 $requestView = '';
+		 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
+		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
+			if(trim($aRow['request_state'])== NULL || trim($aRow['request_state'])== ''){
+			  $requestView = '<a href="javascript:void(0);" onclick="requestToUnlock(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Request unlock"><i class="zmdi zmdi-long-arrow-right"></i> Request</a>';
+			}else{
+			  $requestView = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
+			}
+		 }else{
+		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+		 }
+		 $lockState = '';
+		 $requestedState = '';
+		 if($loginContainer->roleCode!= 'LDEO'){
+			if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
+			   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
+			}else if($aRow['lock_state']== 'lock'){
+			   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
+			   if(trim($aRow['request_state'])== 'requested'){
+				  $requestedState = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
+			   }
+			}
+		 }
+		$row[] = $dataView.$requestView.$lockState.$requestedState;
+		$output['aaData'][] = $row;
+	}
+       return $output;
     }
     
     public function fetchDataCollection($dataCollectionId){
