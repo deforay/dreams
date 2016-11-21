@@ -54,7 +54,7 @@ $loginContainer = new Container('employee');
                     </div>
                     <ul class="right hide-on-med-and-down">
                         <li>
-                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>Hi <?php echo ucwords(substr($loginContainer->userName,0,6)).'..'; ?><i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
+                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>Hi <?php echo ucwords(substr($loginContainer->userName,0,6)); ?> <?php (strlen($loginContainer->userName)>6)?'..':''; ?><i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
                                 <li><a href="<?php echo $this->url('log-out'); ?>"><i class="material-icons dp48">input</i>Logout</a></li>
                             </ul>
                             
