@@ -137,7 +137,7 @@ $loginContainer = new Container('user');
                                                 <div class="collapsible-body" style="">
                                                     <ul>
                                                         <li>
-                                                            <a href="#" style="text-align:right;color:#444;">Manage Users</a>
+                                                            <a href="/user/<?php echo base64_encode($country['country_id']); ?>"  style="text-align:right;color:#444;">Manage Users</a>
                                                         </li>
                                                         <li class="facilityMenu ">
                                                             <a class="facilityMenu " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="text-align:right;color:#444;" >Manage Facilities/Labs</a>

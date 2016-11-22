@@ -80,27 +80,27 @@ return array(
             ),'user' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/user[/:role]',
+                    'route' => '/user[/:countryId]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\user',
+                        'controller' => 'Application\Controller\User',
                         'action' => 'index'
                     ),
                 ),
             ),'add-user' => array(
-                'type' => 'literal',
+                'type' => 'segment',
                 'options' => array(
-                    'route' => '/user/add',
+                    'route' => '/user/add[/][:countryId]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\user',
+                        'controller' => 'Application\Controller\User',
                         'action' => 'add'
                     ),
                 ),
             ),'edit-user' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/user/edit[/:id]',
+                    'route' => '/user/edit[/:id][/][:countryId]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\user',
+                        'controller' => 'Application\Controller\User',
                         'action' => 'edit'
                     ),
                 ),

@@ -194,6 +194,9 @@ class UserTable extends AbstractTableGateway {
 		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
 		  $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
 	   }
+	   if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $sQuery = $sQuery->where(array('u.country'=>trim($parameters['countryId'])));
+	   }
 	   if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	      $sQuery = $sQuery->where(array('u.country'=>base64_decode($parameters['country'])));
 	    }
@@ -235,6 +238,9 @@ class UserTable extends AbstractTableGateway {
 		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
 		  $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
 	    }
+	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $tQuery = $tQuery->where(array('u.country'=>trim($parameters['countryId'])));
+	   }
 	    if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	      $tQuery = $tQuery->where(array('u.country'=>base64_decode($parameters['country'])));  
 	    }
@@ -260,7 +266,7 @@ class UserTable extends AbstractTableGateway {
 			}
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+			$row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 			$output['aaData'][] = $row;
 		}
 	  return $output;

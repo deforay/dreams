@@ -76,12 +76,20 @@ $loginContainer = new Container('user');
 		</table>
 	    </div>
 	</div>
-    <?php } ?>
+    <?php }
+    if($countryId=='')
+    {
+	$countryId = '';
+    }else{
+	$countryId = $countryId;
+    }
+    ?>
+    <input type="hidden" name="countryId" id="countryId" value="<?php echo $countryId;?>"/>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
-		  <span style="float:right;"><a href="<?php echo $this->url('add-user'); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
+		  <span style="float:right;"><a href="/user/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
                 </div>
                 <div class="card-content clearfix">
                     <table id="userDataTable"  class="responsive-table display dataTable">
@@ -152,6 +160,7 @@ $loginContainer = new Container('user');
          "fnServerData": function ( sSource, aoData, fnCallback ) {
 	    aoData.push({"name": "roleCode", "value": '<?php echo $roleCode; ?>'});
 	    aoData.push({"name": "country", "value": $("#country").val()});
+	    aoData.push({"name": "countryId", "value": $("#countryId").val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

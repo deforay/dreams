@@ -121,8 +121,17 @@
                 </div>
             </div>
             <div class="col s12">
+                <?php
+                if($countryId!='')
+                {
+                    $link = "/user/".base64_encode($countryId);
+                }else{
+                    $link = "/user";
+                }
+                ?>
+                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <input id="userId" name="userId" type="hidden" value="<?php echo base64_encode($row->user_id);?>"/>
-                <a href="<?php echo $this->url('user'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" onclick="editUser();" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
