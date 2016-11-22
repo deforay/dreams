@@ -90,8 +90,8 @@ $loginContainer = new Container('user');
                                                     <li class="cscCountryMenu menuAll">
                                                         <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:34%;color:#444;">Manage Countries</a>
                                                     </li>
-                                                    <li class="cscCCMenu menuAll">
-                                                        <a class="cscCCMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:36%;text-align:right;color:#444;">Manage Users</a>
+                                                    <li class="cscUserMenu menuAll">
+                                                        <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:36%;text-align:right;color:#444;">Manage Users</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -224,6 +224,13 @@ $loginContainer = new Container('user');
           $(".cscAdminMenu").addClass("active");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
+        }else if(splitsUrl[1]=='user'){
+          $(".cscMenu").addClass("active");
+          $(".collapsibleCSCMenu").css("display","block");
+          $(".collapsibleCSCAdminMenu").css("display","block");
+          $(".cscAdminMenu").addClass("active");
+          $(".cscUserMenu").addClass("active");
+          $(".cscUserMenu").css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }
