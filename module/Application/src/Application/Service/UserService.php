@@ -54,7 +54,7 @@ class UserService {
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
-            $userDb = $this->sm->get('userTable');
+            $userDb = $this->sm->get('UserTable');
             $result = $userDb->updateUserDetails($params);
             if ($result > 0) {
                 $adapter->commit();

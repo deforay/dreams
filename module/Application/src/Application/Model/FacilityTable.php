@@ -16,6 +16,7 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function addFacilityDetails($params){
+	//\Zend\Debug\Debug::dump($params);die;
         $lastInsertedId = 0;
 		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 			$data = array(
@@ -38,7 +39,7 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function fetchAllFacilites($parameters){
-		$loginContainer = new Container('employee');
+		$loginContainer = new Container('user');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -124,9 +125,14 @@ class FacilityTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('f' => 'facility'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	   if($loginContainer->roleCode!= 'CSC'){
-            $sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
-       }
+	   if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $sQuery = $sQuery->where(array('f.country'=>trim($parameters['countryId'])));
+	   }else{
+	    if($loginContainer->roleCode!= 'CSC'){
+		$sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
+	    }
+	   }
+	   
        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
 	}
@@ -158,9 +164,13 @@ class FacilityTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('f' => 'facility'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	    if($loginContainer->roleCode!= 'CSC'){
-            $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
-        }
+		if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+		$tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
+		}else{
+		    if($loginContainer->roleCode!= 'CSC'){
+		    $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
+		    }
+		}
         if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));  
 	}
@@ -183,7 +193,7 @@ class FacilityTable extends AbstractTableGateway {
 				  $row[] = ucwords($aRow['country_name']);
 				}
 				$row[] = ucwords($aRow['status']);
-				$row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+				$row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 				$output['aaData'][] = $row;
 		}
 	  return $output;
@@ -194,6 +204,7 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function updateFacilityDetails($params){
+	
         $facilityId = 0;
 		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 			$facilityId = base64_decode($params['facilityId']);

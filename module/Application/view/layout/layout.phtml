@@ -137,9 +137,13 @@ $loginContainer = new Container('user');
                                                 <div class="collapsible-body" style="">
                                                     <ul>
                                                         <li>
-                                                            <a href="#" style="text-align:right;color:#444;">Lab Data Entry Operator</a>
-                                                            <a href="#" style="text-align:right;color:#444;">Lab Supervisor</a>
-                                                            <a href="#" style="text-align:right;color:#444;">Country Coordinator</a>
+                                                            <a href="#" style="text-align:right;color:#444;">Manage Users</a>
+                                                        </li>
+                                                        <li class="facilityMenu ">
+                                                            <a class="facilityMenu " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="text-align:right;color:#444;" >Manage Facilities/Labs</a>
+                                                        </li>
+                                                        <li class="ancSiteMenu ">
+                                                            <a class="ancSiteMenu " href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="text-align:right;color:#444;">Manage ANC Sites</a>
                                                         </li>
                                                     </ul>
                                                 </div>
