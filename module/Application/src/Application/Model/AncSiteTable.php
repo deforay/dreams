@@ -38,7 +38,7 @@ class AncSiteTable extends AbstractTableGateway {
     }
     
     public function fetchAllAncSites($parameters){
-		$loginContainer = new Container('employee');
+		$loginContainer = new Container('user');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -124,9 +124,13 @@ class AncSiteTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('anc' => 'anc_site'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	   if($loginContainer->roleCode!= 'CSC'){
-            $sQuery = $sQuery->where(array('anc.country'=>$loginContainer->country));
-       }
+	   if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $sQuery = $sQuery->where(array('anc.country'=>trim($parameters['countryId'])));
+	    }else{
+		if($loginContainer->roleCode!= 'CSC'){
+		    $sQuery = $sQuery->where(array('anc.country'=>$loginContainer->country));
+		}
+	    }
        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $sQuery = $sQuery->where(array('anc.country'=>base64_decode($parameters['country'])));  
 	}
@@ -158,9 +162,13 @@ class AncSiteTable extends AbstractTableGateway {
 		$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
-	    if($loginContainer->roleCode!= 'CSC'){
-            $tQuery = $tQuery->where(array('anc.country'=>$loginContainer->country));
-        }
+	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $tQuery = $tQuery->where(array('anc.country'=>trim($parameters['countryId'])));
+	    }else{
+		if($loginContainer->roleCode!= 'CSC'){
+		    $tQuery = $tQuery->where(array('anc.country'=>$loginContainer->country));
+		}
+	    }
         if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $tQuery = $tQuery->where(array('anc.country'=>base64_decode($parameters['country'])));  
 	}
@@ -183,7 +191,7 @@ class AncSiteTable extends AbstractTableGateway {
 				   $row[] = ucwords($aRow['country_name']);
 				}
 				$row[] = ucwords($aRow['status']);
-				$row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+				$row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 				$output['aaData'][] = $row;
 		}
 	  return $output;

@@ -168,7 +168,7 @@ class CountryTable extends AbstractTableGateway {
       return $countryId;
     }
     
-    public function fetchActiveCountries($from){
+    public function fetchActiveCountries($from,$countryId){
         $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
@@ -176,8 +176,13 @@ class CountryTable extends AbstractTableGateway {
                               ->where(array('c.status'=>'active'))
                               ->order('c.country_name asc');
         if(trim($from)!= 'login'){
+            if($countryId!='' && $countryId!=0)
+            {
+                $countriesQuery = $countriesQuery->where(array('c.country_id'=>$countryId));
+            }else{
             if($loginContainer->roleCode!= 'CSC'){
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$loginContainer->country));
+            }
             }
         }
         $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);

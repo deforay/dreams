@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editAncSiteForm" name="editAncSiteForm" method="post" action="<?php echo $this->url('anc-site',array('action'=>'edit')); ?>">
+        <form id="editAncSiteForm" name="editAncSiteForm" method="post" action="<?php echo $this->url('edit-anc-site',array('action'=>'edit')); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
@@ -119,8 +119,9 @@
                 </div>
             </div>
             <div class="col s12">
+                <input type="hidden" name="chosenCountryId" value="<?php echo base64_encode($countryId); ?>"/>
                 <input id="ancSiteId" name="ancSiteId" type="hidden" value="<?php echo base64_encode($row->anc_site_id); ?>"/>
-                <a href="<?php echo $this->url('anc-site'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="/anc-site/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>

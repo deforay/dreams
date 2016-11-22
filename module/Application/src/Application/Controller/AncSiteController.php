@@ -22,10 +22,12 @@ class AncSiteController extends AbstractActionController{
             $result = $ancSiteService->getAllAncSites($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('anc');
+            $countryList=$countryService->getActiveCountries('anc',$countryId);
             return new ViewModel(array(
-                'countries'=>$countryList
+                'countries'=>$countryList,
+                'countryId'=>$countryId
             ));
         }
     }
@@ -36,15 +38,17 @@ class AncSiteController extends AbstractActionController{
             $params = $request->getPost();
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $ancSiteService->addAncSite($params);
-            return $this->redirect()->toRoute('anc-site');
+            return $this->redirect()->toUrl('/anc-site/'.$params['chosenCountryId']);
         }
+        $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
-        $countryList=$countryService->getActiveCountries('anc');
+        $countryList=$countryService->getActiveCountries('anc',$countryId);
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
             return new ViewModel(array(
                 'countries'=>$countryList,
-                'facilityTypes'=>$facilityTypeList
+                'facilityTypes'=>$facilityTypeList,
+                'countryId'=>$countryId
             ));
     }
     
@@ -54,18 +58,20 @@ class AncSiteController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $ancSiteService->updateAncSite($params);
-            return $this->redirect()->toRoute('anc-site');
+            return $this->redirect()->toUrl('/anc-site/'.$params['chosenCountryId']);
         }
+        $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
         $ancSiteId=base64_decode($this->params()->fromRoute('id'));
         $result=$ancSiteService->getAncSite($ancSiteId);
-        $countryList=$countryService->getActiveCountries('anc');
+        $countryList=$countryService->getActiveCountries('anc',$countryId);
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
         return new ViewModel(array(
             'countries'=>$countryList,
             'facilityTypes'=>$facilityTypeList,
-            'row'=>$result
+            'row'=>$result,
+            'countryId'=>$countryId
         ));
     }
 }

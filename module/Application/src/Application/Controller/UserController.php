@@ -24,7 +24,7 @@ class UserController extends AbstractActionController{
         }else{
             $roleCode=base64_decode($this->params()->fromRoute('role'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'roleCode'=>$roleCode
@@ -42,7 +42,7 @@ class UserController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $result=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
             'roleData'=>$result,
             'countries'=>$countryList
@@ -62,7 +62,7 @@ class UserController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
                 'empResult'=>$result,
                 'countries'=>$countryList,

@@ -116,10 +116,28 @@ return array(
             ),'facility' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/facility[/:action][/][:id]',
+                    'route' => '/facility[/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Facility',
                         'action' => 'index'
+                    ),
+                ),
+            ),'add-facility' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/facility/add[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Facility',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-facility' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/facility/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Facility',
+                        'action' => 'edit'
                     ),
                 ),
             ),'country' => array(
@@ -134,10 +152,28 @@ return array(
             ),'anc-site' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/anc-site[/:action][/][:id]',
+                    'route' => '/anc-site[/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\AncSite',
                         'action' => 'index'
+                    ),
+                ),
+            ),'add-anc-site' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/anc-site/add[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\AncSite',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-anc-site' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/anc-site/edit[/:id][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\AncSite',
+                        'action' => 'edit'
                     ),
                 ),
             ),'data-collection' => array(

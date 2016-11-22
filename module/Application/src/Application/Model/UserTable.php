@@ -270,7 +270,7 @@ class UserTable extends AbstractTableGateway {
 	  return $this->select(array('user_id'=>$userId))->current();
     }
 	
-    public function updateEmployeeDetails($params){
+    public function updateUserDetails($params){
 		$employeeId = 0;
 		if(isset($params['userName']) && trim($params['userName'])!= ''){
 			$employeeId = base64_decode($params['employeeId']);
