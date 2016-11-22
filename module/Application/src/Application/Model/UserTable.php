@@ -37,28 +37,37 @@ class UserTable extends AbstractTableGateway {
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
 		if($loginResult->status== 'inactive'){
-			$alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
-			return 'login';
+		    $alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
+		    return 'login';
+		}
+		$loginContainer = new Container('user');
+		$userCountry = array();
+		$countryMapQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
+                                       ->where(array('c_map.user_id' => $loginResult->user_id));
+                $countryMapQueryStr = $sql->getSqlStringForSqlObject($countryMapQuery);
+                $countryMapResult = $dbAdapter->query($countryMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+		if(isset($countryMapResult) && count($countryMapResult)>0){
+		    foreach($countryMapResult as $country){
+			$userCountry[] = $country['country_id'];
+		    }
 		}
 		if($isCountrySelected){
-			if($loginResult->country == $selectedCountry){
-				$loginContainer = new Container('user');
-				$loginContainer->userId = $loginResult->user_id;
-				$loginContainer->userName = $loginResult->user_name;
-				$loginContainer->roleCode = $loginResult->role_code;
-				$loginContainer->country = $loginResult->country;
-			   return 'home';
-			}else{
-			   $alertContainer->msg = 'Please check the country that you have choosen..!';
-			   return 'login';
-			}
-		}else{
-			$loginContainer = new Container('user');
+		    if(in_array($selectedCountry,$userCountry)){
 			$loginContainer->userId = $loginResult->user_id;
 			$loginContainer->userName = $loginResult->user_name;
 			$loginContainer->roleCode = $loginResult->role_code;
-			$loginContainer->country = $loginResult->country;
-			return 'home';
+			$loginContainer->country = $userCountry;
+		       return 'home';
+		    }else{
+		       $alertContainer->msg = 'Please check the country that you have choosen..!';
+		       return 'login';
+		    }
+		}else{
+		    $loginContainer->userId = $loginResult->user_id;
+		    $loginContainer->userName = $loginResult->user_name;
+		    $loginContainer->roleCode = $loginResult->role_code;
+		    $loginContainer->country = $userCountry;
+		    return 'home';
 		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';

@@ -172,7 +172,7 @@ class RoleTable extends AbstractTableGateway {
     }
     
     public function fetchActiveRoles(){
-        $loginContainer = new Container('employee');
+        $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $rolesQuery = $sql->select()->from(array('r' => 'role'))

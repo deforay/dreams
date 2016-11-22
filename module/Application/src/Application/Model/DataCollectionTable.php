@@ -17,7 +17,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function addDataCollectionDetails($params){
-        $loginContainer = new Container('employee');
+        $loginContainer = new Container('user');
         $lastInsertedId = 0;
         if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
             $common = new CommonService();
@@ -282,7 +282,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function updateDataCollectionDetails($params){
-		$loginContainer = new Container('employee');
+	$loginContainer = new Container('user');
         $dataCollectionId = 0;
         if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
             $common = new CommonService();
