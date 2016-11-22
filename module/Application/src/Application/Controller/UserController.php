@@ -13,7 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 
-class EmployeeController extends AbstractActionController{
+class UserController extends AbstractActionController{
     public function indexAction(){
         $request = $this->getRequest();
         if ($request->isPost()){
@@ -22,10 +22,12 @@ class EmployeeController extends AbstractActionController{
             $result = $employeeService->getAllEmployees($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $roleCode=base64_decode($this->params()->fromRoute('role'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $countryList=$countryService->getActiveCountries('employee');
             return new ViewModel(array(
-                'countries'=>$countryList
+                'countries'=>$countryList,
+                'roleCode'=>$roleCode
             ));
         }
     }

@@ -173,7 +173,8 @@ class CountryTable extends AbstractTableGateway {
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $countriesQuery = $sql->select()->from(array('c' => 'country'))
-                              ->where(array('c.status'=>'active'));
+                              ->where(array('c.status'=>'active'))
+                              ->order('c.country_name asc');
         if(trim($from)!= 'login'){
             if($loginContainer->roleCode!= 'CSC'){
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$loginContainer->country));

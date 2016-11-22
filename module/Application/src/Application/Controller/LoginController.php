@@ -15,15 +15,15 @@ use Zend\View\Model\ViewModel;
 
 class LoginController extends AbstractActionController{
     public function indexAction(){
-        $loginContainer = new Container('employee');
+        $loginContainer = new Container('user');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
-            $employeeService = $this->getServiceLocator()->get('EmployeeService');
-            $redirectUrl = $employeeService->getLogin($params);
+            $userService = $this->getServiceLocator()->get('UserService');
+            $redirectUrl = $userService->getLogin($params);
             return $this->redirect()->toRoute($redirectUrl);
         }
-        if (isset($loginContainer->employeeId) && trim($loginContainer->employeeId)!= "") {
+        if (isset($loginContainer->userId) && trim($loginContainer->userId)!= "") {
             return $this->redirect()->toRoute("home");
         }else{
             $countryService = $this->getServiceLocator()->get('CountryService');

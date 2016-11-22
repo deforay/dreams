@@ -5,7 +5,7 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
-class EmployeeService {
+class UserService {
 
     public $sm = null;
 
@@ -18,8 +18,8 @@ class EmployeeService {
     }
     
     public function getLogin($params){
-        $employeeDb = $this->sm->get('EmployeeTable');
-        return $employeeDb->getEmployeeLogin($params);
+        $userDb = $this->sm->get('UserTable');
+        return $userDb->getUserLogin($params);
     }
     
     public function addEmployee($params){

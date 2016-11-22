@@ -8,7 +8,7 @@ use Zend\View\Model\ViewModel;
 
 use Application\Service\CommonService;
 use Application\Service\RoleService;
-use Application\Service\EmployeeService;
+use Application\Service\UserService;
 use Application\Service\FacilityService;
 use Application\Service\CountryService;
 use Application\Service\FacilityTypeService;
@@ -16,7 +16,7 @@ use Application\Service\AncSiteService;
 use Application\Service\DataCollectionService;
 
 use Application\Model\RoleTable;
-use Application\Model\EmployeeTable;
+use Application\Model\UserTable;
 use Application\Model\FacilityTable;
 use Application\Model\CountryTable;
 use Application\Model\FacilityTypeTable;
@@ -55,8 +55,8 @@ class Module{
         if(($e->getRouteMatch()->getParam('controller') != 'Application\Controller\Login')){
             $tempName=explode('Controller',$e->getRouteMatch()->getParam('controller'));
             if(substr($tempName[0], 0, -1) == 'Application'){
-                $loginContainer = new Container('employee');
-                if (!isset($loginContainer->employeeId) || $loginContainer->employeeId == "") {
+                $loginContainer = new Container('user');
+                if (!isset($loginContainer->userId) || $loginContainer->userId == "") {
                     if( ! $e->getRequest()->isXmlHttpRequest()) {
                         $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
                         $response = $e->getResponse();
@@ -90,8 +90,8 @@ class Module{
                     return new CommonService($sm);
                 },'RoleService' => function($sm) {
                     return new RoleService($sm);
-                },'EmployeeService' => function($sm) {
-                    return new EmployeeService($sm);
+                },'UserService' => function($sm) {
+                    return new UserService($sm);
                 },'RoleService' => function($sm) {
                     return new RoleService($sm);
                 },'FacilityService' => function($sm) {
@@ -110,9 +110,9 @@ class Module{
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new RoleTable($dbAdapter);
                     return $table;
-                },'EmployeeTable' => function($sm) {
+                },'UserTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $table = new EmployeeTable($dbAdapter);
+                    $table = new UserTable($dbAdapter);
                     return $table;
                 },'RoleTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
@@ -159,6 +159,14 @@ class Module{
         return include __DIR__ . '/config/module.config.php';
     }
 
+    public function getViewHelperConfig(){
+        return array(
+           'invokables' => array(
+              'GetActiveCountries' => 'Application\View\Helper\GetActiveCountries'
+            )
+        );
+    }
+    
     public function getAutoloaderConfig(){
         return array(
             'Zend\Loader\StandardAutoloader' => array(

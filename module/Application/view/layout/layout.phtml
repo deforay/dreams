@@ -74,39 +74,112 @@ $loginContainer = new Container('employee');
         <ul class="side-nav fixed clearfix left" id="nav-mobile" style="transform: translateX(0%);">
             <li>
                 <ul class="collapsible" data-collapsible="accordion">
-                    <li class="dashboardMenu" class="menuAll">
-                         <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
+                    <li class="dashboardMenu menuAll">
+                        <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
                     </li>
-                    <li id="manageMenu" class="menuAll">
-                        <div class="collapsible-header waves-effect manageMenu"><i class="zmdi zmdi-apps zmdi-hc-fw"></i> Manage <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                        <div class="collapsible-body collapsibleAll collapsibleManageMenu" style="">
+                    <li class="cscMenu menuAll">
+                        <div class="collapsible-header waves-effect cscMenu menuAll"><i class="zmdi zmdi-accounts-list-alt"></i> Chief Coordinator <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                        <div class="collapsible-body collapsibleAll collapsibleCSCMenu">
                             <ul>
-                                <?php
-                                if($loginContainer->roleCode =='CSC'){
-                                ?>
-                                    <li class="countryMenu menuAll">
-                                        <a class="countryMenu menuAll" href="<?php echo $this->url('country');?>">Countries</a>
-                                    </li>
-                                <?php } ?>
-                                <li class="employeeMenu menuAll">
-                                    <a class="employeeMenu menuAll" href="<?php echo $this->url('employee');?>">Employees</a>
+                                <li>
+                                    <ul class="collapsible" data-collapsible="accordion">
+                                        <li class="cscAdminMenu menuAll">
+                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="text-align:center;">Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
+                                                <ul>
+                                                    <li class="cscCountryMenu menuAll">
+                                                        <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="text-align:right;color:#444;">Manage Countries</a>
+                                                    </li>
+                                                    <li class="cscCCMenu menuAll">
+                                                        <a class="cscCCMenu menuAll" href="/user/<?php echo base64_encode('cc'); ?>" style="text-align:right;color:#444;">Manage Users</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="">
+                                            <div class="collapsible-header waves-effect" style="text-align:center;">Data Extraction <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li>
+                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="">
+                                            <div class="collapsible-header waves-effect" style="text-align:center;">Data Reporting<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li>
+                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <?php
-                                if($loginContainer->roleCode =='CSC' || $loginContainer->roleCode =='CC' || $loginContainer->roleCode =='LS'){
-                                ?>
-                                    <li class="facilityMenu menuAll">
-                                        <a class="facilityMenu menuAll" href="<?php echo $this->url('facility');?>">Facilities/Labs</a>
-                                    </li>
-                                    <li class="ancSiteMenu menuAll">
-                                        <a class="ancSiteMenu menuAll" href="<?php echo $this->url('anc-site');?>">ANC Sites</a>
-                                    </li>
-                                <?php } ?>
                             </ul>
                         </div>
                     </li>
-                    <li class="dataCollectionMenu" class="menuAll">
-                        <a href="<?php echo $this->url('data-collection'); ?>" class="dataCollectionMenu menuAll collapsible-header"><i class="zmdi zmdi-view-list zmdi-hc-fw"></i> Data Collection</a>
-                    </li>
+                    <?php
+                    $countries = $this->GetActiveCountries('layout');
+                    if(isset($countries) && count($countries)>0){
+                        foreach($countries as $country){
+                    ?>
+                        <li class="active">
+                            <div class="collapsible-header waves-effect"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                            <div class="collapsible-body" style="">
+                                <ul>
+                                    <li>
+                                        <ul class="collapsible" data-collapsible="accordion">
+                                            <li class="">
+                                                <div class="collapsible-header waves-effect" style="text-align:center;">Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body" style="">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#" style="text-align:right;color:#444;">Lab Data Entry Operator</a>
+                                                            <a href="#" style="text-align:right;color:#444;">Lab Supervisor</a>
+                                                            <a href="#" style="text-align:right;color:#444;">Country Coordinator</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="">
+                                                <div class="collapsible-header waves-effect" style="text-align:center;">Data Reporting <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body" style="">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="">
+                                                <div class="collapsible-header waves-effect" style="text-align:center;">Data Extraction<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body" style="">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                             <li class="">
+                                                <div class="collapsible-header waves-effect" style="text-align:center;">Email<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body" style="">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#" style="text-align:right;color:#444;"> </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php } } ?>
                 </ul>
             </li>
         </ul>
@@ -137,35 +210,20 @@ $loginContainer = new Container('employee');
     $(function () {
         ol();
         //set active link
+        //set active link
         str=$(location).attr('pathname');
         splitsUrl=str.split("/",4);
         //console.log(splitsUrl);
         $(".menuAll").removeClass("active");
-        $("#manageMenu").removeClass("active");
+        $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
-        if(splitsUrl[1]=='role'){
-          $("#manageMenu").addClass("active");
-          $(".collapsibleManageMenu").css("display","block");
-          $(".roleMenu").addClass("active");
-        }else if(splitsUrl[1]=='country'){
-          $("#manageMenu").addClass("active");
-          $(".collapsibleManageMenu").css("display","block");
-          $(".countryMenu").addClass("active");
-        }else if(splitsUrl[1]=='employee'){
-          $("#manageMenu").addClass("active");
-          $(".collapsibleManageMenu").css("display","block");
-          $(".employeeMenu").addClass("active");
-        }else if(splitsUrl[1]=='facility'){
-          $("#manageMenu").addClass("active");
-          $(".collapsibleManageMenu").css("display","block");
-          $(".facilityMenu").addClass("active");
-        }else if(splitsUrl[1]=='anc-site'){
-          $("#manageMenu").addClass("active");
-          $(".collapsibleManageMenu").css("display","block");
-          $(".ancSiteMenu").addClass("active");
-        }else if(splitsUrl[1]=='data-collection'){
-          $(".collapsibleManageMenu").css("display","none");
-          $(".dataCollectionMenu").addClass("active");
+        if(splitsUrl[1]=='country'){
+          $(".cscMenu").addClass("active");
+          $(".collapsibleCSCMenu").css("display","block");
+          $(".collapsibleCSCAdminMenu").css("display","block");
+          $(".cscAdminMenu").addClass("active");
+          $(".cscCountryMenu").addClass("active");
+          $(".cscCountryMenu").css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }

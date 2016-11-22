@@ -233,3 +233,13 @@ INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES
 ALTER TABLE `data_collection` ADD `request_state` VARCHAR(45) NULL DEFAULT NULL AFTER `lock_state`;
 
 ALTER TABLE `data_collection_event_log` ADD `request_state` VARCHAR(45) NULL DEFAULT NULL AFTER `lock_state`;
+
+--Pal 22/11/2016
+DROP TABLE employee
+
+ALTER TABLE `user`
+  DROP `employee_name`;
+  
+ALTER TABLE `user` CHANGE `employee_id` `user_id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `employee_code` `user_code` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `user` ADD `full_name` VARCHAR(255) NULL DEFAULT NULL AFTER `user_id`; 

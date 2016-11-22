@@ -8,15 +8,15 @@ use Zend\Db\TableGateway\AbstractTableGateway;
 use Application\Service\CommonService;
 
 
-class EmployeeTable extends AbstractTableGateway {
+class UserTable extends AbstractTableGateway {
 
-    protected $table = 'employee';
+    protected $table = 'user';
 
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
     }
     
-    public function getEmployeeLogin($params){
+    public function getUserLogin($params){
         $alertContainer = new Container('alert');
         $config = new \Zend\Config\Reader\Ini();
         $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
@@ -30,9 +30,9 @@ class EmployeeTable extends AbstractTableGateway {
 	       $isCountrySelected = true;
 	       $selectedCountry = base64_decode($params['country']);
 	    }
-            $loginQuery = $sql->select()->from(array('e' => 'employee'))
-                              ->join(array('r'=>'role'),'r.role_id=e.role',array('role_code'))
-                              ->where(array('e.user_name' => $userName, 'e.password' => $password));
+            $loginQuery = $sql->select()->from(array('u' => 'user'))
+                              ->join(array('r'=>'role'),'r.role_id=u.role',array('role_code'))
+                              ->where(array('u.user_name' => $userName, 'u.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
@@ -42,8 +42,8 @@ class EmployeeTable extends AbstractTableGateway {
 		}
 		if($isCountrySelected){
 			if($loginResult->country == $selectedCountry){
-				$loginContainer = new Container('employee');
-				$loginContainer->employeeId = $loginResult->employee_id;
+				$loginContainer = new Container('user');
+				$loginContainer->userId = $loginResult->user_id;
 				$loginContainer->userName = $loginResult->user_name;
 				$loginContainer->roleCode = $loginResult->role_code;
 				$loginContainer->country = $loginResult->country;
@@ -53,8 +53,8 @@ class EmployeeTable extends AbstractTableGateway {
 			   return 'login';
 			}
 		}else{
-			$loginContainer = new Container('employee');
-			$loginContainer->employeeId = $loginResult->employee_id;
+			$loginContainer = new Container('user');
+			$loginContainer->userId = $loginResult->user_id;
 			$loginContainer->userName = $loginResult->user_name;
 			$loginContainer->roleCode = $loginResult->role_code;
 			$loginContainer->country = $loginResult->country;

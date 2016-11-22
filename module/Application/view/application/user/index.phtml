@@ -43,10 +43,10 @@ $loginContainer = new Container('employee');
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Employees</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Users</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Employees</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Users</a>
        </div>
     </div>
     <?php
@@ -80,40 +80,40 @@ $loginContainer = new Container('employee');
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Employee List
-		  <span style="float:right;"><a href="<?php echo $this->url('employee',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Employee</a></span>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
+		  <span style="float:right;"><a href="<?php echo $this->url('user',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
                 </div>
                 <div class="card-content clearfix">
-                    <table id="employeeDataTable"  class="responsive-table display dataTable">
+                    <table id="userDataTable"  class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Employee Name</th>
+                                <th>Full Name</th>
                                 <th>Role</th>
-				                <th>User Name</th>
+				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC'){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th style="width:80px !important;">Action</th>
                             </tr>
                         </thead>
-			            <tfoot>
-                            <tr>
-                                <th>Employee Name</th>
+			<tfoot>
+                             <tr>
+                                <th>Full Name</th>
                                 <th>Role</th>
-				                <th>User Name</th>
+				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-				                <?php
+				<?php
                                 if($loginContainer->roleCode =='CSC'){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th>Action</th>
@@ -130,7 +130,7 @@ $loginContainer = new Container('employee');
 </div>
 <script>
     $(document).ready(function() {
-       oTable = $("#employeeDataTable").DataTable({
+       oTable = $("#userDataTable").DataTable({
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
@@ -148,8 +148,9 @@ $loginContainer = new Container('employee');
 		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}
             ],
-        "sAjaxSource": "<?php echo $this->url('employee',array('action' => 'index')); ?>",
+        "sAjaxSource": "<?php echo $this->url('user',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
+	    aoData.push({"name": "roleCode", "value": '<?php echo $roleCode; ?>'});
 	    aoData.push({"name": "country", "value": $("#country").val()});
                 $.ajax({
                     "dataType": 'json',

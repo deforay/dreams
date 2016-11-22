@@ -77,12 +77,12 @@ return array(
                         'action' => 'index'
                     ),
                 ),
-            ),'employee' => array(
+            ),'user' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/employee[/:action][/][:id]',
+                    'route' => '/user[/:role]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\employee',
+                        'controller' => 'Application\Controller\user',
                         'action' => 'index'
                     ),
                 ),
@@ -159,7 +159,7 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Login' => 'Application\Controller\LoginController',
             'Application\Controller\Role' => 'Application\Controller\RoleController',
-            'Application\Controller\Employee' => 'Application\Controller\EmployeeController',
+            'Application\Controller\User' => 'Application\Controller\UserController',
             'Application\Controller\Common' => 'Application\Controller\CommonController',
             'Application\Controller\Facility' => 'Application\Controller\FacilityController',
             'Application\Controller\Country' => 'Application\Controller\CountryController',

@@ -4,29 +4,29 @@ $loginContainer = new Container('employee');
 ?>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Employee</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add User</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="<?php echo $this->url('employee'); ?>" class="breadcrumb">Employees</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Employee</a>
+            <a href="<?php echo $this->url('user'); ?>" class="breadcrumb">Users</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add User</a>
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="addEmployeeForm" name="addEmployeeForm" method="post" action="<?php echo $this->url('employee',array('action'=>'add')); ?>">
+        <form id="addUserForm" name="addUserForm" method="post" action="<?php echo $this->url('user',array('action'=>'add')); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name">
-                        <label for="employeeName" class="">Employee Name *</label>
+                        <input id="fullName" name="fullName" type="text" class="validate isRequired" title="Please enter full name">
+                        <label for="fullName" class="">Full Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" onblur="checkNameValidation('employee', 'employee_code', this, null,'The employee code that you entered already exist. Please enter different code.')">
-                        <label for="employeeCode" class="">Employee Code *</label>
+                        <input id="userCode" name="userCode" type="text" class="validate isRequired" title="Please enter user code" onblur="checkNameValidation('user', 'user_code', this, null,'The user code that you entered already exist. Please enter different code.')">
+                        <label for="userCode" class="">User Code *</label>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@ $loginContainer = new Container('employee');
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
-                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" onblur="checkNameValidation('employee', 'user_name', this, null,'The user name that you entered already exist. Please enter different name.')">
+                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" onblur="checkNameValidation('user', 'user_name', this, null,'The user name that you entered already exist. Please enter different name.')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ $loginContainer = new Container('employee');
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="role" name="role" title="Please select employee role">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select user role">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($roleData as $role){
@@ -67,7 +67,7 @@ $loginContainer = new Container('employee');
                             }
                             ?>
                         </select>
-                        <label for="role" class="">Employee Role *</label>
+                        <label for="role" class="">User Role *</label>
                     </div>
                 </div>
             </div>
@@ -75,14 +75,14 @@ $loginContainer = new Container('employee');
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('employee', 'email', this, null,'The employee email that you entered already exist. Please enter different email id.')">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('user', 'email', this, null,'The user email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('employee', 'mobile', this, null,'The employee mobile no. that you entered already exist. Please enter different mobile no');">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('user', 'mobile', this, null,'The user mobile no. that you entered already exist. Please enter different mobile no');">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -113,8 +113,8 @@ $loginContainer = new Container('employee');
                 </div>
             </div>
             <div class="col s12">
-                <a href="<?php echo $this->url('employee'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addEmployee();">ADD</a>&nbsp;&nbsp;
+                <a href="<?php echo $this->url('user'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addUser();">ADD</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -122,13 +122,13 @@ $loginContainer = new Container('employee');
 </div>
 <script>
     duplicateName = true;
-    function addEmployee(){
+    function addUser(){
         flag = deforayValidator.init({
-               formId: 'addEmployeeForm'
+               formId: 'addUserForm'
         });
         
         if(flag){
-            document.getElementById('addEmployeeForm').submit();
+            document.getElementById('addUserForm').submit();
         }
     }
     
