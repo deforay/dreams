@@ -185,6 +185,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'data-extraction' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-extraction[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtraction',
+                        'action' => 'index'
+                    ),
+                ),
             ),
             
         ),
@@ -218,7 +227,8 @@ return array(
             'Application\Controller\Facility' => 'Application\Controller\FacilityController',
             'Application\Controller\Country' => 'Application\Controller\CountryController',
             'Application\Controller\AncSite' => 'Application\Controller\AncSiteController',
-            'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController'
+            'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController',
+            'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController'
         ),
     ),
     'controller_plugins' => array(

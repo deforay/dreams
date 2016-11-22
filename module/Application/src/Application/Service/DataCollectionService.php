@@ -294,4 +294,8 @@ class DataCollectionService {
         }
     }
     
+    public function getAllDataExtractions($parameters){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchAllDataExtractions($parameters);
+    }
 }

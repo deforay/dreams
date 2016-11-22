@@ -1,0 +1,192 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+?>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    pre {
+        max-height: 596px;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+
+    }
+    #dataCollectionDataTable_wrapper{
+	overflow-x:scroll;
+    }
+    .select-wrapper{
+	width:60%;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Data Extractions</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Extractions</a>
+       </div>
+    </div>
+    <?php
+    if($loginContainer->roleCode =='CSC'){
+    ?>
+	<div class="row">
+	    <div class="col l12 m12 s12">
+		<table style="width:100%;">
+		    <tr>
+			<td style="text-align:right;"><h6><strong>Country</strong></h6></td>
+			<td style="text-align:left;">
+			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
+				<option value=""> -- Select -- </option>
+				<?php
+				foreach($countries as $country){
+				    ?>
+				    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+				    <?php
+				}
+				?>
+			    </select>
+			</td>
+		    </tr>
+		    <tr>
+			<td colspan="2" style="text-align:center;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+		    </tr>
+		</table>
+	    </div>
+	</div>
+    <?php } ?>
+    <div class="row dashboard-wrapper content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Extraction List</div>
+                <div class="card-content clearfix">
+                    <table id="dataExtractionDataTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+                                <th>Surveillance ID</th>
+                                <th>Specimen Collected Date</th>
+				<th>ANC site</th>
+                                <th>ANC Patient ID</th>
+                                <th>Lab site</th>
+                                <th>Lab Specimen ID</th>
+				<?php
+                                if($loginContainer->roleCode =='CSC'){
+                                ?>
+                                 <th>Country</th>
+				<?php } ?>
+				<th>Status</th>
+                            </tr>
+                        </thead>
+			<tfoot>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Specimen Collected Date</th>
+				<th>ANC site</th>
+                                <th>ANC Patient ID</th>
+                                <th>Lab site</th>
+                                <th>Lab Specimen ID</th>
+				<?php
+                                if($loginContainer->roleCode =='CSC'){
+                                ?>
+                                  <th>Country</th>
+				<?php } ?>
+				<th>Status</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+       oTable = $("#dataExtractionDataTable").DataTable({
+        "bProcessing": true,
+        "bServerSide": true,
+         "aoColumns": [
+		{"sClass":"center"},
+		{"sClass":"center"},
+		{"sClass":"center"},
+		{"sClass":"center"},
+		{"sClass":"center"},
+		{"sClass":"center"},
+		<?php
+		if($loginContainer->roleCode =='CSC'){
+		?>
+		  {"sClass":"center"},
+		<?php } ?>
+		{"sClass":"center"}
+            ],
+	"aaSorting": [[ 1, "desc" ]],
+        "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
+         "fnServerData": function ( sSource, aoData, fnCallback ) {
+	    aoData.push({"name": "country", "value": $("#country").val()});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+       });
+       
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
+    });
+	
+	
+	function searchDataCollectionData(){
+	   oTable.draw();
+	}
+	
+	function extractDataCollectionData(){
+	    $.post("<?php echo $this->url('data-extraction',array('action'=>'export-excel')); ?>", {},
+	    function(data){
+		if(data == "" || data == null || data == undefined){
+		    alert('OOPS..Unable to generate excel.');
+		}else{
+		    document.location.href = '/temporary/'+data;
+		}
+	    });
+	}
+</script>
