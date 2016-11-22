@@ -97,24 +97,10 @@ $loginContainer = new Container('user');
                                             </div>
                                         </li>
                                         <li class="">
-                                            <div class="collapsible-header waves-effect" style="padding-left:28%;">Data Extraction <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                            <div class="collapsible-body">
-                                                <ul>
-                                                    <li>
-                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="padding-left:34%;color:#444;">Data Collection</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                         </li>
                                         <li class="">
-                                            <div class="collapsible-header waves-effect" style="padding-left:28%;">Data Reporting<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                            <div class="collapsible-body">
-                                                <ul>
-                                                    <li>
-                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="padding-left:34%;color:#444;">Data Collection</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                            <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                         </li>
                                     </ul>
                                 </li>
