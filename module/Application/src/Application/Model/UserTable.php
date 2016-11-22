@@ -103,7 +103,7 @@ class UserTable extends AbstractTableGateway {
 	    $loginContainer = new Container('user');
 	    $common = new CommonService();
 	    if($loginContainer->roleCode =='CSC'){
-	        $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+	        $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
 	        $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
 	    }else{
 	       $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
@@ -271,13 +271,13 @@ class UserTable extends AbstractTableGateway {
     }
 	
     public function updateUserDetails($params){
-		$employeeId = 0;
+		$userId = 0;
 		if(isset($params['userName']) && trim($params['userName'])!= ''){
-			$employeeId = base64_decode($params['employeeId']);
+			$userId = base64_decode($params['userId']);
 			$common = new CommonService();
 			$data = array(
-			'employee_name' => $params['employeeName'],
-			'employee_code' => $params['employeeCode'],
+			'full_name' => $params['fullName'],
+			'user_code' => $params['userCode'],
 			'user_name' => $params['userName'],
 			'role' => base64_decode($params['role']),
 			'email' => $params['email'],
@@ -291,8 +291,8 @@ class UserTable extends AbstractTableGateway {
 				$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 				$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 			}
-			$this->update($data,array('employee_id'=>$employeeId));
+			$this->update($data,array('user_id'=>$userId));
 		}
-		return $employeeId;
+		return $userId;
     }
 }

@@ -242,4 +242,12 @@ ALTER TABLE `user`
   
 ALTER TABLE `user` CHANGE `employee_id` `user_id` INT(11) NOT NULL AUTO_INCREMENT, CHANGE `employee_code` `user_code` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 
-ALTER TABLE `user` ADD `full_name` VARCHAR(255) NULL DEFAULT NULL AFTER `user_id`; 
+ALTER TABLE `user` ADD `full_name` VARCHAR(255) NULL DEFAULT NULL AFTER `user_id`;
+
+ALTER TABLE `data_collection`
+  DROP `lock_state`,
+  DROP `request_state`;
+  
+ALTER TABLE `data_collection_event_log`
+  DROP `lock_state`,
+  DROP `request_state`;

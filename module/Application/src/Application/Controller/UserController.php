@@ -54,8 +54,8 @@ class UserController extends AbstractActionController{
         $userService=$this->getServiceLocator()->get('UserService');
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $userService->updateEmployee($params);
-            return $this->redirect()->toRoute('employee');
+            $userService->updateUser($params);
+            return $this->redirect()->toRoute('user');
         }else{
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
@@ -64,7 +64,7 @@ class UserController extends AbstractActionController{
             $roleResult=$roleService->getActiveRoles();
             $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
-                'empResult'=>$result,
+                'row'=>$result,
                 'countries'=>$countryList,
                 'roleData'=>$roleResult
             ));
