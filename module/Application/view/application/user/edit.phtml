@@ -8,21 +8,21 @@
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editEmployeeForm" name="editEmployeeForm" method="post" action="<?php echo $this->url('edit-user'); ?>">
+        <form id="editUserForm" name="editUserForm" method="post" action="<?php echo $this->url('edit-user'); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="employeeName" name="employeeName" type="text" class="validate isRequired" title="Please enter employee name" value="<?php echo $empResult->employee_name;?>">
-                        <label for="employeeName" class="">Employee Name *</label>
+                        <input id="fullName" name="fullName" type="text" class="validate isRequired" title="Please enter full name" value="<?php echo $row->full_name;?>">
+                        <label for="fullName" class="">Full Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="employeeCode" name="employeeCode" type="text" class="validate isRequired" title="Please enter employee code" value="<?php echo $empResult->employee_code;?>" onblur="checkNameValidation('employee', 'employee_code', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee code that you entered already exist. Please enter different code.')">
-                        <label for="employeeCode" class="">Employee Code *</label>
+                        <input id="userCode" name="userCode" type="text" class="validate isRequired" title="Please enter user code" value="<?php echo $row->user_code;?>" onblur="checkNameValidation('user', 'user_code', this, '<?php echo "user_id##" .$row->user_id; ?>','The user code that you entered already exist. Please enter different code.')">
+                        <label for="userCode" class="">User Code *</label>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
-                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" value="<?php echo $empResult->user_name;?>" onblur="checkNameValidation('employee', 'user_name', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The user name that you entered already exist. Please enter different name.')">
+                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" value="<?php echo $row->user_name;?>" onblur="checkNameValidation('user', 'user_name', this, '<?php echo "user_id##" .$row->user_id; ?>','The user name that you entered already exist. Please enter different name.')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
@@ -53,17 +53,17 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="role" name="role" title="Please select employee role">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select user role">
                             <option value="">-- Select --</option>
                             <?php
                             foreach($roleData as $role){
                                 ?>
-                                <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($empResult->role == $role['role_id']) ? " selected='selected'" : ""; ?>><?php echo ucwords($role['role_name']);?></option>
+                                <option value="<?php echo base64_encode($role['role_id']);?>"<?php echo ($row->role == $role['role_id']) ? " selected='selected'" : ""; ?>><?php echo ucwords($role['role_name']);?></option>
                                 <?php
                             }
                             ?>
                         </select>
-                        <label for="role" class="">Employee Role *</label>
+                        <label for="role" class="">User Role *</label>
                     </div>
                 </div>
             </div>
@@ -71,14 +71,14 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $empResult->email;?>" onblur="checkNameValidation('employee', 'email', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee email that you entered already exist. Please enter different email.')">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email;?>" onblur="checkNameValidation('user', 'email', this, '<?php echo "user_id##" .$row->user_id; ?>','The user email that you entered already exist. Please enter different email.')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $empResult->mobile;?>" onblur="checkNameValidation('employee', 'mobile', this, '<?php echo "employee_id##" .$empResult->employee_id; ?>','The employee mobile no. that you entered already exist. Please enter different mobile no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>" onblur="checkNameValidation('user', 'mobile', this, '<?php echo "user_id##" .$row->user_id; ?>','The user mobile no. that you entered already exist. Please enter different mobile no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $empResult->alt_contact;?>">
+                        <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $row->alt_contact;?>">
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($empResult->country == $country['country_id']) ? "selected='selected'" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($row->country == $country['country_id']) ? "selected='selected'" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -112,18 +112,18 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="status" name="status" title="Please select employee status">
-                            <option value="active" <?php echo ($empResult->status == 'active') ? " selected='selected'" : ""; ?>>Active</option>
-                            <option value="inactive" <?php echo ($empResult->status == 'inactive') ? " selected='selected'" : ""; ?>>Inactive</option>
+                        <select class="material-select" id="status" name="status" title="Please select user status">
+                            <option value="active" <?php echo ($row->status == 'active') ? " selected='selected'" : ""; ?>>Active</option>
+                            <option value="inactive" <?php echo ($row->status == 'inactive') ? " selected='selected'" : ""; ?>>Inactive</option>
                         </select>
-                        <label for="status" class="">Employee Status *</label>
+                        <label for="status" class="">User Status *</label>
                     </div>
                 </div>
             </div>
             <div class="col s12">
-                <input id="employeeId" name="employeeId" type="hidden" value="<?php echo base64_encode($empResult->employee_id);?>"/>
+                <input id="userId" name="userId" type="hidden" value="<?php echo base64_encode($row->user_id);?>"/>
                 <a href="<?php echo $this->url('user'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" onclick="editEmployee();" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">UPDATE</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" onclick="editUser();" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -131,13 +131,13 @@
 </div>
 <script>
     duplicateName = true;
-    function editEmployee(){
+    function editUser(){
         flag = deforayValidator.init({
-               formId: 'editEmployeeForm'
+               formId: 'editUserForm'
         });
         
         if(flag){
-            document.getElementById('editEmployeeForm').submit();
+            document.getElementById('editUserForm').submit();
         }
     }
     

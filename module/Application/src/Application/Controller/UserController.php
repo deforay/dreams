@@ -24,7 +24,7 @@ class UserController extends AbstractActionController{
         }else{
             $roleCode=base64_decode($this->params()->fromRoute('role'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'roleCode'=>$roleCode
@@ -42,7 +42,7 @@ class UserController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $result=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
             'roleData'=>$result,
             'countries'=>$countryList
@@ -54,17 +54,17 @@ class UserController extends AbstractActionController{
         $userService=$this->getServiceLocator()->get('UserService');
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $userService->updateEmployee($params);
-            return $this->redirect()->toRoute('employee');
+            $userService->updateUser($params);
+            return $this->redirect()->toRoute('user');
         }else{
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('employee');
+            $countryList=$countryService->getActiveCountries('user');
             return new ViewModel(array(
-                'empResult'=>$result,
+                'row'=>$result,
                 'countries'=>$countryList,
                 'roleData'=>$roleResult
             ));
