@@ -71,7 +71,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
                         'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
                         'country'=>$loginContainer->country,
-						'status'=>1,
+			'status'=>1,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->employeeId
                     );
@@ -89,7 +89,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchAllDataCollections($parameters){
-	$loginContainer = new Container('employee');
+	$loginContainer = new Container('user');
 	$queryContainer = new Container('query');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
@@ -249,30 +249,20 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 		$row[] = ucwords($aRow['test_status_name']);
 		 $dataView = '';
-		 $requestView = '';
-		 if($loginContainer->roleCode== 'LDEO' && trim($aRow['lock_state'])== 'lock'){
+		 if($loginContainer->roleCode== 'LDEO' && trim($aRow['test_status_name'])== 'locked'){
 		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
-			if(trim($aRow['request_state'])== NULL || trim($aRow['request_state'])== ''){
-			  $requestView = '<a href="javascript:void(0);" onclick="requestToUnlock(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Request unlock"><i class="zmdi zmdi-long-arrow-right"></i> Request</a>';
-			}else{
-			  $requestView = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
-			}
 		 }else{
 		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		 }
 		 $lockState = '';
-		 $requestedState = '';
 		 if($loginContainer->roleCode!= 'LDEO'){
-			if($aRow['lock_state']== NULL || $aRow['lock_state']== '' || $aRow['lock_state']== 'unlock'){
+			if($aRow['test_status_name']== 'locked'){
 			   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
-			}else if($aRow['lock_state']== 'lock'){
+			}else{
 			   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
-			   if(trim($aRow['request_state'])== 'requested'){
-				  $requestedState = '<a href="javascript:void(0);" class="red-text" style="cursor:default;pointer-event:none;" title="Requested"><i class="zmdi zmdi-alert-circle"></i> Requested </a>';
-			   }
 			}
 		 }
-		$row[] = $dataView.$requestView.$lockState.$requestedState;
+		$row[] = $dataView.$lockState;
 		$output['aaData'][] = $row;
 	}
        return $output;
