@@ -23,7 +23,7 @@ class DataCollectionController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('data-collection');
+            $countryList=$countryService->getActiveCountries('data-collection',0);
             return new ViewModel(array(
                 'countries'=>$countryList
             ));
