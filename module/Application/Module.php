@@ -25,6 +25,7 @@ use Application\Model\SpecimenRejectionReasonTable;
 use Application\Model\DataCollectionTable;
 use Application\Model\DataCollectionEventLogTable;
 use Application\Model\TestStatusTable;
+use Application\Model\UserCountryMapTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -149,6 +150,10 @@ class Module{
                 },'TestStatusTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new TestStatusTable($dbAdapter);
+                    return $table;
+                },'UserCountryMapTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new UserCountryMapTable($dbAdapter);
                     return $table;
                 },
             ),

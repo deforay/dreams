@@ -27,8 +27,10 @@ class UserService {
         $adapter->beginTransaction();
         try {
             $userDb = $this->sm->get('UserTable');
+            $userCountryMapDb = $this->sm->get('UserCountryMapTable');
             $result = $userDb->addUserDetails($params);
             if ($result > 0) {
+                $countryMap = $userCountryMapDb->addUserCountryMapDetails($params,$result);
                 $adapter->commit();
                 $alertContainer = new Container('alert');
                 $alertContainer->msg = 'User added successfully.';
@@ -55,8 +57,10 @@ class UserService {
         $adapter->beginTransaction();
         try {
             $userDb = $this->sm->get('UserTable');
+            $userCountryMapDb = $this->sm->get('UserCountryMapTable');
             $result = $userDb->updateUserDetails($params);
             if ($result > 0) {
+                $countryMap = $userCountryMapDb->addUserCountryMapDetails($params,$result);
                 $adapter->commit();
                 $alertContainer = new Container('alert');
                 $alertContainer->msg = 'User updated successfully.';

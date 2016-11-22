@@ -251,3 +251,16 @@ ALTER TABLE `data_collection`
 ALTER TABLE `data_collection_event_log`
   DROP `lock_state`,
   DROP `request_state`;
+  
+  --saravanan 22-nov-2016
+  CREATE TABLE `user_country_map` (
+  `country_map_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `user_country_map`
+  ADD PRIMARY KEY (`country_map_id`);
+
+ALTER TABLE `user_country_map`
+  MODIFY `country_map_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;

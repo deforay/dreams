@@ -1,3 +1,11 @@
+<?php
+$country = array();
+foreach($row['country'] as $countryListId)
+{
+    $countryList[] = base64_encode($countryListId['country_id']);
+}
+$row = $row[0];
+?>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit User</div>
@@ -53,7 +61,7 @@
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="role" name="role" title="Please select user role">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select user role" onchange="showMultipleCountry(this.value);">
                             <option value="">-- Select --</option>
                             <?php
                             foreach($roleData as $role){
@@ -91,15 +99,30 @@
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
-                <div class="col s6">
-                     <div class="input-field col m10 s10">
+                <div class="col s6" id="countryData">
+                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
-                        <select class="material-select isRequired" id="country" name="country" title="Please select country">
+                        <select class="material-select country" id="country" name="country[]" title="Please select country">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($countries as $country){
                                 ?>
                                 <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($row->country == $country['country_id']) ? "selected='selected'" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="country" class="">Country *</label>
+                    </div>
+                </div>
+                 <div class="col s6" id="countryData1" style="display:none;">
+                    <div class="input-field col m10 s10">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select1 country1" id="country1" name="country[]" multiple="multiple" title="Please select country" >
+                            <?php
+                            foreach($countries as $country){
+                                ?>
+                                <option value="<?php echo base64_encode($country['country_id']);?>"<?php echo in_array(base64_encode($country['country_id']), $countryList) ? "selected=selected" : ""; ?> ><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -146,9 +169,21 @@
         });
         
         if(flag){
+            if(duplicateName){
+            var cntry = $("#country").val();
+            var cntry1 = $("#country1").val();
+            if((cntry=='' || cntry==null) && (cntry1=='' || cntry1==null))
+            {
+                alert("Please Choose country.");
+                return false;
+            }
             document.getElementById('editUserForm').submit();
         }
+        }
     }
+    $(document).ready(function() {
+        showMultipleCountry('<?php echo base64_encode($row->role);?>');
+    });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
@@ -163,6 +198,18 @@
                     duplicateName = true;
                 }
             });
+        }
+    }
+    function showMultipleCountry(value)
+    {
+        if(atob(value)=='2'){
+            $("#country").val('');
+            $("#countryData").hide();
+            $("#countryData1").show();
+        }else{
+            $("#country1").val('');
+            $("#countryData1").hide();
+            $("#countryData").show();
         }
     }
 </script>
