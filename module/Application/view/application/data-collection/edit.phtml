@@ -17,6 +17,12 @@ $resultDispatchedDateToClinic = '';
 if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
+if($countryId!='')
+{
+    $link = "/data-collection/".base64_encode($countryId);
+}else{
+    $link = "/data-collection";
+}
 ?>
 <div id="page-content">
     <div class="row section-header">
@@ -28,7 +34,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('data-collection',array('action'=>'edit')); ?>">
+        <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
@@ -208,8 +214,9 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
                 </div>
             </div>
             <div class="col s12">
+                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
-                <a href="<?php echo $this->url('data-collection'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataCollection();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>

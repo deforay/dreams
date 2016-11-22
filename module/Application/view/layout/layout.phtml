@@ -123,7 +123,7 @@ $loginContainer = new Container('user');
                                                 <div class="collapsible-body" style="">
                                                     <ul>
                                                         <li>
-                                                            <a href="#" style="padding-left:34%;color:#444;">Manage Users</a>
+                                                            <a href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage Users</a>
                                                         </li>
                                                         <li class="facilityMenu ">
                                                             <a class="facilityMenu " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;" >Manage Facilities</a>
@@ -135,10 +135,10 @@ $loginContainer = new Container('user');
                                                 </div>
                                             </li>
                                             <li>
-                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                             </li>
                                             <li>
-                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
+                                                <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                             </li>
                                             <li>
                                                 <a href="#" class="collapsible-header"><i class="zmdi zmdi-email"></i> Email</a>

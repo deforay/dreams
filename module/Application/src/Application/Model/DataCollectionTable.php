@@ -180,9 +180,13 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
-	if($loginContainer->roleCode!= 'CSC'){
-	    $sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
-	}
+	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
+	    }else{
+		if($loginContainer->roleCode!= 'CSC'){
+		    $sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
+		}
+	    }
 	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}
@@ -217,9 +221,13 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
 				  ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 				  ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
-	if($loginContainer->roleCode!= 'CSC'){
-	    $tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
-	}
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
+	    }else{
+		if($loginContainer->roleCode!= 'CSC'){
+		    $tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
+		}
+	    }
 	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}
@@ -252,7 +260,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		 if($loginContainer->roleCode== 'LDEO' && trim($aRow['test_status_name'])== 'locked'){
 		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 		 }else{
-		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		 }
 		 $statusView = '';
 		 if($loginContainer->roleCode!= 'LDEO'){
@@ -282,7 +290,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function updateDataCollectionDetails($params){
-	$loginContainer = new Container('user');
+		$loginContainer = new Container('user');
         $dataCollectionId = 0;
         if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
             $common = new CommonService();
@@ -352,15 +360,15 @@ class DataCollectionTable extends AbstractTableGateway {
     }
 	
     public function lockDataCollectionDetails($params){
-	    return $this->update(array('lock_state'=>'lock'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	    return $this->update(array('status'=>'2'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function unlockDataCollectionDetails($params){
-	    return $this->update(array('lock_state'=>'unlock'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	    return $this->update(array('status'=>'1'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function requestForUnlockDataCollectionDetails($params){
-	    return $this->update(array('request_state'=>'requested'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	    return $this->update(array('status'=>'requested'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function fetchAllDataExtractions($parameters){

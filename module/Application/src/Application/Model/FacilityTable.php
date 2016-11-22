@@ -226,8 +226,8 @@ class FacilityTable extends AbstractTableGateway {
 	  return $facilityId;
     }
 	
-    public function fetchActivefacilities(){
-	$loginContainer = new Container('user');
+	public function fetchActivefacilities(){
+	    $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))

@@ -179,10 +179,46 @@ return array(
             ),'data-collection' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/data-collection[/:action][/][:id]',
+                    'route' => '/data-collection[/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataCollection',
                         'action' => 'index'
+                    ),
+                ),
+            ),'add-data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection/add',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection/edit[/:id][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'edit'
+                    ),
+                ),
+            ),'lock-data-collection' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-collection/lock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'lock'
+                    ),
+                ),
+            ),'unlock-data-collection' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-collection/unlock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'unlock'
                     ),
                 ),
             ),'data-extraction' => array(

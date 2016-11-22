@@ -223,8 +223,8 @@ class AncSiteTable extends AbstractTableGateway {
 		return $ancSiteId;
     }
 	
-    public function fetchActiveAncSites(){
-	$loginContainer = new Container('user');
+	public function fetchActiveAncSites(){
+	    $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $ancSitesQuery = $sql->select()->from(array('anc' => 'anc_site'))
