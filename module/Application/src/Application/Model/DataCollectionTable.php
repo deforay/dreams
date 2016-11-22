@@ -254,15 +254,15 @@ class DataCollectionTable extends AbstractTableGateway {
 		 }else{
 		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		 }
-		 $lockState = '';
+		 $statusView = '';
 		 if($loginContainer->roleCode!= 'LDEO'){
-			if($aRow['test_status_name']== 'locked'){
-			   $lockState = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
-			}else{
-			   $lockState = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
-			}
+		    if($aRow['test_status_name']== 'completed'){
+		       $statusView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
+		    }else{
+		       $statusView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
+		    }
 		 }
-		$row[] = $dataView.$lockState;
+		$row[] = $dataView.$statusView;
 		$output['aaData'][] = $row;
 	}
        return $output;
