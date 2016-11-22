@@ -84,34 +84,34 @@ $loginContainer = new Container('user');
                                 <li>
                                     <ul class="collapsible" data-collapsible="accordion">
                                         <li class="cscAdminMenu menuAll">
-                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="text-align:center;">Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:28%;">Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                             <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
                                                 <ul>
                                                     <li class="cscCountryMenu menuAll">
-                                                        <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="text-align:right;color:#444;">Manage Countries</a>
+                                                        <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:34%;color:#444;">Manage Countries</a>
                                                     </li>
-                                                    <li class="cscCCMenu menuAll">
-                                                        <a class="cscCCMenu menuAll" href="<?php echo $this->url('user'); ?>" style="text-align:right;color:#444;">Manage Users</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="">
-                                            <div class="collapsible-header waves-effect" style="text-align:center;">Data Extraction <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                            <div class="collapsible-body">
-                                                <ul>
-                                                    <li>
-                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                    <li class="cscUserMenu menuAll">
+                                                        <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:34%;;color:#444;">Manage Users</a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li class="">
-                                            <div class="collapsible-header waves-effect" style="text-align:center;">Data Reporting<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-header waves-effect" style="padding-left:28%;">Data Extraction <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                             <div class="collapsible-body">
                                                 <ul>
                                                     <li>
-                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="text-align:right;color:#444;">Data Collection</a>
+                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="padding-left:34%;color:#444;">Data Collection</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="">
+                                            <div class="collapsible-header waves-effect" style="padding-left:28%;">Data Reporting<i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li>
+                                                        <a href="<?php echo $this->url('data-collection'); ?>" style="padding-left:34%;color:#444;">Data Collection</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -228,6 +228,13 @@ $loginContainer = new Container('user');
           $(".cscAdminMenu").addClass("active");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
+        }else if(splitsUrl[1]=='user'){
+          $(".cscMenu").addClass("active");
+          $(".collapsibleCSCMenu").css("display","block");
+          $(".collapsibleCSCAdminMenu").css("display","block");
+          $(".cscAdminMenu").addClass("active");
+          $(".cscUserMenu").addClass("active");
+          $(".cscUserMenu").css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }
