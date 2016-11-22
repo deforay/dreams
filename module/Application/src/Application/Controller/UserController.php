@@ -22,12 +22,14 @@ class UserController extends AbstractActionController{
             $result = $userService->getAllUsers($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $roleCode=base64_decode($this->params()->fromRoute('role'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('user');
+            $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
-                'roleCode'=>$roleCode
+                'roleCode'=>$roleCode,
+                'countryId'=>$countryId
             ));
         }
     }
@@ -37,15 +39,17 @@ class UserController extends AbstractActionController{
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $result=$userService->addUser($params);
-            return $this->_redirect()->toRoute('user');
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $result=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('user');
+            $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
             'roleData'=>$result,
-            'countries'=>$countryList
+            'countries'=>$countryList,
+                'countryId'=>$countryId
             ));
         }
     }
@@ -55,18 +59,20 @@ class UserController extends AbstractActionController{
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $userService->updateUser($params);
-            return $this->redirect()->toRoute('user');
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('user');
+            $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,
-                'roleData'=>$roleResult
+                'roleData'=>$roleResult,
+                'countryId'=>$countryId
             ));
         }
     }
