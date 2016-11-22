@@ -169,7 +169,7 @@ class CountryTable extends AbstractTableGateway {
     }
     
     public function fetchActiveCountries($from){
-        $loginContainer = new Container('employee');
+        $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $countriesQuery = $sql->select()->from(array('c' => 'country'))

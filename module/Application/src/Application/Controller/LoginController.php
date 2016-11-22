@@ -37,8 +37,8 @@ class LoginController extends AbstractActionController{
     }
   
     public function logOutAction(){
-        $loginContainer = new Container('employee');
-        $loginContainer->getManager()->getStorage()->clear('employee');
+        $loginContainer = new Container('user');
+        $loginContainer->getManager()->getStorage()->clear('user');
         return $this->redirect()->toRoute("login");
     }
 }

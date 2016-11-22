@@ -1,7 +1,7 @@
 <?php
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
-$loginContainer = new Container('employee');
+$loginContainer = new Container('user');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +91,7 @@ $loginContainer = new Container('employee');
                                                         <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="text-align:right;color:#444;">Manage Countries</a>
                                                     </li>
                                                     <li class="cscCCMenu menuAll">
-                                                        <a class="cscCCMenu menuAll" href="/user/<?php echo base64_encode('cc'); ?>" style="text-align:right;color:#444;">Manage Users</a>
+                                                        <a class="cscCCMenu menuAll" href="<?php echo $this->url('user'); ?>" style="text-align:right;color:#444;">Manage Users</a>
                                                     </li>
                                                 </ul>
                                             </div>

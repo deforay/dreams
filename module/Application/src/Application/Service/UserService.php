@@ -22,16 +22,16 @@ class UserService {
         return $userDb->getUserLogin($params);
     }
     
-    public function addEmployee($params){
+    public function addUser($params){
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
         try {
-            $employeeDb = $this->sm->get('EmployeeTable');
-            $result = $employeeDb->addEmployeeDetails($params);
+            $userDb = $this->sm->get('UserTable');
+            $result = $userDb->addUserDetails($params);
             if ($result > 0) {
                 $adapter->commit();
                 $alertContainer = new Container('alert');
-                $alertContainer->msg = 'Employee added successfully.';
+                $alertContainer->msg = 'User added successfully.';
             }
         } catch (Exception $exc) {
             $adapter->rollBack();
@@ -40,14 +40,14 @@ class UserService {
         }
     }
     
-    public function getAllEmployees($parameters){
-        $employeeDb = $this->sm->get('EmployeeTable');
-        return $employeeDb->fetchAllEmployees($parameters);
+    public function getAllUsers($parameters){
+        $userDb = $this->sm->get('UserTable');
+        return $userDb->fetchAllUsers($parameters);
     }
     
-    public function getEmployee($employeeId){
-        $employeeDb = $this->sm->get('EmployeeTable');
-        return $employeeDb->fetchEmployee($employeeId);
+    public function getUser($userId){
+        $userDb = $this->sm->get('UserTable');
+        return $userDb->fetchUser($userId);
     }
     
     public function updateEmployee($params){

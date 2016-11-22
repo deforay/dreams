@@ -1,6 +1,6 @@
 <?php
 use Zend\Session\Container;
-$loginContainer = new Container('employee');
+$loginContainer = new Container('user');
 ?>
 <style>
     .card-default {
@@ -81,7 +81,7 @@ $loginContainer = new Container('employee');
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
-		  <span style="float:right;"><a href="<?php echo $this->url('user',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
+		  <span style="float:right;"><a href="<?php echo $this->url('add-user'); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
                 </div>
                 <div class="card-content clearfix">
                     <table id="userDataTable"  class="responsive-table display dataTable">

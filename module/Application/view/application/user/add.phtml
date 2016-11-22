@@ -1,6 +1,6 @@
 <?php
 use Zend\Session\Container;
-$loginContainer = new Container('employee');
+$loginContainer = new Container('user');
 ?>
 <div id="page-content">
     <div class="row section-header">
@@ -12,7 +12,7 @@ $loginContainer = new Container('employee');
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="addUserForm" name="addUserForm" method="post" action="<?php echo $this->url('user',array('action'=>'add')); ?>">
+        <form id="addUserForm" name="addUserForm" method="post" action="<?php echo $this->url('add-user'); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">

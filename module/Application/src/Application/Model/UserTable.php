@@ -70,7 +70,7 @@ class UserTable extends AbstractTableGateway {
         }
     }
     
-    public function addEmployeeDetails($params){
+    public function addUserDetails($params){
 		$lastInsertedId = 0;
 		if(isset($params['userName']) && trim($params['userName'])!= ''){
 			$common = new CommonService();
@@ -78,8 +78,8 @@ class UserTable extends AbstractTableGateway {
 			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 			$password = sha1($params['password'] . $configResult["password"]["salt"]);
 			$data = array(
-			'employee_name' => $params['employeeName'],
-			'employee_code' => $params['employeeCode'],
+			'full_name' => $params['fullName'],
+			'user_code' => $params['userCode'],
 			'user_name' => $params['userName'],
 			'password' => $password,
 			'role' => base64_decode($params['role']),
@@ -96,19 +96,19 @@ class UserTable extends AbstractTableGateway {
 		return $lastInsertedId;
     }
     
-    public function fetchAllEmployees($parameters){
+    public function fetchAllUsers($parameters){
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	    $loginContainer = new Container('employee');
+	    $loginContainer = new Container('user');
 	    $common = new CommonService();
-		if($loginContainer->roleCode =='CSC'){
-            $aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
-            $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','c.country_name','e.status','e.created_on');
-		}else{
-			$aColumns = array('e.employee_name','e.employee_code','r.role_name','e.user_name','e.email','e.mobile','e.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
-            $orderColumns = array('e.employee_name','r.role_name','e.user_name','e.email','e.mobile','e.status','e.created_on');
-		}
+	    if($loginContainer->roleCode =='CSC'){
+	        $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(e.created_on,'%d-%b-%Y %H:%i:%s')");
+	        $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
+	    }else{
+	       $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
+	       $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
+	    }
 
        /*
         * Paging
@@ -181,21 +181,21 @@ class UserTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
-       $sQuery = $sql->select()->from(array('e' => 'employee'))
-		             ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-		             ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+       $sQuery = $sql->select()->from(array('u' => 'user'))
+		             ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
+		             ->join(array('c' => 'country'), "c.country_id=u.country",array('country_name'));
 	   if($loginContainer->roleCode== 'CC'){
-		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
 		  $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
 	   }else if($loginContainer->roleCode== 'LS'){
-		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
 		  $sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
 	   }else if($loginContainer->roleCode== 'LDEO'){
-		  $sQuery = $sQuery->where(array('e.country'=>$loginContainer->country));	
+		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
 		  $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
 	   }
 	   if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	      $sQuery = $sQuery->where(array('e.country'=>base64_decode($parameters['country'])));
+	      $sQuery = $sQuery->where(array('u.country'=>base64_decode($parameters['country'])));
 	    }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -222,21 +222,21 @@ class UserTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-		$tQuery = $sql->select()->from(array('e' => 'employee'))
-				      ->join(array('r' => 'role'), "r.role_id=e.role",array('role_name'))
-				      ->join(array('c' => 'country'), "c.country_id=e.country",array('country_name'));
+		$tQuery = $sql->select()->from(array('u' => 'user'))
+				      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
+				      ->join(array('c' => 'country'), "c.country_id=u.country",array('country_name'));
 	    if($loginContainer->roleCode== 'CC'){
-		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
 		  $sQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LS'){
-		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
 		  $tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LDEO'){
-		  $tQuery = $tQuery->where(array('e.country'=>$loginContainer->country));	
+		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
 		  $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
 	    }
 	    if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	      $tQuery = $tQuery->where(array('e.country'=>base64_decode($parameters['country'])));  
+	      $tQuery = $tQuery->where(array('u.country'=>base64_decode($parameters['country'])));  
 	    }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -250,7 +250,7 @@ class UserTable extends AbstractTableGateway {
 		foreach ($rResult as $aRow) {
 			$row = array();
 			$date = explode(" ",$aRow['created_on']);
-			$row[] = ucwords($aRow['employee_name'])." - ".$aRow['employee_code'];
+			$row[] = ucwords($aRow['full_name'])." - ".$aRow['user_code'];
 			$row[] = ucwords($aRow['role_name']);
 			$row[] = $aRow['user_name'];
 			$row[] = $aRow['email'];
@@ -260,14 +260,14 @@ class UserTable extends AbstractTableGateway {
 			}
 			$row[] = ucwords($aRow['status']);
 			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/employee/edit/' . base64_encode($aRow['employee_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+			$row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 			$output['aaData'][] = $row;
 		}
 	  return $output;
     }
     
-    public function fetchEmployee($employeeId){
-	  return $this->select(array('employee_id'=>$employeeId))->current();
+    public function fetchUser($userId){
+	  return $this->select(array('user_id'=>$userId))->current();
     }
 	
     public function updateEmployeeDetails($params){

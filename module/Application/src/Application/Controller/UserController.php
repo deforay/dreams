@@ -18,8 +18,8 @@ class UserController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()){
             $parameters = $request->getPost();
-            $employeeService = $this->getServiceLocator()->get('EmployeeService');
-            $result = $employeeService->getAllEmployees($parameters);
+            $userService = $this->getServiceLocator()->get('UserService');
+            $result = $userService->getAllUsers($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $roleCode=base64_decode($this->params()->fromRoute('role'));
@@ -33,11 +33,11 @@ class UserController extends AbstractActionController{
     }
     
     public function addAction(){
-        $employeeService=$this->getServiceLocator()->get('EmployeeService');
+        $userService = $this->getServiceLocator()->get('UserService');
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $result=$employeeService->addEmployee($params);
-            return $this->_redirect()->toRoute('employee');
+            $result=$userService->addUser($params);
+            return $this->_redirect()->toRoute('user');
         }else{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
@@ -51,14 +51,14 @@ class UserController extends AbstractActionController{
     }
     
     public function editAction(){
-        $employeeService=$this->getServiceLocator()->get('EmployeeService');
+        $userService=$this->getServiceLocator()->get('UserService');
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $employeeService->updateEmployee($params);
+            $userService->updateEmployee($params);
             return $this->redirect()->toRoute('employee');
         }else{
-            $employeeId=base64_decode($this->params()->fromRoute('id'));
-            $result=$employeeService->getEmployee($employeeId);
+            $userId=base64_decode($this->params()->fromRoute('id'));
+            $result=$userService->getUser($userId);
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();

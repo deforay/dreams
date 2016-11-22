@@ -86,6 +86,24 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'add-user' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/user/add',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\user',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-user' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/user/edit[/:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\user',
+                        'action' => 'edit'
+                    ),
+                ),
             ),'common' => array(
                 'type' => 'segment',
                 'options' => array(
