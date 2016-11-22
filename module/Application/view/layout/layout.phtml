@@ -84,7 +84,7 @@ $loginContainer = new Container('user');
                                 <li>
                                     <ul class="collapsible" data-collapsible="accordion">
                                         <li class="cscAdminMenu menuAll">
-                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:28%;">Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                             <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
                                                 <ul>
                                                     <li class="cscCountryMenu menuAll">
@@ -96,10 +96,10 @@ $loginContainer = new Container('user');
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="">
+                                        <li class="cscDataCollectionMenu menuAll">
                                             <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                         </li>
-                                        <li class="">
+                                        <li class="cscDataExtractionMenu menuAll">
                                             <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                         </li>
                                     </ul>
@@ -221,6 +221,16 @@ $loginContainer = new Container('user');
           $(".cscAdminMenu").addClass("active");
           $(".cscUserMenu").addClass("active");
           $(".cscUserMenu").css("color","#fff");
+        }else if(splitsUrl[1]=='data-collection'){
+          $(".cscMenu").addClass("active");
+          $(".collapsibleCSCMenu").css("display","block");
+          $(".cscDataCollectionMenu").addClass("active");
+          $(".cscDataCollectionMenu").css("color","#fff");
+        }else if(splitsUrl[1]=='data-extraction'){
+          $(".cscMenu").addClass("active");
+          $(".collapsibleCSCMenu").css("display","block");
+          $(".cscDataExtractionMenu").addClass("active");
+          $(".cscDataExtractionMenu").css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }
