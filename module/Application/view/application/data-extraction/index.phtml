@@ -1,11 +1,12 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(trim($countryId)!='')
-{
+if(trim($countryId)!= ""){
     $display="display:none;";
+    $style = "text-align:right;padding-right:6%;";
 }else{
     $display="";
+    $style="width:40%;text-align:left;";
 }
 ?>
 <style>
@@ -79,7 +80,7 @@ if(trim($countryId)!='')
 				?>
 			    </select>
 			</td>
-			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
 		    </tr>
 		</table>
 	    </div>
