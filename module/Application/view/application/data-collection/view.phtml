@@ -55,7 +55,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="ancSite">ANC site name </label><br>
-                        <p><?php echo ucwords($row->anc_site_name); ?></p>
+                        <p><?php echo $row->anc_site_code.' - '.ucwords($row->anc_site_name); ?></p>
                     </div>
                 </div>
             </div>
