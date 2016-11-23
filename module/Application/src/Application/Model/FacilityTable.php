@@ -39,11 +39,11 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function fetchAllFacilites($parameters){
-		$loginContainer = new Container('user');
+	    $loginContainer = new Container('user');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-		if($loginContainer->roleCode =='CSC'){
+		if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
            $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
            $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
 		}else{
@@ -189,7 +189,7 @@ class FacilityTable extends AbstractTableGateway {
 				$row[] = ucwords($aRow['facility_type_name']);
 				$row[] = $aRow['email'];
 				$row[] = $aRow['phone_number'];
-				if($loginContainer->roleCode =='CSC'){
+				if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
 				  $row[] = ucwords($aRow['country_name']);
 				}
 				$row[] = ucwords($aRow['status']);
@@ -225,8 +225,8 @@ class FacilityTable extends AbstractTableGateway {
 	  return $facilityId;
     }
 	
-	public function fetchActivefacilities($from,$countryId){
-	    $loginContainer = new Container('user');
+    public function fetchActivefacilities($from,$countryId){
+	$loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))

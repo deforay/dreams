@@ -111,7 +111,7 @@ class UserTable extends AbstractTableGateway {
         */
 	$loginContainer = new Container('user');
 	$common = new CommonService();
-	if($loginContainer->roleCode =='CSC'){
+	if($loginContainer->roleCode =='CSC' && $parameters['countryId'] ==''){
 	    $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
 	    $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
 	}else{
@@ -284,7 +284,7 @@ class UserTable extends AbstractTableGateway {
 	    $row[] = $aRow['user_name'];
 	    $row[] = $aRow['email'];
 	    $row[] = $aRow['mobile'];
-	    if($loginContainer->roleCode =='CSC'){
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId'] ==''){
 	      $row[] = ucwords($aRow['country_name']);
 	    }
 	    $row[] = ucwords($aRow['status']);

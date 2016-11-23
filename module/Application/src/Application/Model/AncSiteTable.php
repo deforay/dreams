@@ -42,7 +42,7 @@ class AncSiteTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-		if($loginContainer->roleCode =='CSC'){
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
             $aColumns = array('anc.anc_site_name','anc.anc_site_code','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
             $orderColumns = array('anc.anc_site_name','f_typ.facility_type_name','anc.email','anc.phone_number','c.country_name','anc.status');
 		}else{
@@ -163,7 +163,7 @@ class AncSiteTable extends AbstractTableGateway {
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
 	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $tQuery = $tQuery->where(array('anc.country'=>trim($parameters['countryId'])));
+	        $tQuery = $tQuery->where(array('anc.country'=>trim($parameters['countryId'])));
 	    }else{
 		if($loginContainer->roleCode!= 'CSC'){
 		    $tQuery = $tQuery->where(array('anc.country'=>$loginContainer->country));
@@ -187,7 +187,7 @@ class AncSiteTable extends AbstractTableGateway {
 				$row[] = ucwords($aRow['facility_type_name']);
 				$row[] = $aRow['email'];
 				$row[] = $aRow['phone_number'];
-				if($loginContainer->roleCode =='CSC'){
+				if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
 				   $row[] = ucwords($aRow['country_name']);
 				}
 				$row[] = ucwords($aRow['status']);
@@ -223,7 +223,7 @@ class AncSiteTable extends AbstractTableGateway {
 		return $ancSiteId;
     }
 	
-	public function fetchActiveAncSites($from,$countryId){
+    public function fetchActiveAncSites($from,$countryId){
 	    $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);

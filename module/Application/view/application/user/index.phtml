@@ -1,6 +1,9 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
+if(!isset($countryId) || $countryId ==''){
+    $countryId = '';
+}
 ?>
 <style>
     .card-default {
@@ -75,13 +78,7 @@ $loginContainer = new Container('user');
 	    </div>
 	</div>
     <?php }
-    if($countryId==''){
-	$countryId = '';
-    }else{
-	$countryId = $countryId;
-    }
     ?>
-    <input type="hidden" name="countryId" id="countryId" value="<?php echo $countryId;?>"/>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
@@ -98,7 +95,7 @@ $loginContainer = new Container('user');
                                 <th>Email</th>
                                 <th>Mobile</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && $countryId ==''){
                                 ?>
                                   <th>Country</th>
 				<?php } ?>
@@ -115,7 +112,7 @@ $loginContainer = new Container('user');
                                 <th>Email</th>
                                 <th>Mobile</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && $countryId ==''){
                                 ?>
                                   <th>Country</th>
 				<?php } ?>
@@ -145,7 +142,7 @@ $loginContainer = new Container('user');
 		{"sClass":"center"},
 		{"sClass":"center"},
 		<?php
-		if($loginContainer->roleCode =='CSC'){
+		if($loginContainer->roleCode =='CSC' && $countryId ==''){
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
@@ -157,7 +154,7 @@ $loginContainer = new Container('user');
          "fnServerData": function ( sSource, aoData, fnCallback ) {
 	    aoData.push({"name": "roleCode", "value": '<?php echo $roleCode; ?>'});
 	    aoData.push({"name": "country", "value": $("#country").val()});
-	    aoData.push({"name": "countryId", "value": $("#countryId").val()});
+	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

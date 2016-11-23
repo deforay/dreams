@@ -1,14 +1,12 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(trim($countryId)=='')
-    {
-	$countryId = '';
-	$link = "/data-collection";
-    }else{
-	$countryId = $countryId;
-	$link = "/data-collection/".base64_encode($countryId);
-    }
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
+    $link = "/data-collection";
+}else{
+    $link = "/data-collection/".base64_encode($countryId);
+}
 ?>
 <style>
     .card-default {
@@ -238,7 +236,6 @@ if(trim($countryId)=='')
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Collection List</div>
                 <div class="card-content clearfix">
-		    <input type="hidden" name="countryId" id="countryId" value="<?php echo $countryId;?>"/>
                     <table id="dataCollectionDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
@@ -249,7 +246,7 @@ if(trim($countryId)=='')
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
@@ -266,7 +263,7 @@ if(trim($countryId)=='')
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                   <th>Country</th>
 				<?php } ?>
@@ -296,7 +293,7 @@ if(trim($countryId)=='')
 		{"sClass":"center"},
 		{"sClass":"center"},
 		<?php
-		if($loginContainer->roleCode =='CSC'){
+		if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
@@ -306,8 +303,7 @@ if(trim($countryId)=='')
 	"aaSorting": [[ 1, "desc" ]],
         "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
-	    aoData.push({"name": "country", "value": $("#country").val()});
-	    aoData.push({"name": "countryId", "value": $("#countryId").val()});
+	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

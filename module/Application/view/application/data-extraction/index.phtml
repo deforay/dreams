@@ -1,12 +1,13 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(trim($countryId)!= ""){
-    $display="display:none;";
-    $style = "text-align:right;padding-right:6%;";
-}else{
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
     $display="";
     $style="width:40%;text-align:left;";
+}else{
+    $display="display:none;";
+    $style = "text-align:right;padding-right:6%;";
 }
 ?>
 <style>
@@ -80,13 +81,12 @@ if(trim($countryId)!= ""){
 				?>
 			    </select>
 			</td>
-			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
 		    </tr>
 		</table>
 	    </div>
 	</div>
     <?php } ?>
-    <input type="hidden" name="countryId" id="countryId" value="<?php echo $countryId;?>"/>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
@@ -102,7 +102,7 @@ if(trim($countryId)!= ""){
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
@@ -118,7 +118,7 @@ if(trim($countryId)!= ""){
                                 <th>Lab site</th>
                                 <th>Lab Specimen ID</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC'){
+                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                   <th>Country</th>
 				<?php } ?>
@@ -147,7 +147,7 @@ if(trim($countryId)!= ""){
 		{"sClass":"center"},
 		{"sClass":"center"},
 		<?php
-		if($loginContainer->roleCode =='CSC'){
+		if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
@@ -157,7 +157,7 @@ if(trim($countryId)!= ""){
         "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
 	    aoData.push({"name": "country", "value": $("#country").val()});
-	    aoData.push({"name": "countryId", "value": $("#countryId").val()});
+	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -182,7 +182,7 @@ if(trim($countryId)!= ""){
     });
 	
 	
-    function searchDataCollectionData(){
+    function searchDataExtractionData(){
        oTable.draw();
     }
     
