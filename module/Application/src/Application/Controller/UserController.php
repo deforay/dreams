@@ -65,12 +65,10 @@ class UserController extends AbstractActionController{
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
             $countryIdList = array();
-            if(trim($countryId)!='')
-            {
+            if(isset($countryId) && trim($countryId)!=''){
                 $countryIdList[] = $countryId;
             }
-            if(count($result['country'])>0)
-            {
+            if(count($result['country'])>0){
                 foreach($result['country'] as $country){
                     $countryIdList[] = $country['country_id'];
                 }
