@@ -64,8 +64,8 @@ class FacilityService {
         }
     }
     
-    public function getActivefacilities(){
+    public function getActivefacilities($from,$countryId){
         $facilityDb = $this->sm->get('FacilityTable');
-        return $facilityDb->fetchActivefacilities();
+        return $facilityDb->fetchActivefacilities($from,$countryId);
     }
 }

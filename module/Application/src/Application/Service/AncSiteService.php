@@ -64,8 +64,8 @@ class AncSiteService {
         }
     }
     
-    public function getActiveAncSites(){
+    public function getActiveAncSites($from,$countryId){
         $ancSiteDb = $this->sm->get('AncSiteTable');
-        return $ancSiteDb->fetchActiveAncSites();
+        return $ancSiteDb->fetchActiveAncSites($from,$countryId);
     }
 }

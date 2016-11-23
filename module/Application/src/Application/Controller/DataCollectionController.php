@@ -12,6 +12,7 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
+use Zend\Session\Container;
 
 class DataCollectionController extends AbstractActionController{
     public function indexAction(){
@@ -28,9 +29,9 @@ class DataCollectionController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList=$ancSiteService->getActiveAncSites();
+            $ancSiteList=$ancSiteService->getActiveAncSites('datacollection',$countryId);
             $rejectionReasonList=$commonService->getActiveRejectionReasons();
-            $facilityList=$facilityService->getActivefacilities();
+            $facilityList=$facilityService->getActivefacilities('datacollection',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
@@ -76,11 +77,16 @@ class DataCollectionController extends AbstractActionController{
         $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $commonService = $this->getServiceLocator()->get('CommonService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');
-        $ancSiteList=$ancSiteService->getActiveAncSites();
+        if(trim($countryId)==''){
+            $country = $result['country'];
+        }else{
+            $country = $countryId;
+        }
+        $ancSiteList=$ancSiteService->getActiveAncSites('datacollection',$country);
         
         $rejectionReasonList=$commonService->getActiveRejectionReasons();
         $testStatusList=$commonService->getAllTestStatus();
-        $facilityList=$facilityService->getActivefacilities();
+        $facilityList=$facilityService->getActivefacilities('datacollection',$country);
         return new ViewModel(array(
             'row'=>$result,
             'ancSites'=>$ancSiteList,

@@ -223,15 +223,21 @@ class AncSiteTable extends AbstractTableGateway {
 		return $ancSiteId;
     }
 	
-	public function fetchActiveAncSites(){
+	public function fetchActiveAncSites($from,$countryId){
 	    $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $ancSitesQuery = $sql->select()->from(array('anc' => 'anc_site'))
                              ->where(array('anc.status'=>'active'));
-        if($loginContainer->roleCode!= 'CSC'){
-            $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$loginContainer->country));
-        }
+	if(trim($countryId)!='' && $countryId!=0){
+	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
+	}else if($from=='datacollection'){
+		$ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$loginContainer->country[0]));
+	    }else{
+		if($loginContainer->roleCode!= 'CSC'){
+		    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$loginContainer->country));
+		}
+	    }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
         return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
