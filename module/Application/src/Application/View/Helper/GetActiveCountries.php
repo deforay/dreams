@@ -16,9 +16,9 @@ class GetActiveCountries extends AbstractHelper implements ServiceLocatorAwareIn
         return $this->serviceLocator;  
     }
     
-    public function __invoke($from){
+    public function __invoke($from,$country){
         $sm = $this->getServiceLocator()->getServiceLocator();
         $countryDb = $sm->get('CountryTable');
-        return $countryDb->fetchActiveCountries($from,'');
+        return $countryDb->fetchActiveCountries($from,$country);
     }
 }

@@ -168,7 +168,7 @@ class CountryTable extends AbstractTableGateway {
       return $countryId;
     }
     
-    public function fetchActiveCountries($from,$countryId){
+    public function fetchActiveCountries($from,$country){
         $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
@@ -176,13 +176,15 @@ class CountryTable extends AbstractTableGateway {
                               ->where(array('c.status'=>'active'))
                               ->order('c.country_name asc');
         if(trim($from)!= 'login'){
-            if(trim($countryId)!='' && $countryId >0){
-                  $countriesQuery = $countriesQuery->where(array('c.country_id'=>$countryId));
+            if($loginContainer->roleCode!= 'CSC'){
+                if(is_array($country)){
+                  $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $country) . '")');
+                }else if(trim($country)!= '' && $country >0){
+                   $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country)); 
                 }else{
-                    if($loginContainer->roleCode!= 'CSC'){
-                    $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
-                    }
+                  $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');  
                 }
+            }
         }
         $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);
         return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

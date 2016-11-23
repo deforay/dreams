@@ -113,7 +113,7 @@ $loginContainer = new Container('user');
                     <?php } ?>
                     
                     <?php
-                    $countries = $this->GetActiveCountries('layout');
+                    $countries = $this->GetActiveCountries('layout',$loginContainer->country);
                     if(isset($countries) && count($countries)>0){
                         foreach($countries as $country){
                     ?>
