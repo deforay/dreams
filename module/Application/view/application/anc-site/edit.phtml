@@ -119,9 +119,17 @@
                 </div>
             </div>
             <div class="col s12">
-                <input type="hidden" name="chosenCountryId" value="<?php echo base64_encode($countryId); ?>"/>
+                <?php
+                if($countryId!='')
+                {
+                    $link = "/anc-site/".base64_encode($countryId);
+                }else{
+                    $link = "/anc-site";
+                }
+                ?>
+                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <input id="ancSiteId" name="ancSiteId" type="hidden" value="<?php echo base64_encode($row->anc_site_id); ?>"/>
-                <a href="/anc-site/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
