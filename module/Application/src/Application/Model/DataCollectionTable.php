@@ -77,13 +77,13 @@ class DataCollectionTable extends AbstractTableGateway {
                     );
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
-			if($lastInsertedId >0){
-				//Add new row into data collection event log table
-				$dbAdapter = $this->adapter;
-				$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-				$data['data_collection_id'] = $lastInsertedId;
-				$dataCollectionEventLogDb->insert($data);
-			}
+		if($lastInsertedId >0){
+		    //Add new row into data collection event log table
+		    $dbAdapter = $this->adapter;
+		    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+		    $data['data_collection_id'] = $lastInsertedId;
+		    $dataCollectionEventLogDb->insert($data);
+		}
         }
       return $lastInsertedId;
     }
@@ -257,20 +257,30 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 		$row[] = ucwords($aRow['test_status_name']);
 		 $dataView = '';
-		 if($loginContainer->roleCode== 'LDEO' && trim($aRow['test_status_name'])== 'locked'){
+		 $lockView = '';
+		 if($loginContainer->roleCode== 'LDEO'){
 		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
-		 }else{
-		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-		 }
-		 $statusView = '';
-		 if($loginContainer->roleCode!= 'LDEO'){
 		    if($aRow['test_status_name']== 'completed'){
-		       $statusView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a><br>';
+		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		    }
+		 }else if($loginContainer->roleCode== 'LS'){
+		    if($aRow['test_status_name']== 'completed'){
+		       $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
 		    }else{
-		       $statusView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a><br>';
+		       $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
+		    }
+		 }else{
+		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
+		 }
+		 
+		 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+		    if($aRow['test_status_name']== 'completed'){
+		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		    }else{
+		       $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		    }
 		 }
-		$row[] = $dataView.$statusView;
+		$row[] = $dataView.$lockView;
 		$output['aaData'][] = $row;
 	}
        return $output;
