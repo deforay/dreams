@@ -100,10 +100,12 @@ class DataCollectionController extends AbstractActionController{
     
     public function viewAction(){
         $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
+        $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $result=$dataCollectionService->getDataCollection($dataCollectionId);
         return new ViewModel(array(
-            'row'=>$result
+            'row'=>$result,
+            'countryId'=>$countryId,
         ));
     }
     

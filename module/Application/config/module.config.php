@@ -221,6 +221,15 @@ return array(
                         'action' => 'unlock'
                     ),
                 ),
+            ),'view-data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection/view[/][:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'view'
+                    ),
+                ),
             ),'data-extraction' => array(
                 'type' => 'segment',
                 'options' => array(
