@@ -17,8 +17,7 @@ $resultDispatchedDateToClinic = '';
 if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
-if(trim($countryId)!='')
-{
+if(isset($countryId) && trim($countryId)!=''){
     $link = "/data-collection/".base64_encode($countryId);
 }else{
     $link = "/data-collection";
@@ -41,69 +40,59 @@ if(trim($countryId)!='')
     <div class="row dashboard-wrapper content-container">
         <div class="data-collection-view card">
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="surveillanceId" class="">Surveillance ID </label><br>
                         <p><?php echo $row->surveillance_id; ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="specimenCollectedDate" class="">Specimen Collected Date </label><br>
                         <p><?php echo $specimenCollectionDate; ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="ancSite">ANC site name </label><br>
                         <p><?php echo ucwords($row->anc_site_name); ?></p>
                     </div>
                 </div>
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <label for="ancSiteCode" class="">ANC site code </label><br>
-                        <p><?php echo $row->anc_site_code; ?></p>
-                    </div>
-                </div>
             </div>
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="ancPatientId" class="">ANC Patient ID </label><br>
                         <p><?php echo $row->anc_patient_id; ?></p>
                     </div>
                 </div>
-                 <div class="col s6">
+                 <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="age" class="">Age </label><br>
                         <p><?php echo $row->age; ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label><br>
                         <p><?php echo $specimenPickedUpDateAtAnc; ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+            </div>
+            <div class="row">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="lab">Lab site code/name </label><br>
                          <p><?php echo $row->facility_code.' - '.ucwords($row->facility_name); ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="labSpecimenId" class="">Lab Specimen ID </label><br>
                         <p><?php echo $row->lab_specimen_id; ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label><br>
                         <p><?php echo $receiptDateAtCentralLab; ?></p>
@@ -111,63 +100,59 @@ if(trim($countryId)!='')
                 </div>
             </div>
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="rejectionReason">Specimen Rejection Code </label><br>
                         <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label><br>
                         <p><?php echo $row->final_lag_avidity_odn; ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                       <label for="lagAvidityResult" class=""> LAg Avidity Result </label><br>
                       <p><?php echo strtoupper($row->lag_avidity_result); ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+            </div>
+            <div class="row">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
                         <p><?php echo $row->hiv_rna; ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                       <label for="hivRnaGT1000" class=""> HIV RNA >= 1,000 (copies/ml </label><br>
                       <p><?php echo ucfirst($row->hiv_rna_gt_1000); ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
-                      <label for="recentInfection" class=""> Recent Infection (LAg-R & RNA >= 1,000) </label><br>
+                      <label for="recentInfection" class=""> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
                       <p><?php echo ucfirst($row->recent_infection); ?></p>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col s6">
+            <div class="row" style="margin-bottom:20px !important;">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
                         <p><?php echo $resultDispatchedDateToClinic; ?></p>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                    <div class="input-field col m10 s10">
                       <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
                       <p><?php echo strtoupper($row->asante_rapid_recency_assy); ?></p>
                     </div>
                 </div>
-            </div>
-            <div class="row" style="margin-bottom:20px !important;">
-                <div class="col s6">
+                 <div class="col s4">
                     <div class="input-field col m10 s10">
                       <label for="status" class=""> Status </label><br>
                       <p><?php echo ucwords($row->test_status_name); ?></p>

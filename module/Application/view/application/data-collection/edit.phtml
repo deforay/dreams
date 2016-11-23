@@ -36,21 +36,19 @@ if(isset($countryId) && trim($countryId)!=''){
         <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" onblur="checkNameValidation('data_collection', 'surveillance_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The surveillance id that you entered already exist. Please enter different id.')">
                         <label for="surveillanceId" class="">Surveillance ID *</label>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date" value="<?php echo $specimenCollectionDate; ?>">
                         <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
                             <option value=""> -- Select -- </option>
@@ -63,35 +61,29 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="ancSite">ANC site name *</label>
                     </div>
                 </div>
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" value="<?php echo $row['anc_site_code']; ?>">
-                        <label for="ancSiteCode" class="">ANC site code * </label>
-                    </div>
-                </div>
             </div>
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
                         <label for="ancPatientId" class="">ANC Patient ID * </label>
                     </div>
                 </div>
-                 <div class="col s6">
+                 <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="age" name="age" type="text" class="validate checkNum" title="Please enter age" value="<?php echo $row['age']; ?>">
                         <label for="age" class="">Age </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc" value="<?php echo $specimenPickedUpDateAtAnc; ?>">
                         <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
                     </div>
                 </div>
-                <div class="col s6">
+            </div>
+            <div class="row">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
                             <option value=""> -- Select -- </option>
@@ -104,15 +96,13 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="lab">Lab site code/name *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID" value="<?php echo $row->lab_specimen_id; ?>">
                         <label for="labSpecimenId" class="">Lab Specimen ID </label>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab" value="<?php echo $receiptDateAtCentralLab; ?>">
                         <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
@@ -120,7 +110,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </div>
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code">
                             <option value=""> -- Select -- </option>
@@ -133,15 +123,13 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="rejectionReason">Specimen Rejection Code </label>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
                         <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-padding col m10 s10">
                       LAg Avidity Result<br>
                       <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r"/>
@@ -150,15 +138,15 @@ if(isset($countryId) && trim($countryId)!=''){
                       <label for="lagAvidityResultLongTerm">LT </label>
                     </div>
                 </div>
-                <div class="col s6">
+            </div>
+            <div class="row">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="hivRna" name="hivRna" type="text" class="validate" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
                         <label for="hivRna" class="">HIV RNA (copies/ml) </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-padding col m10 s10">
                       HIV RNA >= 1,000 (copies/ml)<br>
                       <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes"/>
@@ -167,9 +155,9 @@ if(isset($countryId) && trim($countryId)!=''){
                       <label for="hivRnaGT1000No">No </label>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-padding col m10 s10">
-                      Recent Infection (LAg-R & RNA >= 1,000)<br>
+                      Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
                       <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes"/>
                       <label for="recentInfectionYes">Yes </label>&nbsp;
                       <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no"/>
@@ -178,13 +166,13 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </div>
             <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic" value="<?php echo $resultDispatchedDateToClinic; ?>">
                         <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
                     </div>
                 </div>
-                <div class="col s6">
+                <div class="col s4">
                    <div class="input-padding col m10 s10">
                       Asante Rapid Recency Assay<br>
                       <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssay" type="radio" <?php echo($row->asante_rapid_recency_assy == 'p')?'checked="checked"':''; ?> value="p"/>
@@ -197,9 +185,7 @@ if(isset($countryId) && trim($countryId)!=''){
                       <label for="asanteRapidRecencyAssayLT" style="padding-left:22px !important;">LT </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
+                <div class="col s4">
                     <div class="input-field col m10 s10">
                         <select id="status" name="status" class="material-select" title="Please select status">
                             <?php
@@ -230,11 +216,6 @@ if(isset($countryId) && trim($countryId)!=''){
             selectYears: 15, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy'
         });
-    });
-    
-    $('#ancSite').on('change', function() {
-        $('label[for=ancSiteCode]').css({"transform": "translateY(-140%)"});
-        $("#ancSiteCode").val($('#ancSite option:selected').data('anc-site-code'));
     });
     
     $('#hivRna').on('change', function() {
