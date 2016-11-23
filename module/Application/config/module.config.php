@@ -239,6 +239,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'export-data-extraction' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-extraction/export-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtraction',
+                        'action' => 'export-excel'
+                    ),
+                ),
             ),
             
         ),
