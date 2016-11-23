@@ -154,7 +154,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		{"sClass":"center"}
             ],
 	"aaSorting": [[ 1, "desc" ]],
-        "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
+        "sAjaxSource": "<?php echo $this->url('data-extraction',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
 	    aoData.push({"name": "country", "value": $("#country").val()});
 	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });

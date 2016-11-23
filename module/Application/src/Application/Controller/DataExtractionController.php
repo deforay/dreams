@@ -24,7 +24,7 @@ class DataExtractionController extends AbstractActionController{
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('data-collection',0);
+            $countryList=$countryService->getActiveCountries('data-extraction',0);
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId
