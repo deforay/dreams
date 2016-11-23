@@ -176,15 +176,17 @@ class CountryTable extends AbstractTableGateway {
                               ->where(array('c.status'=>'active'))
                               ->order('c.country_name asc');
         if(trim($from)!= 'login'){
-            if($country!= '' && $country >0){
+            if(trim($country)!= '' && $country >0){
                 if(is_array($country)){
                   $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $country) . '")');
                 }else{
                    $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country)); 
                 }
-                }else if($loginContainer->roleCode!= 'CSC'){
-                    $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+            }else {
+                if($loginContainer->roleCode!= 'CSC'){
+                   $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
                 }
+            }
         }
         $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);
         return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

@@ -50,17 +50,6 @@ class DataCollectionController extends AbstractActionController{
             $dataCollectionService->addDataCollection($params);
             return $this->redirect()->toUrl($params['chosenCountryId']);
         }
-        $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-        $commonService = $this->getServiceLocator()->get('CommonService');
-        $facilityService = $this->getServiceLocator()->get('FacilityService');
-        $ancSiteList=$ancSiteService->getActiveAncSites();
-        $rejectionReasonList=$commonService->getActiveRejectionReasons();
-        $facilityList=$facilityService->getActivefacilities();
-        return new ViewModel(array(
-            'ancSites'=>$ancSiteList,
-            'rejectionReasons'=>$rejectionReasonList,
-            'facilities'=>$facilityList
-        ));
     }
     
     public function editAction(){

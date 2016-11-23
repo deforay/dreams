@@ -17,8 +17,7 @@ $resultDispatchedDateToClinic = '';
 if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
-if(trim($countryId)!='')
-{
+if(isset($countryId) && trim($countryId)!=''){
     $link = "/data-collection/".base64_encode($countryId);
 }else{
     $link = "/data-collection";

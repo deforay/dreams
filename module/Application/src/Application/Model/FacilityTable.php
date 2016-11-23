@@ -228,15 +228,13 @@ class FacilityTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
                                ->where(array('f.status'=>'active'));
-	if(trim($countryId)!='' && $countryId!=0){
-		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
-	    }else if($from=='datacollection'){
-		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
-	    }else{
-	    if($loginContainer->roleCode!= 'CSC'){
-		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
-		}
-	    }
+	if(trim($countryId)!='' && $countryId !=0){
+            $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
+        }else{
+            if($loginContainer->roleCode!= 'CSC'){
+                $facilitiesQuery = $facilitiesQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
+            }
+        }
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
         return $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }

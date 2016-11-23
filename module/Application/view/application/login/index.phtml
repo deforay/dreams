@@ -59,7 +59,7 @@ $alertContainer = new Container('alert');
         <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/mara.min.js' ?>"></script>
         <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/deforayValidation.js' ?>"></script>
         <script>
-          $(document).ready(function() {
+        $(document).ready(function() {
             $('.material-select').material_select();
             <?php
             if (isset($alertContainer->msg) && $alertContainer->msg != "") {
@@ -70,9 +70,16 @@ $alertContainer = new Container('alert');
                 unset($alertContainer->msg);
             }
             ?>
-          });
+        });
           
-          function getLogin(){
+        $('input').keypress(function(event) {
+            if (event.which == 13) {
+                event.preventDefault();
+                getLogin();
+            }
+        });
+
+        function getLogin(){
             flag = deforayValidator.init({
                 formId: 'loginForm'
             });
@@ -80,7 +87,7 @@ $alertContainer = new Container('alert');
             if(flag){
                 document.getElementById('loginForm').submit();
             }
-          }
+        }
         </script>
     </body>
 </html>
