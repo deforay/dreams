@@ -42,7 +42,7 @@ $loginContainer = new Container('user');
 	overflow-x:scroll;
     }
     .select-wrapper{
-	width:60%;
+	width:100%;
     }
 </style>
 <div id="page-content">
@@ -60,7 +60,7 @@ $loginContainer = new Container('user');
 	    <div class="col l12 m12 s12">
 		<table style="width:100%;">
 		    <tr>
-			<td style="text-align:right;"><h6><strong>Country</strong></h6></td>
+			<td style="width:30%;text-align:right;"><h6><strong>Country</strong></h6></td>
 			<td style="text-align:left;">
 			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
 				<option value=""> -- Select -- </option>
@@ -73,9 +73,7 @@ $loginContainer = new Container('user');
 				?>
 			    </select>
 			</td>
-		    </tr>
-		    <tr>
-			<td colspan="2" style="text-align:center;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
 		    </tr>
 		</table>
 	    </div>
@@ -175,18 +173,18 @@ $loginContainer = new Container('user');
     });
 	
 	
-	function searchDataCollectionData(){
-	   oTable.draw();
-	}
-	
-	function extractDataCollectionData(){
-	    $.post("<?php echo $this->url('data-extraction',array('action'=>'export-excel')); ?>", {},
-	    function(data){
-		if(data == "" || data == null || data == undefined){
-		    alert('OOPS..Unable to generate excel.');
-		}else{
-		    document.location.href = '/temporary/'+data;
-		}
-	    });
-	}
+    function searchDataCollectionData(){
+       oTable.draw();
+    }
+    
+    function extractDataCollectionData(){
+	$.post("<?php echo $this->url('data-extraction',array('action'=>'export-excel')); ?>", {},
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+	    }else{
+		document.location.href = '/temporary/'+data;
+	    }
+	});
+    }
 </script>
