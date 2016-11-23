@@ -22,10 +22,12 @@ class DataExtractionController extends AbstractActionController{
             $result = $dataCollectionService->getAllDataExtractions($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $countryList=$countryService->getActiveCountries('data-collection',0);
             return new ViewModel(array(
-                'countries'=>$countryList
+                'countries'=>$countryList,
+                'countryId'=>$countryId
             ));
         }
     }

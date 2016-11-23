@@ -81,6 +81,7 @@ $loginContainer = new Container('user');
 	    </div>
 	</div>
     <?php } ?>
+    <input type="hidden" name="countryId" id="countryId" value="<?php echo $countryId;?>"/>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
@@ -151,6 +152,7 @@ $loginContainer = new Container('user');
         "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
 	    aoData.push({"name": "country", "value": $("#country").val()});
+	    aoData.push({"name": "countryId", "value": $("#countryId").val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

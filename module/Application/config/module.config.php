@@ -233,7 +233,7 @@ return array(
             ),'data-extraction' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/data-extraction[/:action][/][:id]',
+                    'route' => '/data-extraction[/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataExtraction',
                         'action' => 'index'
