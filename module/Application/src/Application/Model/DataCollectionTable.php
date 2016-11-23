@@ -189,7 +189,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	       $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	    }else{
 		if($loginContainer->roleCode!= 'CSC'){
-		    $sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
+		    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 		}
 	    }
        if (isset($sWhere) && $sWhere != "") {
@@ -226,7 +226,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	    }else{
 		if($loginContainer->roleCode!= 'CSC'){
-		    $tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
+		    $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 		}
 	    }
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -474,13 +474,12 @@ class DataCollectionTable extends AbstractTableGateway {
 	
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
+	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $sQuery = $sQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}else{
 	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where(array('da_c.country'=>$loginContainer->country));
+	       $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
-	}
-	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $sQuery = $sQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}
 	$queryContainer->exportQuery = $sQuery;
        if (isset($sWhere) && $sWhere != "") {
@@ -515,15 +514,13 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'));
 	
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['countryId'])));  
+	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
+	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}else{
 	    if($loginContainer->roleCode!= 'CSC'){
-	      $tQuery = $tQuery->where(array('da_c.country'=>$loginContainer->country));
+	       $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
-	}
-	
-	 if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

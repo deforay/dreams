@@ -204,18 +204,14 @@ class UserTable extends AbstractTableGateway {
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
-	}
-	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
 	}else{
 	    if($loginContainer->roleCode!= 'CSC'){
 	       $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
+	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -255,16 +251,11 @@ class UserTable extends AbstractTableGateway {
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-        }else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
-	}
-	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	  $tQuery = $tQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
+	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	   $tQuery = $tQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
 	}else{
 	    if($loginContainer->roleCode!= 'CSC'){
-	      $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	       $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance

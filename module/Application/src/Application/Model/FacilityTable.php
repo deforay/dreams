@@ -125,17 +125,15 @@ class FacilityTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('f' => 'facility'))
 		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 		             ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-	   if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $sQuery = $sQuery->where(array('f.country'=>trim($parameters['countryId'])));
-	   }else{
-	    if($loginContainer->roleCode!= 'CSC'){
-		$sQuery = $sQuery->where(array('f.country'=>$loginContainer->country));
-	    }
-	   }
-	   
-       if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-	}
+        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+           $sQuery = $sQuery->where(array('f.country'=>trim($parameters['countryId'])));
+        }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
+           $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
+        }else{
+             if($loginContainer->roleCode!= 'CSC'){
+                 $sQuery = $sQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
+             }
+        }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -165,15 +163,14 @@ class FacilityTable extends AbstractTableGateway {
 					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
 		if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-		$tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
-		}else{
-		    if($loginContainer->roleCode!= 'CSC'){
-		    $tQuery = $tQuery->where(array('f.country'=>$loginContainer->country));
-		    }
-		}
-        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));  
-	}
+                    $tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
+                 }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
+                    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));
+                 }else{
+                    if($loginContainer->roleCode!= 'CSC'){
+                       $tQuery = $tQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
+                    }
+                }
 		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 		$iTotal = count($tResult);
