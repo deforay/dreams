@@ -38,7 +38,7 @@ class FacilityController extends AbstractActionController{
             $params = $request->getPost();
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $facilityService->addFacility($params);
-            return $this->redirect()->toUrl('/facility/'.$params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
@@ -58,7 +58,7 @@ class FacilityController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $facilityService->updateFacility($params);
-            return $this->redirect()->toUrl('/facility/'.$params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');

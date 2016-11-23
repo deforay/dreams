@@ -38,7 +38,7 @@ class AncSiteController extends AbstractActionController{
             $params = $request->getPost();
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $ancSiteService->addAncSite($params);
-            return $this->redirect()->toUrl('/anc-site/'.$params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
@@ -58,7 +58,7 @@ class AncSiteController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $ancSiteService->updateAncSite($params);
-            return $this->redirect()->toUrl('/anc-site/'.$params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['chosenCountryId']);
         }
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
