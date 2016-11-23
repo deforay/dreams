@@ -109,15 +109,15 @@ class UserTable extends AbstractTableGateway {
 	/* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	    $loginContainer = new Container('user');
-	    $common = new CommonService();
-	    if($loginContainer->roleCode =='CSC'){
-	        $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
-	        $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
-	    }else{
-	       $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
-	       $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
-	    }
+	$loginContainer = new Container('user');
+	$common = new CommonService();
+	if($loginContainer->roleCode =='CSC'){
+	    $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
+	    $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
+	}else{
+	   $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
+	   $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
+	}
 
        /*
         * Paging
@@ -205,12 +205,16 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	}else{
-	   $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    if($loginContainer->roleCode!= 'CSC'){
+	       $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
 	}
 	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
 	}else{
-	   $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	    if($loginContainer->roleCode!= 'CSC'){
+	       $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -252,12 +256,16 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
         }else{
-	   $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	    if($loginContainer->roleCode!= 'CSC'){
+	       $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
 	}
 	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	  $tQuery = $tQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
 	}else{
-	   $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	    if($loginContainer->roleCode!= 'CSC'){
+	      $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
