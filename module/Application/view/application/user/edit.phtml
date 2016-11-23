@@ -1,8 +1,7 @@
 <?php
 $country = array();
-foreach($row['country'] as $countryListId)
-{
-    $countryList[] = base64_encode($countryListId['country_id']);
+foreach($row['country'] as $countryListId){
+    $countryList[] = $countryListId['country_id'];
 }
 $row = $row[0];
 ?>
@@ -107,7 +106,7 @@ $row = $row[0];
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($row->country == $country['country_id']) ? "selected='selected'" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo in_array($country['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -122,7 +121,7 @@ $row = $row[0];
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>"<?php echo in_array(base64_encode($country['country_id']), $countryList) ? "selected=selected" : ""; ?> ><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo in_array($country['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>

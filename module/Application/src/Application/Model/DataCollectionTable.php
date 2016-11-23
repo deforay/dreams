@@ -41,7 +41,7 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
-			if(!isset($params['age']) || trim($params['age'])== ''){
+	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
                 $params['lagAvidityResult'] = NULL;
@@ -73,7 +73,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'country'=>$loginContainer->country,
 			'status'=>1,
                         'added_on'=>$common->getDateTime(),
-                        'added_by'=>$loginContainer->employeeId
+                        'added_by'=>$loginContainer->userId
                     );
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
@@ -290,7 +290,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function updateDataCollectionDetails($params){
-		$loginContainer = new Container('user');
+	$loginContainer = new Container('user');
         $dataCollectionId = 0;
         if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
             $common = new CommonService();
@@ -353,7 +353,7 @@ class DataCollectionTable extends AbstractTableGateway {
 			$data['data_collection_id'] = $dataCollectionId;
 			$data['country']=$loginContainer->country;
 			$data['updated_on'] = $common->getDateTime();
-			$data['updated_by'] = $loginContainer->employeeId;
+			$data['updated_by'] = $loginContainer->userId;
 			$dataCollectionEventLogDb->insert($data);
         }
       return $dataCollectionId;
