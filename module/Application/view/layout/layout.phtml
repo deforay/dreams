@@ -113,11 +113,16 @@ $loginContainer = new Container('user');
                     <?php } ?>
                     
                     <?php
-                    $countries = $this->GetActiveCountries('layout',$loginContainer->country);
+                    if($loginContainer->roleCode == 'CSC'){
+                        $loginCountry = '0';
+                    }else{
+                        $loginCountry = $loginContainer->country;
+                    }
+                    $countries = $this->GetActiveCountries('layout',$loginCountry);
                     if(isset($countries) && count($countries)>0){
                         foreach($countries as $country){
                     ?>
-                        <li class="active">
+                        <li class="menuAll countryMenu<?php echo $country['country_id']; ?>">
                             <div class="collapsible-header waves-effect"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body" style="">
                                 <ul>
@@ -193,7 +198,7 @@ $loginContainer = new Container('user');
         //set active link
         str=$(location).attr('pathname');
         splitsUrl=str.split("/",4);
-        //console.log(splitsUrl);
+        console.log(splitsUrl);
         $(".menuAll").removeClass("active");
         $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
