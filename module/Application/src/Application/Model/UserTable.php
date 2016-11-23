@@ -195,22 +195,23 @@ class UserTable extends AbstractTableGateway {
 			     ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
 		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name' => new \Zend\Db\Sql\Expression("GROUP_CONCAT(DISTINCT c.country_name ORDER BY c.country_name SEPARATOR ', ')")))
 			     ->group('u.user_id');
-	   if($loginContainer->roleCode== 'CC'){
-		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
-	   }else if($loginContainer->roleCode== 'LS'){
-		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
-	   }else if($loginContainer->roleCode== 'LDEO'){
-		  $sQuery = $sQuery->where(array('u.country'=>$loginContainer->country));	
-		  $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
-	   }
-	   if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $sQuery = $sQuery->where(array('ucm.country_id'=>trim($parameters['countryId'])));
-	   }
-	   if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	      $sQuery = $sQuery->where(array('ucm.country_id'=>base64_decode($parameters['country'])));
-	    }
+	if($loginContainer->roleCode== 'CC'){		
+	     $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	}else if($loginContainer->roleCode== 'LS'){
+	     $sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
+	}else if($loginContainer->roleCode== 'LDEO'){	
+	     $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
+	}
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
+	}else{
+	   $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	}
+	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	   $sQuery = $sQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
+	}else{
+	   $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -236,53 +237,54 @@ class UserTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-		$tQuery = $sql->select()->from(array('u' => 'user'))
-				      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
-				      ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-				      ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name' => new \Zend\Db\Sql\Expression("GROUP_CONCAT(DISTINCT c.country_name ORDER BY c.country_name SEPARATOR ', ')")))
-				      ->group('u.user_id');
-	    if($loginContainer->roleCode== 'CC'){
-		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
-		  $sQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
-	    }else if($loginContainer->roleCode== 'LS'){
-		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
-		  $tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
-	    }else if($loginContainer->roleCode== 'LDEO'){
-		  $tQuery = $tQuery->where(array('u.country'=>$loginContainer->country));	
-		  $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
+	$tQuery = $sql->select()->from(array('u' => 'user'))
+			      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
+			      ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
+			      ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name' => new \Zend\Db\Sql\Expression("GROUP_CONCAT(DISTINCT c.country_name ORDER BY c.country_name SEPARATOR ', ')")))
+			      ->group('u.user_id');
+	if($loginContainer->roleCode== 'CC'){	
+	    $sQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	}else if($loginContainer->roleCode== 'LS'){	
+	    $tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	    $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
+	}
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
+        }else{
+	   $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	}
+	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+	  $tQuery = $tQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
+	}else{
+	   $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")'); 
+	}
+	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+	$iTotal = count($tResult);
+	$output = array(
+	    "sEcho" => intval($parameters['sEcho']),
+	    "iTotalRecords" => $iTotal,
+	    "iTotalDisplayRecords" => $iFilteredTotal,
+	    "aaData" => array()
+	);
+	foreach ($rResult as $aRow) {
+	    $row = array();
+	    $date = explode(" ",$aRow['created_on']);
+	    $row[] = ucwords($aRow['full_name'])." - ".$aRow['user_code'];
+	    $row[] = ucwords($aRow['role_name']);
+	    $row[] = $aRow['user_name'];
+	    $row[] = $aRow['email'];
+	    $row[] = $aRow['mobile'];
+	    if($loginContainer->roleCode =='CSC'){
+	      $row[] = ucwords($aRow['country_name']);
 	    }
-	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $tQuery = $tQuery->where(array('ucm.country_id'=>trim($parameters['countryId'])));
-	   }
-	    if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	      $tQuery = $tQuery->where(array('ucm.country_id'=>base64_decode($parameters['country'])));  
-	    }
-		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-		$iTotal = count($tResult);
-		$output = array(
-			   "sEcho" => intval($parameters['sEcho']),
-			   "iTotalRecords" => $iTotal,
-			   "iTotalDisplayRecords" => $iFilteredTotal,
-			   "aaData" => array()
-		);
-		foreach ($rResult as $aRow) {
-			$row = array();
-			$date = explode(" ",$aRow['created_on']);
-			$row[] = ucwords($aRow['full_name'])." - ".$aRow['user_code'];
-			$row[] = ucwords($aRow['role_name']);
-			$row[] = $aRow['user_name'];
-			$row[] = $aRow['email'];
-			$row[] = $aRow['mobile'];
-			if($loginContainer->roleCode =='CSC'){
-			  $row[] = ucwords($aRow['country_name']);
-			}
-			$row[] = ucwords($aRow['status']);
-			$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-			$row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-			$output['aaData'][] = $row;
-		}
-	  return $output;
+	    $row[] = ucwords($aRow['status']);
+	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
+	    $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+	    $output['aaData'][] = $row;
+	}
+      return $output;
     }
     
     public function fetchUser($userId){
@@ -292,41 +294,38 @@ class UserTable extends AbstractTableGateway {
 		             ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
 		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name','country_id'))
 			     ->where(array('u.user_id'=>$userId));
-
 	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance
 	$rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	
 	$cQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
 				->where(array('ucm.user_id'=>$userId));
-
-	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery); // Get the string of the Sql, instead of the Select-instance
+	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
 	$cResult = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	return array($rResult,'country'=>$cResult);
     }
 	
     public function updateUserDetails($params){
-		$userId = 0;
-		if(isset($params['userName']) && trim($params['userName'])!= ''){
-			$userId = base64_decode($params['userId']);
-			$common = new CommonService();
-			$data = array(
-			'full_name' => $params['fullName'],
-			'user_code' => $params['userCode'],
-			'user_name' => $params['userName'],
-			'role' => base64_decode($params['role']),
-			'email' => $params['email'],
-			'mobile' => $params['mobile'],
-			'alt_contact' => $params['altContact'],
-			//'country' => base64_decode($params['country']),
-			'status' => $params['status']
-				);
-			if (isset($params['password']) && trim($params['password']) != ''){
-				$config = new \Zend\Config\Reader\Ini();
-				$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-				$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
-			}
-			$this->update($data,array('user_id'=>$userId));
+	$userId = 0;
+	if(isset($params['userName']) && trim($params['userName'])!= ''){
+		$userId = base64_decode($params['userId']);
+		$common = new CommonService();
+		$data = array(
+		'full_name' => $params['fullName'],
+		'user_code' => $params['userCode'],
+		'user_name' => $params['userName'],
+		'role' => base64_decode($params['role']),
+		'email' => $params['email'],
+		'mobile' => $params['mobile'],
+		'alt_contact' => $params['altContact'],
+		'status' => $params['status']
+			);
+		if (isset($params['password']) && trim($params['password']) != ''){
+			$config = new \Zend\Config\Reader\Ini();
+			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+			$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 		}
-		return $userId;
+		$this->update($data,array('user_id'=>$userId));
+	}
+	return $userId;
     }
 }

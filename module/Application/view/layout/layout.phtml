@@ -77,36 +77,41 @@ $loginContainer = new Container('user');
                     <li class="dashboardMenu menuAll">
                         <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
                     </li>
-                    <li class="cscMenu menuAll">
-                        <div class="collapsible-header waves-effect cscMenu menuAll"><i class="zmdi zmdi-accounts-list-alt"></i> Chief Coordinator <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                        <div class="collapsible-body collapsibleAll collapsibleCSCMenu">
-                            <ul>
-                                <li>
-                                    <ul class="collapsible" data-collapsible="accordion">
-                                        <li class="cscAdminMenu menuAll">
-                                            <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                            <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
-                                                <ul>
-                                                    <li class="cscCountryMenu menuAll">
-                                                        <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:34%;color:#444;">Manage Countries</a>
-                                                    </li>
-                                                    <li class="cscUserMenu menuAll">
-                                                        <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:34%;;color:#444;">Manage Users</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="cscDataCollectionMenu menuAll">
-                                            <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
-                                        </li>
-                                        <li class="cscDataExtractionMenu menuAll">
-                                            <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                    <?php
+                    if($loginContainer->roleCode == 'CSC'){
+                    ?>
+                        <li class="cscMenu menuAll">
+                            <div class="collapsible-header waves-effect cscMenu menuAll"><i class="zmdi zmdi-accounts-list-alt"></i> Chief Coordinator <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                            <div class="collapsible-body collapsibleAll collapsibleCSCMenu">
+                                <ul>
+                                    <li>
+                                        <ul class="collapsible" data-collapsible="accordion">
+                                            <li class="cscAdminMenu menuAll">
+                                                <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
+                                                    <ul>
+                                                        <li class="cscCountryMenu menuAll">
+                                                            <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:34%;color:#444;">Manage Countries</a>
+                                                        </li>
+                                                        <li class="cscUserMenu menuAll">
+                                                            <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:34%;;color:#444;">Manage Users</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="cscDataCollectionMenu menuAll">
+                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                            </li>
+                                            <li class="cscDataExtractionMenu menuAll">
+                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    <?php } ?>
+                    
                     <?php
                     $countries = $this->GetActiveCountries('layout');
                     if(isset($countries) && count($countries)>0){
