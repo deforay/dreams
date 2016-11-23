@@ -17,6 +17,12 @@ $resultDispatchedDateToClinic = '';
 if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
+if(trim($countryId)!='')
+{
+    $link = "/data-collection/".base64_encode($countryId);
+}else{
+    $link = "/data-collection";
+}
 ?>
 <style>
     .data-collection-view .row{
@@ -169,7 +175,7 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
                 </div>
             </div>
             <div class="col s12">
-                <a href="<?php echo $this->url('data-collection'); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
             </div>
         </div>
     </div>

@@ -52,6 +52,12 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['asanteRapidRecencyAssay'])){
                 $params['asanteRapidRecencyAssay'] = NULL;
             }
+	    if(trim($params['chosenCountry'])!='')
+	    {
+		$country = base64_decode($params['chosenCountry']);
+	    }else{
+		$country = $loginContainer->country[0];
+	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
@@ -70,7 +76,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'recent_infection'=>$params['recentInfection'],
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
                         'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
-                        'country'=>$loginContainer->country,
+                        'country'=>$country,
 			'status'=>1,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
@@ -259,7 +265,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		 $dataView = '';
 		 $lockView = '';
 		 if($loginContainer->roleCode== 'LDEO'){
-		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
+		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 		    if($aRow['test_status_name']== 'completed'){
 		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		    }
@@ -361,7 +367,7 @@ class DataCollectionTable extends AbstractTableGateway {
 			$dbAdapter = $this->adapter;
 			$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
 			$data['data_collection_id'] = $dataCollectionId;
-			$data['country']=$loginContainer->country;
+			$data['country']=$params['chosenCountry'];
 			$data['updated_on'] = $common->getDateTime();
 			$data['updated_by'] = $loginContainer->userId;
 			$dataCollectionEventLogDb->insert($data);

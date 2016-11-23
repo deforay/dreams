@@ -197,7 +197,7 @@ return array(
             ),'edit-data-collection' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/data-collection/edit[/:id][/:countryId]',
+                    'route' => '/data-collection/edit[/:id][/][:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataCollection',
                         'action' => 'edit'
@@ -219,6 +219,15 @@ return array(
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataCollection',
                         'action' => 'unlock'
+                    ),
+                ),
+            ),'view-data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection/view[/][:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'view'
                     ),
                 ),
             ),'data-extraction' => array(

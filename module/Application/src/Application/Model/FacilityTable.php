@@ -204,7 +204,6 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function updateFacilityDetails($params){
-	
         $facilityId = 0;
 		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 			$facilityId = base64_decode($params['facilityId']);
@@ -226,15 +225,21 @@ class FacilityTable extends AbstractTableGateway {
 	  return $facilityId;
     }
 	
-	public function fetchActivefacilities(){
+	public function fetchActivefacilities($from,$countryId){
 	    $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
                                ->where(array('f.status'=>'active'));
-        if($loginContainer->roleCode!= 'CSC'){
-            $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
-        }
+	if(trim($countryId)!='' && $countryId!=0){
+		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
+	    }else if($from=='datacollection'){
+		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
+	    }else{
+	    if($loginContainer->roleCode!= 'CSC'){
+		$facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$loginContainer->country));
+		}
+	    }
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
         return $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
