@@ -64,10 +64,21 @@ class UserController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
+            $countryIdList = array();
+            if(trim($countryId)!='')
+            {
+                $countryIdList[] = $countryId;
+            }
+            if(count($result['country'])>0)
+            {
+                foreach($result['country'] as $country){
+                    $countryIdList[] = $country['country_id'];
+                }
+            }
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('user',$countryId);
+            $countryList=$countryService->getActiveCountries('user',array_unique($countryIdList));
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,

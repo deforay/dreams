@@ -124,35 +124,35 @@ $loginContainer = new Container('user');
                     ?>
                         <li class="menuAll countryMenu<?php echo $country['country_id']; ?>">
                             <div class="collapsible-header waves-effect"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                            <div class="collapsible-body" style="">
+                            <div class="collapsible-body collapsibleAll collapsibleCountryMenu<?php echo $country['country_id']; ?>" style="">
                                 <ul>
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
-                                            <li class="">
-                                                <div class="collapsible-header waves-effect" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                                <div class="collapsible-body" style="">
+                                            <li class="countryAdminMenu<?php echo $country['country_id']; ?> menuAll">
+                                                <div class="collapsible-header waves-effect countryAdminMenu<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>" style="">
                                                     <ul>
-                                                        <li>
-                                                            <a href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage Users</a>
+                                                        <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
+                                                            <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage Users</a>
                                                         </li>
                                                         <?php
                                                         if($loginContainer->roleCode!= 'LDEO'){ ?>
-                                                            <li class="facilityMenu ">
-                                                                <a class="facilityMenu " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;" >Manage Facilities</a>
+                                                            <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;" >Manage Facilities</a>
                                                             </li>
-                                                            <li class="ancSiteMenu ">
-                                                                <a class="ancSiteMenu " href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage ANC Sites</a>
+                                                            <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage ANC Sites</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
                                                 </div>
                                             </li>
-                                            <li>
+                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
                                                 <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                             </li>
                                             <?php
                                             if($loginContainer->roleCode!= 'LDEO'){ ?>
-                                                <li>
+                                                <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                                 </li>
                                                 <li>
@@ -197,12 +197,12 @@ $loginContainer = new Container('user');
         //set active link
         //set active link
         str=$(location).attr('pathname');
-        splitsUrl=str.split("/",4);
-        console.log(splitsUrl);
+        splitsUrl=str.split("/",5);
         $(".menuAll").removeClass("active");
         $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
         if(splitsUrl[1]=='country'){
+            //set country
           $(".cscMenu").addClass("active");
           $(".collapsibleCSCMenu").css("display","block");
           $(".collapsibleCSCAdminMenu").css("display","block");
@@ -210,22 +210,138 @@ $loginContainer = new Container('user');
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
         }else if(splitsUrl[1]=='user'){
-          $(".cscMenu").addClass("active");
-          $(".collapsibleCSCMenu").css("display","block");
-          $(".collapsibleCSCAdminMenu").css("display","block");
-          $(".cscAdminMenu").addClass("active");
-          $(".cscUserMenu").addClass("active");
-          $(".cscUserMenu").css("color","#fff");
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).addClass("active");
+                $(".countryUserMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }else{
+                $(".cscMenu").addClass("active");
+                $(".collapsibleCSCMenu").css("display","block");
+                $(".collapsibleCSCAdminMenu").css("display","block");
+                $(".cscAdminMenu").addClass("active");
+                $(".cscUserMenu").addClass("active");
+                $(".cscUserMenu").css("color","#fff");
+            }
+        }else if(splitsUrl[1]=='facility'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).addClass("active");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
+            }
+        }else if(splitsUrl[1]=='anc-site'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+                $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).addClass("active");
+                $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
+                $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+                $(".countryUserMenu"+atob(splits)).css("color","#444");
+            }
         }else if(splitsUrl[1]=='data-collection'){
-          $(".cscMenu").addClass("active");
-          $(".collapsibleCSCMenu").css("display","block");
-          $(".cscDataCollectionMenu").addClass("active");
-          $(".cscDataCollectionMenu").css("color","#fff");
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");   
+            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");    
+            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");   
+            }else{
+                $(".cscMenu").addClass("active");
+                $(".collapsibleCSCMenu").css("display","block");
+                $(".cscDataCollectionMenu").addClass("active");
+                $(".cscDataCollectionMenu").css("color","#fff");
+            }
         }else if(splitsUrl[1]=='data-extraction'){
-          $(".cscMenu").addClass("active");
-          $(".collapsibleCSCMenu").css("display","block");
-          $(".cscDataExtractionMenu").addClass("active");
-          $(".cscDataExtractionMenu").css("color","#fff");
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".countryDataExtractionMenu"+atob(splits)).addClass("active");
+                $(".countryDataExtractionMenu"+atob(splits)).css("color","#fff");     
+            }else{
+                $(".cscMenu").addClass("active");
+                $(".collapsibleCSCMenu").css("display","block");
+                $(".cscDataExtractionMenu").addClass("active");
+                $(".cscDataExtractionMenu").css("color","#fff");
+            }
         }else{
             $(".dashboardMenu").addClass("active");
         }
