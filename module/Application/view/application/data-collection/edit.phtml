@@ -55,7 +55,7 @@ if(isset($countryId) && trim($countryId)!=''){
                             <?php
                             foreach($ancSites as $ancSite){
                             ?>
-                              <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>" <?php echo($row->anc_site == $ancSite['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($ancSite['anc_site_name']); ?></option>
+                              <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>" <?php echo($row->anc_site == $ancSite['anc_site_id'])?'selected="selected"':''; ?>><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
                             <?php } ?>
                         </select>
                         <label for="ancSite">ANC site name *</label>
