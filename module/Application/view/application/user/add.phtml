@@ -1,6 +1,12 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
+if(isset($countryId) && trim($countryId)!=''){
+    $link = "/user/".base64_encode($countryId);
+}else{
+    $countryId = '';
+    $link = "/user";
+}
 ?>
 <div id="page-content">
     <div class="row section-header">
@@ -103,7 +109,7 @@ $loginContainer = new Container('user');
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($loginContainer->roleCode!= "CSC" && $loginContainer->country ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($countryId ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -114,11 +120,11 @@ $loginContainer = new Container('user');
                  <div class="col s6" id="countryData1" style="display:none;">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
-                        <select class="material-select country1" id="country1" name="country[]" multiple="multiple" title="Please select country" >
+                        <select class="material-select country1" id="country1" name="country[]" multiple="multiple" title="Please select country">
                             <?php
                             foreach($countries as $country){
                                 ?>
-                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($loginContainer->roleCode!= "CSC" && $loginContainer->country ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
+                                <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($countryId ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -128,14 +134,6 @@ $loginContainer = new Container('user');
                 </div>
             </div>
             <div class="col s12">
-                <?php
-                if($countryId!='')
-                {
-                    $link = "/user/".base64_encode($countryId);
-                }else{
-                    $link = "/user";
-                }
-                ?>
                 <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addUser();">ADD</a>&nbsp;&nbsp;

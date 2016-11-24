@@ -22,20 +22,18 @@ class UserCountryMapTable extends AbstractTableGateway {
 	$sql = new Sql($dbAdapter);
 	$sQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
                                 ->where(array('ucm.user_id'=>$userId));
-
 	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
 	$rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
         if($rResult){
             $this->delete(array('user_id'=>$userId));
         }
         
-        if(count($params['country'])>0)
-        {
+        if(count($params['country'])>0){
             $c = count($params['country']);
             for($i=0;$i<$c;$i++){
                 if(trim($params['country'][$i])){
-                $data = array('user_id'=>$userId,'country_id'=>base64_decode($params['country'][$i]));
-                $this->insert($data);
+		    $data = array('user_id'=>$userId,'country_id'=>base64_decode($params['country'][$i]));
+		    $this->insert($data);
                 }
             }
         }

@@ -95,7 +95,6 @@ class UserTable extends AbstractTableGateway {
 			'email' => $params['email'],
 			'mobile' => $params['mobile'],
 			'alt_contact' => $params['altContact'],
-			//'country' => base64_decode($params['country']),
 			'status' => 'active',
 			'created_on' => $common->getDateTime()
 			);

@@ -228,7 +228,7 @@ class FacilityTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
                                ->where(array('f.status'=>'active'));
-	if(trim($countryId)!='' && $countryId !=0){
+	if(trim($countryId)!='' && $countryId >0){
             $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
         }else{
             if($loginContainer->roleCode!= 'CSC'){

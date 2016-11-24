@@ -66,7 +66,7 @@ class DataCollectionController extends AbstractActionController{
         $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $commonService = $this->getServiceLocator()->get('CommonService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');
-        if(trim($countryId)==''){
+        if(!isset($countryId) || (trim($countryId)==''){
             $country = $result['country'];
         }else{
             $country = $countryId;
@@ -94,7 +94,7 @@ class DataCollectionController extends AbstractActionController{
         $result=$dataCollectionService->getDataCollection($dataCollectionId);
         return new ViewModel(array(
             'row'=>$result,
-            'countryId'=>$countryId,
+            'countryId'=>$countryId
         ));
     }
     

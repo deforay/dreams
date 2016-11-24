@@ -47,8 +47,8 @@ class UserController extends AbstractActionController{
             $result=$roleService->getActiveRoles();
             $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
-            'roleData'=>$result,
-            'countries'=>$countryList,
+                'roleData'=>$result,
+                'countries'=>$countryList,
                 'countryId'=>$countryId
             ));
         }
