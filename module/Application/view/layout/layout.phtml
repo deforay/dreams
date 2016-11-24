@@ -87,7 +87,7 @@ $loginContainer = new Container('user');
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li class="cscAdminMenu menuAll">
-                                                <div class="collapsible-header waves-effect cscAdminMenu menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-header waves-effect cscAdminMenuSecond menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
                                                     <ul>
                                                         <li class="cscCountryMenu menuAll">
@@ -130,7 +130,7 @@ $loginContainer = new Container('user');
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li class="countryAdminMenu<?php echo $country['country_id']; ?> menuAll">
                                                 <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                                <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>" style="">
+                                                <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>">
                                                     <ul>
                                                         <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
                                                             <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage Users</a>
@@ -206,6 +206,9 @@ $loginContainer = new Container('user');
           $(".collapsibleCSCMenu").css("display","block");
           $(".collapsibleCSCAdminMenu").css("display","block");
           $(".cscAdminMenu").addClass("active");
+          $(".cscAdminMenuSecond").addClass("active");
+          $(".cscAdminMenuSecond").css("background-color","#ededed");
+          $(".cscAdminMenuSecond").css("color","#9c1b54");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
         }else if(splitsUrl[1]=='user'){
@@ -245,6 +248,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCSCMenu").css("display","block");
                 $(".collapsibleCSCAdminMenu").css("display","block");
                 $(".cscAdminMenu").addClass("active");
+                $(".cscAdminMenuSecond").addClass("active");
+                $(".cscAdminMenuSecond").css("background-color","#ededed");
+                $(".cscAdminMenuSecond").css("color","#9c1b54");
                 $(".cscUserMenu").addClass("active");
                 $(".cscUserMenu").css("color","#fff");
             }
