@@ -129,7 +129,7 @@ $loginContainer = new Container('user');
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li class="countryAdminMenu<?php echo $country['country_id']; ?> menuAll">
-                                                <div class="collapsible-header waves-effect countryAdminMenu<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>" style="">
                                                     <ul>
                                                         <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
@@ -215,6 +215,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -252,6 +255,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -282,6 +288,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
