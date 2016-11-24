@@ -27,7 +27,7 @@ class FacilityService {
             if ($result > 0) {
                 $adapter->commit();
                 $alertContainer = new Container('alert');
-                $alertContainer->msg = 'Facility added successfully.';
+                $alertContainer->msg = 'Lab added successfully.';
             }
         } catch (Exception $exc) {
             $adapter->rollBack();
@@ -55,7 +55,7 @@ class FacilityService {
             if ($result > 0) {
                 $adapter->commit();
                 $alertContainer = new Container('alert');
-                $alertContainer->msg = 'Facility updated successfully.';
+                $alertContainer->msg = 'Lab updated successfully.';
             }
         } catch (Exception $exc) {
             $adapter->rollBack();

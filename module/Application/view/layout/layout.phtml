@@ -87,14 +87,14 @@ $loginContainer = new Container('user');
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li class="cscAdminMenu menuAll">
-                                                <div class="collapsible-header waves-effect cscAdminMenuSecond menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-header waves-effect cscAdminMenuSecond menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
                                                     <ul>
                                                         <li class="cscCountryMenu menuAll">
-                                                            <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:34%;color:#444;">Manage Countries</a>
+                                                            <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-pin"></i> Manage Countries</a>
                                                         </li>
                                                         <li class="cscUserMenu menuAll">
-                                                            <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:34%;;color:#444;">Manage Users</a>
+                                                            <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:28%;;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -129,19 +129,19 @@ $loginContainer = new Container('user');
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li class="countryAdminMenu<?php echo $country['country_id']; ?> menuAll">
-                                                <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>">
                                                     <ul>
                                                         <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
-                                                            <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage Users</a>
+                                                            <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
                                                         </li>
                                                         <?php
                                                         if($loginContainer->roleCode!= 'LDEO'){ ?>
                                                             <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;" >Manage Facilities</a>
+                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage Labs</a>
                                                             </li>
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:34%;color:#444;">Manage ANC Sites</a>
+                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-globe"></i> Manage ANC Sites</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
@@ -156,7 +156,7 @@ $loginContainer = new Container('user');
                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                                 </li>
                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="#" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
+                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
                                                 </li>
                                             <?php } ?>
                                         </ul>
@@ -230,6 +230,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -239,6 +242,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -273,6 +279,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -282,6 +291,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -306,6 +318,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -315,6 +330,9 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+                $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -356,6 +374,12 @@ $loginContainer = new Container('user');
                 $(".cscDataExtractionMenu").addClass("active");
                 $(".cscDataExtractionMenu").css("color","#fff");
             }
+        }else if(splitsUrl[1]=='result-email'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryResultEmailMenu"+atob(splits)).addClass("active");
+            $(".countryResultEmailMenu"+atob(splits)).css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }

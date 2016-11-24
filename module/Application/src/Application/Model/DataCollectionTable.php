@@ -531,23 +531,39 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-		$row = array();
-		$specimenCollectionDate = '';
-		if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-		    $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-		}
-		$row[] = $aRow['surveillance_id'];
-		$row[] = $specimenCollectionDate;
-		$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
-		$row[] = $aRow['anc_patient_id'];
-		$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-		$row[] = $aRow['lab_specimen_id'];
-		if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
-		   $row[] = ucwords($aRow['country_name']);
-		}
-		$row[] = ucwords($aRow['test_status_name']);
-		$output['aaData'][] = $row;
+	    $row = array();
+	    $specimenCollectionDate = '';
+	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+		$specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+	    }
+	    $row[] = $aRow['surveillance_id'];
+	    $row[] = $specimenCollectionDate;
+	    $row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
+	    $row[] = $aRow['anc_patient_id'];
+	    $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+	    $row[] = $aRow['lab_specimen_id'];
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
+	       $row[] = ucwords($aRow['country_name']);
+	    }
+	    $row[] = ucwords($aRow['test_status_name']);
+	    $output['aaData'][] = $row;
 	}
        return $output;
+    }
+    
+    public function fetchSearchableDataCollection($params){
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+	                           ->columns(array('data_collection_id','surveillance_id'));
+        if(isset($params['anc']) && trim($params['anc'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
+        }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
+        }if(isset($params['status']) && trim($params['status'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.status'=>base64_decode($params['status'])));
+        }
+        $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+        return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

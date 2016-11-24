@@ -267,3 +267,5 @@ ALTER TABLE `user_country_map`
   
 --Pal 24/11/2016
 INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES (NULL, 'unlocked');
+
+ALTER TABLE `data_collection` ADD `result_mail_sent` VARCHAR(45) NOT NULL DEFAULT 'no' AFTER `country`;

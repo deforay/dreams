@@ -1,0 +1,60 @@
+<div class="input-field col m8 s8">
+    <a href='#' id='select-all'>Select all</a>
+    <a href='#' id='deselect-all'>Deselect all</a>
+    <select id="dataCollection" name="dataCollection[]" class="searchable" title="Please select data reporting" multiple>
+       <?php
+       foreach($dataList as $data){
+       ?>
+          <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id']; ?></option>
+        <?php } ?>
+    </select>
+</div>
+<script>
+    $(document).ready(function(){
+       $('.searchable').multiSelect({
+            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Surveillance ID'>",
+            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Surveillance ID'>",
+            afterInit: function(ms){
+              var that = this,
+                  $selectableSearch = that.$selectableUl.prev(),
+                  $selectionSearch = that.$selectionUl.prev(),
+                  selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                  selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+          
+              that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+              .on('keydown', function(e){
+                if (e.which === 40){
+                  that.$selectableUl.focus();
+                  return false;
+                }
+              });
+          
+              that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+              .on('keydown', function(e){
+                if (e.which == 40){
+                  that.$selectionUl.focus();
+                  return false;
+                }
+              });
+            },
+            afterSelect: function(){
+              this.qs1.cache();
+              this.qs2.cache();
+            },
+            afterDeselect: function(){
+              this.qs1.cache();
+              this.qs2.cache();
+            }
+        });
+       
+       $('#select-all').click(function(){
+        $('#dataCollection').multiSelect('select_all');
+        return false;
+       });
+       
+       $('#deselect-all').click(function(){
+        $('#dataCollection').multiSelect('deselect_all');
+        return false;
+       });
+    });
+</script>

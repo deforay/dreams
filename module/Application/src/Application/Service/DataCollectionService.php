@@ -298,4 +298,9 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->fetchAllDataExtractions($parameters);
     }
+    
+    public function getSearchableDataCollection($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchSearchableDataCollection($params);
+    }
 }

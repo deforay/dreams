@@ -7,29 +7,29 @@ if(isset($countryId) && trim($countryId)!=''){
 ?>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Facility</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Lab</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="<?php echo $this->url('facility'); ?>" class="breadcrumb">Facilities</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Facility</a>
+            <a href="<?php echo $this->url('facility'); ?>" class="breadcrumb">Labs</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Lab</a>
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editFacilityForm" name="editFacilityForm" method="post" action="<?php echo $this->url('edit-facility',array('action'=>'edit')); ?>">
+        <form id="editLabForm" name="editLabForm" method="post" action="<?php echo $this->url('edit-facility',array('action'=>'edit')); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">person_pin</i>
-                        <input id="facilityName" name="facilityName" type="text" class="validate isRequired" title="Please enter facility name" value="<?php echo $row->facility_name; ?>">
-                        <label for="facilityName" class="">Facility Name *</label>
+                        <input id="facilityName" name="facilityName" type="text" class="validate isRequired" title="Please enter lab name" value="<?php echo $row->facility_name; ?>">
+                        <label for="facilityName" class="">Lab Name *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter facility code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The facility code that you entered already exist. Please enter different code.')">
-                        <label for="facilityCode" class="">Facility Code *</label>
+                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter lab code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab code that you entered already exist. Please enter different code.')">
+                        <label for="facilityCode" class="">Lab Code *</label>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="facilityType" name="facilityType" title="Please select facility type">
+                        <select class="material-select isRequired" id="facilityType" name="facilityType" title="Please select lab type">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($facilityTypes as $facilityType){
@@ -47,13 +47,13 @@ if(isset($countryId) && trim($countryId)!=''){
                             }
                             ?>
                         </select>
-                        <label for="facilityType" class="">Facility Type *</label>
+                        <label for="facilityType" class="">Lab Type *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('facility', 'email', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The facility email that you entered already exist. Please enter different email id.')">
+                        <input id="email" name="email" type="text" class="validate isEmail" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('facility', 'email', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab email that you entered already exist. Please enter different email id.')">
                         <label for="email" class="">Email </label>
                     </div>
                 </div>
@@ -69,7 +69,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('facility', 'phone_number', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The contact no. that you entered already exist. Please enter different contact no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('facility', 'phone_number', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab contact no. that you entered already exist. Please enter different contact no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -121,7 +121,7 @@ if(isset($countryId) && trim($countryId)!=''){
                             <option value="active" <?php echo($row->status == "active")?'selected="selected"':'';  ?>>Active</option>
                             <option value="inactive" <?php echo($row->status == "inactive")?'selected="selected"':'';  ?>>Inactive</option>
                         </select>
-                        <label for="facilityStatus">Facility Status</label>
+                        <label for="facilityStatus">Lab Status</label>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <input id="facilityId" name="facilityId" type="hidden" value="<?php echo base64_encode($row->facility_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateFacility();">UPDATE</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateLab();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -137,13 +137,13 @@ if(isset($countryId) && trim($countryId)!=''){
 </div>
 <script>
     duplicateName = true;
-    function updateFacility(){
+    function updateLab(){
         flag = deforayValidator.init({
-            formId: 'editFacilityForm'
+            formId: 'editLabForm'
         });
         
         if(flag){
-            document.getElementById('editFacilityForm').submit();
+            document.getElementById('editLabForm').submit();
         }
     }
     

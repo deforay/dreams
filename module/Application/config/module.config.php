@@ -248,6 +248,24 @@ return array(
                         'action' => 'export-excel'
                     ),
                 ),
+            ),'result-email' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/result-email[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResultEmail',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'get-data-collection' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-data-collection',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResultEmail',
+                        'action' => 'get-data-collection'
+                    ),
+                ),
             ),
             
         ),
@@ -282,7 +300,8 @@ return array(
             'Application\Controller\Country' => 'Application\Controller\CountryController',
             'Application\Controller\AncSite' => 'Application\Controller\AncSiteController',
             'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController',
-            'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController'
+            'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController',
+            'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController'
         ),
     ),
     'controller_plugins' => array(

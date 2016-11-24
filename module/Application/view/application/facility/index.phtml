@@ -46,10 +46,10 @@ if(!isset($countryId) || $countryId ==''){
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Facilities</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Labs</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Facilities</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Labs</a>
        </div>
     </div>
     <?php
@@ -72,7 +72,7 @@ if(!isset($countryId) || $countryId ==''){
 				?>
 			    </select>
 			</td>
-			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a></td>
+			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchLab();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a></td>
 		    </tr>
 		</table>
 	    </div>
@@ -81,37 +81,37 @@ if(!isset($countryId) || $countryId ==''){
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Facility List
-		  <span style="float:right;"><a href="/facility/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Facility</a></span>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab List
+		  <span style="float:right;"><a href="/facility/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Lab</a></span>
                 </div>
                 <div class="card-content clearfix">
-                    <table id="facilityDataTable"  class="responsive-table display dataTable">
+                    <table id="labDataTable"  class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Facility Name</th>
-                                <th>Facility Type</th>
+                                <th>Lab Name</th>
+                                <th>Lab Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-			            <tfoot>
+			<tfoot>
                             <tr>
-                                <th>Facility Name</th>
-                                <th>Facility Type</th>
+                                <th>Lab Name</th>
+                                <th>Lab Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -127,7 +127,7 @@ if(!isset($countryId) || $countryId ==''){
 </div>
 <script>
     $(document).ready(function() {
-       oTable = $("#facilityDataTable").DataTable({
+       oTable = $("#labDataTable").DataTable({
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
@@ -170,7 +170,7 @@ if(!isset($countryId) || $countryId ==''){
                 });
     });
     
-    function searchDataCollectionData(){
+    function searchLab(){
 	oTable.draw();
     }
 </script>

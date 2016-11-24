@@ -29,9 +29,9 @@ class DataCollectionController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('datacollection',$countryId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$countryId);
             $rejectionReasonList=$commonService->getActiveRejectionReasons();
-            $facilityList=$facilityService->getActivefacilities('datacollection',$countryId);
+            $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
@@ -71,18 +71,17 @@ class DataCollectionController extends AbstractActionController{
         }else{
             $country = $countryId;
         }
-        $ancSiteList=$ancSiteService->getActiveAncSites('datacollection',$country);
-        
+        $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$country);
         $rejectionReasonList=$commonService->getActiveRejectionReasons();
         $testStatusList=$commonService->getAllTestStatus();
-        $facilityList=$facilityService->getActivefacilities('datacollection',$country);
+        $facilityList=$facilityService->getActivefacilities('data-collection',$country);
         return new ViewModel(array(
             'row'=>$result,
             'ancSites'=>$ancSiteList,
             'rejectionReasons'=>$rejectionReasonList,
             'allTestStatus'=>$testStatusList,
             'facilities'=>$facilityList,
-            'countryId'=>$countryId,
+            'countryId'=>$countryId
             
         ));
     }
