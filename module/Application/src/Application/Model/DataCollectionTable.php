@@ -52,8 +52,7 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['asanteRapidRecencyAssay'])){
                 $params['asanteRapidRecencyAssay'] = NULL;
             }
-	    if(trim($params['chosenCountry'])!='')
-	    {
+	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
 		$country = base64_decode($params['chosenCountry']);
 	    }else{
 		$country = $loginContainer->country[0];
@@ -254,30 +253,30 @@ class DataCollectionTable extends AbstractTableGateway {
 		   $row[] = ucwords($aRow['country_name']);
 		}
 		$row[] = ucwords($aRow['test_status_name']);
-		 $dataView = '';
-		 $lockView = '';
-		 if($loginContainer->roleCode== 'LDEO'){
+		$dataView = '';
+		$lockView = '';
+		if($loginContainer->roleCode== 'LDEO'){
 		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 		    if($aRow['test_status_name']== 'completed'){
 		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		    }
-		 }else if($loginContainer->roleCode== 'LS'){
-		    if($aRow['test_status_name']== 'completed'){
+		}else if($loginContainer->roleCode== 'LS'){
+		    if($aRow['test_status_name']== 'unlocked'){
 		       $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
 		    }else{
 		       $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 		    }
-		 }else{
+		}else{
 		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
-		 }
+		}
 		 
-		 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		    if($aRow['test_status_name']== 'completed'){
+		if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+		    if($aRow['test_status_name']== 'completed' || $aRow['test_status_name']== 'unlocked'){
 		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
-		    }else{
+		    }else if($aRow['test_status_name']== 'locked'){
 		       $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		    }
-		 }
+		}
 		$row[] = $dataView.$lockView;
 		$output['aaData'][] = $row;
 	}
@@ -293,8 +292,8 @@ class DataCollectionTable extends AbstractTableGateway {
                                    ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
                                    ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
                                    ->where(array('da_c.data_collection_id'=>$dataCollectionId));
-	   $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-	   return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+	return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
     public function updateDataCollectionDetails($params){
@@ -323,7 +322,7 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
-			if(!isset($params['age']) || trim($params['age'])== ''){
+	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
                 $params['lagAvidityResult'] = NULL;
@@ -355,28 +354,28 @@ class DataCollectionTable extends AbstractTableGateway {
                         'status'=>base64_decode($params['status'])
                     );
             $this->update($data,array('data_collection_id'=>$dataCollectionId));
-			//Add new row into data collection event log table
-			$dbAdapter = $this->adapter;
-			$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-			$data['data_collection_id'] = $dataCollectionId;
-			$data['country']=$params['chosenCountry'];
-			$data['updated_on'] = $common->getDateTime();
-			$data['updated_by'] = $loginContainer->userId;
-			$dataCollectionEventLogDb->insert($data);
+		//Add new row into data collection event log table
+		$dbAdapter = $this->adapter;
+		$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+		$data['data_collection_id'] = $dataCollectionId;
+		$data['country'] = $params['chosenCountry'];
+		$data['updated_on'] = $common->getDateTime();
+		$data['updated_by'] = $loginContainer->userId;
+		$dataCollectionEventLogDb->insert($data);
         }
       return $dataCollectionId;
     }
 	
     public function lockDataCollectionDetails($params){
-	    return $this->update(array('status'=>'2'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	return $this->update(array('status'=>2),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function unlockDataCollectionDetails($params){
-	    return $this->update(array('status'=>'1'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	return $this->update(array('status'=>3),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function requestForUnlockDataCollectionDetails($params){
-	    return $this->update(array('status'=>'requested'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	return $this->update(array('status'=>'requested'),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function fetchAllDataExtractions($parameters){

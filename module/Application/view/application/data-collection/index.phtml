@@ -53,11 +53,11 @@ if(!isset($countryId) || trim($countryId)== ''){
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Data Reporting</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Collections</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Reporting</a>
        </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="addDataCollectionForm" name="addDataCollectionForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
+        <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s4">
@@ -214,7 +214,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
 		<input type="hidden" name="chosenCountryId" id="chosenCountryId" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataCollection();">ADD</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -222,9 +222,9 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Collection List</div>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Reporting List</div>
                 <div class="card-content clearfix">
-                    <table id="dataCollectionDataTable" class="responsive-table display dataTable">
+                    <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Surveillance ID</th>
@@ -270,7 +270,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 </div>
 <script>
     $(document).ready(function() {
-       oTable = $("#dataCollectionDataTable").DataTable({
+       oTable = $("#dataReportingDataTable").DataTable({
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
@@ -316,7 +316,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     });
 	
     function lockDataCollection(ID){
-	var conf = confirm("Are you sure you want to lock this data collection..?");
+	var conf = confirm("Are you sure you want to lock this data report..?");
 	if(conf){
 	    $.post("<?php echo $this->url('lock-data-collection'); ?>", {dataCollectionId:ID},
 		function(data){
@@ -330,7 +330,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     
     function unlockDataCollection(ID){
-	var conf = confirm("Are you sure you want to unlock this data collection..?");
+	var conf = confirm("Are you sure you want to unlock this data report..?");
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-data-collection'); ?>", {dataCollectionId:ID},
 		function(data){
@@ -344,7 +344,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     
     function requestToUnlock(ID){
-	var conf = confirm("Are you sure you want to send request for unlock this data collection..?");
+	var conf = confirm("Are you sure you want to send request to unlock this data report..?");
 	if(conf){
 	    $.post("<?php echo $this->url('data-collection',array('action'=>'send-request')); ?>", {dataCollectionId:ID},
 		function(data){
@@ -398,13 +398,13 @@ if(!isset($countryId) || trim($countryId)== ''){
         }
     });
     
-    function addDataCollection(){
+    function addDataReporting(){
         flag = deforayValidator.init({
-               formId: 'addDataCollectionForm'
+            formId: 'addDataReportingForm'
         });
         
         if(flag){
-            document.getElementById('addDataCollectionForm').submit();
+            document.getElementById('addDataReportingForm').submit();
         }
     }
     

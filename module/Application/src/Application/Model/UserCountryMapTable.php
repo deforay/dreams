@@ -5,7 +5,6 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
-use Application\Service\CommonService;
 
 
 class UserCountryMapTable extends AbstractTableGateway {
@@ -17,14 +16,14 @@ class UserCountryMapTable extends AbstractTableGateway {
     }
     
     public function addUserCountryMapDetails($params,$userId){
-        //check exist in this user id
+        //Check exist country nd update
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$sQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
                                 ->where(array('ucm.user_id'=>$userId));
-	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
-	$rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-        if($rResult){
+	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
+	$sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        if($sResult){
             $this->delete(array('user_id'=>$userId));
         }
         
@@ -37,5 +36,6 @@ class UserCountryMapTable extends AbstractTableGateway {
                 }
             }
         }
+      return true;
     }
 }

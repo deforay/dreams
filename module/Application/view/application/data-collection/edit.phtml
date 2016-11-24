@@ -25,15 +25,15 @@ if(isset($countryId) && trim($countryId)!=''){
 ?>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Data Collection</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Data Reporting</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="<?php echo $this->url('data-collection'); ?>" class="breadcrumb">Data Collections</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Data Collection</a>
+            <a href="<?php echo $this->url('data-collection'); ?>" class="breadcrumb">Data Reporting</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Data Reporting</a>
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="editDataCollectionForm" name="editDataCollectionForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
+        <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <div class="row">
                 <div class="col s4">
@@ -203,7 +203,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <input type="hidden" name="chosenCountry" value="<?php echo $row->country; ?>"/>
                 <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataCollection();">UPDATE</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -247,13 +247,13 @@ if(isset($countryId) && trim($countryId)!=''){
         }
     });
     
-    function updateDataCollection(){
+    function updateDataReporting(){
         flag = deforayValidator.init({
-               formId: 'editDataCollectionForm'
+            formId: 'editDataReportingForm'
         });
         
         if(flag){
-            document.getElementById('editDataCollectionForm').submit();
+            document.getElementById('editDataReportingForm').submit();
         }
     }
     

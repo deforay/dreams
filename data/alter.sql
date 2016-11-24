@@ -252,7 +252,7 @@ ALTER TABLE `data_collection_event_log`
   DROP `lock_state`,
   DROP `request_state`;
   
-  --saravanan 22-nov-2016
+--Saravanan 22-nov-2016
   CREATE TABLE `user_country_map` (
   `country_map_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -264,3 +264,6 @@ ALTER TABLE `user_country_map`
 
 ALTER TABLE `user_country_map`
   MODIFY `country_map_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  
+--Pal 24/11/2016
+INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES (NULL, 'unlocked');

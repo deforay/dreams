@@ -16,7 +16,6 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function addFacilityDetails($params){
-	//\Zend\Debug\Debug::dump($params);die;
         $lastInsertedId = 0;
 		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 			$data = array(
