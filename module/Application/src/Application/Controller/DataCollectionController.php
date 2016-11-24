@@ -66,7 +66,7 @@ class DataCollectionController extends AbstractActionController{
         $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $commonService = $this->getServiceLocator()->get('CommonService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');
-        if(!isset($countryId) || (trim($countryId)==''){
+        if(!isset($countryId) || trim($countryId)==''){
             $country = $result['country'];
         }else{
             $country = $countryId;
