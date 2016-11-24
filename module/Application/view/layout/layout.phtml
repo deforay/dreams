@@ -123,7 +123,7 @@ $loginContainer = new Container('user');
                         foreach($countries as $country){
                     ?>
                         <li class="menuAll countryMenu<?php echo $country['country_id']; ?>">
-                            <div class="collapsible-header waves-effect"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                            <div class="collapsible-header waves-effect menuAll countryMenu<?php echo $country['country_id']; ?>"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body collapsibleAll collapsibleCountryMenu<?php echo $country['country_id']; ?>" style="">
                                 <ul>
                                     <li>
