@@ -41,6 +41,7 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
+	     
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -49,13 +50,15 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['hivRnaGT1000'] = NULL;
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
-            } if(!isset($params['asanteRapidRecencyAssay'])){
-                $params['asanteRapidRecencyAssay'] = NULL;
+            } if(!isset($params['asanteRapidRecencyAssayPn'])){
+                $params['asanteRapidRecencyAssayPn'] = NULL;
+            }if(!isset($params['asanteRapidRecencyAssayRlt'])){
+                $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
+	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
+	    $country = $loginContainer->country[0];
 	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
 		$country = base64_decode($params['chosenCountry']);
-	    }else{
-		$country = $loginContainer->country[0];
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -74,7 +77,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
-                        'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
+                        'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
                         'country'=>$country,
 			'status'=>1,
                         'added_on'=>$common->getDateTime(),
@@ -330,9 +333,12 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['hivRnaGT1000'] = NULL;
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
-            } if(!isset($params['asanteRapidRecencyAssay'])){
-                $params['asanteRapidRecencyAssay'] = NULL;
+            } if(!isset($params['asanteRapidRecencyAssayPn'])){
+                $params['asanteRapidRecencyAssayPn'] = NULL;
+            }if(!isset($params['asanteRapidRecencyAssayRlt'])){
+                $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
+	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
@@ -350,7 +356,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
-                        'asante_rapid_recency_assy'=>$params['asanteRapidRecencyAssay'],
+                        'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
                         'status'=>base64_decode($params['status'])
                     );
             $this->update($data,array('data_collection_id'=>$dataCollectionId));

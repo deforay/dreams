@@ -72,7 +72,7 @@ if(!isset($countryId) || $countryId ==''){
 				?>
 			    </select>
 			</td>
-			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a></td>
+			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchAncSite();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a></td>
 		    </tr>
 		</table>
 	    </div>
@@ -92,26 +92,26 @@ if(!isset($countryId) || $countryId ==''){
                                 <th>ANC site Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-			            <tfoot>
+			<tfoot>
                             <tr>
                                 <th>ANC site Name</th>
                                 <th>ANC site Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
-								<?php
+				<?php
                                 if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
                                 ?>
                                   <th>Country</th>
-								<?php } ?>
+				<?php } ?>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -170,7 +170,7 @@ if(!isset($countryId) || $countryId ==''){
                 });
     });
     
-    function searchDataCollectionData(){
+    function searchAncSite(){
 	oTable.draw();
     }
 </script>
