@@ -148,23 +148,23 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
-                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
-                            <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label>
+                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate isRequired" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
+                            <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
-                          LAg Avidity Result<br>
-                          <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;"/>
+                          LAg Avidity Result *<br>
+                          <input id="lagAvidityResultRecent" class="with-gap isRequired" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;"/>
                           <label for="lagAvidityResultRecent" style="pointer-events:none !important;">R </label>&nbsp;
-                          <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;"/>
+                          <input id="lagAvidityResultLongTerm" class="with-gap isRequired" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;"/>
                           <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;">LT </label>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m10 s10">
-                            <input id="hivRna" name="hivRna" type="text" class="validate" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) </label>
+                            <input id="hivRna" name="hivRna" type="text" class="validate isRequired" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
                         </div>
                     </div>
                 </div>
@@ -189,14 +189,14 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                     <div class="col s4">
                        <div class="input-padding col m10 s10">
-                          Asante Rapid Recency Assay<br>
-                          <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
+                          Asante Rapid Recency Assay *<br>
+                          <input id="asanteRapidRecencyAssayP" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
                           <label for="asanteRapidRecencyAssayP">P </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
+                          <input id="asanteRapidRecencyAssayN" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
                           <label for="asanteRapidRecencyAssayN">N </label><br>
-                          <input id="asanteRapidRecencyAssayR" class="with-gap" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r"/>
+                          <input id="asanteRapidRecencyAssayR" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r"/>
                           <label for="asanteRapidRecencyAssayR">R </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayLt" class="with-gap" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt"/>
+                          <input id="asanteRapidRecencyAssayLt" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt"/>
                           <label for="asanteRapidRecencyAssayLt">LT </label>
                         </div>
                     </div>
