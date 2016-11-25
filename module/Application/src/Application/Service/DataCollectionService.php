@@ -28,7 +28,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->addDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Collection added successfully.';
+               $alertContainer->msg = 'Data Reporting added successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }
@@ -59,7 +59,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->updateDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Collection updated successfully.';
+               $alertContainer->msg = 'Data Reporting updated successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }

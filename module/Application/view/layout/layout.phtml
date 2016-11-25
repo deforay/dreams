@@ -138,10 +138,10 @@ $loginContainer = new Container('user');
                                                         <?php
                                                         if($loginContainer->roleCode!= 'LDEO'){ ?>
                                                             <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage Labs</a>
+                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
                                                             </li>
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-globe"></i> Manage ANC Sites</a>
+                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
