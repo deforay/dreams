@@ -61,36 +61,64 @@ if(!isset($countryId) || trim($countryId)== ''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Extractions</a>
        </div>
     </div>
-    <?php
-    if($loginContainer->roleCode!= 'LDEO'){
-    ?>
-	<div class="row">
+    <div class="row">
 	    <div class="col l12 m12 s12">
 		<table style="width:100%;">
 		    <tr>
-			<td style="width:30%;text-align:right;<?php echo $display;?>"><h6><strong>Country</strong></h6></td>
-			<td style="text-align:left;<?php echo $display;?>">
-			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-				<option value=""> -- Select -- </option>
-				<?php
-				foreach($countries as $country){
-				    ?>
-				    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
-				    <?php
-				}
+		<td>
+		    <a href="javascript:void(0)" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green" onclick="$('#showhide').fadeToggle();return false;"><span>Manage Columns</span></a>
+		<span style="display: none;position:absolute;z-index: 9999 !important;color:#333;padding:5px;" id="showhide" class="">
+		<div class="row" style="background:#e0e0e0;float: right !important;padding: 15px;">
+		    <div class="col-md-12" >
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Surveillance ID</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol2">ANC site</label> <br>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol3">ANC Patient ID</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol4">Lab site</label> <br>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol5">Lab Specimen ID</label> <br>
+			</div>
+		    </div>
+		</div>
+		</span>
+		</td>
+		<?php
+		if($loginContainer->roleCode!= 'LDEO'){
+		?>
+		    <td style="width:10%;text-align:right;<?php echo $display;?>"><h6><strong>Country</strong></h6></td>
+		    <td style="text-align:left;<?php echo $display;?>">
+			<select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
+			    <option value=""> -- Select -- </option>
+			    <?php
+			    foreach($countries as $country){
 				?>
-			    </select>
-			</td>
-			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
-		    </tr>
+				<option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+		    </td>
+		    <td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-cloud-download"></i> Export Excel</a></td>
+		<?php } ?>
+		</tr>
 		</table>
 	    </div>
 	</div>
-    <?php } ?>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Extraction List</div>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Extraction List
+		</div>
                 <div class="card-content clearfix">
                     <table id="dataExtractionDataTable" class="responsive-table display dataTable">
                         <thead>
@@ -135,11 +163,14 @@ if(!isset($countryId) || trim($countryId)== ''){
     </div>
 </div>
 <script>
+    var oTable = null;
     $(document).ready(function() {
-       oTable = $("#dataExtractionDataTable").DataTable({
-        "bProcessing": true,
-        "bServerSide": true,
-         "aoColumns": [
+	oTable = $('#dataExtractionDataTable').dataTable({
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "bStateSave" : true,
+            "aoColumns": [
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
@@ -153,11 +184,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<?php } ?>
 		{"sClass":"center"}
             ],
-	"aaSorting": [[ 1, "desc" ]],
-        "sAjaxSource": "<?php echo $this->url('data-extraction',array('action' => 'index')); ?>",
-         "fnServerData": function ( sSource, aoData, fnCallback ) {
-	    aoData.push({"name": "country", "value": $("#country").val()});
-	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
+            "aaSorting": [[1, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('data-extraction',array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                aoData.push({"name": "country", "value": $("#country").val()});
+		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -166,7 +199,17 @@ if(!isset($countryId) || trim($countryId)== ''){
                     "success": fnCallback
                 });
             }
-       });
+        });
+       
+       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+        for(colNo=0;colNo <=5;colNo++){
+            $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+            if(oTable.fnSettings().aoColumns[colNo].bVisible){
+                $("#iCol"+colNo+"-sort").show();    
+            }else{
+                $("#iCol"+colNo+"-sort").hide();    
+            }
+        }
        
        $('.dataTables_filter').empty(); // clears the content generated
        $('.dataTables_filter').append(
@@ -180,13 +223,17 @@ if(!isset($countryId) || trim($countryId)== ''){
                     oTable.fnFilter($(this).val());
                 });
     });
-	
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    }
 	
     function searchDataExtractionData(){
        oTable.draw();
     }
     
     function extractDataCollectionData(){
+	
 	$.post("<?php echo $this->url('export-data-extraction'); ?>", {},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
