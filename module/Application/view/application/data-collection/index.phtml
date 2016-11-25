@@ -221,8 +221,35 @@ if(!isset($countryId) || trim($countryId)== ''){
     </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
+	    
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Reporting List</div>
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Reporting List
+		<a href="javascript:void(0)" class="waves-effect waves-light btn-small btn white-text custom-btn " onclick="$('#showhide').fadeToggle();return false;"><span>Manage Columns</span></a>
+		<span style="position:absolute;z-index: 9999 !important;color:#333;padding:5px;" id="showhide">
+		<div class="row" style="background:#e0e0e0;float: right !important;padding: 15px;">
+		    <div class="col-md-12" >
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Surveillance ID</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol2">ANC site</label> <br>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol3">ANC Patient ID</label>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol4">Lab site</label> <br>
+			</div>
+			<div class="col-md-3">
+				<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol5">Lab Specimen ID</label> <br>
+			</div>
+		    </div>
+		</div>
+		</span>
+		</div>
                 <div class="card-content clearfix">
                     <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
@@ -269,12 +296,16 @@ if(!isset($countryId) || trim($countryId)== ''){
     </div>
 </div>
 <script>
+    var oTable = null;
     $(document).ready(function() {
-       oTable = $("#dataReportingDataTable").DataTable({
-        "bProcessing": true,
-        "bServerSide": true,
-         "aoColumns": [
-		{"sClass":"center"},
+	$("#showhide").hide();
+       oTable = $('#dataReportingDataTable').dataTable({
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "bStateSave" : true,
+            "aoColumns": [
+                {"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
@@ -288,10 +319,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}
             ],
-	"aaSorting": [[ 1, "desc" ]],
-        "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
-         "fnServerData": function ( sSource, aoData, fnCallback ) {
-	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
+            "aaSorting": [[1, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -300,7 +333,17 @@ if(!isset($countryId) || trim($countryId)== ''){
                     "success": fnCallback
                 });
             }
-       });
+        });
+       
+       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+        for(colNo=0;colNo <=5;colNo++){
+            $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+            if(oTable.fnSettings().aoColumns[colNo].bVisible){
+                $("#iCol"+colNo+"-sort").show();    
+            }else{
+                $("#iCol"+colNo+"-sort").hide();    
+            }
+        }
        
        $('.dataTables_filter').empty(); // clears the content generated
        $('.dataTables_filter').append(
@@ -314,6 +357,10 @@ if(!isset($countryId) || trim($countryId)== ''){
                     oTable.fnFilter($(this).val());
                 });
     });
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    }
 	
     function lockDataCollection(ID){
 	var conf = confirm("Are you sure you want to lock this data report..?");
