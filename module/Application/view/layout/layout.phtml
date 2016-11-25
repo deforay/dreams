@@ -37,6 +37,21 @@ $loginContainer = new Container('user');
         .breadcrumb:before{
             font-size:16px;
         }
+        .card-default .card-header.dataTable-header{
+           background-color:#ff69b4; 
+        }
+        .dropdown-content li > a, .dropdown-content li{
+           color:#ff69b4; 
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header.active{
+            color:#ff69b4;
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header:hover{
+            color:#ff69b4;
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-body li.active{
+            background-color:#ff69b4;
+        }
     </style>
     <script  src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -209,7 +224,7 @@ $loginContainer = new Container('user');
           $(".cscAdminMenu").addClass("active");
           $(".cscAdminMenuSecond").addClass("active");
           $(".cscAdminMenuSecond").css("background-color","#ededed");
-          $(".cscAdminMenuSecond").css("color","#9c1b54");
+          $(".cscAdminMenuSecond").css("color","#ff69b4");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
         }else if(splitsUrl[1]=='user'){
@@ -221,7 +236,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -233,7 +248,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -245,7 +260,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -257,7 +272,7 @@ $loginContainer = new Container('user');
                 $(".cscAdminMenu").addClass("active");
                 $(".cscAdminMenuSecond").addClass("active");
                 $(".cscAdminMenuSecond").css("background-color","#ededed");
-                $(".cscAdminMenuSecond").css("color","#9c1b54");
+                $(".cscAdminMenuSecond").css("color","#ff69b4");
                 $(".cscUserMenu").addClass("active");
                 $(".cscUserMenu").css("color","#fff");
             }
@@ -270,7 +285,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -282,7 +297,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -294,7 +309,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -309,7 +324,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -321,7 +336,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -333,7 +348,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
