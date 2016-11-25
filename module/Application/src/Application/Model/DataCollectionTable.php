@@ -245,41 +245,41 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 		$row = array();
-		$specimenCollectionDate = '';
-		$specimenPickedDate = '';
-		$receiptDate = '';
-		$dispatchDate = '';
+		$specimenCollectedDate = '';
+		$specimenPickUpDateatAnc = '';
+		$receiptDateAtCentralLab = '';
+		$resultDispatchedDateToClinic = '';
 		if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-		    $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+		    $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
 		}
 		if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
-		    $specimenPickedDate = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
+		    $specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
 		}
 		if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
-		    $receiptDate = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+		    $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
 		}
 		if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
-		    $dispatchDate = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+		    $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 		}
 		$date = explode(" ",$aRow['added_on']);
     
 		$row[] = $aRow['surveillance_id'];
-		$row[] = $specimenCollectionDate;
+		$row[] = $specimenCollectedDate;
 		$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
 		$row[] = $aRow['anc_patient_id'];
 		$row[] = $aRow['age'];
-		$row[] = $specimenPickedDate;
+		$row[] = $specimenPickUpDateatAnc;
 		$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
 		$row[] = $aRow['lab_specimen_id'];
-		$row[] = $receiptDate;
+		$row[] = $receiptDateAtCentralLab;
 		$row[] = ucwords($aRow['rejection_code']);
 		$row[] = $aRow['final_lag_avidity_odn'];
-		$row[] = $aRow['lag_avidity_result'];
+		$row[] = strtoupper($aRow['lag_avidity_result']);
 		$row[] = $aRow['hiv_rna'];
-		$row[] = $aRow['hiv_rna_gt_1000'];
-		$row[] = $aRow['recent_infection'];
-		$row[] = $dispatchDate;
-		$row[] = $aRow['asante_rapid_recency_assy'];
+		$row[] = ucwords($aRow['hiv_rna_gt_1000']);
+		$row[] = ucwords($aRow['recent_infection']);
+		$row[] = $resultDispatchedDateToClinic;
+		$row[] = strtoupper($aRow['asante_rapid_recency_assy']);
 		$row[] = ucwords($aRow['test_status_name']);
 		$row[] = $common->humanDateFormat($date[0])." ".$date[1];
 		$row[] = ucwords($aRow['user_name']);
@@ -571,48 +571,48 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-	    $specimenCollectionDate = '';
-		$specimenPickedDate = '';
-		$receiptDate = '';
-		$dispatchDate = '';
-		if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-		    $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-		}
-		if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
-		    $specimenPickedDate = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-		}
-		if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
-		    $receiptDate = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-		}
-		if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
-		    $dispatchDate = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
-		}
-		$date = explode(" ",$aRow['added_on']);
-		
-		$row[] = $aRow['surveillance_id'];
-		$row[] = $specimenCollectionDate;
-		$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
-		$row[] = $aRow['anc_patient_id'];
-		$row[] = $aRow['age'];
-		$row[] = $specimenPickedDate;
-		$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-		$row[] = $aRow['lab_specimen_id'];
-		$row[] = $receiptDate;
-		$row[] = ucwords($aRow['rejection_code']);
-		$row[] = $aRow['final_lag_avidity_odn'];
-		$row[] = $aRow['lag_avidity_result'];
-		$row[] = $aRow['hiv_rna'];
-		$row[] = $aRow['hiv_rna_gt_1000'];
-		$row[] = $aRow['recent_infection'];
-		$row[] = $dispatchDate;
-		$row[] = $aRow['asante_rapid_recency_assy'];
-		$row[] = ucwords($aRow['test_status_name']);
-		$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-		$row[] = ucwords($aRow['user_name']);
-		if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
-		   $row[] = ucwords($aRow['country_name']);
-		}
-	    $output['aaData'][] = $row;
+	    $specimenCollectedDate = '';
+	    $specimenPickUpDateatAnc = '';
+	    $receiptDateAtCentralLab = '';
+	    $resultDispatchedDateToClinic = '';
+	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+		$specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+	    }
+	    if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+		$specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
+	    }
+	    if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+		$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+	    }
+	    if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    }
+	    $date = explode(" ",$aRow['added_on']);
+	    
+	    $row[] = $aRow['surveillance_id'];
+	    $row[] = $specimenCollectedDate;
+	    $row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
+	    $row[] = $aRow['anc_patient_id'];
+	    $row[] = $aRow['age'];
+	    $row[] = $specimenPickUpDateatAnc;
+	    $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+	    $row[] = $aRow['lab_specimen_id'];
+	    $row[] = $receiptDateAtCentralLab;
+	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = $aRow['final_lag_avidity_odn'];
+	    $row[] = strtoupper($aRow['lag_avidity_result']);
+	    $row[] = $aRow['hiv_rna'];
+	    $row[] = ucwords($aRow['hiv_rna_gt_1000']);
+	    $row[] = ucwords($aRow['recent_infection']);
+	    $row[] = $resultDispatchedDateToClinic;
+	    $row[] = strtoupper($aRow['asante_rapid_recency_assy']);
+	    $row[] = ucwords($aRow['test_status_name']);
+	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
+	    $row[] = ucwords($aRow['user_name']);
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
+	       $row[] = ucwords($aRow['country_name']);
+	    }
+	   $output['aaData'][] = $row;
 	}
        return $output;
     }
