@@ -425,6 +425,16 @@ $loginContainer = new Container('user');
         $('.material-select').material_select();
         $('.select-wrapper').removeClass('isRequired');
     });
+    
+    $('#password').change('input',function(e){
+        if ($(this).val()!= '') {
+	    var regex = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	    if(!regex.test($(this).val())) {
+	       $(this).val('');
+	       alert('Minimum 8 characters and enter atleast one number, one special character , one alphabet.');
+	    }
+        }
+    });
 </script>
 <script>
     $('.button-collapse').sideNav({
