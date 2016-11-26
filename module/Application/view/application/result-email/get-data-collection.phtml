@@ -1,13 +1,13 @@
 <div class="input-field col m8 s8">
     <a href='#' id='select-all'>Select all</a>
     <a href='#' id='deselect-all'>Deselect all</a>
-    <select id="dataCollection" name="dataCollection[]" class="searchable" title="Please select data reporting" multiple>
+    <select id="dataCollection" name="dataCollection[]" class="searchable isRequired" title="Please select data surveillance ID" multiple>
        <?php
        foreach($dataList as $data){
        ?>
           <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id']; ?></option>
         <?php } ?>
-    </select>
+    </select><br/>
 </div>
 <script>
     $(document).ready(function(){

@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="resultMail" name="resultMail" method="post" action="#">
+        <form id="resultMail" name="resultMail" method="post" action="<?php echo $this->url('result-email-send'); ?>">
         <div class="card">
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
@@ -21,7 +21,7 @@
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <input id="cc" name="cc" type="text" class="validate isRequired" title="Please enter CC">
+                        <input id="cc" name="cc" type="text" class="validate " title="Please enter CC">
                         <label for="cc" class="">CC </label>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <input id="bcc" name="bcc" type="text" class="validate isRequired" title="Please enter BCC">
+                        <input id="bcc" name="bcc" type="text" class="validate " title="Please enter BCC">
                         <label for="bcc" class="">BCC </label>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <textarea id="message" name="message" class="materialize-textarea" title="Please enter message"></textarea>
+                        <textarea id="message" name="message" class="materialize-textarea isRequired" title="Please enter message"></textarea>
                         <label for="message">Message </label>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
             <div class="row">
                <div class="col s6">
                     <div class="input-field col m8 s8">
-                        <select id="anc" name="anc" class="material-select" title="Please select anc site">
+                        <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site">
                              <option value=""> -- Select -- </option>
                            <?php
                            foreach($ancList as $anc){
@@ -96,8 +96,10 @@
                 </div>
             </div>
             <div class="col s12">
+                <input type="hidden" name="chosenCountryId" value="<?php echo base64_encode($countryId); ?>"/>
+                <input type="hidden" name="pdfFile" id="pdfFile" />
                 <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10"> Send</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">Send</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
@@ -165,4 +167,30 @@
           $('.dataCollectionSection').html(data);
         });
     }
+    
+    function addMail(){
+        var dataCollection = $('#dataCollection').val();
+        $.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dataCollection},
+        function(data){
+            $.unblockUI();
+          if(data === "" || data === null || data === undefined){
+                            alert('There is no survillence Id.');
+            }else{
+                $.blockUI();
+                    $("#pdfFile").val(data);
+                    document.getElementById('resultMail').submit();
+            }
+        });
+        
+    }
+    function validateNow(){
+    flag = deforayValidator.init({
+        formId: 'resultMail'
+    });
+    
+    if(flag){
+        $.blockUI();
+        addMail();
+    }
+  }
 </script>

@@ -11,6 +11,7 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
 
 class ResultEmailController extends AbstractActionController{
     public function indexAction(){
@@ -31,10 +32,18 @@ class ResultEmailController extends AbstractActionController{
     }
     
     public function sendAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $commonService = $this->getServiceLocator()->get('CommonService');
+            $commonService->sendMailResult($params);
+            return $this->redirect()->toUrl('/result-email/'.$params['chosenCountryId']);
+        }
         return new ViewModel();
     }
     
     public function getDataCollectionAction(){
+        
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
@@ -42,6 +51,19 @@ class ResultEmailController extends AbstractActionController{
             $dataList=$dataCollectionService->getSearchableDataCollection($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataList' =>$dataList));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    public function generatePdfAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $dataResult=$dataCollectionService->getDataCollectionDetailsPdf($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('dataResult' =>$dataResult));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

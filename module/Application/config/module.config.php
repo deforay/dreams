@@ -257,6 +257,24 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'result-email-send' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/result-email/send',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResultEmail',
+                        'action' => 'send'
+                    ),
+                ),
+            ),'result-email-pdf' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/result-email/generate-pdf',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResultEmail',
+                        'action' => 'generate-pdf'
+                    ),
+                ),
             ),'get-data-collection' => array(
                 'type' => 'literal',
                 'options' => array(

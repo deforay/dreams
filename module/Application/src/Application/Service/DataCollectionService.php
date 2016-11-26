@@ -110,6 +110,33 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->requestForUnlockDataCollectionDetails($params);
     }
+    public function getDataCollectionDetailsPdf($params)
+    {
+        $alertContainer = new Container('alert');
+        $alertContainer->aliasPage = 1;
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $dQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+                     ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
+                     ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
+                     ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
+                     ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+        if(count($params['dataCollection'])>0)
+        {
+            $dataCollectionId = array();
+            for($i=0;$i<count($params['dataCollection']);$i++)
+            {
+                $dataCollectionId[] = base64_decode($params['dataCollection'][$i]);
+            }
+            $dQuery = $dQuery->where('da_c.data_collection_id IN ("' . implode('", "', $dataCollectionId) . '")');
+        }
+        $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
+        $dataResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $alertContainer->nbPages = count($dataResult);
+        return $dataResult;
+    }
     
     public function exportDataCollectionInExcel($params){
         $queryContainer = new Container('query');
