@@ -269,3 +269,14 @@ ALTER TABLE `user_country_map`
 INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES (NULL, 'unlocked');
 
 ALTER TABLE `data_collection` ADD `result_mail_sent` VARCHAR(45) NOT NULL DEFAULT 'no' AFTER `country`;
+
+--Pal 26/11/2016
+
+CREATE TABLE `global_config` (
+  `display_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `value` varchar(255) DEFAULT NULL
+)
+
+INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
+('Locking Data After Login', 'locking_data_after_login', '72');
