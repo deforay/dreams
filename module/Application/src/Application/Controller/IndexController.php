@@ -16,10 +16,5 @@ class IndexController extends AbstractActionController{
     public function indexAction(){
         return new ViewModel();
     }
-    
-    public function automaticLockAction(){
-        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-        $dataCollectionService->automaticDataCollectionLock();
-    }
   
 }

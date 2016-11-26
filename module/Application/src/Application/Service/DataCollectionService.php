@@ -81,23 +81,34 @@ class DataCollectionService {
         return $dataCollectionDb->unlockDataCollectionDetails($params);
     }
     
-    public function automaticDataCollectionLock(){
+    public function automaticDataCollectionLockAfterLogin(){
+        $loginContainer = new Container('user');
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
+        //Get locking hour to lock data
+        $lockingHour = '+72 hours';//Default locking hour
+        $globalConfigQuery = $sql->select()->from(array('conf' => 'global_config'))
+                                 ->where(array('conf.name'=>'locking_data_after_login'));
+        $globalConfigQueryStr = $sql->getSqlStringForSqlObject($globalConfigQuery);
+        $globalConfigResult = $dbAdapter->query($globalConfigQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        if(isset($globalConfigResult->value) && trim($globalConfigResult->value) >0){
+            $lockingHour = '+'.$globalConfigResult->value.' hours';
+        }
+        //Get completed data by logined user
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
-                                   ->where(array('da_c.status'=>'completed'));
+                                   ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=>1));
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
         if(isset($dataCollectionResult) && count($dataCollectionResult)>0){
-            $now = strtotime("now");
+            $now = date("Y-m-d H:i:s");
             foreach($dataCollectionResult as $dataCollection){
-               $dataCollectionAddedDatePlusThreeDays = strtotime("+3 day", strtotime($dataCollection['added_on']));
-               if($dataCollectionAddedDatePlusThreeDays <=$now){
-                 $params = array();
-                 $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
-                 $dataCollectionDb->lockDataCollectionDetails($params);
+               $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockingHour));
+               if($newDate <=$now){
+                   $params = array();
+                   $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
+                   $dataCollectionDb->lockDataCollectionDetails($params);
                }
             }
           return true;

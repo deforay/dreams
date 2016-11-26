@@ -288,12 +288,12 @@ class UserTable extends AbstractTableGateway {
     public function fetchUser($userId){
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
-	$sQuery = $sql->select()->from(array('u' => 'user'))
+	$rQuery = $sql->select()->from(array('u' => 'user'))
 		             ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name','country_id'))
+		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_id','country_name'))
 			     ->where(array('u.user_id'=>$userId));
-	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance
-	$rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	$rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
+	$rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	
 	$cQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
 				->where(array('ucm.user_id'=>$userId));

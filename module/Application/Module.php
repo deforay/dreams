@@ -26,6 +26,7 @@ use Application\Model\DataCollectionTable;
 use Application\Model\DataCollectionEventLogTable;
 use Application\Model\TestStatusTable;
 use Application\Model\UserCountryMapTable;
+use Application\Model\GlobalConfigTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -154,6 +155,10 @@ class Module{
                 },'UserCountryMapTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new UserCountryMapTable($dbAdapter);
+                    return $table;
+                },'GlobalConfigTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new GlobalConfigTable($dbAdapter);
                     return $table;
                 },
             ),

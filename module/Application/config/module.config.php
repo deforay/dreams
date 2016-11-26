@@ -329,16 +329,7 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
-                'automatic-lock' => array(
-                    'type' => 'simple',
-                    'options' => array(
-                        'route' => 'automatic-lock',
-                        'defaults' => array(
-                            'controller' => 'Application\Controller\Index',
-                            'action' => 'automatic-lock'
-                        ),
-                    ),
-                )
+                
             ),
         ),
     ),

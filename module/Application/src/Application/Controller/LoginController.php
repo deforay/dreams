@@ -21,6 +21,10 @@ class LoginController extends AbstractActionController{
             $params = $request->getPost();
             $userService = $this->getServiceLocator()->get('UserService');
             $redirectUrl = $userService->getLogin($params);
+            if($redirectUrl == 'home'){
+                $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+                $dataCollectionService->automaticDataCollectionLockAfterLogin();
+            }
             return $this->redirect()->toRoute($redirectUrl);
         }
         if (isset($loginContainer->userId) && trim($loginContainer->userId)!= "") {
