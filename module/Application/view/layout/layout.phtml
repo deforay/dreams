@@ -37,6 +37,27 @@ $loginContainer = new Container('user');
         .breadcrumb:before{
             font-size:16px;
         }
+        .card-default .card-header.dataTable-header{
+           background-color:#ff69b4; 
+        }
+        .dropdown-content li > a, .dropdown-content li{
+           color:#ff69b4; 
+        }
+        .dataTables_paginate{
+           border: 1px solid #ff96ca !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current{
+           background-color:#ff69b4;
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header.active{
+            color:#ff69b4;
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header:hover{
+            color:#ff69b4;
+        }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-body li.active{
+            background-color:#ff69b4;
+        }
     </style>
     <script  src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -46,7 +67,7 @@ $loginContainer = new Container('user');
 <div class="wrapper vertical-sidebar" id="full-page">
     <header id="header">
         <div class="navbar">
-            <nav>
+            <nav style="background-color:#ff69b4;">
                 <a href="#" data-activates="nav-mobile" class="button-collapse top-nav full waves-effect waves-light"><i class="material-icons">menu</i></a>
                 <div class="nav-wrapper">
                     <ul class="left">
@@ -55,7 +76,7 @@ $loginContainer = new Container('user');
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
-                        <input type="search" id="search" autocomplete="false" class="autocomplete search-top-bar-input z-depth-2" name="search-state" placeholder="Search">
+                        <input type="search" id="search" autocomplete="false" class="autocomplete search-top-bar-input z-depth-2" name="search-state" placeholder="Search" style="background-color:#ff96ca;">
                         <i class="material-icons zmdi zmdi-search"></i>
                     </div>
                     <ul class="right hide-on-med-and-down">
@@ -174,11 +195,11 @@ $loginContainer = new Container('user');
       echo $this->content;
     ?>
     </main>
-    <footer>
+    <footer style="background-color:#ff69b4;">
         <div class="row margin">
             <div class="row">
                 <div class="col s12 m12 l12">
-                    <div class="foot4" style="padding:0;">
+                    <div class="foot4" style="padding:0;background-color:#ff69b4;">
                       <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
                     </div>
                 </div>
@@ -210,7 +231,7 @@ $loginContainer = new Container('user');
           $(".cscAdminMenu").addClass("active");
           $(".cscAdminMenuSecond").addClass("active");
           $(".cscAdminMenuSecond").css("background-color","#ededed");
-          $(".cscAdminMenuSecond").css("color","#9c1b54");
+          $(".cscAdminMenuSecond").css("color","#ff69b4");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
         }else if(splitsUrl[1]=='user'){
@@ -222,7 +243,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -234,7 +255,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -246,7 +267,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryUserMenu"+atob(splits)).addClass("active");
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -258,7 +279,7 @@ $loginContainer = new Container('user');
                 $(".cscAdminMenu").addClass("active");
                 $(".cscAdminMenuSecond").addClass("active");
                 $(".cscAdminMenuSecond").css("background-color","#ededed");
-                $(".cscAdminMenuSecond").css("color","#9c1b54");
+                $(".cscAdminMenuSecond").css("color","#ff69b4");
                 $(".cscUserMenu").addClass("active");
                 $(".cscUserMenu").css("color","#fff");
             }
@@ -271,7 +292,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -283,7 +304,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -295,7 +316,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryFacilityMenu"+atob(splits)).addClass("active");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
@@ -310,7 +331,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -322,7 +343,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -334,7 +355,7 @@ $loginContainer = new Container('user');
                 $(".countryAdminMenu"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
                 $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
-                $(".countryAdminMenuSecond"+atob(splits)).css("color","#9c1b54");
+                $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
                 $(".countryAncsiteMenu"+atob(splits)).addClass("active");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
@@ -404,6 +425,16 @@ $loginContainer = new Container('user');
             
         $('.material-select').material_select();
         $('.select-wrapper').removeClass('isRequired');
+    });
+    
+    $('#password').change('input',function(e){
+        if ($(this).val()!= '') {
+	    var regex = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	    if(!regex.test($(this).val())) {
+	       $(this).val('');
+	       alert('Minimum 8 characters and enter atleast one number, one special character , one alphabet.');
+	    }
+        }
     });
 </script>
 <script>

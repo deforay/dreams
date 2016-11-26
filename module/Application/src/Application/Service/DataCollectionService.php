@@ -81,23 +81,34 @@ class DataCollectionService {
         return $dataCollectionDb->unlockDataCollectionDetails($params);
     }
     
-    public function automaticDataCollectionLock(){
+    public function automaticDataCollectionLockAfterLogin(){
+        $loginContainer = new Container('user');
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
+        //Get locking hour to lock data
+        $lockingHour = '+72 hours';//Default locking hour
+        $globalConfigQuery = $sql->select()->from(array('conf' => 'global_config'))
+                                 ->where(array('conf.name'=>'locking_data_after_login'));
+        $globalConfigQueryStr = $sql->getSqlStringForSqlObject($globalConfigQuery);
+        $globalConfigResult = $dbAdapter->query($globalConfigQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        if(isset($globalConfigResult->value) && trim($globalConfigResult->value) >0){
+            $lockingHour = '+'.$globalConfigResult->value.' hours';
+        }
+        //Get completed data by logined user
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
-                                   ->where(array('da_c.status'=>'completed'));
+                                   ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=>1));
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
         if(isset($dataCollectionResult) && count($dataCollectionResult)>0){
-            $now = strtotime("now");
+            $now = date("Y-m-d H:i:s");
             foreach($dataCollectionResult as $dataCollection){
-               $dataCollectionAddedDatePlusThreeDays = strtotime("+3 day", strtotime($dataCollection['added_on']));
-               if($dataCollectionAddedDatePlusThreeDays <=$now){
-                 $params = array();
-                 $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
-                 $dataCollectionDb->lockDataCollectionDetails($params);
+               $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockingHour));
+               if($newDate <=$now){
+                   $params = array();
+                   $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
+                   $dataCollectionDb->lockDataCollectionDetails($params);
                }
             }
           return true;
@@ -155,6 +166,7 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $row = array();
                         $specimenCollectionDate = '';
                         if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
                             $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
@@ -220,25 +232,6 @@ class DataCollectionService {
                             ),
                         )
                     );
-                    $sheet->mergeCells('A1:A2');
-                    $sheet->mergeCells('B1:B2');
-                    $sheet->mergeCells('C1:C2');
-                    $sheet->mergeCells('D1:D2');
-                    $sheet->mergeCells('E1:E2');
-                    $sheet->mergeCells('F1:F2');
-                    $sheet->mergeCells('G1:G2');
-                    $sheet->mergeCells('H1:H2');
-                    $sheet->mergeCells('I1:I2');
-                    $sheet->mergeCells('J1:J2');
-                    $sheet->mergeCells('K1:K2');
-                    $sheet->mergeCells('L1:L2');
-                    $sheet->mergeCells('M1:M2');
-                    $sheet->mergeCells('N1:N2');
-                    $sheet->mergeCells('O1:O2');
-                    $sheet->mergeCells('P1:P2');
-                    $sheet->mergeCells('Q1:Q2');
-                    $sheet->mergeCells('R1:R2');
-                    $sheet->mergeCells('S1:S2');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Surveillance ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -260,38 +253,39 @@ class DataCollectionService {
                     $sheet->setCellValue('R1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('S1', html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
-                    $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
-                    $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
-                    $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
-                    $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
-                    $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
-                    $sheet->getStyle('F1:F2')->applyFromArray($styleArray);
-                    $sheet->getStyle('G1:G2')->applyFromArray($styleArray);
-                    $sheet->getStyle('H1:H2')->applyFromArray($styleArray);
-                    $sheet->getStyle('I1:I2')->applyFromArray($styleArray);
-                    $sheet->getStyle('J1:j2')->applyFromArray($styleArray);
-                    $sheet->getStyle('K1:K2')->applyFromArray($styleArray);
-                    $sheet->getStyle('L1:L2')->applyFromArray($styleArray);
-                    $sheet->getStyle('M1:M2')->applyFromArray($styleArray);
-                    $sheet->getStyle('N1:N2')->applyFromArray($styleArray);
-                    $sheet->getStyle('O1:O2')->applyFromArray($styleArray);
-                    $sheet->getStyle('P1:P2')->applyFromArray($styleArray);
-                    $sheet->getStyle('Q1:Q2')->applyFromArray($styleArray);
-                    $sheet->getStyle('R1:R2')->applyFromArray($styleArray);
-                    $sheet->getStyle('S1:S2')->applyFromArray($styleArray);
-                    $currentRow = 3;
-                    foreach ($output as $rowNo => $rowData) {
+                    $sheet->getStyle('A1')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1')->applyFromArray($styleArray);
+                    $sheet->getStyle('E1')->applyFromArray($styleArray);
+                    $sheet->getStyle('F1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1')->applyFromArray($styleArray);
+                    $sheet->getStyle('H1')->applyFromArray($styleArray);
+                    $sheet->getStyle('I1')->applyFromArray($styleArray);
+                    $sheet->getStyle('J1')->applyFromArray($styleArray);
+                    $sheet->getStyle('K1')->applyFromArray($styleArray);
+                    $sheet->getStyle('L1')->applyFromArray($styleArray);
+                    $sheet->getStyle('M1')->applyFromArray($styleArray);
+                    $sheet->getStyle('N1')->applyFromArray($styleArray);
+                    $sheet->getStyle('O1')->applyFromArray($styleArray);
+                    $sheet->getStyle('P1')->applyFromArray($styleArray);
+                    $sheet->getStyle('Q1')->applyFromArray($styleArray);
+                    $sheet->getStyle('R1')->applyFromArray($styleArray);
+                    $sheet->getStyle('S1')->applyFromArray($styleArray);
+                    $currentRow = 2;
+                    foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
-                            }
-                            if($colNo > 18){
+                            }if($colNo > 18){
                                 break;
+                            }if($colNo == 3){
+                                $value = sha1($value);
                             }
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                            } else {
+                            }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
@@ -303,7 +297,6 @@ class DataCollectionService {
                         }
                       $currentRow++;
                     }
-                    
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
                     $filename = 'DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
