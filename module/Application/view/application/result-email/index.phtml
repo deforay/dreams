@@ -1,4 +1,11 @@
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/multi-select.css' ?>"/>
+<style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    /*.left{float: right !important;}*/
+</style>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Result Email</div>
@@ -43,6 +50,12 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m8 s8">
+                        <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="isRequired" title="Please enter specimen collected date" onclick="pickDate();">
+                        <label for="specimenCollectedDate" id="" class="" style="">Specimen Collected Date </label>
+                    </div>
+                </div>
                <div class="col s6">
                     <div class="input-field col m8 s8">
                         <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site">
@@ -56,12 +69,7 @@
                         <label for="anc">ANC Site</label>
                     </div>
                 </div>
-               <div class="col s6">
-                    <div class="input-field col m8 s8">
-                        <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate" title="Please enter specimen collected date">
-                        <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
-                    </div>
-                </div>
+               
             </div>
             <div class="row">
                <div class="col s6">
@@ -105,8 +113,10 @@
         </form>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.multi-select.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.quicksearch.js' ?>"></script>
+
 <script>
     $(document).ready(function(){
        $('.searchable').multiSelect({
@@ -155,8 +165,36 @@
         return false;
        });
        searchDataReporting();
+       //
+       pickDate();
+       
     });
-    
+    function pickDate()
+    {
+        $(".ranges").show();
+        $('#specimenCollectedDate').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            //startDate: moment(),
+            //endDate: moment(),
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },
+        function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="specimenCollectedDate"]').css("transform", "translateY(-140%)");
+        });
+        
+        $(".left").removeClass("left");
+    }
     function searchDataReporting(){
         var anc = $('#anc').val();
         var specimenCollectedDate = $('#specimenCollectedDate').val();

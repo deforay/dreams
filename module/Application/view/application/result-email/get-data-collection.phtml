@@ -1,6 +1,7 @@
-<div class="input-field col m8 s8">
-    <a href='#' id='select-all'>Select all</a>
-    <a href='#' id='deselect-all'>Deselect all</a>
+<div class="input-field col m6 s6">
+    <div class="col m4 s4">&nbsp;&nbsp;&nbsp;<a href='#' id='select-all' style="margin-left:19%;" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">Select all</a></div>
+    <div class="col m5 s5"><a href='#' id='deselect-all'style="float:right" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" style="float: right;">Deselect all</a></div>
+    <div style="width:80%;margin:0 auto;clear:both;">
     <select id="dataCollection" name="dataCollection[]" class="searchable isRequired" title="Please select data surveillance ID" multiple>
        <?php
        foreach($dataList as $data){
@@ -8,6 +9,7 @@
           <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id']; ?></option>
         <?php } ?>
     </select><br/>
+    </div>
 </div>
 <script>
     $(document).ready(function(){
