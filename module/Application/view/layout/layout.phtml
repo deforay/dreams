@@ -362,7 +362,7 @@ $loginContainer = new Container('user');
             }
         }else if(splitsUrl[1]=='data-collection'){
             splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!='view' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
@@ -372,11 +372,16 @@ $loginContainer = new Container('user');
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
                 $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");    
+            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='edit' && typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+                $(".countryMenu"+atob(splits)).addClass("active");
+                $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+                $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff"); 
             }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
-                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");   
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");
             }else{
                 $(".cscMenu").addClass("active");
                 $(".collapsibleCSCMenu").css("display","block");
