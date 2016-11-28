@@ -170,6 +170,7 @@ class CommonService {
     }
     public function sendMailResult($params)
     {
+        $alertContainer = new Container('alert');
         try {
             $dataCollectionDb = $this->sm->get('DataCollectionTable');
             $config = new \Zend\Config\Reader\Ini();
@@ -247,6 +248,7 @@ class CommonService {
                 }
                 //remove file from temporary
                 $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+                $alertContainer->msg = 'Data Reporting mail sent successfully.';
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());

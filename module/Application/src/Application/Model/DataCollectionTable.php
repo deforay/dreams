@@ -641,6 +641,9 @@ class DataCollectionTable extends AbstractTableGateway {
         } else if (trim($start_date) != "") {
             $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date='" . $start_date. "'"));
         }
+        if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
+        }
         if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
         }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
