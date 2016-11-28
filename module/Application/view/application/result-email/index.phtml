@@ -99,7 +99,7 @@
                 </div>
                <div class="col s6">
                     <div class="input-field col m10 s10">
-                        <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site">
+                        <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site" onchange="searchDataReporting('change');">
                              <option value=""> -- Select -- </option>
                            <?php
                            foreach($ancList as $anc){
@@ -232,7 +232,7 @@
     }
     
     function searchDataReporting(from){
-        if(from == 'search'){
+        if(from == 'search' || from == 'change'){
           $.blockUI();
         }
         var anc = $('#anc').val();
@@ -241,7 +241,7 @@
         var status = $('#status').val();
         $.post("<?php echo $this->url('get-data-collection'); ?>", {anc:anc,specimenCollectedDate:specimenCollectedDate,mailSentStatus:mailSentStatus,status:status,chosenCountryId:$("#chosenCountryId").val(), },
         function(data){
-          if(from == 'search'){
+          if(from == 'search' || from == 'change'){
             $.unblockUI();
           }
           $('.dataCollectionSection').html(data);
