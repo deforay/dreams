@@ -43,7 +43,6 @@ class ResultEmailController extends AbstractActionController{
     }
     
     public function getDataCollectionAction(){
-        
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
@@ -55,13 +54,13 @@ class ResultEmailController extends AbstractActionController{
             return $viewModel;
         }
     }
-    public function generatePdfAction()
-    {
+    
+    public function generatePdfAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $dataResult=$dataCollectionService->getDataCollectionDetailsPdf($params);
+            $dataResult=$dataCollectionService->generateDataCollectionsResultPdf($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataResult' =>$dataResult));
             $viewModel->setTerminal(true);

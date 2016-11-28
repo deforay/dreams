@@ -168,8 +168,8 @@ class CommonService {
         $testStatusDb = $this->sm->get('TestStatusTable');
         return $testStatusDb->fetchAllTestStatus();
     }
-    public function sendMailResult($params)
-    {
+    
+    public function sendMailResult($params){
         $alertContainer = new Container('alert');
         try {
             $dataCollectionDb = $this->sm->get('DataCollectionTable');
@@ -177,7 +177,6 @@ class CommonService {
             $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
             $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
             $sql = new Sql($dbAdapter);
-
             // Setup SMTP transport using LOGIN authentication
             $transport = new SmtpTransport();
             $options = new SmtpOptions(array(
@@ -191,70 +190,70 @@ class CommonService {
                 ),
             ));
             $transport->setOptions($options);
-                //get tomail
-                $ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
-                                ->where(array('anc.anc_site_id'=>base64_decode($params['anc'])));
-                $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
-                $ancResult = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-                
-                $alertMail = new Mail\Message();
-                $fromEmail = $configResult["email"]["config"]["username"];
-                $fromFullName = $configResult["email"]["config"]["username"];
-                $subject = ucwords($params['subject']);
+            //get to email id
+            $ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
+                            ->where(array('anc.anc_site_id'=>base64_decode($params['anc'])));
+            $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
+            $ancResult = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+            
+            $fromEmail = $configResult["email"]["config"]["username"];
+            $fromFullName = $configResult["email"]["config"]["username"];
+            $subject = ucwords($params['subject']);
 
-                $html = new MimePart(ucwords($params['message']));
-                $html->type = "text/html";
+            $html = new MimePart(ucwords($params['message']));
+            $html->type = "text/html";
 
-                $attachment = new MimePart(fopen(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile'],'r'));
-                $attachment->type = 'application/pdf';
-                $attachment->encoding    = Mime::ENCODING_BASE64;
-                $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-                $attachment->filename = 'Data Reporting';
-                $body = new MimeMessage();
-                $body->setParts(array($html,$attachment));
+            $attachment = new MimePart(fopen(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile'],'r'));
+            $attachment->type = 'application/pdf';
+            $attachment->encoding    = Mime::ENCODING_BASE64;
+            $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+            $attachment->filename = 'Data Reporting Result';
+            $body = new MimeMessage();
+            $body->setParts(array($html,$attachment));
 
-                $alertMail->setBody($body);
-                $alertMail->addFrom($fromEmail, $fromFullName);
-                $alertMail->addReplyTo($fromEmail, $fromFullName);
+            $alertMail = new Mail\Message();
+            $alertMail->setBody($body);
+            $alertMail->addFrom($fromEmail, $fromFullName);
+            $alertMail->addReplyTo($fromEmail, $fromFullName);
 
-                $toArray = explode(",", $ancResult['email']);
-                foreach ($toArray as $toId) {
-                    if ($toId != '') {
-                        $alertMail->addTo($toId);
+            $toArray = explode(",", $ancResult->email);
+            foreach ($toArray as $toId) {
+                if ($toId != '') {
+                    $alertMail->addTo($toId);
+                }
+            }
+            if (isset($params['cc']) && trim($params['cc']) != "") {
+                $ccArray = explode(",", $params['cc']);
+                foreach ($ccArray as $ccId) {
+                    if ($ccId != '') {
+                        $alertMail->addCc($ccId);
                     }
                 }
-                if (isset($params['cc']) && trim($params['cc']) != "") {
-                    $ccArray = explode(",", $params['cc']);
-                    foreach ($ccArray as $ccId) {
-                        if ($ccId != '') {
-                            $alertMail->addCc($ccId);
-                        }
+            }
+            if (isset($params['bcc']) && trim($params['bcc']) != "") {
+                $bccArray = explode(",", $params['bcc']);
+                foreach ($bccArray as $bccId) {
+                    if ($bccId != '') {
+                        $alertMail->addBcc($bccId);
                     }
                 }
-                if (isset($params['bcc']) && trim($params['bcc']) != "") {
-                    $bccArray = explode(",", $params['bcc']);
-                    foreach ($bccArray as $bccId) {
-                        if ($bccId != '') {
-                            $alertMail->addBcc($bccId);
-                        }
-                    }
-                }
-                $alertMail->setSubject($subject);
-                $transport->send($alertMail);
-                //update mail sent status
-                for($i=0;$i<count($params['dataCollection']);$i++)
-                {
-                    $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
-                }
-                //remove file from temporary
-                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-                $alertContainer->msg = 'Data Reporting mail sent successfully.';
+            }
+            $alertMail->setSubject($subject);
+            $transport->send($alertMail);
+            //update mail sent status
+            for($i=0;$i<count($params['dataCollection']);$i++){
+                $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
+            }
+            //remove file from temporary
+            $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+            $alertContainer->msg = 'Data Reporting Result mailed successfully.';
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
-            error_log('whoops! Something went wrong in cron/SendMailAlerts.php');
+            error_log('whoops! Something went wrong in mailer.');
         }
     }
+    
     function removeDirectory($dirname) {
         // Sanity check
         if (!file_exists($dirname)) {

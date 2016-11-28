@@ -645,6 +645,8 @@ class DataCollectionTable extends AbstractTableGateway {
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
         }if(isset($params['status']) && trim($params['status'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.status'=>base64_decode($params['status'])));
+        }if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
         }
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
