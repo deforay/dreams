@@ -4,6 +4,7 @@ namespace Application\Model;
 use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Application\Service\CommonService;
 
@@ -618,28 +619,25 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchSearchableDataCollection($params){
-	//\Zend\Debug\Debug::dump($params);die;
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$common = new CommonService();
-	
-        $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-	                           ->columns(array('data_collection_id','surveillance_id'));
 	$start_date = '';
 	$end_date = '';
 	if(isset($params['specimenCollectedDate']) && trim($params['specimenCollectedDate'])!= ''){
 	   $s_c_date = explode("to", $_POST['specimenCollectedDate']);
-	   if (isset($s_c_date[0]) && trim($s_c_date[0]) != "") {
+	   if(isset($s_c_date[0]) && trim($s_c_date[0]) != "") {
 	     $start_date = $common->dateRangeFormat(trim($s_c_date[0]));
-	   }
-	   if (isset($s_c_date[1]) && trim($s_c_date[1]) != "") {
+	   }if(isset($s_c_date[1]) && trim($s_c_date[1]) != "") {
 	     $end_date = $common->dateRangeFormat(trim($s_c_date[1]));
 	   }
 	}
-	if (trim($start_date) != "" && trim($end_date) != "") {
-        $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
-        } else if (trim($start_date) != "") {
-            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date='" . $start_date. "'"));
+        $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+	                           ->columns(array('data_collection_id','surveillance_id'));
+	if(trim($start_date) != "" && trim($end_date) != "") {
+           $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
+        }else if (trim($start_date) != "") {
+            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
         }
         if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
@@ -650,5 +648,25 @@ class DataCollectionTable extends AbstractTableGateway {
         }
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function fetchDashboardDetails($params){
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				   ->columns(array(
+						   'year' => new \Zend\Db\Sql\Expression("YEAR(added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"),
+						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))")
+						))
+				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name'))
+				   ->where(array('c.country_status'=>'active'))
+				   ->group(new \Zend\Db\Sql\Expression("YEAR(added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"))
+				   ->group('da_c.country')
+				   ->order('da_c.added_on desc');
+	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+	return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

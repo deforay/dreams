@@ -11,10 +11,15 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Json\Json;
 
 class IndexController extends AbstractActionController{
     public function indexAction(){
-        return new ViewModel();
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        $result = $dataCollectionService->getDashboardDetails($params = array());
+        return new ViewModel(array(
+            'row'=>$result
+        ));
     }
   
 }

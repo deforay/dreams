@@ -323,4 +323,9 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->fetchSearchableDataCollection($params);
     }
+    
+    public function getDashboardDetails($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchDashboardDetails($params);
+    }
 }

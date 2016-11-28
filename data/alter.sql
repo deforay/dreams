@@ -280,3 +280,6 @@ CREATE TABLE `global_config` (
 
 INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
 ('Locking Data After Login', 'locking_data_after_login', '72');
+
+--Pal 28/11/2016
+ALTER TABLE `country` CHANGE `status` `country_status` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
