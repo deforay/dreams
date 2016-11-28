@@ -50,8 +50,8 @@ class Pdf_concat extends FPDI {
 }
 
 //$pdf->SetY(20,true,false);
-    $pages = array();
     $page = 1;
+    $pages = array();
     foreach($dataResult as $data){
 	$alertContainer->aliasPage = $page;
 	// create new PDF document
@@ -108,7 +108,7 @@ class Pdf_concat extends FPDI {
 	$html .='<td colspan="4" style="text-align:left;line-height:43px;"><h3>Data Reporting Result</h3></td>';
 	$html .='<hr/></tr>';
 	$html .= '<tr><td colspan="6" style="text-align:left;"><h5>SURVEILLANCE INFORMATION</h5></td></tr>';
-	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Surveillance ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['surveillance_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Collected Date</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_collected_date'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">ANC Site Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
+	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Surveillance ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['surveillance_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Collected Date</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_collected_date'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">ANC Site Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
 	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Picked Up Date at ANC</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
 	$html .= '<tr><td colspan="6" style="text-align:left;"><h5>LABORATORY INFORMATION</h5></td></tr>';
 	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Lab Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['facility_code'].' - '.ucwords($data['facility_name']).'</td><td   style="line-height:18px;font-size:10px;text-align:left;">Lab Specimen Id</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['lab_specimen_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Date Of Receipt at Central Lab</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['receipt_date_at_central_lab'].'</td></tr>';
@@ -126,7 +126,7 @@ class Pdf_concat extends FPDI {
 	$filename = TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .'p'.$page. '.pdf';
 	$pdf->Output($filename,"F");
 	$pages[] = $filename;
-	$page++;
+       $page++;
     }
     $resultFilename = '';
     if(count($pages) >0){

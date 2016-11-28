@@ -172,11 +172,11 @@ class CommonService {
     public function sendResultMail($params){
         $alertContainer = new Container('alert');
         try {
-            $dataCollectionDb = $this->sm->get('DataCollectionTable');
             $config = new \Zend\Config\Reader\Ini();
             $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
             $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
             $sql = new Sql($dbAdapter);
+            $dataCollectionDb = $this->sm->get('DataCollectionTable');
             // Setup SMTP transport using LOGIN authentication
             $transport = new SmtpTransport();
             $options = new SmtpOptions(array(
