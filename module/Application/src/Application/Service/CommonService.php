@@ -169,7 +169,7 @@ class CommonService {
         return $testStatusDb->fetchAllTestStatus();
     }
     
-    public function sendMailResult($params){
+    public function sendResultMail($params){
         $alertContainer = new Container('alert');
         try {
             $dataCollectionDb = $this->sm->get('DataCollectionTable');
