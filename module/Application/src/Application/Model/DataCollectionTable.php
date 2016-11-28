@@ -618,10 +618,29 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchSearchableDataCollection($params){
+	//\Zend\Debug\Debug::dump($params);die;
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+	$common = new CommonService();
+	
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 	                           ->columns(array('data_collection_id','surveillance_id'));
+	$start_date = '';
+	$end_date = '';
+	if(isset($params['specimenCollectedDate']) && trim($params['specimenCollectedDate'])!= ''){
+	   $s_c_date = explode("to", $_POST['specimenCollectedDate']);
+	   if (isset($s_c_date[0]) && trim($s_c_date[0]) != "") {
+	     $start_date = $common->dateRangeFormat(trim($s_c_date[0]));
+	   }
+	   if (isset($s_c_date[1]) && trim($s_c_date[1]) != "") {
+	     $end_date = $common->dateRangeFormat(trim($s_c_date[1]));
+	   }
+	}
+	if (trim($start_date) != "" && trim($end_date) != "") {
+        $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
+        } else if (trim($start_date) != "") {
+            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date='" . $start_date. "'"));
+        }
         if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
         }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){

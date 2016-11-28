@@ -1,4 +1,11 @@
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/multi-select.css' ?>"/>
+<style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    /*.left{float: right !important;}*/
+</style>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Result Email</div>
@@ -8,7 +15,7 @@
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="resultMail" name="resultMail" method="post" action="#">
+        <form id="resultMail" name="resultMail" method="post" action="<?php echo $this->url('result-email-send'); ?>">
         <div class="card">
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
@@ -21,7 +28,7 @@
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <input id="cc" name="cc" type="text" class="validate isRequired" title="Please enter CC">
+                        <input id="cc" name="cc" type="text" class="validate " title="Please enter CC">
                         <label for="cc" class="">CC </label>
                     </div>
                 </div>
@@ -29,7 +36,7 @@
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <input id="bcc" name="bcc" type="text" class="validate isRequired" title="Please enter BCC">
+                        <input id="bcc" name="bcc" type="text" class="validate " title="Please enter BCC">
                         <label for="bcc" class="">BCC </label>
                     </div>
                 </div>
@@ -37,15 +44,21 @@
             <div class="row">
                 <div class="col s12">
                     <div class="input-field col m8 s8">
-                        <textarea id="message" name="message" class="materialize-textarea" title="Please enter message"></textarea>
+                        <textarea id="message" name="message" class="materialize-textarea isRequired" title="Please enter message"></textarea>
                         <label for="message">Message </label>
                     </div>
                 </div>
             </div>
             <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m8 s8">
+                        <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="isRequired" title="Please enter specimen collected date" onclick="pickDate();">
+                        <label for="specimenCollectedDate" id="" class="" style="">Specimen Collected Date </label>
+                    </div>
+                </div>
                <div class="col s6">
                     <div class="input-field col m8 s8">
-                        <select id="anc" name="anc" class="material-select" title="Please select anc site">
+                        <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site">
                              <option value=""> -- Select -- </option>
                            <?php
                            foreach($ancList as $anc){
@@ -56,12 +69,7 @@
                         <label for="anc">ANC Site</label>
                     </div>
                 </div>
-               <div class="col s6">
-                    <div class="input-field col m8 s8">
-                        <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate" title="Please enter specimen collected date">
-                        <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
-                    </div>
-                </div>
+               
             </div>
             <div class="row">
                <div class="col s6">
@@ -96,15 +104,19 @@
                 </div>
             </div>
             <div class="col s12">
+                <input type="hidden" name="chosenCountryId" value="<?php echo base64_encode($countryId); ?>"/>
+                <input type="hidden" name="pdfFile" id="pdfFile" />
                 <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10"> Send</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">Send</a>&nbsp;&nbsp;
             </div>
         </div>
         </form>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.multi-select.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.quicksearch.js' ?>"></script>
+
 <script>
     $(document).ready(function(){
        $('.searchable').multiSelect({
@@ -153,8 +165,36 @@
         return false;
        });
        searchDataReporting();
+       //
+       pickDate();
+       
     });
-    
+    function pickDate()
+    {
+        $(".ranges").show();
+        $('#specimenCollectedDate').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            //startDate: moment(),
+            //endDate: moment(),
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },
+        function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="specimenCollectedDate"]').css("transform", "translateY(-140%)");
+        });
+        
+        $(".left").removeClass("left");
+    }
     function searchDataReporting(){
         var anc = $('#anc').val();
         var specimenCollectedDate = $('#specimenCollectedDate').val();
@@ -165,4 +205,30 @@
           $('.dataCollectionSection').html(data);
         });
     }
+    
+    function addMail(){
+        var dataCollection = $('#dataCollection').val();
+        $.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dataCollection},
+        function(data){
+            $.unblockUI();
+          if(data === "" || data === null || data === undefined){
+                            alert('There is no survillence Id.');
+            }else{
+                $.blockUI();
+                    $("#pdfFile").val(data);
+                    document.getElementById('resultMail').submit();
+            }
+        });
+        
+    }
+    function validateNow(){
+    flag = deforayValidator.init({
+        formId: 'resultMail'
+    });
+    
+    if(flag){
+        $.blockUI();
+        addMail();
+    }
+  }
 </script>

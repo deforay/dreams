@@ -1,0 +1,141 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+$common = new \Application\Service\CommonService();
+class MYPDF extends TCPDF {
+    
+    public function Header() {
+       
+        // Logo
+        //if(trim($this->logo)!="" && file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . 'logo'. DIRECTORY_SEPARATOR.$this->logo)){
+	    //$image_file = '/assets'. DIRECTORY_SEPARATOR. 'images'. DIRECTORY_SEPARATOR.'logo.png';
+	    //$this->Image($image_file, 12,3,20, '', 'PNG', '', 'T', false, 300, 'L', false, false, 0, false, false, false);
+	//}
+         // Set font
+        //$this->SetFont('helvetica', 'B', 12);
+        // Title
+        //$this->writeHTMLCell(0,'',33,10,"DATA COLLECTION RESULT",0,1,false,true,'C',true);
+    }
+    // Page footer
+    public function Footer() {
+        $alertContainer = new Container('alert');
+        // Position at 15 mm from bottom
+        $this->SetY(-15);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        // Page number
+        $this->Cell(0, 10, 'Page '.$alertContainer->aliasPage.'/'.$alertContainer->nbPages, 0, false, 'C', 0, '', 0, false, 'T', 'M');
+    }
+}
+
+class Pdf_concat extends FPDI {
+    var $files = array();
+ 
+    function setFiles($files) {
+        $this->files = $files;
+    }
+ 
+    function concat() {
+        foreach($this->files AS $file) {
+             $pagecount = $this->setSourceFile($file);
+             for ($i = 1; $i <= $pagecount; $i++) {
+                  $tplidx = $this->ImportPage($i);
+                  $s = $this->getTemplatesize($tplidx);
+                  $this->AddPage('P', array($s['w'], $s['h']));
+                  $this->useTemplate($tplidx);
+             }
+        }
+    }
+}
+
+//$pdf->SetY(20,true,false);
+                
+                $pages = array();
+                $page = 1;
+                foreach($dataResult as $data)
+                {
+                    $alertContainer->aliasPage = $page;
+                    // create new PDF document
+                    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        //$pdf->SetAuthor('Saravanan');
+        $pdf->SetTitle('Data Collection Result');
+        //$pdf->SetSubject('TCPDF Tutorial');
+        //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+        
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        
+        // set margins
+        //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_RIGHT);
+        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        
+                    // set font
+                    $pdf->SetFont('times', '', 10);
+                    
+                    $pdf->AddPage();
+                    if(isset($data['specimen_collected_date']) && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
+                        $data['specimen_collected_date'] = $common->humanDateFormat($data['specimen_collected_date']);
+                    }
+                    if(isset($data['specimen_picked_up_date_at_anc']) && trim($data['specimen_picked_up_date_at_anc'])!= '' && $data['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+                        $data['specimen_picked_up_date_at_anc'] = $common->humanDateFormat($data['specimen_picked_up_date_at_anc']);
+                    }
+                    if(isset($data['receipt_date_at_central_lab']) && trim($data['receipt_date_at_central_lab'])!= '' && $data['receipt_date_at_central_lab']!= '0000-00-00'){
+                        $data['receipt_date_at_central_lab'] = $common->humanDateFormat($data['receipt_date_at_central_lab']);
+                    }
+                    if(isset($data['result_dispatched_date_to_clinic']) && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
+                        $data['result_dispatched_date_to_clinic'] = $common->humanDateFormat($data['result_dispatched_date_to_clinic']);
+                    }
+                    $html = "";
+                    $html .= '<table  style="padding:2px;">';
+                    $html .='<tr>';
+                    $html .='<td colspan="2" style="text-align:left;"><img src="/assets/images/logo.png" style="width:70px;height:70px;" alt="logo"></td>';
+                    $html .='<td colspan="4" style="text-align:left;line-height:43px;"><h3>Data Reporting</h3></td>';
+                    $html .='<hr/></tr>';
+                    $html .= '<tr><td colspan="6" style="text-align:left;"><h5>SURVEILLANCE INFORMATION</h5></td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">SURVEILLANCE ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['surveillance_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Collected Date</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_collected_date'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">ANC Site Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['anc_site_name'].'</td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Picked Up Date at ANC</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
+                    $html .= '<tr><td colspan="6" style="text-align:left;"><h5>LABORATORY INFORMATION</h5></td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Lab Site Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['facility_name'].'</td><td   style="line-height:18px;font-size:10px;text-align:left;">Lab Specimen Id</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['lab_specimen_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Date Of Receipt at Central Lab</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['receipt_date_at_central_lab'].'</td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Speciemen Rejection Code</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['rejection_code'].'</td></tr>';
+                    $html .= '<tr><td colspan="6" style="text-align:left;"><h5>PATIENT INFORMATION</h5></td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">ANC Patient Id</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['anc_patient_id'].'</td><td   style="line-height:18px;font-size:10px;text-align:left;">Age</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['age'].'</td></tr>';
+                    $html .= '<tr><td colspan="6" style="text-align:left;"><h5>TEST INFORMATION</h5></td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Final Lag Avidity ODn</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['final_lag_avidity_odn'].'</td><td   style="line-height:18px;font-size:10px;text-align:left;">LAg Avidity Result</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['lag_avidity_result'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">HIV RNA(copies/ml)</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['hiv_rna'].'</td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">HIV RNA >= 1,000 (copies/ml) </td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['hiv_rna_gt_1000'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Recent Infection(LAg-R & RNA >= 1,000)</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['recent_infection'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Asante Rapid Recency Assay </td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['asante_rapid_recency_assy'].'</td></tr>';
+                    $html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Date Of Result Dispatched To Clinic </td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['result_dispatched_date_to_clinic'].'</td></tr>';
+                    $html .= '<hr/>';
+                    $html .= '</table>';
+                    $pdf->writeHTML($html);
+                    $pdf->lastPage();
+                    $filename = TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .'p'.$page. '.pdf';
+                    $pdf->Output($filename,"F");
+                    $pages[] = $filename;
+                    $page++;
+                }
+                $resultFilename = '';
+                if(count($pages) >0){
+                    $resultPdf = new Pdf_concat();
+                    $resultPdf->setFiles($pages);
+                    $resultPdf->concat();
+                    $resultFilename = 'Data-collection-result-' . date('d-M-Y-H-i-s') . '.pdf';
+                    $resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
+                    echo $resultFilename;
+                }
+                
