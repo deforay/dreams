@@ -129,18 +129,18 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m10 s10">
-                          <label for="lagAvidityResult" class=""> LAg Avidity Result </label><br>
-                          <p><?php echo strtoupper($row->lag_avidity_result); ?></p>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m10 s10">
                             <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
                             <p><?php echo $row->hiv_rna; ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m10 s10">
+                          <label for="lagAvidityResult" class=""> LAg Avidity Result </label><br>
+                          <p><?php echo strtoupper($row->lag_avidity_result); ?></p>
+                        </div>
+                    </div>
                     <div class="col s4">
                         <div class="input-field col m10 s10">
                           <label for="hivRnaGT1000" class=""> HIV RNA >= 1,000 (copies/ml </label><br>
@@ -153,14 +153,15 @@ if(isset($countryId) && trim($countryId)!=''){
                           <p><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
+                    
+                </div>
+                <div class="row" style="margin-bottom:20px !important;">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
                           <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
                           <p><?php echo strtoupper($row->asante_rapid_recency_assy); ?></p>
                         </div>
                     </div>
-                </div>
-                <div class="row" style="margin-bottom:20px !important;">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
                             <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>

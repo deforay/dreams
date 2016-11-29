@@ -45,7 +45,7 @@ if(isset($countryId) && trim($countryId)!=''){
         <div class="card">
             <fieldset style="border-color:#88C542;border-style: solid;">
                <legend>SURVEILLANCE INFORMATION</legend>
-                <div class="row">
+                <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
                             <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" onblur="checkNameValidation('data_collection', 'surveillance_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The surveillance id that you entered already exist. Please enter different id.')">
