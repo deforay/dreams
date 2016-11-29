@@ -163,7 +163,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
                           LAg Avidity Result <br>
-                           <label for="lagAvidityResult"><?php echo strtoupper($row->lag_avidity_result); ?></label>
+                           <label for="lagAvidityResult" style="font-size:15px;"><?php echo strtoupper($row->lag_avidity_result); ?></label>
                           <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
                           <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -173,7 +173,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
                           HIV RNA >= 1,000 (copies/ml)<br>
-                           <label for="hivRnaGT1000"><?php echo ucwords($row->hiv_rna_gt_1000); ?></label>
+                           <label for="hivRnaGT1000" style="font-size:15px;"><?php echo ucwords($row->hiv_rna_gt_1000); ?></label>
                           <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
                           <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -183,7 +183,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
                           Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-                          <label for="recentInfection"><?php echo ucwords($row->recent_infection); ?></label>
+                          <label for="recentInfection" style="font-size:15px;"><?php echo ucwords($row->recent_infection); ?></label>
                           <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
                           <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
