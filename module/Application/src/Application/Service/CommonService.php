@@ -200,7 +200,7 @@ class CommonService {
             $fromFullName = $configResult["email"]["config"]["username"];
             $subject = ucwords($params['subject']);
 
-            $html = new MimePart(ucwords($params['message']));
+            $html = new MimePart(ucfirst($params['message']));
             $html->type = "text/html";
 
             $attachment = new MimePart(fopen(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile'],'r'));
@@ -211,22 +211,22 @@ class CommonService {
             $body = new MimeMessage();
             $body->setParts(array($html,$attachment));
 
-            $alertMail = new Mail\Message();
-            $alertMail->setBody($body);
-            $alertMail->addFrom($fromEmail, $fromFullName);
-            $alertMail->addReplyTo($fromEmail, $fromFullName);
+            $resultMail = new Mail\Message();
+            $resultMail->setBody($body);
+            $resultMail->addFrom($fromEmail, $fromFullName);
+            $resultMail->addReplyTo($fromEmail, $fromFullName);
 
             $toArray = explode(",", $ancResult->email);
             foreach ($toArray as $toId) {
                 if ($toId != '') {
-                    $alertMail->addTo($toId);
+                    $resultMail->addTo($toId);
                 }
             }
             if (isset($params['cc']) && trim($params['cc']) != "") {
                 $ccArray = explode(",", $params['cc']);
                 foreach ($ccArray as $ccId) {
                     if ($ccId != '') {
-                        $alertMail->addCc($ccId);
+                        $resultMail->addCc($ccId);
                     }
                 }
             }
@@ -234,19 +234,26 @@ class CommonService {
                 $bccArray = explode(",", $params['bcc']);
                 foreach ($bccArray as $bccId) {
                     if ($bccId != '') {
-                        $alertMail->addBcc($bccId);
+                        $resultMail->addBcc($bccId);
                     }
                 }
             }
-            $alertMail->setSubject($subject);
-            $transport->send($alertMail);
-            //update mail sent status
-            for($i=0;$i<count($params['dataCollection']);$i++){
-                $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
+            $resultMail->setSubject($subject);
+            if($transport->send($resultMail)){
+                //update mail sent status
+                for($i=0;$i<count($params['dataCollection']);$i++){
+                    $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
+                }
+                //remove file from temporary
+                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+                $alertContainer->msg = 'Data Reporting Result mailed successfully.';
+              return true;
+            }else{
+                //remove file from temporary
+                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+                $alertContainer->msg = 'OOPS..';
+              return false;
             }
-            //remove file from temporary
-            $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-            $alertContainer->msg = 'Data Reporting Result mailed successfully.';
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
