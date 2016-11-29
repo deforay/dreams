@@ -153,15 +153,6 @@ if(isset($countryId) && trim($countryId)!=''){
                         </div>
                     </div>
                     <div class="col s4">
-                        <div class="input-padding col m10 s10">
-                          LAg Avidity Result *<br>
-                          <input id="lagAvidityResultRecent" class="with-gap isRequired" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="lagAvidityResultRecent" style="pointer-events:none !important;">R </label>&nbsp;
-                          <input id="lagAvidityResultLongTerm" class="with-gap isRequired" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;">LT </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
                         <div class="input-field col m10 s10">
                             <input id="hivRna" name="hivRna" type="text" class="validate isRequired" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
                             <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
@@ -171,22 +162,36 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="row">
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
+                          LAg Avidity Result <br>
+                           <label for="lagAvidityResult"><?php echo strtoupper($row->lag_avidity_result); ?></label>
+                          <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
+                          <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-padding col m10 s10">
                           HIV RNA >= 1,000 (copies/ml)<br>
-                          <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="hivRnaGT1000Yes" style="pointer-events:none !important;">Yes </label>&nbsp;
-                          <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="hivRnaGT1000No" style="pointer-events:none !important;">No </label>
+                           <label for="hivRnaGT1000"><?php echo ucwords($row->hiv_rna_gt_1000); ?></label>
+                          <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+                          <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-padding col m10 s10">
                           Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-                          <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="recentInfectionYes" style="pointer-events:none !important;">Yes </label>&nbsp;
-                          <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;"/>
-                          <label for="recentInfectionNo" style="pointer-events:none !important;">No </label>
+                          <label for="recentInfection"><?php echo ucwords($row->recent_infection); ?></label>
+                          <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+                          <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col s4">
                        <div class="input-padding col m10 s10">
                           Asante Rapid Recency Assay *<br>
@@ -200,8 +205,6 @@ if(isset($countryId) && trim($countryId)!=''){
                           <label for="asanteRapidRecencyAssayLt">LT </label>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
                             <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic" value="<?php echo $resultDispatchedDateToClinic; ?>">
@@ -244,51 +247,77 @@ if(isset($countryId) && trim($countryId)!=''){
     });
     
     $('#finalLagAvidityOdn').on('change', function() {
-        if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) >= 1000){
-            $('#lagAvidityResultRecent').prop('checked',true);
-	    if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
-		$('#recentInfectionYes').prop('checked',true);
-	    }else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
-		$('#recentInfectionNo').prop('checked',true);
-	    }
-        }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) < 1000){
+        if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+	    $('label[for="lagAvidityResult"]').html('LT');
             $('#lagAvidityResultLongTerm').prop('checked',true);
-	    if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
-		$('#recentInfectionNo').prop('checked',true);
-	    }else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
-		$('#recentInfectionNo').prop('checked',true);
+        }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
+            if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) <= 1000){
+		$('label[for="lagAvidityResult"]').html('LT');
+		$('#lagAvidityResultLongTerm').prop('checked',true);
+	    }else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
+		$('label[for="lagAvidityResult"]').html('R');
+		$('#lagAvidityResultRecent').prop('checked',true);
+	    }else{
+		$('label[for="lagAvidityResult"]').html('');
+		$('#lagAvidityResultRecent').prop('checked',false);
+                $('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
         }else{
+	   $('label[for="lagAvidityResult"]').html('');
            $('#lagAvidityResultRecent').prop('checked',false);
            $('#lagAvidityResultLongTerm').prop('checked',false);
-	   $('#recentInfectionYes').prop('checked',false);
-	   $('#recentInfectionNo').prop('checked',false);
         }
+	//Recent infection
+	if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+	    $('label[for="recentInfection"]').html('Yes');
+	    $('#recentInfectionYes').prop('checked',true);
+	}else{
+	    $('label[for="recentInfection"]').html('No');
+	    $('#recentInfectionNo').prop('checked',true);
+	}
     });
     
     $('#hivRna').on('change', function() {
-        if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
-	    console.log('asday');
-            $('#hivRnaGT1000Yes').prop('checked',true);
-            if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) >= 1000){
-		$('#recentInfectionYes').prop('checked',true);
-	    }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) < 1000){
-		$('#recentInfectionNo').prop('checked',true);
+	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
+	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
+		$('label[for="lagAvidityResult"]').html('R');
+		$('#lagAvidityResultRecent').prop('checked',true);
 	    }
-        }else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
-	    console.log('asdan');
-            $('#hivRnaGT1000No').prop('checked',true);
-	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) < 1000){
-		$('#recentInfectionNo').prop('checked',true);
-	    }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) >= 1000){
-		$('#recentInfectionNo').prop('checked',true);
+	}else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) <= 1000){
+	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
+		$('label[for="lagAvidityResult"]').html('LT');
+		$('#lagAvidityResultLongTerm').prop('checked',true);
 	    }
-        }else{
-            $('#hivRnaGT1000Yes').prop('checked',false);
-            $('#hivRnaGT1000No').prop('checked',false);
-            $('#recentInfectionYes').prop('checked',false);
-            $('#recentInfectionNo').prop('checked',false);
-        }
+	}else{
+	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+		$('label[for="lagAvidityResult"]').html('LT');
+		$('#lagAvidityResultLongTerm').prop('checked',true);
+	    }else{
+		$('label[for="lagAvidityResult"]').html('');
+		$('#lagAvidityResultRecent').prop('checked',false);
+                $('#lagAvidityResultLongTerm').prop('checked',false);
+	    }
+	}
+	//Gt1000
+	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
+	    $('label[for="hivRnaGT1000"]').html('Yes');
+	    $('#hivRnaGT1000Yes').prop('checked',true);
+	}else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
+	    $('label[for="hivRnaGT1000"]').html('No');
+	    $('#hivRnaGT1000No').prop('checked',true);
+	}else{
+	    $('label[for="hivRnaGT1000"]').html('');
+	    $('#hivRnaGT1000Yes').prop('checked',false);
+	    $('#hivRnaGT1000No').prop('checked',false);
+	}
+	//Recent infection
+	if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+	    $('label[for="recentInfection"]').html('Yes');
+	    $('#recentInfectionYes').prop('checked',true);
+	}else{
+	    $('label[for="recentInfection"]').html('No');
+	    $('#recentInfectionNo').prop('checked',true);
+	}
     });
     
     function updateDataReporting(){
