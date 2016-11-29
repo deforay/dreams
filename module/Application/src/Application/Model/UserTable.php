@@ -194,7 +194,9 @@ class UserTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('u' => 'user'))
-		             ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'));
+		               ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
+		               ->join(array('c_map' => 'user_country_map'), "c_map.user_id=u.user_id",array(),'left')
+		               ->join(array('c' => 'country'), "c.country_id=c_map.country_id",array(),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
@@ -238,7 +240,9 @@ class UserTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('u' => 'user'))
-			      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'));
+			        ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
+				->join(array('c_map' => 'user_country_map'), "c_map.user_id=u.user_id",array(),'left')
+		                ->join(array('c' => 'country'), "c.country_id=c_map.country_id",array(),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
@@ -286,13 +290,12 @@ class UserTable extends AbstractTableGateway {
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$rQuery = $sql->select()->from(array('u' => 'user'))
-		             ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-			     ->where(array('u.user_id'=>$userId));
+			        ->where(array('u.user_id'=>$userId));
 	$rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
 	$rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	//Get user's countries if exist
-	$cQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
-				->where(array('ucm.user_id'=>$userId));
+	$cQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
+				->where(array('c_map.user_id'=>$userId));
 	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
 	$cResult = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return array($rResult,'userCountries'=>$cResult);

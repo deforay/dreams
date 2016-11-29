@@ -19,8 +19,8 @@ class UserCountryMapTable extends AbstractTableGateway {
         //Check exist country nd update
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
-	$sQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
-                                ->where(array('ucm.user_id'=>$userId));
+	$sQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
+                                ->where(array('c_map.user_id'=>$userId));
 	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
 	$sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
         if($sResult){
