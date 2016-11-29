@@ -633,7 +633,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	   }
 	}
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-	                           ->columns(array('data_collection_id','surveillance_id'));
+	                           ->columns(array('data_collection_id','surveillance_id'))
+				   ->where(array('da_c.status'=>2));
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
@@ -641,10 +642,10 @@ class DataCollectionTable extends AbstractTableGateway {
         }
         if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
+        }if(isset($params['facility']) && trim($params['facility'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.lab'=>base64_decode($params['facility'])));
         }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
-        }if(isset($params['status']) && trim($params['status'])!= ''){
-            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.status'=>base64_decode($params['status'])));
         }if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
         }

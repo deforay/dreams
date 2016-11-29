@@ -239,7 +239,7 @@ class CommonService {
                 }
             }
             $resultMail->setSubject($subject);
-            $transport->send($resultMail))
+            $transport->send($resultMail);
             //update mail sent status
             for($i=0;$i<count($params['dataCollection']);$i++){
                 $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
