@@ -176,7 +176,7 @@ class CountryTable extends AbstractTableGateway {
                               ->where(array('c.country_status'=>'active'))
                               ->order('c.country_name asc');
         if(trim($from)!= 'login'){
-            if(is_array($country) && $country >0){
+            if(is_array($country) && count($country) >0){
                 $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $country) . '")');
             }else if(isset($country) && trim($country)!= '' && $country >0){
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country)); 

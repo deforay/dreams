@@ -186,8 +186,8 @@ class CommonService {
                 'connection_config' => array(
                     'username' => $configResult["email"]["config"]["username"],
                     'password' => $configResult["email"]["config"]["password"],
-                    'ssl' => $configResult["email"]["config"]["ssl"],
-                ),
+                    'ssl' => $configResult["email"]["config"]["ssl"]
+                )
             ));
             $transport->setOptions($options);
             //get to email id
@@ -239,21 +239,15 @@ class CommonService {
                 }
             }
             $resultMail->setSubject($subject);
-            if($transport->send($resultMail)){
-                //update mail sent status
-                for($i=0;$i<count($params['dataCollection']);$i++){
-                    $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
-                }
-                //remove file from temporary
-                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-                $alertContainer->msg = 'Data Reporting Result mailed successfully.';
-              return true;
-            }else{
-                //remove file from temporary
-                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-                $alertContainer->msg = 'OOPS..';
-              return false;
+            $transport->send($resultMail))
+            //update mail sent status
+            for($i=0;$i<count($params['dataCollection']);$i++){
+                $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
             }
+            //remove file from temporary
+            $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+            $alertContainer->msg = 'Data Reporting Result mailed successfully.';
+          return true;
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
