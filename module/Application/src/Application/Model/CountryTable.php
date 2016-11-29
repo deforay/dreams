@@ -20,7 +20,7 @@ class CountryTable extends AbstractTableGateway {
         if(isset($params['countryName']) && trim($params['countryName'])!= ''){
             $data=array('country_name'=>$params['countryName'],
                         'country_code'=>$params['countryCode'],
-                        'status'=>'active'
+                        'country_status'=>'active'
                         );
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
@@ -33,7 +33,7 @@ class CountryTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 
-       $aColumns = array('country_name','country_code','status');
+       $aColumns = array('country_name','country_code','country_status');
 
        /*
         * Paging
@@ -144,7 +144,7 @@ class CountryTable extends AbstractTableGateway {
            $row = array();
            $row[] = ucwords($aRow['country_name']);
            $row[] = $aRow['country_code'];
-           $row[] = ucwords($aRow['status']);
+           $row[] = ucwords($aRow['country_status']);
            $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            $output['aaData'][] = $row;
        }
@@ -161,7 +161,7 @@ class CountryTable extends AbstractTableGateway {
             $countryId = base64_decode($params['countryId']);
             $data=array('country_name'=>$params['countryName'],
                         'country_code'=>$params['countryCode'],
-                        'status'=>$params['countryStatus']
+                        'country_status'=>$params['countryStatus']
                         );
             $this->update($data,array('country_id'=>$countryId));
         }
