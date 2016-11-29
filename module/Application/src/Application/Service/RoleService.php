@@ -49,9 +49,9 @@ class RoleService {
         return $roleDb->fetchRole($roleId);
     }
     
-    public function getActiveRoles(){
+    public function getActiveRoles($country){
         $roleDb = $this->sm->get('RoleTable');
-        return $roleDb->fetchActiveRoles();
+        return $roleDb->fetchActiveRoles($country);
     }
     
     public function updateRole($params){

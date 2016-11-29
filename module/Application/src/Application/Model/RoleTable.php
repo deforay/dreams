@@ -171,18 +171,24 @@ class RoleTable extends AbstractTableGateway {
       return $roleId;
     }
     
-    public function fetchActiveRoles(){
+    public function fetchActiveRoles($country){
         $loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $rolesQuery = $sql->select()->from(array('r' => 'role'))
                           ->where(array('r.role_status'=>'active'));
-        if($loginContainer->roleCode== 'CC'){
-            $rolesQuery = $rolesQuery->where('r.role_code IN ("CC","LS","LDEO")');
-        }else if($loginContainer->roleCode== 'LS'){
-            $rolesQuery = $rolesQuery->where('r.role_code IN ("LS","LDEO")');
-        }else if($loginContainer->roleCode== 'LDEO'){
-           $rolesQuery = $rolesQuery->where('r.role_code IN ("LDEO")'); 
+        if(isset($country) && trim($country)>0){
+            if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+                $rolesQuery = $rolesQuery->where('r.role_code IN ("CC","LS","LDEO")');
+            }else if($loginContainer->roleCode== 'LS'){
+                $rolesQuery = $rolesQuery->where('r.role_code IN ("LS","LDEO")');
+            }else if($loginContainer->roleCode== 'LDEO'){
+               $rolesQuery = $rolesQuery->where('r.role_code IN ("LDEO")'); 
+            }
+        }else{
+            if($loginContainer->roleCode== 'CSC'){
+                $rolesQuery = $rolesQuery->where('r.role_code IN ("CSC")');
+            }
         }
         $rolesQueryStr = $sql->getSqlStringForSqlObject($rolesQuery);
         return $dbAdapter->query($rolesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

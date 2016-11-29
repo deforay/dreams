@@ -52,33 +52,6 @@ if(!isset($countryId) || $countryId ==''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Users</a>
        </div>
     </div>
-    <?php
-    if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
-    ?>
-	<div class="row">
-	    <div class="col l12 m12 s12">
-		<table style="width:100%;">
-		    <tr>
-			<td style="width:30%;text-align:right;"><h6><strong>Country</strong></h6></td>
-			<td style="text-align:left;">
-			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-				<option value=""> -- Select -- </option>
-				<?php
-				foreach($countries as $country){
-				    ?>
-				    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
-				    <?php
-				}
-				?>
-			    </select>
-			</td>
-			<td style="width:40%;text-align:left;"><a href="javascript:void(0);" onclick="searchUsers();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a></td>
-		    </tr>
-		</table>
-	    </div>
-	</div>
-    <?php }
-    ?>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
@@ -90,15 +63,14 @@ if(!isset($countryId) || $countryId ==''){
                         <thead>
                             <tr>
                                 <th>Full Name</th>
-                                <th>Role</th>
+				<?php
+				if(trim($countryId)!= ''){
+				?>
+                                  <th>Role</th>
+				<?php } ?>
 				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-				<?php
-                                if($loginContainer->roleCode =='CSC' && $countryId ==''){
-                                ?>
-                                  <th>Country</th>
-				<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th style="width:80px !important;">Action</th>
@@ -107,15 +79,14 @@ if(!isset($countryId) || $countryId ==''){
 			<tfoot>
                              <tr>
                                 <th>Full Name</th>
-                                <th>Role</th>
+				<?php
+				if(trim($countryId)!= ''){
+				?>
+                                  <th>Role</th>
+				<?php } ?>
 				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-				<?php
-                                if($loginContainer->roleCode =='CSC' && $countryId ==''){
-                                ?>
-                                  <th>Country</th>
-				<?php } ?>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th>Action</th>
@@ -137,23 +108,20 @@ if(!isset($countryId) || $countryId ==''){
         "bServerSide": true,
          "aoColumns": [
 		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
 		<?php
-		if($loginContainer->roleCode =='CSC' && $countryId ==''){
+		if(trim($countryId)!= ''){
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
+		{"sClass":"center"},
+		{"sClass":"center"},
+		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center","bSortable":false}
             ],
         "sAjaxSource": "<?php echo $this->url('user',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {
-	    aoData.push({"name": "roleCode", "value": '<?php echo $roleCode; ?>'});
-	    aoData.push({"name": "country", "value": $("#country").val()});
 	    aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 $.ajax({
                     "dataType": 'json',
@@ -177,8 +145,4 @@ if(!isset($countryId) || $countryId ==''){
                     oTable.fnFilter($(this).val());
                 });
     });
-    
-    function searchUsers(){
-	oTable.draw();
-    }
 </script>

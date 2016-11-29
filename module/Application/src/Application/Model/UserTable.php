@@ -42,13 +42,17 @@ class UserTable extends AbstractTableGateway {
 		}
 		$loginContainer = new Container('user');
 		$userCountry = array();
-		$countryMapQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
-                                       ->where(array('c_map.user_id' => $loginResult->user_id));
-                $countryMapQueryStr = $sql->getSqlStringForSqlObject($countryMapQuery);
-                $countryMapResult = $dbAdapter->query($countryMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-		if(isset($countryMapResult) && count($countryMapResult)>0){
-		    foreach($countryMapResult as $country){
-			$userCountry[] = $country['country_id'];
+		if($loginResult->role_code =='CSC'){
+		    $isCountrySelected = false;
+		}else{
+		    $countryMapQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
+					   ->where(array('c_map.user_id' => $loginResult->user_id));
+		    $countryMapQueryStr = $sql->getSqlStringForSqlObject($countryMapQuery);
+		    $countryMapResult = $dbAdapter->query($countryMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+		    if(isset($countryMapResult) && count($countryMapResult)>0){
+			foreach($countryMapResult as $country){
+			    $userCountry[] = $country['country_id'];
+			}
 		    }
 		}
 		if($isCountrySelected){
@@ -110,9 +114,9 @@ class UserTable extends AbstractTableGateway {
         */
 	$loginContainer = new Container('user');
 	$common = new CommonService();
-	if($loginContainer->roleCode =='CSC' && $parameters['countryId'] ==''){
-	    $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
-	    $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','c.country_name','u.status','u.created_on');
+	if(trim($parameters['countryId']) ==''){
+	    $aColumns = array('u.full_name','u.user_code','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
+	    $orderColumns = array('u.full_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
 	}else{
 	   $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
 	   $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
@@ -190,24 +194,21 @@ class UserTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('u' => 'user'))
-		             ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
-			     ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name' => new \Zend\Db\Sql\Expression("GROUP_CONCAT(DISTINCT c.country_name ORDER BY c.country_name SEPARATOR ', ')")))
-			     ->group('u.user_id');
-	if($loginContainer->roleCode== 'CC'){		
-	     $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
-	}else if($loginContainer->roleCode== 'LS'){
-	     $sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
-	}else if($loginContainer->roleCode== 'LDEO'){	
-	     $sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
-	}
+		             ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'));
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	   $sQuery = $sQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
+	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+	        $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	    }else if($loginContainer->roleCode== 'LS'){
+		$sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
+	    }else if($loginContainer->roleCode== 'LDEO'){
+		$sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
+	    }
 	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    if($loginContainer->roleCode== 'CSC'){
+	       $sQuery = $sQuery->where('r.role_code IN ("CSC")');
+	    }else{
+		$sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
 	
@@ -237,24 +238,21 @@ class UserTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('u' => 'user'))
-			      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
-			      ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-			      ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_name' => new \Zend\Db\Sql\Expression("GROUP_CONCAT(DISTINCT c.country_name ORDER BY c.country_name SEPARATOR ', ')")))
-			      ->group('u.user_id');
-	if($loginContainer->roleCode== 'CC'){	
-	    $sQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
-	}else if($loginContainer->roleCode== 'LS'){	
-	    $tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
-	}
+			      ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'));
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	   $tQuery = $tQuery->where(array('c.country_id'=>base64_decode($parameters['country'])));  
+	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+	        $tQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	    }else if($loginContainer->roleCode== 'LS'){
+		$tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
+	    }else if($loginContainer->roleCode== 'LDEO'){
+		$tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
+	    }
 	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+	    if($loginContainer->roleCode== 'CSC'){
+	       $tQuery = $tQuery->where('r.role_code IN ("CSC")');
+	    }else{
+		$tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -270,13 +268,12 @@ class UserTable extends AbstractTableGateway {
 	    $row = array();
 	    $date = explode(" ",$aRow['created_on']);
 	    $row[] = ucwords($aRow['full_name'])." - ".$aRow['user_code'];
-	    $row[] = ucwords($aRow['role_name']);
+	    if(trim($parameters['countryId'])!= ''){
+	       $row[] = ucwords($aRow['role_name']);
+	    }
 	    $row[] = $aRow['user_name'];
 	    $row[] = $aRow['email'];
 	    $row[] = $aRow['mobile'];
-	    if($loginContainer->roleCode =='CSC' && $parameters['countryId'] ==''){
-	      $row[] = ucwords($aRow['country_name']);
-	    }
 	    $row[] = ucwords($aRow['status']);
 	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
 	    $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
@@ -290,16 +287,15 @@ class UserTable extends AbstractTableGateway {
 	$sql = new Sql($dbAdapter);
 	$rQuery = $sql->select()->from(array('u' => 'user'))
 		             ->join(array('ucm' => 'user_country_map'), "ucm.user_id=u.user_id")
-		             ->join(array('c' => 'country'), "c.country_id=ucm.country_id",array('country_id','country_name'))
 			     ->where(array('u.user_id'=>$userId));
 	$rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
 	$rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-	
+	//Get user's countries if exist
 	$cQuery = $sql->select()->from(array('ucm' => 'user_country_map'))
 				->where(array('ucm.user_id'=>$userId));
 	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
 	$cResult = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	return array($rResult,'country'=>$cResult);
+      return array($rResult,'userCountries'=>$cResult);
     }
 	
     public function updateUserDetails($params){

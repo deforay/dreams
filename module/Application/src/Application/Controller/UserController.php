@@ -23,12 +23,10 @@ class UserController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $roleCode=base64_decode($this->params()->fromRoute('role'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
-                'roleCode'=>$roleCode,
                 'countryId'=>$countryId
             ));
         }
@@ -44,7 +42,7 @@ class UserController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $result=$roleService->getActiveRoles();
+            $result=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
@@ -64,19 +62,19 @@ class UserController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
-            $countryIdList = array();
+            $userCountryList = array();
             if(isset($countryId) && trim($countryId)!=''){
-                $countryIdList[] = $countryId;
+                $userCountryList[] = $countryId;
             }
-            if(count($result['country'])>0){
-                foreach($result['country'] as $country){
-                    $countryIdList[] = $country['country_id'];
+            if(count($result['userCountries'])>0){
+                foreach($result['userCountries'] as $country){
+                    $userCountryList[] = $country['country_id'];
                 }
             }
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $roleResult=$roleService->getActiveRoles();
-            $countryList=$countryService->getActiveCountries('user',array_unique($countryIdList));
+            $roleResult=$roleService->getActiveRoles($countryId);
+            $countryList=$countryService->getActiveCountries('user',array_unique($userCountryList));
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,
