@@ -44,7 +44,7 @@ if(isset($countryId) && trim($countryId)!=''){
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend></legend>
+               <legend>SURVEILLANCE INFORMATION</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
@@ -82,7 +82,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
-               <legend style="margin-top:20px;"></legend>
+               <legend>LABORATORY INFORMATION</legend>
                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
@@ -127,7 +127,7 @@ if(isset($countryId) && trim($countryId)!=''){
                </div>
             </fieldset>
             <fieldset style="border-color:#ff9800;border-style: solid;">
-                <legend style="margin-top:20px;"></legend>
+                <legend>PATIENT INFORMATION</legend>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
@@ -144,17 +144,17 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
-                <legend style="margin-top:20px;"></legend>
+                <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate isRequired" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
+                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
                             <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="hivRna" name="hivRna" type="text" class="validate isRequired" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum isRequired" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
                             <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
                         </div>
                     </div>

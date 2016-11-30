@@ -63,7 +63,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
         <div class="card">
 	    <fieldset style="border-color:#88C542;border-style:solid;">
-               <legend></legend>
+               <legend>SURVEILLANCE INFORMATION</legend>
 	            <?php
 		    if(trim($countryId) ==''){
 		    ?>
@@ -154,7 +154,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<?php } ?>
 	    </fieldset>
 	    <fieldset style="border-color:#2196F3 ;border-style: solid;">
-               <legend style="margin-top:20px;"></legend>
+               <legend>LABORATORY INFORMATION</legend>
 		<div class="row">
 		    <div class="col s4">
 			<div class="input-field col m12 s12 labSection">
@@ -199,7 +199,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		</div>
 	    </fieldset>
 	    <fieldset style="border-color:#ff9800;border-style: solid;"> 
-               <legend style="margin-top:20px;"></legend>
+               <legend>PATIENT INFORMATION</legend>
 	       <div class="row">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
@@ -216,17 +216,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 	        </div>
 	    </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
-               <legend style="margin-top:20px;"></legend>
+               <legend>TEST RESULT</legend>
 	        <div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate isRequired" title="Please enter final LAg avidity ODn">
+			    <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired" title="Please enter final LAg avidity ODn">
 			    <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
 			</div>
 		    </div>
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="hivRna" name="hivRna" type="text" class="validate isRequired" title="Please enter HIV RNA">
+			    <input id="hivRna" name="hivRna" type="text" class="validate checkNum isRequired" title="Please enter HIV RNA">
 			    <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
 			</div>
                     </div>
@@ -451,6 +451,7 @@ if(!isset($countryId) || trim($countryId)== ''){
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "bStateSave" : true,
             "aoColumns": [
                 {"sClass":"center"},
