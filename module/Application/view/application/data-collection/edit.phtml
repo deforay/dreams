@@ -246,7 +246,7 @@ if(isset($countryId) && trim($countryId)!=''){
         });
     });
     
-    $('#finalLagAvidityOdn').on('change', function() {
+    $('#finalLagAvidityOdn').on('keyup', function() {
         if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
 	    $('label[for="lagAvidityResult"]').html('LT');
             $('#lagAvidityResultLongTerm').prop('checked',true);
@@ -277,7 +277,7 @@ if(isset($countryId) && trim($countryId)!=''){
 	}
     });
     
-    $('#hivRna').on('change', function() {
+    $('#hivRna').on('keyup', function() {
 	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
 	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
 		$('label[for="lagAvidityResult"]').html('R');
