@@ -578,80 +578,79 @@ if(!isset($countryId) || trim($countryId)== ''){
     
     //For Pre-populate Result
     $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
-	//Avidity Check
-        if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
-	    $('.prePopulateSection').show();
-	    $('.prePopulateAvidity').css('visibility','visible');
-	    $('label[for="lagAvidityResult"]').html('LT');
-            $('#lagAvidityResultLongTerm').prop('checked',true);
-        }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
-            if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) <= 1000){
-		$('label[for="lagAvidityResult"]').html('LT');
-		$('#lagAvidityResultLongTerm').prop('checked',true);
-	    }else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
-		$('label[for="lagAvidityResult"]').html('R');
-		$('#lagAvidityResultRecent').prop('checked',true);
-	    }else{
-		$('label[for="lagAvidityResult"]').html('');
-		$('#lagAvidityResultRecent').prop('checked',false);
-                $('#lagAvidityResultLongTerm').prop('checked',false);
-	    }
-        }else{
-	   $('.prePopulateAvidity').css('visibility','hidden');
-           $('#lagAvidityResultRecent').prop('checked',false);
-           $('#lagAvidityResultLongTerm').prop('checked',false);
-        }
-	//HIVRNA Check
-	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
-	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
-		$('label[for="lagAvidityResult"]').html('R');
-		$('#lagAvidityResultRecent').prop('checked',true);
-	    }
-	}else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseInt($('#finalLagAvidityOdn').val()) <= 1000){
-	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
-		$('label[for="lagAvidityResult"]').html('LT');
-		$('#lagAvidityResultLongTerm').prop('checked',true);
-	    }
+	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
+	    $('.prePopulateSection').hide();
+	    $('.prePopulateChildSection').hide();
+	    $('.prePopulateAvidity').css('visibility','hidden');
+	    $('.prePopulateHIVRNA').css('visibility','hidden');
+	    $('.prePopulateRecentInfection').css('visibility','hidden');
+	    $('#lagAvidityResultRecent').prop('checked',false);
+            $('#lagAvidityResultLongTerm').prop('checked',false);
+	    $('#hivRnaGT1000Yes').prop('checked',false);
+	    $('#hivRnaGT1000No').prop('checked',false);
+	    $('#recentInfectionYes').prop('checked',false);
+	    $('#recentInfectionNo').prop('checked',false);
+	    $('label[for="lagAvidityResult"]').html('');
+	    $('label[for="hivRnaGT1000"]').html('');
+	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
-		$('label[for="lagAvidityResult"]').html('LT');
-		$('#lagAvidityResultLongTerm').prop('checked',true);
+		$('.prePopulateSection').show();
+	        $('.prePopulateAvidity').css('visibility','visible');
+	        $('label[for="lagAvidityResult"]').html('LT');
+                $('#lagAvidityResultLongTerm').prop('checked',true);
+	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
+		if(parseInt($('#hivRna').val()) <= 1000){
+		    $('.prePopulateSection').show();
+	            $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('LT');
+		    $('#lagAvidityResultLongTerm').prop('checked',true);
+		}else if(parseInt($('#hivRna').val()) > 1000){
+		    $('.prePopulateSection').show();
+	            $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('R');
+		    $('#lagAvidityResultRecent').prop('checked',true);
+		}else{
+		    $('.prePopulateSection').show();
+	            $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('R');
+		    $('#lagAvidityResultRecent').prop('checked',true);
+		}
 	    }else{
-		$('.prePopulateSection').hide();
 		$('.prePopulateAvidity').css('visibility','hidden');
 		$('label[for="lagAvidityResult"]').html('');
 		$('#lagAvidityResultRecent').prop('checked',false);
-                $('#lagAvidityResultLongTerm').prop('checked',false);
+		$('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
-	}
-	//Gt1000
-	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
-	    $('.prePopulateSection').show();
-	    $('.prePopulateHIVRNA').css('visibility','visible');
-	    $('label[for="hivRnaGT1000"]').html('Yes');
-	    $('#hivRnaGT1000Yes').prop('checked',true);
-	}else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
-	    $('.prePopulateSection').show();
-	    $('.prePopulateHIVRNA').css('visibility','visible');
-	    $('label[for="hivRnaGT1000"]').html('No');
-	    $('#hivRnaGT1000No').prop('checked',true);
-	}else{
-	    $('.prePopulateHIVRNA').css('visibility','hidden');
-	    $('label[for="hivRnaGT1000"]').html('');
-	    $('#hivRnaGT1000Yes').prop('checked',false);
-	    $('#hivRnaGT1000No').prop('checked',false);
-	}
-	//Recent infection
-	if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-	    $('.prePopulateChildSection').show();
-	    $('.prePopulateRecentInfection').css('visibility','visible');
-	    $('label[for="recentInfection"]').html('Yes');
-	    $('#recentInfectionYes').prop('checked',true);
-	}else{
-	    $('.prePopulateChildSection').show();
-	    $('.prePopulateRecentInfection').css('visibility','visible');
-	    $('label[for="recentInfection"]').html('No');
-	    $('#recentInfectionNo').prop('checked',true);
+	    //Gt1000
+	    if(parseInt($('#hivRna').val()) >= 1000){
+		$('.prePopulateSection').show();
+		$('.prePopulateHIVRNA').css('visibility','visible');
+		$('label[for="hivRnaGT1000"]').html('Yes');
+		$('#hivRnaGT1000Yes').prop('checked',true);
+	    }else if(parseInt($('#hivRna').val()) < 1000){
+		$('.prePopulateSection').show();
+		$('.prePopulateHIVRNA').css('visibility','visible');
+		$('label[for="hivRnaGT1000"]').html('No');
+		$('#hivRnaGT1000No').prop('checked',true);
+	    }else{
+		$('.prePopulateHIVRNA').css('visibility','hidden');
+		$('label[for="hivRnaGT1000"]').html('');
+		$('#hivRnaGT1000Yes').prop('checked',false);
+		$('#hivRnaGT1000No').prop('checked',false);
+	    }
+	    //Recent infection
+	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+		$('.prePopulateChildSection').show();
+		$('.prePopulateRecentInfection').css('visibility','visible');
+		$('label[for="recentInfection"]').html('Yes');
+		$('#recentInfectionYes').prop('checked',true);
+	    }else{
+		$('.prePopulateChildSection').show();
+		$('.prePopulateRecentInfection').css('visibility','visible');
+		$('label[for="recentInfection"]').html('No');
+		$('#recentInfectionNo').prop('checked',true);
+	    }
 	}
     });
     
