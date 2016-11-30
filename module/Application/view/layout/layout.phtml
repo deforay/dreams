@@ -54,7 +54,7 @@ $loginContainer = new Container('user');
             color:#ff69b4;
         }
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header:hover{
-            color:#ff69b4;
+            color:#444;
         }
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-body li.active{
             background-color:#ff69b4;
@@ -136,7 +136,7 @@ $loginContainer = new Container('user');
                     
                     <?php
                     if($loginContainer->roleCode == 'CSC'){
-                        $loginCountry = '0';
+                        $loginCountry = '';
                     }else{
                         $loginCountry = $loginContainer->country;
                     }
