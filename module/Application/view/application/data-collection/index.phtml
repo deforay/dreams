@@ -62,14 +62,14 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
         <div class="card">
-	    <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION</legend>
+	    <fieldset style="border-color:#88C542;border-style:solid;">
+               <legend></legend>
 	            <?php
 		    if(trim($countryId) ==''){
 		    ?>
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();">
 				    <option value=""> -- Select -- </option>
 				    <?php
@@ -82,13 +82,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
 				<label for="surveillanceId" class="">Surveillance ID *</label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
 				<label for="specimenCollectedDate" class="">Specimen Collected Date </label>
 			    </div>
@@ -96,7 +96,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="row">
 			<div class="col s4">
-			    <div class="input-field col m10 s10 ancSiteSection">
+			    <div class="input-field col m12 s12 ancSiteSection">
 				<select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
 				    <option value=""> -- Select -- </option>
 				    <?php
@@ -109,7 +109,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
 				<label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
 			    </div>
@@ -118,19 +118,19 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<?php } else { ?>
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
 				<label for="surveillanceId" class="">Surveillance ID *</label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
 				<label for="specimenCollectedDate" class="">Specimen Collected Date </label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
 				    <option value=""> -- Select -- </option>
 				    <?php
@@ -145,7 +145,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="row">
 			<div class="col s4">
-			    <div class="input-field col m10 s10">
+			    <div class="input-field col m12 s12">
 				<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
 				<label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
 			    </div>
@@ -154,10 +154,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<?php } ?>
 	    </fieldset>
 	    <fieldset style="border-color:#2196F3 ;border-style: solid;">
-               <legend>LABORATORY INFORMATION</legend>
+               <legend style="margin-top:20px;"></legend>
 		<div class="row">
 		    <div class="col s4">
-			<div class="input-field col m10 s10 labSection">
+			<div class="input-field col m12 s12 labSection">
 			    <select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
 				<option value=""> -- Select -- </option>
 				<?php
@@ -170,13 +170,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 		    </div>
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID">
 			    <label for="labSpecimenId" class="">Lab Specimen ID </label>
 			</div>
 		    </div>
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
 			    <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
 			</div>
@@ -184,7 +184,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 </div>
 		<div class="row">
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code">
 				<option value=""> -- Select -- </option>
 				<?php
@@ -199,16 +199,16 @@ if(!isset($countryId) || trim($countryId)== ''){
 		</div>
 	    </fieldset>
 	    <fieldset style="border-color:#ff9800;border-style: solid;"> 
-               <legend>PATIENT INFORMATION</legend>
+               <legend style="margin-top:20px;"></legend>
 	       <div class="row">
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
 			    <label for="ancPatientId" class="">ANC Patient ID * </label>
 			</div>
 		    </div>
 		     <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="age" name="age" type="text" class="validate checkNum" title="Please enter age">
 			    <label for="age" class="">Age </label>
 			</div>
@@ -216,24 +216,34 @@ if(!isset($countryId) || trim($countryId)== ''){
 	        </div>
 	    </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
-               <legend>TEST RESULT</legend>
-	        <div class="row">
+               <legend style="margin-top:20px;"></legend>
+	        <div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate isRequired" title="Please enter final LAg avidity ODn">
 			    <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
 			</div>
 		    </div>
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="hivRna" name="hivRna" type="text" class="validate isRequired" title="Please enter HIV RNA">
 			    <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
 			</div>
                     </div>
+		    <div class="col s4 prePopulateChildSection" style="display:none;">
+			<div class="input-padding col m10 s10 prePopulateRecentInfection" style="visibility:hidden;">
+			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
+			  <label for="recentInfection" style="font-size:15px;color:#F44336;"></label>
+			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			 <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
+			</div>
+		    </div>
                 </div>
-		<div class="row">
+		<div class="row prePopulateSection" style="display:none;">
 		    <div class="col s4">
-			<div class="input-padding col m10 s10">
+			<div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
 			  LAg Avidity Result <br>
 			  <label for="lagAvidityResult" style="font-size:15px;color:#F44336;"></label>
 			  <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -243,23 +253,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 		    </div>
 		    <div class="col s4">
-			<div class="input-padding col m10 s10">
+			<div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
 			  HIV RNA >= 1,000 (copies/ml) <br>
 			  <label for="hivRnaGT1000" style="font-size:15px;color:#F44336;"></label>
 			  <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			  <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
-			</div>
-		    </div>
-		    <div class="col s4">
-			<div class="input-padding col m10 s10">
-			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-			  <label for="recentInfection" style="font-size:15px;color:#F44336;"></label>
-			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			 <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
 			</div>
 		    </div>
 		</div>
@@ -278,7 +278,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 		    </div>
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m12 s12">
 			    <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
 			    <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
 			</div>
@@ -575,8 +575,12 @@ if(!isset($countryId) || trim($countryId)== ''){
         });
     });
     
-    $('#finalLagAvidityOdn').on('keyup', function() {
+    //For Pre-populate Result
+    $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
+	//Avidity Check
         if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+	    $('.prePopulateSection').show();
+	    $('.prePopulateAvidity').css('visibility','visible');
 	    $('label[for="lagAvidityResult"]').html('LT');
             $('#lagAvidityResultLongTerm').prop('checked',true);
         }else if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
@@ -592,21 +596,11 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
         }else{
-	   $('label[for="lagAvidityResult"]').html('');
+	   $('.prePopulateAvidity').css('visibility','hidden');
            $('#lagAvidityResultRecent').prop('checked',false);
            $('#lagAvidityResultLongTerm').prop('checked',false);
         }
-	//Recent infection
-	if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-	    $('label[for="recentInfection"]').html('Yes');
-	    $('#recentInfectionYes').prop('checked',true);
-	}else{
-	    $('label[for="recentInfection"]').html('No');
-	    $('#recentInfectionNo').prop('checked',true);
-	}
-    });
-    
-    $('#hivRna').on('keyup', function() {
+	//HIVRNA Check
 	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) > 1000){
 	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) <=1.5){
 		$('label[for="lagAvidityResult"]').html('R');
@@ -618,10 +612,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('#lagAvidityResultLongTerm').prop('checked',true);
 	    }
 	}else{
-	    if($.trim($('#finalLagAvidityOdn').val())!= '' && parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
 		$('label[for="lagAvidityResult"]').html('LT');
 		$('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else{
+		$('.prePopulateSection').hide();
+		$('.prePopulateAvidity').css('visibility','hidden');
 		$('label[for="lagAvidityResult"]').html('');
 		$('#lagAvidityResultRecent').prop('checked',false);
                 $('#lagAvidityResultLongTerm').prop('checked',false);
@@ -629,21 +625,30 @@ if(!isset($countryId) || trim($countryId)== ''){
 	}
 	//Gt1000
 	if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) >= 1000){
+	    $('.prePopulateSection').show();
+	    $('.prePopulateHIVRNA').css('visibility','visible');
 	    $('label[for="hivRnaGT1000"]').html('Yes');
 	    $('#hivRnaGT1000Yes').prop('checked',true);
 	}else if($.trim($('#hivRna').val())!= '' && parseInt($('#hivRna').val()) < 1000){
+	    $('.prePopulateSection').show();
+	    $('.prePopulateHIVRNA').css('visibility','visible');
 	    $('label[for="hivRnaGT1000"]').html('No');
 	    $('#hivRnaGT1000No').prop('checked',true);
 	}else{
+	    $('.prePopulateHIVRNA').css('visibility','hidden');
 	    $('label[for="hivRnaGT1000"]').html('');
 	    $('#hivRnaGT1000Yes').prop('checked',false);
 	    $('#hivRnaGT1000No').prop('checked',false);
 	}
 	//Recent infection
 	if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+	    $('.prePopulateChildSection').show();
+	    $('.prePopulateRecentInfection').css('visibility','visible');
 	    $('label[for="recentInfection"]').html('Yes');
 	    $('#recentInfectionYes').prop('checked',true);
 	}else{
+	    $('.prePopulateChildSection').show();
+	    $('.prePopulateRecentInfection').css('visibility','visible');
 	    $('label[for="recentInfection"]').html('No');
 	    $('#recentInfectionNo').prop('checked',true);
 	}

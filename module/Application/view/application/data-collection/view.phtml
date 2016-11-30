@@ -40,7 +40,7 @@ if(isset($countryId) && trim($countryId)!=''){
     <div class="row dashboard-wrapper content-container">
         <div class="data-collection-view card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION</legend>
+               <legend></legend>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
@@ -71,7 +71,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
-               <legend>LABORATORY INFORMATION</legend>
+               <legend style="margin-top:20px;"></legend>
                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
@@ -102,7 +102,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <fieldset style="border-color:#ff9800;border-style: solid;">
-               <legend>PATIENT INFORMATION</legend>
+               <legend style="margin-top:20px;"></legend>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
@@ -119,7 +119,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
-               <legend>TEST RESULT</legend>
+               <legend style="margin-top:20px;"></legend>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m10 s10">
@@ -131,6 +131,12 @@ if(isset($countryId) && trim($countryId)!=''){
                         <div class="input-field col m10 s10">
                             <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
                             <p><?php echo $row->hiv_rna; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m10 s10">
+                          <label for="recentInfection" class=""> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
+                          <p><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
                 </div>
@@ -147,13 +153,6 @@ if(isset($countryId) && trim($countryId)!=''){
                           <p><?php echo ucfirst($row->hiv_rna_gt_1000); ?></p>
                         </div>
                     </div>
-                    <div class="col s4">
-                        <div class="input-field col m10 s10">
-                          <label for="recentInfection" class=""> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
-                          <p><?php echo ucfirst($row->recent_infection); ?></p>
-                        </div>
-                    </div>
-                    
                 </div>
                 <div class="row" style="margin-bottom:20px !important;">
                     <div class="col s4">
