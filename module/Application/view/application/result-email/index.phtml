@@ -234,9 +234,7 @@
     }
     
     function clearSearchFields(){
-        $('#specimenCollectedDate').val('');
-        $('#facility').prop('selectedIndex',-1);
-        $('#mailSentStatus').prop('selectedIndex',-1);
+        $('#resultMail')[0].reset()
         searchDataReporting('reset');
     }
     

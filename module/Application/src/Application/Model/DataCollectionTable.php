@@ -640,14 +640,14 @@ class DataCollectionTable extends AbstractTableGateway {
         }else if (trim($start_date) != "") {
             $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
         }
-        if(isset($params['anc']) && trim($params['anc'])!= ''){
+	if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
+        }if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
         }if(isset($params['facility']) && trim($params['facility'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.lab'=>base64_decode($params['facility'])));
         }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
-        }if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
-            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
         }
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
