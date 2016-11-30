@@ -513,7 +513,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
-       $(document).on('keyup', "input[type='text']", function(){
+       $('#search-items').on('keyup', function(){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
