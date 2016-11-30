@@ -50,6 +50,18 @@ if(!isset($countryId) || trim($countryId)== ''){
     .dataTables_wrapper{
 	overflow-x: scroll;
     }
+	.input-field{
+        margin-top:0px !important;
+	}
+	.row{
+		margin-bottom: 0px !important;
+	}
+	.select-wrapper+label{
+		top:-8px !important;
+	}
+	.input-field label.active{
+		top:1.2rem !important;
+	}
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -181,8 +193,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="row">
 		    <div class="col s4">
 			<div class="input-padding col m10 s10">
-			  LAg Avidity Result <br>
-			  <label for="lagAvidityResult" style="font-size:15px;"></label>
+			  LAg Avidity Result : 
+			  <label for="lagAvidityResult" style="font-size:15px;color:#9c1b54;"></label>
 			  <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
 			  <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -191,8 +203,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-padding col m10 s10">
-			  HIV RNA >= 1,000 (copies/ml) <br>
-			  <label for="hivRnaGT1000" style="font-size:15px;"></label>
+			  HIV RNA >= 1,000 (copies/ml):
+			  <label for="hivRnaGT1000" style="font-size:15px;color:#9c1b54;"></label>
 			  <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			  <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -201,8 +213,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-padding col m10 s10">
-			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-			  <label for="recentInfection" style="font-size:15px;"></label>
+			  Recent Infection <br>(LAg-R & RNA >= 1,000)
+			  <label for="recentInfection" style="font-size:15px;color:#9c1b54;"></label>
 			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
