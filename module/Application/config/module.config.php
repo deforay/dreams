@@ -284,6 +284,15 @@ return array(
                         'action' => 'get-data-collection'
                     ),
                 ),
+            ),'get-countries-lab-anc' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-countries-lab-anc',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'get-countries-lab-anc'
+                    ),
+                ),
             ),
             
         ),

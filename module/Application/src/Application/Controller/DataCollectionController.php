@@ -25,10 +25,10 @@ class DataCollectionController extends AbstractActionController{
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('data-collection',0);
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $countryList=$countryService->getActiveCountries('data-collection',0);
             $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$countryId);
             $rejectionReasonList=$commonService->getActiveRejectionReasons();
             $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
@@ -48,7 +48,7 @@ class DataCollectionController extends AbstractActionController{
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $dataCollectionService->addDataCollection($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }
     }
     
@@ -58,7 +58,7 @@ class DataCollectionController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService->updateDataCollection($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
@@ -67,7 +67,7 @@ class DataCollectionController extends AbstractActionController{
         $commonService = $this->getServiceLocator()->get('CommonService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');
         if(!isset($countryId) || trim($countryId)==''){
-            $country = $result['country'];
+            $country = $result->country;
         }else{
             $country = $countryId;
         }
@@ -129,6 +129,19 @@ class DataCollectionController extends AbstractActionController{
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response=$dataCollectionService->requestForUnlockDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function getCountriesLabAncAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->getCountriesLabAncDetails($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

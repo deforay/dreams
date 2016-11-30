@@ -226,7 +226,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </fieldset>
             <div class="col s12" style="margin-top:20px;">
-                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
+                <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <input type="hidden" name="chosenCountry" value="<?php echo $row->country; ?>"/>
                 <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>

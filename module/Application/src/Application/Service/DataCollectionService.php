@@ -326,4 +326,9 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->fetchDashboardDetails($params);
     }
+    
+    public function getCountriesLabAncDetails($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchCountriesLabAncDetails($params);
+    }
 }

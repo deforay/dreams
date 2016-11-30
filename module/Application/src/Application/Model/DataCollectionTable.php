@@ -57,9 +57,12 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
-	    $country = $loginContainer->country[0];
 	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
 		$country = base64_decode($params['chosenCountry']);
+	    }else if(isset($params['country']) && trim($params['country'])!=''){
+		$country = base64_decode($params['country']);
+	    }else{
+		return $lastInsertedId;
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -671,5 +674,22 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->order('da_c.added_on desc');
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
 	return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function fetchCountriesLabAncDetails($params){
+	$countriesLabAnc = array();
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
+	                ->columns(array('anc_site_id','anc_site_name','anc_site_code'))
+                        ->where(array('anc.country'=>base64_decode($params['country']),'anc.status'=>'active'));
+        $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
+        $countriesLabAnc['ancsites'] = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	$facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
+	                       ->columns(array('facility_id','facility_name','facility_code'))
+                               ->where(array('f.country'=>base64_decode($params['country']),'f.status'=>'active'));
+        $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
+        $countriesLabAnc['labs'] = $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $countriesLabAnc;
     }
 }

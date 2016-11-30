@@ -64,47 +64,100 @@ if(!isset($countryId) || trim($countryId)== ''){
         <div class="card">
 	    <fieldset style="border-color:#88C542;border-style: solid;">
                <legend>SURVEILLANCE INFORMATION</legend>
-		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
-			<div class="input-field col m10 s10">
-			    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
-			    <label for="surveillanceId" class="">Surveillance ID *</label>
+	            <?php
+		    if(trim($countryId) ==''){
+		    ?>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($countries as $country){
+				    ?>
+				      <option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option>
+				    <?php } ?>
+				</select>
+				<label for="country">Country *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
+				<label for="surveillanceId" class="">Surveillance ID *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
+				<label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+			    </div>
 			</div>
 		    </div>
-		    <div class="col s4">
-			<div class="input-field col m10 s10">
-			    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
-			    <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+		    <div class="row">
+			<div class="col s4">
+			    <div class="input-field col m10 s10 ancSiteSection">
+				<select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($ancSites as $ancSite){
+				    ?>
+				      <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+				    <?php } ?>
+				</select>
+				<label for="ancSite">ANC site name *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
+				<label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+			    </div>
 			</div>
 		    </div>
-		    <div class="col s4">
-			<div class="input-field col m10 s10">
-			    <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
-				<option value=""> -- Select -- </option>
-				<?php
-				foreach($ancSites as $ancSite){
-				?>
-				  <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
-				<?php } ?>
-			    </select>
-			    <label for="ancSite">ANC site name *</label>
+		<?php } else { ?>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');">
+				<label for="surveillanceId" class="">Surveillance ID *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
+				<label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($ancSites as $ancSite){
+				    ?>
+				      <option value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+				    <?php } ?>
+				</select>
+				<label for="ancSite">ANC site name *</label>
+			    </div>
 			</div>
 		    </div>
-		</div>
-		<div class="row">
-		    <div class="col s4">
-			<div class="input-field col m10 s10">
-			    <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
-			    <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+		    <div class="row">
+			<div class="col s4">
+			    <div class="input-field col m10 s10">
+				<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
+				<label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+			    </div>
 			</div>
 		    </div>
-		</div>
+		<?php } ?>
 	    </fieldset>
 	    <fieldset style="border-color:#2196F3 ;border-style: solid;">
                <legend>LABORATORY INFORMATION</legend>
 		<div class="row">
 		    <div class="col s4">
-			<div class="input-field col m10 s10">
+			<div class="input-field col m10 s10 labSection">
 			    <select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
 				<option value=""> -- Select -- </option>
 				<?php
@@ -234,7 +287,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    </fieldset>
             <div class="col s12" style="margin-top:20px;">
 		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
-		<input type="hidden" name="chosenCountryId" id="chosenCountryId" value="<?php echo $link;?>"/>
+		<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
             </div>
@@ -595,6 +648,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('#recentInfectionNo').prop('checked',true);
 	}
     });
+    
+    function getCountriesLabAnc(){
+	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
+            function(data) {
+		splitData = data.split('divider');
+		$('.ancSiteSection').html(splitData[0]);
+		$('#ancSite').material_select();
+		$('.labSection').html(splitData[1]);
+		$('#lab').material_select();
+	    });
+    }
     
     function addDataReporting(){
         flag = deforayValidator.init({
