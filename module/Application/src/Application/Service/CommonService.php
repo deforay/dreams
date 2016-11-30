@@ -207,7 +207,7 @@ class CommonService {
             $attachment->type = 'application/pdf';
             $attachment->encoding    = Mime::ENCODING_BASE64;
             $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-            $attachment->filename = 'Data Reporting Result';
+            $attachment->filename = 'Data-Reporting-Result-'.date('d-M-Y-H-i-s');
             $body = new MimeMessage();
             $body->setParts(array($html,$attachment));
 
