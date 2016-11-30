@@ -224,12 +224,13 @@
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
                 'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
             },
-        },
-        function(start, end) {
+        },function(start, end) {
             startDate = start.format('YYYY-MM-DD');
             endDate = end.format('YYYY-MM-DD');
             $('label[for="specimenCollectedDate"]').css("transform", "translateY(-140%)");
         });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
     }
     
     function clearSearchFields(){
