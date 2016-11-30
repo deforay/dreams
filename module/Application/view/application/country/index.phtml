@@ -32,7 +32,6 @@
     .search-div label {
         margin-left: 0;
         /*left: -184px*/
-
     }
 </style>
 <div id="page-content">
@@ -79,6 +78,7 @@
 <script>
     $(document).ready(function() {
         $("#countryDataTable").dataTable( {
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],    
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
