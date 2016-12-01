@@ -177,14 +177,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
-			    <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
-			</div>
-		    </div>
-                </div>
-		<div class="row">
-		    <div class="col s4">
-			<div class="input-field col m12 s12">
 			    <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code">
 				<option value=""> -- Select -- </option>
 				<?php
@@ -194,6 +186,26 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<?php } ?>
 			    </select>
 			    <label for="rejectionReason">Specimen Rejection Code </label>
+			</div>
+		    </div>
+                </div>
+		<div class="row">
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			    <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
+			    <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
+			</div>
+		    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			    <input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion">
+			    <label for="dateOfTestCompletion" class="">Date of Test Completion </label>
+			</div>
+		    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			    <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
+			    <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
 			</div>
 		    </div>
 		</div>
@@ -230,22 +242,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
 			</div>
                     </div>
-		    <div class="col s4 prePopulateChildSection" style="display:none;">
-			<div class="input-padding col m10 s10 prePopulateRecentInfection" style="visibility:hidden;">
-			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-			  <label for="recentInfection" style="font-size:15px;color:#F44336;"></label>
-			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			 <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
-			</div>
-		    </div>
                 </div>
-		<div class="row prePopulateSection" style="display:none;">
+		<div class="row prePopulateSection" style="background-color:#ff69b4;border-radius:30px;">
 		    <div class="col s4">
 			<div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
 			  LAg Avidity Result <br>
-			  <label for="lagAvidityResult" style="font-size:15px;color:#F44336;"></label>
+			  <label for="lagAvidityResult" style="font-size:15px;color:#fff;"></label>
 			  <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
 			  <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -255,11 +257,21 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="col s4">
 			<div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
 			  HIV RNA >= 1,000 (copies/ml) <br>
-			  <label for="hivRnaGT1000" style="font-size:15px;color:#F44336;"></label>
+			  <label for="hivRnaGT1000" style="font-size:15px;color:#fff;"></label>
 			  <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			  <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
+			</div>
+		    </div>
+		    <div class="col s4">
+			<div class="input-padding col m10 s10 prePopulateRecentInfection" style="visibility:hidden;">
+			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
+			  <label for="recentInfection" style="font-size:15px;color:#fff;"></label>
+			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			 <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
 			</div>
 		    </div>
 		</div>
@@ -268,19 +280,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 		       <div class="input-padding col m10 s10">
 			  Asante Rapid Recency Assay *<br>
 			  <input id="asanteRapidRecencyAssayP" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
-			  <label for="asanteRapidRecencyAssayP">P </label>&nbsp;
+			  <label for="asanteRapidRecencyAssayP">POSITIVE </label>&nbsp;
 			  <input id="asanteRapidRecencyAssayN" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
-			  <label for="asanteRapidRecencyAssayN">N </label><br>
+			  <label for="asanteRapidRecencyAssayN">NEGATIVE </label><br>
 			  <input id="asanteRapidRecencyAssayR" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
-			  <label for="asanteRapidRecencyAssayR">R </label>&nbsp;
+			  <label for="asanteRapidRecencyAssayR">RECENT </label>&nbsp;
 			  <input id="asanteRapidRecencyAssayLt" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
-			  <label for="asanteRapidRecencyAssayLt">LT </label>
-			</div>
-		    </div>
-		    <div class="col s4">
-			<div class="input-field col m12 s12">
-			    <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
-			    <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
+			  <label for="asanteRapidRecencyAssayLt">LONG TERM </label>
 			</div>
 		    </div>
 		</div>
@@ -321,50 +327,53 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol7">Lab Specimen ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol8">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol8">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol9">Rejection Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol9">Receipt Date at Central Lab</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol10">Final LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol10">Date of Test Completion</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol11">LAg Avidity Result</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol11">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol12">Hiv RNA</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol12">Final LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol13">HIV RNA >= 1,000 <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol13">LAg Avidity Result</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol14">Recent Infection</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol14">Hiv RNA</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol15">HIV RNA >= 1,000 <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol16">Asante Rapid Recency Assay</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol16">Recent Infection</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol17"> Status</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol17">Asante Rapid Recency Assay</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol18">Added On</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol18"> Status</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol19">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol19">Added On</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol20">Added by</label> <br>
 	    </div>
 	    <?php
 	    if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="20"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol20">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="21"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol21">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="19"/>
+	      <input type="hidden" id="countColumn" value="20"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -386,14 +395,15 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 <th>Specimen Pick Up Date at ANC</th>
 	                        <th>Lab Name</th>
                                 <th>Lab Specimen ID</th>
-				<th>Receipt Date at Central Lab</th>
 				<th>Rejection Code</th>
+				<th>Receipt Date at Central Lab</th>
+				<th>Date of Test Completion</th>
+				<th>Result Dispatched Date to Clinic</th>
 				<th>Final LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-				<th>Result Dispatched Date to Clinic</th>
                                 <th>Asante Rapid Recency Assay</th>
                                 <th>Status</th>
                                 <th>Added On</th>
@@ -414,16 +424,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
-				<th>Lab Name</th>
+	                        <th>Lab Name</th>
                                 <th>Lab Specimen ID</th>
-				<th>Receipt Date at Central Lab</th>
 				<th>Rejection Code</th>
+				<th>Receipt Date at Central Lab</th>
+				<th>Date of Test Completion</th>
+				<th>Result Dispatched Date to Clinic</th>
 				<th>Final LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-				<th>Result Dispatched Date to Clinic</th>
                                 <th>Asante Rapid Recency Assay</th>
                                 <th>Status</th>
                                 <th>Added On</th>
@@ -455,6 +466,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "bStateSave" : true,
             "aoColumns": [
                 {"sClass":"center"},
+		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
@@ -579,8 +591,6 @@ if(!isset($countryId) || trim($countryId)== ''){
     //For Pre-populate Result
     $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
-	    $('.prePopulateSection').hide();
-	    $('.prePopulateChildSection').hide();
 	    $('.prePopulateAvidity').css('visibility','hidden');
 	    $('.prePopulateHIVRNA').css('visibility','hidden');
 	    $('.prePopulateRecentInfection').css('visibility','hidden');
@@ -595,25 +605,21 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
-		$('.prePopulateSection').show();
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('LT');
+	        $('label[for="lagAvidityResult"]').html('LONG TERM');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
 		if(parseInt($('#hivRna').val()) <= 1000){
-		    $('.prePopulateSection').show();
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('LT');
+		    $('label[for="lagAvidityResult"]').html('LONG TERM');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
-		    $('.prePopulateSection').show();
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('R');
+		    $('label[for="lagAvidityResult"]').html('RECENT');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
-		    $('.prePopulateSection').show();
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('R');
+		    $('label[for="lagAvidityResult"]').html('RECENT');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
@@ -624,14 +630,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) >= 1000){
-		$('.prePopulateSection').show();
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('Yes');
+		$('label[for="hivRnaGT1000"]').html('HIGH VIRAL LOAD');
 		$('#hivRnaGT1000Yes').prop('checked',true);
 	    }else if(parseInt($('#hivRna').val()) < 1000){
-		$('.prePopulateSection').show();
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('No');
+		$('label[for="hivRnaGT1000"]').html('LOW VIRAL LOAD');
 		$('#hivRnaGT1000No').prop('checked',true);
 	    }else{
 		$('.prePopulateHIVRNA').css('visibility','hidden');
@@ -641,12 +645,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }
 	    //Recent infection
 	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-		$('.prePopulateChildSection').show();
 		$('.prePopulateRecentInfection').css('visibility','visible');
 		$('label[for="recentInfection"]').html('Yes');
 		$('#recentInfectionYes').prop('checked',true);
 	    }else{
-		$('.prePopulateChildSection').show();
 		$('.prePopulateRecentInfection').css('visibility','visible');
 		$('label[for="recentInfection"]').html('No');
 		$('#recentInfectionNo').prop('checked',true);

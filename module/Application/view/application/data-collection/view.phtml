@@ -1,6 +1,11 @@
 <?php
 use Application\Service\CommonService;
 $common = new CommonService();
+if(isset($countryId) && trim($countryId)!=''){
+    $link = "/data-collection/".base64_encode($countryId);
+}else{
+    $link = "/data-collection";
+}
 $specimenCollectionDate = '';
 if(isset($row->specimen_collected_date) && trim($row->specimen_collected_date)!= '' && $row->specimen_collected_date!= '0000-00-00'){
     $specimenCollectionDate = $common->viewDateFormat($row->specimen_collected_date);
@@ -13,14 +18,35 @@ $receiptDateAtCentralLab = '';
 if(isset($row->receipt_date_at_central_lab) && trim($row->receipt_date_at_central_lab)!= '' && $row->receipt_date_at_central_lab!= '0000-00-00'){
     $receiptDateAtCentralLab = $common->viewDateFormat($row->receipt_date_at_central_lab);
 }
+$testCompletionDate = '';
+if(isset($row->date_of_test_completion) && trim($row->date_of_test_completion)!= '' && $row->date_of_test_completion!= '0000-00-00'){
+    $testCompletionDate = $common->viewDateFormat($row->date_of_test_completion);
+}
 $resultDispatchedDateToClinic = '';
 if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
-if(isset($countryId) && trim($countryId)!=''){
-    $link = "/data-collection/".base64_encode($countryId);
-}else{
-    $link = "/data-collection";
+$lAgAvidityResult = '';
+if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'lt'){
+    $lAgAvidityResult = 'LONG TERM';
+}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'r'){
+    $lAgAvidityResult = 'RECENT';
+}
+$hIVRNAResult = '';
+if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
+    $hIVRNAResult = 'HIGH VIRAL LOAD';
+}else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
+    $hIVRNAResult = 'LOW VIRAL LOAD';
+}
+$asanteRapidRecencyAssay = '';
+if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/lt'){
+    $asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/lt'){
+    $asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/r'){
+    $asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/r'){
+    $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
 }
 ?>
 <style>
@@ -87,16 +113,28 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label><br>
-                            <p><?php echo $receiptDateAtCentralLab; ?></p>
+                            <label for="rejectionReason">Specimen Rejection Code </label><br>
+                            <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="rejectionReason">Specimen Rejection Code </label><br>
-                            <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
+                            <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label><br>
+                            <p><?php echo $receiptDateAtCentralLab; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="dateOfTestCompletion" class="">Date of Test Completion </label><br>
+                            <p><?php echo $testCompletionDate; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
+                            <p><?php echo $resultDispatchedDateToClinic; ?></p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +158,7 @@ if(isset($countryId) && trim($countryId)!=''){
             </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
                <legend>TEST RESULT</legend>
-                <div class="row">
+                <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn </label><br>
@@ -133,24 +171,24 @@ if(isset($countryId) && trim($countryId)!=''){
                             <p><?php echo $row->hiv_rna; ?></p>
                         </div>
                     </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                          <label for="recentInfection" class=""> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
-                          <p><?php echo ucfirst($row->recent_infection); ?></p>
-                        </div>
-                    </div>
                 </div>
-                <div class="row">
+                <div class="row" style="background-color:#ff69b4;border-radius:30px;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="lagAvidityResult" class=""> LAg Avidity Result </label><br>
-                          <p><?php echo strtoupper($row->lag_avidity_result); ?></p>
+                          <label for="lagAvidityResult" class="" style="color:rgba(0,0,0,0.87);"> LAg Avidity Result </label><br>
+                          <p style="font-size:15px;color:#fff;"><?php echo $lAgAvidityResult; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="hivRnaGT1000" class=""> HIV RNA >= 1,000 (copies/ml </label><br>
-                          <p><?php echo ucfirst($row->hiv_rna_gt_1000); ?></p>
+                          <label for="hivRnaGT1000" class="" style="color:rgba(0,0,0,0.87);"> HIV RNA >= 1,000 (copies/ml) </label><br>
+                          <p style="font-size:15px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                          <label for="recentInfection" class="" style="color:rgba(0,0,0,0.87);"> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
+                          <p style="font-size:15px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
                 </div>
@@ -158,13 +196,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                           <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
-                          <p><?php echo strtoupper($row->asante_rapid_recency_assy); ?></p>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
-                            <p><?php echo $resultDispatchedDateToClinic; ?></p>
+                          <p><?php echo $asanteRapidRecencyAssay; ?></p>
                         </div>
                     </div>
                      <div class="col s4">

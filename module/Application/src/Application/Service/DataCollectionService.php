@@ -122,7 +122,7 @@ class DataCollectionService {
         return $dataCollectionDb->requestForUnlockDataCollectionDetails($params);
     }
     
-    public function generateDataCollectionsResultPdf($params){
+    public function generateDataCollectionResultPdf($params){
         $alertContainer = new Container('alert');
         $alertContainer->aliasPage = 1;
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
@@ -173,17 +173,43 @@ class DataCollectionService {
                         if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
                             $specimenPickedUpDateAtAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
                         }
-                        $receiptDateAtCentralLab = '';
-                        if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
-                            $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-                        }
                         $rejectionCode = '';
                         if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= ''){
                             $rejectionCode = $aRow['rejection_code'];
                         }
+                        $receiptDateAtCentralLab = '';
+                        if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+                            $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+                        }
+                        $testCompletionDate = '';
+                        if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
+                            $testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
+                        }
                         $resultDispatchedDateToClinic = '';
                         if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
                             $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+                        }
+                        $lAgAvidityResult = '';
+                        if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
+                            $lAgAvidityResult = 'LONG TERM';
+                        }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
+                            $lAgAvidityResult = 'RECENT';
+                        }
+                        $hIVRNAResult = '';
+                        if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+                            $hIVRNAResult = 'HIGH VIRAL LOAD';
+                        }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+                            $hIVRNAResult = 'LOW VIRAL LOAD';
+                        }
+                        $asanteRapidRecencyAssay = '';
+                        if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
+                            $asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
+                            $asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
+                            $asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
+                            $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
                         }
                         $row[] = $aRow['surveillance_id'];
                         $row[] = $specimenCollectionDate;
@@ -193,15 +219,16 @@ class DataCollectionService {
                         $row[] = $specimenPickedUpDateAtAnc;
                         $row[] = ucwords($aRow['facility_name']).' - '.$aRow['facility_code'];
                         $row[] = $aRow['lab_specimen_id'];
-                        $row[] = $receiptDateAtCentralLab;
                         $row[] = $rejectionCode;
-                        $row[] = $aRow['final_lag_avidity_odn'];
-                        $row[] = $aRow['lag_avidity_result'];
-                        $row[] = $aRow['hiv_rna'];
-                        $row[] = $aRow['hiv_rna_gt_1000'];
-                        $row[] = $aRow['recent_infection'];
+                        $row[] = $receiptDateAtCentralLab;
+                        $row[] = $testCompletionDate;
                         $row[] = $resultDispatchedDateToClinic;
-                        $row[] = $aRow['asante_rapid_recency_assy'];
+                        $row[] = $aRow['final_lag_avidity_odn'];
+                        $row[] = $lAgAvidityResult;
+                        $row[] = $aRow['hiv_rna'];
+                        $row[] = $hIVRNAResult;
+                        $row[] = ucwords($aRow['recent_infection']);
+                        $row[] = $asanteRapidRecencyAssay;
                         $row[] = ucwords($aRow['country_name']);
                         $row[] = ucwords($aRow['test_status_name']);
                         $output[] = $row;
@@ -238,18 +265,19 @@ class DataCollectionService {
                     $sheet->setCellValue('E1', html_entity_decode('Age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F1', html_entity_decode('Specimen Picked Up Date at ANC ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G1', html_entity_decode('Lab/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('Lab Specimen ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('Receipt Date at Central Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('Recjection Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K1', html_entity_decode('Final LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L1', html_entity_decode('LAg Avidity Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M1', html_entity_decode('HIV RNA ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N1', html_entity_decode('HIV RNA >=1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O1', html_entity_decode('Recent Infection', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P1', html_entity_decode('Result Dispatched Date to Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q1', html_entity_decode('Asante Rapid Recency Assy', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S1', html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Recjection Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Lab Specimen ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Receipt Date at Central Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K1', html_entity_decode('Date of Test Completion', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L1', html_entity_decode('Result Dispatched Date to Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M1', html_entity_decode('Final LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N1', html_entity_decode('LAg Avidity Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O1', html_entity_decode('HIV RNA ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P1', html_entity_decode('HIV RNA >=1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q1', html_entity_decode('Recent Infection', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R1', html_entity_decode('Asante Rapid Recency Assy', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T1', html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -270,13 +298,14 @@ class DataCollectionService {
                     $sheet->getStyle('Q1')->applyFromArray($styleArray);
                     $sheet->getStyle('R1')->applyFromArray($styleArray);
                     $sheet->getStyle('S1')->applyFromArray($styleArray);
+                    $sheet->getStyle('T1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
-                            }if($colNo > 18){
+                            }if($colNo > 19){
                                 break;
                             }if($colNo == 3){
                                 $value = sha1($value);

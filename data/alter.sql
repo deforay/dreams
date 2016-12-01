@@ -283,3 +283,8 @@ INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
 
 --Pal 28/11/2016
 ALTER TABLE `country` CHANGE `status` `country_status` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 01/12/2016
+ALTER TABLE `data_collection` ADD `date_of_test_completion` DATE NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
+
+ALTER TABLE `data_collection_event_log` ADD `date_of_test_completion` DATE NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
