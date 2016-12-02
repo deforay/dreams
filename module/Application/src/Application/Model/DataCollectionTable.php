@@ -254,97 +254,97 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-		$row = array();
-		$specimenCollectedDate = '';
-		$specimenPickUpDateatAnc = '';
-		$receiptDateAtCentralLab = '';
-		$testCompletionDate = '';
-		$resultDispatchedDateToClinic = '';
-		if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-		    $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-		}if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
-		    $specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-		}if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
-		    $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-		}if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
-		    $testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
-		}if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
-		    $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    $row = array();
+	    $specimenCollectedDate = '';
+	    $specimenPickUpDateatAnc = '';
+	    $receiptDateAtCentralLab = '';
+	    $testCompletionDate = '';
+	    $resultDispatchedDateToClinic = '';
+	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+	    }if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+		$specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
+	    }if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+		$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+	    }if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
+		$testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
+	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    }
+	    $lAgAvidityResult = '';
+	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
+		$lAgAvidityResult = 'Long Term';
+	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
+		$lAgAvidityResult = 'Recent';
+	    }
+	    $hIVRNAResult = '';
+	    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+		$hIVRNAResult = 'High Viral Load';
+	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+		$hIVRNAResult = 'Low Viral Load';
+	    }
+	    $asanteRapidRecencyAssay = '';
+	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
+		$asanteRapidRecencyAssay = 'Positive/Long Term';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
+		$asanteRapidRecencyAssay = 'Negative/Long Term';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
+		$asanteRapidRecencyAssay = 'Negative/Recent';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
+		$asanteRapidRecencyAssay = 'Positive/Recent';
+	    }
+	    
+	    $addedDate = explode(" ",$aRow['added_on']);
+	    $row[] = $aRow['surveillance_id'];
+	    $row[] = $specimenCollectedDate;
+	    $row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
+	    $row[] = $aRow['anc_patient_id'];
+	    $row[] = $aRow['age'];
+	    $row[] = $specimenPickUpDateatAnc;
+	    $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+	    $row[] = $aRow['lab_specimen_id'];
+	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = $receiptDateAtCentralLab;
+	    $row[] = $testCompletionDate;
+	    $row[] = $resultDispatchedDateToClinic;
+	    $row[] = $aRow['final_lag_avidity_odn'];
+	    $row[] = $lAgAvidityResult;
+	    $row[] = $aRow['hiv_rna'];
+	    $row[] = $hIVRNAResult;
+	    $row[] = ucfirst($aRow['recent_infection']);
+	    $row[] = $asanteRapidRecencyAssay;
+	    $row[] = ucwords($aRow['test_status_name']);
+	    $row[] = $common->humanDateFormat($addedDate[0])." ".$addedDate[1];
+	    $row[] = ucwords($aRow['user_name']);
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
+	       $row[] = ucwords($aRow['country_name']);
+	    }
+	    $dataView = '';
+	    $lockView = '';
+	    if($loginContainer->roleCode== 'LDEO'){
+		$dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
+		if($aRow['test_status_name']== 'completed'){
+		   $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		}
-		$lAgAvidityResult = '';
-		if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		    $lAgAvidityResult = 'LONG TERM';
-		}else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		    $lAgAvidityResult = 'RECENT';
-		}
-		$hIVRNAResult = '';
-		if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-		    $hIVRNAResult = 'HIGH VIRAL LOAD';
-		}else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-		    $hIVRNAResult = 'LOW VIRAL LOAD';
-		}
-		$asanteRapidRecencyAssay = '';
-		if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		    $asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
-		}else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		    $asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
-		}else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		    $asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
-		}else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		    $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
-		}
-		$date = explode(" ",$aRow['added_on']);
-    
-		$row[] = $aRow['surveillance_id'];
-		$row[] = $specimenCollectedDate;
-		$row[] = ucwords($aRow['anc_site_name'])." - ".$aRow['anc_site_code'];
-		$row[] = $aRow['anc_patient_id'];
-		$row[] = $aRow['age'];
-		$row[] = $specimenPickUpDateatAnc;
-		$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-		$row[] = $aRow['lab_specimen_id'];
-		$row[] = ucwords($aRow['rejection_code']);
-		$row[] = $receiptDateAtCentralLab;
-		$row[] = $testCompletionDate;
-		$row[] = $resultDispatchedDateToClinic;
-		$row[] = $aRow['final_lag_avidity_odn'];
-		$row[] = $lAgAvidityResult;
-		$row[] = $aRow['hiv_rna'];
-		$row[] = $hIVRNAResult;
-		$row[] = ucwords($aRow['recent_infection']);
-		$row[] = $asanteRapidRecencyAssay;
-		$row[] = ucwords($aRow['test_status_name']);
-		$row[] = $common->humanDateFormat($date[0])." ".$date[1];
-		$row[] = ucwords($aRow['user_name']);
-		if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
-		   $row[] = ucwords($aRow['country_name']);
-		}
-		$dataView = '';
-		$lockView = '';
-		if($loginContainer->roleCode== 'LDEO'){
-		    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
-		    if($aRow['test_status_name']== 'completed'){
-		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
-		    }
-		}else if($loginContainer->roleCode== 'LS'){
-		    if($aRow['test_status_name']== 'unlocked'){
-		       $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
-		    }else{
-		       $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
-		    }
+	    }else if($loginContainer->roleCode== 'LS'){
+		if($aRow['test_status_name']== 'unlocked'){
+		   $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
 		}else{
-		    $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
+		   $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a><br>';
 		}
-		 
-		if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		    if($aRow['test_status_name']== 'completed' || $aRow['test_status_name']== 'unlocked'){
-		       $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
-		    }else if($aRow['test_status_name']== 'locked'){
-		       $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
-		    }
+	    }else{
+		$dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a><br>';
+	    }
+	     
+	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+		if($aRow['test_status_name']== 'completed' || $aRow['test_status_name']== 'unlocked'){
+		   $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		}else if($aRow['test_status_name']== 'locked'){
+		   $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
-		$row[] = $dataView.$lockView;
-		$output['aaData'][] = $row;
+	    }
+	    $row[] = $dataView.$lockView;
+	    $output['aaData'][] = $row;
 	}
        return $output;
     }
@@ -543,7 +543,7 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	             ->where('da_c.status IN (2,3)');
+	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
@@ -583,7 +583,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	                        ->where('da_c.status IN (2,3)');
+	                        ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
@@ -622,25 +622,25 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $lAgAvidityResult = '';
 	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'LONG TERM';
+		$lAgAvidityResult = 'Long Term';
 	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'RECENT';
+		$lAgAvidityResult = 'Recent';
 	    }
 	    $hIVRNAResult = '';
 	    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-		$hIVRNAResult = 'HIGH VIRAL LOAD';
+		$hIVRNAResult = 'High Viral Load';
 	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-		$hIVRNAResult = 'LOW VIRAL LOAD';
+		$hIVRNAResult = 'Low Viral Load';
 	    }
 	    $asanteRapidRecencyAssay = '';
 	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+		$asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+		$asanteRapidRecencyAssay = 'Negative/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+		$asanteRapidRecencyAssay = 'Negative/Recent';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'POSITIVE/RECENT';
+		$asanteRapidRecencyAssay = 'Positive/Recent';
 	    }
 	    
 	    $row[] = $aRow['surveillance_id'];
@@ -659,7 +659,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
 	    $row[] = $hIVRNAResult;
-	    $row[] = ucwords($aRow['recent_infection']);
+	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = $asanteRapidRecencyAssay;
 	   $output['aaData'][] = $row;
 	}
@@ -828,7 +828,7 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	             ->where('da_c.status IN (2,3)');
+	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
@@ -868,7 +868,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
 				  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
 				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	                          ->where('da_c.status IN (2,3)');
+	                          ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
@@ -907,25 +907,25 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $lAgAvidityResult = '';
 	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'LONG TERM';
+		$lAgAvidityResult = 'Long Term';
 	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'RECENT';
+		$lAgAvidityResult = 'Recent';
 	    }
 	    $hIVRNAResult = '';
 	    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-		$hIVRNAResult = 'HIGH VIRAL LOAD';
+		$hIVRNAResult = 'High Viral Load';
 	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-		$hIVRNAResult = 'LOW VIRAL LOAD';
+		$hIVRNAResult = 'Low Viral Load';
 	    }
 	    $asanteRapidRecencyAssay = '';
 	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+		$asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+		$asanteRapidRecencyAssay = 'Negative/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+		$asanteRapidRecencyAssay = 'Negative/Recent';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'POSITIVE/RECENT';
+		$asanteRapidRecencyAssay = 'Positive/Recent';
 	    }
 	    
 	    $row[] = $aRow['surveillance_id'];
@@ -944,7 +944,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
 	    $row[] = $hIVRNAResult;
-	    $row[] = ucwords($aRow['recent_infection']);
+	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = $asanteRapidRecencyAssay;
 	   $output['aaData'][] = $row;
 	}

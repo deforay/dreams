@@ -28,25 +28,25 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
 }
 $lAgAvidityResult = '';
 if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'lt'){
-    $lAgAvidityResult = 'LONG TERM';
+    $lAgAvidityResult = 'Long Term';
 }else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'r'){
-    $lAgAvidityResult = 'RECENT';
+    $lAgAvidityResult = 'Recent';
 }
 $hIVRNAResult = '';
 if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
-    $hIVRNAResult = 'HIGH VIRAL LOAD';
+    $hIVRNAResult = 'High Viral Load';
 }else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
-    $hIVRNAResult = 'LOW VIRAL LOAD';
+    $hIVRNAResult = 'Low Viral Load';
 }
 $asanteRapidRecencyAssay = '';
 if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/lt'){
-    $asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+    $asanteRapidRecencyAssay = 'Positive/Long Term';
 }else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/lt'){
-    $asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+    $asanteRapidRecencyAssay = 'Negative/Long Term';
 }else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/r'){
-    $asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+    $asanteRapidRecencyAssay = 'Negative/Recent';
 }else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/r'){
-    $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
+    $asanteRapidRecencyAssay = 'Positive/Recent';
 }
 ?>
 <style>
@@ -175,20 +175,20 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                 <div class="row" style="background-color:#ff69b4;border-radius:30px;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="lagAvidityResult" class="" style="color:rgba(0,0,0,0.87);"> LAg Avidity Result </label><br>
-                          <p style="font-size:15px;color:#fff;"><?php echo $lAgAvidityResult; ?></p>
+                          <label for="lagAvidityResult" class="" style="color:#fff;"><strong>LAg Avidity Result</strong> </label><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="hivRnaGT1000" class="" style="color:rgba(0,0,0,0.87);"> HIV RNA >= 1,000 (copies/ml) </label><br>
-                          <p style="font-size:15px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
+                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA >= 1,000 (copies/ml)</strong> </label><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="recentInfection" class="" style="color:rgba(0,0,0,0.87);"> Recent Infection <br>(LAg-R & RNA >= 1,000) </label><br><br>
-                          <p style="font-size:15px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
+                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection <br>(LAg-R & RNA >= 1,000)</strong> </label><br><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
                 </div>

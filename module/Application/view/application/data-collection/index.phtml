@@ -243,11 +243,11 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
                     </div>
                 </div>
-		<div class="row prePopulateSection" style="background-color:#ff69b4;border-radius:30px;">
+		<div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;">
 		    <div class="col s4">
 			<div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
-			  LAg Avidity Result <br>
-			  <label for="lagAvidityResult" style="font-size:15px;color:#fff;"></label>
+			  <strong>LAg Avidity Result</strong> <br>
+			  <label for="lagAvidityResult" style="font-size:13px;color:#fff;"></label>
 			  <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
 			  <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -256,8 +256,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
-			  HIV RNA >= 1,000 (copies/ml) <br>
-			  <label for="hivRnaGT1000" style="font-size:15px;color:#fff;"></label>
+			  <strong>HIV RNA >= 1,000 (copies/ml)</strong> <br>
+			  <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"></label>
 			  <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			  <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			  <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -266,8 +266,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-padding col m10 s10 prePopulateRecentInfection" style="visibility:hidden;">
-			  Recent Infection <br>(LAg-R & RNA >= 1,000)<br>
-			  <label for="recentInfection" style="font-size:15px;color:#fff;"></label>
+			  <strong>Recent Infection <br>(LAg-R & RNA >= 1,000)</strong><br>
+			  <label for="recentInfection" style="font-size:13px;color:#fff;"></label>
 			  <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			 <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
 			 <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
@@ -280,13 +280,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 		       <div class="input-padding col m10 s10">
 			  Asante Rapid Recency Assay *<br>
 			  <input id="asanteRapidRecencyAssayP" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
-			  <label for="asanteRapidRecencyAssayP">POSITIVE </label>&nbsp;
+			  <label for="asanteRapidRecencyAssayP">Positive </label>&nbsp;
 			  <input id="asanteRapidRecencyAssayN" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
-			  <label for="asanteRapidRecencyAssayN">NEGATIVE </label><br>
+			  <label for="asanteRapidRecencyAssayN">Negative </label><br>
 			  <input id="asanteRapidRecencyAssayR" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
-			  <label for="asanteRapidRecencyAssayR">RECENT </label>&nbsp;
+			  <label for="asanteRapidRecencyAssayR">Recent </label>&nbsp;
 			  <input id="asanteRapidRecencyAssayLt" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
-			  <label for="asanteRapidRecencyAssayLt">LONG TERM </label>
+			  <label for="asanteRapidRecencyAssayLt">Long Term </label>
 			</div>
 		    </div>
 		</div>
@@ -606,20 +606,20 @@ if(!isset($countryId) || trim($countryId)== ''){
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('LONG TERM');
+	        $('label[for="lagAvidityResult"]').html('Long Term');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
 		if(parseInt($('#hivRna').val()) <= 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('LONG TERM');
+		    $('label[for="lagAvidityResult"]').html('Long Term');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('RECENT');
+		    $('label[for="lagAvidityResult"]').html('Recent');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('RECENT');
+		    $('label[for="lagAvidityResult"]').html('Recent');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
@@ -631,11 +631,11 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) >= 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('HIGH VIRAL LOAD');
+		$('label[for="hivRnaGT1000"]').html('High Viral Load');
 		$('#hivRnaGT1000Yes').prop('checked',true);
 	    }else if(parseInt($('#hivRna').val()) < 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('LOW VIRAL LOAD');
+		$('label[for="hivRnaGT1000"]').html('Low Viral Load');
 		$('#hivRnaGT1000No').prop('checked',true);
 	    }else{
 		$('.prePopulateHIVRNA').css('visibility','hidden');

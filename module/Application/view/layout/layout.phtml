@@ -177,11 +177,11 @@ $loginContainer = new Container('user');
                                                 <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                                 </li>
-                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
-                                                </li>
                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
+                                                </li>
+                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
+                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                 </li>
                                             <?php } ?>
                                         </ul>

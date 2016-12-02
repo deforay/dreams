@@ -108,15 +108,15 @@ $alertContainer->nbPages = count($dataResult);
 	}
 	$lAgAvidityResult = '';
 	if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='lt'){
-	    $lAgAvidityResult = 'LONG TERM';
+	    $lAgAvidityResult = 'Long Term';
 	}else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='r'){
-	    $lAgAvidityResult = 'RECENT';
+	    $lAgAvidityResult = 'Recent';
 	}
 	$hIVRNAResult = '';
 	if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='yes'){
-	    $hIVRNAResult = 'HIGH VIRAL LOAD';
+	    $hIVRNAResult = 'High Viral Load';
 	}else if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='no'){
-	    $hIVRNAResult = 'LOW VIRAL LOAD';
+	    $hIVRNAResult = 'Low Viral Load';
 	}
 	
 	$html = '';
@@ -141,7 +141,7 @@ $alertContainer->nbPages = count($dataResult);
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA(copies/ml)</strong></td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;">'.$data['hiv_rna'].'</td></tr>';
 	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>LAg Avidity Result</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$lAgAvidityResult.'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA >= 1,000 (copies/ml)</strong> </td><td style="line-height:18px;font-size:10px;text-align:left;">'.$hIVRNAResult.'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Recent Infection(LAg-R & RNA >= 1,000)</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.ucwords($data['recent_infection']).'</td></tr>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Recent Infection(LAg-R & RNA >= 1,000)</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.ucfirst($data['recent_infection']).'</td></tr>';
 	$html .='</table>';
 	$pdf->writeHTML($html);
 	$pdf->lastPage();

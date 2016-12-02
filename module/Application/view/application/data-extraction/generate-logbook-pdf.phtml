@@ -108,38 +108,39 @@ if(count($logbookResult) >0){
 	    $testCompletionDate = '';
 	    $resultDispatchedDateToClinic = '';
 	    if(isset($row['specimen_collected_date']) && trim($row['specimen_collected_date'])!= '' && $row['specimen_collected_date']!= '0000-00-00'){
-		$specimenCollectedDate = $common->viewDateFormat($row['specimen_collected_date']);
+	      $specimenCollectedDate = $common->viewDateFormat($row['specimen_collected_date']);
 	    }if(isset($row['specimen_picked_up_date_at_anc']) && trim($row['specimen_picked_up_date_at_anc'])!= '' && $row['specimen_picked_up_date_at_anc']!= '0000-00-00'){
-		$specimenPickUpDateatAnc = $common->viewDateFormat($row['specimen_picked_up_date_at_anc']);
+	      $specimenPickUpDateatAnc = $common->viewDateFormat($row['specimen_picked_up_date_at_anc']);
 	    }if(isset($row['receipt_date_at_central_lab']) && trim($row['receipt_date_at_central_lab'])!= '' && $row['receipt_date_at_central_lab']!= '0000-00-00'){
-		$receiptDateAtCentralLab = $common->viewDateFormat($row['receipt_date_at_central_lab']);
+	      $receiptDateAtCentralLab = $common->viewDateFormat($row['receipt_date_at_central_lab']);
 	    }if(isset($row['date_of_test_completion']) && trim($row['date_of_test_completion'])!= '' && $row['date_of_test_completion']!= '0000-00-00'){
-		$testCompletionDate = $common->viewDateFormat($row['date_of_test_completion']);
+	      $testCompletionDate = $common->viewDateFormat($row['date_of_test_completion']);
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
-		$resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
+	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
             $lAgAvidityResult = '';
 	    if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'LONG TERM';
+	      $lAgAvidityResult = 'Long Term';
 	    }else if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'RECENT';
+	      $lAgAvidityResult = 'Recent';
 	    }
 	    $hIVRNAResult = '';
 	    if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
-		$hIVRNAResult = 'HIGH VIRAL LOAD';
+	      $hIVRNAResult = 'High Viral Load';
 	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
-		$hIVRNAResult = 'LOW VIRAL LOAD';
+	      $hIVRNAResult = 'Low Viral Load';
 	    }
 	    $asanteRapidRecencyAssay = '';
 	    if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+	      $asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+	      $asanteRapidRecencyAssay = 'Negative/Long Term';
 	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+	      $asanteRapidRecencyAssay = 'Negative/Recent';
 	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'POSITIVE/RECENT';
+	      $asanteRapidRecencyAssay = 'Positive/Recent';
 	    }
+	    
             $html .='<tr>';
               $html .='<td>'.$row['surveillance_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
@@ -157,7 +158,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.$lAgAvidityResult.'</td>';
               $html .='<td>'.$row['hiv_rna'].'</td>';
               $html .='<td>'.$hIVRNAResult.'</td>';
-              $html .='<td>'.ucwords($row['recent_infection']).'</td>';
+              $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               $html .='<td>'.$asanteRapidRecencyAssay.'</td>';
             $html .='</tr>';
           }

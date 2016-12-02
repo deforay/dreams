@@ -140,7 +140,7 @@ class DataCollectionService {
             $dQuery = $dQuery->where('da_c.data_collection_id IN ("' . implode('", "', $dataCollectionArray) . '")');
         }
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
-        return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function exportDataCollectionInExcel($params){
@@ -187,25 +187,25 @@ class DataCollectionService {
                         }
                         $lAgAvidityResult = '';
                         if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-                            $lAgAvidityResult = 'LONG TERM';
+                            $lAgAvidityResult = 'Long Term';
                         }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-                            $lAgAvidityResult = 'RECENT';
+                            $lAgAvidityResult = 'Recent';
                         }
                         $hIVRNAResult = '';
                         if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-                            $hIVRNAResult = 'HIGH VIRAL LOAD';
+                            $hIVRNAResult = 'High Viral Load';
                         }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-                            $hIVRNAResult = 'LOW VIRAL LOAD';
+                            $hIVRNAResult = 'Low Viral Load';
                         }
                         $asanteRapidRecencyAssay = '';
                         if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-                            $asanteRapidRecencyAssay = 'POSITIVE/LONG TERM';
+                            $asanteRapidRecencyAssay = 'Positive/Long Term';
                         }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-                            $asanteRapidRecencyAssay = 'NEGATIVE/LONG TERM';
+                            $asanteRapidRecencyAssay = 'Negative/Long Term';
                         }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-                            $asanteRapidRecencyAssay = 'NEGATIVE/RECENT';
+                            $asanteRapidRecencyAssay = 'Negative/Recent';
                         }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-                            $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
+                            $asanteRapidRecencyAssay = 'Positive/Recent';
                         }
                         $row[] = $aRow['surveillance_id'];
                         $row[] = $specimenCollectedDate;
@@ -223,7 +223,7 @@ class DataCollectionService {
                         $row[] = $lAgAvidityResult;
                         $row[] = $aRow['hiv_rna'];
                         $row[] = $hIVRNAResult;
-                        $row[] = ucwords($aRow['recent_infection']);
+                        $row[] = ucfirst($aRow['recent_infection']);
                         $row[] = $asanteRapidRecencyAssay;
                         $output[] = $row;
                     }
