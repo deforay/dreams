@@ -105,6 +105,7 @@ if(!isset($countryId) || $countryId ==''){
     $(document).ready(function() {
        oTable = $("#userDataTable").DataTable({
 	"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	"iDisplayLength": 25,
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [

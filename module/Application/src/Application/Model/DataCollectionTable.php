@@ -698,7 +698,7 @@ class DataCollectionTable extends AbstractTableGateway {
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
         }
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-        return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function fetchDashboardDetails($params){
@@ -718,7 +718,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group('da_c.country')
 				   ->order('da_c.added_on desc');
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-	return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function fetchCountriesLabAncDetails($params){
