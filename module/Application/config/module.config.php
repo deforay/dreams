@@ -311,6 +311,15 @@ return array(
                         'action' => 'generate-logbook-pdf'
                     ),
                 ),
+            ),'change-password' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/change-password',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\User',
+                        'action' => 'change-password'
+                    ),
+                ),
             ),
             
         ),

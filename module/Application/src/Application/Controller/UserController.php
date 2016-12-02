@@ -9,6 +9,7 @@
 
 namespace Application\Controller;
 
+use Zend\Session\Container;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -36,7 +37,7 @@ class UserController extends AbstractActionController{
         $userService = $this->getServiceLocator()->get('UserService');
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
-            $result=$userService->addUser($params);
+            $userService->addUser($params);
             return $this->redirect()->toUrl($params['chosenCountryId']);
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
@@ -80,6 +81,22 @@ class UserController extends AbstractActionController{
                 'countries'=>$countryList,
                 'roleData'=>$roleResult,
                 'countryId'=>$countryId
+            ));
+        }
+    }
+    
+    public function changePasswordAction(){
+        $loginContainer = new Container('user');
+        $userService = $this->getServiceLocator()->get('UserService');
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $params = $request->getPost();
+            $userService->changeAccountPassword($params);
+            return $this->redirect()->toRoute('home');
+        }else{
+            $result=$userService->getUser($loginContainer->userId);
+            return new ViewModel(array(
+                'row'=>$result
             ));
         }
     }

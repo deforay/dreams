@@ -54,11 +54,14 @@ class DataExtractionController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('lab-logbook',0);
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $ancSiteList=$ancSiteService->getActiveAncSites('lab-logbook',$countryId);
+            $facilityList=$facilityService->getActivefacilities('lab-logbook',$countryId);
             return new ViewModel(array(
-                'countries'=>$countryList,
-                'countryId'=>$countryId
+                'countryId'=>$countryId,
+                'ancSites'=>$ancSiteList,
+                'facilities'=>$facilityList
             ));
         }
     }

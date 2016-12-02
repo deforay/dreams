@@ -59,6 +59,10 @@ $loginContainer = new Container('user');
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-body li.active{
             background-color:#ff69b4;
         }
+        .search-top-bar{
+          margin-top:0;
+          text-align:right;
+        }
     </style>
     <script  src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -77,12 +81,12 @@ $loginContainer = new Container('user');
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
-                        <input type="search" id="search" autocomplete="false" class="autocomplete search-top-bar-input z-depth-2" name="search-state" placeholder="Search" style="background-color:#ff96ca;">
-                        <i class="material-icons zmdi zmdi-search"></i>
+                        Hi <strong><?php echo ucwords($loginContainer->userName); ?></strong> Welcome back to <strong style="font-family: BaronFont;">DREAM</strong>
                     </div>
                     <ul class="right hide-on-med-and-down">
                         <li>
-                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>Hi <?php echo ucwords(substr($loginContainer->userName,0,6)); ?> <?php (strlen($loginContainer->userName)>6)?'..':''; ?><i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
+                            <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>My Account <i class="zmdi zmdi-caret-down drop-down-icon"></i></a><ul id="dropdown3" class="create-dropdown dropdown-content">
+                                <li><a href="<?php echo $this->url('change-password'); ?>"><i class="zmdi zmdi-more"></i> Change <br>Password</a></li>
                                 <li><a href="<?php echo $this->url('log-out'); ?>"><i class="material-icons dp48">input</i>Logout</a></li>
                             </ul>
                             
@@ -217,6 +221,7 @@ $loginContainer = new Container('user');
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/prism.min.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/deforayValidation.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/base64_decode.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.crypt.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/cookie.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.blockUI.js' ?>"></script>
 <script>
@@ -423,10 +428,6 @@ $loginContainer = new Container('user');
         }
     });
     
-    $(window).load(function() {
-        $('.zmdi-search').removeClass('active');
-    });
-    
     $(document).ready(function(){
         <?php
         if (isset($alertContainer->msg) && $alertContainer->msg != "") {
@@ -458,7 +459,7 @@ $loginContainer = new Container('user');
         }
     });
     
-    $('#password').change('input',function(e){
+    $('#password,#newPassword').change('input',function(e){
         if ($(this).val()!= '') {
 	    var regex = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 	    if(!regex.test($(this).val())) {

@@ -1,16 +1,12 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId) || trim($countryId)== ''){
-    $countryId = '';
-    $display="";
-    $style="width:40%;text-align:left;";
-}else{
-    $display="display:none;";
-    $style = "text-align:right;padding-right:6%;";
-}
 ?>
 <style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+	width: 190px;
+    }
     .card-default {
         border: 1px solid #eaeaea;
     }
@@ -69,24 +65,51 @@ if(!isset($countryId) || trim($countryId)== ''){
     ?>
 	<div class="row">
 	    <div class="col l12 m12 s12">
-		<table style="width:100%;">
-		    <tr>
-			<td style="width:20%;text-align:right;<?php echo $display;?>"><h6><strong>Country</strong></h6></td>
-			<td style="text-align:left;<?php echo $display;?>">
-			    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-				<option value=""> -- Select -- </option>
-				<?php
-				foreach($countries as $country){
-				    ?>
-				    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
+		<form id="searchFilterForm" method="post" action="#">
+		    <table style="width:100%;">
+			<tr>
+			    <td style="width:25%;text-align:right;"><h6><strong>Specimen Collected Date </strong></h6></td>
+			    <td style="width:25%;text-align:left;">
+				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
+			    </td>
+			    <td style="width:10%;text-align:left;"><h6><strong>ANC Site</strong></h6></td>
+			    <td style="width:40%;text-align:left;padding-right:8%;">
+				<select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
+				    <option value=""> -- Select -- </option>
 				    <?php
-				}
-				?>
-			    </select>
-			</td>
-			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a></td>
-		    </tr>
-		</table>
+				    foreach($ancSites as $anc){
+					?>
+					<option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+					<?php
+				    }
+				    ?>
+				</select>
+			    </td>
+			</tr>
+			 <tr>
+			    <td style="width:25%;text-align:left;padding-left:7.4%;"><h6><strong>Lab Site/Facility </strong></h6></td>
+			    <td colspan="3" style="text-align:left;padding-right:50%;">
+				<select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($facilities as $lab){
+					?>
+					<option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+					<?php
+				    }
+				    ?>
+				</select>
+			    </td>
+			</tr>
+			<tr>
+			    <td colspan="4" style="text-align:center;">
+				<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+			    </td>
+			</tr>
+		    </table>
+		</form>
 	    </div>
 	</div>
     <?php } ?>
@@ -210,8 +233,10 @@ if(!isset($countryId) || trim($countryId)== ''){
         </div>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script>
     $(document).ready(function() {
+	selectDate();
 	oTable = $('#labLogbookDataTable').dataTable({
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
@@ -245,6 +270,9 @@ if(!isset($countryId) || trim($countryId)== ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "country", "value": $("#country").val()});
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
+		aoData.push({"name": "specimenCollectedDate", "value": $("#specimenCollectedDate").val() });
+		aoData.push({"name": "anc", "value": $("#anc").val() });
+		aoData.push({"name": "lab", "value": $("#lab").val() });
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -283,8 +311,37 @@ if(!isset($countryId) || trim($countryId)== ''){
         oTable.fnSetColumnVis( iCol, bVis ? false : true );
     }
 	
+    function selectDate(){
+	$(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#specimenCollectedDate').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="specimenCollectedDate"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
     function searchLabLogbookData(){
        oTable.fnDraw(false);
+    }
+    
+    function clearSearchFields(){
+        $('#searchFilterForm')[0].reset();
+        searchLabLogbookData();
     }
     
     function exportLabLogbookData(){

@@ -84,28 +84,28 @@ class UserTable extends AbstractTableGateway {
     }
     
     public function addUserDetails($params){
-		$lastInsertedId = 0;
-		if(isset($params['userName']) && trim($params['userName'])!= ''){
-			$common = new CommonService();
-			$config = new \Zend\Config\Reader\Ini();
-			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-			$password = sha1($params['password'] . $configResult["password"]["salt"]);
-			$data = array(
-			'full_name' => $params['fullName'],
-			'user_code' => $params['userCode'],
-			'user_name' => $params['userName'],
-			'password' => $password,
-			'role' => base64_decode($params['role']),
-			'email' => $params['email'],
-			'mobile' => $params['mobile'],
-			'alt_contact' => $params['altContact'],
-			'status' => 'active',
-			'created_on' => $common->getDateTime()
-			);
-			$this->insert($data);
-			$lastInsertedId = $this->lastInsertValue;
-		}
-		return $lastInsertedId;
+	$lastInsertedId = 0;
+	if(isset($params['userName']) && trim($params['userName'])!= ''){
+		$common = new CommonService();
+		$config = new \Zend\Config\Reader\Ini();
+		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+		$password = sha1($params['password'] . $configResult["password"]["salt"]);
+		$data = array(
+		'full_name' => $params['fullName'],
+		'user_code' => $params['userCode'],
+		'user_name' => $params['userName'],
+		'password' => $password,
+		'role' => base64_decode($params['role']),
+		'email' => $params['email'],
+		'mobile' => $params['mobile'],
+		'alt_contact' => $params['altContact'],
+		'status' => 'active',
+		'created_on' => $common->getDateTime()
+		);
+		$this->insert($data);
+		$lastInsertedId = $this->lastInsertValue;
+	}
+       return $lastInsertedId;
     }
     
     public function fetchAllUsers($parameters){
@@ -315,14 +315,30 @@ class UserTable extends AbstractTableGateway {
 		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
 		'status' => $params['status']
-			);
-		if (isset($params['password']) && trim($params['password']) != ''){
-			$config = new \Zend\Config\Reader\Ini();
-			$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-			$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
+		);
+		if(isset($params['password']) && trim($params['password']) != ''){
+		    $config = new \Zend\Config\Reader\Ini();
+		    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+		    $data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
 		}
 		$this->update($data,array('user_id'=>$userId));
 	}
-	return $userId;
+      return $userId;
+    }
+    
+    public function updateAccountPassword($params){
+	$loginContainer = new Container('user');
+	$alertContainer = new Container('alert');
+	$config = new \Zend\Config\Reader\Ini();
+	$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+	$changedPassword = sha1($params['newPassword'] . $configResult["password"]["salt"]);
+	$updated = $this->update(array('password'=>$changedPassword),array('user_id'=>$loginContainer->userId));
+	if($updated >0){
+	    $alertContainer->msg = 'Your have successfully updated your password.';
+	    return true;
+	}else{
+	    $alertContainer->msg = 'OOPS..Unable to change your password.';
+	    return false;
+	}
     }
 }

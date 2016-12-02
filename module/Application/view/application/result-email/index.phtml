@@ -6,7 +6,6 @@
 }
 @font-face {
     font-family: 'Glyphicons Halflings';
-  
     src: url('../assets/fonts/glyphicons-halflings-regular.eot');
     src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
   }
@@ -92,7 +91,7 @@
                 </div>
             </div>
             <div class="col s12" style="text-align:center;margin-bottom:20px;">
-                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -234,7 +233,7 @@
     }
     
     function clearSearchFields(){
-        $('#resultMail')[0].reset()
+        $('#resultMail')[0].reset();
         searchDataReporting('reset');
     }
     
