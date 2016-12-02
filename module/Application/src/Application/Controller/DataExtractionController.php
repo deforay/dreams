@@ -44,4 +44,35 @@ class DataExtractionController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function printLabLogbookAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $parameters = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result = $dataCollectionService->getAllLabLogbook($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryList=$countryService->getActiveCountries('lab-logbook',0);
+            return new ViewModel(array(
+                'countries'=>$countryList,
+                'countryId'=>$countryId
+            ));
+        }
+    }
+    
+    public function generateLabLogbookAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $logbookResult=$dataCollectionService->getLogbookResult($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('logbookResult' =>$logbookResult));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

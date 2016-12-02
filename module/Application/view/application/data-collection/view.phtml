@@ -6,9 +6,9 @@ if(isset($countryId) && trim($countryId)!=''){
 }else{
     $link = "/data-collection";
 }
-$specimenCollectionDate = '';
+$specimenCollectedDate = '';
 if(isset($row->specimen_collected_date) && trim($row->specimen_collected_date)!= '' && $row->specimen_collected_date!= '0000-00-00'){
-    $specimenCollectionDate = $common->viewDateFormat($row->specimen_collected_date);
+    $specimenCollectedDate = $common->viewDateFormat($row->specimen_collected_date);
 }
 $specimenPickedUpDateAtAnc = '';
 if(isset($row->specimen_picked_up_date_at_anc) && trim($row->specimen_picked_up_date_at_anc)!= '' && $row->specimen_picked_up_date_at_anc!= '0000-00-00'){
@@ -77,7 +77,7 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="specimenCollectedDate" class="">Specimen Collected Date </label><br>
-                            <p><?php echo $specimenCollectionDate; ?></p>
+                            <p><?php echo $specimenCollectedDate; ?></p>
                         </div>
                     </div>
                     <div class="col s4">

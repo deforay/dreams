@@ -293,6 +293,24 @@ return array(
                         'action' => 'get-countries-lab-anc'
                     ),
                 ),
+            ),'print-lab-logbook' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/print-lab-logbook[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtraction',
+                        'action' => 'print-lab-logbook'
+                    ),
+                ),
+            ),'generate-lab-logbook' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/generate-lab-logbook',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtraction',
+                        'action' => 'generate-lab-logbook'
+                    ),
+                ),
             ),
             
         ),

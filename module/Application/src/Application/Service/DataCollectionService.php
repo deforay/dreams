@@ -165,9 +165,9 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
-                        $specimenCollectionDate = '';
+                        $specimenCollectedDate = '';
                         if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
-                            $specimenCollectionDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+                            $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
                         }
                         $specimenPickedUpDateAtAnc = '';
                         if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
@@ -212,7 +212,7 @@ class DataCollectionService {
                             $asanteRapidRecencyAssay = 'POSITIVE/RECENT';
                         }
                         $row[] = $aRow['surveillance_id'];
-                        $row[] = $specimenCollectionDate;
+                        $row[] = $specimenCollectedDate;
                         $row[] = ucwords($aRow['anc_site_name']).' - '.$aRow['anc_site_code'];
                         $row[] = $aRow['anc_patient_id'];
                         $row[] = $aRow['age'];
@@ -229,8 +229,6 @@ class DataCollectionService {
                         $row[] = $hIVRNAResult;
                         $row[] = ucwords($aRow['recent_infection']);
                         $row[] = $asanteRapidRecencyAssay;
-                        $row[] = ucwords($aRow['country_name']);
-                        $row[] = ucwords($aRow['test_status_name']);
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -276,8 +274,6 @@ class DataCollectionService {
                     $sheet->setCellValue('P1', html_entity_decode('HIV RNA >=1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('Q1', html_entity_decode('Recent Infection', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('R1', html_entity_decode('Asante Rapid Recency Assy', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T1', html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -297,15 +293,13 @@ class DataCollectionService {
                     $sheet->getStyle('P1')->applyFromArray($styleArray);
                     $sheet->getStyle('Q1')->applyFromArray($styleArray);
                     $sheet->getStyle('R1')->applyFromArray($styleArray);
-                    $sheet->getStyle('S1')->applyFromArray($styleArray);
-                    $sheet->getStyle('T1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
-                            }if($colNo > 19){
+                            }if($colNo > 17){
                                 break;
                             }if($colNo == 3){
                                 $value = sha1($value);
@@ -359,5 +353,18 @@ class DataCollectionService {
     public function getCountriesLabAncDetails($params){
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->fetchCountriesLabAncDetails($params);
+    }
+    
+    public function getAllLabLogbook($parameters){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fecthAllLabLogbook($parameters);
+    }
+    
+    public function getLogbookResult($params){
+        $queryContainer = new Container('query');
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $logbookQueryStr = $sql->getSqlStringForSqlObject($queryContainer->logbookQuery);
+        return $dbAdapter->query($logbookQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

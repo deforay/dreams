@@ -6,9 +6,9 @@ if(isset($countryId) && trim($countryId)!=''){
 }else{
     $link = "/data-collection";
 }
-$specimenCollectionDate = '';
+$specimenCollectedDate = '';
 if(isset($row->specimen_collected_date) && trim($row->specimen_collected_date)!= '' && $row->specimen_collected_date!= '0000-00-00'){
-    $specimenCollectionDate = $common->viewDateFormat($row->specimen_collected_date);
+    $specimenCollectedDate = $common->viewDateFormat($row->specimen_collected_date);
 }
 $specimenPickedUpDateAtAnc = '';
 if(isset($row->specimen_picked_up_date_at_anc) && trim($row->specimen_picked_up_date_at_anc)!= '' && $row->specimen_picked_up_date_at_anc!= '0000-00-00'){
@@ -70,7 +70,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date" value="<?php echo $specimenCollectionDate; ?>">
+                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date" value="<?php echo $specimenCollectedDate; ?>">
                             <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
                         </div>
                     </div>

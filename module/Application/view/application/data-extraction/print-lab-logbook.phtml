@@ -58,10 +58,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Data Extractions</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Print Lab Logbook</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Extractions</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Print Lab Logbook</a>
        </div>
     </div>
     <?php
@@ -84,7 +84,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				?>
 			    </select>
 			</td>
-			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a></td>
+			<td style="<?php echo $style; ?>"><a href="javascript:void(0);" style="<?php echo $display;?>" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a></td>
 		    </tr>
 		</table>
 	    </div>
@@ -152,11 +152,11 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Data Extraction List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Logbook List
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
-                    <table id="dataExtractionDataTable" class="responsive-table display dataTable">
+                    <table id="labLogbookDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Surveillance ID</th>
@@ -212,7 +212,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 </div>
 <script>
     $(document).ready(function() {
-	oTable = $('#dataExtractionDataTable').dataTable({
+	oTable = $('#labLogbookDataTable').dataTable({
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },
@@ -241,7 +241,7 @@ if(!isset($countryId) || trim($countryId)== ''){
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?php echo $this->url('data-extraction',array('action' => 'index')); ?>",
+            "sAjaxSource": "<?php echo $this->url('print-lab-logbook'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "country", "value": $("#country").val()});
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
@@ -283,20 +283,20 @@ if(!isset($countryId) || trim($countryId)== ''){
         oTable.fnSetColumnVis( iCol, bVis ? false : true );
     }
 	
-    function searchDataExtractionData(){
+    function searchLabLogbookData(){
        oTable.fnDraw(false);
     }
     
-    function extractDataCollectionData(){
+    function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-data-extraction'); ?>", {},
+	$.post("<?php echo $this->url('generate-lab-logbook'); ?>", {},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('OOPS..Unable to generate logbook pdf.');
 		$.unblockUI();
 	    }else{
-		$.unblockUI();
 		document.location.href = '/temporary/'+data;
+		$.unblockUI();
 	    }
 	});
     }
