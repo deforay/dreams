@@ -123,8 +123,6 @@ class DataCollectionService {
     }
     
     public function generateDataCollectionResultPdf($params){
-        $alertContainer = new Container('alert');
-        $alertContainer->aliasPage = 1;
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $dQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -142,9 +140,7 @@ class DataCollectionService {
             $dQuery = $dQuery->where('da_c.data_collection_id IN ("' . implode('", "', $dataCollectionArray) . '")');
         }
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
-        $dataResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-        $alertContainer->nbPages = count($dataResult);
-        return $dataResult;
+        return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function exportDataCollectionInExcel($params){

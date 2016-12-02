@@ -1,21 +1,26 @@
 <?php
 use Zend\Session\Container;
+$alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
-
+$alertContainer->aliasPage = 1;
+$alertContainer->nbPages = count($dataResult);
     class MYPDF extends TCPDF {
+	public function setSchemeName($heading,$logo) {
+	    $this->heading = $heading;
+	    $this->logo = $logo;
+	}
 	
 	public function Header() {
-	   
 	    // Logo
-	    //if(trim($this->logo)!="" && file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . 'logo'. DIRECTORY_SEPARATOR.$this->logo)){
-		//$image_file = '/assets'. DIRECTORY_SEPARATOR. 'images'. DIRECTORY_SEPARATOR.'logo.png';
-		//$this->Image($image_file, 12,3,20, '', 'PNG', '', 'T', false, 300, 'L', false, false, 0, false, false, false);
-	    //}
-	     // Set font
-	    //$this->SetFont('helvetica', 'B', 12);
-	    // Title
-	    //$this->writeHTMLCell(0,'',33,10,"DATA COLLECTION RESULT",0,1,false,true,'C',true);
+            $image_file = UPLOAD_PATH . DIRECTORY_SEPARATOR.$this->logo;
+            $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+             //Set font
+            $this->SetFont('helvetica', 'B', 20);
+             //Title
+            $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
+	    $this->writeHTMLCell(0,'','','','<br/><hr/>',0,1,false,true,'C',true);
 	}
+	
 	// Page footer
 	public function Footer() {
 	    $alertContainer = new Container('alert');
@@ -48,7 +53,6 @@ $common = new \Application\Service\CommonService();
 	}
     }
 
-    $alertContainer = new Container('alert');
     //$pdf->SetY(20,true,false);
     $page = 1;
     $pages = array();
@@ -56,11 +60,11 @@ $common = new \Application\Service\CommonService();
 	$alertContainer->aliasPage = $page;
 	// create new PDF document
 	$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        
+        $pdf->setSchemeName('Data Reporting Result','logo.png');
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
         //$pdf->SetAuthor('Saravanan');
-        $pdf->SetTitle('Data Collection Result');
+        $pdf->SetTitle('Data Reporting Result');
         //$pdf->SetSubject('TCPDF Tutorial');
         //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
         
@@ -89,6 +93,8 @@ $common = new \Application\Service\CommonService();
 	$pdf->SetFont('times', '', 10);
 	
 	$pdf->AddPage();
+	$pdf->SetY(30,true,false);
+	
 	if(isset($data['specimen_collected_date']) && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
 	    $data['specimen_collected_date'] = $common->humanDateFormat($data['specimen_collected_date']);
 	}if(isset($data['specimen_picked_up_date_at_anc']) && trim($data['specimen_picked_up_date_at_anc'])!= '' && $data['specimen_picked_up_date_at_anc']!= '0000-00-00'){
@@ -115,29 +121,28 @@ $common = new \Application\Service\CommonService();
 	
 	$html = '';
 	$html .= '<table style="padding:2px;">';
-	$html .='<tr>';
-	$html .='<td colspan="2" style="text-align:left;"><img src="/assets/images/logo.png" style="width:70px;height:70px;" alt="logo"></td>';
-	$html .='<td colspan="4" style="text-align:left;line-height:43px;"><h3>Data Reporting Result</h3></td>';
-	$html .='<hr/></tr>';
 	$html .='<tr><td colspan="6" style="text-align:left;"><h5>SURVEILLANCE INFORMATION</h5></td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Surveillance ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['surveillance_id'].'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">Specimen Collected Date</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_collected_date'].'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">ANC Site Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Picked Up Date at ANC</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Surveillance ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['surveillance_id'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Collected Date</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_collected_date'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Picked Up Date at ANC</td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
 	$html .='<tr><td colspan="6" style="text-align:left;"><h5>LABORATORY INFORMATION</h5></td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Lab Site Code/Name</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['facility_code'].' - '.ucwords($data['facility_name']).'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">Lab Specimen ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['lab_specimen_id'].'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">Speciemen Rejection Code</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['rejection_code'].'</td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Date Of Receipt at Central Lab</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['receipt_date_at_central_lab'].'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">Date Of Test Completion</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['date_of_test_completion'].'</td>';
-	$html .='<td style="line-height:18px;font-size:10px;text-align:left;">Date Of Result Dispatched To Clinic</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['result_dispatched_date_to_clinic'].'</td></tr>';
-	$html .= '<tr><td colspan="6" style="text-align:left;"><h5>PATIENT INFORMATION</h5></td></tr>';
-	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">ANC Patient ID</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['anc_patient_id'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">Age</td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['age'].'</td></tr>';
-	$html .= '<tr><td colspan="6" style="text-align:left;"><h5>TEST INFORMATION</h5></td></tr>';
-	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">Final Lag Avidity ODn</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['final_lag_avidity_odn'].'</td><td style="line-height:18px;font-size:10px;text-align:left;">HIV RNA(copies/ml)</td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$data['hiv_rna'].'</td></tr>';
-	$html .= '<tr><td style="line-height:18px;font-size:10px;text-align:left;">LAg Avidity Result</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$lAgAvidityResult.'</td><td style="line-height:18px;font-size:10px;text-align:left;">HIV RNA >= 1,000 (copies/ml) </td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.$hIVRNAResult.'</td><td style="line-height:18px;font-size:10px;text-align:left;">Recent Infection(LAg-R & RNA >= 1,000)</td><td style="line-height:18px;font-size:10px;text-align:left;font-weight:bold">'.ucwords($data['recent_infection']).'</td></tr>';
-	$html .= '<hr/>';
-	$html .= '</table>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['facility_code'].' - '.ucwords($data['facility_name']).'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Specimen ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['lab_specimen_id'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Speciemen Rejection Code</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['rejection_code'].'</td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Receipt at Central Lab</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['receipt_date_at_central_lab'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Test Completion</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['date_of_test_completion'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Result Dispatched To Clinic</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['result_dispatched_date_to_clinic'].'</td></tr>';
+	$html .='<tr><td colspan="6" style="text-align:left;"><h5>PATIENT INFORMATION</h5></td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Patient ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_patient_id'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Age</strong></td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;">'.$data['age'].'</td></tr>';
+	$html .='<tr><td colspan="6" style="text-align:left;"><h5>TEST INFORMATION</h5></td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Final Lag Avidity ODn</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['final_lag_avidity_odn'].'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA(copies/ml)</strong></td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;">'.$data['hiv_rna'].'</td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>LAg Avidity Result</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$lAgAvidityResult.'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA >= 1,000 (copies/ml)</strong> </td><td style="line-height:18px;font-size:10px;text-align:left;">'.$hIVRNAResult.'</td>';
+	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Recent Infection(LAg-R & RNA >= 1,000)</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.ucwords($data['recent_infection']).'</td></tr>';
+	$html .='</table>';
 	$pdf->writeHTML($html);
 	$pdf->lastPage();
 	$filename = TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .'p'.$page. '.pdf';

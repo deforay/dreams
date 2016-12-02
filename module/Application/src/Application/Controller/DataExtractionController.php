@@ -63,7 +63,7 @@ class DataExtractionController extends AbstractActionController{
         }
     }
     
-    public function generateLabLogbookAction(){
+    public function generateLogbookPdfAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();

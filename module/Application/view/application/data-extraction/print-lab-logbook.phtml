@@ -289,7 +289,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     
     function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('generate-lab-logbook'); ?>", {},
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate logbook pdf.');

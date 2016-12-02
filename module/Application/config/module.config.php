@@ -302,13 +302,13 @@ return array(
                         'action' => 'print-lab-logbook'
                     ),
                 ),
-            ),'generate-lab-logbook' => array(
+            ),'generate-logbook-pdf' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/generate-lab-logbook',
+                    'route' => '/generate-logbook-pdf',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataExtraction',
-                        'action' => 'generate-lab-logbook'
+                        'action' => 'generate-logbook-pdf'
                     ),
                 ),
             ),
