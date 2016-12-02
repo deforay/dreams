@@ -210,7 +210,7 @@ class DataCollectionService {
                         $row[] = $aRow['surveillance_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = ucwords($aRow['anc_site_name']).' - '.$aRow['anc_site_code'];
-                        $row[] = $aRow['anc_patient_id'];
+                        $row[] = $aRow['enc_anc_patient_id'];
                         $row[] = $aRow['age'];
                         $row[] = $specimenPickedUpDateAtAnc;
                         $row[] = ucwords($aRow['facility_name']).' - '.$aRow['facility_code'];
@@ -297,8 +297,6 @@ class DataCollectionService {
                                 $value = "";
                             }if($colNo > 17){
                                 break;
-                            }if($colNo == 3){
-                                $value = sha1($value);
                             }
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);

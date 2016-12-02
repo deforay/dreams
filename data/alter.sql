@@ -288,3 +288,8 @@ ALTER TABLE `country` CHANGE `status` `country_status` VARCHAR(45) CHARACTER SET
 ALTER TABLE `data_collection` ADD `date_of_test_completion` DATE NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
 
 ALTER TABLE `data_collection_event_log` ADD `date_of_test_completion` DATE NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
+
+--Pal 02/12/2016
+ALTER TABLE `data_collection` ADD `enc_anc_patient_id` VARCHAR(500) NULL DEFAULT NULL AFTER `anc_patient_id`;
+
+ALTER TABLE `data_collection_event_log` ADD `enc_anc_patient_id` VARCHAR(500) NULL DEFAULT NULL AFTER `anc_patient_id`;

@@ -63,7 +63,7 @@ $alertContainer->nbPages = count($dataResult);
         $pdf->setSchemeName('Data Reporting Result','logo.png');
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
-        //$pdf->SetAuthor('Saravanan');
+        $pdf->SetAuthor('Dream');
         $pdf->SetTitle('Data Reporting Result');
         //$pdf->SetSubject('TCPDF Tutorial');
         //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -90,7 +90,7 @@ $alertContainer->nbPages = count($dataResult);
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         
 	// set font
-	$pdf->SetFont('times', '', 10);
+	$pdf->SetFont('helvetica', '', 10);
 	
 	$pdf->AddPage();
 	$pdf->SetY(30,true,false);
@@ -125,7 +125,7 @@ $alertContainer->nbPages = count($dataResult);
 	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Surveillance ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['surveillance_id'].'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Collected Date</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_collected_date'].'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;">Specimen Picked Up Date at ANC</td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Picked Up Date at ANC</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';
 	$html .='<tr><td colspan="6" style="text-align:left;"><h5>LABORATORY INFORMATION</h5></td></tr>';
 	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['facility_code'].' - '.ucwords($data['facility_name']).'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Specimen ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['lab_specimen_id'].'</td>';
