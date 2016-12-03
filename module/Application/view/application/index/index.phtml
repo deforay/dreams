@@ -23,52 +23,48 @@ $loginContainer = new Container('user');
     <?php
     if($loginContainer->roleCode == 'CSC'){
     ?>
-       <div class="row content-container elements">
-            <div class="row">
-                <div class="col l12 m12 s12">
-                    <div class="card card-default">
-                        <div class="card-header white-text">
-                            Data Reporting/Finalized Points
-                        </div>
-                        <div class="card-content clearfix">
-                            <table class="responsive-table striped">
-                                <thead>
+        <div class="row">
+            <div class="col s12">
+                <div class="card card-default">
+                    <div class="card-header white-text">
+                        Data Reporting /Finalized Points
+                    </div>
+                    <div class="card-content clearfix">
+                        <table class="responsive-table striped">
+                            <thead>
+                            <tr>
+                                <th data-field="Country Name">Name of the Country</th>
+                                <th data-field="Points Reported">Total no. of Data Points Reported</th>
+                                <th data-field="Points Finalized">Data Points Finalized</th>
+                                <th data-field="Month Year">Month - Year</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            if(count($row) >0){
+                                foreach($row as $country){
+                            ?>
                                 <tr>
-                                    <th data-field="Country Name">Name of the Country</th>
-                                    <th data-field="Points Reported">Total no. of Data Points Reported</th>
-                                    <th data-field="Points Finalized">Data Points Finalized</th>
-                                    <th data-field="Month Year">Month - Year</th>
+                                    <td><?php echo ucwords($country['country_name']); ?></td>
+                                    <td><?php echo $country['totalDataPoints']; ?></td>
+                                    <td><?php echo $country['dataPointFinalized']; ?></td>
+                                    <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                if(count($row) >0){
-                                    foreach($row as $country){
-                                ?>
-                                    <tr>
-                                        <td><?php echo ucwords($country['country_name']); ?></td>
-                                        <td><?php echo $country['totalDataPoints']; ?></td>
-                                        <td><?php echo $country['dataPointFinalized']; ?></td>
-                                        <td><?php echo $country['month'].' - '.$country['year']; ?></td>
-                                    </tr>
-                                <?php } } else { ?>
-                                    <tr>
-                                        <td colspan="4">No data available..</td>
-                                    </tr>
-                                <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
+                            <?php } } else { ?>
+                                <tr>
+                                    <td colspan="4">No data available..</td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     <?php } else { ?>
-       <div class="row content-container elements">
-            <div class="row">
-                <div class="col l12 m12 s12">
-                    Coming Soon..
-                </div>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                Coming Soon..
             </div>
         </div>
     <?php } ?>

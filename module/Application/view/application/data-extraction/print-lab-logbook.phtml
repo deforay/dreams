@@ -268,7 +268,6 @@ $loginContainer = new Container('user');
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('print-lab-logbook'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
-                aoData.push({"name": "country", "value": $("#country").val()});
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
 		aoData.push({"name": "specimenCollectedDate", "value": $("#specimenCollectedDate").val() });
 		aoData.push({"name": "anc", "value": $("#anc").val() });
