@@ -76,4 +76,18 @@ class UserService {
         $userDb = $this->sm->get('UserTable');
         return $userDb->updateAccountPassword($params);
     }
+    
+    public function checkAccountPassword($params){
+        $loginContainer = new Container('user');
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $config = new \Zend\Config\Reader\Ini();
+	$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+	$password = sha1($params['password'] . $configResult["password"]["salt"]);
+        $userQuery = $sql->select()->from(array('u' => 'user'))
+                         ->columns(array('user_id'))
+                         ->where(array('u.user_id'=>$loginContainer->userId,'u.password'=>$password));
+        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
+      return $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+    }
 }

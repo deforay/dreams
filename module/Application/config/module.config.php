@@ -320,6 +320,15 @@ return array(
                         'action' => 'change-password'
                     ),
                 ),
+            ),'check-account-password' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/check-account-password',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\User',
+                        'action' => 'check-password'
+                    ),
+                ),
             ),
             
         ),

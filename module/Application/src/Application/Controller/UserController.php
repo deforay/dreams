@@ -86,18 +86,25 @@ class UserController extends AbstractActionController{
     }
     
     public function changePasswordAction(){
-        $loginContainer = new Container('user');
-        $userService = $this->getServiceLocator()->get('UserService');
         $request = $this->getRequest();
         if($request->isPost()){
             $params = $request->getPost();
+            $userService = $this->getServiceLocator()->get('UserService');
             $userService->changeAccountPassword($params);
             return $this->redirect()->toRoute('home');
-        }else{
-            $result=$userService->getUser($loginContainer->userId);
-            return new ViewModel(array(
-                'row'=>$result
-            ));
+        }
+    }
+    
+    public function checkPasswordAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $userService = $this->getServiceLocator()->get('UserService');
+            $row = $userService->checkAccountPassword($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('row' =>$row));
+            $viewModel->setTerminal(true);
+            return $viewModel;
         }
     }
   
