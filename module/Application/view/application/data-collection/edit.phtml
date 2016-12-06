@@ -286,36 +286,36 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('Long Term');
+	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 1.5)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
 		if(parseInt($('#hivRna').val()) <= 1000){
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term');
+	        $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn < 1.5 and HIV RNA <= 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent');
+	        $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5 and HIV RNA > 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent');
+	        $('.prePopulateAvidity').css('visibility','visible');
+		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
-		$('.prePopulateAvidity').css('visibility','hidden');
-		$('label[for="lagAvidityResult"]').html('');
-		$('#lagAvidityResultRecent').prop('checked',false);
-		$('#lagAvidityResultLongTerm').prop('checked',false);
+            $('.prePopulateAvidity').css('visibility','hidden');
+            $('label[for="lagAvidityResult"]').html('');
+            $('#lagAvidityResultRecent').prop('checked',false);
+            $('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) >= 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('High Viral Load');
+		$('label[for="hivRnaGT1000"]').html('High Viral Load (>= 1000 cp/mL)');
 		$('#hivRnaGT1000Yes').prop('checked',true);
 	    }else if(parseInt($('#hivRna').val()) < 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('Low Viral Load');
+		$('label[for="hivRnaGT1000"]').html('Low Viral Load (< 1000 cp/mL)');
 		$('#hivRnaGT1000No').prop('checked',true);
 	    }else{
 		$('.prePopulateHIVRNA').css('visibility','hidden');
@@ -323,16 +323,21 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('#hivRnaGT1000Yes').prop('checked',false);
 		$('#hivRnaGT1000No').prop('checked',false);
 	    }
-	    //Recent infection
-	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-		$('.prePopulateRecentInfection').css('visibility','visible');
-		$('label[for="recentInfection"]').html('Yes');
-		$('#recentInfectionYes').prop('checked',true);
-	    }else{
-		$('.prePopulateRecentInfection').css('visibility','visible');
-		$('label[for="recentInfection"]').html('No');
-		$('#recentInfectionNo').prop('checked',true);
-	    }
+	    
+		if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+		}else{
+			//Recent infection
+			if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+				$('.prePopulateRecentInfection').css('visibility','visible');
+				$('label[for="recentInfection"]').html('Yes');
+				$('#recentInfectionYes').prop('checked',true);
+			}else{
+				$('.prePopulateRecentInfection').css('visibility','visible');
+				$('label[for="recentInfection"]').html('No');
+				$('#recentInfectionNo').prop('checked',true);
+			}
+		}
 	}
     });
     
