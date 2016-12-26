@@ -2,6 +2,21 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $loginContainer = new Container('user');
+$DRAccess = '';
+$PRAccess = '';
+if($loginContainer->roleCode == 'CL'){
+    if($loginContainer->hasDRAccess == 'yes'){
+        $DRAccess = '';
+    }else{
+       $DRAccess = 'display:none;'; 
+    }
+    
+    if($loginContainer->hasPRAccess == 'yes'){
+        $PRAccess = '';
+    }else{
+       $PRAccess = 'display:none;'; 
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,7 +192,7 @@ $loginContainer = new Container('user');
                                                     </ul>
                                                 </div>
                                             </li>
-                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll" style="<?php echo $DRAccess; ?>">
                                                 <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                             </li>
                                             <?php
@@ -188,7 +203,7 @@ $loginContainer = new Container('user');
                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
                                                 </li>
-                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
+                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll" style="<?php echo $PRAccess; ?>">
                                                     <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                 </li>
                                             <?php } ?>

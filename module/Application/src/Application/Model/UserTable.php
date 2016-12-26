@@ -42,9 +42,11 @@ class UserTable extends AbstractTableGateway {
 		}
 		$loginContainer = new Container('user');
 		$userCountry = array();
+		$userClinic = array();
 		if($loginResult->role_code =='CSC'){
 		    $isCountrySelected = false;
 		}else{
+		    //Set user countries
 		    $countryMapQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
 					   ->where(array('c_map.user_id' => $loginResult->user_id));
 		    $countryMapQueryStr = $sql->getSqlStringForSqlObject($countryMapQuery);
@@ -54,13 +56,26 @@ class UserTable extends AbstractTableGateway {
 			    $userCountry[] = $country['country_id'];
 			}
 		    }
+		    //set user clinics
+		    $clinicMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+					  ->where(array('cl_map.user_id' => $loginResult->user_id));
+		    $clinicMapQueryStr = $sql->getSqlStringForSqlObject($clinicMapQuery);
+		    $clinicMapResult = $dbAdapter->query($clinicMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+		    if(isset($clinicMapResult) && count($clinicMapResult)>0){
+			foreach($clinicMapResult as $clinic){
+			    $userClinic[] = $clinic['clinic_id'];
+			}
+		    }
 		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
 			$loginContainer->userId = $loginResult->user_id;
 			$loginContainer->userName = $loginResult->user_name;
 			$loginContainer->roleCode = $loginResult->role_code;
+			$loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
+			$loginContainer->hasPRAccess = $loginResult->has_print_report_access;
 			$loginContainer->country = $userCountry;
+			$loginContainer->clinic = $userClinic;
 		       return 'home';
 		    }else{
 		       $alertContainer->msg = 'Please check the country that you have choosen..!';
@@ -70,7 +85,10 @@ class UserTable extends AbstractTableGateway {
 		    $loginContainer->userId = $loginResult->user_id;
 		    $loginContainer->userName = $loginResult->user_name;
 		    $loginContainer->roleCode = $loginResult->role_code;
+		    $loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
+		    $loginContainer->hasPRAccess = $loginResult->has_print_report_access;
 		    $loginContainer->country = $userCountry;
+		    $loginContainer->clinic = $userClinic;
 		    return 'home';
 		}
             }else{
@@ -102,6 +120,12 @@ class UserTable extends AbstractTableGateway {
 		'status' => 'active',
 		'created_on' => $common->getDateTime()
 		);
+		$data['has_data_reporting_access']  =NULL;
+		$data['has_print_report_access']  =NULL;
+		if(isset($params['role']) && base64_decode($params['role'])== 5){
+		   $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
+		   $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
+		}
 		$this->insert($data);
 		$lastInsertedId = $this->lastInsertValue;
 	}
@@ -200,7 +224,7 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-	        $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	        $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO","CL")');
 	    }else if($loginContainer->roleCode== 'LS'){
 		$sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LDEO'){
@@ -246,7 +270,7 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-	        $tQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO")');
+	        $tQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO","CL")');
 	    }else if($loginContainer->roleCode== 'LS'){
 		$tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LDEO'){
@@ -298,7 +322,12 @@ class UserTable extends AbstractTableGateway {
 				->where(array('c_map.user_id'=>$userId));
 	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
 	$cResult = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-      return array($rResult,'userCountries'=>$cResult);
+	//Get user's clinics if exist
+	$clQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+				->where(array('cl_map.user_id'=>$userId));
+	$clQueryStr = $sql->getSqlStringForSqlObject($clQuery);
+	$clResult = $dbAdapter->query($clQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return array($rResult,'userCountries'=>$cResult,'userClinics'=>$clResult);
     }
 	
     public function updateUserDetails($params){
@@ -306,6 +335,7 @@ class UserTable extends AbstractTableGateway {
 	if(isset($params['userName']) && trim($params['userName'])!= ''){
 		$userId = base64_decode($params['userId']);
 		$common = new CommonService();
+
 		$data = array(
 		'full_name' => $params['fullName'],
 		'user_code' => $params['userCode'],
@@ -320,6 +350,14 @@ class UserTable extends AbstractTableGateway {
 		    $config = new \Zend\Config\Reader\Ini();
 		    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 		    $data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
+		}
+		
+		if(isset($params['role']) && base64_decode($params['role'])== 5){
+		   $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
+		   $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
+		}else{
+		    $data['has_data_reporting_access']  =NULL;
+		    $data['has_print_report_access']  =NULL;
 		}
 		$this->update($data,array('user_id'=>$userId));
 	}

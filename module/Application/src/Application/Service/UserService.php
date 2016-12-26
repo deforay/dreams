@@ -30,7 +30,11 @@ class UserService {
             $result = $userDb->addUserDetails($params);
             if ($result > 0) {
                 $userCountryMapDb = $this->sm->get('UserCountryMapTable');
+                $userClinicMapDb = $this->sm->get('UserClinicMapTable');
                 $userCountryMapDb->addUserCountryMapDetails($params,$result);
+		if(isset($params['role']) && base64_decode($params['role'])== 5){
+		   $userClinicMapDb->addUserClinicMapDetails($params,$result); 
+		}
                 $adapter->commit();
                 $alertContainer = new Container('alert');
                 $alertContainer->msg = 'User added successfully.';
@@ -60,7 +64,9 @@ class UserService {
             $result = $userDb->updateUserDetails($params);
             if ($result > 0) {
                 $userCountryMapDb = $this->sm->get('UserCountryMapTable');
+		$userClinicMapDb = $this->sm->get('UserClinicMapTable');
                 $userCountryMapDb->addUserCountryMapDetails($params,$result);
+		$userClinicMapDb->addUserClinicMapDetails($params,$result); 
                 $adapter->commit();
                 $alertContainer = new Container('alert');
                 $alertContainer->msg = 'User updated successfully.';

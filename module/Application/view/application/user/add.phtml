@@ -137,6 +137,43 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                 <?php } ?>
             </div>
+            <div class="row clinicanSection" style="display:none;">
+                <div class="col s6">
+                    <div class="input-padding col m10 s10">
+                        Has Data Reporting Access ? *<br>
+                        <input id="hasDataReportingAccessYes" class="with-gap isRequired" name="hasDataReportingAccess" value="yes" type="radio">
+                        <label for="hasDataReportingAccessYes">Yes </label>&nbsp;
+                        <input id="hasDataReportingAccessNo" class="with-gap isRequired" name="hasDataReportingAccess" value="no" type="radio" checked>
+                        <label for="hasDataReportingAccessNo">No </label>
+		    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-padding col m10 s10">
+                        Has Print Report Access ? *<br>
+                        <input id="hasPrintReportAccessYes" class="with-gap isRequired" name="hasPrintReportAccess" value="yes" type="radio">
+                        <label for="hasPrintReportAccessYes">Yes </label>&nbsp;
+                        <input id="hasPrintReportAccessNo" class="with-gap isRequired" name="hasPrintReportAccess" value="no" type="radio" checked>
+                        <label for="hasPrintReportAccessNo">No </label>
+		    </div>
+                </div>
+            </div>
+            <div class="row clinicanSection" style="display:none;">
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <i class="material-icons prefix">done</i>
+                        <select class="material-select" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
+                            <?php
+                            foreach($ancSites as $anc){
+                                ?>
+                                <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo ucwords($anc['anc_site_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                        <label for="ancSite" class="">ANC site name *</label>
+                    </div>
+                </div>
+            </div>
             <div class="col s12">
                 <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
@@ -195,4 +232,15 @@ if(isset($countryId) && trim($countryId)!=''){
             $("#countrySingle").show();
         }
     }
+    
+    $('#role').on('change',function(e){
+       var role = $('#role').val();
+       if(base64_decode(role)== 5){
+          $('.clinicanSection').show();
+          $('#ancSite').addClass('isRequired');
+       }else{
+         $('#ancSite').removeClass('isRequired');
+         $('.clinicanSection').hide();
+       }
+    });
 </script>

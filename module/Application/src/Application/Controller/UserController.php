@@ -43,11 +43,14 @@ class UserController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $result=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',$countryId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
                 'countries'=>$countryList,
+                'ancSites'=>$ancSiteList,
                 'countryId'=>$countryId
             ));
         }
@@ -74,11 +77,14 @@ class UserController extends AbstractActionController{
             }
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $roleResult=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',array_unique($userCountryList));
+            $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,
+                'ancSites'=>$ancSiteList,
                 'roleData'=>$roleResult,
                 'countryId'=>$countryId
             ));
