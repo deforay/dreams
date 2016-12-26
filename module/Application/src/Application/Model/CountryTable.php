@@ -182,7 +182,9 @@ class CountryTable extends AbstractTableGateway {
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country));
             }else{
                 if($loginContainer->roleCode!= 'CSC'){
-                   $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+                    if(count($loginContainer->country) >0){
+                       $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+                    }
                 }
             }
         }
