@@ -299,3 +299,15 @@ ALTER TABLE `data_collection_event_log` ADD `enc_anc_patient_id` VARCHAR(500) NU
 INSERT INTO `role` (`role_id`, `role_name`, `role_code`, `role_description`, `role_status`) VALUES (NULL, 'Clinician', 'CL', NULL, 'active');
 
 ALTER TABLE `user` ADD `has_data_reporting_access` VARCHAR(45) NULL DEFAULT NULL AFTER `alt_contact`, ADD `has_print_report_access` VARCHAR(45) NULL DEFAULT NULL AFTER `has_data_reporting_access`;
+
+CREATE TABLE `user_clinic_map` (
+  `clinic_map_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `clinic_id` int(11) NOT NULL
+)
+
+ALTER TABLE `user_clinic_map`
+  ADD PRIMARY KEY (`clinic_map_id`);
+
+ALTER TABLE `user_clinic_map`
+  MODIFY `clinic_map_id` int(11) NOT NULL AUTO_INCREMENT
