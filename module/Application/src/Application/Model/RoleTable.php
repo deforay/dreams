@@ -184,6 +184,8 @@ class RoleTable extends AbstractTableGateway {
                 $rolesQuery = $rolesQuery->where('r.role_code IN ("LS","LDEO")');
             }else if($loginContainer->roleCode== 'LDEO'){
                $rolesQuery = $rolesQuery->where('r.role_code IN ("LDEO")'); 
+            }else if($loginContainer->roleCode== 'CL'){
+               $rolesQuery = $rolesQuery->where('r.role_code IN ("CL")');
             }
         }else{
             if($loginContainer->roleCode== 'CSC'){

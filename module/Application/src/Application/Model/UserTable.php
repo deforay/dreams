@@ -229,6 +229,8 @@ class UserTable extends AbstractTableGateway {
 		$sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LDEO'){
 		$sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
+	    }else if($loginContainer->roleCode== 'CL'){
+		$sQuery = $sQuery->where('r.role_code IN ("CL")');
 	    }
 	}else{
 	    if($loginContainer->roleCode== 'CSC'){
@@ -275,6 +277,8 @@ class UserTable extends AbstractTableGateway {
 		$tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
 	    }else if($loginContainer->roleCode== 'LDEO'){
 		$tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
+	    }else if($loginContainer->roleCode== 'CL'){
+		$tQuery = $tQuery->where('r.role_code IN ("CL")');
 	    }
 	}else{
 	    if($loginContainer->roleCode== 'CSC'){
