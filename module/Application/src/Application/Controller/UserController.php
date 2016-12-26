@@ -46,10 +46,12 @@ class UserController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $result=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',$countryId);
+            $allCountryList=$countryService->getActiveCountries('login',$countryId);
             $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
                 'countries'=>$countryList,
+                'allCountries'=>$allCountryList,
                 'ancSites'=>$ancSiteList,
                 'countryId'=>$countryId
             ));
@@ -66,24 +68,18 @@ class UserController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $userId=base64_decode($this->params()->fromRoute('id'));
             $result=$userService->getUser($userId);
-            $userCountryList = array();
-            if(isset($countryId) && trim($countryId)!=''){
-                $userCountryList[] = $countryId;
-            }
-            if(count($result['userCountries'])>0){
-                foreach($result['userCountries'] as $country){
-                    $userCountryList[] = $country['country_id'];
-                }
-            }
+        
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $roleResult=$roleService->getActiveRoles($countryId);
-            $countryList=$countryService->getActiveCountries('user',array_unique($userCountryList));
+            $countryList=$countryService->getActiveCountries('user',$countryId);
+            $allCountryList=$countryService->getActiveCountries('login',$countryId);
             $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,
+                'allCountries'=>$allCountryList,
                 'ancSites'=>$ancSiteList,
                 'roleData'=>$roleResult,
                 'countryId'=>$countryId

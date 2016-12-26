@@ -125,9 +125,9 @@ if(isset($countryId) && trim($countryId)!=''){
                             <i class="material-icons prefix">room</i>
                             <select class="material-select countryMulti" id="countryMulti" name="country[]" multiple="multiple" title="Please select country">
                                 <?php
-                                foreach($countries as $country){
+                                foreach($allCountries as $allCountry){
                                     ?>
-                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($countryId ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
+                                    <option value="<?php echo base64_encode($allCountry['country_id']);?>" <?php echo($countryId ==$allCountry['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($allCountry['country_name']);?></option>
                                     <?php
                                 }
                                 ?>

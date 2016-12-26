@@ -58,7 +58,7 @@ $row = $row[0];
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
                         <input id="password" name="password" type="password" class="validate" title="Please enter password">
-                        <label for="password" class="">Password *</label>
+                        <label for="password" class="">Password </label>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@ $row = $row[0];
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
                         <input id="confirmPassword" name="password" type="password" class="validate confirmPassword" title="Please check that your password and confirm password are same">
-                        <label for="password" class="">Confirm Password *</label>
+                        <label for="password" class="">Confirm Password </label>
                     </div>
                 </div>
                 <div class="col s6">
@@ -135,9 +135,9 @@ $row = $row[0];
                             <i class="material-icons prefix">room</i>
                             <select class="material-select countryMulti" id="countryMulti" name="country[]" multiple="multiple" title="Please select country" >
                                 <?php
-                                foreach($countries as $country){
+                                foreach($allCountries as $allCountry){
                                     ?>
-                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo in_array($country['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                    <option value="<?php echo base64_encode($allCountry['country_id']);?>" <?php echo in_array($allCountry['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($allCountry['country_name']);?></option>
                                     <?php
                                 }
                                 ?>
