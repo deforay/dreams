@@ -5,16 +5,10 @@ $loginContainer = new Container('user');
 $DRAccess = '';
 $PRAccess = '';
 if($loginContainer->roleCode == 'CL'){
-    if($loginContainer->hasDRAccess == 'yes'){
-        $DRAccess = '';
-    }else{
-       $DRAccess = 'display:none;'; 
-    }
-    
-    if($loginContainer->hasPRAccess == 'yes'){
-        $PRAccess = '';
-    }else{
-       $PRAccess = 'display:none;'; 
+    if($loginContainer->hasDRAccess == 'no' || $loginContainer->hasDRAccess == '' || $loginContainer->hasDRAccess == NULL){
+        $DRAccess = 'display:none;';
+    }if($loginContainer->hasPRAccess == 'no' || $loginContainer->hasPRAccess == '' || $loginContainer->hasPRAccess == NULL){
+        $PRAccess = 'display:none;';
     }
 }
 ?>
