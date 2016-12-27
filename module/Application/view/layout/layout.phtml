@@ -7,22 +7,23 @@ $countryUserMenu = 'show';
 $countryLabMenu = 'show';
 $countryAncsiteMenu = 'show';
 $countryDataReportingMenu = 'show';
-$DRAccess = 'show';
-$PRAccess = 'show';
-if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'CL'){
+$DRAccess = 'hide';
+$PRAccess = 'hide';
+if($loginContainer->roleCode== 'LDEO'){
+  $countrySingleMenus = 'hide';
+  $countryLabMenu = 'hide';
+  $countryAncsiteMenu = 'hide';
+}
+if($loginContainer->roleCode== 'CL'){
   $countrySingleMenus = 'hide';
   $countryUserMenu = 'hide';
   $countryLabMenu = 'hide';
-}
-if($loginContainer->roleCode== 'CL'){
   $countryDataReportingMenu = 'hide';
-}
-if($loginContainer->roleCode == 'CL'){
-    if($loginContainer->hasDRAccess == 'no' || $loginContainer->hasDRAccess == '' || $loginContainer->hasDRAccess == NULL){
-        $DRAccess = 'hide';
-    }if($loginContainer->hasPRAccess == 'no' || $loginContainer->hasPRAccess == '' || $loginContainer->hasPRAccess == NULL){
-        $PRAccess = 'hide';
-    }
+  if($loginContainer->hasDRAccess == 'yes'){
+    $DRAccess = 'show';
+  }if($loginContainer->hasPRAccess == 'yes'){
+    $PRAccess = 'show';
+  }
 }
 ?>
 <!DOCTYPE html>
