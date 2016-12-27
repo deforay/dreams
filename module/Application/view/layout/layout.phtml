@@ -2,13 +2,26 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $loginContainer = new Container('user');
-$DRAccess = '';
-$PRAccess = '';
+$countrySingleMenus = 'show';
+$countryUserMenu = 'show';
+$countryLabMenu = 'show';
+$countryAncsiteMenu = 'show';
+$countryDataReportingMenu = 'show';
+$DRAccess = 'show';
+$PRAccess = 'show';
+if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'CL'){
+  $countrySingleMenus = 'hide';
+  $countryUserMenu = 'hide';
+  $countryLabMenu = 'hide';
+}
+if($loginContainer->roleCode== 'CL'){
+  $countryDataReportingMenu = 'hide';
+}
 if($loginContainer->roleCode == 'CL'){
     if($loginContainer->hasDRAccess == 'no' || $loginContainer->hasDRAccess == '' || $loginContainer->hasDRAccess == NULL){
-        $DRAccess = 'display:none;';
+        $DRAccess = 'hide';
     }if($loginContainer->hasPRAccess == 'no' || $loginContainer->hasPRAccess == '' || $loginContainer->hasPRAccess == NULL){
-        $PRAccess = 'display:none;';
+        $PRAccess = 'hide';
     }
 }
 ?>
@@ -171,14 +184,20 @@ if($loginContainer->roleCode == 'CL'){
                                                 <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>">
                                                     <ul>
-                                                        <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
-                                                            <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
-                                                        </li>
                                                         <?php
-                                                        if($loginContainer->roleCode!= 'LDEO'){ ?>
+                                                        if($countryUserMenu == 'show') {
+                                                        ?>
+                                                            <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
+                                                            </li>
+                                                        <?php } ?>
+                                                        <?php
+                                                        if($countryLabMenu == 'show'){ ?>
                                                             <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
                                                             </li>
+                                                        <?php } ?>
+                                                        <?php if($countryAncsiteMenu == 'show'){ ?>
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
@@ -186,18 +205,21 @@ if($loginContainer->roleCode == 'CL'){
                                                     </ul>
                                                 </div>
                                             </li>
-                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll" style="<?php echo $DRAccess; ?>">
-                                                <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
-                                            </li>
                                             <?php
-                                            if($loginContainer->roleCode!= 'LDEO'){ ?>
+                                            if($countryDataReportingMenu == 'show'){ ?>
+                                                <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                    <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                </li>
+                                            <?php } ?>
+                                            <?php
+                                            if($countrySingleMenus == 'show'){ ?>
                                                 <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
                                                 </li>
                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
                                                 </li>
-                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll" style="<?php echo $PRAccess; ?>">
+                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                 </li>
                                             <?php } ?>
