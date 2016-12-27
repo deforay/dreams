@@ -325,13 +325,13 @@ class UserTable extends AbstractTableGateway {
 	$cQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
 				->where(array('c_map.user_id'=>$userId));
 	$cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
-	$cResult = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	$rResult['userCountries'] = $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	//Get user's clinics if exist
 	$clQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
 				->where(array('cl_map.user_id'=>$userId));
 	$clQueryStr = $sql->getSqlStringForSqlObject($clQuery);
-	$clResult = $dbAdapter->query($clQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-      return array($rResult,'userCountries'=>$cResult,'userClinics'=>$clResult);
+	$rResult['userClinics'] = $dbAdapter->query($clQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $rResult;
     }
 	
     public function updateUserDetails($params){
