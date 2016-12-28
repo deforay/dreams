@@ -153,10 +153,10 @@ if($loginContainer->roleCode== 'CL'){
                                                 </div>
                                             </li>
                                             <li class="cscDataCollectionMenu menuAll">
-                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Lab Data Reporting</a>
                                             </li>
                                             <li class="cscDataExtractionMenu menuAll">
-                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
+                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Lab Data Extraction</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -189,41 +189,48 @@ if($loginContainer->roleCode== 'CL'){
                                                         if($countryUserMenu == 'show') {
                                                         ?>
                                                             <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
+                                                                <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
                                                             </li>
                                                         <?php } ?>
                                                         <?php
                                                         if($countryLabMenu == 'show'){ ?>
                                                             <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
+                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
                                                             </li>
                                                         <?php } ?>
                                                         <?php if($countryAncsiteMenu == 'show'){ ?>
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
+                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
                                                 </div>
                                             </li>
-                                            <?php
-                                            if($countryDataReportingMenu == 'show'){ ?>
-                                                <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
-                                                </li>
-                                            <?php } ?>
-                                            <?php
-                                            if($countrySingleMenus == 'show'){ ?>
-                                                <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
-                                                </li>
-                                                <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-email"></i>Result Email</a>
-                                                </li>
-                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
-                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
-                                                </li>
-                                            <?php } ?>
+                                            <li class="countryLabMenu<?php echo $country['country_id']; ?> menuAll">
+                                                <div class="collapsible-header waves-effect countryLabMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Lab <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body collapsibleAll collapsibleCountryLabMenu<?php echo $country['country_id']; ?>">
+                                                    <ul>
+                                                        <?php
+                                                        if($countryDataReportingMenu == 'show'){ ?>
+                                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                            </li>
+                                                        <?php } ?>
+                                                        <?php
+                                                        if($countrySingleMenus == 'show'){ ?>
+                                                            <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
+                                                            </li>
+                                                            <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-email"></i>Result Email</a>
+                                                            </li>
+                                                            <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> Print Logbook</a>
+                                                            </li>
+                                                        <?php } ?>
+                                                    </ul>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -412,22 +419,42 @@ if($loginContainer->roleCode== 'CL'){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
-                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");   
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");
+                $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+                $(".countryLabMenu"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
             }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
-                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");    
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");
+                $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+                $(".countryLabMenu"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
             }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='edit' && typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
-                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff"); 
+                $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");
+                $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+                $(".countryLabMenu"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
             }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
                 $(".countryDataCollectionMenu"+atob(splits)).css("color","#fff");
+                $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+                $(".countryLabMenu"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
             }else{
                 $(".cscMenu").addClass("active");
                 $(".collapsibleCSCMenu").css("display","block");
@@ -440,7 +467,12 @@ if($loginContainer->roleCode== 'CL'){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataExtractionMenu"+atob(splits)).addClass("active");
-                $(".countryDataExtractionMenu"+atob(splits)).css("color","#fff");     
+                $(".countryDataExtractionMenu"+atob(splits)).css("color","#fff");
+                $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+                $(".countryLabMenu"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+                $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+                $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
             }else{
                 $(".cscMenu").addClass("active");
                 $(".collapsibleCSCMenu").css("display","block");
@@ -453,12 +485,22 @@ if($loginContainer->roleCode== 'CL'){
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryLogbookMenu"+atob(splits)).addClass("active");
             $(".countryLogbookMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+            $(".countryLabMenu"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='result-email'){
             splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultEmailMenu"+atob(splits)).addClass("active");
             $(".countryResultEmailMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+            $(".countryLabMenu"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else{
             $(".dashboardMenu").addClass("active");
         }
