@@ -311,3 +311,45 @@ ALTER TABLE `user_clinic_map`
 
 ALTER TABLE `user_clinic_map`
   MODIFY `clinic_map_id` int(11) NOT NULL AUTO_INCREMENT
+  
+--Pal 30/12/2016
+CREATE TABLE `anc_form` (
+  `field_id` int(11) NOT NULL,
+  `field_name` varchar(500) DEFAULT NULL,
+  `age_disaggregation` varchar(45) DEFAULT NULL,
+  `status` varchar(45) DEFAULT NULL
+)
+
+INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`) VALUES
+(1, 'no_of_1st_ANC_attendees', 'yes', 'active'),
+(2, 'no_known_HIV_positive_at_1st_ANC', 'yes', 'active'),
+(3, 'no_with_unknown_HIV_status', 'no', 'active'),
+(4, 'no_tested_for_HIV', 'yes', 'active'),
+(5, 'no_RDT_positive', 'yes', 'active'),
+(6, 'no_RDT_negative', 'yes', 'active'),
+(7, 'no_RDT_indeterminate', 'no', 'active'),
+(8, 'no_specimen_drawn_for_recency_testing', 'no', 'active'),
+(9, 'recency_result', 'yes', 'active'),
+(10, 'no_who_received_recency_result', 'no', 'active');
+
+ALTER TABLE `anc_form`
+  ADD PRIMARY KEY (`field_id`);
+  
+ALTER TABLE `anc_form`
+  MODIFY `field_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+CREATE TABLE `clinic_data_collection` (
+  `cl_data_collection_id` int(11) NOT NULL,
+  `anc` int(11) DEFAULT NULL,
+  `reporting_month_year` varchar(45) DEFAULT NULL,
+  `characteristics_data` text,
+  `country` int(11) DEFAULT NULL,
+  `added_on` datetime DEFAULT NULL,
+  `added_by` int(11) DEFAULT NULL
+)
+
+ALTER TABLE `clinic_data_collection`
+  ADD PRIMARY KEY (`cl_data_collection_id`);
+  
+ALTER TABLE `clinic_data_collection`
+  MODIFY `cl_data_collection_id` int(11) NOT NULL AUTO_INCREMENT

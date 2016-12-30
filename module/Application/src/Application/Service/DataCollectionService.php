@@ -23,7 +23,7 @@ class DataCollectionService {
         $alertContainer = new Container('alert');
         $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
         $adapter->beginTransaction();
-       try {
+        try {
            $dataCollectionDb = $this->sm->get('DataCollectionTable');
            $result = $dataCollectionDb->addDataCollectionDetails($params);
            if($result>0){
@@ -32,12 +32,12 @@ class DataCollectionService {
            }else{
              $alertContainer->msg = 'OOPS..';
            }
-       }
-       catch (Exception $exc) {
+        }
+        catch (Exception $exc) {
            $adapter->rollBack();
            error_log($exc->getMessage());
            error_log($exc->getTraceAsString());
-       }
+        }
     }
     
     public function getAllDataCollections($parameters){
@@ -360,5 +360,36 @@ class DataCollectionService {
         $sql = new Sql($dbAdapter);
         $logbookQueryStr = $sql->getSqlStringForSqlObject($queryContainer->logbookQuery);
         return $dbAdapter->query($logbookQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function getActiveAncFormFields(){
+        $ancFormDb = $this->sm->get('AncFormTable');
+        return $ancFormDb->fetchActiveAncFormFields();
+    }
+    
+    public function addClinicDataCollection($params){
+        $alertContainer = new Container('alert');
+        $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
+        $adapter->beginTransaction();
+        try {
+           $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+           $result = $clinicDataCollectionDb->addClinicDataCollectionDetails($params);
+           if($result>0){
+            $adapter->commit();
+               $alertContainer->msg = 'Data Reporting added successfully.';
+           }else{
+             $alertContainer->msg = 'OOPS..';
+           }
+        }
+        catch (Exception $exc) {
+           $adapter->rollBack();
+           error_log($exc->getMessage());
+           error_log($exc->getTraceAsString());
+        }
+    }
+    
+    public function getAllClinicDataCollections($parameters){
+        $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+        return $clinicDataCollectionDb->fetchAllClinicDataCollections($parameters);
     }
 }

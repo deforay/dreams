@@ -329,7 +329,25 @@ return array(
                         'action' => 'check-password'
                     ),
                 ),
-            ),
+            ),'clinic-data-collection' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/data-collection[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'data-collection'
+                    ),
+                ),
+            ),'clinic-data-collection-add' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic-data-collection-add',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'data-collection-add'
+                    ),
+                ),
+            )
             
         ),
     ),
@@ -364,7 +382,8 @@ return array(
             'Application\Controller\AncSite' => 'Application\Controller\AncSiteController',
             'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController',
             'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController',
-            'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController'
+            'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController',
+            'Application\Controller\Clinic' => 'Application\Controller\ClinicController'
         ),
     ),
     'controller_plugins' => array(

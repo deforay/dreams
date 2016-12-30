@@ -9,6 +9,10 @@ $countryAncsiteMenu = 'show';
 $countryDataReportingMenu = 'show';
 $DRAccess = 'hide';
 $PRAccess = 'hide';
+if($loginContainer->roleCode== 'CSC'){
+    $DRAccess = 'show';
+    $PRAccess = 'show';
+}
 if($loginContainer->roleCode== 'LDEO'){
   $countrySingleMenus = 'hide';
   $countryLabMenu = 'hide';
@@ -43,7 +47,6 @@ if($loginContainer->roleCode== 'CL'){
     <link type="text/css" rel="stylesheet" href="<?php echo $this->basePath() .'/assets/css/mara.min.css' ?>" media="screen"/>
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/prism.css' ?>"/>
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
     <style>
         .wrapper main {
             margin-bottom:0px !important;
@@ -207,7 +210,7 @@ if($loginContainer->roleCode== 'CL'){
                                                 </div>
                                             </li>
                                             <li class="countryLabMenu<?php echo $country['country_id']; ?> menuAll">
-                                                <div class="collapsible-header waves-effect countryLabMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Lab <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-header waves-effect countryLabMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Lab <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCountryLabMenu<?php echo $country['country_id']; ?>">
                                                     <ul>
                                                         <?php
@@ -226,6 +229,19 @@ if($loginContainer->roleCode== 'CL'){
                                                             </li>
                                                             <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> Print Logbook</a>
+                                                            </li>
+                                                        <?php } ?>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li class="countryClinicMenu<?php echo $country['country_id']; ?> menuAll">
+                                                <div class="collapsible-header waves-effect countryClinicMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-hospital"></i> Clinic <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                <div class="collapsible-body collapsibleAll collapsibleCountryClinicMenu<?php echo $country['country_id']; ?>">
+                                                    <ul>
+                                                        <?php
+                                                        if($DRAccess == 'show'){ ?>
+                                                            <li class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
@@ -273,6 +289,7 @@ if($loginContainer->roleCode== 'CL'){
         //set active link
         str=$(location).attr('pathname');
         splitsUrl=str.split("/",5);
+        //console.log(splitsUrl);
         $(".menuAll").removeClass("active");
         $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
@@ -501,6 +518,17 @@ if($loginContainer->roleCode== 'CL'){
             $(".countryLabMenuSecond"+atob(splits)).addClass("active");
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='data-collection'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryClinicDataCollectionMenu"+atob(splits)).addClass("active");
+            $(".countryClinicDataCollectionMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
+            $(".countryClinicMenu"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else{
             $(".dashboardMenu").addClass("active");
         }

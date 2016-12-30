@@ -28,6 +28,8 @@ use Application\Model\TestStatusTable;
 use Application\Model\UserCountryMapTable;
 use Application\Model\GlobalConfigTable;
 use Application\Model\UserClinicMapTable;
+use Application\Model\AncFormTable;
+use Application\Model\ClinicDataCollectionTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -165,7 +167,15 @@ class Module{
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new UserClinicMapTable($dbAdapter);
                     return $table;
-                },
+                },'AncFormTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new AncFormTable($dbAdapter);
+                    return $table;
+                },'ClinicDataCollectionTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new ClinicDataCollectionTable($dbAdapter);
+                    return $table;
+                }
             ),
         );
     }
