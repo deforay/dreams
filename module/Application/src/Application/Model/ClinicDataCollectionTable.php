@@ -48,6 +48,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchAllClinicDataCollections($parameters){
+        $loginContainer = new Container('user');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -136,6 +137,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
        }
+       if($loginContainer->roleCode!= 'CSC'){
+          $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
+       }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -170,6 +174,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
           $tQuery = $tQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $tQuery = $tQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
+       }
+       if($loginContainer->roleCode!= 'CSC'){
+          $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
        }
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

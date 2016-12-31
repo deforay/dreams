@@ -2,24 +2,32 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $loginContainer = new Container('user');
-$countrySingleMenus = 'show';
+//Secondary menus
+$labMenuAccess = 'show';
+$clinicMenuAccess = 'hide';
+//Menus
 $countryUserMenu = 'show';
 $countryLabMenu = 'show';
 $countryAncsiteMenu = 'show';
 $countryDataReportingMenu = 'show';
+$countryOtherMenus = 'show';
+//Access
 $DRAccess = 'hide';
 $PRAccess = 'hide';
 if($loginContainer->roleCode== 'CSC'){
+    $clinicMenuAccess = 'show';
     $DRAccess = 'show';
     $PRAccess = 'show';
 }
 if($loginContainer->roleCode== 'LDEO'){
-  $countrySingleMenus = 'hide';
+  $countryOtherMenus = 'hide';
   $countryLabMenu = 'hide';
   $countryAncsiteMenu = 'hide';
 }
 if($loginContainer->roleCode== 'CL'){
-  $countrySingleMenus = 'hide';
+  $labMenuAccess = 'hide';  
+  $clinicMenuAccess = 'show';  
+  $countryOtherMenus = 'hide';
   $countryUserMenu = 'hide';
   $countryLabMenu = 'hide';
   $countryDataReportingMenu = 'hide';
@@ -76,14 +84,19 @@ if($loginContainer->roleCode== 'CL'){
         .dataTables_wrapper .dataTables_paginate .paginate_button.current{
            background-color:#ff69b4;
         }
-        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header.active{
-            color:#ff69b4;
-        }
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header:hover{
             color:#ff96ca;
         }
+        .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header.active{
+            color:#ff69b4;
+        }
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-body li.active{
             background-color:#ff69b4;
+        }
+        .collapsible-body ul li a.active:hover{
+            color:#333 !important;
+            font-size:13px;
+            font-weight:bold;
         }
         .search-top-bar{
           margin-top:0;
@@ -209,44 +222,52 @@ if($loginContainer->roleCode== 'CL'){
                                                     </ul>
                                                 </div>
                                             </li>
-                                            <li class="countryLabMenu<?php echo $country['country_id']; ?> menuAll">
-                                                <div class="collapsible-header waves-effect countryLabMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Lab <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                                <div class="collapsible-body collapsibleAll collapsibleCountryLabMenu<?php echo $country['country_id']; ?>">
-                                                    <ul>
-                                                        <?php
-                                                        if($countryDataReportingMenu == 'show'){ ?>
-                                                            <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
-                                                            </li>
-                                                        <?php } ?>
-                                                        <?php
-                                                        if($countrySingleMenus == 'show'){ ?>
-                                                            <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
-                                                            </li>
-                                                            <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-email"></i>Result Email</a>
-                                                            </li>
-                                                            <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> Print Logbook</a>
-                                                            </li>
-                                                        <?php } ?>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                            <li class="countryClinicMenu<?php echo $country['country_id']; ?> menuAll">
-                                                <div class="collapsible-header waves-effect countryClinicMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-hospital"></i> Clinic <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
-                                                <div class="collapsible-body collapsibleAll collapsibleCountryClinicMenu<?php echo $country['country_id']; ?>">
-                                                    <ul>
-                                                        <?php
-                                                        if($DRAccess == 'show'){ ?>
-                                                            <li class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
-                                                            </li>
-                                                        <?php } ?>
-                                                    </ul>
-                                                </div>
-                                            </li>
+                                            <?php
+                                            if($labMenuAccess == 'show'){
+                                            ?>
+                                                <li class="countryLabMenu<?php echo $country['country_id']; ?> menuAll">
+                                                    <div class="collapsible-header waves-effect countryLabMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Lab <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                    <div class="collapsible-body collapsibleAll collapsibleCountryLabMenu<?php echo $country['country_id']; ?>">
+                                                        <ul>
+                                                            <?php
+                                                            if($countryDataReportingMenu == 'show'){ ?>
+                                                                <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                                </li>
+                                                            <?php } ?>
+                                                            <?php
+                                                            if($countryOtherMenus == 'show'){ ?>
+                                                                <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-cloud-download"></i> Data Extraction</a>
+                                                                </li>
+                                                                <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-email"></i>Result Email</a>
+                                                                </li>
+                                                                <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> Print Logbook</a>
+                                                                </li>
+                                                            <?php } ?>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            <?php } ?>
+                                            <?php
+                                            if($clinicMenuAccess == 'show'){
+                                            ?>
+                                                <li class="countryClinicMenu<?php echo $country['country_id']; ?> menuAll">
+                                                    <div class="collapsible-header waves-effect countryClinicMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-hospital"></i> Clinic <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
+                                                    <div class="collapsible-body collapsibleAll collapsibleCountryClinicMenu<?php echo $country['country_id']; ?>">
+                                                        <ul>
+                                                            <?php
+                                                            if($DRAccess == 'show'){ ?>
+                                                                <li class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Data Reporting</a>
+                                                                </li>
+                                                            <?php } ?>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            <?php } ?>
                                         </ul>
                                     </li>
                                 </ul>
