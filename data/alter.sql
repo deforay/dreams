@@ -353,3 +353,6 @@ ALTER TABLE `clinic_data_collection`
   
 ALTER TABLE `clinic_data_collection`
   MODIFY `cl_data_collection_id` int(11) NOT NULL AUTO_INCREMENT
+  
+--Pal 31/12/2016
+ALTER TABLE `clinic_data_collection` ADD `updated_on` DATETIME NULL DEFAULT NULL AFTER `added_by`, ADD `updated_by` INT(11) NULL DEFAULT NULL AFTER `updated_on`;

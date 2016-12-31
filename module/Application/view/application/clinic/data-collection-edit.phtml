@@ -1,0 +1,196 @@
+<?php
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
+    $link = "/clinic/data-collection";
+}else{
+    $link = "/clinic/data-collection/".base64_encode($countryId);
+}
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    pre {
+        max-height: 596px;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+    }
+    #dataCollectionDataTable_wrapper{
+	overflow-x:scroll;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTables_wrapper{
+	overflow-x: scroll;
+    }
+    .ui-datepicker-calendar {
+       display: none;
+    }
+    .ui-datepicker-month,.ui-datepicker-year{
+       display:block;
+       display:inline-block;
+    }
+    #ancFormTable thead tr th{
+        text-align:center;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Data Reporting</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Clinic</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Data Reporting</a>
+       </div>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <form id="editClinicDataReportingForm" name="editClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-edit'); ?>">
+            <div class="col l12 m12 s12">
+                <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+                <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" value="<?php echo ucfirst($row->reporting_month_year); ?>" readonly/></div>
+            </div>
+            <div class="col l12 m12 s12">
+                <div class="card card-default table-height">
+                    <div class="card-content clearfix">
+                        <table id="ancFormTable" class="responsive-table display">
+                            <thead>
+                                <tr>
+                                    <th>Characteristics</th>
+                                    <th>Age < 15</th>
+                                    <th>Age 15-19</th>
+                                    <th>Age 20-24</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                //Set characteristics array data from josn data
+                                if(isset($row->characteristics_data) && trim($row->characteristics_data)!= ''){
+                                  $fieldArray = array();
+                                  $fields = json_decode($row->characteristics_data,true);
+                                  foreach($fields as $fieldName=>$fieldValue){
+                                    foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
+                                        $fieldArray[$fieldName][$characteristicsName] = $characteristicsValue;
+                                    }
+                                  }
+                                }
+                                $f=1;
+                                foreach($ancFormFields as $key=>$value){
+                                    $fieldName = $key;
+                                    $formLabel = ucwords(str_replace("_"," ",$key));
+                                    $formLabel = str_replace("No","No.",$formLabel);
+                                    //Set readonly on 'No'
+                                    $commonFieldsStyle = 'pointer-events:auto;';
+                                    $totalStyle = 'pointer-events:none;';
+                                    if($value == 'no'){
+                                        $commonFieldsStyle = 'pointer-events:none;';
+                                        $totalStyle = 'pointer-events:auto;';
+                                    }
+                                    //Set characteristics value
+                                    if(array_key_exists($key,$fieldArray)){
+                                        $ageLt15 = (isset($fieldArray[$key]['age_lt_15']) && $fieldArray[$key]['age_lt_15']!= '')?$fieldArray[$key]['age_lt_15']:'';
+                                        $age15To19 = (isset($fieldArray[$key]['age_15_to_19']) && $fieldArray[$key]['age_15_to_19']!= '')?$fieldArray[$key]['age_15_to_19']:'';
+                                        $age20to24 = (isset($fieldArray[$key]['age_20_to_24']) && $fieldArray[$key]['age_20_to_24']!= '')?$fieldArray[$key]['age_20_to_24']:'';
+                                        $total = (isset($fieldArray[$key]['total']) && $fieldArray[$key]['total']!= '')?$fieldArray[$key]['total']:'';
+                                    }else{
+                                        $ageLt15 = '';
+                                        $age15To19 ='';
+                                        $age20to24 = '';
+                                        $total = '';
+                                    }
+                                ?>
+                                    <tr>
+                                      <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
+                                      <td><input id="age_lt_15_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="age_15_to_19_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="age_20_to_24_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="total_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="<?php echo $totalStyle; ?>"/></td>
+                                    </tr>
+                                <?php $f++; } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12" style="margin-top:20px;">
+                <input type="hidden" name="clinicDataCollectionId" id="clinicDataCollectionId" value="<?php echo base64_encode($row->cl_data_collection_id); ?>"/>
+		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
+		<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+                <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+       $('#reportingMonthYear').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                var tmp = $('#reportingMonthYear').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+            }
+       });
+    });
+    
+    function getTotal(commonFieldClassName){
+        total = 0;
+        $('.'+commonFieldClassName).each( function(i,e) {
+           /* you can use e.id instead of $(e).attr('id') */
+            if($('#'+$(e).attr('id')).val()!= ''){
+                total = parseInt(total)+parseInt($('#'+$(e).attr('id')).val());
+                $('#total_'+commonFieldClassName).val(total);
+            }
+        });
+    }
+    
+    function updateDataReporting(){
+        flag = deforayValidator.init({
+            formId: 'editClinicDataReportingForm'
+        });
+        
+        if(flag){
+            document.getElementById('editClinicDataReportingForm').submit();
+        }
+    }
+</script>

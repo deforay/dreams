@@ -392,4 +392,30 @@ class DataCollectionService {
         $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
         return $clinicDataCollectionDb->fetchAllClinicDataCollections($parameters);
     }
+    
+    public function getClinicDataCollection($clinicDataCollectionId){
+        $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+        return $clinicDataCollectionDb->fetchClinicDataCollection($clinicDataCollectionId);
+    }
+    
+    public function updateClinicDataCollection($params){
+        $alertContainer = new Container('alert');
+        $adapter = $this->sm->get('Zend\Db\Adapter\Adapter')->getDriver()->getConnection();
+        $adapter->beginTransaction();
+        try {
+           $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+           $result = $clinicDataCollectionDb->updateClinicDataCollectionDetails($params);
+           if($result>0){
+            $adapter->commit();
+               $alertContainer->msg = 'Data Reporting updated successfully.';
+           }else{
+             $alertContainer->msg = 'OOPS..';
+           }
+        }
+        catch (Exception $exc) {
+           $adapter->rollBack();
+           error_log($exc->getMessage());
+           error_log($exc->getTraceAsString());
+        }
+    }
 }

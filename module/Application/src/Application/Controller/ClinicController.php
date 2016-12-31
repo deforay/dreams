@@ -41,4 +41,28 @@ class ClinicController extends AbstractActionController{
             return $this->redirect()->toUrl($params['redirectUrl']);
         }
     }
+    
+    public function dataCollectionEditAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $dataCollectionService->updateClinicDataCollection($params);
+            return $this->redirect()->toUrl($params['redirectUrl']);
+        }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId);
+            $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+            return new ViewModel(array(
+                'row'=>$result,
+                'countryId'=>$countryId,
+                'ansSites'=>$ancSiteList,
+                'ancFormFields'=>$ancFormFieldList
+            ));
+        }
+    }
 }

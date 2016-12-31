@@ -122,7 +122,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
 		<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">SAVE</a>&nbsp;&nbsp;
             </div>
         </form>
     </div>
@@ -152,6 +152,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+                                <th>Action</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -167,6 +168,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -196,6 +198,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"center","bSortable":false},
                 <?php } ?>
+                {"sClass":"center","bSortable":false}
             ],
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,

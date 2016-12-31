@@ -347,6 +347,15 @@ return array(
                         'action' => 'data-collection-add'
                     ),
                 ),
+            ),'clinic-data-collection-edit' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/data-collection/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'data-collection-edit'
+                    ),
+                ),
             )
             
         ),

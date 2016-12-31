@@ -129,7 +129,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
-       if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+       if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+          $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+       }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
@@ -159,7 +161,19 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-       $iTotal = $this->select()->count();
+       $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
+                     ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
+                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+       if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+          $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+       }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+          $tQuery = $tQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
+       }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
+          $tQuery = $tQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
+       }
+       $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
+       $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       $iTotal = count($tResult);
        $output = array(
            "sEcho" => intval($parameters['sEcho']),
            "iTotalRecords" => $iTotal,
@@ -175,26 +189,72 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $row[] = ucfirst($aRow['reporting_month_year']);
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
-                $characteristicsVal = '';
+                //For non-existing fields
+                $rowVal = '';
+                $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : ,';
+                $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : ,';
+                $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : ,';
+                $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : ';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
-                            $fieldValue[0]['age_lt_15'] = (trim($fieldValue[0]['age_lt_15'])!= '')?$fieldValue[0]['age_lt_15']:0;
-                            $fieldValue[0]['age_15_to_19'] = (trim($fieldValue[0]['age_15_to_19'])!= '')?$fieldValue[0]['age_15_to_19']:0;
-                            $fieldValue[0]['age_20_to_24'] = (trim($fieldValue[0]['age_20_to_24'])!= '')?$fieldValue[0]['age_20_to_24']:0;
-                            $fieldValue[0]['total'] = (trim($fieldValue[0]['total'])!= '')?$fieldValue[0]['total']:0;
-                            $characteristicsVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$fieldValue[0]['age_lt_15'].',';
-                            $characteristicsVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$fieldValue[0]['age_15_to_19'].',';
-                            $characteristicsVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$fieldValue[0]['age_20_to_24'].',';
-                            $characteristicsVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$fieldValue[0]['total'];
+                            //Re-intialize to show existing fields
+                            $rowVal = '';
+                            foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
+                               if($characteristicsName =='age_lt_15'){
+                                  $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
+                               }elseif($characteristicsName =='age_15_to_19'){
+                                  $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
+                               }elseif($characteristicsName =='age_20_to_24'){
+                                  $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
+                               }elseif($characteristicsName =='total'){
+                                  $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
+                               }
+                            }
                         }
                     }
                 }
-              $row[] = '<div style="width:310px !important;">'.$characteristicsVal.'</div>';
+              $row[] = '<div style="width:310px !important;">'.$rowVal.'</div>';
            }
+           $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            $output['aaData'][] = $row;
        }
       return $output;
+    }
+    
+    public function fetchClinicDataCollection($clinicDataCollectionId){
+        return $this->select(array('cl_data_collection_id'=>$clinicDataCollectionId))->current();
+    }
+    
+    public function updateClinicDataCollectionDetails($params){
+        $loginContainer = new Container('user');
+        $clinicDataCollectionId = 0;
+        if(isset($params['anc']) && trim($params['anc'])!= ''){
+            $clinicDataCollectionId = base64_decode($params['clinicDataCollectionId']);
+            $common = new CommonService();
+            //Set updated characteristics data
+            $reportingArray = array();
+            if(count($params['field']) >0){
+                for($f=0;$f<count($params['field']);$f++){
+                    $listArray = array();
+                    foreach($params[$params['field'][$f]] as $key=>$value){
+                       $listArray[$key] = $value;
+                    }
+                    $reportingArray[$params['field'][$f]][] = $listArray;
+                }
+            }
+            $characteristicsVal = ($reportingArray >0)?json_encode($reportingArray):NULL;
+            $data = array(
+                        'anc'=>base64_decode($params['anc']),
+                        'reporting_month_year'=>strtolower($params['reportingMonthYear']),
+                        'characteristics_data'=>$characteristicsVal,
+                        'country'=>base64_decode($params['chosenCountry']),
+                        'updated_on'=>$common->getDateTime(),
+                        'updated_by'=>$loginContainer->userId
+                    );
+            $this->update($data,array('cl_data_collection_id'=>$clinicDataCollectionId));
+        }
+      return $clinicDataCollectionId;
     }
 }
