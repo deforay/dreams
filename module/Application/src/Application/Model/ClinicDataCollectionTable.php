@@ -187,7 +187,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                             $characteristicsVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$fieldValue[0]['age_lt_15'].',';
                             $characteristicsVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$fieldValue[0]['age_15_to_19'].',';
                             $characteristicsVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$fieldValue[0]['age_20_to_24'].',';
-                            $characteristicsVal.= ' <span style="color:#528A16;"><strong>Total</strong></span> : '.$fieldValue[0]['total'];
+                            $characteristicsVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$fieldValue[0]['total'];
                         }
                     }
                 }
