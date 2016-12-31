@@ -35,7 +35,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $characteristicsVal = ($reportingArray >0)?json_encode($reportingArray):NULL;
             $data = array(
                         'anc'=>base64_decode($params['anc']),
-                        'reporting_month_year'=>str_replace("/","-",strtolower($params['reportingMonthYear'])),
+                        'reporting_month_year'=>strtolower($params['reportingMonthYear']),
                         'characteristics_data'=>$characteristicsVal,
                         'country'=>base64_decode($params['chosenCountry']),
                         'added_on'=>$common->getDateTime(),
@@ -129,6 +129,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+       if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+          $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
+       }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
+          $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
+       }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -179,10 +184,10 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                             $fieldValue[0]['age_15_to_19'] = (trim($fieldValue[0]['age_15_to_19'])!= '')?$fieldValue[0]['age_15_to_19']:0;
                             $fieldValue[0]['age_20_to_24'] = (trim($fieldValue[0]['age_20_to_24'])!= '')?$fieldValue[0]['age_20_to_24']:0;
                             $fieldValue[0]['total'] = (trim($fieldValue[0]['total'])!= '')?$fieldValue[0]['total']:0;
-                            $characteristicsVal.= 'Age < 15 : '.$fieldValue[0]['age_lt_15'].',';
-                            $characteristicsVal.= ' Age 15-19 : '.$fieldValue[0]['age_15_to_19'].',';
-                            $characteristicsVal.= ' Age 20-24 : '.$fieldValue[0]['age_20_to_24'].',';
-                            $characteristicsVal.= ' Total : '.$fieldValue[0]['total'];
+                            $characteristicsVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$fieldValue[0]['age_lt_15'].',';
+                            $characteristicsVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$fieldValue[0]['age_15_to_19'].',';
+                            $characteristicsVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$fieldValue[0]['age_20_to_24'].',';
+                            $characteristicsVal.= ' <span style="color:#528A16;"><strong>Total</strong></span> : '.$fieldValue[0]['total'];
                         }
                     }
                 }
