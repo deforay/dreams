@@ -202,6 +202,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                             //Re-intialize to show existing fields
                             $rowVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
+                                $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                if($characteristicsName =='age_lt_15'){
                                   $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='age_15_to_19'){
