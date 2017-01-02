@@ -78,7 +78,7 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="role" name="role" title="Please select user role" onchange="checkRole(this.value);">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select user role" onchange="checkUserRole(this.value);">
                             <option value="">-- Select --</option>
                             <?php
                             foreach($roleData as $role){
@@ -119,6 +119,17 @@ if(count($row['userLaboratories'])>0){
                             <label for="altContact" class="">Alternate Contact</label>
                         </div>
                     </div>
+                    <div class="col s6">
+                        <div class="input-padding col m10 s10">
+                            Has View Only Access ? *<br>
+                            <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio" <?php echo ($row->has_view_only_access == 'yes') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
+                            <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" <?php echo ($row->has_view_only_access == 'no') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYesNo">No </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col s6" id="countrySingle">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
@@ -135,7 +146,7 @@ if(count($row['userLaboratories'])>0){
                             <label for="country" class="">Country *</label>
                         </div>
                     </div>
-                    <div class="col s6" id="countryMultiple" style="display:none;">
+                    <div class="col s6" id="countryMultiple">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
                             <select class="material-select countryMulti" id="countryMulti" name="country[]" multiple="multiple" title="Please select country" >
@@ -148,17 +159,6 @@ if(count($row['userLaboratories'])>0){
                                 ?>
                             </select>
                             <label for="country" class="">Country *</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s6">
-                        <div class="input-padding col m10 s10">
-                            Has View Only Access ? *<br>
-                            <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio" <?php echo ($row->has_view_only_access == 'yes') ? " checked='checked'" : ""; ?>>
-                            <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
-                            <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" <?php echo ($row->has_view_only_access == 'no') ? " checked='checked'" : ""; ?>>
-                            <label for="hasViewOnlyAccessYesNo">No </label>
                         </div>
                     </div>
                     <div class="col s6 clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
@@ -234,6 +234,17 @@ if(count($row['userLaboratories'])>0){
                         </div>
                     </div>
                     <div class="col s6">
+                        <div class="input-padding col m10 s10">
+                            Has View Only Access ? *<br>
+                            <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio" <?php echo ($row->has_view_only_access == 'yes') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
+                            <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" <?php echo ($row->has_view_only_access == 'no') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYesNo">No </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
                             <select class="material-select" id="status" name="status" title="Please select user status">
@@ -277,7 +288,7 @@ if(count($row['userLaboratories'])>0){
         }
     }
     $(document).ready(function() {
-        checkRole('<?php echo base64_encode($row->role);?>');
+        checkUserRole('<?php echo base64_encode($row->role);?>');
     });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
@@ -296,7 +307,7 @@ if(count($row['userLaboratories'])>0){
         }
     }
     
-    function checkRole(val){
+    function checkUserRole(val){
         if(atob(val)=='2'){
             $("#country").val('');
             $("#countrySingle").hide();

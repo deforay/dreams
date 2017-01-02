@@ -63,7 +63,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
-                        <select class="material-select isRequired" id="role" name="role" title="Please select user role" onchange="checkRole(this);">
+                        <select class="material-select isRequired" id="role" name="role" title="Please select user role" onchange="checkUserRole(this.value);">
                             <option value=""> -- Select -- </option>
                             <?php
                             foreach($roleData as $role){
@@ -101,6 +101,17 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
+                <div class="col s6">
+                    <div class="input-padding col m10 s10">
+                        Has View Only Access ? *<br>
+                        <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio">
+                        <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
+                        <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" checked>
+                        <label for="hasViewOnlyAccessYesNo">No </label>
+		    </div>
+                </div>
+            </div>
+            <div class="row">
                 <?php
                 if(trim($countryId) > 0){
                 ?>
@@ -136,17 +147,6 @@ if(isset($countryId) && trim($countryId)!=''){
                         </div>
                     </div>
                 <?php } ?>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <div class="input-padding col m10 s10">
-                        Has View Only Access ? *<br>
-                        <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio" checked>
-                        <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
-                        <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio">
-                        <label for="hasViewOnlyAccessYesNo">No </label>
-		    </div>
-                </div>
                 <div class="col s6 clinicanSection" style="display:none;">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
@@ -178,7 +178,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                 </div>
             </div>
-            <div class="row clinicanSection" style="display:none;">
+            <div class="row clinicanSection" style="display:none;padding-bottom:20px;">
                 <div class="col s6">
                     <div class="input-padding col m10 s10">
                         Has Data Reporting Access ? *<br>
@@ -245,8 +245,8 @@ if(isset($countryId) && trim($countryId)!=''){
         }
     }
     
-    function checkRole(obj){
-        if(atob(obj.value)=='2'){
+    function checkUserRole(val){
+        if(atob(val)=='2'){
             $("#country").val('');
             $("#countrySingle").hide();
             $("#countryMultiple").show();
