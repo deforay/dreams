@@ -91,7 +91,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         /*left: -184px*/
 
     }
-    #dataCollectionDataTable_wrapper{
+    #dataExtractionDataTable_wrapper{
 	overflow-x:scroll;
     }
     .select-wrapper{
@@ -411,7 +411,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     
     function extractDataCollectionData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-data-extraction'); ?>", {},
+	$.post("<?php echo $this->url('export-data-collection'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate excel.');

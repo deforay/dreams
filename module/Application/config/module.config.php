@@ -239,7 +239,7 @@ return array(
                         'action' => 'index'
                     ),
                 ),
-            ),'export-data-extraction' => array(
+            ),'export-data-collection' => array(
                 'type' => 'Literal',
                 'options' => array(
                     'route' => '/data-extraction/export-excel',
@@ -354,6 +354,24 @@ return array(
                     'defaults' => array(
                         'controller' => 'Application\Controller\Clinic',
                         'action' => 'data-collection-edit'
+                    ),
+                ),
+            ),'clinic-data-extraction' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/data-extraction[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'data-extraction'
+                    ),
+                ),
+            ),'export-clinic-data-collection' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/clinic-data-extraction/export-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'data-collection-export-excel'
                     ),
                 ),
             )

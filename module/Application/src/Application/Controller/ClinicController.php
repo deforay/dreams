@@ -12,16 +12,15 @@ class ClinicController extends AbstractActionController{
     }
     
     public function dataCollectionAction(){
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $parameters = $request->getPost();
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $result = $dataCollectionService->getAllClinicDataCollections($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId);
             $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
             return new ViewModel(array(
@@ -43,17 +42,16 @@ class ClinicController extends AbstractActionController{
     }
     
     public function dataCollectionEditAction(){
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $dataCollectionService->updateClinicDataCollection($params);
             return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
             $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId);
             $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
@@ -63,6 +61,39 @@ class ClinicController extends AbstractActionController{
                 'ansSites'=>$ancSiteList,
                 'ancFormFields'=>$ancFormFieldList
             ));
+        }
+    }
+    
+    public function dataExtractionAction(){
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $parameters = $request->getPost();
+            $result = $dataCollectionService->getAllClinicalDataExtractions($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId);
+            $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+            return new ViewModel(array(
+                    'countryId'=>$countryId,
+                    'ansSites'=>$ancSiteList,
+                    'ancFormFields'=>$ancFormFieldList
+                ));
+        }
+    }
+    
+    public function dataCollectionExportExcelAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->exportClinicDataCollectionInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
         }
     }
 }

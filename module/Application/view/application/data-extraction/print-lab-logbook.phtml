@@ -83,7 +83,7 @@ $loginContainer = new Container('user');
         /*left: -184px*/
 
     }
-    #dataCollectionDataTable_wrapper{
+    #labLogbookDataTable_wrapper{
 	overflow-x:scroll;
     }
     .select-wrapper{
@@ -386,7 +386,7 @@ $loginContainer = new Container('user');
     
     function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {},
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate logbook pdf.');

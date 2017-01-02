@@ -418,4 +418,155 @@ class DataCollectionService {
            error_log($exc->getTraceAsString());
         }
     }
+    
+    public function getAllClinicalDataExtractions($parameters){
+        $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+        return $clinicDataCollectionDb->fetchAllClinicalDataExtractions($parameters);
+    }
+    
+    public function exportClinicDataCollectionInExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->clinicXportQuery)){
+            try{
+                $ancFormDb = $this->sm->get('AncFormTable');
+                $ancFormFields = $ancFormDb->fetchActiveAncFormFields();
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->clinicXportQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                        $row = array();
+                        $row[] = ucwords($aRow['anc_site_name']);
+                        $row[] = $aRow['anc_site_code'];
+                        $row[] = ucfirst($aRow['reporting_month_year']);
+                        $row[] = ucwords($aRow['country_name']);
+                        foreach($ancFormFields as $key=>$value){
+                            //For non-existing fields
+                            $rowVal = '';
+                            $rowVal.= 'Age < 15 : 0,';
+                            $rowVal.= ' Age 15-19 : 0,';
+                            $rowVal.= ' Age 20-24 : 0,';
+                            $rowVal.= ' Total : 0';
+                            if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
+                                $fields = json_decode($aRow['characteristics_data'],true);
+                                foreach($fields as $fieldName=>$fieldValue){
+                                    if($key == $fieldName){
+                                        //Re-intialize to show existing fields
+                                        $rowVal = '';
+                                        foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
+                                            $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
+                                           if($characteristicsName =='age_lt_15'){
+                                              $rowVal.= 'Age < 15 : '.$characteristicsValue.',';
+                                           }elseif($characteristicsName =='age_15_to_19'){
+                                              $rowVal.= ' Age 15-19 : '.$characteristicsValue.',';
+                                           }elseif($characteristicsName =='age_20_to_24'){
+                                              $rowVal.= ' Age 20-24 : '.$characteristicsValue.',';
+                                           }elseif($characteristicsName =='total'){
+                                              $rowVal.= ' Total : '.$characteristicsValue;
+                                           }
+                                        }
+                                    }
+                                }
+                            }
+                          $row[] = $rowVal;
+                        }
+                        $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    
+                    $sheet->setCellValue('A1', html_entity_decode('Clinic Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Month/Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $e1 = 4;
+                    foreach($ancFormFields as $key=>$value){
+                        $columnTitle = ucwords(str_replace("_"," ",$key));
+                        $columnTitle = str_replace("No","No.",$columnTitle);
+                        $cellNameValue = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                        $sheet->setCellValue($cellNameValue.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $e1++;
+                    }
+                   
+                    $sheet->getStyle('A1')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1')->applyFromArray($styleArray);
+                    $f1 = 4;
+                    foreach($ancFormFields as $fieldRow){
+                        $cellNameValue = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                        $sheet->getStyle($cellNameValue.'1')->applyFromArray($styleArray);
+                      $f1++;
+                    }
+                    
+                    $currentRow = 2;
+                    $highestColumn = (count($ancFormFields)+4)-1;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }if($colNo > $highestColumn){
+                                break;
+                            }
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'CLINIC-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "";
+                }
+            }catch (Exception $exc) {
+                error_log("CLINIC-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
+        }
+    }
 }

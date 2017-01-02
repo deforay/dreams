@@ -561,7 +561,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	       $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
-	//Customer Filter Start
+	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $sQuery = $sQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
@@ -573,8 +573,7 @@ class DataCollectionTable extends AbstractTableGateway {
         }if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
 	}
-	//Customer Filter End
-	$queryContainer->exportQuery = $sQuery;
+	//Custom Filter End
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -587,7 +586,7 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-
+       $queryContainer->exportQuery = $sQuery;
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -878,7 +877,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	       $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	    }
 	}
-	//Customer Filter Start
+	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $sQuery = $sQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
@@ -888,8 +887,7 @@ class DataCollectionTable extends AbstractTableGateway {
         }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
             $sQuery = $sQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
         }
-	//Customer Filter End
-	$queryContainer->logbookQuery = $sQuery;
+	//Custom Filter End
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -902,7 +900,7 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-
+       $queryContainer->logbookQuery = $sQuery;
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
