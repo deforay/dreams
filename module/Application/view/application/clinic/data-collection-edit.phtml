@@ -129,10 +129,10 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                     <tr>
                                       <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
-                                      <td><input id="age_lt_15_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="age_15_to_19_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="age_20_to_24_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="total_<?php echo $fieldName; ?>" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="<?php echo $totalStyle; ?>"/></td>
+                                      <td><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="<?php echo $totalStyle; ?>"/></td>
                                     </tr>
                                 <?php $f++; } ?>
                             </tbody>
@@ -179,7 +179,7 @@ if(!isset($countryId) || trim($countryId)== ''){
            /* you can use e.id instead of $(e).attr('id') */
             if($('#'+$(e).attr('id')).val()!= ''){
                 total = parseInt(total)+parseInt($('#'+$(e).attr('id')).val());
-                $('#total_'+commonFieldClassName).val(total);
+                $('#'+commonFieldClassName+'_total').val(total);
             }
         });
     }

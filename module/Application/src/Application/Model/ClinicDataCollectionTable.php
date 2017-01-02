@@ -198,10 +198,10 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            foreach($ancFormFieldList as $key=>$value){
                 //For non-existing fields
                 $rowVal = '';
-                $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : ,';
-                $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : ,';
-                $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : ,';
-                $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : ';
+                $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
+                $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
+                $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
