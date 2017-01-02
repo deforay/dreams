@@ -252,7 +252,7 @@ class UserTable extends AbstractTableGateway {
 	    if($loginContainer->roleCode== 'CSC'){
 	       $sQuery = $sQuery->where('r.role_code IN ("CSC")');
 	    }else{
-		$sQuery = $sQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+		$sQuery = $sQuery->where(array('c.country_id'=>0));
 	    }
 	}
 	
@@ -300,7 +300,7 @@ class UserTable extends AbstractTableGateway {
 	    if($loginContainer->roleCode== 'CSC'){
 	       $tQuery = $tQuery->where('r.role_code IN ("CSC")');
 	    }else{
-		$tQuery = $tQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+		$tQuery = $tQuery->where(array('c.country_id'=>0));
 	    }
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance

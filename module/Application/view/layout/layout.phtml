@@ -5,7 +5,7 @@ $loginContainer = new Container('user');
 //Secondary menus
 $labMenuAccess = 'show';
 $clinicMenuAccess = 'hide';
-//Menus
+//Third level Menus
 $countryUserMenu = 'show';
 $countryLabMenu = 'show';
 $countryAncsiteMenu = 'show';
@@ -14,7 +14,7 @@ $countryOtherMenus = 'show';
 //Access
 $DRAccess = 'hide';
 $PRAccess = 'hide';
-if($loginContainer->roleCode== 'CSC'){
+if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $clinicMenuAccess = 'show';
     $DRAccess = 'show';
     $PRAccess = 'show';
