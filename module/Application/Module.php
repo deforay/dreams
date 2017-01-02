@@ -30,6 +30,7 @@ use Application\Model\GlobalConfigTable;
 use Application\Model\UserClinicMapTable;
 use Application\Model\AncFormTable;
 use Application\Model\ClinicDataCollectionTable;
+use Application\Model\UserLaboratoryMapTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -174,6 +175,10 @@ class Module{
                 },'ClinicDataCollectionTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new ClinicDataCollectionTable($dbAdapter);
+                    return $table;
+                },'UserLaboratoryMapTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new UserLaboratoryMapTable($dbAdapter);
                     return $table;
                 }
             ),

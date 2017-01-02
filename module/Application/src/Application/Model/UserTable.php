@@ -117,6 +117,7 @@ class UserTable extends AbstractTableGateway {
 		'email' => $params['email'],
 		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
+		'has_view_only_access' => $params['hasViewOnlyAccess'],
 		'status' => 'active',
 		'created_on' => $common->getDateTime()
 		);
@@ -331,6 +332,11 @@ class UserTable extends AbstractTableGateway {
 				->where(array('cl_map.user_id'=>$userId));
 	$clQueryStr = $sql->getSqlStringForSqlObject($clQuery);
 	$rResult['userClinics'] = $dbAdapter->query($clQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//Get user's laboratories if exist
+	$lQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+				->where(array('l_map.user_id'=>$userId));
+	$lQueryStr = $sql->getSqlStringForSqlObject($lQuery);
+	$rResult['userLaboratories'] = $dbAdapter->query($lQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return $rResult;
     }
 	
@@ -348,6 +354,7 @@ class UserTable extends AbstractTableGateway {
 		'email' => $params['email'],
 		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
+		'has_view_only_access' => $params['hasViewOnlyAccess'],
 		'status' => $params['status']
 		);
 		if(isset($params['password']) && trim($params['password']) != ''){

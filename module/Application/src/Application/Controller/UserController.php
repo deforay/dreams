@@ -44,15 +44,18 @@ class UserController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
             $result=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',$countryId);
             $allCountryList=$countryService->getActiveCountries('login',$countryId);
             $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
+            $facilityList=$facilityService->getActivefacilities('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
                 'countries'=>$countryList,
                 'allCountries'=>$allCountryList,
                 'ancSites'=>$ancSiteList,
+                'facilities'=>$facilityList,
                 'countryId'=>$countryId
             ));
         }
@@ -72,15 +75,18 @@ class UserController extends AbstractActionController{
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
             $roleResult=$roleService->getActiveRoles($countryId);
             $countryList=$countryService->getActiveCountries('user',$countryId);
             $allCountryList=$countryService->getActiveCountries('login',$countryId);
             $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
+            $facilityList=$facilityService->getActivefacilities('user',$countryId);
             return new ViewModel(array(
                 'row'=>$result,
                 'countries'=>$countryList,
                 'allCountries'=>$allCountryList,
                 'ancSites'=>$ancSiteList,
+                'facilities'=>$facilityList,
                 'roleData'=>$roleResult,
                 'countryId'=>$countryId
             ));

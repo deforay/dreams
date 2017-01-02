@@ -31,9 +31,12 @@ class UserService {
             if ($result > 0) {
                 $userCountryMapDb = $this->sm->get('UserCountryMapTable');
                 $userClinicMapDb = $this->sm->get('UserClinicMapTable');
+                $userLaboratoryMapDb = $this->sm->get('UserLaboratoryMapTable');
                 $userCountryMapDb->addUserCountryMapDetails($params,$result);
 		if(isset($params['role']) && base64_decode($params['role'])== 5){
 		   $userClinicMapDb->addUserClinicMapDetails($params,$result); 
+		}else if(isset($params['role']) && base64_decode($params['role'])== 3){
+		   $userLaboratoryMapDb->addUserLaboratoryMapDetails($params,$result);
 		}
                 $adapter->commit();
                 $alertContainer = new Container('alert');
@@ -65,8 +68,10 @@ class UserService {
             if ($result > 0) {
                 $userCountryMapDb = $this->sm->get('UserCountryMapTable');
 		$userClinicMapDb = $this->sm->get('UserClinicMapTable');
+		$userLaboratoryMapDb = $this->sm->get('UserLaboratoryMapTable');
                 $userCountryMapDb->addUserCountryMapDetails($params,$result);
-		$userClinicMapDb->addUserClinicMapDetails($params,$result); 
+		$userClinicMapDb->addUserClinicMapDetails($params,$result);
+		$userLaboratoryMapDb->addUserLaboratoryMapDetails($params,$result);
                 $adapter->commit();
                 $alertContainer = new Container('alert');
                 $alertContainer->msg = 'User updated successfully.';

@@ -7,32 +7,32 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
 
 
-class UserClinicMapTable extends AbstractTableGateway {
+class UserLaboratoryMapTable extends AbstractTableGateway {
 
-    protected $table = 'user_clinic_map';
+    protected $table = 'user_laboratory_map';
 
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
     }
     
-    public function addUserClinicMapDetails($params,$userId){
-        //Check exist clinic nd update
+    public function addUserLaboratoryMapDetails($params,$userId){
+        //Check exist laboratory nd update
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
-	$sQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
-                                ->where(array('cl_map.user_id'=>$userId));
+	$sQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                ->where(array('l_map.user_id'=>$userId));
 	$sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
 	$sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
         if($sResult){
             $this->delete(array('user_id'=>$userId));
         }
         
-        if(isset($params['role']) && base64_decode($params['role'])== 5){
-            if(count($params['ancSite'])>0){
-                $c = count($params['ancSite']);
+        if(isset($params['role']) && base64_decode($params['role'])== 3){
+            if(count($params['lab'])>0){
+                $c = count($params['lab']);
                 for($i=0;$i<$c;$i++){
-                    if(trim($params['ancSite'][$i])){
-                        $data = array('user_id'=>$userId,'clinic_id'=>base64_decode($params['ancSite'][$i]));
+                    if(trim($params['lab'][$i])){
+                        $data = array('user_id'=>$userId,'laboratory_id'=>base64_decode($params['lab'][$i]));
                         $this->insert($data);
                     }
                 }
@@ -40,5 +40,4 @@ class UserClinicMapTable extends AbstractTableGateway {
         }
       return true;
     }
-
 }

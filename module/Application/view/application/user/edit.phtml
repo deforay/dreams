@@ -12,8 +12,14 @@ if(count($row['userCountries'])>0){
 }
 $ancList = array();
 if(count($row['userClinics'])>0){
-    foreach($row['userClinics'] as $userClinics){
-        $ancList[] = $userClinics['clinic_id'];
+    foreach($row['userClinics'] as $userClinic){
+        $ancList[] = $userClinic['clinic_id'];
+    }
+}
+$laboratoryList = array();
+if(count($row['userLaboratories'])>0){
+    foreach($row['userLaboratories'] as $userlaboratory){
+        $laboratoryList[] = $userlaboratory['laboratory_id'];
     }
 }
 ?>
@@ -145,6 +151,47 @@ if(count($row['userClinics'])>0){
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col s6">
+                        <div class="input-padding col m10 s10">
+                            Has View Only Access ? *<br>
+                            <input id="hasViewOnlyAccessYes" class="with-gap isRequired" name="hasViewOnlyAccess" value="yes" type="radio" <?php echo ($row->has_view_only_access == 'yes') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
+                            <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" <?php echo ($row->has_view_only_access == 'no') ? " checked='checked'" : ""; ?>>
+                            <label for="hasViewOnlyAccessYesNo">No </label>
+                        </div>
+                    </div>
+                    <div class="col s6 clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
+                        <div class="input-field col m10 s10">
+                            <i class="material-icons prefix">done</i>
+                            <select class="material-select <?php echo($row->role ==5)?'isRequired':''; ?>" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
+                                <?php
+                                foreach($ancSites as $anc){
+                                    ?>
+                                    <option value="<?php echo base64_encode($anc['anc_site_id']);?>" <?php echo in_array($anc['anc_site_id'], $ancList) ? "selected=selected" : ""; ?>><?php echo ucwords($anc['anc_site_name']);?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                            <label for="ancSite" class="">ANC site name *</label>
+                        </div>
+                    </div>
+                    <div class="col s6 supervisorSection" style="<?php echo($row->role ==3)?'':'display:none;'; ?>">
+                        <div class="input-field col m10 s10">
+                            <i class="material-icons prefix">done</i>
+                            <select class="material-select <?php echo($row->role ==3)?'isRequired':''; ?>" id="lab" name="lab[]" multiple title="Please select lab site name">
+                                <?php
+                                foreach($facilities as $facility){
+                                    ?>
+                                    <option value="<?php echo base64_encode($facility['facility_id']);?>" <?php echo in_array($facility['facility_id'], $laboratoryList) ? "selected=selected" : ""; ?>><?php echo ucwords($facility['facility_name']);?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                            <label for="lab" class="">Lab site name *</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="row clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
@@ -166,21 +213,6 @@ if(count($row['userClinics'])>0){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s6 clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
-                        <div class="input-field col m10 s10">
-                            <i class="material-icons prefix">done</i>
-                            <select class="material-select <?php echo($row->role ==5)?'isRequired':''; ?>" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
-                                <?php
-                                foreach($ancSites as $anc){
-                                    ?>
-                                    <option value="<?php echo base64_encode($anc['anc_site_id']);?>" <?php echo in_array($anc['anc_site_id'], $ancList) ? "selected=selected" : ""; ?>><?php echo ucwords($anc['anc_site_name']);?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                            <label for="ancSite" class="">ANC site name *</label>
-                        </div>
-                    </div>
                     <div class="col s6">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
@@ -279,11 +311,20 @@ if(count($row['userClinics'])>0){
     $('#role').on('change',function(e){
        var role = $('#role').val();
        if(base64_decode(role)== 5){
+          $('.supervisorSection').hide();
+          $('#lab').removeClass('isRequired');
           $('.clinicanSection').show();
           $('#ancSite').addClass('isRequired');
+       }else if(base64_decode(role)== 3){
+          $('.clinicanSection').hide();
+          $('#ancSite').removeClass('isRequired');
+          $('.supervisorSection').show();
+          $('#lab').addClass('isRequired');
        }else{
-         $('#ancSite').removeClass('isRequired');
          $('.clinicanSection').hide();
+         $('.supervisorSection').hide();
+         $('#ancSite').removeClass('isRequired');
+         $('#lab').removeClass('isRequired');
        }
     });
 </script>

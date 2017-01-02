@@ -356,3 +356,18 @@ ALTER TABLE `clinic_data_collection`
   
 --Pal 31/12/2016
 ALTER TABLE `clinic_data_collection` ADD `updated_on` DATETIME NULL DEFAULT NULL AFTER `added_by`, ADD `updated_by` INT(11) NULL DEFAULT NULL AFTER `updated_on`;
+
+--Pal 02/01/2017
+ALTER TABLE `user` ADD `has_view_only_access` VARCHAR(45) NULL DEFAULT NULL AFTER `alt_contact`;
+
+CREATE TABLE `user_laboratory_map` (
+  `laboratory_map_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `laboratory_id` int(11) NOT NULL
+)
+
+ALTER TABLE `user_laboratory_map`
+  ADD PRIMARY KEY (`laboratory_map_id`);
+  
+ALTER TABLE `user_laboratory_map`
+  MODIFY `laboratory_map_id` int(11) NOT NULL AUTO_INCREMENT;
