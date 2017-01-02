@@ -43,6 +43,7 @@ class UserTable extends AbstractTableGateway {
 		$loginContainer = new Container('user');
 		$userCountry = array();
 		$userClinic = array();
+		$userLaboratory = array();
 		if($loginResult->role_code =='CSC'){
 		    $isCountrySelected = false;
 		}else{
@@ -66,16 +67,28 @@ class UserTable extends AbstractTableGateway {
 			    $userClinic[] = $clinic['clinic_id'];
 			}
 		    }
+		    //set user laboratories
+		    $laboratoryMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+					      ->where(array('l_map.user_id' => $loginResult->user_id));
+		    $laboratoryMapQueryStr = $sql->getSqlStringForSqlObject($laboratoryMapQuery);
+		    $laboratoryMapResult = $dbAdapter->query($laboratoryMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+		    if(isset($laboratoryMapResult) && count($laboratoryMapResult)>0){
+			foreach($laboratoryMapResult as $laboratory){
+			    $userLaboratory[] = $laboratory['laboratory_id'];
+			}
+		    }
 		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
 			$loginContainer->userId = $loginResult->user_id;
 			$loginContainer->userName = $loginResult->user_name;
 			$loginContainer->roleCode = $loginResult->role_code;
+			$loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
 			$loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
 			$loginContainer->hasPRAccess = $loginResult->has_print_report_access;
 			$loginContainer->country = $userCountry;
 			$loginContainer->clinic = $userClinic;
+			$loginContainer->laboratory = $userLaboratory;
 		       return 'home';
 		    }else{
 		       $alertContainer->msg = 'Please check the country that you have choosen..!';
@@ -85,10 +98,12 @@ class UserTable extends AbstractTableGateway {
 		    $loginContainer->userId = $loginResult->user_id;
 		    $loginContainer->userName = $loginResult->user_name;
 		    $loginContainer->roleCode = $loginResult->role_code;
+		    $loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
 		    $loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
 		    $loginContainer->hasPRAccess = $loginResult->has_print_report_access;
 		    $loginContainer->country = $userCountry;
 		    $loginContainer->clinic = $userClinic;
+		    $loginContainer->laboratory = $userLaboratory;
 		    return 'home';
 		}
             }else{
