@@ -96,4 +96,38 @@ class ClinicController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function labReportAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $parameters = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result = $dataCollectionService->getAllAncLabReportDatas($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $ancSiteList=$ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
+            $facilityList=$facilityService->getActivefacilities('anc-lab-report',$countryId);
+            return new ViewModel(array(
+                'ancSites'=>$ancSiteList,
+                'facilities'=>$facilityList,
+                'countryId'=>$countryId
+            ));
+        }
+    }
+    
+    public function exportLabReportAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $labReportResult=$dataCollectionService->getLabReportResult();
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('params'=>$params,'labReportResult' =>$labReportResult));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

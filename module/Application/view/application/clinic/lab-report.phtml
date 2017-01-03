@@ -3,11 +3,6 @@ use Zend\Session\Container;
 $loginContainer = new Container('user');
 if(!isset($countryId) || trim($countryId)== ''){
     $countryId = '';
-    $display="";
-    $style="width:40%;text-align:left;";
-}else{
-    $display="display:none;";
-    $style = "text-align:right;padding-right:6%;";
 }
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
@@ -91,7 +86,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         /*left: -184px*/
 
     }
-    #dataExtractionDataTable_wrapper{
+    #ancLabReportDataTable_wrapper{
 	overflow-x:scroll;
     }
     .select-wrapper{
@@ -103,151 +98,132 @@ if(!isset($countryId) || trim($countryId)== ''){
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Lab Data Extraction</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">ANC Lab Report</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Lab Data Extraction</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Lab Report</a>
        </div>
     </div>
-    <?php
-    if($loginContainer->roleCode!= 'LDEO'){
-    ?>
-	<div class="row">
-	    <div class="col l12 m12 s12">
-		<form id="searchFilterForm" method="post" action="#">
-		    <table style="width:100%;">
-			<tr>
-			    <td style="width:25%;text-align:right;"><h6><strong>Specimen Collected Date </strong></h6></td>
-			    <td style="width:25%;text-align:left;">
-				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
-			    </td>
-			    <td style="width:10%;text-align:left;"><h6><strong>ANC Site</strong></h6></td>
-			    <td style="width:40%;text-align:left;padding-right:8%;">
-				<select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
-				    <option value=""> -- Select -- </option>
-				    <?php
-				    foreach($ancSites as $anc){
-					?>
-					<option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
-					<?php
-				    }
-				    ?>
-				</select>
-			    </td>
-			</tr>
-			 <tr>
-			    <td style="text-align:left;padding-left:7.4%;<?php echo($loginContainer->roleCode== 'CSC' && trim($countryId)== '')?'':'width:25%;'; ?>"><h6><strong>Lab Site/Facility </strong></h6></td>
-			    <td <?php echo($loginContainer->roleCode== 'CSC' && trim($countryId)== '')?'':'colspan="3"'; ?> style="text-align:left;<?php echo($loginContainer->roleCode== 'CSC' && trim($countryId)== '')?'':'padding-right:50%;'; ?>">
-				<select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
-				    <option value=""> -- Select -- </option>
-				    <?php
-				    foreach($facilities as $lab){
-					?>
-					<option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
-					<?php
-				    }
-				    ?>
-				</select>
-			    </td>
-			    <?php
-			    if($loginContainer->roleCode== 'CSC' && trim($countryId)== ''){ ?>
-				<td style="text-align:left;"><h6><strong>Country </strong></h6></td>
-				<td style="text-align:left;padding-right:8%;">
-				    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-					<option value=""> -- Select -- </option>
-					<?php
-					foreach($countries as $country){
-					    ?>
-					    <option value="<?php echo base64_encode($country['country_id']);?>"><?php echo ucwords($country['country_name']);?></option>
-					    <?php
-					}
-					?>
-				    </select>
-				</td>
-			    <?php } ?>
-			</tr>
-			<tr>
-			    <td colspan="4" style="text-align:center;">
-				<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
-			    </td>
-			</tr>
-		    </table>
-		</form>
-	    </div>
-	</div>
-    <?php } ?>
+    <div class="row">
+        <div class="col l12 m12 s12">
+            <form id="searchFilterForm" method="post" action="#">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="width:25%;text-align:right;"><h6><strong>Specimen Collected Date </strong></h6></td>
+                        <td style="width:25%;text-align:left;">
+                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
+                        </td>
+                        <td style="width:10%;text-align:left;"><h6><strong>ANC Site</strong></h6></td>
+                        <td style="width:40%;text-align:left;padding-right:8%;">
+                            <select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
+                                <option value=""> -- Select -- </option>
+                                <?php
+                                foreach($ancSites as $anc){
+                                    ?>
+                                    <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td style="text-align:left;padding-left:7.4%;"><h6><strong>Lab Site/Facility </strong></h6></td>
+                        <td style="text-align:left;">
+                            <select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
+                                <option value=""> -- Select -- </option>
+                                <?php
+                                foreach($facilities as $lab){
+                                    ?>
+                                    <option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </td>
+                        <td style="text-align:left;"><h6><strong>Report Type </strong></h6></td>
+                        <td style="text-align:left;padding-right:8%;">
+                            <select class="material-select" id="reportType" name="reportType" title="Please select report type" style="width:40% !important;">
+                                <option value=""> -- Both -- </option>
+                                <option value="vl">Viral Load Report</option>
+                                <option value="in">Infection Report</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align:center;">
+                            <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Surveillance ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol0">Specimen Collected Date</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol1">ANC site</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol2">ANC site</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol2">ANC Patient ID</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol3">ANC Patient ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="age" class="showhideCheckBox" /> <label for="iCol3">Age</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="age" class="showhideCheckBox" /> <label for="iCol4">Age</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol4">Specimen Pick Up Date at ANC</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol5">Specimen Pick Up Date at ANC</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol5">Lab Name</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol6">Lab Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol6">Lab Specimen ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol7">Lab Specimen ID</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol7">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol8">Rejection Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol8">Receipt Date at Central Lab</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol9">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol9">Date of Test Completion</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol10">Date of Test Completion</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol10">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol11">Result Dispatched Date to Clinic</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol11">Final LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol12">Final LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol12">LAg Avidity Result</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol13">LAg Avidity Result</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol13">Hiv RNA</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol14">Hiv RNA</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol14">HIV RNA >= 1,000 <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol15">HIV RNA >= 1,000 <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol16">Recent Infection</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol17">Asante Rapid Recency Assay</label>
-		<input type="hidden" id="countColumn" value="17"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol15">Recent Infection</label> <br>
+                <input type="hidden" id="countColumn" value="15"/>
 	    </div>
 	</div>
     </div>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Extraction List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Report List
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
-                    <table id="dataExtractionDataTable" class="responsive-table display dataTable">
+                    <table id="ancLabReportDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Surveillance ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC site</th>
 				<th>ANC Patient ID</th>
@@ -264,12 +240,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-                                <th>Asante Rapid Recency Assay</th>
                             </tr>
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Surveillance ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC site</th>
 				<th>ANC Patient ID</th>
@@ -286,7 +260,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-                                <th>Asante Rapid Recency Assay</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -302,7 +275,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 <script>
     $(document).ready(function() {
 	selectDate();
-	oTable = $('#dataExtractionDataTable').dataTable({
+	oTable = $('#ancLabReportDataTable').dataTable({
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },
@@ -324,20 +297,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
 		{"sClass":"center"}
             ],
-            "aaSorting": [[1, "desc"]],
+            "aaSorting": [[0, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?php echo $this->url('data-extraction',array('action' => 'index')); ?>",
+            "sAjaxSource": "<?php echo $this->url('clinic-lab-report'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
 		aoData.push({"name": "specimenCollectedDate", "value": $("#specimenCollectedDate").val() });
 		aoData.push({"name": "anc", "value": $("#anc").val() });
 		aoData.push({"name": "lab", "value": $("#lab").val() });
-		aoData.push({"name": "country", "value": $("#country").val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -372,8 +342,29 @@ if(!isset($countryId) || trim($countryId)== ''){
     });
     
     function fnShowHide(iCol){
-        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
-        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+        iColSplit = iCol.split(',');
+        if(iColSplit.length == 2){
+           oTable.fnSetColumnVis(11, true);
+           oTable.fnSetColumnVis(12, true);
+           oTable.fnSetColumnVis(15, true); 
+           oTable.fnSetColumnVis(13, false);
+           oTable.fnSetColumnVis(14, false);
+        }else if(iColSplit.length == 3){
+           oTable.fnSetColumnVis(13, true);
+           oTable.fnSetColumnVis(14, true);
+           oTable.fnSetColumnVis(11, false);
+           oTable.fnSetColumnVis(12, false);
+           oTable.fnSetColumnVis(15, false);
+        }else if(iColSplit.length == 5){
+           oTable.fnSetColumnVis(11, true);
+           oTable.fnSetColumnVis(12, true);
+           oTable.fnSetColumnVis(15, true);
+           oTable.fnSetColumnVis(13, true);
+           oTable.fnSetColumnVis(14, true);
+        }else{
+           var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+           oTable.fnSetColumnVis(iCol, bVis ? false : true); 
+        }
     }
     
     function selectDate(){
@@ -400,25 +391,36 @@ if(!isset($countryId) || trim($countryId)== ''){
         $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
     }
     
-    function searchDataExtractionData(){
+    $('#reportType').change(function(e){
+        if(this.value == 'vl'){
+            cols = '11,12,15';
+        }else if(this.value == 'in'){
+            cols = '13,14';
+        }else{
+          cols = '11,12,15,13,14';  
+        }
+        fnShowHide(cols);
+    });
+    
+    function searchLabReportData(){
        oTable.fnDraw(false);
     }
     
     function clearSearchFields(){
         $('#searchFilterForm')[0].reset();
-        searchDataExtractionData();
+        searchLabReportData();
     }
     
-    function extractDataCollectionData(){
-	$.blockUI();
-	$.post("<?php echo $this->url('export-data-collection'); ?>", { },
+    function extractLabReportData(){
+        $.blockUI();
+	$.post("<?php echo $this->url('export-clinic-lab-report'); ?>", {reportType: $('#reportType').val()},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('OOPS..Unable to generate lab report pdf.');
 		$.unblockUI();
 	    }else{
-		$.unblockUI();
 		document.location.href = '/temporary/'+data;
+		$.unblockUI();
 	    }
 	});
     }

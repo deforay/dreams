@@ -371,3 +371,12 @@ ALTER TABLE `user_laboratory_map`
   
 ALTER TABLE `user_laboratory_map`
   MODIFY `laboratory_map_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+--Pal 03/01/2017
+ALTER TABLE `user` ADD `created_by` INT(11) NULL DEFAULT NULL AFTER `status`;
+
+ALTER TABLE `user` CHANGE `created_by` `created_by` INT(11) NOT NULL;
+
+UPDATE `role` SET `role_name` = 'ANC Data Entry Operator' WHERE `role`.`role_id` = 5;
+
+UPDATE `role` SET `role_code` = 'ANCDEO' WHERE `role`.`role_id` = 5;

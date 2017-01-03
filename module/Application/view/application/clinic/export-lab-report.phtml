@@ -1,6 +1,6 @@
 <?php
 $common = new \Application\Service\CommonService();
-if(count($logbookResult) >0){
+if(count($labReportResult) >0){
     //header and footer
     class MYPDF extends TCPDF {
         public function setSchemeName($heading,$logo) {
@@ -33,11 +33,11 @@ if(count($logbookResult) >0){
     // create new PDF document
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
-    $pdf->setSchemeName('Lab Logbook','logo.png');
+    $pdf->setSchemeName('ANC Lab Report','logo.png');
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('Lab Logbook');
+    $pdf->SetTitle('ANC Lab Report');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -76,11 +76,17 @@ if(count($logbookResult) >0){
     $pdf->AddPage();
     $pdf->SetY(30,true,false);
     
+    $vlReportType = 'show';
+    $infectionType = 'show';
+    if(isset($params['reportType']) && trim($params['reportType'])== 'vl'){
+        $infectionType = 'hide';
+    }else if(isset($params['reportType']) && trim($params['reportType'])== 'in'){
+        $vlReportType = 'hide';
+    }
     $html = '';
       $html.='<table border="1" style="padding:2px;">';
           $html .='<thead>';
            $html .='<tr>';
-           $html .='<th><strong>Surveillance ID</strong></th>';
            $html .='<th><strong>Specimen Collected Date</strong></th>';
            $html .='<th><strong>ANC Site Code/Name</strong></th>';
            $html .='<th><strong>ANC Patient ID</strong></th>';
@@ -92,16 +98,19 @@ if(count($logbookResult) >0){
            $html .='<th><strong>Receipt Date at Central Lab</strong></th>';
            $html .='<th><strong>Date of Test Completion</strong></th>';
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
-           $html .='<th><strong>Final LAg Avidity</strong></th>';
-           $html .='<th><strong>LAg Avidity Result</strong></th>';
-           $html .='<th><strong>HIV RNA</strong></th>';
-           $html .='<th><strong>HIV RNA >= 1,000</strong></th>';
-           $html .='<th><strong>Recent Infection</strong></th>';
-           $html .='<th><strong>Asante Rapid Recency Assay</strong></th>';
+           if($infectionType =='show'){
+                $html .='<th><strong>Final LAg Avidity</strong></th>';
+                $html .='<th><strong>LAg Avidity Result</strong></th>';
+           }if($vlReportType =='show'){
+               $html .='<th><strong>HIV RNA</strong></th>';
+               $html .='<th><strong>HIV RNA >= 1,000</strong></th>';
+           } if($infectionType =='show'){
+               $html .='<th><strong>Recent Infection</strong></th>';
+           }
            $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
-          foreach($logbookResult as $row){
+          foreach($labReportResult as $row){
             $specimenCollectedDate = '';
 	    $specimenPickUpDateatAnc = '';
 	    $receiptDateAtCentralLab = '';
@@ -130,19 +139,8 @@ if(count($logbookResult) >0){
 	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
 	      $hIVRNAResult = 'Low Viral Load';
 	    }
-	    $asanteRapidRecencyAssay = '';
-	    if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/lt'){
-	      $asanteRapidRecencyAssay = 'Positive/Long Term';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/lt'){
-	      $asanteRapidRecencyAssay = 'Negative/Long Term';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/r'){
-	      $asanteRapidRecencyAssay = 'Negative/Recent';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/r'){
-	      $asanteRapidRecencyAssay = 'Positive/Recent';
-	    }
 	    
             $html .='<tr>';
-              $html .='<td>'.$row['surveillance_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
               $html .='<td>'.ucwords($row['anc_site_name'])." - ".$row['anc_site_code'].'</td>';
               $html .='<td>'.$row['anc_patient_id'].'</td>';
@@ -154,19 +152,22 @@ if(count($logbookResult) >0){
               $html .='<td>'.$receiptDateAtCentralLab.'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
-              $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
-              $html .='<td>'.$lAgAvidityResult.'</td>';
-              $html .='<td>'.$row['hiv_rna'].'</td>';
-              $html .='<td>'.$hIVRNAResult.'</td>';
-              $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
-              $html .='<td>'.$asanteRapidRecencyAssay.'</td>';
+              if($infectionType =='show'){
+                  $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
+                  $html .='<td>'.$lAgAvidityResult.'</td>';
+              }if($vlReportType =='show'){
+                  $html .='<td>'.$row['hiv_rna'].'</td>';
+                  $html .='<td>'.$hIVRNAResult.'</td>';
+              }if($infectionType =='show'){
+                $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
+              }
             $html .='</tr>';
           }
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
     $pdf->lastPage();
-    $filename = 'LAB-LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
+    $filename = 'ANC-LAB-REPORT--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{

@@ -28,7 +28,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->addDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Reporting added successfully.';
+               $alertContainer->msg = 'Lab Data Reporting added successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }
@@ -59,7 +59,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->updateDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Reporting updated successfully.';
+               $alertContainer->msg = 'Lab Data Reporting updated successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }
@@ -313,14 +313,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'LAB-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("DATA-COLLECTION-EXCEL--" . $exc->getMessage());
+                error_log("LAB-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
@@ -376,7 +376,7 @@ class DataCollectionService {
            $result = $clinicDataCollectionDb->addClinicDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Reporting added successfully.';
+               $alertContainer->msg = 'ANC Data Reporting added successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }
@@ -407,7 +407,7 @@ class DataCollectionService {
            $result = $clinicDataCollectionDb->updateClinicDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Data Reporting updated successfully.';
+               $alertContainer->msg = 'ANC Data Reporting updated successfully.';
            }else{
              $alertContainer->msg = 'OOPS..';
            }
@@ -554,19 +554,32 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'CLINIC-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'ANC-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("CLINIC-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
+                error_log("ANC-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
         }else{
             return "";
         }
+    }
+    
+    public function getAllAncLabReportDatas($parameters){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchAllAncLabReportDatas($parameters);
+    }
+    
+    public function getLabReportResult(){
+        $queryContainer = new Container('query');
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $rQueryStr = $sql->getSqlStringForSqlObject($queryContainer->labReportQuery);
+      return $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

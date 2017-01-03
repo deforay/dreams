@@ -374,6 +374,24 @@ return array(
                         'action' => 'data-collection-export-excel'
                     ),
                 ),
+            ),'clinic-lab-report' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/lab-report[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'lab-report'
+                    ),
+                ),
+            ),'export-clinic-lab-report' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/export-clinic-lab-report',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'export-lab-report'
+                    ),
+                ),
             )
             
         ),

@@ -179,13 +179,13 @@ class RoleTable extends AbstractTableGateway {
                           ->where(array('r.role_status'=>'active'));
         if(isset($country) && trim($country)>0){
             if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-                $rolesQuery = $rolesQuery->where('r.role_code IN ("CC","LS","LDEO","CL")');
+                $rolesQuery = $rolesQuery->where('r.role_code IN ("CC","LS","LDEO","ANCDEO")');
             }else if($loginContainer->roleCode== 'LS'){
                 $rolesQuery = $rolesQuery->where('r.role_code IN ("LS","LDEO")');
             }else if($loginContainer->roleCode== 'LDEO'){
                $rolesQuery = $rolesQuery->where('r.role_code IN ("LDEO")'); 
             }else if($loginContainer->roleCode== 'CL'){
-               $rolesQuery = $rolesQuery->where('r.role_code IN ("CL")');
+               $rolesQuery = $rolesQuery->where('r.role_code IN ("ANCDEO")');
             }
         }else{
             if($loginContainer->roleCode== 'CSC'){

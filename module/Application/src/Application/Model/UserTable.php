@@ -233,29 +233,32 @@ class UserTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $createdByUser = array();
+       $uQuery = $sql->select()->from(array('u' => 'user'))
+                               ->where(array('u.created_by'=>$loginContainer->userId));
+       $uQueryStr = $sql->getSqlStringForSqlObject($uQuery);
+       $uResult = $dbAdapter->query($uQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //For own profile edit
+       $createdByUser[] = $loginContainer->userId;
+       //Get all created by user
+       foreach($uResult as $user){
+	 $createdByUser[] = $user['user_id'];
+       }
        $sQuery = $sql->select()->from(array('u' => 'user'))
 		               ->join(array('r' => 'role'), "r.role_id=u.role",array('role_name'))
 		               ->join(array('c_map' => 'user_country_map'), "c_map.user_id=u.user_id",array(),'left')
 		               ->join(array('c' => 'country'), "c.country_id=c_map.country_id",array(),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-	        $sQuery = $sQuery->where('r.role_code IN ("CC","LS","LDEO","CL")');
-	    }else if($loginContainer->roleCode== 'LS'){
-		$sQuery = $sQuery->where('r.role_code IN ("LS","LDEO")');
-	    }else if($loginContainer->roleCode== 'LDEO'){
-		$sQuery = $sQuery->where('r.role_code IN ("LDEO")'); 
-	    }else if($loginContainer->roleCode== 'CL'){
-		$sQuery = $sQuery->where('r.role_code IN ("CL")');
-	    }
 	}else{
-	    if($loginContainer->roleCode== 'CSC'){
-	       $sQuery = $sQuery->where('r.role_code IN ("CSC")');
-	    }else{
-		$sQuery = $sQuery->where(array('c.country_id'=>0));
+	    if($loginContainer->roleCode != 'CSC'){
+	       $sQuery = $sQuery->where(array('c.country_id'=>0));
 	    }
 	}
-	
+       if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
+	    $sQuery = $sQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
+       }
+       
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -287,21 +290,13 @@ class UserTable extends AbstractTableGateway {
 		                ->join(array('c' => 'country'), "c.country_id=c_map.country_id",array(),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
-	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-	        $tQuery = $tQuery->where('r.role_code IN ("CC","LS","LDEO","CL")');
-	    }else if($loginContainer->roleCode== 'LS'){
-		$tQuery = $tQuery->where('r.role_code IN ("LS","LDEO")');
-	    }else if($loginContainer->roleCode== 'LDEO'){
-		$tQuery = $tQuery->where('r.role_code IN ("LDEO")'); 
-	    }else if($loginContainer->roleCode== 'CL'){
-		$tQuery = $tQuery->where('r.role_code IN ("CL")');
-	    }
 	}else{
-	    if($loginContainer->roleCode== 'CSC'){
-	       $tQuery = $tQuery->where('r.role_code IN ("CSC")');
-	    }else{
+	    if($loginContainer->roleCode != 'CSC'){
 		$tQuery = $tQuery->where(array('c.country_id'=>0));
 	    }
+	}
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
+	   $tQuery = $tQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
