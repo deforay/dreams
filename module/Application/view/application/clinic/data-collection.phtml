@@ -1,4 +1,6 @@
 <?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
 if(!isset($countryId) || trim($countryId)== ''){
     $countryId = '';
     $link = "/clinic/data-collection";
@@ -70,61 +72,65 @@ if(!isset($countryId) || trim($countryId)== ''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Data Reporting</a>
        </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
-        <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
-            <div class="col l12 m12 s12">
-                <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
-                <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
-            </div>
-            <div class="col l12 m12 s12">
-                <div class="card card-default table-height">
-                    <div class="card-content clearfix">
-                        <table id="ancFormTable" class="responsive-table display">
-                            <thead>
-                                <tr>
-                                    <th>Characteristics</th>
-                                    <th>Age < 15</th>
-                                    <th>Age 15-19</th>
-                                    <th>Age 20-24</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $f=1;
-                                foreach($ancFormFields as $key=>$value){
-                                    $fieldName = $key;
-                                    $formLabel = ucwords(str_replace("_"," ",$key));
-                                    $formLabel = str_replace("No","No.",$formLabel);
-                                    //Set readonly on 'No'
-                                    $commonFieldsStyle = 'pointer-events:auto;';
-                                    $totalStyle = 'pointer-events:none;';
-                                    if($value == 'no'){
-                                        $commonFieldsStyle = 'pointer-events:none;';
-                                        $totalStyle = 'pointer-events:auto;';
-                                    }
-                                ?>
+    <?php
+    if($loginContainer->hasViewOnlyAccess =='no') {
+    ?>
+        <div class="row dashboard-wrapper content-container">
+            <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
+                <div class="col l12 m12 s12">
+                    <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+                    <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+                </div>
+                <div class="col l12 m12 s12">
+                    <div class="card card-default table-height">
+                        <div class="card-content clearfix">
+                            <table id="ancFormTable" class="responsive-table display">
+                                <thead>
                                     <tr>
-                                      <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="<?php echo $totalStyle; ?>"/></td>
+                                        <th>Characteristics</th>
+                                        <th>Age < 15</th>
+                                        <th>Age 15-19</th>
+                                        <th>Age 20-24</th>
+                                        <th>Total</th>
                                     </tr>
-                                <?php $f++; } ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $f=1;
+                                    foreach($ancFormFields as $key=>$value){
+                                        $fieldName = $key;
+                                        $formLabel = ucwords(str_replace("_"," ",$key));
+                                        $formLabel = str_replace("No","No.",$formLabel);
+                                        //Set readonly on 'No'
+                                        $commonFieldsStyle = 'pointer-events:auto;';
+                                        $totalStyle = 'pointer-events:none;';
+                                        if($value == 'no'){
+                                            $commonFieldsStyle = 'pointer-events:none;';
+                                            $totalStyle = 'pointer-events:auto;';
+                                        }
+                                    ?>
+                                        <tr>
+                                          <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
+                                          <td><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="<?php echo $totalStyle; ?>"/></td>
+                                        </tr>
+                                    <?php $f++; } ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col s12" style="margin-top:20px;">
-		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
-		<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
-                <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">SAVE</a>&nbsp;&nbsp;
-            </div>
-        </form>
-    </div>
+                <div class="col s12" style="margin-top:20px;">
+                    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
+                    <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+                    <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">SAVE</a>&nbsp;&nbsp;
+                </div>
+            </form>
+        </div>
+    <?php } ?>
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <form id="dataCollectionFilter" action=#">
@@ -151,7 +157,11 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
-                                <th>Action</th>
+                                <?php
+                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                ?>
+                                  <th style="width:120px !important;">Action</th>
+                                <?php } ?>
                             </tr>
                         </thead>
 			<tfoot>
@@ -167,7 +177,11 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
-                                <th>Action</th>
+                                <?php
+                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                ?>
+                                  <th>Action</th>
+                                <?php } ?>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -197,7 +211,11 @@ if(!isset($countryId) || trim($countryId)== ''){
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"center","bSortable":false},
                 <?php } ?>
-                {"sClass":"center","bSortable":false}
+                <?php
+                if($loginContainer->hasViewOnlyAccess =='no') {
+                ?>
+                  {"sClass":"center","bSortable":false}
+                <?php } ?>
             ],
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,

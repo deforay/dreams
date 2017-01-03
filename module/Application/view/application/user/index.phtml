@@ -56,7 +56,11 @@ if(!isset($countryId) || $countryId ==''){
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
+		<?php
+		if($loginContainer->hasViewOnlyAccess =='no') {
+		?>
 		  <span style="float:right;"><a href="/user/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
+		<?php } ?>
                 </div>
                 <div class="card-content clearfix">
                     <table id="userDataTable"  class="responsive-table display dataTable">
@@ -73,7 +77,11 @@ if(!isset($countryId) || $countryId ==''){
                                 <th>Mobile</th>
                                 <th>Status</th>
                                 <th>Added On</th>
-                                <th style="width:80px !important;">Action</th>
+				<?php
+				if($loginContainer->hasViewOnlyAccess =='no') {
+				?>
+                                   <th style="width:80px !important;">Action</th>
+				<?php } ?>
                             </tr>
                         </thead>
 			<tfoot>
@@ -89,7 +97,11 @@ if(!isset($countryId) || $countryId ==''){
                                 <th>Mobile</th>
                                 <th>Status</th>
                                 <th>Added On</th>
-                                <th>Action</th>
+				<?php
+				if($loginContainer->hasViewOnlyAccess =='no') {
+				?>
+                                  <th>Action</th>
+				<?php } ?>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -120,7 +132,11 @@ if(!isset($countryId) || $countryId ==''){
 		{"sClass":"center"},
 		{"sClass":"center"},
 		{"sClass":"center"},
-		{"sClass":"center","bSortable":false}
+		<?php
+		if($loginContainer->hasViewOnlyAccess =='no') {
+		?>
+		  {"sClass":"center","bSortable":false}
+		<?php } ?>
             ],
         "sAjaxSource": "<?php echo $this->url('user',array('action' => 'index')); ?>",
          "fnServerData": function ( sSource, aoData, fnCallback ) {

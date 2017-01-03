@@ -343,7 +343,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		   $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
 	    }
-	    $row[] = $dataView.$lockView;
+	    if($loginContainer->hasViewOnlyAccess =='no'){
+	       $row[] = $dataView.$lockView;
+	    }
 	    $output['aaData'][] = $row;
 	}
        return $output;

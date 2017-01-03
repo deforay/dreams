@@ -29,6 +29,7 @@ class CountryTable extends AbstractTableGateway {
     }
     
     public function fetchAllCountries($parameters){
+        $loginContainer = new Container('user');
          /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
@@ -145,7 +146,9 @@ class CountryTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['country_name']);
            $row[] = $aRow['country_code'];
            $row[] = ucwords($aRow['country_status']);
-           $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+           if($loginContainer->hasViewOnlyAccess =='no') {
+              $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+           }
            $output['aaData'][] = $row;
        }
        return $output;

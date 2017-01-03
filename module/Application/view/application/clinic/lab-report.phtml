@@ -154,7 +154,10 @@ if(!isset($countryId) || trim($countryId)== ''){
                         <td colspan="4" style="text-align:center;">
                             <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+			    <?php
+			    if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+                               <a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+			    <?php } ?>
                         </td>
                     </tr>
                 </table>
@@ -217,7 +220,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Report List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Lab Report List
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
@@ -419,8 +422,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		alert('OOPS..Unable to generate lab report pdf.');
 		$.unblockUI();
 	    }else{
-		document.location.href = '/temporary/'+data;
 		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
 	    }
 	});
     }

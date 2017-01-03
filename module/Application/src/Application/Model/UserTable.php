@@ -251,8 +251,10 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	}else{
-	    if($loginContainer->roleCode != 'CSC'){
-	       $sQuery = $sQuery->where(array('c.country_id'=>0));
+	    if($loginContainer->roleCode == 'CSC'){
+	       $sQuery = $sQuery->where('r.role_code IN ("CSC")');
+	    }else{
+		$sQuery = $sQuery->where(array('c.country_id'=> 0));
 	    }
 	}
        if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
@@ -291,10 +293,13 @@ class UserTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('c.country_id'=>trim($parameters['countryId'])));
 	}else{
-	    if($loginContainer->roleCode != 'CSC'){
-		$tQuery = $tQuery->where(array('c.country_id'=>0));
+	    if($loginContainer->roleCode == 'CSC'){
+	       $tQuery = $tQuery->where('r.role_code IN ("CSC")');
+	    }else{
+		$tQuery = $tQuery->where(array('c.country_id'=> 0));
 	    }
 	}
+	
 	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
 	   $tQuery = $tQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
 	}
@@ -319,7 +324,9 @@ class UserTable extends AbstractTableGateway {
 	    $row[] = $aRow['mobile'];
 	    $row[] = ucwords($aRow['status']);
 	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
-	    $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+	    if($loginContainer->hasViewOnlyAccess =='no') {
+	       $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+	    }
 	    $output['aaData'][] = $row;
 	}
       return $output;

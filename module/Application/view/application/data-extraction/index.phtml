@@ -170,7 +170,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <td colspan="4" style="text-align:center;">
 				<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
 				<a href="javascript:void(0);" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+				<?php
+				if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+				  <a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+				<?php } ?>
 			    </td>
 			</tr>
 		    </table>
@@ -418,7 +421,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
-		document.location.href = '/temporary/'+data;
+		window.open("/temporary/"+data, "_blank");
 	    }
 	});
     }

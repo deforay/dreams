@@ -38,17 +38,17 @@ class FacilityTable extends AbstractTableGateway {
     }
     
     public function fetchAllFacilites($parameters){
-	    $loginContainer = new Container('user');
+	$loginContainer = new Container('user');
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-		if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
+	if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
            $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
            $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
-		}else{
-		   $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','f.status');
-           $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','f.status');
-		}
+	}else{
+	    $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','f.status');
+            $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','f.status');
+	}
 
        /*
         * Paging
@@ -158,41 +158,43 @@ class FacilityTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-		$tQuery = $sql->select()->from(array('f' => 'facility'))
-					  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
-					  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
-		if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-                    $tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
-                 }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
-                    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-                 }else{
-                    if($loginContainer->roleCode!= 'CSC'){
-                       $tQuery = $tQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
-                    }
-                }
-		$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
-		$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
-		$iTotal = count($tResult);
-		$output = array(
-			   "sEcho" => intval($parameters['sEcho']),
-			   "iTotalRecords" => $iTotal,
-			   "iTotalDisplayRecords" => $iFilteredTotal,
-			   "aaData" => array()
-		);
-		foreach ($rResult as $aRow) {
-				$row = array();
-				$row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
-				$row[] = ucwords($aRow['facility_type_name']);
-				$row[] = $aRow['email'];
-				$row[] = $aRow['phone_number'];
-				if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
-				  $row[] = ucwords($aRow['country_name']);
-				}
-				$row[] = ucwords($aRow['status']);
-				$row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-				$output['aaData'][] = $row;
-		}
-	  return $output;
+	$tQuery = $sql->select()->from(array('f' => 'facility'))
+				  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
+				  ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	    $tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
+	 }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
+	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));
+	 }else{
+	    if($loginContainer->roleCode!= 'CSC'){
+	       $tQuery = $tQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
+	}
+	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
+	$iTotal = count($tResult);
+	$output = array(
+		   "sEcho" => intval($parameters['sEcho']),
+		   "iTotalRecords" => $iTotal,
+		   "iTotalDisplayRecords" => $iFilteredTotal,
+		   "aaData" => array()
+	);
+	foreach ($rResult as $aRow) {
+	    $row = array();
+	    $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+	    $row[] = ucwords($aRow['facility_type_name']);
+	    $row[] = $aRow['email'];
+	    $row[] = $aRow['phone_number'];
+	    if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
+	      $row[] = ucwords($aRow['country_name']);
+	    }
+	    $row[] = ucwords($aRow['status']);
+	    if($loginContainer->hasViewOnlyAccess =='no') {
+	       $row[] = '<a href="/facility/edit/' . base64_encode($aRow['facility_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+	    }
+	    $output['aaData'][] = $row;
+	}
+      return $output;
     }
     
     public function fetchFacility($facilityId){

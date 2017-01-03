@@ -225,7 +225,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                 }
               $row[] = '<div style="width:310px !important;">'.$rowVal.'</div>';
            }
-           $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+           if($loginContainer->hasViewOnlyAccess =='no') {
+              $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+           }
            $output['aaData'][] = $row;
        }
       return $output;
