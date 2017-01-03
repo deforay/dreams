@@ -191,6 +191,15 @@ class DataCollectionTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedLab = array();
+       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped lab
+       foreach($uMapResult as $lab){
+	   $mappedLab[] = $lab['laboratory_id'];
+       }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
@@ -200,10 +209,11 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-		$sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	   $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -239,10 +249,11 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-		$tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	   $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -551,6 +562,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedLab = array();
+       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped lab
+       foreach($uMapResult as $lab){
+	   $mappedLab[] = $lab['laboratory_id'];
+       }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
@@ -558,10 +578,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -608,10 +627,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -700,8 +718,18 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchSearchableDataCollection($params){
+	$loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+	$mappedLab = array();
+	$uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+				   ->where(array('l_map.user_id'=>$loginContainer->userId));
+	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//Get all mapped lab
+	foreach($uMapResult as $lab){
+	    $mappedLab[] = $lab['laboratory_id'];
+	}
 	$common = new CommonService();
 	$start_date = '';
 	$end_date = '';
@@ -716,6 +744,9 @@ class DataCollectionTable extends AbstractTableGateway {
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 	                           ->columns(array('data_collection_id','surveillance_id'))
 				   ->where(array('da_c.status'=>2));
+	if($loginContainer->roleCode== 'LS'){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
@@ -867,6 +898,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedLab = array();
+       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped lab
+       foreach($uMapResult as $lab){
+	   $mappedLab[] = $lab['laboratory_id'];
+       }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
@@ -874,10 +914,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -922,10 +961,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	                          ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	if($loginContainer->roleCode== 'LS'){
+	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -1103,6 +1141,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedANC = array();
+       $uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+                                  ->where(array('cl_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped ANC
+       foreach($uMapResult as $anc){
+	   $mappedANC[] = $anc['clinic_id'];
+       }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
@@ -1110,11 +1157,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $sQuery = $sQuery->where(array('da_c.country'=>0));
-	    }
 	}
+	if($loginContainer->roleCode == 'ANCDEO'){
+            $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+        }
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $sQuery = $sQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
@@ -1158,11 +1204,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where(array('da_c.country'=>0));
-	    }
 	}
+	if($loginContainer->roleCode == 'ANCDEO'){
+            $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+        }
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
            $tQuery = $tQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));

@@ -121,18 +121,27 @@ class FacilityTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
-       $sQuery = $sql->select()->from(array('f' => 'facility'))
+       $mappedLab = array();
+       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped lab
+       foreach($uMapResult as $lab){
+	   $mappedLab[] = $lab['laboratory_id'];
+       }
+       
+        $sQuery = $sql->select()->from(array('f' => 'facility'))
 			       ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=f.facility_type",array('facility_type_name'))
 			       ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
            $sQuery = $sQuery->where(array('f.country'=>trim($parameters['countryId'])));
         }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
            $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-        }else{
-            if($loginContainer->roleCode!= 'CSC'){
-                $sQuery = $sQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
-            }
         }
+	if($loginContainer->roleCode== 'LS'){
+	    $sQuery = $sQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
+	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -165,10 +174,10 @@ class FacilityTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
 	 }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
 	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-	 }else{
-	    if($loginContainer->roleCode!= 'CSC'){
-	       $tQuery = $tQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	}
+	 
+	if($loginContainer->roleCode== 'LS'){
+	    $tQuery = $tQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -227,15 +236,23 @@ class FacilityTable extends AbstractTableGateway {
 	$loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+	$mappedLab = array();
+	$uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+				   ->where(array('l_map.user_id'=>$loginContainer->userId));
+	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//Get all mapped lab
+	foreach($uMapResult as $lab){
+	    $mappedLab[] = $lab['laboratory_id'];
+	}
         $facilitiesQuery = $sql->select()->from(array('f' => 'facility'))
                                ->where(array('f.status'=>'active'));
 	if(trim($countryId)!='' && $countryId >0){
             $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
-        }else{
-            if($loginContainer->roleCode!= 'CSC'){
-                $facilitiesQuery = $facilitiesQuery->where('f.country IN ("' . implode('", "', $loginContainer->country) . '")');
-            }
         }
+	if($loginContainer->roleCode== 'LS'){
+	    $facilitiesQuery = $facilitiesQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
+	}
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
         return $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }

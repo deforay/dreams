@@ -122,16 +122,12 @@ class AncSiteTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('anc' => 'anc_site'))
-		             ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
-		             ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
+		               ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
+		               ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
            $sQuery = $sQuery->where(array('anc.country'=>trim($parameters['countryId'])));
         }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
            $sQuery = $sQuery->where(array('anc.country'=>base64_decode($parameters['country'])));  
-        }else{
-            if($loginContainer->roleCode!= 'CSC'){
-                $sQuery = $sQuery->where('anc.country IN ("' . implode('", "', $loginContainer->country) . '")');
-            }
         }
        
        if (isset($sWhere) && $sWhere != "") {
@@ -160,16 +156,12 @@ class AncSiteTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('anc' => 'anc_site'))
-				  ->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
-				  ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
+				->join(array('f_typ' => 'facility_type'), "f_typ.facility_type_id=anc.anc_site_type",array('facility_type_name'))
+				->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('anc.country'=>trim($parameters['countryId'])));
 	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $tQuery = $tQuery->where(array('anc.country'=>base64_decode($parameters['country'])));  
-	}else{
-	    if($loginContainer->roleCode!= 'CSC'){
-		$tQuery = $tQuery->where('anc.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    }
+	    $tQuery = $tQuery->where(array('anc.country'=>base64_decode($parameters['country'])));
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -228,14 +220,22 @@ class AncSiteTable extends AbstractTableGateway {
 	$loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+	$mappedANC = array();
+	$uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+				   ->where(array('cl_map.user_id'=>$loginContainer->userId));
+	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//Get all mapped ANC
+	foreach($uMapResult as $anc){
+	    $mappedANC[] = $anc['clinic_id'];
+	}
         $ancSitesQuery = $sql->select()->from(array('anc' => 'anc_site'))
                              ->where(array('anc.status'=>'active'));
 	if(trim($countryId)!= '' && $countryId > 0){
 	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
-        }else{
-           if($loginContainer->roleCode!= 'CSC'){
-                $ancSitesQuery = $ancSitesQuery->where('anc.country IN ("' . implode('", "', $loginContainer->country) . '")');
-            } 
+        }
+	if($loginContainer->roleCode == 'ANCDEO'){
+            $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
         return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

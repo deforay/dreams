@@ -127,9 +127,21 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedANC = array();
+       $uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+                                  ->where(array('cl_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped ANC
+       foreach($uMapResult as $anc){
+	   $mappedANC[] = $anc['clinic_id'];
+       }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+        if($loginContainer->roleCode == 'ANCDEO'){
+            $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
+        }
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
@@ -137,9 +149,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
        }
-       if($loginContainer->roleCode!= 'CSC'){
-          $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-       }
+    
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -168,6 +178,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+        if($loginContainer->roleCode == 'ANCDEO'){
+            $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
+        }
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
@@ -175,9 +188,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $tQuery = $tQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
        }
-       if($loginContainer->roleCode!= 'CSC'){
-          $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-       }
+       
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
        $iTotal = count($tResult);
@@ -349,9 +360,21 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
+       $mappedANC = array();
+       $uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+                                  ->where(array('cl_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped ANC
+       foreach($uMapResult as $anc){
+	   $mappedANC[] = $anc['clinic_id'];
+       }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+        if($loginContainer->roleCode == 'ANCDEO'){
+            $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
+        }
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
@@ -359,9 +382,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
        }
-       if($loginContainer->roleCode!= 'CSC'){
-          $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-       }
+       
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -390,6 +411,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+        if($loginContainer->roleCode == 'ANCDEO'){
+            $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
+        }
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
@@ -397,9 +421,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $tQuery = $tQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
        }
-       if($loginContainer->roleCode!= 'CSC'){
-          $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-       }
+       
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
        $iTotal = count($tResult);
