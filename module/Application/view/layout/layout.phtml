@@ -44,25 +44,27 @@ $countryLabDataReportingAccess = 'hide';
 $countryLabDataExtractionAccess = 'hide';
 $countryLabResultEmailAccess = 'hide';
 $countryPrintLabLogbookAccess = 'hide';
-if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'LS'){
+if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $countryLabDataReportingAccess = 'show';
     $countryLabDataExtractionAccess = 'show';
     $countryLabResultEmailAccess = 'show';
     $countryPrintLabLogbookAccess = 'show';
+}else if($loginContainer->roleCode== 'LS'){
+    $countryLabDataReportingAccess = 'show';
+    $countryLabDataExtractionAccess = 'show';
+    $countryLabResultEmailAccess = 'show';
 }else if($loginContainer->roleCode== 'LDEO'){
     $countryLabDataReportingAccess = 'show';
+    $countryLabDataExtractionAccess = 'show';
 }
 //Country Anc site Submenu Access
 $countryAncsiteDataReportingAccess = 'hide';
 $countryAncsiteDataExtractionAccess = 'hide';
 $countryAncsiteLabReportAccess = 'hide';
-if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCDEO'){
     $countryAncsiteDataReportingAccess = 'show';
     $countryAncsiteDataExtractionAccess = 'show';
     $countryAncsiteLabReportAccess = 'show';
-}else if($loginContainer->roleCode== 'ANCDEO'){
-   $countryAncsiteDataReportingAccess = 'show'; 
-   $countryAncsiteLabReportAccess = 'show'; 
 }
 ?>
 <!DOCTYPE html>

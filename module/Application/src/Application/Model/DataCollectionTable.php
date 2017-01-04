@@ -581,6 +581,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	if($loginContainer->roleCode== 'LS'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	   $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -630,6 +632,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	   $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
