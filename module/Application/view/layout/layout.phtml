@@ -108,8 +108,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
         .dataTables_paginate{
            border: 1px solid #ff96ca !important;
         }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current{
-           background-color:#ff69b4;
+        #cscDataCollectionMenu.active,#cscDataExtractionMenu.active{
+            color:#444 !important;
+            background-color:#ff69b4 !important;
         }
         .wrapper.vertical-sidebar .side-nav .collapsible .collapsible-header:hover{
             color:#ff96ca;
@@ -187,19 +188,19 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                                                 <div class="collapsible-body collapsibleAll collapsibleCSCAdminMenu">
                                                     <ul>
                                                         <li class="cscCountryMenu menuAll">
-                                                            <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:28%;color:#444;"><i class="zmdi zmdi-pin"></i> Manage Countries</a>
+                                                            <a class="cscCountryMenu menuAll" href="<?php echo $this->url('country');?>" style="padding-left:28%;color:#444;font-size:13px;"><i class="zmdi zmdi-pin"></i> Manage Countries</a>
                                                         </li>
                                                         <li class="cscUserMenu menuAll">
-                                                            <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:28%;;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
+                                                            <a class="cscUserMenu menuAll" href="<?php echo $this->url('user'); ?>" style="padding-left:28%;;color:#444;font-size:13px;"><i class="zmdi zmdi-account"></i> Manage Users</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </li>
                                             <li class="cscDataCollectionMenu menuAll">
-                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header"><i class="zmdi zmdi-comment-edit"></i> Lab Data Reporting</a>
+                                                <a href="<?php echo $this->url('data-collection'); ?>" class="collapsible-header cscDataCollectionMenu menuAll"><i class="zmdi zmdi-comment-edit" style="margin-right:0px;"></i> Lab Data Reporting</a>
                                             </li>
                                             <li class="cscDataExtractionMenu menuAll">
-                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download</a>
+                                                <a href="<?php echo $this->url('data-extraction'); ?>" class="collapsible-header cscDataExtractionMenu menuAll"><i class="zmdi zmdi-cloud-download" style="margin-right:0px;"></i> Lab Data Download</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -231,15 +232,15 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                                                         <?php
                                                         if($countryAdminUserMenuAccess =='show'){ ?>
                                                             <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-account"></i> Manage Users</a>
+                                                                <a class="countryUserMenu<?php echo $country['country_id']; ?>" href="/user/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-account"></i> Manage Users</a>
                                                             </li>
                                                         <?php } if($countryAdminLabMenuAccess =='show'){ ?>
                                                             <li class="countryFacilityMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
+                                                                <a class="countryFacilityMenu<?php echo $country['country_id']; ?> " href="/facility/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-panorama-vertical"></i> Manage Labs</a>
                                                             </li>
                                                         <?php } if($countryAdminAncsiteMenuAccess =='show'){ ?>
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
+                                                                <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
                                                         <?php } ?>
                                                     </ul>
@@ -254,19 +255,19 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                                                             <?php
                                                             if($countryLabDataReportingAccess =='show'){ ?>
                                                                 <li class="countryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> Lab Data Reporting</a>
+                                                                    <a href="/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-comment-edit"></i> Lab Data Reporting</a>
                                                                 </li>
                                                             <?php } if($countryLabDataExtractionAccess == 'show') { ?>
                                                                 <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download</a>
+                                                                    <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download</a>
                                                                 </li>
                                                             <?php } if($countryLabResultEmailAccess == 'show') { ?>
                                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-email"></i> Lab Result Email</a>
+                                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-email"></i> Lab Result Email</a>
                                                                 </li>
                                                             <?php } if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
+                                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>
@@ -282,15 +283,15 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                                                            <?php
                                                             if($countryAncsiteDataReportingAccess == 'show' && $DRAccess == 'show'){ ?>
                                                                 <li class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-comment-edit"></i> ANC Data Reporting</a>
+                                                                    <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-comment-edit"></i> ANC Data Reporting</a>
                                                                 </li>
                                                             <?php } if($countryAncsiteDataExtractionAccess == 'show') { ?>
                                                                 <li class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
+                                                                    <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
                                                                 </li>
                                                             <?php } if($countryAncsiteLabReportAccess == 'show' && $PRAccess == 'show'){ ?>
                                                                 <li class="countryClinicLabReportMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicLabReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;"><i class="zmdi zmdi-print"></i> ANC Lab Report</a>
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicLabReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> ANC Lab Report</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>
