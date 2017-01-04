@@ -337,6 +337,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 <script>
     $(function () {
         ol();
+        $(".opensright").css("display","none");
         //set active link
         str=$(location).attr('pathname');
         splitsUrl=str.split("/",5);
@@ -527,7 +528,6 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                 $(".cscMenu").addClass("active");
                 $(".collapsibleCSCMenu").css("display","block");
                 $(".cscDataCollectionMenu").addClass("active");
-                $(".cscDataCollectionMenu").css("color","#fff");
             }
         }else if(splitsUrl[1]=='data-extraction'){
             splits=str.substr(str.lastIndexOf('/') + 1);
@@ -545,7 +545,6 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                 $(".cscMenu").addClass("active");
                 $(".collapsibleCSCMenu").css("display","block");
                 $(".cscDataExtractionMenu").addClass("active");
-                $(".cscDataExtractionMenu").css("color","#fff");
             }
         }else if(splitsUrl[1]=='print-lab-logbook'){
             splits=str.substr(str.lastIndexOf('/') + 1);

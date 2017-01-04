@@ -173,8 +173,16 @@ if(!isset($countryId) || trim($countryId)== ''){
             showButtonPanel: true,
             dateFormat: 'M/yy',
             maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#reportingMonthYearFilter').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYearFilter').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYearFilter').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
             onClose: function(dateText, inst) {
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
     });
