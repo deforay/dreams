@@ -104,65 +104,63 @@ if(!isset($countryId) || trim($countryId)== ''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Lab Report</a>
        </div>
     </div>
-    <div class="row">
-        <div class="col l12 m12 s12">
-            <form id="searchFilterForm" method="post" action="#">
-                <table style="width:100%;">
-                    <tr>
-                        <td style="width:25%;text-align:right;"><h6><strong>Specimen Collected Date </strong></h6></td>
-                        <td style="width:25%;text-align:left;">
-                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
-                        </td>
-                        <td style="width:10%;text-align:left;"><h6><strong>ANC Site</strong></h6></td>
-                        <td style="width:40%;text-align:left;padding-right:8%;">
-                            <select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($ancSites as $anc){
-                                    ?>
-                                    <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                    </tr>
-                     <tr>
-                        <td style="text-align:left;padding-left:7.4%;"><h6><strong>Lab Site/Facility </strong></h6></td>
-                        <td style="text-align:left;">
-                            <select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($facilities as $lab){
-                                    ?>
-                                    <option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </td>
-                        <td style="text-align:left;"><h6><strong>Report Type </strong></h6></td>
-                        <td style="text-align:left;padding-right:8%;">
-                            <select class="material-select" id="reportType" name="reportType" title="Please select report type" style="width:40% !important;">
-                                <option value=""> -- Both -- </option>
-                                <option value="vl">Viral Load Report</option>
-                                <option value="in">Infection Report</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" style="text-align:center;">
-                            <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="row" style="max-width:1109px;">
+	<form id="searchFilterForm" action="#">
+	    <div class="col l12 m12 s12">
+		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
+		<div class="col l2 m2 s2 left-align"><h6><strong>Specimen Collected Date </strong></h6></div>
+		<div class="col l3 m3 s3 left-align">
+		    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
+		</div>
+		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
+		<div class="col l3 m3 s3 left-align">
+		    <select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
+			<option value=""> -- Select -- </option>
+			<?php
+			foreach($ancSites as $anc){
+			    ?>
+			    <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
 			    <?php
-			    if($loginContainer->hasViewOnlyAccess =='no'){ ?>
-                               <a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
-			    <?php } ?>
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+			}
+			?>
+		    </select>
+		</div>
+		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
+	    </div>
+	    <div class="col l12 m12 s12">
+		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
+		<div class="col l2 m2 s2 left-align"><h6><strong>Lab Site/Facility </strong></h6></div>
+		<div class="col l3 m3 s3 left-align">
+		    <select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
+			<option value=""> -- Select -- </option>
+			<?php
+			foreach($facilities as $lab){
+			    ?>
+			    <option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+			    <?php
+			}
+			?>
+		    </select>
+		</div>
+		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>Report Type</strong></h6></div>
+		<div class="col l3 m3 s3 left-align">
+		    <select class="material-select" id="reportType" name="reportType" title="Please select report type" style="width:40% !important;">
+			<option value=""> -- Both -- </option>
+			<option value="vl">Viral Load Report</option>
+			<option value="in">Infection Report</option>
+		    </select>
+		</div>
+		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<?php
+		if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+		   <a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+		<?php } ?>
+	    </div>
+	</form>
     </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
