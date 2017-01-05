@@ -162,7 +162,7 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="ancSite" class="">ANC site name *</label>
                     </div>
                 </div>
-                <div class="col s6 supervisorSection" style="display:none;">
+                <div class="col s6 supervisorDeoSection" style="display:none;">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
                         <select class="material-select" id="lab" name="lab[]" multiple title="Please select lab site name">
@@ -260,18 +260,18 @@ if(isset($countryId) && trim($countryId)!=''){
     $('#role').on('change',function(e){
        var role = $('#role').val();
        if(base64_decode(role)== 5){
-          $('.supervisorSection').hide();
+          $('.supervisorDeoSection').hide();
           $('#lab').removeClass('isRequired');
           $('.clinicanSection').show();
           $('#ancSite').addClass('isRequired');
-       }else if(base64_decode(role)== 3){
+       }else if(base64_decode(role)== 3 || base64_decode(role)== 4){
           $('.clinicanSection').hide();
           $('#ancSite').removeClass('isRequired');
-          $('.supervisorSection').show();
+          $('.supervisorDeoSection').show();
           $('#lab').addClass('isRequired');
        }else{
          $('.clinicanSection').hide();
-         $('.supervisorSection').hide();
+         $('.supervisorDeoSection').hide();
          $('#ancSite').removeClass('isRequired');
          $('#lab').removeClass('isRequired');
        }

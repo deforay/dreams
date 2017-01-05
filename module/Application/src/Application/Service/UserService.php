@@ -33,9 +33,9 @@ class UserService {
                 $userClinicMapDb = $this->sm->get('UserClinicMapTable');
                 $userLaboratoryMapDb = $this->sm->get('UserLaboratoryMapTable');
                 $userCountryMapDb->addUserCountryMapDetails($params,$result);
-		if(isset($params['role']) && base64_decode($params['role'])== 5){
-		   $userClinicMapDb->addUserClinicMapDetails($params,$result); 
-		}else if(isset($params['role']) && base64_decode($params['role'])== 3){
+		if(base64_decode($params['role'])== 5){
+		   $userClinicMapDb->addUserClinicMapDetails($params,$result);
+		}else if(base64_decode($params['role'])== 3 || base64_decode($params['role'])== 4){
 		   $userLaboratoryMapDb->addUserLaboratoryMapDetails($params,$result);
 		}
                 $adapter->commit();

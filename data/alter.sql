@@ -380,3 +380,7 @@ ALTER TABLE `user` CHANGE `created_by` `created_by` INT(11) NOT NULL;
 UPDATE `role` SET `role_name` = 'ANC Data Entry Operator' WHERE `role`.`role_id` = 5;
 
 UPDATE `role` SET `role_code` = 'ANCDEO' WHERE `role`.`role_id` = 5;
+
+
+--Pal 05/01/2017
+alter table user add FOREIGN KEY(role) REFERENCES role(role_id)

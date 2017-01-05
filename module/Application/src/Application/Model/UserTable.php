@@ -117,6 +117,7 @@ class UserTable extends AbstractTableGateway {
     }
     
     public function addUserDetails($params){
+	$loginContainer = new Container('user');
 	$lastInsertedId = 0;
 	if(isset($params['userName']) && trim($params['userName'])!= ''){
 		$common = new CommonService();
@@ -134,6 +135,7 @@ class UserTable extends AbstractTableGateway {
 		'alt_contact' => $params['altContact'],
 		'has_view_only_access' => $params['hasViewOnlyAccess'],
 		'status' => 'active',
+		'created_by' => $loginContainer->userId,
 		'created_on' => $common->getDateTime()
 		);
 		$data['has_data_reporting_access']  =NULL;

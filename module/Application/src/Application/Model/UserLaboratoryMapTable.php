@@ -27,7 +27,7 @@ class UserLaboratoryMapTable extends AbstractTableGateway {
             $this->delete(array('user_id'=>$userId));
         }
         
-        if(isset($params['role']) && base64_decode($params['role'])== 3){
+        if(base64_decode($params['role'])== 3 || base64_decode($params['role'])== 4){
             if(count($params['lab'])>0){
                 $c = count($params['lab']);
                 for($i=0;$i<$c;$i++){

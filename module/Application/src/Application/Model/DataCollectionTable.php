@@ -210,10 +210,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	   $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -250,10 +248,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	   $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -579,10 +575,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	   $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
@@ -630,10 +624,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	   $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($end_date) != "") {
