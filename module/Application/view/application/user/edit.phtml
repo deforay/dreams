@@ -46,8 +46,8 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="userCode" name="userCode" type="text" class="validate isRequired" title="Please enter user code" value="<?php echo $row->user_code;?>" onblur="checkNameValidation('user', 'user_code', this, '<?php echo "user_id##" .$row->user_id; ?>','The user code that you entered already exist. Please enter different code.')">
-                        <label for="userCode" class="">User Code *</label>
+                        <input id="userCode" name="userCode" type="text" class="validate" title="Please enter user code" value="<?php echo $row->user_code;?>" onblur="checkNameValidation('user', 'user_code', this, '<?php echo "user_id##" .$row->user_id; ?>','The user code that you entered already exist. Please enter different code.')">
+                        <label for="userCode" class="">User Code </label>
                     </div>
                 </div>
             </div>
@@ -161,6 +161,34 @@ if(count($row['userLaboratories'])>0){
                             <label for="country" class="">Country *</label>
                         </div>
                     </div>
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+                            <label for="comments">Comments</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
+                    <div class="col s6">
+                        <div class="input-padding col m10 s10">
+                            Has Data Reporting Access ? *<br>
+                            <input id="hasDataReportingAccessYes" class="with-gap isRequired" name="hasDataReportingAccess" value="yes" type="radio" <?php echo(isset($row->has_data_reporting_access) && $row->has_data_reporting_access == 'yes')?'checked="checked"':''; ?>>
+                            <label for="hasDataReportingAccessYes">Yes </label>&nbsp;
+                            <input id="hasDataReportingAccessNo" class="with-gap isRequired" name="hasDataReportingAccess" value="no" type="radio" <?php echo(isset($row->has_data_reporting_access) && $row->has_data_reporting_access == 'no')?'checked="checked"':''; ?> <?php echo($row->has_data_reporting_access == '' || $row->has_data_reporting_access == NULL)?'checked="checked"':''; ?>>
+                            <label for="hasDataReportingAccessNo">No </label>
+                        </div>
+                    </div>
+                    <div class="col s6">
+                        <div class="input-padding col m10 s10">
+                            Has Print Report Access ? *<br>
+                            <input id="hasPrintReportAccessYes" class="with-gap isRequired" name="hasPrintReportAccess" value="yes" type="radio" <?php echo(isset($row->has_print_report_access) && $row->has_print_report_access == 'yes')?'checked="checked"':''; ?>>
+                            <label for="hasPrintReportAccessYes">Yes </label>&nbsp;
+                            <input id="hasPrintReportAccessNo" class="with-gap isRequired" name="hasPrintReportAccess" value="no" type="radio" <?php echo(isset($row->has_print_report_access) && $row->has_print_report_access == 'no')?'checked="checked"':''; ?> <?php echo($row->has_print_report_access == '' || $row->has_print_report_access == NULL)?'checked="checked"':''; ?>>
+                            <label for="hasPrintReportAccessNo">No </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col s6 clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
@@ -191,28 +219,6 @@ if(count($row['userLaboratories'])>0){
                             <label for="lab" class="">Lab site name *</label>
                         </div>
                     </div>
-                </div>
-                <div class="row clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
-                    <div class="col s6">
-                        <div class="input-padding col m10 s10">
-                            Has Data Reporting Access ? *<br>
-                            <input id="hasDataReportingAccessYes" class="with-gap isRequired" name="hasDataReportingAccess" value="yes" type="radio" <?php echo(isset($row->has_data_reporting_access) && $row->has_data_reporting_access == 'yes')?'checked="checked"':''; ?>>
-                            <label for="hasDataReportingAccessYes">Yes </label>&nbsp;
-                            <input id="hasDataReportingAccessNo" class="with-gap isRequired" name="hasDataReportingAccess" value="no" type="radio" <?php echo(isset($row->has_data_reporting_access) && $row->has_data_reporting_access == 'no')?'checked="checked"':''; ?> <?php echo($row->has_data_reporting_access == '' || $row->has_data_reporting_access == NULL)?'checked="checked"':''; ?>>
-                            <label for="hasDataReportingAccessNo">No </label>
-                        </div>
-                    </div>
-                    <div class="col s6">
-                        <div class="input-padding col m10 s10">
-                            Has Print Report Access ? *<br>
-                            <input id="hasPrintReportAccessYes" class="with-gap isRequired" name="hasPrintReportAccess" value="yes" type="radio" <?php echo(isset($row->has_print_report_access) && $row->has_print_report_access == 'yes')?'checked="checked"':''; ?>>
-                            <label for="hasPrintReportAccessYes">Yes </label>&nbsp;
-                            <input id="hasPrintReportAccessNo" class="with-gap isRequired" name="hasPrintReportAccess" value="no" type="radio" <?php echo(isset($row->has_print_report_access) && $row->has_print_report_access == 'no')?'checked="checked"':''; ?> <?php echo($row->has_print_report_access == '' || $row->has_print_report_access == NULL)?'checked="checked"':''; ?>>
-                            <label for="hasPrintReportAccessNo">No </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col s6">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
@@ -244,6 +250,12 @@ if(count($row['userLaboratories'])>0){
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+                            <label for="comments">Comments</label>
+                        </div>
+                    </div>
                     <div class="col s6">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>

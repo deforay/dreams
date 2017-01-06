@@ -20,6 +20,7 @@ class CountryTable extends AbstractTableGateway {
         if(isset($params['countryName']) && trim($params['countryName'])!= ''){
             $data=array('country_name'=>$params['countryName'],
                         'country_code'=>$params['countryCode'],
+                        'comments'=>$params['comments'],
                         'country_status'=>'active'
                         );
             $this->insert($data);
@@ -164,6 +165,7 @@ class CountryTable extends AbstractTableGateway {
             $countryId = base64_decode($params['countryId']);
             $data=array('country_name'=>$params['countryName'],
                         'country_code'=>$params['countryCode'],
+                        'comments'=>$params['comments'],
                         'country_status'=>$params['countryStatus']
                         );
             $this->update($data,array('country_id'=>$countryId));

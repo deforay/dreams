@@ -117,6 +117,14 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                        <label for="comments">Comments</label>
+                    </div>
+                </div>
+            </div>
             <div class="col s12">
                 <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>

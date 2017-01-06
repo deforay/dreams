@@ -16,10 +16,10 @@ use Zend\Session\Container;
 
 class DataCollectionController extends AbstractActionController{
     public function indexAction(){
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $request = $this->getRequest();
         if ($request->isPost()){
             $parameters = $request->getPost();
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $result = $dataCollectionService->getAllDataCollections($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
@@ -32,12 +32,16 @@ class DataCollectionController extends AbstractActionController{
             $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$countryId);
             $rejectionReasonList=$commonService->getActiveRejectionReasons();
             $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
+            $choosedCountryInfo=$countryService->getChoosedCountryInfo($countryId);
+            $lastDataCollectionInfo = $dataCollectionService->getLastDataCollectionInfo();
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
                 'ancSites'=>$ancSiteList,
                 'rejectionReasons'=>$rejectionReasonList,
-                'facilities'=>$facilityList
+                'facilities'=>$facilityList,
+                'choosedCountryInfo'=>$choosedCountryInfo,
+                'lastDataCollection'=>$lastDataCollectionInfo
             ));
         }
     }

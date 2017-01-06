@@ -74,4 +74,14 @@ class CountryService {
         $countryDb = $this->sm->get('CountryTable');
         return $countryDb->fetchActiveCountries($from,$countryId);
     }
+    
+    public function getChoosedCountryInfo($countryId){
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $cQuery = $sql->select()->from(array('c' => 'country'))
+                                ->columns(array('country_code'))
+                                ->where(array('c.country_id'=>$countryId));
+        $cQueryStr = $sql->getSqlStringForSqlObject($cQuery);
+      return $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+    }
 }

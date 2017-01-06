@@ -18,6 +18,7 @@ class UserTable extends AbstractTableGateway {
     
     public function getUserLogin($params){
         $alertContainer = new Container('alert');
+	$common = new CommonService();
         $config = new \Zend\Config\Reader\Ini();
         $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
         if(isset($params['userName']) && trim($params['userName'])!= ''){
@@ -44,6 +45,8 @@ class UserTable extends AbstractTableGateway {
 		$userCountry = array();
 		$userClinic = array();
 		$userLaboratory = array();
+		//Update last login
+		$this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
 		if($loginResult->role_code =='CSC'){
 		    $isCountrySelected = false;
 		}else{
@@ -120,11 +123,11 @@ class UserTable extends AbstractTableGateway {
 	$loginContainer = new Container('user');
 	$lastInsertedId = 0;
 	if(isset($params['userName']) && trim($params['userName'])!= ''){
-		$common = new CommonService();
-		$config = new \Zend\Config\Reader\Ini();
-		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-		$password = sha1($params['password'] . $configResult["password"]["salt"]);
-		$data = array(
+	    $common = new CommonService();
+	    $config = new \Zend\Config\Reader\Ini();
+	    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+	    $password = sha1($params['password'] . $configResult["password"]["salt"]);
+	    $data = array(
 		'full_name' => $params['fullName'],
 		'user_code' => $params['userCode'],
 		'user_name' => $params['userName'],
@@ -134,18 +137,19 @@ class UserTable extends AbstractTableGateway {
 		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
 		'has_view_only_access' => $params['hasViewOnlyAccess'],
+		'comments' => $params['comments'],
 		'status' => 'active',
 		'created_by' => $loginContainer->userId,
 		'created_on' => $common->getDateTime()
-		);
-		$data['has_data_reporting_access']  =NULL;
-		$data['has_print_report_access']  =NULL;
-		if(isset($params['role']) && base64_decode($params['role'])== 5){
-		   $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
-		   $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
-		}
-		$this->insert($data);
-		$lastInsertedId = $this->lastInsertValue;
+	    );
+	    $data['has_data_reporting_access']  =NULL;
+	    $data['has_print_report_access']  =NULL;
+	    if(isset($params['role']) && base64_decode($params['role'])== 5){
+	       $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
+	       $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
+	    }
+	    $this->insert($data);
+	    $lastInsertedId = $this->lastInsertValue;
 	}
        return $lastInsertedId;
     }
@@ -157,11 +161,11 @@ class UserTable extends AbstractTableGateway {
 	$loginContainer = new Container('user');
 	$common = new CommonService();
 	if(trim($parameters['countryId']) ==''){
-	    $aColumns = array('u.full_name','u.user_code','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
-	    $orderColumns = array('u.full_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
+	    $aColumns = array('u.full_name','u.user_code','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
+	    $orderColumns = array('u.full_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status','u.last_login');
 	}else{
-	   $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.status',"DATE_FORMAT(u.created_on,'%d-%b-%Y %H:%i:%s')");
-	   $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.status','u.created_on');
+	   $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
+	   $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status','u.last_login');
 	}
 
        /*
@@ -316,16 +320,25 @@ class UserTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-	    $date = explode(" ",$aRow['created_on']);
-	    $row[] = ucwords($aRow['full_name'])." - ".$aRow['user_code'];
-	    if(trim($parameters['countryId'])!= ''){
+	    $lastLogin = '';
+	    if(isset($aRow['last_login']) && trim($aRow['last_login'])!= ''){
+	       $date = explode(" ",$aRow['last_login']);
+	       $lastLogin = $common->humanDateFormat($date[0])." ".$date[1];
+	    }
+	    $access = 'Full Access';
+	    if(isset($aRow['has_view_only_access']) && trim($aRow['has_view_only_access'])== 'yes'){
+		$access = 'View Only';
+	    }
+	    $row[] = ucwords($aRow['full_name']);
+	    if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	       $row[] = ucwords($aRow['role_name']);
 	    }
 	    $row[] = $aRow['user_name'];
 	    $row[] = $aRow['email'];
 	    $row[] = $aRow['mobile'];
+	    $row[] = $access;
 	    $row[] = ucwords($aRow['status']);
-	    $row[] = $common->humanDateFormat($date[0])." ".$date[1];
+	    $row[] = $lastLogin;
 	    if($loginContainer->hasViewOnlyAccess =='no') {
 	       $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
@@ -362,10 +375,9 @@ class UserTable extends AbstractTableGateway {
     public function updateUserDetails($params){
 	$userId = 0;
 	if(isset($params['userName']) && trim($params['userName'])!= ''){
-		$userId = base64_decode($params['userId']);
-		$common = new CommonService();
-
-		$data = array(
+	    $userId = base64_decode($params['userId']);
+	    $common = new CommonService();
+	    $data = array(
 		'full_name' => $params['fullName'],
 		'user_code' => $params['userCode'],
 		'user_name' => $params['userName'],
@@ -374,22 +386,23 @@ class UserTable extends AbstractTableGateway {
 		'mobile' => $params['mobile'],
 		'alt_contact' => $params['altContact'],
 		'has_view_only_access' => $params['hasViewOnlyAccess'],
+		'comments' => $params['comments'],
 		'status' => $params['status']
-		);
-		if(isset($params['password']) && trim($params['password']) != ''){
-		    $config = new \Zend\Config\Reader\Ini();
-		    $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
-		    $data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
-		}
-		
-		if(isset($params['role']) && base64_decode($params['role'])== 5){
-		   $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
-		   $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
-		}else{
-		    $data['has_data_reporting_access']  =NULL;
-		    $data['has_print_report_access']  =NULL;
-		}
-		$this->update($data,array('user_id'=>$userId));
+	    );
+	    if(isset($params['password']) && trim($params['password']) != ''){
+		$config = new \Zend\Config\Reader\Ini();
+		$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
+		$data['password'] = sha1($params['password'] . $configResult["password"]["salt"]);
+	    }
+	    
+	    if(isset($params['role']) && base64_decode($params['role'])== 5){
+	       $data['has_data_reporting_access'] = $params['hasDataReportingAccess'];
+	       $data['has_print_report_access'] = $params['hasPrintReportAccess']; 
+	    }else{
+		$data['has_data_reporting_access']  =NULL;
+		$data['has_print_report_access']  =NULL;
+	    }
+	    $this->update($data,array('user_id'=>$userId));
 	}
       return $userId;
     }

@@ -17,24 +17,25 @@ class FacilityTable extends AbstractTableGateway {
     
     public function addFacilityDetails($params){
         $lastInsertedId = 0;
-		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-			$data = array(
-			'facility_name' => $params['facilityName'],
-			'facility_code' => $params['facilityCode'],
-			'facility_type' => base64_decode($params['facilityType']),
-			'email' => $params['email'],
-			'contact_person' => $params['contactPerson'],
-			'phone_number' => $params['mobile'],
-			'country' => base64_decode($params['country']),
-			'address' => $params['address'],
-			'latitude' => $params['latitude'],
-			'longitude' => $params['longitude'],
-			'status' => 'active'
-			);
-			$this->insert($data);
-			$lastInsertedId = $this->lastInsertValue;
-		}
-	  return $lastInsertedId;
+	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
+	    $data = array(
+		'facility_name' => $params['facilityName'],
+		'facility_code' => $params['facilityCode'],
+		'facility_type' => base64_decode($params['facilityType']),
+		'email' => $params['email'],
+		'contact_person' => $params['contactPerson'],
+		'phone_number' => $params['mobile'],
+		'country' => base64_decode($params['country']),
+		'address' => $params['address'],
+		'latitude' => $params['latitude'],
+		'longitude' => $params['longitude'],
+		'comments' => $params['comments'],
+		'status' => 'active'
+	    );
+	    $this->insert($data);
+	    $lastInsertedId = $this->lastInsertValue;
+	}
+      return $lastInsertedId;
     }
     
     public function fetchAllFacilites($parameters){
@@ -44,10 +45,10 @@ class FacilityTable extends AbstractTableGateway {
         */
 	if($loginContainer->roleCode =='CSC' && $parameters['countryId']== ''){
            $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
-           $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
+           $orderColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','c.country_name','f.status');
 	}else{
 	    $aColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','f.status');
-            $orderColumns = array('f.facility_name','f_typ.facility_type_name','f.email','f.phone_number','f.status');
+            $orderColumns = array('f.facility_name','f.facility_code','f_typ.facility_type_name','f.email','f.phone_number','f.status');
 	}
 
        /*
@@ -190,7 +191,8 @@ class FacilityTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-	    $row[] = ucwords($aRow['facility_name'])." - ".$aRow['facility_code'];
+	    $row[] = ucwords($aRow['facility_name']);
+	    $row[] = $aRow['facility_code'];
 	    $row[] = ucwords($aRow['facility_type_name']);
 	    $row[] = $aRow['email'];
 	    $row[] = $aRow['phone_number'];
@@ -212,24 +214,25 @@ class FacilityTable extends AbstractTableGateway {
     
     public function updateFacilityDetails($params){
         $facilityId = 0;
-		if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-			$facilityId = base64_decode($params['facilityId']);
-			$data = array(
-			'facility_name' => $params['facilityName'],
-			'facility_code' => $params['facilityCode'],
-			'facility_type' => base64_decode($params['facilityType']),
-			'email' => $params['email'],
-			'contact_person' => $params['contactPerson'],
-			'phone_number' => $params['mobile'],
-			'country' => base64_decode($params['country']),
-			'address' => $params['address'],
-			'latitude' => $params['latitude'],
-			'longitude' => $params['longitude'],
-			'status' => $params['facilityStatus']
-			);
-			$this->update($data,array('facility_id'=>$facilityId));
-		}
-	  return $facilityId;
+	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
+	    $facilityId = base64_decode($params['facilityId']);
+	    $data = array(
+		'facility_name' => $params['facilityName'],
+		'facility_code' => $params['facilityCode'],
+		'facility_type' => base64_decode($params['facilityType']),
+		'email' => $params['email'],
+		'contact_person' => $params['contactPerson'],
+		'phone_number' => $params['mobile'],
+		'country' => base64_decode($params['country']),
+		'address' => $params['address'],
+		'latitude' => $params['latitude'],
+		'longitude' => $params['longitude'],
+		'comments' => $params['comments'],
+		'status' => $params['facilityStatus']
+	    );
+	    $this->update($data,array('facility_id'=>$facilityId));
+	}
+      return $facilityId;
     }
 	
     public function fetchActivefacilities($from,$countryId){

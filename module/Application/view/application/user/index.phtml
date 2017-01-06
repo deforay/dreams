@@ -75,8 +75,9 @@ if(!isset($countryId) || $countryId ==''){
 				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
+                                <th>Access</th>
                                 <th>Status</th>
-                                <th>Added On</th>
+                                <th>Last Login</th>
 				<?php
 				if($loginContainer->hasViewOnlyAccess =='no') {
 				?>
@@ -95,8 +96,9 @@ if(!isset($countryId) || $countryId ==''){
 				<th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
+				<th>Access</th>
                                 <th>Status</th>
-                                <th>Added On</th>
+                                <th>Last Login</th>
 				<?php
 				if($loginContainer->hasViewOnlyAccess =='no') {
 				?>
@@ -121,16 +123,17 @@ if(!isset($countryId) || $countryId ==''){
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
-		{"sClass":"center"},
+		{"sClass":"left"},
 		<?php
 		if(trim($countryId)!= ''){
 		?>
-		  {"sClass":"center"},
+		  {"sClass":"left"},
 		<?php } ?>
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
 		{"sClass":"center"},
 		<?php
 		if($loginContainer->hasViewOnlyAccess =='no') {

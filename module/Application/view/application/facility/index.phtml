@@ -93,6 +93,7 @@ if(!isset($countryId) || $countryId ==''){
                         <thead>
                             <tr>
                                 <th>Lab Name</th>
+                                <th>Lab Code</th>
                                 <th>Lab Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
@@ -112,6 +113,7 @@ if(!isset($countryId) || $countryId ==''){
 			<tfoot>
                             <tr>
                                 <th>Lab Name</th>
+                                <th>Lab Code</th>
                                 <th>Lab Type</th>
                                 <th>Email</th>
                                 <th>Phone Number</th>
@@ -145,16 +147,17 @@ if(!isset($countryId) || $countryId ==''){
         "bProcessing": true,
         "bServerSide": true,
          "aoColumns": [
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
 		<?php
 		if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
 		?>
-		  {"sClass":"center"},
+		  {"sClass":"left"},
 		<?php } ?>
-		{"sClass":"center"},
+		{"sClass":"left"},
 		<?php
 		if($loginContainer->hasViewOnlyAccess =='no') {
 		?>

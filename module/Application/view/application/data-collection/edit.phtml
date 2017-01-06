@@ -64,7 +64,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" onblur="checkNameValidation('data_collection', 'surveillance_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The surveillance id that you entered already exist. Please enter different id.')">
+                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" style="pointer-events:none;">
                             <label for="surveillanceId" class="">Surveillance ID *</label>
                         </div>
                     </div>
@@ -115,8 +115,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID" value="<?php echo $row->lab_specimen_id; ?>">
-                            <label for="labSpecimenId" class="">Lab Specimen ID </label>
+                            <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate isRequired" title="Please enter lab specimen ID" value="<?php echo $row->lab_specimen_id; ?>">
+                            <label for="labSpecimenId" class="">Lab Specimen ID *</label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -165,8 +165,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="age" name="age" type="text" class="validate checkNum" title="Please enter age" value="<?php echo $row['age']; ?>">
-                            <label for="age" class="">Age </label>
+                            <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
+                            <label for="age" class="">Age *</label>
                         </div>
                     </div>
                 </div>
@@ -231,6 +231,12 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                           <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Recent </label>&nbsp;
                           <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>"/>
                           <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Long Term </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+                            <label for="comments">Comments</label>
                         </div>
                     </div>
                     <div class="col s4">

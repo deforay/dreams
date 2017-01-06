@@ -384,3 +384,18 @@ UPDATE `role` SET `role_code` = 'ANCDEO' WHERE `role`.`role_id` = 5;
 
 --Pal 05/01/2017
 alter table user add FOREIGN KEY(role) REFERENCES role(role_id)
+
+--Pal 06/01/2017
+ALTER TABLE `user` ADD `last_login` DATETIME NULL DEFAULT NULL AFTER `status`;
+
+ALTER TABLE `user` ADD `comments` TEXT NULL DEFAULT NULL AFTER `has_view_only_access`;
+
+ALTER TABLE `facility` ADD `comments` TEXT NULL DEFAULT NULL AFTER `longitude`;
+
+ALTER TABLE `anc_site` ADD `comments` TEXT NULL DEFAULT NULL AFTER `longitude`;
+
+ALTER TABLE `country` ADD `comments` TEXT NULL DEFAULT NULL AFTER `country_code`;
+
+ALTER TABLE `data_collection` ADD `comments` TEXT NULL DEFAULT NULL AFTER `asante_rapid_recency_assy`;
+
+ALTER TABLE `data_collection_event_log` ADD `comments` TEXT NULL DEFAULT NULL AFTER `asante_rapid_recency_assy`;

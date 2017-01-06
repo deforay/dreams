@@ -81,15 +81,11 @@ $loginContainer = new Container('user');
     .search-div label {
         margin-left: 0;
         /*left: -184px*/
-
-    }
-    #labLogbookDataTable_wrapper{
-	overflow-x:scroll;
     }
     .select-wrapper{
 	width:100%;
     }
-    .dataTables_wrapper{
+    #labLogbookDataTable_wrapper{
 	overflow-x: scroll;
     }
 </style>
@@ -337,6 +333,7 @@ $loginContainer = new Container('user');
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
+       doubleScroll(document.getElementById('labLogbookDataTable_wrapper'));
     });
     
     function fnShowHide(iCol){
