@@ -280,15 +280,15 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row">
 			<div class="col s4">
 			   <div class="input-padding col m10 s10">
-			      Asante Rapid Recency Assay *<br>
-			      <input id="asanteRapidRecencyAssayP" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
+			      Rapid Recency Assay (Eg. Assante)<br>
+			      <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
 			      <label for="asanteRapidRecencyAssayP">Positive </label>&nbsp;
-			      <input id="asanteRapidRecencyAssayN" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
+			      <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
 			      <label for="asanteRapidRecencyAssayN">Negative </label><br>
-			      <input id="asanteRapidRecencyAssayR" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
-			      <label for="asanteRapidRecencyAssayR">Recent </label>&nbsp;
-			      <input id="asanteRapidRecencyAssayLt" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
-			      <label for="asanteRapidRecencyAssayLt">Long Term </label>
+			      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
+			      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label>&nbsp;
+			      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
+			      <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label>
 			    </div>
 			</div>
 		    </div>
@@ -357,7 +357,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol16">Recent Infection</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol17">Asante Rapid Recency Assay</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol17">Rapid Recency Assay (Eg. Assante)</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol18"> Status</label> <br>
@@ -369,7 +369,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol20">Added by</label> <br>
 	    </div>
 	    <?php
-	    if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+	    if(trim($countryId)== ''){
 	    ?>
 	    <div class="col m3">
 		<input type="hidden" id="countColumn" value="21"/>
@@ -407,12 +407,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-                                <th>Asante Rapid Recency Assay</th>
+                                <th>Rapid Recency Assay (Eg. Assante)</th>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+                                if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
@@ -441,12 +441,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
-                                <th>Asante Rapid Recency Assay</th>
+                                <th>Rapid Recency Assay (Eg. Assante)</th>
                                 <th>Status</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+                                if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
@@ -496,7 +496,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		{"sClass":"center"},
 		{"sClass":"center"},
 		<?php
-		if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+		if(trim($countryId)== ''){
 		?>
 		  {"sClass":"center"},
 		<?php } ?>
@@ -642,33 +642,33 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) >= 1000){
-			$('.prePopulateHIVRNA').css('visibility','visible');
-			$('label[for="hivRnaGT1000"]').html('High Viral Load (>= 1000 cp/mL)');
-			$('#hivRnaGT1000Yes').prop('checked',true);
+		$('.prePopulateHIVRNA').css('visibility','visible');
+		$('label[for="hivRnaGT1000"]').html('High Viral Load (>= 1000 cp/mL)');
+		$('#hivRnaGT1000Yes').prop('checked',true);
 	    }else if(parseInt($('#hivRna').val()) < 1000){
-			$('.prePopulateHIVRNA').css('visibility','visible');
-			$('label[for="hivRnaGT1000"]').html('Low Viral Load (< 1000 cp/mL)');
-			$('#hivRnaGT1000No').prop('checked',true);
+		$('.prePopulateHIVRNA').css('visibility','visible');
+		$('label[for="hivRnaGT1000"]').html('Low Viral Load (< 1000 cp/mL)');
+		$('#hivRnaGT1000No').prop('checked',true);
 	    }else{
-			$('.prePopulateHIVRNA').css('visibility','hidden');
-			$('label[for="hivRnaGT1000"]').html('');
-			$('#hivRnaGT1000Yes').prop('checked',false);
-			$('#hivRnaGT1000No').prop('checked',false);
+		$('.prePopulateHIVRNA').css('visibility','hidden');
+		$('label[for="hivRnaGT1000"]').html('');
+		$('#hivRnaGT1000Yes').prop('checked',false);
+		$('#hivRnaGT1000No').prop('checked',false);
 	    }
 		
 	    if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
-		    $('.prePopulateRecentInfection').css('visibility','hidden');
+		$('.prePopulateRecentInfection').css('visibility','hidden');
 	    }else{
-		    //Recent infection
-		    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-			    $('.prePopulateRecentInfection').css('visibility','visible');
-			    $('label[for="recentInfection"]').html('Yes');
-			    $('#recentInfectionYes').prop('checked',true);
-		    }else{
-			    $('.prePopulateRecentInfection').css('visibility','visible');
-			    $('label[for="recentInfection"]').html('No');
-			    $('#recentInfectionNo').prop('checked',true);
-		    }
+		//Recent infection
+		if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+		    $('.prePopulateRecentInfection').css('visibility','visible');
+		    $('label[for="recentInfection"]').html('Yes');
+		    $('#recentInfectionYes').prop('checked',true);
+		}else{
+		    $('.prePopulateRecentInfection').css('visibility','visible');
+		    $('label[for="recentInfection"]').html('No');
+		    $('#recentInfectionNo').prop('checked',true);
+		}
 	    }
 	}
     });
@@ -683,6 +683,16 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('#lab').material_select();
 	    });
     }
+    
+    $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
+	if(this.value == 'p') {
+	    $('.asanteRapidRecencyAssayRlt').css('visibility','visible');
+	}else if(this.value == 'n'){
+	    $('.asanteRapidRecencyAssayRlt').css('visibility','hidden');
+	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
+	    $('#asanteRapidRecencyAssayR').prop('checked',false);
+	}
+    });
     
     function addDataReporting(){
         flag = deforayValidator.init({

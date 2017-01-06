@@ -97,7 +97,7 @@ if(count($logbookResult) >0){
            $html .='<th><strong>HIV RNA</strong></th>';
            $html .='<th><strong>HIV RNA >= 1,000</strong></th>';
            $html .='<th><strong>Recent Infection</strong></th>';
-           $html .='<th><strong>Asante Rapid Recency Assay</strong></th>';
+           $html .='<th colspan="2"><strong>Rapid Recency Assay (Eg. Assante)</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -130,17 +130,25 @@ if(count($logbookResult) >0){
 	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
 	      $hIVRNAResult = 'Low Viral Load';
 	    }
-	    $asanteRapidRecencyAssay = '';
-	    if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/lt'){
-	      $asanteRapidRecencyAssay = 'Positive/Long Term';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/lt'){
-	      $asanteRapidRecencyAssay = 'Negative/Long Term';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='n/r'){
-	      $asanteRapidRecencyAssay = 'Negative/Recent';
-	    }else if(trim($row['asante_rapid_recency_assy'])!= '' && $row['asante_rapid_recency_assy'] =='p/r'){
-	      $asanteRapidRecencyAssay = 'Positive/Recent';
-	    }
 	    
+	    $rapidRecencyAssay = '';
+	    $rapidRecencyAssayDuration = '';
+	    if(isset($row['asante_rapid_recency_assy']) && trim($row['asante_rapid_recency_assy'])!= ''){
+		$xplodRapidRecencyAssay = explode('/',$row['asante_rapid_recency_assy']);
+		if(trim($xplodRapidRecencyAssay[0])!= ''){
+		    if($xplodRapidRecencyAssay[0] == 'p'){
+			$rapidRecencyAssay = 'Positive';
+		    }else if($xplodRapidRecencyAssay[0] == 'n'){
+			$rapidRecencyAssay = 'Negative';
+		    }
+		}if(trim($xplodRapidRecencyAssay[1])!= ''){
+		    if($xplodRapidRecencyAssay[1] == 'r'){
+			$rapidRecencyAssayDuration = 'Recent';
+		    }else if($xplodRapidRecencyAssay[1] == 'lt'){
+			$rapidRecencyAssayDuration = 'Long Term';
+		    }
+		}
+	    }
             $html .='<tr>';
               $html .='<td>'.$row['surveillance_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
@@ -159,7 +167,8 @@ if(count($logbookResult) >0){
               $html .='<td>'.$row['hiv_rna'].'</td>';
               $html .='<td>'.$hIVRNAResult.'</td>';
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
-              $html .='<td>'.$asanteRapidRecencyAssay.'</td>';
+              $html .='<td>'.$rapidRecencyAssay.'</td>';
+              $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
             $html .='</tr>';
           }
           $html .='</tbody>';

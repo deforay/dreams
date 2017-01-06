@@ -197,15 +197,23 @@ class DataCollectionService {
                         }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
                             $hIVRNAResult = 'Low Viral Load';
                         }
-                        $asanteRapidRecencyAssay = '';
-                        if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-                            $asanteRapidRecencyAssay = 'Positive/Long Term';
-                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-                            $asanteRapidRecencyAssay = 'Negative/Long Term';
-                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-                            $asanteRapidRecencyAssay = 'Negative/Recent';
-                        }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-                            $asanteRapidRecencyAssay = 'Positive/Recent';
+                        $rapidRecencyAssay = '';
+                        $rapidRecencyAssayDuration = '';
+                        if(isset($aRow['asante_rapid_recency_assy']) && trim($aRow['asante_rapid_recency_assy'])!= ''){
+                            $xplodRapidRecencyAssay = explode('/',$aRow['asante_rapid_recency_assy']);
+                            if(trim($xplodRapidRecencyAssay[0])!= ''){
+                                if($xplodRapidRecencyAssay[0] == 'p'){
+                                    $rapidRecencyAssay = 'Positive';
+                                }else if($xplodRapidRecencyAssay[0] == 'n'){
+                                    $rapidRecencyAssay = 'Negative';
+                                }
+                            }if(trim($xplodRapidRecencyAssay[1])!= ''){
+                                if($xplodRapidRecencyAssay[1] == 'r'){
+                                    $rapidRecencyAssayDuration = 'Recent';
+                                }else if($xplodRapidRecencyAssay[1] == 'lt'){
+                                    $rapidRecencyAssayDuration = 'Long Term';
+                                }
+                            }
                         }
                         $row[] = $aRow['surveillance_id'];
                         $row[] = $specimenCollectedDate;
@@ -224,7 +232,8 @@ class DataCollectionService {
                         $row[] = $aRow['hiv_rna'];
                         $row[] = $hIVRNAResult;
                         $row[] = ucfirst($aRow['recent_infection']);
-                        $row[] = $asanteRapidRecencyAssay;
+                        $row[] = $rapidRecencyAssay;
+                        $row[] = $rapidRecencyAssayDuration;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -252,6 +261,8 @@ class DataCollectionService {
                         )
                     );
                     
+                    $sheet->mergeCells('R1:S1');
+                    
                     $sheet->setCellValue('A1', html_entity_decode('Surveillance ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('ANC site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -269,7 +280,7 @@ class DataCollectionService {
                     $sheet->setCellValue('O1', html_entity_decode('HIV RNA ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('P1', html_entity_decode('HIV RNA >=1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('Q1', html_entity_decode('Recent Infection', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R1', html_entity_decode('Asante Rapid Recency Assy', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R1', html_entity_decode('Rapid Recency Assay (Eg. Assante)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -288,14 +299,14 @@ class DataCollectionService {
                     $sheet->getStyle('O1')->applyFromArray($styleArray);
                     $sheet->getStyle('P1')->applyFromArray($styleArray);
                     $sheet->getStyle('Q1')->applyFromArray($styleArray);
-                    $sheet->getStyle('R1')->applyFromArray($styleArray);
+                    $sheet->getStyle('R1:S1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
-                            }if($colNo > 17){
+                            }if($colNo > 18){
                                 break;
                             }
                             if (is_numeric($value)) {

@@ -222,15 +222,15 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                 <div class="row">
                     <div class="col s4">
                        <div class="input-padding col m10 s10">
-                          Asante Rapid Recency Assay *<br>
-                          <input id="asanteRapidRecencyAssayP" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
+                          Rapid Recency Assay (Eg. Assante)<br>
+                          <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
                           <label for="asanteRapidRecencyAssayP">Positive </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayN" class="with-gap isRequired" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
+                          <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
                           <label for="asanteRapidRecencyAssayN">Negative </label><br>
-                          <input id="asanteRapidRecencyAssayR" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r"/>
-                          <label for="asanteRapidRecencyAssayR">Recent </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayLt" class="with-gap isRequired" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt"/>
-                          <label for="asanteRapidRecencyAssayLt">Long Term </label>
+                          <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>"/>
+                          <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Recent </label>&nbsp;
+                          <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>"/>
+                          <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Long Term </label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -324,20 +324,30 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('#hivRnaGT1000No').prop('checked',false);
 	    }
 	    
-		if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
-			$('.prePopulateRecentInfection').css('visibility','hidden');
-		}else{
-			//Recent infection
-			if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-				$('.prePopulateRecentInfection').css('visibility','visible');
-				$('label[for="recentInfection"]').html('Yes');
-				$('#recentInfectionYes').prop('checked',true);
-			}else{
-				$('.prePopulateRecentInfection').css('visibility','visible');
-				$('label[for="recentInfection"]').html('No');
-				$('#recentInfectionNo').prop('checked',true);
-			}
-		}
+            if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
+                $('.prePopulateRecentInfection').css('visibility','hidden');
+            }else{
+                //Recent infection
+                if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+                    $('.prePopulateRecentInfection').css('visibility','visible');
+                    $('label[for="recentInfection"]').html('Yes');
+                    $('#recentInfectionYes').prop('checked',true);
+                }else{
+                    $('.prePopulateRecentInfection').css('visibility','visible');
+                    $('label[for="recentInfection"]').html('No');
+                    $('#recentInfectionNo').prop('checked',true);
+                }
+            }
+	}
+    });
+    
+    $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
+	if(this.value == 'p') {
+	    $('.asanteRapidRecencyAssayRlt').css('visibility','visible');
+	}else if(this.value == 'n'){
+	    $('.asanteRapidRecencyAssayRlt').css('visibility','hidden');
+	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
+	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}
     });
     

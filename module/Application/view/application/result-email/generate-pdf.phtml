@@ -155,7 +155,7 @@ $alertContainer->nbPages = count($dataResult);
 	$resultPdf = new Pdf_concat();
 	$resultPdf->setFiles($pages);
 	$resultPdf->concat();
-	$resultFilename = 'Data-Reporting-Result-'.date('d-M-Y-H-i-s').'.pdf';
+	$resultFilename = 'Lab-Data-Reporting-Result-'.date('d-M-Y-H-i-s').'.pdf';
 	$resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
 	echo $resultFilename;
     }

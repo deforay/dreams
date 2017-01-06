@@ -39,7 +39,11 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
     $hIVRNAResult = 'Low Viral Load';
 }
 $asanteRapidRecencyAssay = '';
-if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/lt'){
+if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/'){
+    $asanteRapidRecencyAssay = 'Positive';
+}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/'){
+    $asanteRapidRecencyAssay = 'Negative';
+}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/lt'){
     $asanteRapidRecencyAssay = 'Positive/Long Term';
 }else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/lt'){
     $asanteRapidRecencyAssay = 'Negative/Long Term';
@@ -195,7 +199,7 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                 <div class="row" style="margin-bottom:20px !important;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="asanteRapidRecencyAssay" class="">Asante Rapid Recency Assay </label><br>
+                          <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Assante) </label><br>
                           <p><?php echo $asanteRapidRecencyAssay; ?></p>
                         </div>
                     </div>
