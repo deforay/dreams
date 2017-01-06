@@ -95,7 +95,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                             <tr>
                                 <th>Clinic Name</th>
                                 <th>Clinic ID</th>
-				<th>Month/Year</th>
+				<th>Month</th>
+				<th>Year</th>
                                 <th>Country</th>
                                 <?php
                                 foreach($ancFormFields as $key=>$value){
@@ -110,7 +111,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                             <tr>
                                 <th>Clinic Name</th>
                                 <th>Clinic ID</th>
-				<th>Month/Year</th>
+				<th>Month</th>
+				<th>Year</th>
                                 <th>Country</th>
                                 <?php
                                 foreach($ancFormFields as $key=>$value){
@@ -140,13 +142,14 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-                {"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
+                {"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
                 <?php
                 foreach($ancFormFields as $key=>$value){ ?>
-		  {"sClass":"center","bSortable":false},
+		  {"sClass":"left","bSortable":false},
                 <?php } ?>
             ],
             "aaSorting": [[0, "asc"]],

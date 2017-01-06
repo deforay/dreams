@@ -1,12 +1,24 @@
-<div class="input-field col m6 s6">
-    <div class="col m4 s4">&nbsp;&nbsp;&nbsp;<a href='#' id='select-all' style="margin-left:19%;" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10">Select all</a></div>
-    <div class="col m5 s5"><a href='#' id='deselect-all'style="float:right" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" style="float: right;">Deselect all</a></div>
-    <div style="width:80%;margin:0 auto;clear:both;">
+<div class="input-field col m8 s8">
+    <div class="col m6 s6" style="text-align:center !important;">&nbsp;&nbsp;&nbsp;<a href='#' id='select-all' class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10">Select all</a></div>
+    <div class="col m6 s6" style="text-align:center !important;"><a href='#' id='deselect-all' class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10">Deselect all</a></div>
+    <div style="width:100%;margin:0 auto;clear:both;">
     <select id="dataCollection" name="dataCollection[]" class="searchable isRequired" title="Please select surveillance ID" multiple>
        <?php
        foreach($dataList as $data){
+            $lAgAvidityResult = '';
+	    if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='lt'){
+		$lAgAvidityResult = 'Long Term';
+	    }else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='r'){
+		$lAgAvidityResult = 'Recent';
+	    }
+	    $hIVRNAResult = '';
+	    if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='yes'){
+		$hIVRNAResult = 'High Viral Load';
+	    }else if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='no'){
+		$hIVRNAResult = 'Low Viral Load';
+	    }
        ?>
-          <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id']; ?></option>
+          <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id'].'&nbsp;-&nbsp;'.$hIVRNAResult.'&nbsp;-&nbsp;'.$lAgAvidityResult; ?></option>
         <?php } ?>
     </select><br/>
     </div>

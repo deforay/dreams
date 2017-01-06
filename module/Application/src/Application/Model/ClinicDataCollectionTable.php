@@ -54,7 +54,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
 
        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name');
+       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
 
        /*
         * Paging
@@ -202,9 +202,17 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $ancFormFieldList = $ancFormDb->fetchActiveAncFormFields();
        foreach ($rResult as $aRow) {
            $row = array();
+           $reportingMonth = '';
+           $reportingYear = '';
+           if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
+               $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
+               $reportingMonth = $xplodReportingMonthYear[0];
+               $reportingYear = $xplodReportingMonthYear[1];
+           }
            $row[] = ucwords($aRow['anc_site_name']);
            $row[] = $aRow['anc_site_code'];
-           $row[] = ucfirst($aRow['reporting_month_year']);
+           $row[] = ucfirst($reportingMonth);
+           $row[] = $reportingYear;
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
                 //For non-existing fields
@@ -287,7 +295,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
 
        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name');
+       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
 
        /*
         * Paging
@@ -435,9 +443,17 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $ancFormFieldList = $ancFormDb->fetchActiveAncFormFields();
        foreach ($rResult as $aRow) {
            $row = array();
+           $reportingMonth = '';
+           $reportingYear = '';
+           if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
+               $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
+               $reportingMonth = $xplodReportingMonthYear[0];
+               $reportingYear = $xplodReportingMonthYear[1];
+           }
            $row[] = ucwords($aRow['anc_site_name']);
            $row[] = $aRow['anc_site_code'];
-           $row[] = ucfirst($aRow['reporting_month_year']);
+           $row[] = ucfirst($reportingMonth);
+           $row[] = $reportingYear;
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
                 //For non-existing fields

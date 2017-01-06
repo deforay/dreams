@@ -479,39 +479,48 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
+                        $reportingMonth = '';
+                        $reportingYear = '';
+                        if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
+                            $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
+                            $reportingMonth = $xplodReportingMonthYear[0];
+                            $reportingYear = $xplodReportingMonthYear[1];
+                        }
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['anc_site_code'];
-                        $row[] = ucfirst($aRow['reporting_month_year']);
+                        $row[] = ucfirst($reportingMonth);
+                        $row[] = $reportingYear;
                         $row[] = ucwords($aRow['country_name']);
                         foreach($ancFormFields as $key=>$value){
                             //For non-existing fields
-                            $rowVal = '';
-                            $rowVal.= 'Age < 15 : 0,';
-                            $rowVal.= ' Age 15-19 : 0,';
-                            $rowVal.= ' Age 20-24 : 0,';
-                            $rowVal.= ' Total : 0';
+                            $col1Val = 'Age < 15 : 0';
+                            $col2Val = ' Age 15-19 : 0';
+                            $col3Val = ' Age 20-24 : 0';
+                            $col4Val = ' Total : 0';
                             if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                                 $fields = json_decode($aRow['characteristics_data'],true);
                                 foreach($fields as $fieldName=>$fieldValue){
                                     if($key == $fieldName){
                                         //Re-intialize to show existing fields
-                                        $rowVal = '';
                                         foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                             $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                            if($characteristicsName =='age_lt_15'){
-                                              $rowVal.= 'Age < 15 : '.$characteristicsValue.',';
+                                              $col1Val = 'Age < 15 : '.$characteristicsValue;
                                            }elseif($characteristicsName =='age_15_to_19'){
-                                              $rowVal.= ' Age 15-19 : '.$characteristicsValue.',';
+                                              $col2Val = ' Age 15-19 : '.$characteristicsValue;
                                            }elseif($characteristicsName =='age_20_to_24'){
-                                              $rowVal.= ' Age 20-24 : '.$characteristicsValue.',';
+                                              $col3Val = ' Age 20-24 : '.$characteristicsValue;
                                            }elseif($characteristicsName =='total'){
-                                              $rowVal.= ' Total : '.$characteristicsValue;
+                                              $col4Val = ' Total : '.$characteristicsValue;
                                            }
                                         }
                                     }
                                 }
                             }
-                          $row[] = $rowVal;
+                          $row[] = $col1Val;
+                          $row[] = $col2Val;
+                          $row[] = $col3Val;
+                          $row[] = $col4Val;
                         }
                         $output[] = $row;
                     }
@@ -540,32 +549,47 @@ class DataCollectionService {
                         )
                     );
                     
+                    $e1 = 5;
+                    foreach($ancFormFields as $fieldRow){
+                        $e2 = $e1+3;
+                        $cellName1Value = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                        $cellName2Value = $sheet->getCellByColumnAndRow($e2, 1)->getColumn();
+                        $sheet->mergeCells($cellName1Value.'1:'.$cellName2Value.'1');
+                      $e1 = $e2;
+                      $e1++;
+                    }
+                    
                     $sheet->setCellValue('A1', html_entity_decode('Clinic Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Month/Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $e1 = 4;
+                    $sheet->setCellValue('C1', html_entity_decode('Month ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $a1 = 5;
                     foreach($ancFormFields as $key=>$value){
                         $columnTitle = ucwords(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
-                        $cellNameValue = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                        $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
                         $sheet->setCellValue($cellNameValue.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $e1++;
+                      $a1+=3;  
+                      $a1++;
                     }
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
                     $sheet->getStyle('C1')->applyFromArray($styleArray);
                     $sheet->getStyle('D1')->applyFromArray($styleArray);
-                    $f1 = 4;
+                    $sheet->getStyle('E1')->applyFromArray($styleArray);
+                    $f1 = 5;
                     foreach($ancFormFields as $fieldRow){
-                        $cellNameValue = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
-                        $sheet->getStyle($cellNameValue.'1')->applyFromArray($styleArray);
+                        $f2 = $f1+3;
+                        $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                        $cellName2Value = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
+                        $sheet->getStyle($cellName1Value.'1:'.$cellName2Value.'1')->applyFromArray($styleArray);
+                      $f1 = $f2;
                       $f1++;
                     }
-                    
                     $currentRow = 2;
-                    $highestColumn = (count($ancFormFields)+4)-1;
+                    $highestColumn = $f1-1;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
