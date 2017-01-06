@@ -107,6 +107,7 @@ if(count($labReportResult) >0){
            } if($infectionType =='show'){
                $html .='<th><strong>Recent Infection</strong></th>';
            }
+	   $html .='<th><strong>Comments</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -161,6 +162,7 @@ if(count($labReportResult) >0){
               }if($infectionType =='show'){
                 $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               }
+	      $html .='<td>'.ucfirst($row['comments']).'</td>';
             $html .='</tr>';
           }
           $html .='</tbody>';

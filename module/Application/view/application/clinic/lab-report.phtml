@@ -110,7 +110,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
 		<div class="col l2 m2 s2 left-align"><h6><strong>Specimen Collected Date </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();">
+		    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" title="Please enter specimen collected date" onclick="selectDate();" readonly>
 		</div>
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
@@ -165,50 +165,59 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol0">Specimen Collected Date</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol1">ANC site</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol1">ANC Site</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol2">ANC Patient ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol2">ANC Site Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="age" class="showhideCheckBox" /> <label for="iCol3">Age</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol3">ANC Patient ID</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol4">Specimen Pick Up Date at ANC</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="age" class="showhideCheckBox" /> <label for="iCol4">Age</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol5">Lab Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol5">Specimen Pick Up Date at ANC</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol6">Lab Specimen ID</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol6">Lab Name</label> <br>
+	    </div>
+	     <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol7">Lab Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol7">Rejection Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol8">Lab Specimen ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol8">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol9">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol9">Date of Test Completion</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol10">Receipt Date at Central Lab</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol10">Result Dispatched Date to Clinic</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol11">Date of Test Completion</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol11">Final LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol12">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol12">LAg Avidity Result</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol13">Final LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol13">Hiv RNA</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol14">LAg Avidity Result</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol14">HIV RNA >= 1,000 <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol15">Hiv RNA</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol15">Recent Infection</label> <br>
-                <input type="hidden" id="countColumn" value="15"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol16">HIV RNA >= 1,000 <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol17">Recent Infection</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol18">Comments</label> <br>
+                <input type="hidden" id="countColumn" value="18"/>
 	    </div>
 	</div>
     </div>
@@ -223,11 +232,13 @@ if(!isset($countryId) || trim($countryId)== ''){
                         <thead>
                             <tr>
                                 <th>Specimen Collected Date</th>
-				<th>ANC site</th>
+				<th>ANC Site</th>
+				<th>ANC Site Code</th>
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
 	                        <th>Lab Name</th>
+	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Central Lab</th>
@@ -238,16 +249,19 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
+				<th>Comments</th>
                             </tr>
                         </thead>
 			<tfoot>
                             <tr>
                                 <th>Specimen Collected Date</th>
-				<th>ANC site</th>
+				<th>ANC Site</th>
+				<th>ANC Site Code</th>
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
 	                        <th>Lab Name</th>
+	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Central Lab</th>
@@ -258,6 +272,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>HIV RNA</th>
                                 <th>HIV RNA >= 1,000</th>
 				<th>Recent Infection</th>
+				<th>Comments</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -280,22 +295,25 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"}
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"},
+		{"sClass":"left"}
             ],
             "aaSorting": [[0, "desc"]],
             "bProcessing": true,
@@ -342,23 +360,23 @@ if(!isset($countryId) || trim($countryId)== ''){
     function fnShowHide(iCol){
         iColSplit = iCol.split(',');
         if(iColSplit.length == 2){
-           oTable.fnSetColumnVis(11, true);
-           oTable.fnSetColumnVis(12, true);
-           oTable.fnSetColumnVis(15, true); 
+           oTable.fnSetColumnVis(13, true);
+           oTable.fnSetColumnVis(14, true);
+           oTable.fnSetColumnVis(17, true); 
+           oTable.fnSetColumnVis(15, false);
+           oTable.fnSetColumnVis(16, false);
+        }else if(iColSplit.length == 3){
+           oTable.fnSetColumnVis(15, true);
+           oTable.fnSetColumnVis(16, true);
            oTable.fnSetColumnVis(13, false);
            oTable.fnSetColumnVis(14, false);
-        }else if(iColSplit.length == 3){
-           oTable.fnSetColumnVis(13, true);
-           oTable.fnSetColumnVis(14, true);
-           oTable.fnSetColumnVis(11, false);
-           oTable.fnSetColumnVis(12, false);
-           oTable.fnSetColumnVis(15, false);
+           oTable.fnSetColumnVis(17, false);
         }else if(iColSplit.length == 5){
-           oTable.fnSetColumnVis(11, true);
-           oTable.fnSetColumnVis(12, true);
-           oTable.fnSetColumnVis(15, true);
            oTable.fnSetColumnVis(13, true);
            oTable.fnSetColumnVis(14, true);
+           oTable.fnSetColumnVis(17, true);
+           oTable.fnSetColumnVis(15, true);
+           oTable.fnSetColumnVis(16, true);
         }else{
            var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
            oTable.fnSetColumnVis(iCol, bVis ? false : true); 
