@@ -60,6 +60,13 @@ if(!isset($countryId) || trim($countryId)== ''){
     #ancFormTable thead tr th{
         text-align:center;
     }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:2px 4px 0px 4px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -72,7 +79,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <?php
     if($loginContainer->hasViewOnlyAccess =='no') {
     ?>
-        <div class="row dashboard-wrapper content-container">
+        <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
                 <div class="col l12 m12 s12">
                     <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
@@ -109,17 +116,17 @@ if(!isset($countryId) || trim($countryId)== ''){
                                         }
                                     ?>
                                         <tr>
-                                          <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
-                                          <td><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="<?php echo $totalStyle; ?>"/></td>
+                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
+                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="height:2rem;<?php echo $totalStyle; ?>"/></td>
                                         </tr>
                                     <?php $f++; } ?>
                                     <tr>
-                                        <td>Comments</td>
-                                        <td colspan="4">
-                                            <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                                        <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
+                                        <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
+                                            <textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;"></textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -218,20 +225,20 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-                {"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
+                {"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
                 <?php
                 foreach($ancFormFields as $key=>$value){ ?>
-		  {"sClass":"left","bSortable":false},
+		  {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php } ?>
-                {"sClass":"center","bSortable":false},
+                {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php
                 if($loginContainer->hasViewOnlyAccess =='no') {
                 ?>
-                  {"sClass":"center","bSortable":false}
+                  {"sClass":"dataTable_noWrap","bSortable":false}
                 <?php } ?>
             ],
             "aaSorting": [[0, "asc"]],
@@ -289,7 +296,6 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
-       doubleScroll(document.getElementById('dataReportingDataTable_wrapper'));
     });
     
     function getTotal(commonFieldClassName){

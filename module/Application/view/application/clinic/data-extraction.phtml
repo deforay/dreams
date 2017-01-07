@@ -60,6 +60,13 @@ if(!isset($countryId) || trim($countryId)== ''){
     #ancFormTable thead tr th{
         text-align:center;
     }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -141,16 +148,16 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-                {"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
+                {"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
                 <?php
                 foreach($ancFormFields as $key=>$value){ ?>
-		  {"sClass":"left","bSortable":false},
+		  {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php } ?>
-		{"sClass":"left","bSortable":false}
+		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,
@@ -188,7 +195,6 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
-       doubleScroll(document.getElementById('dataExtractionDataTable_wrapper'));
     });
    
     function searchDataExtractionData(){

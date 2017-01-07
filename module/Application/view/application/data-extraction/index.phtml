@@ -91,6 +91,13 @@ if(!isset($countryId) || trim($countryId)== ''){
     #dataExtractionDataTable_wrapper{
 	overflow-x: scroll;
     }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -325,31 +332,31 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
 		?>
-		  {"sClass":"left"}
+		  {"sClass":"dataTable_noWrap"}
 		<?php } ?>
             ],
             "aaSorting": [[1, "desc"]],
@@ -393,7 +400,6 @@ if(!isset($countryId) || trim($countryId)== ''){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
-       doubleScroll(document.getElementById('dataExtractionDataTable_wrapper'));
     });
     
     function fnShowHide(iCol){

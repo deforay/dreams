@@ -49,7 +49,9 @@ if(!isset($countryId) || trim($countryId)== ''){
     .dataTable_noWrap{
 	white-space: nowrap;
         overflow: hidden;
-	min-height: 28px;
+    }
+    table.dataTable tbody td{
+	padding:2px 4px 0px 4px;
     }
 </style>
 <div id="page-content">
@@ -62,7 +64,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     </div>
     <?php
     if($loginContainer->hasViewOnlyAccess =='no'){ ?>
-	<div class="row dashboard-wrapper content-container">
+	<div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
 	    <div class="card">
 		<fieldset style="border-color:#88C542;border-style:solid;">
@@ -405,7 +407,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		   <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
-                    <table id="dataReportingDataTable" class="responsive-table display dataTable" cellspacing="0">
+                    <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Surveillance ID</th>
@@ -581,7 +583,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }
 	  $('#surveillanceId').val(surveillanceID);
        <?php } ?>
-       doubleScroll(document.getElementById('dataReportingDataTable_wrapper'));
     });
     
     function generateSurveillanceID(cObj){

@@ -243,7 +243,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         }
                     }
                 }
-              $row[] = '<div style="width:310px !important;">'.$colVal.'</div>';
+              $row[] = '<div>'.$colVal.'&nbsp;&nbsp;</div>';
            }
            $row[] = ucfirst($aRow['comments']);
            if($loginContainer->hasViewOnlyAccess =='no') {
@@ -486,7 +486,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         }
                     }
                 }
-              $row[] = '<div style="width:310px !important;">'.$colVal.'</div>';
+              $row[] = '<div>'.$colVal.'&nbsp;&nbsp;</div>';
            }
            $row[] = ucfirst($aRow['comments']);
            $output['aaData'][] = $row;

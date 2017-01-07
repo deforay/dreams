@@ -88,6 +88,13 @@ $loginContainer = new Container('user');
     #labLogbookDataTable_wrapper{
 	overflow-x: scroll;
     }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -284,26 +291,26 @@ $loginContainer = new Container('user');
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"}
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"}
             ],
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
@@ -345,7 +352,6 @@ $loginContainer = new Container('user');
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
-       doubleScroll(document.getElementById('labLogbookDataTable_wrapper'));
     });
     
     function fnShowHide(iCol){
