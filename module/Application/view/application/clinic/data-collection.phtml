@@ -50,9 +50,6 @@ if(!isset($countryId) || trim($countryId)== ''){
     .select-wrapper{
 	width:100%;
     }
-    .dataTables_wrapper{
-	overflow-x: scroll;
-    }
     .ui-datepicker-calendar {
        display: none;
     }
@@ -119,6 +116,12 @@ if(!isset($countryId) || trim($countryId)== ''){
                                           <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="<?php echo $totalStyle; ?>"/></td>
                                         </tr>
                                     <?php $f++; } ?>
+                                    <tr>
+                                        <td>Comments</td>
+                                        <td colspan="4">
+                                            <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -166,6 +169,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+                                <th>Comments</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess =='no') {
                                 ?>
@@ -187,6 +191,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+                                <th>Comments</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess =='no') {
                                 ?>
@@ -222,6 +227,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"left","bSortable":false},
                 <?php } ?>
+                {"sClass":"center","bSortable":false},
                 <?php
                 if($loginContainer->hasViewOnlyAccess =='no') {
                 ?>
@@ -283,6 +289,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
+       doubleScroll(document.getElementById('dataReportingDataTable_wrapper'));
     });
     
     function getTotal(commonFieldClassName){

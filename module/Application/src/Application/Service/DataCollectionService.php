@@ -522,6 +522,7 @@ class DataCollectionService {
                           $row[] = $col3Val;
                           $row[] = $col4Val;
                         }
+                        $row[] = ucfirst($aRow['comments']);
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -573,7 +574,9 @@ class DataCollectionService {
                       $a1+=3;  
                       $a1++;
                     }
-                   
+                    $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
+                    $sheet->setCellValue($cellNameValue.'1', html_entity_decode('Comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
                     $sheet->getStyle('C1')->applyFromArray($styleArray);
@@ -588,8 +591,11 @@ class DataCollectionService {
                       $f1 = $f2;
                       $f1++;
                     }
+                    $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                    $sheet->getStyle($cellName1Value.'1')->applyFromArray($styleArray);
+                    
                     $currentRow = 2;
-                    $highestColumn = $f1-1;
+                    $highestColumn = ($f1+1)-1;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {

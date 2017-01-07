@@ -399,3 +399,6 @@ ALTER TABLE `country` ADD `comments` TEXT NULL DEFAULT NULL AFTER `country_code`
 ALTER TABLE `data_collection` ADD `comments` TEXT NULL DEFAULT NULL AFTER `asante_rapid_recency_assy`;
 
 ALTER TABLE `data_collection_event_log` ADD `comments` TEXT NULL DEFAULT NULL AFTER `asante_rapid_recency_assy`;
+
+--Pal 07/01/2017
+ALTER TABLE `clinic_data_collection` ADD `comments` TEXT NULL DEFAULT NULL AFTER `characteristics_data`;

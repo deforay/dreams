@@ -50,9 +50,6 @@ if(!isset($countryId) || trim($countryId)== ''){
     .select-wrapper{
 	width:100%;
     }
-    .dataTables_wrapper{
-	overflow-x: scroll;
-    }
     .ui-datepicker-calendar {
        display: none;
     }
@@ -105,6 +102,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+				<th>Comments</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -121,6 +119,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
+				<th>Comments</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -151,6 +150,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"left","bSortable":false},
                 <?php } ?>
+		{"sClass":"left","bSortable":false}
             ],
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,
@@ -188,6 +188,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
+       doubleScroll(document.getElementById('dataExtractionDataTable_wrapper'));
     });
    
     function searchDataExtractionData(){

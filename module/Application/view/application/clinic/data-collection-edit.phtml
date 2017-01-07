@@ -135,6 +135,12 @@ if(!isset($countryId) || trim($countryId)== ''){
                                       <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="<?php echo $totalStyle; ?>"/></td>
                                     </tr>
                                 <?php $f++; } ?>
+				<tr>
+				    <td>Comments</td>
+				    <td colspan="4">
+					<textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+				    </td>
+				</tr>
                             </tbody>
                         </table>
                     </div>

@@ -37,6 +37,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
                         'characteristics_data'=>$characteristicsVal,
+                        'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
@@ -53,7 +54,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 
-       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data');
+       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
 
        /*
@@ -216,34 +217,35 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
                 //For non-existing fields
-                $rowVal = '';
-                $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
-                $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
-                $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
+                $colVal = '';
+                $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
+                $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
+                $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
                             //Re-intialize to show existing fields
-                            $rowVal = '';
+                            $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                if($characteristicsName =='age_lt_15'){
-                                  $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='age_15_to_19'){
-                                  $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='total'){
-                                  $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
+                                  $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
                             }
                         }
                     }
                 }
-              $row[] = '<div style="width:310px !important;">'.$rowVal.'</div>';
+              $row[] = '<div style="width:310px !important;">'.$colVal.'</div>';
            }
+           $row[] = ucfirst($aRow['comments']);
            if($loginContainer->hasViewOnlyAccess =='no') {
               $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            }
@@ -278,6 +280,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
                         'characteristics_data'=>$characteristicsVal,
+                        'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
@@ -294,7 +297,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 
-       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data');
+       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
 
        /*
@@ -457,34 +460,35 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
                 //For non-existing fields
-                $rowVal = '';
-                $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
-                $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
-                $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
+                $colVal = '';
+                $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
+                $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
+                $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
                             //Re-intialize to show existing fields
-                            $rowVal = '';
+                            $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                if($characteristicsName =='age_lt_15'){
-                                  $rowVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='age_15_to_19'){
-                                  $rowVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  $rowVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
+                                  $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
                                }elseif($characteristicsName =='total'){
-                                  $rowVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
+                                  $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
                             }
                         }
                     }
                 }
-              $row[] = '<div style="width:310px !important;">'.$rowVal.'</div>';
+              $row[] = '<div style="width:310px !important;">'.$colVal.'</div>';
            }
+           $row[] = ucfirst($aRow['comments']);
            $output['aaData'][] = $row;
        }
       return $output;
