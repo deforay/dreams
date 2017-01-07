@@ -80,7 +80,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	<form id="dataExtractionFilter" action="#">
 	    <div class="col l12 m12 s12">
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l5 m5 s5" style="text-align:center;"><strong>Anc Site </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+		<div class="col l5 m5 s5" style="text-align:center;"><strong>Anc Site </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value="">All</option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
 		<div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYearFilter" name="reportingMonthYearFilter" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
 	    </div>

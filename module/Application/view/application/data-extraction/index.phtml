@@ -118,7 +118,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
 		    <select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
-			<option value=""> -- Select -- </option>
+			<option value="">All</option>
 			<?php
 			foreach($ancSites as $anc){
 			    ?>
@@ -135,7 +135,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="col l2 m2 s2 left-align"><h6><strong>Lab Site/Facility </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
 		    <select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
-			<option value=""> -- Select -- </option>
+			<option value="">All</option>
 			<?php
 			foreach($facilities as $lab){
 			    ?>
@@ -148,7 +148,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;<?php echo (trim($countryId) == '')?'visibility:visible;':'visibility:hidden;'; ?>"><h6><strong>Country </strong></h6></div>
 		<div class="col l3 m3 s3 left-align" style="<?php echo (trim($countryId) == '')?'visibility:visible;':'visibility:hidden;'; ?>">
 		    <select class="material-select" id="country" name="country" title="Please select country" style="width:40% !important;">
-			<option value=""> -- Select -- </option>
+			<option value="">All</option>
 			<?php
 			foreach($countries as $country){
 			    ?>
