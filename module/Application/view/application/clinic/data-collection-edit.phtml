@@ -128,17 +128,17 @@ if(!isset($countryId) || trim($countryId)== ''){
                                     }
                                 ?>
                                     <tr>
-                                      <td><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>"/><?php echo $formLabel; ?></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="<?php echo $totalStyle; ?>"/></td>
+                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
+                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="height:2rem;<?php echo $totalStyle; ?>"/></td>
                                     </tr>
                                 <?php $f++; } ?>
 				<tr>
-				    <td>Comments</td>
-				    <td colspan="4">
-					<textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+				    <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
+				    <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
+					<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;"><?php echo $row->comments; ?></textarea>
 				    </td>
 				</tr>
                             </tbody>
