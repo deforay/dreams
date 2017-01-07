@@ -46,6 +46,11 @@ if(!isset($countryId) || trim($countryId)== ''){
     #dataReportingDataTable_wrapper{
 	overflow-x:scroll;
     }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+	min-height: 28px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -92,7 +97,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				</div>
 			    </div>
 			</div>
-			<div class="row">
+			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12 ancSiteSection">
 				    <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
@@ -141,9 +146,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 				</div>
 			    </div>
 			</div>
-			<div class="row">
+			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
-				<div class="input-field col m12 s12">
+				<div class="input-field col m12 s12" style="margin-top:0;">
 				    <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
 				    <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
 				</div>
@@ -153,7 +158,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		</fieldset>
 		<fieldset style="border-color:#2196F3 ;border-style: solid;">
 		   <legend>LABORATORY INFORMATION</legend>
-		    <div class="row">
+		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12 labSection">
 				<select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
@@ -187,21 +192,21 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			</div>
 		    </div>
-		    <div class="row">
+		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
 				<input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
 				<label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
 				<input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion">
 				<label for="dateOfTestCompletion" class="">Date of Test Completion </label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
 				<input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
 				<label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
 			    </div>
@@ -210,15 +215,15 @@ if(!isset($countryId) || trim($countryId)== ''){
 		</fieldset>
 		<fieldset style="border-color:#ff9800;border-style: solid;"> 
 		   <legend>PATIENT INFORMATION</legend>
-		   <div class="row">
+		   <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
 				<label for="ancPatientId" class="">ANC Patient ID * </label>
 			    </div>
 			</div>
 			 <div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age">
 				<label for="age" class="">Age *</label>
 			    </div>
@@ -229,19 +234,19 @@ if(!isset($countryId) || trim($countryId)== ''){
 		   <legend>TEST RESULT</legend>
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired" title="Please enter final LAg avidity ODn">
 				<label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m12 s12">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="hivRna" name="hivRna" type="text" class="validate checkNum isRequired" title="Please enter HIV RNA">
 				<label for="hivRna" class="">HIV RNA (copies/ml) *</label>
 			    </div>
 			</div>
 		    </div>
-		    <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;">
+		    <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
 			<div class="col s4">
 			    <div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
 			      <strong>LAg Avidity Result</strong> <br>
@@ -254,7 +259,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 			<div class="col s4">
 			    <div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
-			      <strong>HIV RNA >= 1,000 (copies/ml)</strong> <br>
+			      <strong>HIV RNA >= 1000 (copies/ml)</strong> <br>
 			      <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"></label>
 			      <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
@@ -263,17 +268,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-padding col m10 s10 prePopulateRecentInfection" style="visibility:hidden;">
-			      <strong>Recent Infection <br>(LAg-R & RNA >= 1,000)</strong><br>
+			    <div class="input-padding col m12 s12 prePopulateRecentInfection" style="visibility:hidden;">
+			      <strong>Recent Infection (LAg-R & RNA >= 1000)</strong><br>
 			      <label for="recentInfection" style="font-size:13px;color:#fff;"></label>
 			      <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			     <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-			     <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-			     <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
+			      <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+			      <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
 			    </div>
 			</div>
 		    </div>
-		    <div class="row">
+		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			   <div class="input-padding col m10 s10">
 			      Rapid Recency Assay (Eg. Assante)<br>
@@ -400,7 +405,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		   <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
-                    <table id="dataReportingDataTable" class="responsive-table display dataTable">
+                    <table id="dataReportingDataTable" class="responsive-table display dataTable" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Surveillance ID</th>
@@ -493,38 +498,38 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-                {"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"center"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"left"},
-		{"sClass":"center"},
-		{"sClass":"left"},
+                {"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
 		?>
-		  {"sClass":"left"},
+		  {"sClass":"dataTable_noWrap"},
 		<?php } ?>
 		<?php
                 if($loginContainer->hasViewOnlyAccess =='no'){ ?>
-		   {"sClass":"center","bSortable":false}
+		   {"sClass":"dataTable_noWrap","bSortable":false}
 		<?php } ?>
             ],
             "aaSorting": [[1, "desc"]],

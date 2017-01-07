@@ -57,6 +57,9 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
     .data-collection-view .row{
         margin-bottom:0 !important;
     }
+    .input-field{
+        margin-top:0;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -185,13 +188,13 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA >= 1,000 (copies/ml)</strong> </label><br>
+                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA >= 1000 (copies/ml)</strong> </label><br>
                           <p style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection <br>(LAg-R & RNA >= 1,000)</strong> </label><br><br>
+                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection (LAg-R & RNA >= 1000)</strong> </label><br>
                           <p style="font-size:13px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
