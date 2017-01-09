@@ -657,4 +657,25 @@ class DataCollectionService {
         $lrQueryStr = $sql->getSqlStringForSqlObject($lrQuery);
       return $dbAdapter->query($lrQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
+    
+    public function checkDublicateClinicDataReport($params){
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $rQuery = $sql->select()->from(array('cl_da_c' => 'clinic_data_collection'))
+                                 ->columns(array('cl_data_collection_id'));
+        if(isset($params['clDataCollectionID']) && trim($params['clDataCollectionID'])!= ''){
+            $rQuery = $rQuery->where('cl_da_c.cl_data_collection_id != "'.base64_decode($params['clDataCollectionID']).'"');
+        }if(isset($params['reportingMonthYear']) && trim($params['reportingMonthYear'])!= ''){
+            $rQuery = $rQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($params['reportingMonthYear'])));
+        }if(isset($params['anc']) && trim($params['anc'])!= ''){
+            $rQuery = $rQuery->where(array('cl_da_c.anc'=>base64_decode($params['anc'])));
+        }
+        $rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
+        $rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        if($rResult){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
 }

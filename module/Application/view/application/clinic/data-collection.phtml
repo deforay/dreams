@@ -83,7 +83,7 @@ if(!isset($countryId) || trim($countryId)== ''){
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
                 <div class="col l12 m12 s12">
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
                     <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
                 </div>
@@ -275,6 +275,10 @@ if(!isset($countryId) || trim($countryId)== ''){
                 var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
                 var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
                 $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+                checkDublicateDataReporting();
+            },
+            onChangeMonthYear: function(e){
+                checkDublicateDataReporting();
             }
        });
        
@@ -316,6 +320,20 @@ if(!isset($countryId) || trim($countryId)== ''){
     function clearSearchFields(){
         $('#dataCollectionFilter')[0].reset();
         searchDataCollectionData();
+    }
+    
+    function checkDublicateDataReporting(){
+        var reportingMonthYear = $('#reportingMonthYear').val();
+        var anc = $('#anc').val();
+        if($.trim(reportingMonthYear)!= '' && $.trim(anc)!= ''){
+            $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {reportingMonthYear: reportingMonthYear,anc:anc},
+            function(data) {
+                if(data ==1){
+                    alert('Dupliacate data not allowed..The anc and year/month that you have choosed already entered.');
+                    $('#reportingMonthYear').val('');
+                }
+            });
+        }
     }
     
     function addDataReporting(){

@@ -74,7 +74,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <form id="editClinicDataReportingForm" name="editClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-edit'); ?>">
             <div class="col l12 m12 s12">
-                <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+                <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ansSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
                 <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" value="<?php echo ucfirst($row->reporting_month_year); ?>" readonly/></div>
             </div>
             <div class="col l12 m12 s12">
@@ -175,6 +175,10 @@ if(!isset($countryId) || trim($countryId)== ''){
                 var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
                 var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
                 $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+		checkDublicateDataReporting();
+            },
+	    onChangeMonthYear: function(e){
+                checkDublicateDataReporting();
             }
        });
     });
@@ -188,6 +192,20 @@ if(!isset($countryId) || trim($countryId)== ''){
                 $('#'+commonFieldClassName+'_total').val(total);
             }
         });
+    }
+    
+    function checkDublicateDataReporting(){
+        var reportingMonthYear = $('#reportingMonthYear').val();
+        var anc = $('#anc').val();
+        if($.trim(reportingMonthYear)!= '' && $.trim(anc)!= ''){
+            $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {clDataCollectionID:'<?php echo base64_encode($row->cl_data_collection_id); ?>',reportingMonthYear: reportingMonthYear,anc:anc},
+            function(data) {
+                if(data ==1){
+                    alert('Dupliacate data not allowed..The anc and year/month that you have choosed already entered.');
+                    $('#reportingMonthYear').val('');
+                }
+            });
+        }
     }
     
     function updateDataReporting(){

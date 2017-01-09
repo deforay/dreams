@@ -392,6 +392,15 @@ return array(
                         'action' => 'export-lab-report'
                     ),
                 ),
+            ),'check-duplicate-data-report' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/check-duplicate-data-report',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'check-duplicate-data-report'
+                    ),
+                ),
             )
             
         ),

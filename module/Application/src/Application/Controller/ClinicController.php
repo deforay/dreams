@@ -130,4 +130,17 @@ class ClinicController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function checkDuplicateDataReportAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->checkDublicateClinicDataReport($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response'=>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }
