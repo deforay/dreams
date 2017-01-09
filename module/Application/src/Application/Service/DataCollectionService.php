@@ -493,10 +493,10 @@ class DataCollectionService {
                         $row[] = ucwords($aRow['country_name']);
                         foreach($ancFormFields as $key=>$value){
                             //For non-existing fields
-                            $col1Val = 'Age < 15 : 0';
-                            $col2Val = ' Age 15-19 : 0';
-                            $col3Val = ' Age 20-24 : 0';
-                            $col4Val = ' Total : 0';
+                            $col1Val = '0';
+                            $col2Val = '0';
+                            $col3Val = '0';
+                            $col4Val = '0';
                             if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                                 $fields = json_decode($aRow['characteristics_data'],true);
                                 foreach($fields as $fieldName=>$fieldValue){
@@ -505,13 +505,13 @@ class DataCollectionService {
                                         foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                             $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                            if($characteristicsName =='age_lt_15'){
-                                              $col1Val = 'Age < 15 : '.$characteristicsValue;
+                                              $col1Val = $characteristicsValue;
                                            }elseif($characteristicsName =='age_15_to_19'){
-                                              $col2Val = ' Age 15-19 : '.$characteristicsValue;
+                                              $col2Val = $characteristicsValue;
                                            }elseif($characteristicsName =='age_20_to_24'){
-                                              $col3Val = ' Age 20-24 : '.$characteristicsValue;
+                                              $col3Val = $characteristicsValue;
                                            }elseif($characteristicsName =='total'){
-                                              $col4Val = ' Total : '.$characteristicsValue;
+                                              $col4Val = $characteristicsValue;
                                            }
                                         }
                                     }
@@ -550,6 +550,12 @@ class DataCollectionService {
                         )
                     );
                     
+                    $sheet->mergeCells('A1:A2');
+                    $sheet->mergeCells('B1:B2');
+                    $sheet->mergeCells('C1:C2');
+                    $sheet->mergeCells('D1:D2');
+                    $sheet->mergeCells('E1:E2');
+                     
                     $e1 = 5;
                     foreach($ancFormFields as $fieldRow){
                         $e2 = $e1+3;
@@ -559,6 +565,8 @@ class DataCollectionService {
                       $e1 = $e2;
                       $e1++;
                     }
+                    $cellNameValue = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                    $sheet->mergeCells($cellNameValue.'1:'.$cellNameValue.'2');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Clinic Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -567,10 +575,22 @@ class DataCollectionService {
                     $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $a1 = 5;
                     foreach($ancFormFields as $key=>$value){
+                        $a11 = $a1;
+                        $a12 = $a1+1;
+                        $a13 = $a12+1;
+                        $a14 = $a13+1;
                         $columnTitle = ucwords(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
                         $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
+                        $subCellName1Value = $sheet->getCellByColumnAndRow($a11, 2)->getColumn();
+                        $subCellName2Value = $sheet->getCellByColumnAndRow($a12, 2)->getColumn();
+                        $subCellName3Value = $sheet->getCellByColumnAndRow($a13, 2)->getColumn();
+                        $subCellName4Value = $sheet->getCellByColumnAndRow($a14, 2)->getColumn();
                         $sheet->setCellValue($cellNameValue.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue($subCellName1Value.'2', html_entity_decode('Age < 15', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue($subCellName2Value.'2', html_entity_decode('Age 15-19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue($subCellName3Value.'2', html_entity_decode('Age 20-24', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue($subCellName4Value.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $a1+=3;  
                       $a1++;
                     }
@@ -584,17 +604,29 @@ class DataCollectionService {
                     $sheet->getStyle('E1')->applyFromArray($styleArray);
                     $f1 = 5;
                     foreach($ancFormFields as $fieldRow){
+                        $f11 = $f1;
+                        $f12 = $f11+1;
+                        $f13 = $f12+1;
+                        $f14 = $f13+1;
                         $f2 = $f1+3;
                         $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
                         $cellName2Value = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
+                        $subCellName1Value = $sheet->getCellByColumnAndRow($f11, 2)->getColumn();
+                        $subCellName2Value = $sheet->getCellByColumnAndRow($f12, 2)->getColumn();
+                        $subCellName3Value = $sheet->getCellByColumnAndRow($f13, 2)->getColumn();
+                        $subCellName4Value = $sheet->getCellByColumnAndRow($f14, 2)->getColumn();
                         $sheet->getStyle($cellName1Value.'1:'.$cellName2Value.'1')->applyFromArray($styleArray);
+                        $sheet->getStyle($subCellName1Value.'2')->applyFromArray($styleArray);
+                        $sheet->getStyle($subCellName2Value.'2')->applyFromArray($styleArray);
+                        $sheet->getStyle($subCellName3Value.'2')->applyFromArray($styleArray);
+                        $sheet->getStyle($subCellName4Value.'2')->applyFromArray($styleArray);
                       $f1 = $f2;
                       $f1++;
                     }
                     $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
                     $sheet->getStyle($cellName1Value.'1')->applyFromArray($styleArray);
                     
-                    $currentRow = 2;
+                    $currentRow = 3;
                     $highestColumn = ($f1+1)-1;
                     foreach ($output as $rowData) {
                         $colNo = 0;
