@@ -650,7 +650,10 @@ if(!isset($countryId) || trim($countryId)== ''){
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy',
-	    max: new Date('Today')
+	    max: new Date('Today'),
+	    onSet: function(e){
+		validateDataReportingDates();
+	    }
         });
     });
     
@@ -747,6 +750,52 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}
     });
+    
+    function validateDataReportingDates(){
+	var specimenCollectedDate = $('#specimenCollectedDate').val();
+	var specimenPickedUpDateAtAnc = $('#specimenPickedUpDateAtAnc').val();
+	var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
+	var dateOfTestCompletion = $('#dateOfTestCompletion').val();
+	var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
+	splitSpecimenCollectedDate = specimenCollectedDate.split('/');
+	splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
+	splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
+	splitTestCompletionDate = dateOfTestCompletion.split('/');
+	splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
+	specimenCollectedDate = splitSpecimenCollectedDate[2]+'-'+splitSpecimenCollectedDate[1]+'-'+splitSpecimenCollectedDate[0];
+	specimenPickedUpDateAtAnc = splitSpecimenPickedUpDateAtAnc[2]+'-'+splitSpecimenPickedUpDateAtAnc[1]+'-'+splitSpecimenPickedUpDateAtAnc[0];
+	dateOfReceiptAtcentralLab = splitReceiptAtCentralLabDate[2]+'-'+splitReceiptAtCentralLabDate[1]+'-'+splitReceiptAtCentralLabDate[0];
+	dateOfTestCompletion = splitTestCompletionDate[2]+'-'+splitTestCompletionDate[1]+'-'+splitTestCompletionDate[0];
+	dateOfResultDispatchedToClinic = splitResultDispatchedToClinicDate[2]+'-'+splitResultDispatchedToClinicDate[1]+'-'+splitResultDispatchedToClinicDate[0];
+	//Check specimen coll./specimen picked up date at mnc
+	if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
+	    if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
+		alert('Specimen picked up date at anc could not be earlier than specimen collection date!');
+		$('#specimenPickedUpDateAtAnc').val('');
+	    }
+	}
+	//specimen picked up date at anc/receipt at central lab
+	if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
+	    if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
+		alert('Date of receipt at central lab could not be earlier than specimen picked up date!');
+		$('#dateOfReceiptAtCentralLab').val('');
+	    }
+	}
+	//receipt at central lab/test completion
+	if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
+	    if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
+		alert('Test completion date could not be earlier than date of receipt at central lab!');
+		$('#dateOfTestCompletion').val('');
+	    }
+	}
+	//Check test completion/result dispatched to clinic
+	if($.trim(dateOfTestCompletion)!= '' && $.trim(dateOfResultDispatchedToClinic)!= ''){
+	    if(moment(dateOfTestCompletion).isAfter(dateOfResultDispatchedToClinic)) {
+		alert('Date of result dispatched to clinic could not be earlier than test completion date!');
+		$('#dateOfResultDispatchedToClinic').val('');
+	    }
+	}
+    }
     
     function addDataReporting(){
         flag = deforayValidator.init({
