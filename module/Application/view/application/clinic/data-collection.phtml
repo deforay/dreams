@@ -329,7 +329,7 @@ if(!isset($countryId) || trim($countryId)== ''){
             $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {reportingMonthYear: reportingMonthYear,anc:anc},
             function(data) {
                 if(data ==1){
-                    alert('Dupliacate data not allowed..The anc and year/month that you have choosed already entered.');
+                    alert('Duplicate data not allowed..The anc and year/month that you have choosed already entered.');
                     $('#reportingMonthYear').val('');
                 }
             });
