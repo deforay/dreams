@@ -258,7 +258,7 @@ class DataCollectionService {
                     );
                     $borderStyle = array(
                         'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                         ),
                         'borders' => array(
                             'outline' => array(
@@ -541,7 +541,7 @@ class DataCollectionService {
                     );
                     $borderStyle = array(
                         'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
                         ),
                         'borders' => array(
                             'outline' => array(
@@ -575,17 +575,13 @@ class DataCollectionService {
                     $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $a1 = 5;
                     foreach($ancFormFields as $key=>$value){
-                        $a11 = $a1;
-                        $a12 = $a1+1;
-                        $a13 = $a12+1;
-                        $a14 = $a13+1;
                         $columnTitle = ucwords(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
                         $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
-                        $subCellName1Value = $sheet->getCellByColumnAndRow($a11, 2)->getColumn();
-                        $subCellName2Value = $sheet->getCellByColumnAndRow($a12, 2)->getColumn();
-                        $subCellName3Value = $sheet->getCellByColumnAndRow($a13, 2)->getColumn();
-                        $subCellName4Value = $sheet->getCellByColumnAndRow($a14, 2)->getColumn();
+                        $subCellName1Value = $sheet->getCellByColumnAndRow($a1, 2)->getColumn();
+                        $subCellName2Value = $sheet->getCellByColumnAndRow($a1+1, 2)->getColumn();
+                        $subCellName3Value = $sheet->getCellByColumnAndRow($a1+2, 2)->getColumn();
+                        $subCellName4Value = $sheet->getCellByColumnAndRow($a1+3, 2)->getColumn();
                         $sheet->setCellValue($cellNameValue.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue($subCellName1Value.'2', html_entity_decode('Age < 15', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue($subCellName2Value.'2', html_entity_decode('Age 15-19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -597,24 +593,20 @@ class DataCollectionService {
                     $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
                     $sheet->setCellValue($cellNameValue.'1', html_entity_decode('Comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->getStyle('A1')->applyFromArray($styleArray);
-                    $sheet->getStyle('B1')->applyFromArray($styleArray);
-                    $sheet->getStyle('C1')->applyFromArray($styleArray);
-                    $sheet->getStyle('D1')->applyFromArray($styleArray);
-                    $sheet->getStyle('E1')->applyFromArray($styleArray);
+                    $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
+                    $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
                     $f1 = 5;
                     foreach($ancFormFields as $fieldRow){
-                        $f11 = $f1;
-                        $f12 = $f11+1;
-                        $f13 = $f12+1;
-                        $f14 = $f13+1;
                         $f2 = $f1+3;
                         $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
                         $cellName2Value = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
-                        $subCellName1Value = $sheet->getCellByColumnAndRow($f11, 2)->getColumn();
-                        $subCellName2Value = $sheet->getCellByColumnAndRow($f12, 2)->getColumn();
-                        $subCellName3Value = $sheet->getCellByColumnAndRow($f13, 2)->getColumn();
-                        $subCellName4Value = $sheet->getCellByColumnAndRow($f14, 2)->getColumn();
+                        $subCellName1Value = $sheet->getCellByColumnAndRow($f1, 2)->getColumn();
+                        $subCellName2Value = $sheet->getCellByColumnAndRow($f1+1, 2)->getColumn();
+                        $subCellName3Value = $sheet->getCellByColumnAndRow($f1+2, 2)->getColumn();
+                        $subCellName4Value = $sheet->getCellByColumnAndRow($f1+3, 2)->getColumn();
                         $sheet->getStyle($cellName1Value.'1:'.$cellName2Value.'1')->applyFromArray($styleArray);
                         $sheet->getStyle($subCellName1Value.'2')->applyFromArray($styleArray);
                         $sheet->getStyle($subCellName2Value.'2')->applyFromArray($styleArray);
@@ -624,7 +616,7 @@ class DataCollectionService {
                       $f1++;
                     }
                     $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
-                    $sheet->getStyle($cellName1Value.'1')->applyFromArray($styleArray);
+                    $sheet->getStyle($cellName1Value.'1:'.$cellName1Value.'2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
                     $highestColumn = ($f1+1)-1;
