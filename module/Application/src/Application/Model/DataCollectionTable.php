@@ -73,7 +73,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-                        'enc_anc_patient_id'=>sha1($params['ancPatientId']),
+                        //'enc_anc_patient_id'=>sha1($params['ancPatientId']),
                         'age'=>$params['age'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
@@ -97,7 +97,21 @@ class DataCollectionTable extends AbstractTableGateway {
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
 		if($lastInsertedId >0){
+		    $dbAdapter = $this->adapter;
+		    $sql = new Sql($dbAdapter);
+		    $dQuery = $sql->select()->from(array('dc' => 'data_collection'))
+					    ->columns(array('anc_patient_id','enc_anc_patient_id'))
+					    ->where(array('dc.anc_patient_id'=>$params['ancPatientId']));
+		    $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
+		    $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+		    if(count($dResult)>1){
+			$pId = $dResult[0]['enc_anc_patient_id'];
+		    }else{
+			$pId = "P".$lastInsertedId;
+		    }
 		    //Add new row into data collection event log table
+		    $this->update(array('enc_anc_patient_id'=>$pId),array('data_collection_id'=>$lastInsertedId));
+		    
 		    $dbAdapter = $this->adapter;
 		    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
 		    $data['data_collection_id'] = $lastInsertedId;
@@ -428,7 +442,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-			'enc_anc_patient_id'=>sha1($params['ancPatientId']),
+			//'enc_anc_patient_id'=>sha1($params['ancPatientId']),
                         'age'=>$params['age'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),

@@ -102,7 +102,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12 ancSiteSection">
-				    <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
+				    <select id="ancSite" name="ancSite" class="material-select " title="Please select ANC site">
 					<option value=""> -- Select -- </option>
 					<?php
 					foreach($ancSites as $ancSite){
@@ -163,7 +163,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12 labSection">
-				<select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
+				<select id="lab" name="lab" class="material-select " title="Please select lab site code/name">
 				    <option value=""> -- Select -- </option>
 				    <?php
 				    foreach($facilities as $facility){
@@ -799,10 +799,22 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     
     function addDataReporting(){
+	if($("#surveillanceId").val()!=''){
+	    if($("#ancSite").val()==''){
+	    alert("Please choose ANC site name");
+	    $("#ancSite").css("background-color","#ffff99");
+	    return false;
+	    }
+	    if($("#lab").val()==''){
+		alert("Please select lab site code/name");
+		$("#lab").css("background-color","#ffff99");
+		return false;
+	    }
+	}
         flag = deforayValidator.init({
             formId: 'addDataReportingForm'
         });
-        
+	
         if(flag){
             document.getElementById('addDataReportingForm').submit();
         }
