@@ -107,7 +107,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		    if(count($dResult)>1){
 			$pId = $dResult[0]['enc_anc_patient_id'];
 		    }else{
-			$pId = "P".$lastInsertedId;
+			$strparam = strlen($lastInsertedId);
+			$zeros = substr("00000000", $strparam);
+			$pId = 'P' . $zeros . $lastInsertedId;
 		    }
 		    //Add new row into data collection event log table
 		    $this->update(array('enc_anc_patient_id'=>$pId),array('data_collection_id'=>$lastInsertedId));
