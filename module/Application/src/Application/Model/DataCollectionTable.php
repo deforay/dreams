@@ -73,7 +73,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-                        //'enc_anc_patient_id'=>sha1($params['ancPatientId']),
+                        'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
                         'age'=>$params['age'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
@@ -104,15 +104,15 @@ class DataCollectionTable extends AbstractTableGateway {
 					    ->where(array('dc.anc_patient_id'=>$params['ancPatientId']));
 		    $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
 		    $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-		    if(count($dResult)>1){
-			$pId = $dResult[0]['enc_anc_patient_id'];
-		    }else{
-			$strparam = strlen($lastInsertedId);
-			$zeros = substr("00000000", $strparam);
-			$pId = 'P' . $zeros . $lastInsertedId;
-		    }
-		    //Add new row into data collection event log table
-		    $this->update(array('enc_anc_patient_id'=>$pId),array('data_collection_id'=>$lastInsertedId));
+		//    if(count($dResult)>1){
+		//	$pId = $dResult[0]['enc_anc_patient_id'];
+		//    }else{
+		//	$strparam = strlen($lastInsertedId);
+		//	$zeros = substr("00000000", $strparam);
+		//	$pId = 'P' . $zeros . $lastInsertedId;
+		//    }
+		//    //Add new row into data collection event log table
+		//    $this->update(array('enc_anc_patient_id'=>$pId),array('data_collection_id'=>$lastInsertedId));
 		    
 		    $dbAdapter = $this->adapter;
 		    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
@@ -444,7 +444,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-			//'enc_anc_patient_id'=>sha1($params['ancPatientId']),
+						'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
                         'age'=>$params['age'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
@@ -1083,6 +1083,23 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
        return $output;
     }
+	
+	
+
+	public function rot47($str){
+
+		if (!function_exists('str_rot47')) {
+		  function str_rot47($str) {
+			return strtr($str, 
+			  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 
+			  'PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO'
+			);
+		  }
+		}
+		
+		return str_rot47($str);
+		
+	}	
     
     public function fetchAllAncLabReportDatas($parameters){
 	$loginContainer = new Container('user');
