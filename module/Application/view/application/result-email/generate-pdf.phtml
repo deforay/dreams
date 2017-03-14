@@ -122,7 +122,7 @@ $alertContainer->nbPages = count($dataResult);
 	$html = '';
 	$html .= '<table style="padding:2px;">';
 	$html .='<tr><td colspan="6" style="text-align:left;"><h5>SURVEILLANCE INFORMATION</h5></td></tr>';
-	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Surveillance ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['surveillance_id'].'</td>';
+	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Serial No</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['surveillance_id'].'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Collected Date</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_collected_date'].'</td>';
 	$html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td></tr>';
 	$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Picked Up Date at ANC</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.$data['specimen_picked_up_date_at_anc'].'</td></tr>';

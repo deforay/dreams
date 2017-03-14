@@ -64,8 +64,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" value="<?php echo $row->surveillance_id; ?>" style="pointer-events:none;">
-                            <label for="surveillanceId" class="">Surveillance ID *</label>
+                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." value="<?php echo $row->surveillance_id; ?>" style="pointer-events:none;">
+                            <label for="surveillanceId" class="">Serial No *</label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -182,8 +182,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum isRequired" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
+                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum <?php echo($row->final_lag_avidity_odn > 1.5)?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 1.5)?'':'*'; ?></label>
                         </div>
                     </div>
                 </div>
@@ -281,6 +281,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
     //For Pre-populate Result
     $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
+            $('#hivRna').addClass('isRequired');
+	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 	    $('.prePopulateAvidity').css('visibility','hidden');
 	    $('.prePopulateHIVRNA').css('visibility','hidden');
 	    $('.prePopulateRecentInfection').css('visibility','hidden');
@@ -295,10 +297,14 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+                $('#hivRna').removeClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 1.5)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
+                $('#hivRna').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		if(parseInt($('#hivRna').val()) <= 1000){
 	        $('.prePopulateAvidity').css('visibility','visible');
 		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn < 1.5 and HIV RNA <= 1000 cp/mL)');
@@ -313,10 +319,12 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
-            $('.prePopulateAvidity').css('visibility','hidden');
-            $('label[for="lagAvidityResult"]').html('');
-            $('#lagAvidityResultRecent').prop('checked',false);
-            $('#lagAvidityResultLongTerm').prop('checked',false);
+                $('#hivRna').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+                $('.prePopulateAvidity').css('visibility','hidden');
+                $('label[for="lagAvidityResult"]').html('');
+                $('#lagAvidityResultRecent').prop('checked',false);
+                $('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) >= 1000){
@@ -334,19 +342,15 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('#hivRnaGT1000No').prop('checked',false);
 	    }
 	    
-            if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
-                $('.prePopulateRecentInfection').css('visibility','hidden');
+            //Recent infection
+            if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+                $('.prePopulateRecentInfection').css('visibility','visible');
+                $('label[for="recentInfection"]').html('Yes');
+                $('#recentInfectionYes').prop('checked',true);
             }else{
-                //Recent infection
-                if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-                    $('.prePopulateRecentInfection').css('visibility','visible');
-                    $('label[for="recentInfection"]').html('Yes');
-                    $('#recentInfectionYes').prop('checked',true);
-                }else{
-                    $('.prePopulateRecentInfection').css('visibility','visible');
-                    $('label[for="recentInfection"]').html('No');
-                    $('#recentInfectionNo').prop('checked',true);
-                }
+                $('.prePopulateRecentInfection').css('visibility','visible');
+                $('label[for="recentInfection"]').html('No');
+                $('#recentInfectionNo').prop('checked',true);
             }
 	}
     });

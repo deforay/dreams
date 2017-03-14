@@ -74,13 +74,15 @@ if(count($logbookResult) >0){
     $pdf->SetFont('helvetica', '', 10);
     
     $pdf->AddPage();
-    $pdf->SetY(30,true,false);
+    $pdf->SetMargins(10, 28, 10, true);
+    //$pdf->SetFooterMargin(10);
+    $pdf->SetY(28,true,false);
     
     $html = '';
       $html.='<table border="1" style="padding:2px;">';
           $html .='<thead>';
            $html .='<tr>';
-           $html .='<th><strong>Surveillance ID</strong></th>';
+           $html .='<th><strong>Serial No.</strong></th>';
            $html .='<th><strong>Specimen Collected Date</strong></th>';
            $html .='<th><strong>ANC Site Name/Code</strong></th>';
            $html .='<th><strong>ANC Patient ID</strong></th>';
@@ -135,13 +137,13 @@ if(count($logbookResult) >0){
 	    $rapidRecencyAssayDuration = '';
 	    if(isset($row['asante_rapid_recency_assy']) && trim($row['asante_rapid_recency_assy'])!= ''){
 		$xplodRapidRecencyAssay = explode('/',$row['asante_rapid_recency_assy']);
-		if(trim($xplodRapidRecencyAssay[0])!= ''){
+		if(isset($xplodRapidRecencyAssay[0])){
 		    if($xplodRapidRecencyAssay[0] == 'p'){
 			$rapidRecencyAssay = 'Positive';
 		    }else if($xplodRapidRecencyAssay[0] == 'n'){
 			$rapidRecencyAssay = 'Negative';
 		    }
-		}if(trim($xplodRapidRecencyAssay[1])!= ''){
+		}if(isset($xplodRapidRecencyAssay[1])){
 		    if($xplodRapidRecencyAssay[1] == 'r'){
 			$rapidRecencyAssayDuration = 'Recent';
 		    }else if($xplodRapidRecencyAssay[1] == 'lt'){
@@ -174,7 +176,6 @@ if(count($logbookResult) >0){
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $pdf->lastPage();
     $filename = 'LAB-LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;

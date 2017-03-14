@@ -33,11 +33,11 @@ if(count($labReportResult) >0){
     // create new PDF document
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
-    $pdf->setSchemeName('ANC Lab Report','logo.png');
+    $pdf->setSchemeName('DREAMS Lab Logbook','logo.png');
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('ANC Lab Report');
+    $pdf->SetTitle('DREAMS Lab Logbook');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -74,7 +74,9 @@ if(count($labReportResult) >0){
     $pdf->SetFont('helvetica', '', 10);
     
     $pdf->AddPage();
-    $pdf->SetY(30,true,false);
+    $pdf->SetMargins(10, 28, 10, true);
+    //$pdf->SetFooterMargin(10);
+    $pdf->SetY(28,true,false);
     
     $vlReportType = 'show';
     $infectionType = 'show';
@@ -168,7 +170,6 @@ if(count($labReportResult) >0){
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $pdf->lastPage();
     $filename = 'ANC-LAB-REPORT--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;

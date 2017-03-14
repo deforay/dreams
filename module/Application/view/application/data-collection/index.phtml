@@ -88,8 +88,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');" style="pointer-events:none;">
-				    <label for="surveillanceId" class="">Surveillance ID *</label>
+				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The serial no. that you entered already exist. Please enter different no.');" style="pointer-events:none;">
+				    <label for="surveillanceId" class="">Serial No *</label>
 				</div>
 			    </div>
 			    <div class="col s4">
@@ -124,8 +124,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter surveillance ID" onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The surveillance id that you entered already exist. Please enter different id.');" style="pointer-events:none;">
-				    <label for="surveillanceId" class="">Surveillance ID *</label>
+				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The serial no. that you entered already exist. Please enter different no.');" style="pointer-events:none;">
+				    <label for="surveillanceId" class="">Serial No *</label>
 				</div>
 			    </div>
 			    <div class="col s4">
@@ -317,7 +317,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Surveillance ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Serial No.</label>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
@@ -410,7 +410,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Surveillance ID</th>
+                                <th>Serial No.</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
@@ -447,7 +447,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Surveillance ID</th>
+                                <th>Serial No.</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
@@ -495,6 +495,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 <script>
     $(document).ready(function() {
        oTable = $('#dataReportingDataTable').dataTable({
+	    "autoWidth": false,
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },
@@ -661,6 +662,8 @@ if(!isset($countryId) || trim($countryId)== ''){
     //For Pre-populate Result
     $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
+	    $('#hivRna').addClass('isRequired');
+	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 	    $('.prePopulateAvidity').css('visibility','hidden');
 	    $('.prePopulateHIVRNA').css('visibility','hidden');
 	    $('.prePopulateRecentInfection').css('visibility','hidden');
@@ -675,24 +678,30 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
+		$('#hivRna').removeClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 1.5)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
+		$('#hivRna').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		if(parseInt($('#hivRna').val()) <= 1000){
-	        $('.prePopulateAvidity').css('visibility','visible');
+	            $('.prePopulateAvidity').css('visibility','visible');
 		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn < 1.5 and HIV RNA <= 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
-	        $('.prePopulateAvidity').css('visibility','visible');
+	            $('.prePopulateAvidity').css('visibility','visible');
 		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5 and HIV RNA > 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
-	        $('.prePopulateAvidity').css('visibility','visible');
+	            $('.prePopulateAvidity').css('visibility','visible');
 		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
+		$('#hivRna').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		$('.prePopulateAvidity').css('visibility','hidden');
 		$('label[for="lagAvidityResult"]').html('');
 		$('#lagAvidityResultRecent').prop('checked',false);
@@ -714,19 +723,15 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('#hivRnaGT1000No').prop('checked',false);
 	    }
 		
-	    if(!$("#finalLagAvidityOdn").val() || !$("#hivRna").val() ){
-		$('.prePopulateRecentInfection').css('visibility','hidden');
+	    //Recent infection
+	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+		$('.prePopulateRecentInfection').css('visibility','visible');
+		$('label[for="recentInfection"]').html('Yes');
+		$('#recentInfectionYes').prop('checked',true);
 	    }else{
-		//Recent infection
-		if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-		    $('.prePopulateRecentInfection').css('visibility','visible');
-		    $('label[for="recentInfection"]').html('Yes');
-		    $('#recentInfectionYes').prop('checked',true);
-		}else{
-		    $('.prePopulateRecentInfection').css('visibility','visible');
-		    $('label[for="recentInfection"]').html('No');
-		    $('#recentInfectionNo').prop('checked',true);
-		}
+		$('.prePopulateRecentInfection').css('visibility','visible');
+		$('label[for="recentInfection"]').html('No');
+		$('#recentInfectionNo').prop('checked',true);
 	    }
 	}
     });

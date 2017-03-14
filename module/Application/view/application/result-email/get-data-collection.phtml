@@ -2,7 +2,7 @@
     <div class="col m6 s6" style="text-align:center !important;">&nbsp;&nbsp;&nbsp;<a href='#' id='select-all' class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10">Select all</a></div>
     <div class="col m6 s6" style="text-align:center !important;"><a href='#' id='deselect-all' class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10">Deselect all</a></div>
     <div style="width:100%;margin:0 auto;clear:both;">
-    <select id="dataCollection" name="dataCollection[]" class="searchable isRequired" title="Please select surveillance ID" multiple>
+    <select id="dataCollection" name="dataCollection[]" class="searchable isRequired" title="Please select serial no." multiple>
        <?php
        foreach($dataList as $data){
             $lAgAvidityResult = '';
@@ -26,8 +26,8 @@
 <script>
     $(document).ready(function(){
        $('.searchable').multiSelect({
-            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Surveillance ID'>",
-            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Surveillance ID'>",
+            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial No'>",
+            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial No'>",
             afterInit: function(ms){
               var that = this,
                   $selectableSearch = that.$selectableUl.prev(),

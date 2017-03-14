@@ -288,8 +288,8 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                                     <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
                                                                 </li>
                                                             <?php } if($PRAccess == 'show'){ ?>
-                                                                <li class="countryClinicLabReportMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicLabReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> ANC Lab Report</a>
+                                                                <li class="countryLabLogbookMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryLabLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> DREAMS Lab Logbook</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>
@@ -592,8 +592,8 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
-            $(".countryClinicLabReportMenu"+atob(splits)).addClass("active");
-            $(".countryClinicLabReportMenu"+atob(splits)).css("color","#fff");
+            $(".countryLabLogbookMenu"+atob(splits)).addClass("active");
+            $(".countryLabLogbookMenu"+atob(splits)).css("color","#fff");
             $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
             $(".countryClinicMenu"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");

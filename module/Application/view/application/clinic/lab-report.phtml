@@ -86,7 +86,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         /*left: -184px*/
 
     }
-    #ancLabReportDataTable_wrapper{
+    #labLogbookDataTable_wrapper{
 	overflow-x:scroll;
     }
     .select-wrapper{
@@ -102,10 +102,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">ANC Lab Report</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">DREAMS Lab Logbook</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Lab Report</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">DREAMS Lab Logbook</a>
        </div>
     </div>
     <div class="row" style="max-width:1109px;">
@@ -228,11 +228,11 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Lab Report List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> DREAMS Lab Logbook List
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
-                    <table id="ancLabReportDataTable" class="responsive-table display dataTable">
+                    <table id="labLogbookDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Specimen Collected Date</th>
@@ -292,7 +292,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 <script>
     $(document).ready(function() {
 	selectDate();
-	oTable = $('#ancLabReportDataTable').dataTable({
+	oTable = $('#labLogbookDataTable').dataTable({
+	    "autoWidth": false,
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },

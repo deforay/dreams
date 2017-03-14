@@ -402,3 +402,8 @@ ALTER TABLE `data_collection_event_log` ADD `comments` TEXT NULL DEFAULT NULL AF
 
 --Pal 07/01/2017
 ALTER TABLE `clinic_data_collection` ADD `comments` TEXT NULL DEFAULT NULL AFTER `characteristics_data`;
+
+--Pal 12/01/2017
+UPDATE `anc_form` SET `field_name` = 'no_of_recency_result' WHERE `anc_form`.`field_id` = 9;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_who_received_recency_result' WHERE `anc_form`.`field_id` = 10;
