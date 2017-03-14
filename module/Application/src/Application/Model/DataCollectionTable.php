@@ -1086,20 +1086,18 @@ class DataCollectionTable extends AbstractTableGateway {
 	
 	
 
-	public function rot47($str){
-
-		if (!function_exists('str_rot47')) {
-		  function str_rot47($str) {
-			return strtr($str, 
-			  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 
-			  'PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO'
-			);
-		  }
-		}
-		
-		return str_rot47($str);
-		
-	}	
+    public function rot47($str){
+	    if (!function_exists('str_rot47')) {
+	      function str_rot47($str) {
+		    return strtr($str, 
+		      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 
+		      'PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO'
+		    );
+	      }
+	    }
+	    
+	    return str_rot47($str);
+    }	
     
     public function fetchAllAncLabReportDatas($parameters){
 	$loginContainer = new Container('user');
