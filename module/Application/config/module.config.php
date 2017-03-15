@@ -275,6 +275,15 @@ return array(
                         'action' => 'generate-pdf'
                     ),
                 ),
+            ),'result-sms' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/result-sms[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResultSms',
+                        'action' => 'index'
+                    ),
+                ),
             ),'get-data-collection' => array(
                 'type' => 'literal',
                 'options' => array(
@@ -437,6 +446,7 @@ return array(
             'Application\Controller\DataCollection' => 'Application\Controller\DataCollectionController',
             'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController',
             'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController',
+            'Application\Controller\ResultSms' => 'Application\Controller\ResultSmsController',
             'Application\Controller\Clinic' => 'Application\Controller\ClinicController'
         ),
     ),

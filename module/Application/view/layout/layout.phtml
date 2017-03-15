@@ -269,7 +269,10 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                                 </li>
                                                             <?php } if($countryLabResultEmailAccess == 'show') { ?>
                                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-email"></i> Lab Result Email</a>
+                                                                    <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-email"></i> Email Lab Results</a>
+                                                                </li>
+                                                                <li class="countryResultSmsMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/result-sms/<?php echo base64_encode($country['country_id']); ?>" class="countryResultSmsMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-smartphone-android"></i> SMS Lab Results</a>
                                                                 </li>
                                                             <?php } if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
@@ -324,7 +327,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="foot4" style="padding:0;background-color:#ff69b4;">
-                      <p class="copy">©Copyright 2016 Dream - All Rights Reserved</p>
+                      <p class="copy">&copy; <?php echo date('Y'); ?> DREAMS Project - All Rights Reserved</p>
                     </div>
                 </div>
             </div>
@@ -569,6 +572,17 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultEmailMenu"+atob(splits)).addClass("active");
             $(".countryResultEmailMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+            $(".countryLabMenu"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(splitsUrl[1]=='result-sms'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryResultSmsMenu"+atob(splits)).addClass("active");
+            $(".countryResultSmsMenu"+atob(splits)).css("color","#fff");
             $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
             $(".countryLabMenu"+atob(splits)).addClass("active");
             $(".countryLabMenuSecond"+atob(splits)).addClass("active");
