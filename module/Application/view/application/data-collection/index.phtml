@@ -728,13 +728,23 @@ if(!isset($countryId) || trim($countryId)== ''){
 		
 	    //Recent infection
 	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-		$('.prePopulateRecentInfection').css('visibility','visible');
 		$('label[for="recentInfection"]').html('Yes');
 		$('#recentInfectionYes').prop('checked',true);
 	    }else{
-		$('.prePopulateRecentInfection').css('visibility','visible');
 		$('label[for="recentInfection"]').html('No');
 		$('#recentInfectionNo').prop('checked',true);
+	    }
+	    //Showing result section
+	    if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 1.5){
+	       $('.prePopulateRecentInfection').css('visibility','visible');
+	    }else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 1.5){
+	       if($('#hivRna').val() == ''){
+		  $('.prePopulateRecentInfection').css('visibility','hidden');
+	       }else{
+		  $('.prePopulateRecentInfection').css('visibility','visible');
+	       }
+	    }else{
+	       $('.prePopulateRecentInfection').css('visibility','hidden');
 	    }
 	}
     });
