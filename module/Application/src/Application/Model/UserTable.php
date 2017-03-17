@@ -24,6 +24,7 @@ class UserTable extends AbstractTableGateway {
         if(isset($params['userName']) && trim($params['userName'])!= ''){
             $dbAdapter = $this->adapter;
             $sql = new Sql($dbAdapter);
+	    $loginTrackerDb = new LoginTrackerTable($dbAdapter);
             $userName = trim($params['userName']);
             $password = sha1($params['password'].$configResult["password"]["salt"]);
 	    $isCountrySelected = false;
@@ -83,6 +84,7 @@ class UserTable extends AbstractTableGateway {
 		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
+			$loginTrackerDb->addNewLogin($loginResult->user_id);
 			$loginContainer->userId = $loginResult->user_id;
 			$loginContainer->userName = $loginResult->user_name;
 			$loginContainer->roleCode = $loginResult->role_code;
@@ -98,6 +100,7 @@ class UserTable extends AbstractTableGateway {
 		       return 'login';
 		    }
 		}else{
+		    $loginTrackerDb->addNewLogin($loginResult->user_id);
 		    $loginContainer->userId = $loginResult->user_id;
 		    $loginContainer->userName = $loginResult->user_name;
 		    $loginContainer->roleCode = $loginResult->role_code;

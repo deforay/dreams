@@ -47,6 +47,24 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
     $asanteRapidRecencyAssayRlt = $asanteRapidRecencyAssy[1];
 }
 ?>
+<style>
+    #box-1{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+    }
+    #box-2{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+    }
+</style>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Lab Data Reporting</div>
@@ -223,17 +241,22 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                       <div class="input-padding col m10 s10">
+                    <div class="col s5">
+                       <div class="input-padding col m12 s12">
                           Rapid Recency Assay (Eg. Assante)<br>
-                          <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
-                          <label for="asanteRapidRecencyAssayP">Positive </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
-                          <label for="asanteRapidRecencyAssayN">Negative </label><br>
-                          <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>"/>
-                          <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Recent </label>&nbsp;
-                          <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>"/>
-                          <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">Long Term </label>
+                          <div id="box-1">
+                            <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
+                            <label for="asanteRapidRecencyAssayP">Positive </label><br>
+                            <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
+                            <label for="asanteRapidRecencyAssayN">Negative </label>
+                          </div>
+                          <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">&rArr;</div>
+                          <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">
+                            <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r"/>
+                            <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label>&nbsp;
+                            <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt"/>
+                            <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label>
+                          </div>
                         </div>
                     </div>
                     <div class="col s4">
@@ -242,7 +265,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="comments">Comments</label>
                         </div>
                     </div>
-                    <div class="col s4">
+                    <div class="col s3">
                         <div class="input-field col m12 s12">
                             <select id="status" name="status" class="material-select" title="Please select status">
                                 <?php
@@ -370,9 +393,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
     
     $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
 	if(this.value == 'p') {
-	    $('.asanteRapidRecencyAssayRlt').css('visibility','visible');
+	    $('#box-2,#box-breaker').css('visibility','visible');
 	}else if(this.value == 'n'){
-	    $('.asanteRapidRecencyAssayRlt').css('visibility','hidden');
+	    $('#box-2,#box-breaker').css('visibility','hidden');
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}

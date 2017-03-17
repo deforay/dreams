@@ -53,6 +53,22 @@ if(!isset($countryId) || trim($countryId)== ''){
     table.dataTable tbody td{
 	padding:2px 4px 0px 4px;
     }
+    #box-1{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+    }
+    #box-2{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -284,20 +300,25 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 		    </div>
 		    <div class="row" style="margin-bottom:0;">
-			<div class="col s4">
-			   <div class="input-padding col m10 s10">
+			<div class="col s5">
+			   <div class="input-padding col m12 s12">
 			      Rapid Recency Assay (Eg. Assante)<br>
-			      <input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
-			      <label for="asanteRapidRecencyAssayP">Positive </label>&nbsp;
-			      <input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
-			      <label for="asanteRapidRecencyAssayN">Negative </label><br>
-			      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
-			      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label>&nbsp;
-			      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
-			      <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label>
+			      <div id="box-1">
+				<input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
+				<label for="asanteRapidRecencyAssayP">Positive </label><br>
+				<input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
+				<label for="asanteRapidRecencyAssayN">Negative </label>
+			      </div>
+			      <div id="box-breaker">&rArr;</div>
+			      <div id="box-2">
+				<input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
+			        <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label><br>
+			        <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
+			        <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label>
+			      </div>
 			    </div>
 			</div>
-			<div class="col s8">
+			<div class="col s7">
 			    <div class="input-field col m12 s12">
 				<textarea id="comments" name="comments" class="materialize-textarea"></textarea>
 				<label for="comments">Comments</label>
@@ -762,9 +783,9 @@ if(!isset($countryId) || trim($countryId)== ''){
     
     $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
 	if(this.value == 'p') {
-	    $('.asanteRapidRecencyAssayRlt').css('visibility','visible');
+	    $('#box-2,#box-breaker').css('visibility','visible');
 	}else if(this.value == 'n'){
-	    $('.asanteRapidRecencyAssayRlt').css('visibility','hidden');
+	    $('#box-2,#box-breaker').css('visibility','hidden');
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}

@@ -31,6 +31,7 @@ use Application\Model\UserClinicMapTable;
 use Application\Model\AncFormTable;
 use Application\Model\ClinicDataCollectionTable;
 use Application\Model\UserLaboratoryMapTable;
+use Application\Model\LoginTrackerTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -179,6 +180,10 @@ class Module{
                 },'UserLaboratoryMapTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new UserLaboratoryMapTable($dbAdapter);
+                    return $table;
+                },'LoginTrackerTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new LoginTrackerTable($dbAdapter);
                     return $table;
                 }
             ),

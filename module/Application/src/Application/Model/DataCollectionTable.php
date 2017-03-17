@@ -104,17 +104,7 @@ class DataCollectionTable extends AbstractTableGateway {
 					    ->where(array('dc.anc_patient_id'=>$params['ancPatientId']));
 		    $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
 		    $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-		//    if(count($dResult)>1){
-		//	$pId = $dResult[0]['enc_anc_patient_id'];
-		//    }else{
-		//	$strparam = strlen($lastInsertedId);
-		//	$zeros = substr("00000000", $strparam);
-		//	$pId = 'P' . $zeros . $lastInsertedId;
-		//    }
-		//    //Add new row into data collection event log table
-		//    $this->update(array('enc_anc_patient_id'=>$pId),array('data_collection_id'=>$lastInsertedId));
-		    
-		    $dbAdapter = $this->adapter;
+		
 		    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
 		    $data['data_collection_id'] = $lastInsertedId;
 		    $dataCollectionEventLogDb->insert($data);

@@ -407,3 +407,18 @@ ALTER TABLE `clinic_data_collection` ADD `comments` TEXT NULL DEFAULT NULL AFTER
 UPDATE `anc_form` SET `field_name` = 'no_of_recency_result' WHERE `anc_form`.`field_id` = 9;
 
 UPDATE `anc_form` SET `field_name` = 'no_of_clients_who_received_recency_result' WHERE `anc_form`.`field_id` = 10;
+
+--Pal 17/03/2017
+CREATE TABLE `login_tracker` (
+  `tracker_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `logged_in_datetime` datetime NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL
+)
+
+ALTER TABLE `login_tracker`
+  ADD PRIMARY KEY (`tracker_id`),
+  ADD KEY `user_id` (`user_id`);
+  
+ALTER TABLE `login_tracker`
+  MODIFY `tracker_id` int(11) NOT NULL AUTO_INCREMENT
