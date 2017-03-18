@@ -482,7 +482,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
         }
     }
     
-    $('#ancPatientId').on('change',function(){
+    $('#ancPatientId').on('keyup',function(){
 	if(this.value == ''){
 	   $('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
 	   $('#encAncPatientId').val('');
