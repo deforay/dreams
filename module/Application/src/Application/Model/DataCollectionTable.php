@@ -473,7 +473,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	$data = array(
 	    'status'=>2,
 	    'locked_on'=>$common->getDateTime(),
-	    'locked_by'=>$loginContainer->userId
+	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL;
 	);
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
