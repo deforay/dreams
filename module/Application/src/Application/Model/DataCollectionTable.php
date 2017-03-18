@@ -96,19 +96,12 @@ class DataCollectionTable extends AbstractTableGateway {
                     );
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
-		if($lastInsertedId >0){
-		    $dbAdapter = $this->adapter;
-		    $sql = new Sql($dbAdapter);
-		    $dQuery = $sql->select()->from(array('dc' => 'data_collection'))
-					    ->columns(array('anc_patient_id','enc_anc_patient_id'))
-					    ->where(array('dc.anc_patient_id'=>$params['ancPatientId']));
-		    $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
-		    $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-		
-		    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-		    $data['data_collection_id'] = $lastInsertedId;
-		    $dataCollectionEventLogDb->insert($data);
-		}
+	    if($lastInsertedId >0){
+		$dbAdapter = $this->adapter;
+		$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+		$data['data_collection_id'] = $lastInsertedId;
+		$dataCollectionEventLogDb->insert($data);
+	    }
         }
       return $lastInsertedId;
     }
@@ -434,7 +427,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-						'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
+			'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
                         'age'=>$params['age'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
@@ -450,27 +443,72 @@ class DataCollectionTable extends AbstractTableGateway {
                         'recent_infection'=>$params['recentInfection'],
                         'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
 			'comments'=>$params['comments'],
-                        'status'=>base64_decode($params['status'])
+                        'status'=>base64_decode($params['status']),
+                        'updated_on'=>$common->getDateTime(),
+                        'updated_by'=>$loginContainer->userId
                     );
+	    if(base64_decode($params['status'])!= $params['prevStatus']){
+		if(base64_decode($params['status'])== 2){
+		    $data['locked_on'] = $common->getDateTime();
+		    $data['locked_by'] = $loginContainer->userId;
+		}else if(base64_decode($params['status'])== 3){
+		    $data['unlocked_on'] = $common->getDateTime();
+		    $data['unlocked_by'] = $loginContainer->userId;
+		}
+	    }
 	    $this->update($data,array('data_collection_id'=>$dataCollectionId));
 	    //Add new row into data collection event log table
 	    $dbAdapter = $this->adapter;
 	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
 	    $data['data_collection_id'] = $dataCollectionId;
 	    $data['country'] = $params['chosenCountry'];
-	    $data['updated_on'] = $common->getDateTime();
-	    $data['updated_by'] = $loginContainer->userId;
 	    $dataCollectionEventLogDb->insert($data);
         }
       return $dataCollectionId;
     }
 	
     public function lockDataCollectionDetails($params){
-	return $this->update(array('status'=>2),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	$loginContainer = new Container('user');
+	$common = new CommonService();
+	$data = array(
+	    'status'=>2,
+	    'locked_on'=>$common->getDateTime(),
+	    'locked_by'=>$loginContainer->userId
+	);
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
+                                           ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
+				           ->order('da_c_e.data_collection_event_log_id desc');
+	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
+	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	if(isset($result->data_collection_event_log_id)){
+	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+	    $dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+	}
+      return $this->update($data,array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function unlockDataCollectionDetails($params){
-	return $this->update(array('status'=>3),array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+	$loginContainer = new Container('user');
+	$common = new CommonService();
+	$data = array(
+	    'status'=>3,
+	    'unlocked_on'=>$common->getDateTime(),
+	    'unlocked_by'=>$loginContainer->userId
+	);
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
+                                           ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
+				           ->order('da_c_e.data_collection_event_log_id desc');
+	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
+	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	if(isset($result->data_collection_event_log_id)){
+	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+	    $dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+	}
+      return $this->update($data,array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function requestForUnlockDataCollectionDetails($params){
@@ -1077,16 +1115,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	
 
     public function rot47($str){
-	    if (!function_exists('str_rot47')) {
-	      function str_rot47($str) {
-		    return strtr($str, 
-		      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 
-		      'PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO'
-		    );
-	      }
-	    }
-	    
-	    return str_rot47($str);
+	$str = (isset($str['pId']))?$str['pId']:$str;
+	if (!function_exists('str_rot47')) {
+	  function str_rot47($str) {
+		return strtr($str, 
+		  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 
+		  'PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO'
+		);
+	  }
+	}
+      return str_rot47($str);
     }	
     
     public function fetchAllAncLabReportDatas($parameters){

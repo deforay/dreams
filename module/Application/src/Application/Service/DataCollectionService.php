@@ -95,7 +95,7 @@ class DataCollectionService {
         if(isset($globalConfigResult->value) && trim($globalConfigResult->value) >0){
             $lockingHour = '+'.$globalConfigResult->value.' hours';
         }
-        //To lock completed data by logined user
+        //To lock completed data
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
                                    ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=>1));
@@ -704,5 +704,10 @@ class DataCollectionService {
         }else{
             return 0;
         }
+    }
+    
+    public function generateRot47String($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->rot47($params);
     }
 }

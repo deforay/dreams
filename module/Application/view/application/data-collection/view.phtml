@@ -156,14 +156,17 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                             <p><?php echo $row->anc_patient_id; ?></p>
                         </div>
                     </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="encAncPatientId" class="">Surveillance ID</label><br>
+                            <p><?php echo $row->enc_anc_patient_id; ?></p>
+                        </div>
+                    </div>
                      <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="age" class="">Age </label><br>
                             <p><?php echo $row->age; ?></p>
                         </div>
-                    </div>
-                    <div class="col s4">
-                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm of lab data reporting</a>
                     </div>
                 </div>
             </fieldset>
@@ -181,6 +184,9 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                             <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
                             <p><?php echo $row->hiv_rna; ?></p>
                         </div>
+                    </div>
+                    <div class="col s4">
+                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm of lab data reporting</a>
                     </div>
                 </div>
                 <div class="row" style="background-color:#ff69b4;border-radius:30px;margin-top:10px;">

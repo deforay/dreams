@@ -80,7 +80,8 @@ if(!isset($countryId) || trim($countryId)== ''){
     </div>
     <?php
     if($loginContainer->hasViewOnlyAccess =='no'){ ?>
-	<div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
+	<div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;">Hide this form</a>
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
 	    <div class="card">
 		<fieldset style="border-color:#88C542;border-style:solid;">
@@ -240,7 +241,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<label for="ancPatientId" class="">ANC Patient ID * </label>
 			    </div>
 			</div>
-			 <div class="col s4">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" readonly>
+				<label for="encAncPatientId">Surveillance ID *</label>
+			    </div>
+			</div>
+			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age">
 				<label for="age" class="">Age *</label>
@@ -425,7 +432,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	</div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <div class="col l12 m12 s12">
+        <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
 		   <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
@@ -840,11 +847,10 @@ if(!isset($countryId) || trim($countryId)== ''){
     function addDataReporting(){
 	if($("#surveillanceId").val()!=''){
 	    if($("#ancSite").val()==''){
-	    alert("Please choose ANC site name");
-	    $("#ancSite").css("background-color","#ffff99");
-	    return false;
-	    }
-	    if($("#lab").val()==''){
+		alert("Please choose ANC site name");
+		$("#ancSite").css("background-color","#ffff99");
+		return false;
+	    }if($("#lab").val()==''){
 		alert("Please select lab site code/name");
 		$("#lab").css("background-color","#ffff99");
 		return false;
@@ -874,4 +880,29 @@ if(!isset($countryId) || trim($countryId)== ''){
             });
         }
     }
+    
+    $("a.formHide").click(function(){
+	$("#addDataReportingForm").toggle();
+	if ($.trim($(this).text()) === 'Hide this form') {
+           $(this).text('Show this form');
+	   $('.formContainer').css('margin-bottom','0px');
+	} else {
+	   $(this).text('Hide this form');
+	   $('.formContainer').css('margin-bottom','20px');
+	}
+      return false;
+    });
+    
+    $('#ancPatientId').on('change',function(){
+	if(this.value == ''){
+	   $('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
+	   $('#encAncPatientId').val('');
+	}else{
+	   $('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
+	   $.post("<?php echo $this->url('rot47'); ?>", {pId: this.value},
+	    function(data) {
+		$('#encAncPatientId').val(data);
+	    });
+	}
+    });
 </script>

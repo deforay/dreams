@@ -410,6 +410,15 @@ return array(
                         'action' => 'check-duplicate-data-report'
                     ),
                 ),
+            ),'rot47' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/rot47',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'rot47'
+                    ),
+                ),
             )
             
         ),

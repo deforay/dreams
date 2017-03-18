@@ -183,6 +183,12 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+                            <input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
+                            <label for="encAncPatientId">Surveillance ID *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
                             <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
                             <label for="age" class="">Age *</label>
                         </div>
@@ -282,6 +288,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
             <div class="col s12" style="margin-top:20px;">
                 <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <input type="hidden" name="chosenCountry" value="<?php echo $row->country; ?>"/>
+                <input type="hidden" name="prevStatus" value="<?php echo $row->status; ?>"/>
                 <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
@@ -472,4 +479,17 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
             });
         }
     }
+    
+    $('#ancPatientId').on('change',function(){
+	if(this.value == ''){
+	   $('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
+	   $('#encAncPatientId').val('');
+	}else{
+	   $('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
+	   $.post("<?php echo $this->url('rot47'); ?>", {pId: this.value},
+	    function(data) {
+		$('#encAncPatientId').val(data);
+	    });
+	}
+    });
 </script>
