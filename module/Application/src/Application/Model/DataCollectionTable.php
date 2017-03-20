@@ -304,7 +304,22 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
 		$asanteRapidRecencyAssay = 'Positive/Recent';
 	    }
-	    
+	    $unlockedInfo = '';
+	    if(isset($aRow['unlocked_on']) && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= NULL && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
+		$unlockedDate = explode(" ",$aRow['unlocked_on']);
+		$userQuery = $sql->select()->from(array('u' => 'user'))
+		                           ->columns(array('user_id','full_name'))
+				           ->where(array('u.user_id'=>$aRow['unlocked_by']));
+	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
+	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		$unlockedBy = 'System';
+		if(isset($userResult->user_id) && $loginContainer->userId == $userResult->user_id){
+		    $unlockedBy = 'You';
+		}else if(isset($userResult->user_id)){
+		    $unlockedBy = ucwords($userResult->full_name);
+		}
+	      $unlockedInfo = '<i class="zmdi zmdi-lock-open" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size: 1.3rem;"></i>';
+	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    $row[] = $aRow['surveillance_id'];
 	    $row[] = $specimenCollectedDate;
@@ -358,7 +373,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 	    }
 	    if($loginContainer->hasViewOnlyAccess =='no'){
-	       $row[] = $dataView.'&nbsp;&nbsp;'.$lockView;
+	       $row[] = $dataView.'&nbsp;&nbsp;'.$lockView.'&nbsp;'.$unlockedInfo;
 	    }
 	    $output['aaData'][] = $row;
 	}
