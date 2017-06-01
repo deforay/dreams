@@ -701,22 +701,26 @@ if(!isset($countryId) || trim($countryId)== ''){
     });
     
     $('#hivRnaNew').on('keyup', function() {
+	 $('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
         if($.trim($('#hivRnaNew').val())!= ''){
 	   $('label[for="hivRna"]').css("transform", "translateY(-140%)");  
 	   $('#hivRna').val($('#hivRnaNew').val());
 	}else{
 	   $('label[for="hivRna"]').css("transform", "translateY(0%)");  
+	   $('label[for="hivRnaNew"]').css("transform", "translateY(0%)");  
 	   $('#hivRna').val('');
 	}
 	populateResult('');
     });
     
     $('#hivRna').on('keyup', function() {
+	$('label[for="hivRna"]').css("transform", "translateY(-140%)"); 
         if($.trim($('#hivRna').val())!= ''){
 	   $('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
 	   $('#hivRnaNew').val($('#hivRna').val());
 	}else{
 	   $('label[for="hivRnaNew"]').css("transform", "translateY(0%)");
+	   $('label[for="hivRna"]').css("transform", "translateY(0%)");
 	   $('#hivRnaNew').val('');
 	}
 	populateResult('');
@@ -818,7 +822,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }
 	}
 	//mandatory check for lt
-	if(fromSource == 'lt' && isHivRnaMandatory == false){
+	if((fromSource == 'lt' || fromSource == 'n') && isHivRnaMandatory == false){
 	    $('#hivRna,#hivRnaNew').removeClass('isRequired');
 	    $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
@@ -853,6 +857,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('#box-2,#box-breaker').css('visibility','hidden');
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
+	    populateResult('n');
 	}
     });
     
