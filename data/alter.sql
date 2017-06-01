@@ -1,6 +1,10 @@
 --Pal 14/11/2016
 CREATE TABLE `employee` (
-  `employee_id` int(11) NOT NULL,
+  `
+
+employee
+
+_id` int(11) NOT NULL,
   `employee_name` varchar(255) DEFAULT NULL,
   `employee_code` varchar(45) NOT NULL,
   `password` varchar(500) DEFAULT NULL,
@@ -427,3 +431,4 @@ ALTER TABLE `login_tracker`
 ALTER TABLE `data_collection` ADD `updated_on` DATETIME NULL DEFAULT NULL AFTER `added_by`, ADD `updated_by` INT(11) NULL DEFAULT NULL AFTER `updated_on`, ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`;
 
 ALTER TABLE `data_collection_event_log` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`;
+

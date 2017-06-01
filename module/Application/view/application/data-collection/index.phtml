@@ -316,21 +316,29 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<input id="asanteRapidRecencyAssayP" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
 				<label for="asanteRapidRecencyAssayP">Positive </label><br>
 				<input id="asanteRapidRecencyAssayN" class="with-gap" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
-				<label for="asanteRapidRecencyAssayN">Negative </label>
+				<label for="asanteRapidRecencyAssayN">Negative </label><br>
+				<input type="text" class="checkNum" id="readerValue1" name="readerValue1" placeholder="Reader Value"/>
 			      </div>
 			      <div id="box-breaker">&rArr;</div>
 			      <div id="box-2">
 				<input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="r"/>
 			        <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label><br>
 			        <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt" type="radio" value="lt"/>
-			        <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label>
+			        <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
+				<input type="text" class="checkNum" id="readerValue2" name="readerValue2" placeholder="Reader Value"/>
 			      </div>
 			    </div>
 			</div>
-			<div class="col s7">
+			<div class="col s4">
 			    <div class="input-field col m12 s12">
 				<textarea id="comments" name="comments" class="materialize-textarea"></textarea>
 				<label for="comments">Comments</label>
+			    </div>
+			</div>
+			<div class="col s3">
+			    <div class="input-field col m12 s12">
+				<input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum isRequired" title="Please enter HIV RNA">
+				<label for="hivRnaNew">HIV RNA (copies/ml) *</label>
 			    </div>
 			</div>
 		    </div>
@@ -614,7 +622,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		lastDacId = parseInt(lastDacId)+parseInt(1);
 		var surveillanceID = lastCCode+'00'+lastDacId;
 	    }else{
-	       var surveillanceID = lastCCode+'001';
+	        var surveillanceID = lastCCode+'001';
 	    }
 	  $('#surveillanceId').val(surveillanceID);
        <?php } ?>
@@ -692,11 +700,39 @@ if(!isset($countryId) || trim($countryId)== ''){
         });
     });
     
+    $('#hivRnaNew').on('keyup', function() {
+        if($.trim($('#hivRnaNew').val())!= ''){
+	   $('label[for="hivRna"]').css("transform", "translateY(-140%)");  
+	   $('#hivRna').val($('#hivRnaNew').val());
+	}else{
+	   $('label[for="hivRna"]').css("transform", "translateY(0%)");  
+	   $('#hivRna').val('');
+	}
+	populateResult('');
+    });
+    
+    $('#hivRna').on('keyup', function() {
+        if($.trim($('#hivRna').val())!= ''){
+	   $('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
+	   $('#hivRnaNew').val($('#hivRna').val());
+	}else{
+	   $('label[for="hivRnaNew"]').css("transform", "translateY(0%)");
+	   $('#hivRnaNew').val('');
+	}
+	populateResult('');
+    });
+    
     //For Pre-populate Result
-    $('#finalLagAvidityOdn,#hivRna').on('keyup', function() {
+    $('#finalLagAvidityOdn').on('keyup', function() {
+	populateResult('');
+    });
+    
+    function populateResult(fromSource){
+	isHivRnaMandatory = true;
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
-	    $('#hivRna').addClass('isRequired');
+	    $('#hivRna,#hivRnaNew').addClass('isRequired');
 	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 	    $('.prePopulateAvidity').css('visibility','hidden');
 	    $('.prePopulateHIVRNA').css('visibility','hidden');
 	    $('.prePopulateRecentInfection').css('visibility','hidden');
@@ -710,31 +746,35 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('label[for="hivRnaGT1000"]').html('');
 	    $('label[for="recentInfection"]').html('');
 	}else{
-	    if(parseFloat($('#finalLagAvidityOdn').val()) >1.5){
-		$('#hivRna').removeClass('isRequired');
+	    if(parseFloat($('#finalLagAvidityOdn').val()) >2){
+		$('#hivRna,#hivRnaNew').removeClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 1.5)');
+	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
-	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 1.5){
-		$('#hivRna').addClass('isRequired');
+		isHivRnaMandatory = false;
+	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
+		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-		if(parseInt($('#hivRna').val()) <= 1000){
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+		if(parseInt($('#hivRna').val()) < 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn < 1.5 and HIV RNA <= 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn <= 2.0 and HIV RNA < 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
-		}else if(parseInt($('#hivRna').val()) > 1000){
+		}else if(parseInt($('#hivRna').val()) >= 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5 and HIV RNA > 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0 and HIV RNA >= 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn < 1.5)');
+		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
-		$('#hivRna').addClass('isRequired');
+		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 		$('.prePopulateAvidity').css('visibility','hidden');
 		$('label[for="lagAvidityResult"]').html('');
 		$('#lagAvidityResultRecent').prop('checked',false);
@@ -765,9 +805,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('#recentInfectionNo').prop('checked',true);
 	    }
 	    //Showing result section
-	    if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 1.5){
+	    if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 2){
 	       $('.prePopulateRecentInfection').css('visibility','visible');
-	    }else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 1.5){
+	    }else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 2){
 	       if($('#hivRna').val() == ''){
 		  $('.prePopulateRecentInfection').css('visibility','hidden');
 	       }else{
@@ -776,6 +816,22 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }else{
 	       $('.prePopulateRecentInfection').css('visibility','hidden');
 	    }
+	}
+	//mandatory check for lt
+	if(fromSource == 'lt' && isHivRnaMandatory == false){
+	    $('#hivRna,#hivRnaNew').removeClass('isRequired');
+	    $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
+	}
+    }
+    
+    $('input:radio[name=asanteRapidRecencyAssayRlt]').change(function () {
+	if ($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'r') {
+	    $('#hivRna,#hivRnaNew').addClass('isRequired');
+	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+	}else if($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'lt') {
+	    populateResult('lt');
 	}
     });
     
