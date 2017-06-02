@@ -208,8 +208,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum <?php echo($row->final_lag_avidity_odn > 2 || $asanteRapidRecencyAssayRlt == 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 || $asanteRapidRecencyAssayRlt == 'r')?'':'*'; ?></label>
+                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt != 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt != 'r')?'':'*'; ?></label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -271,8 +271,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
 		    <div class="col s3">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum <?php echo($row->final_lag_avidity_odn > 2 || $asanteRapidRecencyAssayRlt == 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 || $asanteRapidRecencyAssayRlt == 'r')?'':'*'; ?></label>
+                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt != 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt != 'r')?'':'*'; ?></label>
                         </div>
 		    </div>
                     <div class="col s4">
@@ -374,13 +374,19 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >2){
-		$('#hivRna,#hivRnaNew').removeClass('isRequired');
-		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
-		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
+		if($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'r'){
+		   $('#hivRna,#hivRnaNew').addClass('isRequired');
+		   $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+		   $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *'); 
+		}else{
+		   $('#hivRna,#hivRnaNew').removeClass('isRequired');
+		   $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+		   $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
+		   isHivRnaMandatory = false;
+		}
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
-		isHivRnaMandatory = false;
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
 		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
