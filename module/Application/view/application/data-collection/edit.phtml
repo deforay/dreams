@@ -14,6 +14,10 @@ $specimenPickedUpDateAtAnc = '';
 if(isset($row->specimen_picked_up_date_at_anc) && trim($row->specimen_picked_up_date_at_anc)!= '' && $row->specimen_picked_up_date_at_anc!= '0000-00-00'){
     $specimenPickedUpDateAtAnc = $common->viewDateFormat($row->specimen_picked_up_date_at_anc);
 }
+$patientDOB = '';
+if(isset($row->patient_dob) && trim($row->patient_dob)!= '' && $row->patient_dob!= '0000-00-00'){
+    $patientDOB = $common->viewDateFormat($row->patient_dob);
+}
 $receiptDateAtCentralLab = '';
 if(isset($row->receipt_date_at_central_lab) && trim($row->receipt_date_at_central_lab)!= '' && $row->receipt_date_at_central_lab!= '0000-00-00'){
     $receiptDateAtCentralLab = $common->viewDateFormat($row->receipt_date_at_central_lab);
@@ -80,9 +84,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION</legend>
+               <legend>SURVEILLANCE INFORMATION(<span id="surveillanceTitleId"><?php echo $row->surveillance_id; ?></span>)</legend>
                 <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
+                    <div class="col s4" style="display:none;">
                         <div class="input-field col m12 s12">
                             <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." value="<?php echo $row->surveillance_id; ?>" style="pointer-events:none;">
                             <label for="surveillanceId" class="">Serial No *</label>
@@ -91,7 +95,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date" value="<?php echo $specimenCollectedDate; ?>">
-                            <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+                            <label for="specimenCollectedDate" class="">Date Specimen Collected </label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -107,15 +111,51 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="ancSite">ANC site name *</label>
                         </div>
                     </div>
-                </div>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0;">
+					<div class="col s4">
+                        <div class="input-field col m12 s12">
                             <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc" value="<?php echo $specimenPickedUpDateAtAnc; ?>">
-                            <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+                            <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
                         </div>
                     </div>
                 </div>
+                
+            </fieldset>
+			<fieldset style="border-color:#ff9800;border-style: solid;">
+                <legend>PATIENT INFORMATION</legend>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
+                            <label for="ancPatientId" class="">ANC Patient ID * </label>
+                        </div>
+                    </div>
+					<div class="col s4">
+						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+						<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
+						<label for="artPatientId" class="">ART Number </label>
+						</div>
+					</div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+                            <input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
+                            <label for="encAncPatientId">Study ID *</label>
+                        </div>
+                    </div>
+                </div>
+				<div class="row" style="margin-bottom:0;">
+					<div class="col s4">
+						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+						<input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getDateOfBirth()">
+						<label for="dob" class="">DOB *</label>
+						</div>
+					</div>
+					<div class="col s4">
+                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+                            <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
+                            <label for="age" class="">Age *</label>
+                        </div>
+                    </div>
+				</div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
                <legend>LABORATORY INFORMATION</legend>
@@ -146,7 +186,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                                 <?php
                                 foreach($rejectionReasons as $rejection){
                                 ?>
-                                  <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']; ?></option>
+                                  <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
                                 <?php } ?>
                             </select>
                             <label for="rejectionReason">Specimen Rejection Code </label>
@@ -173,30 +213,21 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                         </div>
                     </div>
                </div>
+			   <div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+					<div class="input-field col m12 s12">
+					<select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
+						<option value=""> -- Select -- </option>
+						<option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
+						<option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
+						<option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
+					</select>
+					<label for="specimenType">Specimen Type </label>
+					</div>
+			    </div>
+			</div>
             </fieldset>
-            <fieldset style="border-color:#ff9800;border-style: solid;">
-                <legend>PATIENT INFORMATION</legend>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
-                            <label for="ancPatientId" class="">ANC Patient ID * </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
-                            <label for="encAncPatientId">Surveillance ID *</label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
-                            <label for="age" class="">Age *</label>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+            
             <fieldset style="border-color:#F44336;border-style: solid;">
                 <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
@@ -563,4 +594,41 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    });
 	}
     });
+	function getDateOfBirth(){
+      var today = new Date();
+      var dob = $("#dob").val();
+      if($.trim(dob) == ""){
+        $("#age").val("");
+        return false;
+      }
+      
+      var dd = today.getDate();
+      var mm = today.getMonth();
+      var yyyy = today.getFullYear();
+      if(dd<10) {
+        dd='0'+dd
+      }
+      if(mm<10) {
+       mm='0'+mm
+      }
+      
+      splitDob = dob.split("/");
+      var dobDate = new Date(splitDob[1] + splitDob[2]+", "+splitDob[0]);
+      var monthDigit = dobDate.getMonth();
+      var dobYear = splitDob[2];
+      var dobMonth = isNaN(monthDigit) ? 0 : (monthDigit);
+      dobMonth = (dobMonth<10) ? '0'+dobMonth: dobMonth;
+      var dobDate = (splitDob[0]<10) ? '0'+splitDob[0]: splitDob[0];
+      
+      var date1 = new Date(yyyy,mm,dd);
+      var date2 = new Date(dobYear,dobMonth,dobDate);
+      var diff = new Date(date1.getTime() - date2.getTime());
+      if((diff.getUTCFullYear() - 1970) == 0){
+        $("#age").val(diff.getUTCMonth()); // Gives month count of difference
+		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+      }else{
+		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+        $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
+      }
+  }
 </script>

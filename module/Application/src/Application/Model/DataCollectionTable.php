@@ -46,6 +46,10 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
+			$patientDOB = NULL;
+            if(isset($params['dob']) && trim($params['dob'])!= ''){
+                $patientDOB = $common->dateFormat($params['dob']);
+            }
 	     
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
@@ -74,7 +78,11 @@ class DataCollectionTable extends AbstractTableGateway {
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
                         'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
+                        'art_patient_id'=>$params['artPatientId'],
                         'age'=>$params['age'],
+                        'gestational_age'=>$params['gestationalAge'],
+                        'patient_dob'=>$patientDOB,
+						'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
                         'lab_specimen_id'=>$params['labSpecimenId'],
@@ -423,6 +431,10 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
+            $patientDOB = NULL;
+            if(isset($params['dob']) && trim($params['dob'])!= ''){
+                $patientDOB = $common->dateFormat($params['dob']);
+            }
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -443,7 +455,11 @@ class DataCollectionTable extends AbstractTableGateway {
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
 			'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
+			'art_patient_id'=>$params['artPatientId'],
                         'age'=>$params['age'],
+						'gestational_age'=>$params['gestationalAge'],
+                        'patient_dob'=>$patientDOB,
+                        'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
                         'lab_specimen_id'=>$params['labSpecimenId'],

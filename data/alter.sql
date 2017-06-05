@@ -432,3 +432,15 @@ ALTER TABLE `data_collection` ADD `updated_on` DATETIME NULL DEFAULT NULL AFTER 
 
 ALTER TABLE `data_collection_event_log` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`;
 
+
+--saravanna 05-jun-2017
+ALTER TABLE  `data_collection` ADD  `patient_dob` DATE NULL DEFAULT NULL AFTER  `age` ;
+ALTER TABLE  `data_collection` ADD  `art_patient_id` VARCHAR( 255 ) NULL DEFAULT NULL AFTER  `enc_anc_patient_id` ;
+
+ALTER TABLE  `data_collection` ADD  `gestational_age` INT NULL DEFAULT NULL AFTER  `patient_dob` ;
+ALTER TABLE  `data_collection` ADD  `specimen_type` VARCHAR( 45 ) NULL DEFAULT NULL AFTER  `rejection_reason` ;
+
+ALTER TABLE  `data_collection_event_log` ADD  `patient_dob` DATE NULL DEFAULT NULL AFTER  `age` ;
+ALTER TABLE  `data_collection_event_log` ADD  `art_patient_id` VARCHAR( 255 ) NULL DEFAULT NULL AFTER  `enc_anc_patient_id` ;
+ALTER TABLE  `data_collection_event_log` ADD  `gestational_age` INT NULL DEFAULT NULL AFTER  `patient_dob` ;
+ALTER TABLE  `data_collection_event_log` ADD  `specimen_type` VARCHAR( 45 ) NULL DEFAULT NULL AFTER  `rejection_reason` ;

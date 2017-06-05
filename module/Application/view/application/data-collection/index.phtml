@@ -71,6 +71,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 	border:2px dotted #333;
 	margin-top:8px !important;
     }
+	@media (max-width: 460px) 
+	{
+		.hideDataTable
+		{
+			display: none;
+		}
+	}
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -87,7 +94,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
 	    <div class="card">
 		<fieldset style="border-color:#88C542;border-style:solid;">
-		   <legend>SURVEILLANCE INFORMATION</legend>
+		   <legend>SURVEILLANCE INFORMATION(<span id="surveillanceTitleId"></span>)</legend>
 			<?php
 			if(trim($countryId) ==''){
 			?>
@@ -105,7 +112,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				    <label for="country">Country *</label>
 				</div>
 			    </div>
-			    <div class="col s4">
+			    <div class="col s4" style="display:none;">
 				<div class="input-field col m12 s12">
 				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The serial no. that you entered already exist. Please enter different no.');" style="pointer-events:none;">
 				    <label for="surveillanceId" class="">Serial No *</label>
@@ -114,12 +121,10 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
 				    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
-				    <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+				    <label for="specimenCollectedDate" class="">Date specimen collected </label>
 				</div>
 			    </div>
-			</div>
-			<div class="row" style="margin-bottom:0;">
-			    <div class="col s4">
+				<div class="col s4">
 				<div class="input-field col m12 s12 ancSiteSection">
 				    <select id="ancSite" name="ancSite" class="material-select " title="Please select ANC site">
 					<option value=""> -- Select -- </option>
@@ -132,16 +137,19 @@ if(!isset($countryId) || trim($countryId)== ''){
 				    <label for="ancSite">ANC site name *</label>
 				</div>
 			    </div>
+			</div>
+			<div class="row" style="margin-bottom:0;">
+			    
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
 				    <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
-				    <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+				    <label for="specimenPickedUpDateAtAnc" class="">Date specimen picked up at ANC </label>
 				</div>
 			    </div>
 			</div>
 		    <?php } else { ?>
 			<div class="row" style="margin-bottom:0;">
-			    <div class="col s4">
+			    <div class="col s4" style="display:none;">
 				<div class="input-field col m12 s12">
 				    <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." onblur="checkNameValidation('data_collection', 'surveillance_id', this, null,'The serial no. that you entered already exist. Please enter different no.');" style="pointer-events:none;">
 				    <label for="surveillanceId" class="">Serial No *</label>
@@ -150,7 +158,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
 				    <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date">
-				    <label for="specimenCollectedDate" class="">Specimen Collected Date </label>
+				    <label for="specimenCollectedDate" class="">Date Specimen Collected </label>
 				</div>
 			    </div>
 			    <div class="col s4">
@@ -166,16 +174,59 @@ if(!isset($countryId) || trim($countryId)== ''){
 				    <label for="ancSite">ANC site name *</label>
 				</div>
 			    </div>
-			</div>
-			<div class="row" style="margin-bottom:0;">
-			    <div class="col s4">
-				<div class="input-field col m12 s12" style="margin-top:0;">
+				<div class="col s4">
+				<div class="input-field col m12 s12" >
 				    <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
-				    <label for="specimenPickedUpDateAtAnc" class="">Specimen Picked Up Date at ANC </label>
+				    <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
 				</div>
 			    </div>
 			</div>
+			
 		    <?php } ?>
+		</fieldset>
+		<fieldset style="border-color:#ff9800;border-style: solid;"> 
+		   <legend>PATIENT INFORMATION</legend>
+		   <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
+				<label for="ancPatientId" class="">ANC Patient ID * </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number">
+				<label for="artPatientId" class="">ART Number </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="encAncPatientId" name="encAncPatientId" type="text" title="Study Id" readonly>
+				<label for="encAncPatientId">Study ID *</label>
+			    </div>
+			</div>
+			
+		    </div>
+		   <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" onchange="getDateOfBirth()">
+				<label for="dob" class="">DOB *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="age" name="age" type="text" class="validate isRequired" title="Please enter patient age">
+				<label for="age" class="">Age *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="gestationalAge" name="gestationalAge" type="text" class="validate" title="Please enter gestational age">
+				<label for="gestationalAge" class="">Gestational Age </label>
+			    </div>
+			</div>
+		   </div>
 		</fieldset>
 		<fieldset style="border-color:#2196F3 ;border-style: solid;">
 		   <legend>LABORATORY INFORMATION</legend>
@@ -201,12 +252,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-				<select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code">
+				<select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" style=''>
 				    <option value=""> -- Select -- </option>
 				    <?php
 				    foreach($rejectionReasons as $rejection){
 				    ?>
-				      <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>"><?php echo $rejection['rejection_code']; ?></option>
+				      <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>"><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
 				    <?php } ?>
 				</select>
 				<label for="rejectionReason">Specimen Rejection Code </label>
@@ -233,30 +284,22 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			</div>
 		    </div>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+					<div class="input-field col m12 s12">
+					<select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
+						<option value=""> -- Select -- </option>
+						<option value="1">Venous</option>
+						<option value="2">Plasma</option>
+						<option value="3">DBS</option>
+					</select>
+					<label for="specimenType">Specimen Type </label>
+					</div>
+			    </div>
+			</div>
+			</div>
 		</fieldset>
-		<fieldset style="border-color:#ff9800;border-style: solid;"> 
-		   <legend>PATIENT INFORMATION</legend>
-		   <div class="row" style="margin-bottom:0;">
-			<div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
-				<label for="ancPatientId" class="">ANC Patient ID * </label>
-			    </div>
-			</div>
-			<div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" readonly>
-				<label for="encAncPatientId">Surveillance ID *</label>
-			    </div>
-			</div>
-			<div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age">
-				<label for="age" class="">Age *</label>
-			    </div>
-			</div>
-		    </div>
-		</fieldset>
+		
 		<fieldset style="border-color:#F44336;border-style: solid;">
 		   <legend>TEST RESULT</legend>
 		    <div class="row" style="margin-bottom:0;">
@@ -441,7 +484,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    <?php } ?>
 	</div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row dashboard-wrapper content-container hideDataTable">
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
@@ -625,6 +668,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	        var surveillanceID = lastCCode+'001';
 	    }
 	  $('#surveillanceId').val(surveillanceID);
+	  $('#surveillanceTitleId').html(surveillanceID);
        <?php } ?>
     });
     
@@ -638,6 +682,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	   var surveillanceID = lastCCode+'001';
 	}
       $('#surveillanceId').val(surveillanceID);
+      $('#surveillanceTitleId').html(surveillanceID);
       $('label[for="surveillanceId"]').css("transform", "translateY(-140%)");
     }
     
@@ -974,4 +1019,42 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    });
 	}
     });
+	//get age
+	function getDateOfBirth(){
+      var today = new Date();
+      var dob = $("#dob").val();
+      if($.trim(dob) == ""){
+        $("#age").val("");
+        return false;
+      }
+      
+      var dd = today.getDate();
+      var mm = today.getMonth();
+      var yyyy = today.getFullYear();
+      if(dd<10) {
+        dd='0'+dd
+      }
+      if(mm<10) {
+       mm='0'+mm
+      }
+      
+      splitDob = dob.split("/");
+      var dobDate = new Date(splitDob[1] + splitDob[2]+", "+splitDob[0]);
+      var monthDigit = dobDate.getMonth();
+      var dobYear = splitDob[2];
+      var dobMonth = isNaN(monthDigit) ? 0 : (monthDigit);
+      dobMonth = (dobMonth<10) ? '0'+dobMonth: dobMonth;
+      var dobDate = (splitDob[0]<10) ? '0'+splitDob[0]: splitDob[0];
+      
+      var date1 = new Date(yyyy,mm,dd);
+      var date2 = new Date(dobYear,dobMonth,dobDate);
+      var diff = new Date(date1.getTime() - date2.getTime());
+      if((diff.getUTCFullYear() - 1970) == 0){
+        $("#age").val(diff.getUTCMonth()); // Gives month count of difference
+		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+      }else{
+		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+        $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
+      }
+  }
 </script>
