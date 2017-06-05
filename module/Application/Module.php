@@ -14,6 +14,7 @@ use Application\Service\CountryService;
 use Application\Service\FacilityTypeService;
 use Application\Service\AncSiteService;
 use Application\Service\DataCollectionService;
+use Application\Service\RiskAssessmentService;
 
 use Application\Model\RoleTable;
 use Application\Model\UserTable;
@@ -32,6 +33,8 @@ use Application\Model\AncFormTable;
 use Application\Model\ClinicDataCollectionTable;
 use Application\Model\UserLaboratoryMapTable;
 use Application\Model\LoginTrackerTable;
+use Application\Model\OccupationTypeTable;
+use Application\Model\ClinicRiskAssessmentTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -111,6 +114,8 @@ class Module{
                     return new AncSiteService($sm);
                 },'DataCollectionService' => function($sm) {
                     return new DataCollectionService($sm);
+                },'RiskAssessmentService' => function($sm) {
+                    return new RiskAssessmentService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -184,6 +189,14 @@ class Module{
                 },'LoginTrackerTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new LoginTrackerTable($dbAdapter);
+                    return $table;
+                },'OccupationTypeTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new OccupationTypeTable($dbAdapter);
+                    return $table;
+                },'ClinicRiskAssessmentTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new ClinicRiskAssessmentTable($dbAdapter);
                     return $table;
                 }
             ),

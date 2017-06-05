@@ -22,6 +22,13 @@ class DataCollectionTable extends AbstractTableGateway {
         $lastInsertedId = 0;
         if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
             $common = new CommonService();
+	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
+		$country = base64_decode($params['chosenCountry']);
+	    }else if(isset($params['country']) && trim($params['country'])!=''){
+		$country = base64_decode($params['country']);
+	    }else{
+		return $lastInsertedId;
+	    }
             $specimenCollectedDate = NULL;
             if(isset($params['specimenCollectedDate']) && trim($params['specimenCollectedDate'])!= ''){
                 $specimenCollectedDate = $common->dateFormat($params['specimenCollectedDate']);
@@ -61,13 +68,6 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
-	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
-		$country = base64_decode($params['chosenCountry']);
-	    }else if(isset($params['country']) && trim($params['country'])!=''){
-		$country = base64_decode($params['country']);
-	    }else{
-		return $lastInsertedId;
-	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
@@ -390,7 +390,7 @@ class DataCollectionTable extends AbstractTableGateway {
                                    ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
                                    ->where(array('da_c.data_collection_id'=>$dataCollectionId));
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-	return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
     public function updateDataCollectionDetails($params){

@@ -1,0 +1,720 @@
+<?php
+use Application\Service\CommonService;
+$common = new CommonService();
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
+    $link = "/clinic/risk-assessment";
+}else{
+    $link = "/clinic/risk-assessment/".base64_encode($countryId);
+}
+$interviewDate = '';
+if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+    $interviewDate = $common->viewDateFormat($row->interview_date);
+}
+?>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    pre {
+        max-height: 596px;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Risk Assessment</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="/" class="breadcrumb">Home</a>
+            <a href="/clinic/risk-assessment/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Risk Assessment</a>
+       </div>
+    </div>
+    <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+        <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment',array('action'=>'edit')); ?>">
+        <div class="card">
+            <h6 style="text-align:center;padding:12px 0px 6px 0px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <fieldset style="border-color:#2196F3;border-style:solid;">
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select id="lab" name="lab" class="material-select isRequired" title="Please select facility">
+                                <option value=""> -- Select -- </option>
+                                <?php
+                                foreach($facilities as $facility){
+                                ?>
+                                  <option value="<?php echo base64_encode($facility['facility_id']); ?>" <?php echo ($row->lab == $facility['facility_id'])?'selected="selected"':''; ?>><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
+                                <?php } ?>
+                            </select>
+                            <label for="ancSite">Name of Facility *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter study ID" value="<?php echo $row->enc_anc_patient_id; ?>">
+                            <label for="surveillanceId" class="">Study ID *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="interviewerName" name="interviewerName" type="text" class="validate isRequired" title="Please enter interviewer name" value="<?php echo $row->interviewer_name; ?>">
+                            <label for="interviewerName" class="">Interviewer Name *</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter patient ID" value="<?php echo $row->anc_patient_id; ?>">
+                            <label for="ancPatientId" class="">Patient ID *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="interviewDate" name="interviewDate" type="text" class="validate isRequired datepicker" title="Please enter interview date" value="<?php echo $interviewDate; ?>">
+                            <label for="interviewDate" class="">Interview Date *</label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <h6 style="padding:10px 0px 10px 6px;"><strong>Demographic Characteristics</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    1. What kind of work/occupation do you do most of the time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="occupation" name="occupation" class="material-select" title="Please select kind of work/occupation do you do most of the time">
+                        <option value=""> -- Select -- </option>
+                        <?php
+			foreach($occupationTypes as $occupation){
+			?>
+                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']); ?></option>
+			<?php } ?>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+		<div class="col s4 occupationNew" style="display:none;">
+		    <input id="occupationNew" name="occupationNew" type="text" class="validate" placeholder="Occupation" title="Please enter occupation" onblur="checkNameValidation('occupation_type', 'occupation', this, null,'The occupation that you entered already listed. Please enter different occupation');">
+		</div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    2. What was the highest level of school that you completed or are attending now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="degree" name="degree" class="material-select" title="Please select the highest level of school that you completed or are attending now">
+                        <option value=""> -- Select -- </option>
+                        <option value="noedu" <?php echo ($row->degree == 'noedu')?'selected="selected"':''; ?>>No Education</option>
+                        <option value="primary" <?php echo ($row->degree == 'primary')?'selected="selected"':''; ?>>Primary/Post-Primary/Vocational</option>
+                        <option value="secondary" <?php echo ($row->degree == 'secondary')?'selected="selected"':''; ?>>Secondary/Post-Secondary</option>
+                        <option value="university" <?php echo ($row->degree == 'university')?'selected="selected"':''; ?>>University/College</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    3. Have you ever been married or lived with a partner in a union as if married? (If no, go to question 7)
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <input id="areMarriedYes" class="with-gap" name="areMarried" value="yes" type="radio" <?php echo ($row->are_married == 'yes')?'checked="checked"':''; ?>>
+		    <label for="areMarriedYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="areMarriedNo" class="with-gap" name="areMarried" value="no" type="radio" <?php echo ($row->are_married == 'no')?'checked="checked"':''; ?>>
+		    <label for="areMarriedNo" class="active">No </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    4. How old were you when you first got married or lived with a partner in a union?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s8">
+                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= '' && is_numeric($row->age_at_first_marriage))?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="dontknow" type="radio" <?php echo ($row->age_at_first_marriage == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="ageAtFirstMarriageDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="refused" type="radio" <?php echo ($row->age_at_first_marriage == 'refused')?'checked="checked"':''; ?>>
+		    <label for="ageAtFirstMarriageR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    5. Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <input id="haveEverBeenWidowedYes" class="with-gap" name="haveEverBeenWidowed" value="yes" type="radio" <?php echo ($row->have_ever_been_widowed == 'yes')?'checked="checked"':''; ?>>
+		    <label for="haveEverBeenWidowedYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="haveEverBeenWidowedNo" class="with-gap" name="haveEverBeenWidowed" value="no" type="radio" <?php echo ($row->have_ever_been_widowed == 'no')?'checked="checked"':''; ?>>
+		    <label for="haveEverBeenWidowedNo" class="active">No </label>&nbsp&nbsp
+                    <input id="haveEverBeenWidowedDK" class="with-gap" name="haveEverBeenWidowed" value="dontknow" type="radio" <?php echo ($row->have_ever_been_widowed == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="haveEverBeenWidowedDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="haveEverBeenWidowedR" class="with-gap" name="haveEverBeenWidowed" value="refused" type="radio" <?php echo ($row->have_ever_been_widowed == 'refused')?'checked="checked"':''; ?>>
+		    <label for="haveEverBeenWidowedR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    6. What is your marital status now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select" title="Please select your current marital status">
+                        <option value=""> -- Select -- </option>
+                        <option value="married" <?php echo ($row->current_marital_status == 'married')?'selected="selected"':''; ?>>Married/Cohabiting</option>
+                        <option value="nevermarried" <?php echo ($row->current_marital_status == 'nevermarried')?'selected="selected"':''; ?>>Never Married/Cohabiting</option>
+                        <option value="widowed" <?php echo ($row->current_marital_status == 'widowed')?'selected="selected"':''; ?>>widowed</option>
+                        <option value="separated" <?php echo ($row->current_marital_status == 'separated')?'selected="selected"':''; ?>>Separated</option>
+                        <option value="divorced" <?php echo ($row->current_marital_status == 'divorced')?'selected="selected"':''; ?>>Divorced</option>
+                        <option value="dontknow" <?php echo ($row->current_marital_status == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->current_marital_status == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <h6 style="padding:0px 0px 10px 6px;"><strong>HIV Testing History</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    7. When was the most recent time you were tested for HIV?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="timeOfLastHIVTest" name="timeOfLastHIVTest" class="material-select" title="Please select last HIV test time">
+                        <option value=""> -- Select -- </option>
+                        <option value="nevertested" <?php echo ($row->time_of_last_HIV_test == 'nevertested')?'selected="selected"':''; ?>>Never Tested</option>
+                        <option value="lt3months" <?php echo ($row->time_of_last_HIV_test == 'lt3months')?'selected="selected"':''; ?>>< 3 Months Ago</option>
+                        <option value="3to6months" <?php echo ($row->time_of_last_HIV_test == '3to6months')?'selected="selected"':''; ?>>3-6 Months Ago</option>
+                        <option value="7to12months" <?php echo ($row->time_of_last_HIV_test == '7to12months')?'selected="selected"':''; ?>>7-12 Months Ago</option>
+                        <option value="gt12months" <?php echo ($row->time_of_last_HIV_test == 'gt12months')?'selected="selected"':''; ?>> > 12 months</option>
+                        <option value="dontknow" <?php echo ($row->time_of_last_HIV_test == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->time_of_last_HIV_test == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    8. What was the result of that HIV test?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="lastHIVTestStatus" name="lastHIVTestStatus" class="material-select" title="Please select last HIV test status">
+                        <option value=""> -- Select -- </option>
+                        <option value="didnotreceive" <?php echo ($row->last_HIV_test_status == 'didnotreceive')?'selected="selected"':''; ?>>I Did Not Receive Result</option>
+                        <option value="hivplus" <?php echo ($row->last_HIV_test_status == 'hivplus')?'selected="selected"':''; ?>>HIV+</option>
+                        <option value="hivminus" <?php echo ($row->last_HIV_test_status == 'hivminus')?'selected="selected"':''; ?>>HIV-</option>
+                        <option value="indeterminate" <?php echo ($row->last_HIV_test_status == 'indeterminate')?'selected="selected"':''; ?>>Indeterminate</option>
+                        <option value="dontknow" <?php echo ($row->last_HIV_test_status == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->last_HIV_test_status == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    9. What is your spouse/main sexual partner's HIV status?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="partnerHIVTestStatus" name="partnerHIVTestStatus" class="material-select" title="Please select your spouse/main sexual partner's HIV status">
+                        <option value=""> -- Select -- </option>
+                        <option value="hivplus" <?php echo ($row->partner_HIV_test_status == 'hivplus')?'selected="selected"':''; ?>>HIV+</option>
+                        <option value="hivminus" <?php echo ($row->partner_HIV_test_status == 'hivminus')?'selected="selected"':''; ?>>HIV-</option>
+                        <option value="idonotknow" <?php echo ($row->partner_HIV_test_status == 'idonotknow')?'selected="selected"':''; ?>>I Do Not Know</option>
+                        <option value="refused" <?php echo ($row->partner_HIV_test_status == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <h6 style="padding:0px 0px 10px 6px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    10. How old were you when you had sexual intercourse for the very first time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate checkNum" title="Please enter years" value="<?php echo $row->age_at_very_first_sex; ?>" style="width:20%;"> Years
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    11. The first time you had sex, was it because you wanted to or because you were forced to?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="reasonForVeryFirstSexWT" class="with-gap" name="reasonForVeryFirstSex" value="wantedto" type="radio" <?php echo ($row->reason_for_very_first_sex == 'wantedto')?'checked="checked"':''; ?>>
+		    <label for="reasonForVeryFirstSexWT" class="active">Wanted To </label>&nbsp&nbsp
+                    <input id="reasonForVeryFirstSexFT" class="with-gap" name="reasonForVeryFirstSex" value="forcedto" type="radio" <?php echo ($row->reason_for_very_first_sex == 'forcedto')?'checked="checked"':''; ?>>
+		    <label for="reasonForVeryFirstSexFT" class="active">Forced To </label>&nbsp&nbsp
+                    <input id="reasonForVeryFirstSexDK" class="with-gap" name="reasonForVeryFirstSex" value="dontknow" type="radio" <?php echo ($row->reason_for_very_first_sex == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="reasonForVeryFirstSexDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="reasonForVeryFirstSexR" class="with-gap" name="reasonForVeryFirstSex" value="refused" type="radio" <?php echo ($row->reason_for_very_first_sex == 'refused')?'checked="checked"':''; ?>>
+		    <label for="reasonForVeryFirstSexR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    12. How many different people have you had sexual intercourse with in your entire life?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= '' && is_numeric($row->no_of_sexual_partners))?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners == 'refused')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    13. How many different people have you had sex with in the last 6 months?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= '' && is_numeric($row->no_of_sexual_partners_in_last_six_months))?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersInLastSixMonthsR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    14. How old was your main sexual partner on his last birthday?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= '' && is_numeric($row->age_of_main_sexual_partner_at_last_birthday))?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'refused')?'checked="checked"':''; ?>>
+		    <label for="ageOfMainSexualPartnerAtLastBirthdayR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    15. Is the age of your main sexual partner older, younger, or the same age as you?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="ageDiffOfMainSexualPartner" name="ageDiffOfMainSexualPartner" class="material-select" title="Please select the age diff. of main sexual partner">
+                        <option value=""> -- Select -- </option>
+                        <option value="lt5yearolder" <?php echo ($row->age_diff_of_main_sexual_partner == 'lt5yearolder')?'selected="selected"':''; ?>> < 5 Years Older</option>
+                        <option value="5to10yearolder" <?php echo ($row->age_diff_of_main_sexual_partner == '5to10yearolder')?'selected="selected"':''; ?>> 5-10 Years Older</option>
+                        <option value="10yearsolder" <?php echo ($row->age_diff_of_main_sexual_partner == '10yearsolder')?'selected="selected"':''; ?>> >10 Years Older</option>
+                        <option value="sameage" <?php echo ($row->age_diff_of_main_sexual_partner == 'sameage')?'selected="selected"':''; ?>>Same Age</option>
+                        <option value="lt5yearyounger" <?php echo ($row->age_diff_of_main_sexual_partner == 'lt5yearyounger')?'selected="selected"':''; ?>> < 5 Years Younger</option>
+                        <option value="5to10yearyounger" <?php echo ($row->age_diff_of_main_sexual_partner == '5to10yearyounger')?'selected="selected"':''; ?>>5-10 Years Younger</option>
+                        <option value="gt10yearyounger" <?php echo ($row->age_diff_of_main_sexual_partner == 'gt10yearyounger')?'selected="selected"':''; ?>> >10 Years Younger</option>
+                        <option value="dontknow" <?php echo ($row->age_diff_of_main_sexual_partner == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->age_diff_of_main_sexual_partner == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    16. Is your main sexual partner circumcised?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="isPartnerCircumcisedYes" class="with-gap" name="isPartnerCircumcised" value="yes" type="radio" <?php echo ($row->is_partner_circumcised == 'yes')?'checked="checked"':''; ?>>
+		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="no" type="radio" <?php echo ($row->is_partner_circumcised == 'no')?'checked="checked"':''; ?>>
+		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp&nbsp
+                    <input id="isPartnerCircumcisedDK" class="with-gap" name="isPartnerCircumcised" value="dontknow" type="radio" <?php echo ($row->is_partner_circumcised == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="isPartnerCircumcisedR" class="with-gap" name="isPartnerCircumcised" value="refused" type="radio" <?php echo ($row->is_partner_circumcised == 'refused')?'checked="checked"':''; ?>>
+		    <label for="isPartnerCircumcisedR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    17. When did you last receive money/gifts in exchange for sex?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="lastTimeOfReceivingMoneyForSex" name="lastTimeOfReceivingMoneyForSex" class="material-select" title="Please select the last time of receiving money for sex">
+                        <option value=""> -- Select -- </option>
+                        <option value="never" <?php echo ($row->last_time_of_receiving_money_for_sex == 'never')?'selected="selected"':''; ?>> Never</option>
+                        <option value="lt6months" <?php echo ($row->last_time_of_receiving_money_for_sex == 'lt6months')?'selected="selected"':''; ?>> < 6 Months Ago</option>
+                        <option value="6to12months" <?php echo ($row->last_time_of_receiving_money_for_sex == '6to12months')?'selected="selected"':''; ?>> 6-12 Months Ago</option>
+                        <option value="gt12months" <?php echo ($row->last_time_of_receiving_money_for_sex == 'gt12months')?'selected="selected"':''; ?>> > 12 Months Ago</option>
+                        <option value="dontknow" <?php echo ($row->last_time_of_receiving_money_for_sex == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->last_time_of_receiving_money_for_sex == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    18. How many times have you been pregnant? (including this pregnancy)
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate checkNum" title="Please enter no. of times" value="<?php echo $row->no_of_times_been_pregnant; ?>" style="width:20%;"> Times
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    19. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="always" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'always')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyA" class="active">Always </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedBeforePregnancyS" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="sometimes" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'sometimes')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyS" class="active">Sometimes </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedBeforePregnancyN" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="never" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'never')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyN" class="active">Never </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedBeforePregnancyDK" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="dontknow" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedBeforePregnancyR" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="refused" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'refused')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    20. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="always" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'always')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyA" class="active">Always </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedAfterPregnancyS" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="sometimes" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'sometimes')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyS" class="active">Sometimes </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedAfterPregnancyN" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="never" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'never')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyN" class="active">Never </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedAfterPregnancyDK" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="dontknow" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="noOfTimesCondomUsedAfterPregnancyR" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="refused" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'refused')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    21. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="havePainInLowerAbdomenYes" class="with-gap" name="havePainInLowerAbdomen" value="yes" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'yes')?'checked="checked"':''; ?>>
+		    <label for="havePainInLowerAbdomenYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="havePainInLowerAbdomenNo" class="with-gap" name="havePainInLowerAbdomen" value="no" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'no')?'checked="checked"':''; ?>>
+		    <label for="havePainInLowerAbdomenNo" class="active">No </label>&nbsp&nbsp
+                    <input id="havePainInLowerAbdomenDK" class="with-gap" name="havePainInLowerAbdomen" value="dontknow" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="havePainInLowerAbdomenDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="havePainInLowerAbdomenR" class="with-gap" name="havePainInLowerAbdomen" value="refused" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'refused')?'checked="checked"':''; ?>>
+		    <label for="havePainInLowerAbdomenR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    22. If yes, were you treated for these symptoms?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="haveTreatedForLowerAbdomenPainYes" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="yes" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'yes')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForLowerAbdomenPainYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="haveTreatedForLowerAbdomenPainNo" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="no" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'no')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForLowerAbdomenPainNo" class="active">No </label>&nbsp&nbsp
+                    <input id="haveTreatedForLowerAbdomenPainDK" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="dontknow" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForLowerAbdomenPainDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="haveTreatedForLowerAbdomenPainR" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="refused" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'refused')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForLowerAbdomenPainR" class="active">Refused </label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    23. Have you ever been diagnosed or treated for syphilis?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="haveTreatedForSyphilisyes" class="with-gap" name="haveTreatedForSyphilis" value="yes" type="radio" <?php echo ($row->have_treated_for_syphilis == 'yes')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForSyphilisYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="haveTreatedForSyphilisNo" class="with-gap" name="haveTreatedForSyphilis" value="no" type="radio" <?php echo ($row->have_treated_for_syphilis == 'no')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForSyphilisNo" class="active">No </label>&nbsp&nbsp
+                    <input id="haveTreatedForSyphilisDK" class="with-gap" name="haveTreatedForSyphilis" value="dontknow" type="radio" <?php echo ($row->have_treated_for_syphilis == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForSyphilisDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="haveTreatedForSyphilisR" class="with-gap" name="haveTreatedForSyphilis" value="refused" type="radio" <?php echo ($row->have_treated_for_syphilis == 'refused')?'checked="checked"':''; ?>>
+		    <label for="haveTreatedForSyphilisR" class="active">Refused </label>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;"><strong>Alcohol and drug use</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    24. During the past 6 months, on how many days did you have at least one drink containing alcohol?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s8">
+                    <input id="noOfDaysHadDrinkInLastSixMonthsInDays" name="noOfDaysHadDrinkInLastSixMonthsInDays" type="text" class="validate checkNum" title="Please enter no. of days" value="<?php echo($row->no_of_days_had_drink_in_last_six_months!= '' && is_numeric($row->no_of_days_had_drink_in_last_six_months))?$row->no_of_days_had_drink_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
+                    <input id="noOfDaysHadDrinkInLastSixMonthsNot" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
+		    <label for="noOfDaysHadDrinkInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
+                    <input id="noOfDaysHadDrinkInLastSixMonthsDK" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="noOfDaysHadDrinkInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="noOfDaysHadDrinkInLastSixMonthsR" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="refusedtoanswer" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'refusedtoanswer')?'checked="checked"':''; ?>>
+		    <label for="noOfDaysHadDrinkInLastSixMonthsR" class="active">Refused To Answer</label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    25. How often do you have 4 or more drinks with alcohol on one occasion (e.g. within 2 hours)?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <select id="doHaveMoreDrinksOnOneOccasion" name="doHaveMoreDrinksOnOneOccasion" class="material-select" title="Please select atleast one option">
+                        <option value=""> -- Select -- </option>
+                        <option value="never" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'never')?'selected="selected"':''; ?>>Never</option>
+                        <option value="monthly" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'monthly')?'selected="selected"':''; ?>>Monthly</option>
+                        <option value="weekly" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'weekly')?'selected="selected"':''; ?>>Weekly</option>
+                        <option value="daily" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'daily')?'selected="selected"':''; ?>>Daily or On Most Days of The Week</option>
+                        <option value="dontknow" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    26. Have you ever tried recreational drugs?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <input id="haveTriedRecreationalDrugsYes" class="with-gap" name="haveTriedRecreationalDrugs" value="yes" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'yes')?'checked="checked"':''; ?>>
+		    <label for="haveTriedRecreationalDrugsYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="haveTriedRecreationalDrugsNo" class="with-gap" name="haveTriedRecreationalDrugs" value="no" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'no')?'checked="checked"':''; ?>>
+		    <label for="haveTriedRecreationalDrugsNo" class="active">No </label>&nbsp&nbsp
+                    <input id="haveTriedRecreationalDrugsDK" class="with-gap" name="haveTriedRecreationalDrugs" value="dontknow" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="haveTriedRecreationalDrugsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="haveTriedRecreationalDrugsR" class="with-gap" name="haveTriedRecreationalDrugs" value="refused" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'refused')?'checked="checked"':''; ?>>
+		    <label for="haveTriedRecreationalDrugsR" class="active">Refused</label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    27. In the last 6 months, have you taken any recreational drugs?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="hadRecreationalDrugsInLastSixMonthsYes" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="yes" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hadRecreationalDrugsInLastSixMonthsYes" class="active">Yes </label>&nbsp&nbsp
+                    <span class="recreationalDrugs" style="display:<?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'':'none'; ?>;">Specify Drug(s) <input id="recreationalDrugs" name="recreationalDrugs" type="text" class="validate <?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'isRequired':''; ?>" title="Please enter recreational drugs" value="<?php echo $row->recreational_drugs; ?>" style="width:30%;">&nbsp;</span>
+                    <input id="hadRecreationalDrugsInLastSixMonthsNo" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="no" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'no')?'checked="checked"':''; ?>>
+		    <label for="hadRecreationalDrugsInLastSixMonthsNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hadRecreationalDrugsInLastSixMonthsDK" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="refused" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>
+                </div>
+            </div>
+            <div class="col s12" style="margin-top:20px;">
+                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
+                <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+                <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
+                <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateRiskAssessment();">UPDATE</a>&nbsp;&nbsp;
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+       $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year
+            format: 'dd/mm/yyyy',
+	    max: new Date('Today')
+        });
+    });
+    
+    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+        checkValue = document.getElementById(obj.id).value;
+        if(checkValue!=''){
+            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+            function(data) {
+                if (data > 0){
+                    alert(msg);
+                    duplicateName = false;
+                    document.getElementById(obj.id).value = "";
+                }else {
+                    duplicateName = true;
+                }
+            });
+        }
+    }
+    
+    //occupation
+    $('#occupation').on('change',function(){
+	if(this.value == 'other'){
+	    $('.occupationNew').show();
+	    $('#occupationNew').addClass('isRequired');
+	    $('#occupationNew').focus();
+	}else{
+	   $('.occupationNew').hide();
+	   $('#occupationNew').removeClass('isRequired'); 
+	}
+    });
+    
+    //age at first marriage
+    $('#ageAtFirstMarriageInYears').on('change',function() {
+	setAgeAtFirstMarriage('txt');
+    });
+    $('input:radio[name=ageAtFirstMarriage]').change(function () {
+	setAgeAtFirstMarriage('rd');
+    });
+    function setAgeAtFirstMarriage(fromSource){
+	if(fromSource == 'txt'){
+	    if($('#ageAtFirstMarriageInYears').val()!= ''){
+		$('#ageAtFirstMarriageDK').prop('checked',false);
+		$('#ageAtFirstMarriageR').prop('checked',false);
+	    }
+	}else if(fromSource == 'rd'){
+	   $('#ageAtFirstMarriageInYears').val('');
+	}
+    }
+    
+    //no.of sexual partners
+    $('#noOfSexualPartnersInNumbers').on('change',function() {
+	setNoOfSexualPartners('txt');
+    });
+    $('input:radio[name=noOfSexualPartners]').change(function () {
+	setNoOfSexualPartners('rd');
+    });
+    function setNoOfSexualPartners(fromSource){
+	if(fromSource == 'txt'){
+	    if($('#noOfSexualPartnersInNumbers').val()!= ''){
+		$('#noOfSexualPartnersDK').prop('checked',false);
+		$('#noOfSexualPartnersR').prop('checked',false);
+	    }
+	}else if(fromSource == 'rd'){
+	   $('#noOfSexualPartnersInNumbers').val('');
+	}
+    }
+    
+    //no.of sexual partners in last six months
+    $('#noOfSexualPartnersInLastSixMonthsInNumbers').on('change',function() {
+	setNoOfSexualPartnersInLastSixMonths('txt');
+    });
+    $('input:radio[name=noOfSexualPartnersInLastSixMonths]').change(function () {
+	setNoOfSexualPartnersInLastSixMonths('rd');
+    });
+    function setNoOfSexualPartnersInLastSixMonths(fromSource){
+	if(fromSource == 'txt'){
+	    if($('#noOfSexualPartnersInLastSixMonthsInNumbers').val()!= ''){
+		$('#noOfSexualPartnersInLastSixMonthsDK').prop('checked',false);
+		$('#noOfSexualPartnersInLastSixMonthsR').prop('checked',false);
+	    }
+	}else if(fromSource == 'rd'){
+	   $('#noOfSexualPartnersInLastSixMonthsInNumbers').val('');
+	}
+    }
+    
+    //main sexual partner age at last birthday
+    $('#ageOfMainSexualPartnerAtLastBirthdayInYears').on('change',function() {
+	mainSexualPartnerAgeAtLastBirthday('txt');
+    });
+    $('input:radio[name=ageOfMainSexualPartnerAtLastBirthday]').change(function () {
+	mainSexualPartnerAgeAtLastBirthday('rd');
+    });
+    function mainSexualPartnerAgeAtLastBirthday(fromSource){
+	if(fromSource == 'txt'){
+	    if($('#ageOfMainSexualPartnerAtLastBirthdayInYears').val()!= ''){
+		$('#ageOfMainSexualPartnerAtLastBirthdayDK').prop('checked',false);
+		$('#ageOfMainSexualPartnerAtLastBirthdayR').prop('checked',false);
+	    }
+	}else if(fromSource == 'rd'){
+	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').val('');
+	}
+    }
+    
+    //no.of days had drinks in last six month
+    $('#noOfDaysHadDrinkInLastSixMonthsInDays').on('change',function() {
+        noOfDaysHadDrinkInLastSixMonth('txt');
+    });
+    $('input:radio[name=noOfDaysHadDrinkInLastSixMonths]').change(function () {
+	noOfDaysHadDrinkInLastSixMonth('rd');
+    });
+    function noOfDaysHadDrinkInLastSixMonth(fromSource){
+	if(fromSource == 'txt'){
+	    if($('#noOfDaysHadDrinkInLastSixMonthsInDays').val()!= ''){
+		$('#noOfDaysHadDrinkInLastSixMonthsNot').prop('checked',false);
+		$('#noOfDaysHadDrinkInLastSixMonthsDK').prop('checked',false);
+		$('#noOfDaysHadDrinkInLastSixMonthsR').prop('checked',false);
+	    }
+	}else if(fromSource == 'rd'){
+	   $('#noOfDaysHadDrinkInLastSixMonthsInDays').val('');
+	}
+    }
+    
+    //had drugs in last six months
+    $('input:radio[name=hadRecreationalDrugsInLastSixMonths]').change(function () {
+	if ($("input[name='hadRecreationalDrugsInLastSixMonths']:checked").val() == 'yes') {
+            $('.recreationalDrugs').show();
+            $('#recreationalDrugs').addClass('isRequired');
+            $('#recreationalDrugs').focus();
+        }else{
+           $('.recreationalDrugs').hide();
+           $('#recreationalDrugs').val('');
+           $('#recreationalDrugs').removeClass('isRequired');
+        }
+    });
+    
+    function updateRiskAssessment(){
+        flag = deforayValidator.init({
+            formId: 'editRiskAssessmentForm'
+        });
+	
+        if(flag){
+            document.getElementById('editRiskAssessmentForm').submit();
+        }
+    }
+</script>

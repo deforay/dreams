@@ -1,0 +1,172 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
+}
+?>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    pre {
+        max-height: 596px;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Risk Assessment</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Risk Assessment</a>
+       </div>
+    </div>
+    <div class="row dashboard-wrapper content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Risk Assessment List
+		<?php
+		if($loginContainer->hasViewOnlyAccess =='no') {
+		?>
+		  <span style="float:right;"><a href="/clinic/risk-assessment/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Risk Assessment</a></span>
+		<?php } ?>
+		</div>
+                <div class="card-content clearfix">
+                    <table id="riskAssessmentDataTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+                                <th>Lab Name</th>
+                                <th>Lab Code</th>
+                                <th>Study ID</th>
+				<th>Interviewer Name</th>
+				<th>Patient ID</th>
+				<th>Interview Date</th>
+				<th>Added On</th>
+				<th>Added By</th>
+				<?php
+                                if(trim($countryId)== ''){
+                                ?>
+                                 <th>Country</th>
+				<?php } ?>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+			<tfoot>
+                            <tr>
+                                <th>Lab Name</th>
+                                <th>Lab Code</th>
+                                <th>Study ID</th>
+				<th>Interviewer Name</th>
+				<th>Patient ID</th>
+				<th>Interview Date</th>
+				<th>Added On</th>
+				<th>Added By</th>
+				<?php
+                                if(trim($countryId)== ''){
+                                ?>
+                                 <th>Country</th>
+				<?php } ?>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+	oTable = $('#riskAssessmentDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		<?php
+		if(trim($countryId)== ''){
+		?>
+		  {"sClass":"dataTable_noWrap"},
+		<?php } ?>
+                {"sClass":"dataTable_noWrap"}
+            ],
+            "aaSorting": [[5, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('clinic-risk-assessment',array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+       
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
+    });
+</script>
