@@ -155,6 +155,12 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="age" class="">Age *</label>
                         </div>
                     </div>
+					<div class="col s4">
+						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+						<input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestational age" value="<?php echo $row['gestational_age']; ?>">
+						<label for="gestationalAge" class="">Gestational Age </label>
+					</div>
+			</div>
 				</div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
