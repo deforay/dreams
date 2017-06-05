@@ -30,7 +30,7 @@ class DataCollectionService {
             $adapter->commit();
                $alertContainer->msg = 'Lab Data Reporting added successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'OOPS..';
            }
         }
         catch (Exception $exc) {
@@ -61,7 +61,7 @@ class DataCollectionService {
             $adapter->commit();
                $alertContainer->msg = 'Lab Data Reporting updated successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'OOPS..';
            }
        }
        catch (Exception $exc) {

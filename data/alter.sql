@@ -444,3 +444,69 @@ ALTER TABLE  `data_collection_event_log` ADD  `patient_dob` DATE NULL DEFAULT NU
 ALTER TABLE  `data_collection_event_log` ADD  `art_patient_id` VARCHAR( 255 ) NULL DEFAULT NULL AFTER  `enc_anc_patient_id` ;
 ALTER TABLE  `data_collection_event_log` ADD  `gestational_age` INT NULL DEFAULT NULL AFTER  `patient_dob` ;
 ALTER TABLE  `data_collection_event_log` ADD  `specimen_type` VARCHAR( 45 ) NULL DEFAULT NULL AFTER  `rejection_reason` ;
+
+--Pal 05/06/2017
+CREATE TABLE `occupation_type` (
+  `occupation_id` int(11) NOT NULL,
+  `occupation` varchar(500) NOT NULL,
+  `occupation_status` varchar(45) NOT NULL DEFAULT 'active'
+)
+
+INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status`) VALUES
+(1, 'Not Currently Working', 'active'),
+(2, 'Student', 'active'),
+(3, 'Fishing', 'active'),
+(4, 'Farming', 'active'),
+(5, 'Driver', 'active'),
+(6, 'Manual Worker', 'active'),
+(7, 'Professional/Managerial', 'active'),
+(8, 'Domestic Worker', 'active');
+
+ALTER TABLE `occupation_type`
+  ADD PRIMARY KEY (`occupation_id`);
+  
+ALTER TABLE `occupation_type`
+  MODIFY `occupation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+CREATE TABLE `clinic_risk_assessment` (
+  `assessment_id` int(11) NOT NULL,
+  `lab` int(11) DEFAULT NULL,
+  `enc_anc_patient_id` varchar(500) DEFAULT NULL,
+  `interviewer_name` varchar(255) DEFAULT NULL,
+  `anc_patient_id` varchar(45) DEFAULT NULL,
+  `interview_date` date DEFAULT NULL,
+  `occupation` int(11) DEFAULT NULL,
+  `degree` varchar(45) DEFAULT NULL,
+  `are_married` varchar(25) DEFAULT NULL,
+  `age_at_first_marriage` varchar(45) DEFAULT NULL,
+  `have_ever_been_widowed` varchar(45) DEFAULT NULL,
+  `current_marital_status` varchar(255) DEFAULT NULL,
+  `time_of_last_HIV_test` varchar(90) DEFAULT NULL,
+  `last_HIV_test_status` varchar(255) DEFAULT NULL,
+  `partner_HIV_test_status` varchar(255) DEFAULT NULL,
+  `age_at_very_first_sex` int(11) DEFAULT NULL,
+  `reason_for_very_first_sex` varchar(45) DEFAULT NULL,
+  `no_of_sexual_partners` varchar(45) DEFAULT NULL,
+  `no_of_sexual_partners_in_last_six_months` varchar(45) DEFAULT NULL,
+  `age_of_main_sexual_partner_at_last_birthday` varchar(45) DEFAULT NULL,
+  `age_diff_of_main_sexual_partner` varchar(255) DEFAULT NULL,
+  `is_partner_circumcised` varchar(45) DEFAULT NULL,
+  `last_time_of_receiving_money_for_sex` varchar(45) DEFAULT NULL,
+  `no_of_times_been_pregnant` int(11) DEFAULT NULL,
+  `no_of_times_condom_used_before_pregnancy` varchar(45) DEFAULT NULL,
+  `no_of_times_condom_used_after_pregnancy` varchar(45) DEFAULT NULL,
+  `have_pain_in_lower_abdomen` varchar(45) DEFAULT NULL,
+  `have_treated_for_lower_abdomen_pain` varchar(45) DEFAULT NULL,
+  `have_treated_for_syphilis` varchar(45) DEFAULT NULL,
+  `no_of_days_had_drink_in_last_six_months` varchar(90) DEFAULT NULL,
+  `do_have_more_drinks_on_one_occasion` varchar(45) DEFAULT NULL,
+  `have_tried_recreational_drugs` varchar(45) DEFAULT NULL,
+  `had_recreational_drugs_in_last_six_months` varchar(45) DEFAULT NULL,
+  `recreational_drugs` varchar(500) DEFAULT NULL,
+  `country` int(11) NOT NULL,
+  `added_on` datetime DEFAULT NULL,
+  `added_by` int(11) DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+)
+

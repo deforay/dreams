@@ -419,8 +419,34 @@ return array(
                         'action' => 'rot47'
                     ),
                 ),
+            ),'clinic-risk-assessment' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'add-clinic-risk-assessment' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/add[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-clinic-risk-assessment' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'edit'
+                    ),
+                ),
             )
-            
         ),
     ),
     'service_manager' => array(
@@ -456,7 +482,8 @@ return array(
             'Application\Controller\DataExtraction' => 'Application\Controller\DataExtractionController',
             'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController',
             'Application\Controller\ResultSms' => 'Application\Controller\ResultSmsController',
-            'Application\Controller\Clinic' => 'Application\Controller\ClinicController'
+            'Application\Controller\Clinic' => 'Application\Controller\ClinicController',
+            'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController'
         ),
     ),
     'controller_plugins' => array(

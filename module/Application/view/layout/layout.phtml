@@ -303,6 +303,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                                     <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryLabLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> DREAMS Lab Logbook</a>
                                                                 </li>
                                                             <?php } ?>
+                                                            <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/clinic/risk-assessment/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment Form</a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </li>
@@ -616,6 +619,17 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryLabLogbookMenu"+atob(splits)).addClass("active");
             $(".countryLabLogbookMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
+            $(".countryClinicMenu"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='risk-assessment'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryRiskAssessmentMenu"+atob(splits)).addClass("active");
+            $(".countryRiskAssessmentMenu"+atob(splits)).css("color","#fff");
             $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
             $(".countryClinicMenu"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
