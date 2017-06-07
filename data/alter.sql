@@ -521,6 +521,21 @@ ALTER TABLE `clinic_risk_assessment`
   MODIFY `assessment_id` int(11) NOT NULL AUTO_INCREMENT
   
 --Pal 06/06/2017
+CREATE TABLE `district` (
+  `district_id` int(11) NOT NULL,
+  `district_name` varchar(255) NOT NULL,
+  `latitude` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) DEFAULT NULL,
+  `country` int(11) NOT NULL
+)
+
+ALTER TABLE `district`
+  ADD PRIMARY KEY (`district_id`),
+  ADD KEY `country` (`country`);
+  
+ALTER TABLE `district`
+  MODIFY `district_id` int(11) NOT NULL AUTO_INCREMENT
+  
 ALTER TABLE `facility` ADD `district` INT(11) NULL DEFAULT NULL AFTER `country`;
 
 ALTER TABLE `anc_site` ADD `district` INT(11) NULL DEFAULT NULL AFTER `country`;
