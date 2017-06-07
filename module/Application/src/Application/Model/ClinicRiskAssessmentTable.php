@@ -79,7 +79,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
-                    'enc_anc_patient_id'=>$params['surveillanceId'],
+                    'study_id'=>$params['studyId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
@@ -128,11 +128,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if($parameters['countryId']== ''){
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.enc_anc_patient_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.enc_anc_patient_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
+	    $aColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
+	    $orderColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
 	}else{
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.enc_anc_patient_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.enc_anc_patient_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
+	    $aColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
+	    $orderColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
 	}
 
        /*
@@ -278,7 +278,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
-	    $row[] = $aRow['enc_anc_patient_id'];
+	    $row[] = $aRow['study_id'];
 	    $row[] = ucwords($aRow['interviewer_name']);
 	    $row[] = $aRow['anc_patient_id'];
 	    $row[] = $interviewDate;
@@ -362,7 +362,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
-                    'enc_anc_patient_id'=>$params['surveillanceId'],
+                    'study_id'=>$params['studyId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,

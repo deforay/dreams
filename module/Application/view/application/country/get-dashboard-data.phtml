@@ -1,0 +1,15 @@
+<?php
+if(count($response) >0){
+    foreach($response as $country){
+?>
+    <tr>
+        <td><?php echo $country['totalDataPoints']; ?></td>
+        <td><?php echo $country['dataPointFinalized']; ?></td>
+        <td><?php echo $country['month'].' - '.$country['year']; ?></td>
+        <td><?php echo ucwords($country['district_name']); ?></td>
+    </tr>
+<?php } } else { ?>
+    <tr>
+        <td colspan="4">No data available..</td>
+    </tr>
+<?php } ?>

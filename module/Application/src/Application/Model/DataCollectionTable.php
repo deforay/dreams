@@ -53,11 +53,10 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['rejectionReason']) && trim($params['rejectionReason'])!= ''){
                 $rejectionReason = base64_decode($params['rejectionReason']);
             }
-			$patientDOB = NULL;
+	    $patientDOB = NULL;
             if(isset($params['dob']) && trim($params['dob'])!= ''){
                 $patientDOB = $common->dateFormat($params['dob']);
             }
-	     
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -74,6 +73,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
+                        'study_id'=>$params['studyId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
@@ -82,7 +82,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'age'=>$params['age'],
                         'gestational_age'=>$params['gestationalAge'],
                         'patient_dob'=>$patientDOB,
-						'specimen_type'=>$params['specimenType'],
+			'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
                         'lab_specimen_id'=>$params['labSpecimenId'],
@@ -451,13 +451,14 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
+			'study_id'=>$params['studyId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
 			'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
 			'art_patient_id'=>$params['artPatientId'],
                         'age'=>$params['age'],
-						'gestational_age'=>$params['gestationalAge'],
+			'gestational_age'=>$params['gestationalAge'],
                         'patient_dob'=>$patientDOB,
                         'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
@@ -1390,5 +1391,66 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $output['aaData'][] = $row;
 	}
        return $output;
+    }
+    
+    public function fetchCountryDashboardDetails($params){
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				   ->columns(array(
+						   'year' => new \Zend\Db\Sql\Expression("YEAR(added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"),
+						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
+						))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
+				   ->join(array('d'=>'district'),'d.district_id=f.district',array('district_name'))
+				   ->where(array('da_c.country'=>$params['country']))
+				   ->group(new \Zend\Db\Sql\Expression("YEAR(added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"))
+				   ->group('f.district')
+				   ->order('da_c.added_on desc');
+	if(trim($params['district'])!= ''){
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.district'=>base64_decode($params['district'])));
+	}if(trim($params['reportingMonthYear'])!= ''){
+	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	}
+	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function fetchDataReportingLocations($params){
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	//facility query
+	$facilityLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				       ->columns(array())
+				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','flatitude'=>'latitude','flongitude'=>'longitude'))
+				       ->where(array('da_c.country'=>$params['country']))
+				       ->group('da_c.lab');
+	if(trim($params['district'])!= ''){
+	    $facilityLocationQuery = $facilityLocationQuery->where(array('f.district'=>base64_decode($params['district'])));
+	}if(trim($params['reportingMonthYear'])!= ''){
+	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+	    $facilityLocationQuery = $facilityLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	}
+	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
+        $facilityLocationResult = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//anc query
+	$ancLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				       ->columns(array())
+				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','anclatitude'=>'latitude','anclongitude'=>'longitude'))
+				       ->where(array('da_c.country'=>$params['country']))
+				       ->group('da_c.anc_site');
+	if(trim($params['district'])!= ''){
+	    $ancLocationQuery = $ancLocationQuery->where(array('f.district'=>base64_decode($params['district'])));
+	}if(trim($params['reportingMonthYear'])!= ''){
+	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+	    $ancLocationQuery = $ancLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	}
+	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
+        $ancLocationResult = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $facilityLocationResult;
     }
 }

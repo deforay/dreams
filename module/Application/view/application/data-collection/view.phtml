@@ -78,12 +78,12 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
     <div class="row dashboard-wrapper content-container">
         <div class="data-collection-view card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION(<span id="surveillanceTitleId"><?php echo $row->surveillance_id; ?></span>)</legend>
+               <legend>SURVEILLANCE INFORMATION (<span id="serialNo"><?php echo $row->surveillance_id; ?></span>)</legend>
                 <div class="row">
-                    <div class="col s4" style="display:none">
+                    <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="surveillanceId" class="">Serial No. </label><br>
-                            <p><?php echo $row->surveillance_id; ?></p>
+                            <label for="studyId" class="">Study ID </label><br>
+                            <p><?php echo $row->study_id; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
@@ -98,14 +98,15 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                             <p><?php echo $row->anc_site_code.' - '.ucwords($row->anc_site_name); ?></p>
                         </div>
                     </div>
-                    <div class="col s4">
+                </div>
+                <div class="row">
+                   <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label><br>
                             <p><?php echo $specimenPickedUpDateAtAnc; ?></p>
                         </div>
                     </div>
                 </div>
-                
             </fieldset>
             <fieldset style="border-color:#ff9800;border-style: solid;">
                <legend>PATIENT INFORMATION</legend>
@@ -124,7 +125,7 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="encAncPatientId" class="">Study ID </label><br>
+                            <label for="encAncPatientId" class="">Enc. Patient ID </label><br>
                             <p><?php echo $row->enc_anc_patient_id; ?></p>
                         </div>
                     </div>
@@ -145,7 +146,6 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                 </div>
             </fieldset>
-
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
                <legend>LABORATORY INFORMATION</legend>
                <div class="row">

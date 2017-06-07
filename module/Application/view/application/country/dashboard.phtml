@@ -1,0 +1,138 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
+<style>
+    .card-header{
+        background-color:#ff69b4;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        padding: 10px 20px;
+    }
+    table th,table td{
+        text-align:center;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .ui-datepicker-calendar {
+       display: none;
+    }
+    .ui-datepicker-month,.ui-datepicker-year{
+       display:block;
+       display:inline-block;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Dashboard (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+    </div>
+    <?php
+    if($loginContainer->roleCode == 'CSC'){
+    ?>
+        <div class="row" style="max-width:1109px;">
+            <form id="dashboardFilter" action="#">
+                <div class="col l12 m12 s12">
+                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
+                    <div class="col l5 m5 s5" style="text-align:center;"><strong>District </strong> <select class="material-select" id="district" name="district" title="Please select district"><option value=""> -- Select -- </option><?php foreach($districts as $district) { ?><option value="<?php echo base64_encode($district['district_id']); ?>"><?php echo ucwords($district['district_name']); ?></option><?php } ?></select></div>
+                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
+                </div>
+                <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card card-default">
+                    <div class="card-header white-text">
+                        Lab Data Reporting / Completed Forms
+                    </div>
+                    <div class="card-content clearfix">
+                        <table class="responsive-table striped">
+                            <thead>
+                            <tr>
+                                <th>No. of Lab Tests</th>
+                                <th>No. of Complete Forms</th>
+                                <th>Month - Year</th>
+                                <th>District Level</th>
+                            </tr>
+                            </thead>
+                            <tbody id="dashboardData">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="row">
+            <div class="col s12">
+                <div class="card card-default">
+                    <div class="card-content map-container clearfix" style="height:1135px;max-height:1500px;">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    <?php } else { ?>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                Coming Soon..
+            </div>
+        </div>
+    <?php } ?>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+        $('#reportingMonthYear').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#reportingMonthYear').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+            }
+       });
+       searchLabReportingData();
+       getDataReportingLocations();
+    });
+    
+    function searchLabReportingData(){
+        var district = $('#district').val();
+        var reportingMonthYear = $('#reportingMonthYear').val();
+        $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-data')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',district:district,reportingMonthYear: reportingMonthYear},
+        function(data) {
+            $('#dashboardData').html(data);
+        });
+    }
+    
+    function getDataReportingLocations(){
+        var district = $('#district').val();
+        var reportingMonthYear = $('#reportingMonthYear').val();
+        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',district:district,reportingMonthYear: reportingMonthYear},
+        function(data) {
+            //$('.map-container').html(data);
+        });
+    }
+    
+    function clearSearchFields(){
+       $('#dashboardFilter')[0].reset();
+        searchLabReportingData();
+        getDataReportingLocations();
+    }
+</script>

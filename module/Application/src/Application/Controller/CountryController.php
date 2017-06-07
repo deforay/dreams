@@ -48,4 +48,54 @@ class CountryController extends AbstractActionController{
             'row'=>$result
         ));
     }
+    
+    public function getCountryDistrictsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $response=$countryService->getDistrictsByCountry(base64_decode($params['country']));
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }  
+    }
+    
+    public function dashboardAction(){
+        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $countryService = $this->getServiceLocator()->get('CountryService');
+        $countryInfo = $countryService->getCountry($countryId);
+        $districts = $countryService->getDistrictsByCountry($countryId);
+        return new ViewModel(array(
+            'countryInfo'=>$countryInfo,
+            'districts'=>$districts
+        )); 
+    }
+    
+    public function getDashboardDataAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->getCountryDashboardDetails($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function getDataReportingLocationsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->getDataReportingLocations($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

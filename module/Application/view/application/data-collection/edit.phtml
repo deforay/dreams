@@ -84,14 +84,14 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION(<span id="surveillanceTitleId"><?php echo $row->surveillance_id; ?></span>)</legend>
+               <legend>SURVEILLANCE INFORMATION (<span id="serialNo"><?php echo $row->surveillance_id; ?></span>)</legend>
                 <div class="row" style="margin-bottom:0;">
-                    <div class="col s4" style="display:none;">
-                        <div class="input-field col m12 s12">
-                            <input id="surveillanceId" name="surveillanceId" type="text" class="validate isRequired" title="Please enter serial no." value="<?php echo $row->surveillance_id; ?>" style="pointer-events:none;">
-                            <label for="surveillanceId" class="">Serial No *</label>
-                        </div>
-                    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			    <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID" value="<?php echo $row->study_id; ?>" onblur="checkNameValidation('data_collection', 'study_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The study id that you entered already exist. Please enter different id');">
+			    <label for="studyId" class="">Study ID *</label>
+			</div>
+		    </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker" title="Please enter specimen collected date" value="<?php echo $specimenCollectedDate; ?>">
@@ -111,16 +111,17 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="ancSite">ANC site name *</label>
                         </div>
                     </div>
-					<div class="col s4">
+                </div>
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s4">
                         <div class="input-field col m12 s12">
                             <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc" value="<?php echo $specimenPickedUpDateAtAnc; ?>">
                             <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
                         </div>
                     </div>
-                </div>
-                
+		</div>
             </fieldset>
-			<fieldset style="border-color:#ff9800;border-style: solid;">
+	    <fieldset style="border-color:#ff9800;border-style: solid;">
                 <legend>PATIENT INFORMATION</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
@@ -129,43 +130,43 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="ancPatientId" class="">ANC Patient ID * </label>
                         </div>
                     </div>
-					<div class="col s4">
-						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-						<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
-						<label for="artPatientId" class="">ART Number </label>
-						</div>
-					</div>
+		    <div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
+			    <label for="artPatientId" class="">ART Number </label>
+			    </div>
+		    </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="encAncPatientId" name="encAncPatientId" type="text" title="Surveillence Id" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
-                            <label for="encAncPatientId">Study ID *</label>
+                            <input id="encAncPatientId" name="encAncPatientId" type="text" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
+                            <label for="encAncPatientId">Enc. Patient ID *</label>
                         </div>
                     </div>
                 </div>
-				<div class="row" style="margin-bottom:0;">
-					<div class="col s4">
-						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-						<input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getDateOfBirth()">
-						<label for="dob" class="">DOB *</label>
-						</div>
-					</div>
-					<div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
-                            <label for="age" class="">Age *</label>
-                        </div>
-                    </div>
-					<div class="col s4">
-						<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-						<input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestational age" value="<?php echo $row['gestational_age']; ?>">
-						<label for="gestationalAge" class="">Gestational Age </label>
-					</div>
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getDateOfBirth()">
+			    <label for="dob" class="">DOB *</label>
+			    </div>
+		    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
+			    <label for="age" class="">Age *</label>
 			</div>
-				</div>
+		    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestational age" value="<?php echo $row['gestational_age']; ?>">
+			    <label for="gestationalAge" class="">Gestational Age </label>
+			</div>
+	            </div>
+		</div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
                <legend>LABORATORY INFORMATION</legend>
-               <div class="row" style="margin-bottom:0;">
+                <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
@@ -199,7 +200,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                         </div>
                     </div>
                 </div>
-               <div class="row" style="margin-bottom:0;">
+                <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0;">
                             <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab" value="<?php echo $receiptDateAtCentralLab; ?>">
@@ -218,22 +219,21 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
                         </div>
                     </div>
-               </div>
-			   <div class="row" style="margin-bottom:0;">
-			    <div class="col s4">
-					<div class="input-field col m12 s12">
-					<select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
-						<option value=""> -- Select -- </option>
-						<option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
-						<option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
-						<option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
-					</select>
-					<label for="specimenType">Specimen Type </label>
-					</div>
-			    </div>
-			</div>
+                </div>
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s4">
+		       <div class="input-field col m12 s12">
+			   <select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
+				   <option value=""> -- Select -- </option>
+				   <option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
+				   <option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
+				   <option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
+			   </select>
+			   <label for="specimenType">Specimen Type </label>
+		       </div>
+		    </div>
+	        </div>
             </fieldset>
-            
             <fieldset style="border-color:#F44336;border-style: solid;">
                 <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
@@ -338,6 +338,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                 <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <input type="hidden" name="chosenCountry" value="<?php echo $row->country; ?>"/>
                 <input type="hidden" name="prevStatus" value="<?php echo $row->status; ?>"/>
+		<input type="hidden" name="surveillanceId" id="surveillanceId" value="<?php echo $row->surveillance_id; ?>"/>
                 <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
@@ -600,7 +601,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    });
 	}
     });
-	function getDateOfBirth(){
+    
+    function getDateOfBirth(){
       var today = new Date();
       var dob = $("#dob").val();
       if($.trim(dob) == ""){
@@ -636,5 +638,5 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('label[for="age"]').css("transform", "translateY(-140%)"); 
         $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
       }
-  }
+    }
 </script>

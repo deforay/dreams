@@ -44,9 +44,11 @@ class FacilityController extends AbstractActionController{
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
         $countryList=$countryService->getActiveCountries('facility',$countryId);
+        $districtList=$countryService->getDistrictsByCountry($countryId);
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
             return new ViewModel(array(
                 'countries'=>$countryList,
+                'districts'=>$districtList,
                 'facilityTypes'=>$facilityTypeList,
                 'countryId'=>$countryId
             ));
@@ -66,9 +68,11 @@ class FacilityController extends AbstractActionController{
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $result=$facilityService->getFacility($facilityId);
         $countryList=$countryService->getActiveCountries('facility',$countryId);
+        $districtList=$countryService->getDistrictsByCountry($countryId);
         $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
         return new ViewModel(array(
             'countries'=>$countryList,
+            'districts'=>$districtList,
             'facilityTypes'=>$facilityTypeList,
             'row'=>$result,
             'countryId'=>$countryId

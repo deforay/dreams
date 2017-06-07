@@ -72,13 +72,13 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.');">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.');">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
             </div>
             <div class="row">
-                 <div class="col s6">
+                <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">room</i>
                         <select class="material-select isRequired" id="country" name="country" title="Please select country">
@@ -95,9 +95,21 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <textarea id="address" name="address" class="materialize-textarea"></textarea>
-                        <label for="address">Address</label>
+                    <div class="input-field col m10 s10 ajaxDistrict">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select validate isRequired" id="district" name="district" title="Please select district" onchange="showDistrictBox(this.value);">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($districts as $district){
+                                ?>
+                                <option value="<?php echo base64_encode($district['district_id']);?>"><?php echo ucwords($district['district_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="district" class="">District *</label>
+                        <input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>
                     </div>
                 </div>
             </div>
@@ -105,19 +117,25 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude">
+                        <input id="latitude" name="latitude" type="text" class="validate checkNum" title="Please enter latitude">
                         <label for="latitude" class="">Latitude </label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude">
+                        <input id="longitude" name="longitude" type="text" class="validate checkNum" title="Please enter longitude">
                         <label for="longitude" class="">Longitude </label>
                     </div>
                 </div>
             </div>
             <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <textarea id="address" name="address" class="materialize-textarea"></textarea>
+                        <label for="address">Address</label>
+                    </div>
+                </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
@@ -135,16 +153,24 @@ if(isset($countryId) && trim($countryId)!=''){
     </div>
 </div>
 <script>
-    duplicateName = true;
-    function addFacility(){
-        flag = deforayValidator.init({
-            formId: 'addAncSiteForm'
-        });
-        
-        if(flag){
-            document.getElementById('addAncSiteForm').submit();
-        }
+    function showDistrictBox(val){
+        if(val == 'other'){
+            $('#districtNew').show();
+            $('#districtNew').addClass('isRequired');
+       }else{
+            $('#districtNew').hide();
+            $('#districtNew').val('');
+            $('#districtNew').removeClass('isRequired');
+       } 
     }
+    
+    $('#country').on('change',function(){
+        $.post("<?php echo $this->url('country', array('action' => 'get-country-districts')); ?>", {country: this.value},
+        function(data) {
+            $('.ajaxDistrict').html(data);
+            $('#district').material_select();
+        });
+    });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
@@ -159,6 +185,17 @@ if(isset($countryId) && trim($countryId)!=''){
                     duplicateName = true;
                 }
             });
+        }
+    }
+    
+    duplicateName = true;
+    function addFacility(){
+        flag = deforayValidator.init({
+            formId: 'addAncSiteForm'
+        });
+        
+        if(flag){
+            document.getElementById('addAncSiteForm').submit();
         }
     }
 </script>

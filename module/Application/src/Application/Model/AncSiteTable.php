@@ -18,6 +18,22 @@ class AncSiteTable extends AbstractTableGateway {
     public function addAncSiteDetails($params){
         $lastInsertedId = 0;
 	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
+	    //set district
+	    $dbAdapter = $this->adapter;
+	    $districtDb = new DistrictTable($dbAdapter);
+	    $district = '';
+	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
+		$districtData = array(
+		                  'district_name'=>$params['districtNew'],
+		                  'latitude' => $params['latitude'],
+		                  'longitude' => $params['longitude'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$districtDb->insert($districtData);
+                $district = $districtDb->lastInsertValue;
+	    }else if(isset($params['district']) && trim($params['district'])!= ''){
+		$district = base64_decode($params['district']);
+	    }
 	    $data = array(
 		'anc_site_name' => $params['ancSiteName'],
 		'anc_site_code' => $params['ancSiteCode'],
@@ -26,6 +42,7 @@ class AncSiteTable extends AbstractTableGateway {
 		'contact_person' => $params['contactPerson'],
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
+		'district' => $district,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],
@@ -200,6 +217,22 @@ class AncSiteTable extends AbstractTableGateway {
         $ancSiteId = 0;
 	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
 	    $ancSiteId = base64_decode($params['ancSiteId']);
+	    //set district
+	    $dbAdapter = $this->adapter;
+	    $districtDb = new DistrictTable($dbAdapter);
+	    $district = '';
+	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
+		$districtData = array(
+		                  'district_name'=>$params['districtNew'],
+		                  'latitude' => $params['latitude'],
+		                  'longitude' => $params['longitude'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$districtDb->insert($districtData);
+                $district = $districtDb->lastInsertValue;
+	    }else if(isset($params['district']) && trim($params['district'])!= ''){
+		$district = base64_decode($params['district']);
+	    }
 	    $data = array(
 		'anc_site_name' => $params['ancSiteName'],
 		'anc_site_code' => $params['ancSiteCode'],
@@ -208,6 +241,7 @@ class AncSiteTable extends AbstractTableGateway {
 		'contact_person' => $params['contactPerson'],
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
+		'district' => $district,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],

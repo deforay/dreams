@@ -35,6 +35,7 @@ use Application\Model\UserLaboratoryMapTable;
 use Application\Model\LoginTrackerTable;
 use Application\Model\OccupationTypeTable;
 use Application\Model\ClinicRiskAssessmentTable;
+use Application\Model\DistrictTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -197,6 +198,10 @@ class Module{
                 },'ClinicRiskAssessmentTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new ClinicRiskAssessmentTable($dbAdapter);
+                    return $table;
+                },'DistrictTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new DistrictTable($dbAdapter);
                     return $table;
                 }
             ),

@@ -69,7 +69,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('anc_site', 'phone_number', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The contact no. that you entered already exist. Please enter different contact no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('anc_site', 'phone_number', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The contact no. that you entered already exist. Please enter different contact no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -92,9 +92,21 @@ if(isset($countryId) && trim($countryId)!=''){
                     </div>
                 </div>
                 <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <textarea id="address" name="address" class="materialize-textarea"><?php echo $row->address; ?></textarea>
-                        <label for="address">Address</label>
+                    <div class="input-field col m10 s10 ajaxDistrict">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select validate isRequired" id="district" name="district" title="Please select district" onchange="showDistrictBox(this.value);">
+                            <option value=""> -- Select -- </option>
+                            <?php
+                            foreach($districts as $district){
+                                ?>
+                                <option value="<?php echo base64_encode($district['district_id']);?>" <?php echo($row->district == $district['district_id'])?'selected="selected"':''; ?>><?php echo ucwords($district['district_name']);?></option>
+                                <?php
+                            }
+                            ?>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="district" class="">District *</label>
+                        <input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>
                     </div>
                 </div>
             </div>
@@ -102,14 +114,14 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude" value="<?php echo $row->latitude; ?>">
+                        <input id="latitude" name="latitude" type="text" class="validate checkNum" title="Please enter latitude" value="<?php echo $row->latitude; ?>">
                         <label for="latitude" class="">Latitude </label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude" value="<?php echo $row->longitude; ?>">
+                        <input id="longitude" name="longitude" type="text" class="validate checkNum" title="Please enter longitude" value="<?php echo $row->longitude; ?>">
                         <label for="longitude" class="">Longitude </label>
                     </div>
                 </div>
@@ -117,10 +129,18 @@ if(isset($countryId) && trim($countryId)!=''){
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
+                        <textarea id="address" name="address" class="materialize-textarea"><?php echo $row->address; ?></textarea>
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
                         <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
                         <label for="comments">Comments</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <select id="ancSiteStatus" name="ancSiteStatus" class="material-select">
@@ -142,16 +162,24 @@ if(isset($countryId) && trim($countryId)!=''){
     </div>
 </div>
 <script>
-    duplicateName = true;
-    function addFacility(){
-        flag = deforayValidator.init({
-            formId: 'editAncSiteForm'
-        });
-        
-        if(flag){
-            document.getElementById('editAncSiteForm').submit();
-        }
+    function showDistrictBox(val){
+        if(val == 'other'){
+            $('#districtNew').show();
+            $('#districtNew').addClass('isRequired');
+       }else{
+            $('#districtNew').hide();
+            $('#districtNew').val('');
+            $('#districtNew').removeClass('isRequired');
+       } 
     }
+    
+    $('#country').on('change',function(){
+        $.post("<?php echo $this->url('country', array('action' => 'get-country-districts')); ?>", {country: this.value},
+        function(data) {
+            $('.ajaxDistrict').html(data);
+            $('#district').material_select();
+        });
+    });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
@@ -166,6 +194,17 @@ if(isset($countryId) && trim($countryId)!=''){
                     duplicateName = true;
                 }
             });
+        }
+    }
+    
+    duplicateName = true;
+    function addFacility(){
+        flag = deforayValidator.init({
+            formId: 'editAncSiteForm'
+        });
+        
+        if(flag){
+            document.getElementById('editAncSiteForm').submit();
         }
     }
 </script>

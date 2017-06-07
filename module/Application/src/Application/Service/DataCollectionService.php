@@ -58,7 +58,7 @@ class DataCollectionService {
            $dataCollectionDb = $this->sm->get('DataCollectionTable');
            $result = $dataCollectionDb->updateDataCollectionDetails($params);
            if($result>0){
-            $adapter->commit();
+               $adapter->commit();
                $alertContainer->msg = 'Lab Data Reporting updated successfully.';
            }else{
               $alertContainer->msg = 'OOPS..';
@@ -709,5 +709,15 @@ class DataCollectionService {
     public function generateRot47String($params){
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         return $dataCollectionDb->rot47($params);
+    }
+    
+    public function getCountryDashboardDetails($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchCountryDashboardDetails($params);
+    }
+    
+    public function getDataReportingLocations($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchDataReportingLocations($params); 
     }
 }

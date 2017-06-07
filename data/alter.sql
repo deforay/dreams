@@ -510,3 +510,24 @@ CREATE TABLE `clinic_risk_assessment` (
   `updated_by` int(11) DEFAULT NULL
 )
 
+ALTER TABLE `clinic_risk_assessment`
+  ADD PRIMARY KEY (`assessment_id`),
+  ADD KEY `country` (`country`),
+  ADD KEY `lab` (`lab`),
+  ADD KEY `added_by` (`added_by`);
+  ADD KEY `updated_by` (`added_by`);
+  
+ALTER TABLE `clinic_risk_assessment`
+  MODIFY `assessment_id` int(11) NOT NULL AUTO_INCREMENT
+  
+--Pal 06/06/2017
+ALTER TABLE `facility` ADD `district` INT(11) NULL DEFAULT NULL AFTER `country`;
+
+ALTER TABLE `anc_site` ADD `district` INT(11) NULL DEFAULT NULL AFTER `country`;
+
+--Pal 07/06/2017
+ALTER TABLE `data_collection` ADD `study_id` VARCHAR(255) NULL DEFAULT NULL AFTER `surveillance_id`;
+
+ALTER TABLE `data_collection_event_log` ADD `study_id` VARCHAR(255) NULL DEFAULT NULL AFTER `surveillance_id`;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `enc_anc_patient_id` `study_id` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;

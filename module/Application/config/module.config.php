@@ -446,6 +446,15 @@ return array(
                         'action' => 'edit'
                     ),
                 ),
+            ),'country-dashboard' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/dashboard[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Country',
+                        'action' => 'dashboard'
+                    ),
+                ),
             )
         ),
     ),

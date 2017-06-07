@@ -235,6 +235,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                 <div class="collapsible-header waves-effect countryAdminMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-account-circle"></i> Admin <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                 <div class="collapsible-body collapsibleAll collapsibleCountryAdminMenu<?php echo $country['country_id']; ?>">
                                                     <ul>
+                                                        <li class="countryDashboardMenu<?php echo $country['country_id']; ?> menuAll">
+                                                            <a class="countryDashboardMenu<?php echo $country['country_id']; ?>" href="/dashboard/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-palette zmdi-hc-fw"></i>Dashboard</a>
+                                                        </li>
                                                         <?php
                                                         if($countryAdminUserMenuAccess =='show'){ ?>
                                                             <li class="countryUserMenu<?php echo $country['country_id']; ?> menuAll">
@@ -367,6 +370,19 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
           $(".cscAdminMenuSecond").css("color","#ff69b4");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
+        }else if(splitsUrl[1]=='dashboard'){
+          splits=str.substr(str.lastIndexOf('/') + 1);  
+          $(".countryMenu"+atob(splits)).addClass("active");
+          $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+          $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+          $(".countryAdminMenu"+atob(splits)).addClass("active");
+          $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+          $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+          $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
+          $(".countryDashboardMenu"+atob(splits)).addClass("active");
+          $(".countryDashboardMenu"+atob(splits)).css("color","#fff");
+          $(".countryFacilityMenu"+atob(splits)).css("color","#444");
+          $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
         }else if(splitsUrl[1]=='user'){
             splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){

@@ -1,0 +1,13 @@
+<?php
+$district = '';
+$district.= '<i class="material-icons prefix">room</i>';
+$district.='<select class="material-select validate isRequired" id="district" name="district" title="Please select district" onchange="showDistrictBox(this.value);">';
+$district.='<option value=""> -- Select -- </option>';
+        foreach($response as $dt){
+          $district.='<option value="'.base64_encode($dt['district_id']).'">'.ucwords($dt['district_name']).'</option>';
+        }
+        $district.='<option value="other">Other</option>';
+$district.='</select>';
+$district.='<label for="district" class="">District *</label>';
+$district.='<input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>';
+echo $district;
