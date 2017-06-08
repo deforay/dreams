@@ -1423,10 +1423,11 @@ class DataCollectionTable extends AbstractTableGateway {
     public function fetchDataReportingLocations($params){
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+	$location = array();
 	//facility query
 	$facilityLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','flatitude'=>'latitude','flongitude'=>'longitude'))
+				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.lab');
 	if(trim($params['district'])!= ''){
@@ -1436,21 +1437,21 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $facilityLocationQuery = $facilityLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
 	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
-        $facilityLocationResult = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	//anc query
 	$ancLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','anclatitude'=>'latitude','anclongitude'=>'longitude'))
+				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.anc_site');
 	if(trim($params['district'])!= ''){
-	    $ancLocationQuery = $ancLocationQuery->where(array('f.district'=>base64_decode($params['district'])));
+	    $ancLocationQuery = $ancLocationQuery->where(array('anc.district'=>base64_decode($params['district'])));
 	}if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $ancLocationQuery = $ancLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
 	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
-        $ancLocationResult = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-      return $facilityLocationResult;
+        $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $location;
     }
 }

@@ -1,0 +1,84 @@
+<?php
+$avai = 0;
+if(isset($response['facilities']) && count($response['facilities']) > 0){
+    foreach($response['facilities'] as $facilities){
+        if(trim($facilities['latitude'])!= '' && trim($facilities['longitude'])!= ''){
+            $avai+=1;
+        }
+    }
+}
+
+if(isset($response['anc']) && count($response['anc']) > 0){
+    foreach($response['anc'] as $anc){
+        if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
+           $avai+=1; 
+        }
+    }
+}
+if($avai > 0) {
+?>
+    <div class="gmap" id="gmap" style="min-height: 500px;width:100%;"></div>
+    <script>
+        $(document).ready(function(){
+            var map;
+            var bounds = new google.maps.LatLngBounds();
+            var mapOptions = {
+                mapTypeId: 'roadmap',
+                scrollwheel: false
+            };  
+           // Display a map on the page
+           map = new google.maps.Map(document.getElementById("gmap"),mapOptions);
+            // Multiple Markers
+            var markers = [
+                //facilities
+                <?php
+                if(isset($response['facilities']) && count($response['facilities']) > 0){
+                    foreach($response['facilities'] as $facilities){
+                        if(trim($facilities['latitude'])!= '' && trim($facilities['longitude'])!= ''){
+                ?>
+                {
+                 lat: "<?php echo $facilities['latitude']; ?>",
+                 lon: "<?php echo $facilities['longitude']; ?>",
+                 title: "<?php echo ucwords($facilities['facility_name']);?>",
+                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"
+                },
+                <?php } } } ?>
+                //anc sites
+                <?php
+                if(isset($response['anc']) && count($response['anc']) > 0){
+                    foreach($response['anc'] as $anc){
+                        if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
+                ?>
+                {
+                 lat: "<?php echo $anc['latitude']; ?>",
+                 lon: "<?php echo $anc['longitude']; ?>",
+                 title: "<?php echo ucwords($anc['anc_site_name']);?>",
+                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"
+                },
+                <?php } } } ?>
+            ];
+            
+            // Loop through our array of markers & place each one on the map
+            for( i = 0; i < markers.length; i++ ) {
+                var position = new google.maps.LatLng(markers[i]['lat'], markers[i]['lon']);
+                bounds.extend(position);
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: markers[i]['title'],
+                    icon : markers[i]['icon'],
+                });
+                
+                // Automatically center the map fitting all markers on the screen
+                map.fitBounds(bounds);
+            }
+            // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+            var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+                this.setZoom(10);
+                google.maps.event.removeListener(boundsListener);
+            });
+         });
+    </script>
+<?php } else { ?>
+    <div style="text-align:center;"><h6>Location not available..</h6></div>
+<?php } ?>

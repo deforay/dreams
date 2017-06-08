@@ -43,7 +43,7 @@ $loginContainer = new Container('user');
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
                 </div>
                 <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
                 </div>
             </form>
         </div>
@@ -70,15 +70,21 @@ $loginContainer = new Container('user');
                 </div>
             </div>
         </div>
-        <!--<div class="row">
+        <div class="row">
             <div class="col s12">
                 <div class="card card-default">
-                    <div class="card-content map-container clearfix" style="height:1135px;max-height:1500px;">
+                    <table style="width:24%;">
+                        <tr>
+                            <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Facilities</strong></td>
+                            <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Sites</strong></td>
+                        </tr>
+                    </table>
+                    <div class="card-content map-container clearfix">
                        
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
     <?php } else { ?>
         <div class="row">
             <div class="col l12 m12 s12">
@@ -88,6 +94,7 @@ $loginContainer = new Container('user');
     <?php } ?>
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhZa4hDifE6p2sbaxJehS7gcrZOJScIqM"></script>
 <script>
     $(document).ready(function(){
         $('#reportingMonthYear').datepicker({
@@ -126,7 +133,7 @@ $loginContainer = new Container('user');
         var reportingMonthYear = $('#reportingMonthYear').val();
         $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',district:district,reportingMonthYear: reportingMonthYear},
         function(data) {
-            //$('.map-container').html(data);
+            $('.map-container').html(data);
         });
     }
     
