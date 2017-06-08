@@ -215,7 +215,7 @@ class DataCollectionService {
                                 }
                             }
                         }
-                        $row[] = $aRow['surveillance_id'];
+                        $row[] = $aRow['study_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['anc_site_code'];
@@ -270,7 +270,7 @@ class DataCollectionService {
                     
                     $sheet->mergeCells('U1:V1');
                     
-                    $sheet->setCellValue('A1', html_entity_decode('Serial No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Site Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);

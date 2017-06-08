@@ -399,7 +399,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Serial No.</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="study_id" class="showhideCheckBox" /> <label for="iCol0">Study ID</label>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
@@ -492,7 +492,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Serial No.</th>
+                                <th>Study ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
@@ -529,7 +529,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Serial No.</th>
+                                <th>Study ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
@@ -780,7 +780,6 @@ if(!isset($countryId) || trim($countryId)== ''){
     });
     
     function populateResult(fromSource){
-	isHivRnaMandatory = true;
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
 	    $('#hivRna,#hivRnaNew').addClass('isRequired');
 	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
@@ -807,7 +806,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 		   $('#hivRna,#hivRnaNew').removeClass('isRequired');
 		   $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 		   $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
-		   isHivRnaMandatory = false;
 		}
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
@@ -875,23 +873,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	       $('.prePopulateRecentInfection').css('visibility','hidden');
 	    }
 	}
-	//mandatory check for lt
-	if((fromSource == 'lt' || fromSource == 'n') && isHivRnaMandatory == false){
-	    $('#hivRna,#hivRnaNew').removeClass('isRequired');
-	    $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
-	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
-	}
     }
-    
-    $('input:radio[name=asanteRapidRecencyAssayRlt]').change(function () {
-	if ($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'r') {
-	    $('#hivRna,#hivRnaNew').addClass('isRequired');
-	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-	}else if($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'lt') {
-	    populateResult('lt');
-	}
-    });
     
     function getCountriesLabAnc(){
 	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
@@ -911,7 +893,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('#box-2,#box-breaker').css('visibility','hidden');
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
-	    populateResult('n');
 	}
     });
     

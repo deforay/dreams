@@ -546,3 +546,6 @@ ALTER TABLE `data_collection` ADD `study_id` VARCHAR(255) NULL DEFAULT NULL AFTE
 ALTER TABLE `data_collection_event_log` ADD `study_id` VARCHAR(255) NULL DEFAULT NULL AFTER `surveillance_id`;
 
 ALTER TABLE `clinic_risk_assessment` CHANGE `enc_anc_patient_id` `study_id` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 08/06/2017
+INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES (NULL, 'incomplete');

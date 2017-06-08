@@ -82,7 +82,7 @@ if(count($logbookResult) >0){
       $html.='<table border="1" style="padding:2px;">';
           $html .='<thead>';
            $html .='<tr>';
-           $html .='<th><strong>Serial No.</strong></th>';
+           $html .='<th><strong>Study ID</strong></th>';
            $html .='<th><strong>Specimen Collected Date</strong></th>';
            $html .='<th><strong>ANC Site Name/Code</strong></th>';
            $html .='<th><strong>ANC Patient ID</strong></th>';
@@ -152,7 +152,7 @@ if(count($logbookResult) >0){
 		}
 	    }
             $html .='<tr>';
-              $html .='<td>'.$row['surveillance_id'].'</td>';
+              $html .='<td>'.$row['study_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
               $html .='<td>'.ucwords($row['anc_site_name'])." - ".$row['anc_site_code'].'</td>';
               $html .='<td>'.$row['anc_patient_id'].'</td>';

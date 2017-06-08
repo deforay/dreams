@@ -170,7 +170,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="surveillance_id" class="showhideCheckBox" /> <label for="iCol0">Serial No.</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="study_id" class="showhideCheckBox" /> <label for="iCol0">Study ID</label>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
@@ -254,7 +254,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <table id="dataExtractionDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Serial No.</th>
+                                <th>Study ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
@@ -284,7 +284,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Serial No.</th>
+                                <th>Study ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site Code</th>
