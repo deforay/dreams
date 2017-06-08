@@ -798,15 +798,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >2){
-		if($("input[name='asanteRapidRecencyAssayRlt']:checked").val() == 'r'){
-		   $('#hivRna,#hivRnaNew').addClass('isRequired');
-		   $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-		   $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *'); 
-		}else{
-		   $('#hivRna,#hivRnaNew').removeClass('isRequired');
-		   $('label[for="hivRna"]').html('HIV RNA (copies/ml)');
-		   $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
-		}
+		$('#hivRna,#hivRnaNew').removeClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
