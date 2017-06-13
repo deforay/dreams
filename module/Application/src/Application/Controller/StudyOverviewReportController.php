@@ -17,10 +17,10 @@ class StudyOverviewReportController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $countryInfo = $countryService->getCountry($countryId);
-            $districts = $countryService->getDistrictsByCountry($countryId);
+            $provinces = $countryService->getProvincesByCountry($countryId);
             return new ViewModel(array(
                 'countryInfo'=>$countryInfo,
-                'districts'=>$districts
+                'provinces'=>$provinces
             ));
         }
     }

@@ -1470,7 +1470,7 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('da_c.study_id','da_c.status','assessment_id','district_name');
+	$aColumns = array('da_c.study_id','da_c.status','assessment_id','province');
        /*
         * Paging
         */
@@ -1567,8 +1567,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'study_id',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 						))
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
-				   ->join(array('d'=>'district'),'d.district_id=f.district',array('district_name'))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessment_id'),'left')
 				   ->where(array('da_c.country'=>$parameters['country']));
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1579,8 +1578,8 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery = $sQuery->where(array("da_c.date_of_test_completion >='" . $s_t_start_date ."'", "da_c.date_of_test_completion <='" . $s_t_end_date."'"));
         }else if (trim($s_t_start_date) != "") {
             $sQuery = $sQuery->where(array("da_c.date_of_test_completion = '" . $s_t_start_date. "'"));
-        }if(trim($parameters['district'])!= ''){
-	    $sQuery = $sQuery->where(array('f.district'=>base64_decode($parameters['district'])));
+        }if(trim($parameters['province'])!= ''){
+	    $sQuery = $sQuery->where(array('f.province'=>base64_decode($parameters['province'])));
 	}if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
 	    $sQuery = $sQuery->where('da_c.final_lag_avidity_odn < 2');
 	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
@@ -1630,8 +1629,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						'study_id',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 					     ))
-				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
-				->join(array('d'=>'district'),'d.district_id=f.district',array('district_name'))
+				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessment_id'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1642,8 +1640,8 @@ class DataCollectionTable extends AbstractTableGateway {
            $tQuery = $tQuery->where(array("da_c.date_of_test_completion >='" . $s_t_start_date ."'", "da_c.date_of_test_completion <='" . $s_t_end_date."'"));
         }else if (trim($s_t_start_date) != "") {
             $tQuery = $tQuery->where(array("da_c.date_of_test_completion = '" . $s_t_start_date. "'"));
-        }if(trim($parameters['district'])!= ''){
-	    $tQuery = $tQuery->where(array('f.district'=>base64_decode($parameters['district'])));
+        }if(trim($parameters['province'])!= ''){
+	    $tQuery = $tQuery->where(array('f.province'=>base64_decode($parameters['province'])));
 	}if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
 	    $tQuery = $tQuery->where('da_c.final_lag_avidity_odn < 2');
 	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
@@ -1677,7 +1675,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $aRow['study_id'];
 	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
-	    $row[] = ucwords($aRow['district_name']);
+	    $row[] = ucwords($aRow['province']);
 	    $output['aaData'][] = $row;
 	}
       return $output;

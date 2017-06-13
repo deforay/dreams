@@ -125,13 +125,13 @@ $loginContainer = new Container('user');
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <select class="material-select" id="district" name="district" title="Please select district">
+                            <select class="material-select" id="province" name="province" title="Please select province">
                                 <option value=""> -- Select -- </option>
-                                <?php foreach($districts as $district) { ?>
-                                   <option value="<?php echo base64_encode($district['district_id']); ?>"><?php echo ucwords($district['district_name']); ?></option>
+                                <?php foreach($provinces as $province) { ?>
+                                   <option value="<?php echo base64_encode($province['province_name']); ?>"><?php echo ucwords($province['province_name']); ?></option>
                                 <?php } ?>
                             </select>
-                            <label for="district">District </label>
+                            <label for="province">Provinces </label>
                         </div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@ $loginContainer = new Container('user');
                                 <th>Study ID</th>
                                 <th>Lab Data Present Complete</th>
                                 <th>Behaviour Data Present</th>
-                                <th>District</th>
+                                <th>Province</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -241,7 +241,7 @@ $loginContainer = new Container('user');
 		aoData.push({"name": "country", "value": '<?php echo $countryInfo->country_id; ?>' });
 		aoData.push({"name": "sampleCollectedDate", "value": $('#specimenCollectedDate').val()});
 		aoData.push({"name": "sampleTestedDate", "value": $('#sampleTestedDate').val()});
-		aoData.push({"name": "district", "value": $('#district').val()});
+		aoData.push({"name": "province", "value": $('#province').val()});
 		aoData.push({"name": "finalLagAvidityOdn", "value": $('#finalLagAvidityOdn').val()});
 		aoData.push({"name": "hivRna", "value": $('#hivRna').val()});
 		aoData.push({"name": "asanteRapidRecencyAssayPn", "value": $('#asanteRapidRecencyAssayPn').val()});

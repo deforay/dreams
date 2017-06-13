@@ -747,7 +747,7 @@ class DataCollectionService {
                         $row[] = $aRow['study_id'];
                         $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
                         $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
-                        $row[] = ucwords($aRow['district_name']);
+                        $row[] = ucwords($aRow['province']);
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -780,7 +780,7 @@ class DataCollectionService {
                     $sheet->setCellValue('A1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Lab Data Present Complete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Behaviour Data Present ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('District ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Province ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
