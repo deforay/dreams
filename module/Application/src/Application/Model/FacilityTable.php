@@ -18,21 +18,21 @@ class FacilityTable extends AbstractTableGateway {
     public function addFacilityDetails($params){
         $lastInsertedId = 0;
 	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-	    //set district
+	    //set province
 	    $dbAdapter = $this->adapter;
-	    $districtDb = new DistrictTable($dbAdapter);
-	    $district = '';
-	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
-		$districtData = array(
-		                  'district_name'=>$params['districtNew'],
+	    $provinceDb = new ProvinceTable($dbAdapter);
+	    $province = '';
+	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
+		$provinceData = array(
+		                  'province_name'=>$params['provinceNew'],
 		                  'latitude' => $params['latitude'],
 		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$districtDb->insert($districtData);
-                $district = $districtDb->lastInsertValue;
-	    }else if(isset($params['district']) && trim($params['district'])!= ''){
-		$district = base64_decode($params['district']);
+		$provinceDb->insert($provinceData);
+		$province = $params['provinceNew'];
+	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$province = base64_decode($params['province']);
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
@@ -42,7 +42,7 @@ class FacilityTable extends AbstractTableGateway {
 		'contact_person' => $params['contactPerson'],
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
-		'district' => $district,
+		'province' => $province,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],
@@ -233,21 +233,21 @@ class FacilityTable extends AbstractTableGateway {
         $facilityId = 0;
 	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 	    $facilityId = base64_decode($params['facilityId']);
-	    //set district
+	    //set province
 	    $dbAdapter = $this->adapter;
-	    $districtDb = new DistrictTable($dbAdapter);
-	    $district = '';
-	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
-		$districtData = array(
-		                  'district_name'=>$params['districtNew'],
+	    $provinceDb = new ProvinceTable($dbAdapter);
+	    $province = '';
+	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
+		$provinceData = array(
+		                  'province_name'=>$params['provinceNew'],
 		                  'latitude' => $params['latitude'],
 		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$districtDb->insert($districtData);
-                $district = $districtDb->lastInsertValue;
-	    }else if(isset($params['district']) && trim($params['district'])!= ''){
-		$district = base64_decode($params['district']);
+		$provinceDb->insert($provinceData);
+		$province = $params['provinceNew'];
+	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$province = base64_decode($params['province']);
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
@@ -257,7 +257,7 @@ class FacilityTable extends AbstractTableGateway {
 		'contact_person' => $params['contactPerson'],
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
-		'district' => $district,
+		'province' => $province,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],

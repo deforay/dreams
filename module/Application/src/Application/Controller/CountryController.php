@@ -49,12 +49,12 @@ class CountryController extends AbstractActionController{
         ));
     }
     
-    public function getCountryDistrictsAction(){
+    public function getCountryProvincesAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $response=$countryService->getDistrictsByCountry(base64_decode($params['country']));
+            $response=$countryService->getProvincesByCountry(base64_decode($params['country']));
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -66,10 +66,10 @@ class CountryController extends AbstractActionController{
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
         $countryInfo = $countryService->getCountry($countryId);
-        $districts = $countryService->getDistrictsByCountry($countryId);
+        $provinces = $countryService->getProvincesByCountry($countryId);
         return new ViewModel(array(
             'countryInfo'=>$countryInfo,
-            'districts'=>$districts
+            'provinces'=>$provinces
         )); 
     }
     

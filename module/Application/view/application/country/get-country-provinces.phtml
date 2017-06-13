@@ -1,0 +1,13 @@
+<?php
+$province = '';
+$province.= '<i class="material-icons prefix">room</i>';
+$province.='<select class="material-select validate isRequired" id="province" name="province" title="Please select province" onchange="checkProvince(this.value);">';
+$province.='<option value=""> -- Select -- </option>';
+        foreach($response as $pv){
+          $province.='<option value="'.base64_encode($pv['province_name']).'">'.ucwords($pv['province_name']).'</option>';
+        }
+        $province.='<option value="other">Other</option>';
+$province.='</select>';
+$province.='<label for="province" class="">Province *</label>';
+$province.='<input type="text" id="provinceNew" name="provinceNew" placeholder="Enter Province" title="Please enter province name" class="validate" style="display:none;"/>';
+echo $province;

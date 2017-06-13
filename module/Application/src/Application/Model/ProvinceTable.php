@@ -7,9 +7,9 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
 
 
-class DistrictTable extends AbstractTableGateway {
+class ProvinceTable extends AbstractTableGateway {
 
-    protected $table = 'district';
+    protected $table = 'province';
 
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;

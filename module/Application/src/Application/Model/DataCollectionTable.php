@@ -1413,15 +1413,14 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
-				   ->join(array('d'=>'district'),'d.district_id=f.district',array('district_name'))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"))
-				   ->group('f.district')
+				   ->group('f.province')
 				   ->order('da_c.added_on desc');
-	if(trim($params['district'])!= ''){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.district'=>base64_decode($params['district'])));
+	if(trim($params['province'])!= ''){
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
 	}if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
@@ -1440,8 +1439,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.lab');
-	if(trim($params['district'])!= ''){
-	    $facilityLocationQuery = $facilityLocationQuery->where(array('f.district'=>base64_decode($params['district'])));
+	if(trim($params['province'])!= ''){
+	    $facilityLocationQuery = $facilityLocationQuery->where(array('f.province'=>base64_decode($params['province'])));
 	}if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $facilityLocationQuery = $facilityLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
@@ -1454,8 +1453,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.anc_site');
-	if(trim($params['district'])!= ''){
-	    $ancLocationQuery = $ancLocationQuery->where(array('anc.district'=>base64_decode($params['district'])));
+	if(trim($params['province'])!= ''){
+	    $facilityLocationQuery = $facilityLocationQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	}if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $ancLocationQuery = $ancLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');

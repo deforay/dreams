@@ -85,12 +85,12 @@ class CountryService {
       return $dbAdapter->query($cQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
-    public function getDistrictsByCountry($countryId){
+    public function getProvincesByCountry($countryId){
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
-        $dQuery = $sql->select()->from(array('d' => 'district'))
-                                ->where(array('d.country'=>$countryId));
-        $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
-      return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $pQuery = $sql->select()->from(array('p' => 'province'))
+                                ->where(array('p.country'=>$countryId));
+        $pQueryStr = $sql->getSqlStringForSqlObject($pQuery);
+      return $dbAdapter->query($pQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

@@ -38,7 +38,7 @@ $loginContainer = new Container('user');
             <form id="dashboardFilter" action="#">
                 <div class="col l12 m12 s12">
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>District </strong> <select class="material-select" id="district" name="district" title="Please select district"><option value=""> -- Select -- </option><?php foreach($districts as $district) { ?><option value="<?php echo base64_encode($district['district_id']); ?>"><?php echo ucwords($district['district_name']); ?></option><?php } ?></select></div>
+                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['province_name']); ?>"><?php echo ucwords($province['province_name']); ?></option><?php } ?></select></div>
                     <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
                 </div>
@@ -60,7 +60,7 @@ $loginContainer = new Container('user');
                                 <th>No. of Lab Tests</th>
                                 <th>No. of Complete Forms</th>
                                 <th>Month - Year</th>
-                                <th>District</th>
+                                <th>Province</th>
                             </tr>
                             </thead>
                             <tbody id="dashboardData">
@@ -120,18 +120,18 @@ $loginContainer = new Container('user');
     });
     
     function searchLabReportingData(){
-        var district = $('#district').val();
+        var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
-        $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-data')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',district:district,reportingMonthYear: reportingMonthYear},
+        $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-data')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
         function(data) {
             $('#dashboardData').html(data);
         });
     }
     
     function getDataReportingLocations(){
-        var district = $('#district').val();
+        var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
-        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',district:district,reportingMonthYear: reportingMonthYear},
+        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
         function(data) {
             $('.map-container').html(data);
         });
