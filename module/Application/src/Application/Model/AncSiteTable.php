@@ -32,6 +32,13 @@ class AncSiteTable extends AbstractTableGateway {
 		$provinceDb->insert($provinceData);
 		$province = $params['provinceNew'];
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$provinceData = array(
+		                  'province_name'=>base64_decode($params['province']),
+		                  'latitude' => $params['latitude'],
+		                  'longitude' => $params['longitude'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
 		$province = base64_decode($params['province']);
 	    }
 	    $data = array(
@@ -231,6 +238,13 @@ class AncSiteTable extends AbstractTableGateway {
 		$provinceDb->insert($provinceData);
 		$province = $params['provinceNew'];
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$provinceData = array(
+		                  'province_name'=>base64_decode($params['province']),
+		                  'latitude' => $params['latitude'],
+		                  'longitude' => $params['longitude'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
 		$province = base64_decode($params['province']);
 	    }
 	    $data = array(

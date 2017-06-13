@@ -1155,7 +1155,6 @@ class DataCollectionTable extends AbstractTableGateway {
     }
 	
 	
-
     public function rot47($str){
 	$str = (isset($str['pId']))?$str['pId']:$str;
 	if (!function_exists('str_rot47')) {
