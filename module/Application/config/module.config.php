@@ -455,6 +455,24 @@ return array(
                         'action' => 'dashboard'
                     ),
                 ),
+            ),'study-overview-report' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/study-overview[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\StudyOverviewReport',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'export-study-overview' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-study-overview',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\StudyOverviewReport',
+                        'action' => 'export-study-overview'
+                    ),
+                ),
             )
         ),
     ),
@@ -492,7 +510,8 @@ return array(
             'Application\Controller\ResultEmail' => 'Application\Controller\ResultEmailController',
             'Application\Controller\ResultSms' => 'Application\Controller\ResultSmsController',
             'Application\Controller\Clinic' => 'Application\Controller\ClinicController',
-            'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController'
+            'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController',
+            'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController'
         ),
     ),
     'controller_plugins' => array(

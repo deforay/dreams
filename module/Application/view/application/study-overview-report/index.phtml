@@ -1,0 +1,351 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
+<style>
+    .card-header{
+        background-color:#ff69b4;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        padding: 10px 20px;
+    }
+    table th,table td{
+        text-align:center;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        /*left: -184px*/
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    @font-face {
+        font-family: 'Glyphicons Halflings';
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot');
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+      }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    * {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    /*.left{float: right !important;}*/
+    #ms-dataCollection{
+        width:100%;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Study Overview Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+    </div>
+    <?php
+    if($loginContainer->roleCode == 'CSC'){
+    ?>
+        <div class="row" style="max-width:1109px;">
+            <form id="overviewFilter" action="#">
+                <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="" title="Please enter specimen collected date" onclick="selectSampleCollectionDate();" readonly>
+                            <label for="specimenCollectedDate">Specimen Collected Date </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="sampleTestedDate" name="sampleTestedDate" type="text" class="" title="Please enter sample tested date" onclick="selectSampleTestedDate();" readonly>
+                            <label for="sampleTestedDate">Specimen Tested Date </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select class="material-select" id="district" name="district" title="Please select district">
+                                <option value=""> -- Select -- </option>
+                                <?php foreach($districts as $district) { ?>
+                                   <option value="<?php echo base64_encode($district['district_id']); ?>"><?php echo ucwords($district['district_name']); ?></option>
+                                <?php } ?>
+                            </select>
+                            <label for="district">District </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select class="material-select" id="finalLagAvidityOdn" name="finalLagAvidityOdn" title="Please select LAg avidity odn">
+                                <option value=""> -- Select -- </option>
+                                <option value="lt2"> <2 </option>
+                                <option value="gt2"> >2 </option>
+                            </select>
+                            <label for="final">Final LAg Avidity ODn </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select class="material-select" id="hivRna" name="hivRna" title="Please select HIV rna value">
+                                <option value=""> -- Select -- </option>
+                                <option value="lte1000"> <=1000 </option>
+                                <option value="gt1000"> >1000 </option>
+                            </select>
+                            <label for="hivRna">Viral Load </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select class="material-select" id="asanteRapidRecencyAssayPn" name="asanteRapidRecencyAssayPn" title="Please select rapid recency assay">
+                                <option value=""> -- Select -- </option>
+                                <option value="positive"> Positive </option>
+                                <option value="negative"> Negative </option>
+                            </select>
+                            <label for="asanteRapidRecencyAssayPn">Rapid Recency Assay </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row asanteRapidRecencyAssayRlt" style="display:none;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <select class="material-select" id="asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt">
+                                <option value=""> -- Select -- </option>
+                                <option value="r"> Recent </option>
+                                <option value="lt"> Long Term </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col l12 m12 s12" style="text-align:center;">
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="searchStudyOverviewData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="extractOverviewData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	        </div>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="card card-default">
+                    <div class="card-header white-text">
+                        Study Overview
+                    </div>
+                    <div class="card-content clearfix">
+                        <table id="overviewDataTable" class="responsive-table striped">
+                            <thead>
+                            <tr>
+                                <th>Study ID</th>
+                                <th>Lab Data Present Complete</th>
+                                <th>Behaviour Data Present</th>
+                                <th>District</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } else { ?>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                Coming Soon..
+            </div>
+        </div>
+    <?php } ?>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+       oTable = $('#overviewDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap"}
+            ],
+            "aaSorting": [[2, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('study-overview-report'); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+		aoData.push({"name": "country", "value": '<?php echo $countryInfo->country_id; ?>' });
+		aoData.push({"name": "sampleCollectedDate", "value": $('#specimenCollectedDate').val()});
+		aoData.push({"name": "sampleTestedDate", "value": $('#sampleTestedDate').val()});
+		aoData.push({"name": "district", "value": $('#district').val()});
+		aoData.push({"name": "finalLagAvidityOdn", "value": $('#finalLagAvidityOdn').val()});
+		aoData.push({"name": "hivRna", "value": $('#hivRna').val()});
+		aoData.push({"name": "asanteRapidRecencyAssayPn", "value": $('#asanteRapidRecencyAssayPn').val()});
+		aoData.push({"name": "asanteRapidRecencyAssayRlt", "value": $('#asanteRapidRecencyAssayRlt').val()});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+        $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
+       selectSampleCollectionDate();
+       selectSampleTestedDate();
+    });
+    
+    function selectSampleCollectionDate(){
+        $(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#specimenCollectedDate').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="specimenCollectedDate"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function selectSampleTestedDate(){
+        $(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#sampleTestedDate').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="sampleTestedDate"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function searchStudyOverviewData(){
+        oTable.fnDraw(false);
+    }
+    
+    function clearSearchFields(){
+       $('#overviewFilter')[0].reset();
+       searchStudyOverviewData();
+    }
+    
+    $('#asanteRapidRecencyAssayPn').on('change',function(){
+        if(this.value == 'negative' || this.value == ''){
+           $('.asanteRapidRecencyAssayRlt').hide();
+        }else{
+          $('.asanteRapidRecencyAssayRlt').show();  
+        }
+    });
+    
+    function extractOverviewData(){
+        $.blockUI();
+	$.post("<?php echo $this->url('export-study-overview'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+</script>

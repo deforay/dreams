@@ -282,6 +282,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                                     <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                                 </li>
                                                             <?php } ?>
+                                                                <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
+                                                                </li>
                                                         </ul>
                                                     </div>
                                                 </li>
@@ -651,6 +654,17 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(splitsUrl[1]=='study-overview'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
+            $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
+            $(".countryLabMenu"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).addClass("active");
+            $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else{
             $(".dashboardMenu").addClass("active");
         }
