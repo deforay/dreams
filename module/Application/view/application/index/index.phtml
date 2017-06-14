@@ -36,6 +36,7 @@ $loginContainer = new Container('user');
                                 <th>Name of the Country</th>
                                 <th>No. of Lab Tests</th>
                                 <th>No. of Complete Forms</th>
+                                <th>No. of Risk Questionnaires</th>
                                 <th>Month - Year</th>
                             </tr>
                             </thead>
@@ -48,6 +49,7 @@ $loginContainer = new Container('user');
                                     <td><?php echo ucwords($country['country_name']); ?></td>
                                     <td><?php echo $country['totalDataPoints']; ?></td>
                                     <td><?php echo $country['dataPointFinalized']; ?></td>
+                                    <td><?php echo $country['assessment_id']; ?></td>
                                     <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                                 </tr>
                             <?php } } else { ?>

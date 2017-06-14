@@ -158,23 +158,12 @@ $loginContainer = new Container('user');
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <select class="material-select" id="asanteRapidRecencyAssayPn" name="asanteRapidRecencyAssayPn" title="Please select rapid recency assay">
-                                <option value=""> -- Select -- </option>
-                                <option value="positive"> Positive </option>
-                                <option value="negative"> Negative </option>
-                            </select>
-                            <label for="asanteRapidRecencyAssayPn">Rapid Recency Assay </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row asanteRapidRecencyAssayRlt" style="display:none;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
                             <select class="material-select" id="asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt">
                                 <option value=""> -- Select -- </option>
                                 <option value="r"> Recent </option>
                                 <option value="lt"> Long Term </option>
                             </select>
+                            <label for="asanteRapidRecencyAssayRlt">Rapid Recency Assay </label>
                         </div>
                     </div>
                 </div>
@@ -195,10 +184,12 @@ $loginContainer = new Container('user');
                         <table id="overviewDataTable" class="responsive-table striped">
                             <thead>
                             <tr>
+								<th>Province</th>
                                 <th>Study ID</th>
-                                <th>Lab Data Present Complete</th>
-                                <th>Behaviour Data Present</th>
-                                <th>Province</th>
+                                <th>Lab Data</th>
+                                <th>Behaviour Data</th>
+                                <th>Final LAg Avidity ODn</th>
+                                <th>Rapid Recency Assay</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -229,11 +220,13 @@ $loginContainer = new Container('user');
 	    "iDisplayLength": 25,
             "aoColumns": [
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap","bSortable":false},
-		{"sClass":"dataTable_noWrap"}
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
-            "aaSorting": [[2, "desc"]],
+            "aaSorting": [[3, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('study-overview-report'); ?>",
@@ -244,7 +237,6 @@ $loginContainer = new Container('user');
 		aoData.push({"name": "province", "value": $('#province').val()});
 		aoData.push({"name": "finalLagAvidityOdn", "value": $('#finalLagAvidityOdn').val()});
 		aoData.push({"name": "hivRna", "value": $('#hivRna').val()});
-		aoData.push({"name": "asanteRapidRecencyAssayPn", "value": $('#asanteRapidRecencyAssayPn').val()});
 		aoData.push({"name": "asanteRapidRecencyAssayRlt", "value": $('#asanteRapidRecencyAssayRlt').val()});
                 $.ajax({
                     "dataType": 'json',
@@ -326,14 +318,6 @@ $loginContainer = new Container('user');
        $('#overviewFilter')[0].reset();
        searchStudyOverviewData();
     }
-    
-    $('#asanteRapidRecencyAssayPn').on('change',function(){
-        if(this.value == 'negative' || this.value == ''){
-           $('.asanteRapidRecencyAssayRlt').hide();
-        }else{
-          $('.asanteRapidRecencyAssayRlt').show();  
-        }
-    });
     
     function extractOverviewData(){
         $.blockUI();
