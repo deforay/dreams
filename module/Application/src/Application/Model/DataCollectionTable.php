@@ -521,7 +521,7 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
                                            ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
-				           ->order('da_c_e.data_collection_event_log_id desc');
+										   ->order('da_c_e.data_collection_event_log_id desc');
 	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
 	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	if(isset($result->data_collection_event_log_id)){
@@ -1668,7 +1668,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row = array();
 	    $row[] = ucwords($aRow['province']);
 	    $row[] = $aRow['study_id'];
-	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No';
+	    $row[] = (isset($aRow['study_id']) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No') . "<br> <small>". (($aRow['labDataPresentComplete'] == 1)? 'Complete':'Incomplete')."</small>";
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
 	    $row[] = $aRow['final_lag_avidity_odn'];
 	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
