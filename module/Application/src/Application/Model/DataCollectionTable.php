@@ -878,7 +878,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
 						))
-				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessment_id' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
+				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name'))
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
@@ -1413,7 +1413,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
-				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessment_id' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
+				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
@@ -1666,20 +1666,18 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-		$row[] = ucwords($aRow['province']);
+	    $row[] = ucwords($aRow['province']);
 	    $row[] = $aRow['study_id'];
 	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No';
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
-		$row[] = $aRow['final_lag_avidity_odn'];
-		if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt')
-		{
-			$row[] = 'Long Term';
-		}else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r')
-		{
-			$row[] = 'Recent';
-		}else {
-			$row[] = '';
-		}
+	    $row[] = $aRow['final_lag_avidity_odn'];
+	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
+		$row[] = 'Long Term';
+	    }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
+		$row[] = 'Recent';
+	    }else {
+		$row[] = '';
+	    }
 	    $output['aaData'][] = $row;
 	}
       return $output;

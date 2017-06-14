@@ -749,11 +749,9 @@ class DataCollectionService {
                         $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
                         $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
                         $row[] = $aRow['final_lag_avidity_odn'];
-                        if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt')
-                        {
+                        if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
                             $row[] = 'Long Term';
-                        }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r')
-                        {
+                        }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
                             $row[] = 'Recent';
                         }else {
                             $row[] = '';

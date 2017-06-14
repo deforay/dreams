@@ -5,13 +5,13 @@ if(count($response) >0){
     <tr>
         <td><?php echo ucwords($country['province']); ?></td>
         <td><?php echo $country['totalDataPoints']; ?></td>
+        <td><?php echo (isset($country['assessments']))?$country['assessments']:0; ?></td>
         <td><?php echo $country['dataPointFinalized']; ?></td>
-        <td><?php echo $country['assessment_id']; ?></td>
         <td><?php echo $country['month'].' - '.$country['year']; ?></td>
         
     </tr>
 <?php } } else { ?>
     <tr>
-        <td colspan="4">No data available..</td>
+        <td colspan="5">No data available..</td>
     </tr>
 <?php } ?>
