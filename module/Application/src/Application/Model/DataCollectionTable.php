@@ -870,22 +870,23 @@ class DataCollectionTable extends AbstractTableGateway {
     
     public function fetchDashboardDetails($params){
 	$dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
+    $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
-						   'year' => new \Zend\Db\Sql\Expression("YEAR(added_on)"),
-						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"),
+						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))")
+						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
 						))
+				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessment_id' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name'))
 				   ->where(array('c.country_status'=>'active'))
-				   ->group(new \Zend\Db\Sql\Expression("YEAR(added_on)"))
-				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('da_c.country')
 				   ->order('da_c.added_on desc');
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function fetchCountriesLabAncDetails($params){
@@ -1407,15 +1408,16 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
-						   'year' => new \Zend\Db\Sql\Expression("YEAR(added_on)"),
-						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"),
+						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
+				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessment_id' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
 				   ->where(array('da_c.country'=>$params['country']))
-				   ->group(new \Zend\Db\Sql\Expression("YEAR(added_on)"))
-				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
+				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('f.province')
 				   ->order('da_c.added_on desc');
 	if(trim($params['province'])!= ''){
@@ -1469,7 +1471,7 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('da_c.study_id','da_c.status','assessment_id','province');
+	$aColumns = array('province','da_c.study_id','da_c.status','assessment_id','da_c.final_lag_avidity_odn','da_c.asante_rapid_recency_assy');
        /*
         * Paging
         */
@@ -1564,6 +1566,8 @@ class DataCollectionTable extends AbstractTableGateway {
         $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'study_id',
+						   'final_lag_avidity_odn',
+						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
@@ -1587,17 +1591,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $sQuery = $sQuery->where('da_c.hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
 	    $sQuery = $sQuery->where('da_c.hiv_rna >= 1000');
-	}if(trim($parameters['asanteRapidRecencyAssayPn'])!= '' && $parameters['asanteRapidRecencyAssayPn'] == 'positive'){
-	    if(trim($parameters['asanteRapidRecencyAssayRlt'])!= '' && $parameters['asanteRapidRecencyAssayRlt'] == 'r'){
-	       $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy = "p/r"');
-	    }else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= '' && $parameters['asanteRapidRecencyAssayRlt'] == 'lt'){
-	       $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy = "p/lt"');
-	    }else {
-	       $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy ="p"');
-	    }
-	}else if(trim($parameters['asanteRapidRecencyAssayPn'])!= '' && $parameters['asanteRapidRecencyAssayPn'] == 'negative'){
-	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy = "n"');
+	}else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
+	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
 	}
+	
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -1626,6 +1623,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				->columns(array(
 						'study_id',
+						'final_lag_avidity_odn',
+						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 					     ))
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
@@ -1649,16 +1648,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where('da_c.hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
 	    $tQuery = $tQuery->where('da_c.hiv_rna >= 1000');
-	}if(trim($parameters['asanteRapidRecencyAssayPn'])!= '' && $parameters['asanteRapidRecencyAssayPn'] == 'positive'){
-	    if(trim($parameters['asanteRapidRecencyAssayRlt'])!= '' && $parameters['asanteRapidRecencyAssayRlt'] == 'r'){
-	       $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy = "p/r"');
-	    }else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= '' && $parameters['asanteRapidRecencyAssayRlt'] == 'lt'){
-	       $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy = "p/lt"');
-	    }else {
-	       $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy ="p"');
-	    }
-	}else if(trim($parameters['asanteRapidRecencyAssayPn'])!= '' && $parameters['asanteRapidRecencyAssayPn'] == 'negative'){
-	    $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy = "n"');
+	}else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
+	    $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1671,10 +1662,20 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
+		$row[] = ucwords($aRow['province']);
 	    $row[] = $aRow['study_id'];
 	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
-	    $row[] = ucwords($aRow['province']);
+		$row[] = $aRow['final_lag_avidity_odn'];
+		if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt')
+		{
+			$row[] = 'Long Term';
+		}else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r')
+		{
+			$row[] = 'Recent';
+		}else {
+			$row[] = '';
+		}
 	    $output['aaData'][] = $row;
 	}
       return $output;
