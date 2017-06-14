@@ -19,7 +19,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     public function addRiskAssessmentDetails($params){
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
-        if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
+        if(isset($params['studyId']) && trim($params['studyId'])!= ''){
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
             $common = new CommonService();

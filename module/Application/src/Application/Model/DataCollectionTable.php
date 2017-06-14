@@ -1565,7 +1565,9 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
+						   'data_collection_id',
 						   'study_id',
+						   'country',
 						   'final_lag_avidity_odn',
 						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
@@ -1622,7 +1624,9 @@ class DataCollectionTable extends AbstractTableGateway {
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				->columns(array(
+						'data_collection_id',
 						'study_id',
+						'country',
 						'final_lag_avidity_odn',
 						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
@@ -1664,7 +1668,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row = array();
 		$row[] = ucwords($aRow['province']);
 	    $row[] = $aRow['study_id'];
-	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
+	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No';
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
 		$row[] = $aRow['final_lag_avidity_odn'];
 		if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt')
