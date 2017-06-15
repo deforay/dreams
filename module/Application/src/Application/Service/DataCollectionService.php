@@ -744,11 +744,18 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
-                        $row[] = ucwords($aRow['province']);
+                        $row[] = ucwords($aRow['province_name']);
                         $row[] = $aRow['study_id'];
                         $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
                         $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
                         $row[] = $aRow['final_lag_avidity_odn'];
+                        if($aRow['lag_avidity_result']=='lt'){
+                            $row[] = 'Long Term';
+                        }else if($aRow['lag_avidity_result']=='r'){
+                            $row[] = 'Recent';
+                        }else {
+                            $row[] = '';
+                        }
                         if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
                             $row[] = 'Long Term';
                         }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
@@ -785,12 +792,13 @@ class DataCollectionService {
                     
                     $sheet->mergeCells('U1:V1');
                     
-                    $sheet->setCellValue('A1', html_entity_decode('Province ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A1', html_entity_decode('Province Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Final LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -798,6 +806,7 @@ class DataCollectionService {
                     $sheet->getStyle('D1')->applyFromArray($styleArray);
                     $sheet->getStyle('E1')->applyFromArray($styleArray);
                     $sheet->getStyle('F1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $colNo = 0;
@@ -805,7 +814,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 5){
+                            if($colNo > 6){
                                 break;
                             }
                             if (is_numeric($value)) {

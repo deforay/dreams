@@ -3,7 +3,7 @@ if(count($response) >0){
     foreach($response as $country){
 ?>
     <tr>
-        <td><?php echo ucwords($country['province']); ?></td>
+        <td><?php echo ucwords($country['province_name']); ?></td>
         <td><?php echo $country['totalDataPoints']; ?></td>
         <td><?php echo (isset($country['assessments']))?$country['assessments']:0; ?></td>
         <td><?php echo $country['dataPointFinalized']; ?></td>

@@ -1414,7 +1414,8 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
 				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
+				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -1437,7 +1438,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	//facility query
 	$facilityLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
+				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name'))
+				       ->join(array('p'=>'province'),'p.province_id=f.province',array('latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.lab');
 	if(trim($params['province'])!= ''){
@@ -1451,7 +1453,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	//anc query
 	$ancLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
+				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name'))
+				       ->join(array('p'=>'province'),'p.province_id=anc.province',array('latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.anc_site');
 	if(trim($params['province'])!= ''){
@@ -1471,7 +1474,7 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province','da_c.study_id','da_c.status','assessment_id','da_c.final_lag_avidity_odn','da_c.asante_rapid_recency_assy');
+	$aColumns = array('province_name','da_c.study_id','da_c.status','assessment_id','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.asante_rapid_recency_assy');
        /*
         * Paging
         */
@@ -1569,10 +1572,12 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'study_id',
 						   'country',
 						   'final_lag_avidity_odn',
+						   'lag_avidity_result',
 						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 						))
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
+				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessment_id'),'left')
 				   ->where(array('da_c.country'=>$parameters['country']));
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1628,10 +1633,12 @@ class DataCollectionTable extends AbstractTableGateway {
 						'study_id',
 						'country',
 						'final_lag_avidity_odn',
+						'lag_avidity_result',
 						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 					     ))
-				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'))
+				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
+				->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessment_id'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1666,11 +1673,20 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-	    $row[] = ucwords($aRow['province']);
+	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
 	    $row[] = ($aRow['labDataPresentComplete'] == 1)?'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No';
 	    $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
 	    $row[] = $aRow['final_lag_avidity_odn'];
+	    //LAg assay
+	    if($aRow['lag_avidity_result']=='lt'){
+		$row[] = 'Long Term';
+	    }else if($aRow['lag_avidity_result']=='r'){
+		$row[] = 'Recent';
+	    }else {
+		$row[] = '';
+	    }
+	    //rapid assay
 	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
 		$row[] = 'Long Term';
 	    }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){

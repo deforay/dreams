@@ -549,3 +549,12 @@ ALTER TABLE `clinic_risk_assessment` CHANGE `enc_anc_patient_id` `study_id` VARC
 
 --Pal 08/06/2017
 INSERT INTO `test_status` (`test_status_id`, `test_status_name`) VALUES (NULL, 'incomplete');
+
+--Pal 15/06/2017
+ALTER TABLE `facility` CHANGE `province` `province` INT(11) NULL DEFAULT NULL;
+
+alter table facility add FOREIGN KEY(province) REFERENCES province(province_id)
+
+ALTER TABLE `anc_site` CHANGE `province` `province` INT(11) NULL DEFAULT NULL;
+
+alter table anc_site add FOREIGN KEY(province) REFERENCES province(province_id)

@@ -128,7 +128,7 @@ $loginContainer = new Container('user');
                             <select class="material-select" id="province" name="province" title="Please select province">
                                 <option value=""> -- Select -- </option>
                                 <?php foreach($provinces as $province) { ?>
-                                   <option value="<?php echo base64_encode($province['province_name']); ?>"><?php echo ucwords($province['province_name']); ?></option>
+                                   <option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option>
                                 <?php } ?>
                             </select>
                             <label for="province">Provinces </label>
@@ -184,11 +184,12 @@ $loginContainer = new Container('user');
                         <table id="overviewDataTable" class="responsive-table striped">
                             <thead>
                             <tr>
-								<th>Province</th>
+				<th>Province Name</th>
                                 <th>Study ID</th>
                                 <th>Lab Data</th>
                                 <th>Behaviour Data</th>
                                 <th>Final LAg Avidity ODn</th>
+                                <th>LAg Recency Assay</th>
                                 <th>Rapid Recency Assay</th>
                             </tr>
                             </thead>
@@ -224,6 +225,7 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
             "aaSorting": [[3, "desc"]],

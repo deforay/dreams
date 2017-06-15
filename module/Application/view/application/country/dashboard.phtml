@@ -38,7 +38,7 @@ $loginContainer = new Container('user');
             <form id="dashboardFilter" action="#">
                 <div class="col l12 m12 s12">
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['province_name']); ?>"><?php echo ucwords($province['province_name']); ?></option><?php } ?></select></div>
+                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option><?php } ?></select></div>
                     <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
                     <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
                 </div>
@@ -57,7 +57,7 @@ $loginContainer = new Container('user');
                         <table class="responsive-table striped">
                             <thead>
                             <tr>
-				<th>Province</th>
+				<th>Province Name</th>
                                 <th>No. of Lab Tests</th>
                                 <th>No. of Risk Questionnaires</th>
                                 <th>No. of Complete Forms</th>

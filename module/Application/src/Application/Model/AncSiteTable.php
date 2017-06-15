@@ -21,7 +21,7 @@ class AncSiteTable extends AbstractTableGateway {
 	    //set province
 	    $dbAdapter = $this->adapter;
 	    $provinceDb = new ProvinceTable($dbAdapter);
-	    $province = '';
+	    $province = null;
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
@@ -30,16 +30,15 @@ class AncSiteTable extends AbstractTableGateway {
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
-		$province = $params['provinceNew'];
+		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$province = base64_decode($params['province']);
 		$provinceData = array(
-		                  'province_name'=>base64_decode($params['province']),
 		                  'latitude' => $params['latitude'],
 		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
-		$province = base64_decode($params['province']);
+		$provinceDb->update($provinceData,array('province_id'=>$province));
 	    }
 	    $data = array(
 		'anc_site_name' => $params['ancSiteName'],
@@ -227,7 +226,7 @@ class AncSiteTable extends AbstractTableGateway {
 	    //set province
 	    $dbAdapter = $this->adapter;
 	    $provinceDb = new ProvinceTable($dbAdapter);
-	    $province = '';
+	    $province = null;
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
@@ -236,16 +235,15 @@ class AncSiteTable extends AbstractTableGateway {
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
-		$province = $params['provinceNew'];
+		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
+		$province = base64_decode($params['province']);
 		$provinceData = array(
-		                  'province_name'=>base64_decode($params['province']),
 		                  'latitude' => $params['latitude'],
 		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
-		$province = base64_decode($params['province']);
+		$provinceDb->update($provinceData,array('province_id'=>$province));
 	    }
 	    $data = array(
 		'anc_site_name' => $params['ancSiteName'],

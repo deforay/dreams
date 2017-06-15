@@ -95,15 +95,15 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="input-field col m10 s10 ajaxProvince">
                         <i class="material-icons prefix">room</i>
                         <select class="material-select validate isRequired" id="province" name="province" title="Please select province" onchange="checkProvince(this.value);">
-                            <option value=""> -- Select -- </option>
+                            <option data-latitude="" data-longitude="" value=""> -- Select -- </option>
                             <?php
                             foreach($provinces as $province){
                                 ?>
-                                <option value="<?php echo base64_encode($province['province_name']);?>" <?php echo($row->province == $province['province_name'])?'selected="selected"':''; ?>><?php echo ucwords($province['province_name']);?></option>
+                                <option data-latitude="<?php echo $province['latitude']; ?>" data-longitude="<?php echo $province['longitude']; ?>" value="<?php echo base64_encode($province['province_id']);?>" <?php echo($row->province == $province['province_id'])?'selected="selected"':''; ?>><?php echo ucwords($province['province_name']);?></option>
                                 <?php
                             }
                             ?>
-                            <option value="other">Other</option>
+                            <option data-latitude="" data-longitude="" value="other">Other</option>
                         </select>
                         <label for="province" class="">Province *</label>
                         <input type="text" id="provinceNew" name="provinceNew" placeholder="Enter Province" title="Please enter province name" class="validate" style="display:none;"/>
@@ -163,13 +163,21 @@ if(isset($countryId) && trim($countryId)!=''){
 </div>
 <script>
     function checkProvince(val){
-        if(val == 'other'){
+       if(val == 'other'){
             $('#provinceNew').show();
             $('#provinceNew').addClass('isRequired');
+            $('label[for="latitude"]').css("transform", "translateY(-140%)");
+            $('label[for="longitude"]').css("transform", "translateY(-140%)");
+            $('#latitude').val($('#province').find(':selected').data('latitude'));
+            $('#longitude').val($('#province').find(':selected').data('longitude'));
        }else{
             $('#provinceNew').hide();
             $('#provinceNew').val('');
             $('#provinceNew').removeClass('isRequired');
+            $('label[for="latitude"]').css("transform", "translateY(-140%)");
+            $('label[for="longitude"]').css("transform", "translateY(-140%)");
+            $('#latitude').val($('#province').find(':selected').data('latitude'));
+            $('#longitude').val($('#province').find(':selected').data('longitude'));
        } 
     }
     
@@ -178,6 +186,8 @@ if(isset($countryId) && trim($countryId)!=''){
         function(data) {
             $('.ajaxProvince').html(data);
             $('#province').material_select();
+            $('#latitude').val('');
+            $('#longitude').val('');
         });
     });
     
