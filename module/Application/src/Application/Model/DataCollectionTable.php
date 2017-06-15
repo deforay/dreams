@@ -1438,8 +1438,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	//facility query
 	$facilityLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name'))
-				       ->join(array('p'=>'province'),'p.province_id=f.province',array('latitude','longitude'))
+				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.lab');
 	if(trim($params['province'])!= ''){
@@ -1453,8 +1452,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	//anc query
 	$ancLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				       ->columns(array())
-				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name'))
-				       ->join(array('p'=>'province'),'p.province_id=anc.province',array('latitude','longitude'))
+				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.anc_site');
 	if(trim($params['province'])!= ''){

@@ -25,20 +25,12 @@ class FacilityTable extends AbstractTableGateway {
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
 		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
-		$provinceData = array(
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
-		                  'country'=>base64_decode($params['country'])
-				);
-		$provinceDb->update($provinceData,array('province_id'=>$province));
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
@@ -246,20 +238,12 @@ class FacilityTable extends AbstractTableGateway {
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
 		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
-		$provinceData = array(
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
-		                  'country'=>base64_decode($params['country'])
-				);
-		$provinceDb->update($provinceData,array('province_id'=>$province));
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
