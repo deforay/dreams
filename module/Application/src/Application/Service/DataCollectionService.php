@@ -746,10 +746,10 @@ class DataCollectionService {
                         $row = array();
                         $row[] = ucwords($aRow['province_name']);
                         $row[] = $aRow['study_id'];
-                        $row[] = ($aRow['labDataPresentComplete'] == 1)?'Yes':'No';
-                        $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
+                        $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
+                        $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';
                         $row[] = $aRow['final_lag_avidity_odn'];
-                        if($aRow['lag_avidity_result']=='lt'){
+if($aRow['lag_avidity_result']=='lt'){
                             $row[] = 'Long Term';
                         }else if($aRow['lag_avidity_result']=='r'){
                             $row[] = 'Recent';
