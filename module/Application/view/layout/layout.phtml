@@ -161,7 +161,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                 <div class="nav-wrapper">
                     <ul class="left">
                         <li>
-                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><h4 class="" style="font-family: BaronFont;margin: 0.799rem 0 .912rem 0;">DREAMS</h4></a>
+                            <a href="<?php echo $this->url('home'); ?>" class="brand-logo"><img src="<?php echo $this->basePath() .'/assets/images/dreams-logo.png' ?>" style="top:6.5px;left:32px;"></a>
                         </li>
                     </ul>
                     <div class="search-top-bar hide-on-med-and-down">
@@ -170,7 +170,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                     <ul class="right hide-on-med-and-down">
                         <li>
                             <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>My Account <i class="zmdi zmdi-caret-down drop-down-icon"></i></a>
-                            <ul id="dropdown3" class="create-dropdown dropdown-content">
+                            <ul id="dropdown3" class="create-dropdown dropdown-content" style="overflow-y:hidden;">
                                 <li><a href="<?php echo $this->url('change-password'); ?>"><i class="zmdi zmdi-more"></i> Change Password</a></li>
                                 <li><a href="<?php echo $this->url('log-out'); ?>"><i class="material-icons dp48">input</i>Logout</a></li>
                             </ul>

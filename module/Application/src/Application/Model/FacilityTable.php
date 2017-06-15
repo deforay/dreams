@@ -21,24 +21,15 @@ class FacilityTable extends AbstractTableGateway {
 	    //set province
 	    $dbAdapter = $this->adapter;
 	    $provinceDb = new ProvinceTable($dbAdapter);
-	    $province = '';
+	    $province = null;
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
-		$province = $params['provinceNew'];
+		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
-		$provinceData = array(
-		                  'province_name'=>base64_decode($params['province']),
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
-		                  'country'=>base64_decode($params['country'])
-				);
-		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
 		$province = base64_decode($params['province']);
 	    }
 	    $data = array(
@@ -243,24 +234,15 @@ class FacilityTable extends AbstractTableGateway {
 	    //set province
 	    $dbAdapter = $this->adapter;
 	    $provinceDb = new ProvinceTable($dbAdapter);
-	    $province = '';
+	    $province = null;
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
 		$provinceData = array(
 		                  'province_name'=>$params['provinceNew'],
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
 		                  'country'=>base64_decode($params['country'])
 				);
 		$provinceDb->insert($provinceData);
-		$province = $params['provinceNew'];
+		$province = $provinceDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
-		$provinceData = array(
-		                  'province_name'=>base64_decode($params['province']),
-		                  'latitude' => $params['latitude'],
-		                  'longitude' => $params['longitude'],
-		                  'country'=>base64_decode($params['country'])
-				);
-		$provinceDb->update($provinceData,array('province_name'=>base64_decode($params['province']),'country'=>base64_decode($params['country'])));
 		$province = base64_decode($params['province']);
 	    }
 	    $data = array(

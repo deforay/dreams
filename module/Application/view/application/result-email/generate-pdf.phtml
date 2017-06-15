@@ -12,7 +12,7 @@ $alertContainer->nbPages = count($dataResult);
 	
 	public function Header() {
 	    // Logo
-            $image_file = UPLOAD_PATH . DIRECTORY_SEPARATOR.$this->logo;
+            $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
             $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
              //Set font
             $this->SetFont('helvetica', 'B', 20);
@@ -60,7 +60,7 @@ $alertContainer->nbPages = count($dataResult);
 	$alertContainer->aliasPage = $page;
 	// create new PDF document
 	$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->setSchemeName('Data Reporting Result','logo.png');
+        $pdf->setSchemeName('Data Reporting Result','dreams-small-logo.png');
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('Dream');
