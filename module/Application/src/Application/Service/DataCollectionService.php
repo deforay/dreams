@@ -744,7 +744,7 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
-                        $row[] = ucwords($aRow['province']);
+                        $row[] = ucwords($aRow['province_name']);
                         $row[] = $aRow['study_id'];
                         $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
                         $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';

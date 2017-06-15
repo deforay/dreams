@@ -1671,7 +1671,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $row = array();
-	    $row[] = ucwords($aRow['province']);
+	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
 	    //$row[] = (isset($aRow['study_id']) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No') . "<br> <small>". (($aRow['labDataPresentComplete'] == 1)? 'Complete':'Incomplete')."</small>";
 		$row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Incomplete</a>';
