@@ -299,7 +299,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                                   ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array())
+                                   ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
+                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.occupation",array('occupationName'=>'occupation'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -308,7 +309,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     public function updateRiskAssessmentDetails($params){
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
-        if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
+        if(isset($params['studyId']) && trim($params['studyId'])!= ''){
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
             $common = new CommonService();

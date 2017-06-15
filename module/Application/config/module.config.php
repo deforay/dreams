@@ -446,6 +446,15 @@ return array(
                         'action' => 'edit'
                     ),
                 ),
+            ),'view-clinic-risk-assessment' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/view[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'view'
+                    ),
+                ),
             ),'country-dashboard' => array(
                 'type' => 'segment',
                 'options' => array(

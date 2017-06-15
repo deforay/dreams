@@ -1,0 +1,683 @@
+<?php
+use Application\Service\CommonService;
+$common = new CommonService();
+if(!isset($countryId) || trim($countryId)== ''){
+    $countryId = '';
+    $link = "/clinic/risk-assessment";
+}else{
+    $link = "/clinic/risk-assessment/".base64_encode($countryId);
+}
+$interviewDate = '';
+if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+    $interviewDate = $common->viewDateFormat($row->interview_date);
+}
+?>
+<style>
+    p{font-size:11.5px;font-weight:bold;}
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">View Risk Assessment</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="/" class="breadcrumb">Home</a>
+            <a href="/clinic/risk-assessment/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">View Risk Assessment</a>
+       </div>
+    </div>
+    <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+        <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment',array('action'=>'edit')); ?>">
+        <div class="card">
+            <h6 style="text-align:center;padding:12px 0px 6px 0px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <fieldset style="border-color:#2196F3;border-style:solid;">
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancSite">Name of Facility</label><br/>
+                            <p>
+                                <?php echo $row->facility_name;?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="studyId" class="">Study ID </label><br>
+                            <p><?php echo $row->study_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="interviewerName" class="">Interviewer Name </label><br>
+                            <p><?php echo ucwords($row->interviewer_name); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancPatientId" class="">Patient ID </label><br>
+                            <p><?php echo $row->anc_patient_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="interviewDate" class="">Interview Date </label><br>
+                            <p><?php echo $interviewDate; ?></p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <h6 style="padding:10px 0px 10px 6px;"><strong>Demographic Characteristics</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    1. What kind of work/occupation do you do most of the time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p><?php echo ($row->occupationName)?$row->occupationName:''; ?></p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    2. What was the highest level of school that you completed or are attending now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if(trim($row->degree)!=''){
+                            if($row->degree=='noedu'){
+                                echo "No Education";
+                            }else if($row->degree=='primary'){
+                                echo "Primary/Post-Primary/Vocational";
+                            }else if($row->degree=='secondary'){
+                                echo "Secondary/Post-Secondary";
+                            }else if($row->degree=='university'){
+                                echo "University/College";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    3. Have you ever been married or lived with a partner in a union as if married? (If no, go to question 7)
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php echo ucwords($row->are_married); ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    4. How old were you when you first got married or lived with a partner in a union?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s8">
+                    <p>
+                        <?php
+                        if(trim($row->age_at_first_marriage)!=''){
+                            if($row->age_at_first_marriage == 'dontknow'){
+                                echo "Don't Know";
+                            }else if($row->age_at_first_marriage == 'refused'){
+                                echo "Refused";
+                            }else if(trim($row->age_at_first_marriage)!= '' && is_numeric($row->age_at_first_marriage) && $row->age_at_first_marriage>1){
+                                echo $row->age_at_first_marriage." Years";
+                            }else if(trim($row->age_at_first_marriage)!= '' && is_numeric($row->age_at_first_marriage) && $row->age_at_first_marriage==1){
+                                echo $row->age_at_first_marriage." Year";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    5. Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                        if($row->have_ever_been_widowed=='dontknow'){
+                            echo "Don't Know";
+                        }else{
+                            echo ucwords($row->have_ever_been_widowed);
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    6. What is your marital status now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                    <?php
+                    if(trim($row->current_marital_status)!=''){
+                        if($row->current_marital_status == 'married'){
+                            echo "Married/Cohabiting";
+                        }else if($row->current_marital_status == 'nevermarried'){
+                            echo "Never Married/Cohabiting";
+                        }else if($row->current_marital_status == 'widowed'){
+                            echo "widowed";
+                        }else if($row->current_marital_status == 'separated'){
+                            echo "Separated";
+                        }else if($row->current_marital_status == 'divorced'){
+                            echo "Divorced";
+                        }else if($row->current_marital_status == 'dontknow'){
+                            echo "Don't Know";
+                        }else if($row->current_marital_status == 'refused'){
+                            echo "Refused";
+                        }
+                    }
+                    ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:0px 0px 10px 6px;"><strong>HIV Testing History</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    7. When was the most recent time you were tested for HIV?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if(trim($row->time_of_last_HIV_test)!=''){
+                            if($row->time_of_last_HIV_test == 'nevertested'){
+                                echo "Never Tested";
+                            }else if($row->time_of_last_HIV_test == 'lt3months'){
+                                echo "< 3 Months Ago";
+                            }else if($row->time_of_last_HIV_test == '3to6months'){
+                                echo "3-6 Months Ago";
+                            }else if($row->time_of_last_HIV_test == '7to12months'){
+                                echo "7-12 Months Ago";
+                            }else if($row->time_of_last_HIV_test == 'gt12months'){
+                                echo "> 12 months";
+                            }else if($row->time_of_last_HIV_test == 'dontknow'){
+                                echo "Don't Know";
+                            }else if($row->time_of_last_HIV_test == 'refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    8. What was the result of that HIV test?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if(trim($row->last_HIV_test_status)!=''){
+                            if($row->last_HIV_test_status == 'didnotreceive'){
+                                echo "I Did Not Receive Result";
+                            }else if($row->last_HIV_test_status == 'hivplus'){
+                                echo "HIV+";
+                            }else if($row->last_HIV_test_status == 'hivminus'){
+                                echo "HIV-";
+                            }else if($row->last_HIV_test_status == 'indeterminate'){
+                                echo "Indeterminate";
+                            }else if($row->last_HIV_test_status == 'dontknow'){
+                                echo "Don't Know";
+                            }else if($row->last_HIV_test_status == 'refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    9. What is your spouse/main sexual partner's HIV status?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if(trim($row->partner_HIV_test_status)!=''){
+                            if($row->partner_HIV_test_status == 'hivplus'){
+                                echo "HIV+";
+                            }else if($row->partner_HIV_test_status == 'hivminus'){
+                                echo "HIV-";
+                            }else if($row->partner_HIV_test_status == 'idonotknow'){
+                                echo "I Do Not Know";
+                            }else if($row->partner_HIV_test_status == 'refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:0px 0px 10px 6px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    10. How old were you when you had sexual intercourse for the very first time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if((trim($row->age_at_very_first_sex)!='') && is_numeric($row->age_at_very_first_sex)){
+                            if($row->age_at_very_first_sex > 1){
+                                echo $row->age_at_very_first_sex." Years";    
+                            }else if($row->age_at_very_first_sex == 1){
+                                echo $row->age_at_very_first_sex." Year";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    11. The first time you had sex, was it because you wanted to or because you were forced to?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                        if(trim($row->reason_for_very_first_sex)!=''){
+                            if($row->reason_for_very_first_sex == 'wantedto'){
+                                echo "Wanted To";
+                            }else if($row->reason_for_very_first_sex == 'forcedto'){
+                                echo "Forced To";
+                            }else if($row->reason_for_very_first_sex == 'dontknow'){
+                                echo "Don't Know";
+                            }else if($row->reason_for_very_first_sex == 'refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    12. How many different people have you had sexual intercourse with in your entire life?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                        if(trim($row->no_of_sexual_partners)!=''){
+                            if(is_numeric($row->no_of_sexual_partners) && $row->no_of_sexual_partners>1){
+                                echo $row->no_of_sexual_partners." Persons";
+                            }else if(is_numeric($row->no_of_sexual_partners) && $row->no_of_sexual_partners==1){
+                                echo $row->no_of_sexual_partners." Person";
+                            }else if($row->no_of_sexual_partners=='dontknow'){
+                                echo "Don't Know";
+                            }else if($row->no_of_sexual_partners=='refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    13. How many different people have you had sex with in the last 6 months?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                        if(trim($row->no_of_sexual_partners_in_last_six_months)!=''){
+                            if(is_numeric($row->no_of_sexual_partners_in_last_six_months) && $row->no_of_sexual_partners_in_last_six_months>1){
+                                echo $row->no_of_sexual_partners_in_last_six_months." Persons";
+                            }else if(is_numeric($row->no_of_sexual_partners_in_last_six_months) && $row->no_of_sexual_partners_in_last_six_months==1){
+                                echo $row->no_of_sexual_partners_in_last_six_months." Person";
+                            }else if($row->no_of_sexual_partners_in_last_six_months=='dontknow'){
+                                echo "Don't Know";
+                            }else if($row->no_of_sexual_partners_in_last_six_months=='refused'){
+                                echo "Refused";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    14. How old was your main sexual partner on his last birthday?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if(trim($row->age_of_main_sexual_partner_at_last_birthday)!=''){
+                                if(is_numeric($row->age_of_main_sexual_partner_at_last_birthday) && $row->age_of_main_sexual_partner_at_last_birthday>1){
+                                    echo $row->age_of_main_sexual_partner_at_last_birthday." Years";
+                                }else if(is_numeric($row->age_of_main_sexual_partner_at_last_birthday) && $row->age_of_main_sexual_partner_at_last_birthday==1){
+                                    echo $row->age_of_main_sexual_partner_at_last_birthday." Year";
+                                }else if($row->age_of_main_sexual_partner_at_last_birthday=='dontknow'){
+                                    echo "Don't Know";
+                                }else if($row->age_of_main_sexual_partner_at_last_birthday=='refused'){
+                                    echo "Refused";
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    15. Is the age of your main sexual partner older, younger, or the same age as you?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                            if(trim($row->age_diff_of_main_sexual_partner)!=''){
+                                if($row->age_diff_of_main_sexual_partner=='lt5yearolder'){
+                                    echo "< 5 Years Older";
+                                }else if($row->age_diff_of_main_sexual_partner=='5to10yearolder'){
+                                    echo "5-10 Years Older";
+                                }else if($row->age_diff_of_main_sexual_partner=='10yearsolder'){
+                                    echo ">10 Years Older";
+                                }else if($row->age_diff_of_main_sexual_partner=='sameage'){
+                                    echo "Same Age";
+                                }else if($row->age_diff_of_main_sexual_partner=='lt5yearyounger'){
+                                    echo "< 5 Years Younger";
+                                }else if($row->age_diff_of_main_sexual_partner=='5to10yearyounger'){
+                                    echo "5-10 Years Younger";
+                                }else if($row->age_diff_of_main_sexual_partner=='gt10yearyounger'){
+                                    echo ">10 Years Younger";
+                                }else if($row->age_diff_of_main_sexual_partner=='dontknow'){
+                                    echo "Don't Know";
+                                }else if($row->age_diff_of_main_sexual_partner=='refused'){
+                                    echo "Refused";
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    16. Is your main sexual partner circumcised?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if($row->is_partner_circumcised=='dontknow'){
+                                echo "Don't Know";
+                            }else{
+                                echo ucwords($row->is_partner_circumcised);
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    17. When did you last receive money/gifts in exchange for sex?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                            if(trim($row->last_time_of_receiving_money_for_sex)!=''){
+                                if($row->last_time_of_receiving_money_for_sex=='lt6months'){
+                                    echo "< 6 Months Ago";
+                                }else if($row->last_time_of_receiving_money_for_sex=='6to12months'){
+                                    echo "6-12 Months Ago";
+                                }else if($row->last_time_of_receiving_money_for_sex=='gt12months'){
+                                    echo "> 12 Months Ago";
+                                }else if($row->last_time_of_receiving_money_for_sex=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->last_time_of_receiving_money_for_sex);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    18. How many times have you been pregnant? (including this pregnancy)
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if(trim($row->no_of_times_been_pregnant)!='' && is_numeric($row->no_of_times_been_pregnant)){
+                            if($row->no_of_times_been_pregnant>1){
+                                echo $row->no_of_times_been_pregnant." Times";
+                            }else if($row->no_of_times_been_pregnant==1){
+                                echo $row->no_of_times_been_pregnant." Time";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    19. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <p>
+                        <?php
+                            if(trim($row->no_of_times_condom_used_before_pregnancy)!=''){
+                                if($row->no_of_times_condom_used_before_pregnancy=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->no_of_times_condom_used_before_pregnancy);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    20. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <p>
+                        <?php
+                            if(trim($row->no_of_times_condom_used_after_pregnancy)!=''){
+                                if($row->no_of_times_condom_used_after_pregnancy=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->no_of_times_condom_used_after_pregnancy);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    21. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if(trim($row->have_pain_in_lower_abdomen)!=''){
+                                if($row->have_pain_in_lower_abdomen=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->have_pain_in_lower_abdomen);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    22. If yes, were you treated for these symptoms?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if(trim($row->have_treated_for_lower_abdomen_pain)!=''){
+                                if($row->have_treated_for_lower_abdomen_pain=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->have_treated_for_lower_abdomen_pain);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    23. Have you ever been diagnosed or treated for syphilis?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if(trim($row->have_treated_for_syphilis)!=''){
+                                if($row->have_treated_for_syphilis=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->have_treated_for_syphilis);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;"><strong>Alcohol and drug use</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    24. During the past 6 months, on how many days did you have at least one drink containing alcohol?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s8">
+                    <p>
+                        <?php
+                            if(trim($row->no_of_days_had_drink_in_last_six_months)!=''){
+                                if(is_numeric($row->no_of_days_had_drink_in_last_six_months) && $row->no_of_days_had_drink_in_last_six_months>1){
+                                    echo $row->no_of_days_had_drink_in_last_six_months." Days";
+                                }else if(is_numeric($row->no_of_days_had_drink_in_last_six_months) && $row->no_of_days_had_drink_in_last_six_months==1){
+                                    echo $row->no_of_days_had_drink_in_last_six_months." Day";
+                                }else if($row->no_of_days_had_drink_in_last_six_months=='havenotdrink'){
+                                    echo "Haven't Had a Drink";
+                                }else if($row->no_of_days_had_drink_in_last_six_months=='dontknow'){
+                                    echo "Don't Know";
+                                }else if($row->no_of_days_had_drink_in_last_six_months=='refusedtoanswer'){
+                                    echo "Refused To Answer";
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    25. How often do you have 4 or more drinks with alcohol on one occasion (e.g. within 2 hours)?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                            if(trim($row->do_have_more_drinks_on_one_occasion)!=''){
+                                if($row->do_have_more_drinks_on_one_occasion == 'daily'){
+                                    echo "Daily or On Most Days of The Week";
+                                }else if($row->do_have_more_drinks_on_one_occasion == 'dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->do_have_more_drinks_on_one_occasion);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    26. Have you ever tried recreational drugs?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s8">
+                    <p>
+                        <?php
+                            if(trim($row->have_tried_recreational_drugs)!=''){
+                                if($row->have_tried_recreational_drugs=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->have_tried_recreational_drugs);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    27. In the last 6 months, have you taken any recreational drugs?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <p>
+                        <?php
+                            if(trim($row->had_recreational_drugs_in_last_six_months)!=''){
+                                if($row->had_recreational_drugs_in_last_six_months=='yes'){
+                                    echo "Yes Specify Drug(s) ".$row->recreational_drugs;
+                                }else if($row->had_recreational_drugs_in_last_six_months=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                 echo ucwords($row->had_recreational_drugs_in_last_six_months)   ;
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="col s12" style="margin-top:20px;">
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
