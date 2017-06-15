@@ -72,10 +72,10 @@ class DataCollectionTable extends AbstractTableGateway {
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
-	    $status = 1;//complete
-	    if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == ''){
-		$status = 4;//incomplete
-	    }
+	    //$status = 1;//complete
+	    //if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == ''){
+		//$status = 4;//incomplete
+	    //}
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'study_id'=>$params['studyId'],
@@ -103,7 +103,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
 			'comments'=>$params['comments'],
                         'country'=>$country,
-			'status'=>$status,
+			'status'=>$params['formStatus'],
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
                     );
@@ -455,10 +455,10 @@ class DataCollectionTable extends AbstractTableGateway {
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
-	    $status = base64_decode($params['status']);//selected status
-	    if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '' && base64_decode($params['status'])!= 4){
-		$status = 4;//incomplete
-	    }
+	    //$status = base64_decode($params['status']);//selected status
+	    //if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '' && base64_decode($params['status'])!= 4){
+		//$status = 4;//incomplete
+	    //}
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
 			'study_id'=>$params['studyId'],
@@ -485,7 +485,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'recent_infection'=>$params['recentInfection'],
                         'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
 			'comments'=>$params['comments'],
-                        'status'=>$status,
+                        'status'=>$params['formStatus'],
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );
@@ -1668,7 +1668,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row = array();
 	    $row[] = ucwords($aRow['province']);
 	    $row[] = $aRow['study_id'];
-	    $row[] = (isset($aRow['study_id']) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No') . "<br> <small>". (($aRow['labDataPresentComplete'] == 1)? 'Complete':'Incomplete')."</small>";
+	    //$row[] = (isset($aRow['study_id']) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No') . "<br> <small>". (($aRow['labDataPresentComplete'] == 1)? 'Complete':'Incomplete')."</small>";
+		$row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Incomplete</a>';
 	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View"> Yes</a>':'No';
 	    $row[] = $aRow['final_lag_avidity_odn'];
 	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){

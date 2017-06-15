@@ -746,7 +746,7 @@ class DataCollectionService {
                         $row = array();
                         $row[] = ucwords($aRow['province']);
                         $row[] = $aRow['study_id'];
-                        $row[] = (isset($aRow['study_id'])?'Yes':'No');
+                        $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
                         $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';
                         $row[] = $aRow['final_lag_avidity_odn'];
                         if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
