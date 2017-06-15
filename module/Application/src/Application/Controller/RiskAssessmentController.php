@@ -69,4 +69,24 @@ class RiskAssessmentController extends AbstractActionController{
                 'countryId'=>$countryId
             ));
     }
+    public function viewAction(){
+       $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+       $countryId=base64_decode($this->params()->fromRoute('countryId'));
+       $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
+       $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
+       $facilityService = $this->getServiceLocator()->get('FacilityService');
+       if(!isset($countryId) || trim($countryId)==''){
+            $country = $result->country;
+        }else{
+            $country = $countryId;
+       }
+       $facilityList=$facilityService->getActivefacilities('data-collection',$country);
+       $occupationTypeList=$riskAssessmentService->getOccupationTypes();
+       return new ViewModel(array(
+                'facilities'=>$facilityList,
+                'occupationTypes'=>$occupationTypeList,
+                'row'=>$result,
+                'countryId'=>$countryId
+            ));
+    }
 }
