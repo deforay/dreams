@@ -1036,4 +1036,20 @@ if(!isset($countryId) || trim($countryId)== ''){
         $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
       }
     }
+    
+    dcid = [];
+    function printDataCollection(ID){
+	dcid.push(ID);
+	$.blockUI();
+	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid},
+	    function(data){
+		if(data === "" || data === null || data === undefined){
+		    alert('OOPS..');
+		    $.unblockUI();
+		}else{
+		    $.unblockUI();
+		    window.open("/temporary/"+data, "_blank");
+		}
+	    });
+    }
 </script>

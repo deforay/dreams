@@ -385,8 +385,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		   $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
 	    }
+	    $exportPdf = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> Print PDF</a>';
 	    if($loginContainer->hasViewOnlyAccess =='no'){
-	       $row[] = $dataView.'&nbsp;&nbsp;'.$lockView.'&nbsp;'.$unlockedInfo;
+	       $row[] = $dataView.'&nbsp;&nbsp;'.$lockView.'&nbsp;&nbsp;'.$unlockedInfo.'&nbsp;&nbsp;'.$exportPdf;
 	    }
 	    $output['aaData'][] = $row;
 	}
