@@ -880,7 +880,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
 						))
 				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
-				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name'))
+				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name','country_id'))
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
