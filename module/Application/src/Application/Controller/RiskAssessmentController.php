@@ -14,9 +14,16 @@ class RiskAssessmentController extends AbstractActionController{
             $result = $riskAssessmentService->getAllRiskAssessment($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }
+        $countryId = '';
+        $type = '';
+        $date = '';
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $type=$this->params()->fromRoute('type');
+        $date=base64_decode($this->params()->fromRoute('date'));
         return new ViewModel(array(
-            'countryId'=>$countryId
+            'countryId'=>$countryId,
+            'type'=>$type,
+            'date'=>$date
         ));
         
     }

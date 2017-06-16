@@ -236,6 +236,11 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
             </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
                 <legend>TEST RESULT</legend>
+		<?php
+		if($row->lag_avidity_result == 'lt' && ($row->asante_rapid_recency_assy == 'p/r' || $row->asante_rapid_recency_assy == '/r')){
+		?>
+		  <span style="width:100%;font-size:18px;color:red;">Because of inconsistent or mismatching results, you are required to provide HIV RNA Result</span>
+		<?php } ?>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">

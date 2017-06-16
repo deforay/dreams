@@ -216,11 +216,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	   $mappedLab[] = $lab['laboratory_id'];
         }
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                     ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
-                     ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
-                     ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
+                      ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
+                      ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
+                      ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
+                      ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $splitReportingMonthYear = explode("/",$parameters['date']);
+	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
 	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
@@ -251,11 +255,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+                      ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $splitReportingMonthYear = explode("/",$parameters['date']);
+	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
 	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');

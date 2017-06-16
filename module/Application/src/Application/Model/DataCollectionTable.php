@@ -222,6 +222,11 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
+	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $splitReportingMonthYear = explode("/",$parameters['date']);
+	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	}if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
+	  $sQuery = $sQuery->where(array('da_c.status'=>2)); 
 	}
 	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
@@ -260,6 +265,11 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
+	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $splitReportingMonthYear = explode("/",$parameters['date']);
+	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	}if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
+	   $tQuery = $tQuery->where(array('da_c.status'=>2)); 
 	}
 	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
@@ -361,33 +371,31 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
-	    $dataView = '';
-	    $lockView = '';
+	    $dataLock = '';
+	    $dataEdit = '';
+	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>';
 	    if($loginContainer->roleCode== 'LDEO'){
-		$dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>';
 		if($aRow['test_status_name']== 'completed'){
-		   $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		   $dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		}
 	    }else if($loginContainer->roleCode== 'LS'){
 		if($aRow['test_status_name']== 'unlocked'){
-		   $dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-		}else{
-		   $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>';
+		   $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		}
 	    }else{
-		$dataView = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
 	     
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 		if($aRow['test_status_name']== 'completed' || $aRow['test_status_name']== 'unlocked'){
-		   $lockView = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		   $dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		}else if($aRow['test_status_name']== 'locked'){
-		   $lockView = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
+		   $dataLock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
 	    }
-	    $exportPdf = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> Print PDF</a>';
+	    $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    if($loginContainer->hasViewOnlyAccess =='no'){
-	       $row[] = $dataView.'&nbsp;&nbsp;'.$lockView.'&nbsp;&nbsp;'.$unlockedInfo.'&nbsp;&nbsp;'.$exportPdf;
+	       $row[] = $dataEdit.'&nbsp;&nbsp;'.$dataView.'&nbsp;&nbsp;'.$dataLock.'&nbsp;&nbsp;'.$pdfLink.'&nbsp;&nbsp;'.$unlockedInfo;
 	    }
 	    $output['aaData'][] = $row;
 	}
@@ -1473,7 +1481,7 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province_name','da_c.study_id','da_c.status','assessment_id','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.asante_rapid_recency_assy');
+	$aColumns = array('province_name','da_c.study_id','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.asante_rapid_recency_assy');
        /*
         * Paging
         */
@@ -1570,7 +1578,6 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'data_collection_id',
 						   'study_id',
 						   'country',
-						   'final_lag_avidity_odn',
 						   'lag_avidity_result',
 						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
@@ -1631,7 +1638,6 @@ class DataCollectionTable extends AbstractTableGateway {
 						'data_collection_id',
 						'study_id',
 						'country',
-						'final_lag_avidity_odn',
 						'lag_avidity_result',
 						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
@@ -1674,10 +1680,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
-	    //$row[] = (isset($aRow['study_id']) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Yes</a>':'No') . "<br> <small>". (($aRow['labDataPresentComplete'] == 1)? 'Complete':'Incomplete')."</small>";
-		$row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Incomplete</a>';
+	    $row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Incomplete</a>';
 	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View"> Yes</a>':'No';
-	    $row[] = $aRow['final_lag_avidity_odn'];
 	    //LAg assay
 	    if($aRow['lag_avidity_result']=='lt'){
 		$row[] = 'Long Term';
