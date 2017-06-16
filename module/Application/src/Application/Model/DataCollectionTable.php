@@ -77,10 +77,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
 	    $status = 1;//complete
-	    if($lagAssayValidate == false || $rapidAssayValidate == false){
-		$status = 4;//incomplete
+	    if($rejectionReason == NULL){
+		if($lagAssayValidate == false || $rapidAssayValidate == false){
+		    $status = 4;//incomplete
+		}
 	    }
-	    
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'study_id'=>$params['studyId'],
@@ -476,8 +477,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $status = $params['formStatus'];
 	    if($status!= 2){
 		$status = 1;//complete
-		if($lagAssayValidate == false || $rapidAssayValidate == false){
-		    $status = 4;//incomplete
+		if($rejectionReason == NULL){
+		    if($lagAssayValidate == false || $rapidAssayValidate == false){
+			$status = 4;//incomplete
+		    }
 		}
 	    }
             $data = array(
