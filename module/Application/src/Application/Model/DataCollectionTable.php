@@ -1463,19 +1463,15 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
 	$location = array();
 	//facility query
-	$facilityLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-				       ->columns(array())
-				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
-				       ->where(array('da_c.country'=>$params['country']))
-				       ->group('da_c.lab');
+	$facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
+				     ->columns(array('facility_name','latitude','longitude'))
+				     ->where(array('f.country'=>$params['country']));
 	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
         $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	//anc query
-	$ancLocationQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-				       ->columns(array())
-				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
-				       ->where(array('da_c.country'=>$params['country']))
-				       ->group('da_c.anc_site');
+	$ancLocationQuery = $sql->select()->from(array('anc' => 'anc_site'))
+				->columns(array('anc_site_name','latitude','longitude'))
+				->where(array('anc.country'=>$params['country']));
 	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
         $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return $location;
