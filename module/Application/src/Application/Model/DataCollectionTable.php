@@ -1468,12 +1468,6 @@ class DataCollectionTable extends AbstractTableGateway {
 				       ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.lab');
-	if(trim($params['province'])!= ''){
-	    $facilityLocationQuery = $facilityLocationQuery->where(array('f.province'=>base64_decode($params['province'])));
-	}if(trim($params['reportingMonthYear'])!= ''){
-	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $facilityLocationQuery = $facilityLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}
 	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
         $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	//anc query
@@ -1482,12 +1476,6 @@ class DataCollectionTable extends AbstractTableGateway {
 				       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_name','latitude','longitude'))
 				       ->where(array('da_c.country'=>$params['country']))
 				       ->group('da_c.anc_site');
-	if(trim($params['province'])!= ''){
-	    $facilityLocationQuery = $facilityLocationQuery->where(array('anc.province'=>base64_decode($params['province'])));
-	}if(trim($params['reportingMonthYear'])!= ''){
-	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $ancLocationQuery = $ancLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}
 	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
         $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return $location;
