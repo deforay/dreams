@@ -628,6 +628,8 @@ if(!isset($countryId) || trim($countryId)== ''){
             "sAjaxSource": "<?php echo $this->url('data-collection',array('action' => 'index')); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
+                aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
+                aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

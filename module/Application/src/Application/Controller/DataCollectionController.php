@@ -23,7 +23,12 @@ class DataCollectionController extends AbstractActionController{
             $result = $dataCollectionService->getAllDataCollections($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $countryId = '';
+            $type = '';
+            $date = '';
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $type=$this->params()->fromRoute('type');
+            $date=base64_decode($this->params()->fromRoute('date'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
@@ -37,6 +42,8 @@ class DataCollectionController extends AbstractActionController{
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
+                'type'=>$type,
+                'date'=>$date,
                 'ancSites'=>$ancSiteList,
                 'rejectionReasons'=>$rejectionReasonList,
                 'facilities'=>$facilityList,

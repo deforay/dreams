@@ -48,7 +48,7 @@ $loginContainer = new Container('user');
                                 <tr>
                                     <td><?php echo ucwords($country['country_name']); ?></td>
                                     <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>" target="_blank" title="View"><?php echo $country['totalDataPoints']; ?></a></td>
-                                    <td><?php echo (isset($country['assessments']))?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '" target="_blank" title="View">'.$country['assessments'].'<a>':0; ?></td>
+                                    <td><?php echo (isset($country['assessments']))?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']).'" target="_blank" title="View">'.$country['assessments'].'<a>':0; ?></td>
                                     <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>" target="_blank" title="View"><?php echo $country['dataPointFinalized']; ?></a></td>
                                     <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                                 </tr>

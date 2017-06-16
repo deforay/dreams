@@ -8,7 +8,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
 }
 $interviewDate = '';
-if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->interview_date!= null && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
 ?>
@@ -667,7 +667,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                                 }else if($row->had_recreational_drugs_in_last_six_months=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                 echo ucwords($row->had_recreational_drugs_in_last_six_months)   ;
+                                    echo ucwords($row->had_recreational_drugs_in_last_six_months)   ;
                                 }
                             }
                         ?>

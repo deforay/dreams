@@ -351,14 +351,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'LAB-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'LAB-DATA-COLLECTION--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("LAB-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
+                error_log("LAB-DATA-COLLECTION--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
@@ -646,14 +646,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'ANC-DATA-COLLECTION-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'ANC-DATA-COLLECTION--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("ANC-DATA-COLLECTION-EXCEL--" . $exc->getMessage());
+                error_log("ANC-DATA-COLLECTION--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
@@ -748,8 +748,7 @@ class DataCollectionService {
                         $row[] = $aRow['study_id'];
                         $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
                         $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';
-                        $row[] = $aRow['final_lag_avidity_odn'];
-if($aRow['lag_avidity_result']=='lt'){
+                        if($aRow['lag_avidity_result']=='lt'){
                             $row[] = 'Long Term';
                         }else if($aRow['lag_avidity_result']=='r'){
                             $row[] = 'Recent';
@@ -796,9 +795,8 @@ if($aRow['lag_avidity_result']=='lt'){
                     $sheet->setCellValue('B1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('Final LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -806,7 +804,6 @@ if($aRow['lag_avidity_result']=='lt'){
                     $sheet->getStyle('D1')->applyFromArray($styleArray);
                     $sheet->getStyle('E1')->applyFromArray($styleArray);
                     $sheet->getStyle('F1')->applyFromArray($styleArray);
-                    $sheet->getStyle('G1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $colNo = 0;
@@ -814,7 +811,7 @@ if($aRow['lag_avidity_result']=='lt'){
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 6){
+                            if($colNo > 5){
                                 break;
                             }
                             if (is_numeric($value)) {
@@ -832,14 +829,14 @@ if($aRow['lag_avidity_result']=='lt'){
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'STUDY-OVERVIEW-REPORT-EXCEL--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'STUDY-OVERVIEW-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("STUDY-OVERVIEW-REPORT-EXCEL--" . $exc->getMessage());
+                error_log("STUDY-OVERVIEW-REPORT--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
