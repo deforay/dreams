@@ -80,7 +80,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($rapidAssayPnValidate == false && $rapidAssayRltValidate == false)){
+		if($lagAssayValidate == false || ($rapidAssayPnValidate == false || $rapidAssayRltValidate == false)){
 		    $status = 4;//incomplete
 		}
 	    }
@@ -480,7 +480,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($rapidAssayPnValidate == false && $rapidAssayRltValidate == false)){
+		if($lagAssayValidate == false || ($rapidAssayPnValidate == false || $rapidAssayRltValidate == false)){
 		    $status = 4;//incomplete
 		}else if($params['formStatus'] == 2){
 		   $status = $params['formStatus']; 
