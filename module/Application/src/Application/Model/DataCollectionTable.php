@@ -58,7 +58,8 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    $rapidAssayValidate = true;
+	    $rapidAssayPnValidate = true;
+	    $rapidAssayRltValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -69,16 +70,17 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-		$rapidAssayValidate = false;
+		$rapidAssayPnValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
+		$rapidAssayRltValidate = ($params['asanteRapidRecencyAssayPn'] == 'n')?true:false;
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $rapidAssayValidate == false){
+		if($lagAssayValidate == false || ($rapidAssayPnValidate == false && $rapidAssayRltValidate == false)){
 		    $status = 4;//incomplete
 		}
 	    }
@@ -456,7 +458,8 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    $rapidAssayValidate = true;
+	    $rapidAssayPnValidate = true;
+	    $rapidAssayRltValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -467,20 +470,20 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-		$rapidAssayValidate = false;
+		$rapidAssayPnValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
+		$rapidAssayRltValidate = ($params['asanteRapidRecencyAssayPn'] == 'n')?true:false;
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
-	    $status = $params['formStatus'];
-	    if($status!= 2){
-		$status = 1;//complete
-		if($rejectionReason == NULL){
-		    if($lagAssayValidate == false || $rapidAssayValidate == false){
-			$status = 4;//incomplete
-		    }
+	    $status = 1;//complete
+	    if($rejectionReason == NULL){
+		if($lagAssayValidate == false || ($rapidAssayPnValidate == false && $rapidAssayRltValidate == false)){
+		    $status = 4;//incomplete
+		}else if($params['formStatus'] == 2){
+		   $status = $params['formStatus']; 
 		}
 	    }
             $data = array(
