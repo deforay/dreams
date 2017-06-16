@@ -246,17 +246,11 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                         </div>
                     </div>
                 </div>
-                <div class="row" style="margin-bottom:20px !important;">
+                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                           <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Assante) </label><br>
                           <p><?php echo $asanteRapidRecencyAssay; ?></p>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                          <label for="comments" class=""> Comments </label><br>
-                          <p><?php echo ucfirst($row->comments); ?></p>
                         </div>
                     </div>
                     <div class="col s4">
@@ -267,6 +261,14 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                 </div>
             </fieldset>
+            <div class="row" style="padding-bottom:20px !important;">
+                <div class="col s4">
+                    <div class="input-field col m12 s12">
+                      <label for="comments" class=""> Comments </label><br>
+                      <p><?php echo ucfirst($row->comments); ?></p>
+                    </div>
+                </div>
+            </div>
             <div class="col s12" style="margin-top:20px;">
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
             </div>
