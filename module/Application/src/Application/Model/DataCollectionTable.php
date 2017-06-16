@@ -57,25 +57,30 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['dob']) && trim($params['dob'])!= ''){
                 $patientDOB = $common->dateFormat($params['dob']);
             }
+	    $lagAssayValidate = true;
+	    $rapidAssayValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
+		$lagAssayValidate = false;
                 $params['lagAvidityResult'] = NULL;
             } if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
+		$rapidAssayValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
-	    //$status = 1;//complete
-	    //if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == ''){
-		//$status = 4;//incomplete
-	    //}
+	    $status = 1;//complete
+	    if($lagAssayValidate == false || $rapidAssayValidate == false){
+		$status = 4;//incomplete
+	    }
+	    
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'study_id'=>$params['studyId'],
@@ -103,7 +108,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
 			'comments'=>$params['comments'],
                         'country'=>$country,
-			'status'=>$params['formStatus'],
+			'status'=>$status,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
                     );
@@ -449,25 +454,32 @@ class DataCollectionTable extends AbstractTableGateway {
             if(isset($params['dob']) && trim($params['dob'])!= ''){
                 $patientDOB = $common->dateFormat($params['dob']);
             }
+	    $lagAssayValidate = true;
+	    $rapidAssayValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
+		$lagAssayValidate = false;
                 $params['lagAvidityResult'] = NULL;
             } if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
+		$rapidAssayValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
-	    //$status = base64_decode($params['status']);//selected status
-	    //if(isset($params['asanteRapidRecencyAssayRlt']) && $params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '' && base64_decode($params['status'])!= 4){
-		//$status = 4;//incomplete
-	    //}
+	    $status = $params['formStatus'];
+	    if($status!= 2){
+		$status = 1;//complete
+		if($lagAssayValidate == false || $rapidAssayValidate == false){
+		    $status = 4;//incomplete
+		}
+	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
 			'study_id'=>$params['studyId'],
@@ -494,7 +506,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'recent_infection'=>$params['recentInfection'],
                         'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
 			'comments'=>$params['comments'],
-                        'status'=>$params['formStatus'],
+                        'status'=>$status,
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );

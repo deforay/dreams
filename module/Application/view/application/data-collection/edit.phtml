@@ -250,8 +250,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2)?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2)?'':'*'; ?></label>
+                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'*'; ?></label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -313,8 +313,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
 		    <div class="col s3">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2)?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2)?'':'*'; ?></label>
+                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'*'; ?></label>
                         </div>
 		    </div>
                 </div>
@@ -488,6 +488,13 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    }else{
 	       $('.prePopulateRecentInfection').css('visibility','hidden');
 	    }
+	    
+	    //hiv rna mandatory
+	    if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
+		$('#hivRna,#hivRnaNew').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+	    }
 	}
     }
     
@@ -499,6 +506,11 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}
+	populateResult('');
+    });
+    
+    $('input[type=radio][name=asanteRapidRecencyAssayRlt]').change(function() {
+	populateResult('');
     });
     
     function validateDataReportingDates(){
@@ -553,31 +565,6 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
         });
         
         if(flag){
-	    $("#formStatus").val(1);
-	    testResultSectionArray = ['readerValue1','readerValue2','hivRnaNew','hivRna','finalLagAvidityOdn','asanteRapidRecencyAssayP','asanteRapidRecencyAssayN'];
-	    if ($.trim($('#rejectionReason').val())==''){
-		if ($("#asanteRapidRecencyAssayP").is(":checked") && $("input[type=radio][name=asanteRapidRecencyAssayPn]").prop("checked")) {
-		   $("#formStatus").val(1);
-		}else if ($("#asanteRapidRecencyAssayN").is(":checked")) {
-		   $("#formStatus").val(1);
-		}else{
-		   $("#formStatus").val(4);
-		}
-	    }
-	    $("form#editDataReportingForm :input").each(function(){
-		if ($.trim($('#rejectionReason').val())=='') {
-		    if ($(this).val()=='' && $(this)[0]['id']!='' && $(this)[0]['id']!='readerValue1' && $(this)[0]['id']!='readerValue2' && $(this)[0]['id']!='rejectionReason') {
-			$("#formStatus").val(4);
-		    }
-		}else{
-		    if ($(this).val()=='' && $(this)[0]['id']!='' && $.inArray($(this)[0]['id'], testResultSectionArray) == -1) {
-			$("#formStatus").val(4);
-		    }
-		}
-	    });
-	    if($("#prevStatus").val()==2 && $("#formStatus").val()==1){
-	      $("#formStatus").val(2);
-	    }
             document.getElementById('editDataReportingForm').submit();
         }
     }
@@ -642,9 +629,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
       var diff = new Date(date1.getTime() - date2.getTime());
       if((diff.getUTCFullYear() - 1970) == 0){
         $("#age").val(diff.getUTCMonth()); // Gives month count of difference
-		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+	$('label[for="age"]').css("transform", "translateY(-140%)"); 
       }else{
-		$('label[for="age"]').css("transform", "translateY(-140%)"); 
+	$('label[for="age"]').css("transform", "translateY(-140%)"); 
         $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
       }
     }

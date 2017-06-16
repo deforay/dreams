@@ -251,7 +251,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-				<select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" style='' onchange="emptyTestResultSection()">
+				<select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" onchange="emptyTestResultSection();">
 				    <option value=""> -- Select -- </option>
 				    <?php
 				    foreach($rejectionReasons as $rejection){
@@ -391,7 +391,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <input type="hidden" name="lDCId" id="lDCId" value="<?php echo (isset($lastDataCollection->data_collection_id))?$lastDataCollection->data_collection_id:'';?>"/>
 		    <input type="hidden" name="lCCode" id="lCCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
 		    <input type="hidden" name="surveillanceId" id="surveillanceId"/>
-			<input type="hidden" name="formStatus" id="formStatus" value="4"/>
 		    <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
 		    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
 		</div>
@@ -871,6 +870,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    }else{
 	       $('.prePopulateRecentInfection').css('visibility','hidden');
 	    }
+	    
+	    //hiv rna mandatory
+	    if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
+		$('#hivRna,#hivRnaNew').addClass('isRequired');
+		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+	    }
 	}
     }
     
@@ -893,6 +899,11 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	}
+	populateResult('');
+    });
+    
+    $('input[type=radio][name=asanteRapidRecencyAssayRlt]').change(function() {
+	populateResult('');
     });
     
     function validateDataReportingDates(){
@@ -958,24 +969,6 @@ if(!isset($countryId) || trim($countryId)== ''){
         });
 	
         if(flag){
-	    $("#formStatus").val(1);
-	    testResultSectionArray = ['readerValue1','readerValue2','hivRnaNew','hivRna','finalLagAvidityOdn','asanteRapidRecencyAssayP','asanteRapidRecencyAssayN'];
-	    if ($("#asanteRapidRecencyAssayP").is(":checked") && $("input[type=radio][name=asanteRapidRecencyAssayPn]").prop("checked")) {
-	       $("#formStatus").val(1);
-	    }else if ($("#asanteRapidRecencyAssayN").is(":checked")) {
-		$("#formStatus").val(1);
-	    }
-	    $("form#addDataReportingForm :input").each(function(){
-		if ($.trim($('#rejectionReason').val())=='') {
-		    if ($(this).val()=='' && $(this)[0]['id']!='' && $(this)[0]['id']!='readerValue1' && $(this)[0]['id']!='readerValue2' && $(this)[0]['id']!='rejectionReason') {
-			$("#formStatus").val(4);
-		    }
-		}else{
-		    if ($(this).val()=='' && $(this)[0]['id']!='' && $.inArray($(this)[0]['id'], testResultSectionArray) == -1) {
-			$("#formStatus").val(4);
-		    }
-		}
-	    });
             document.getElementById('addDataReportingForm').submit();
         }
     }
