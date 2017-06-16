@@ -169,6 +169,7 @@ if(isset($countryId) && trim($countryId)!=''){
         function(data) {
             $('.ajaxProvince').html(data);
             $('#province').material_select();
+            $('div').removeClass('isRequired');
         });
     });
     
