@@ -18,8 +18,8 @@ class RiskAssessmentController extends AbstractActionController{
         $type = '';
         $date = '';
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
-        $type=$this->params()->fromRoute('type');
-        $date=base64_decode($this->params()->fromRoute('date'));
+        $type=$this->params()->fromQuery('type');
+        $date=base64_decode($this->params()->fromQuery('date'));
         return new ViewModel(array(
             'countryId'=>$countryId,
             'type'=>$type,
