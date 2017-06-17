@@ -909,7 +909,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
-				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name','country_id'))
+				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -1456,7 +1456,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('country'))
 				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
