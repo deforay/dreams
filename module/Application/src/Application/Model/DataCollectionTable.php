@@ -1701,8 +1701,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
-	    $row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View"> Incomplete</a>';
-	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View"> Yes</a>':'No';
+	    $row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Incomplete</a>';
+	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View data"> Yes</a>':'No';
 	    //LAg assay
 	    if($aRow['lag_avidity_result']=='lt'){
 		$row[] = 'Long Term';
