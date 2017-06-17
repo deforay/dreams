@@ -146,7 +146,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		<div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getDateOfBirth()">
+			    <input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getAge();">
 			    <label for="dob" class="">DOB *</label>
 			    </div>
 		    </div>
@@ -158,8 +158,8 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		    </div>
 		    <div class="col s4">
 			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestational age" value="<?php echo $row['gestational_age']; ?>">
-			    <label for="gestationalAge" class="">Gestational Age </label>
+			    <input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age" value="<?php echo $row['gestational_age']; ?>">
+			    <label for="gestationalAge" class="">Gestation Age (Weeks) </label>
 			</div>
 	            </div>
 		</div>
@@ -224,10 +224,10 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		    <div class="col s4">
 		       <div class="input-field col m12 s12">
 			   <select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
-				   <option value=""> -- Select -- </option>
-				   <option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
-				   <option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
-				   <option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
+				<option value=""> -- Select -- </option>
+				<option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
+				<option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
+				<option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
 			   </select>
 			   <label for="specimenType">Specimen Type </label>
 		       </div>
@@ -236,11 +236,6 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
             </fieldset>
             <fieldset style="border-color:#F44336;border-style: solid;">
                 <legend>TEST RESULT</legend>
-		<?php
-		if($row->lag_avidity_result == 'lt' && ($row->asante_rapid_recency_assy == 'p/r' || $row->asante_rapid_recency_assy == '/r')){
-		?>
-		  <span style="width:100%;font-size:18px;color:red;">Because of inconsistent or mismatching results, you are required to provide HIV RNA Result</span>
-		<?php } ?>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
@@ -271,7 +266,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-padding col m10 s10 prePopulateHIVRNA">
-                          <strong>HIV RNA >= 1000 (copies/ml)</strong><br>
+                          <strong>HIV RNA > 1000 (copies/ml)</strong><br>
                            <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></label>
                           <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
@@ -281,7 +276,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     </div>
                     <div class="col s4">
                         <div class="input-padding col m12 s12 prePopulateRecentInfection">
-                          <strong>Recent Infection (LAg-R & RNA >= 1000)</strong><br>
+                          <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
                           <label for="recentInfection" style="font-size:13px;color:#fff;"><?php echo ucwords($row->recent_infection); ?></label>
                           <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
@@ -317,6 +312,12 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                             <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'*'; ?></label>
                         </div>
 		    </div>
+		    <?php
+		    if($row->final_lag_avidity_odn > 2 && ($row->asante_rapid_recency_assy == 'p/r' || $row->asante_rapid_recency_assy == '/r')){ ?>
+			<div class="col s4">
+			    <span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
+			</div>
+		    <?php } ?>
                 </div>
 		<!--<div class="row" style="margin-bottom:0;">
 		    <div class="col s3">
@@ -367,7 +368,10 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		validateDataReportingDates();
 	    }
         });
-	   emptyTestResultSection();
+       <?php
+       if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>
+	emptyTestResultSection();
+       <?php } ?>
     });
     
     $('#hivRnaNew').on('keyup', function() {
@@ -430,13 +434,13 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-		if(parseInt($('#hivRna').val()) < 1000){
+		if(parseInt($('#hivRna').val()) <= 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn <= 2.0 and HIV RNA < 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
-		}else if(parseInt($('#hivRna').val()) >= 1000){
+		}else if(parseInt($('#hivRna').val()) > 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0 and HIV RNA >= 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
 	            $('.prePopulateAvidity').css('visibility','visible');
@@ -453,13 +457,13 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
 	    //Gt1000
-	    if(parseInt($('#hivRna').val()) >= 1000){
+	    if(parseInt($('#hivRna').val()) > 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('High Viral Load (>= 1000 cp/mL)');
+		$('label[for="hivRnaGT1000"]').html('High Viral Load (> 1000 cp/mL)');
 		$('#hivRnaGT1000Yes').prop('checked',true);
-	    }else if(parseInt($('#hivRna').val()) < 1000){
+	    }else if(parseInt($('#hivRna').val()) <= 1000){
 		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('Low Viral Load (< 1000 cp/mL)');
+		$('label[for="hivRnaGT1000"]').html('Low Viral Load (<= 1000 cp/mL)');
 		$('#hivRnaGT1000No').prop('checked',true);
 	    }else{
 		$('.prePopulateHIVRNA').css('visibility','hidden');
@@ -598,42 +602,19 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	}
     });
     
-    function getDateOfBirth(){
-      var today = new Date();
+    //get age
+    function getAge(){
       var dob = $("#dob").val();
       if($.trim(dob) == ""){
         $("#age").val("");
         return false;
       }
-      
-      var dd = today.getDate();
-      var mm = today.getMonth();
-      var yyyy = today.getFullYear();
-      if(dd<10) {
-        dd='0'+dd
-      }
-      if(mm<10) {
-       mm='0'+mm
-      }
-      
+      //calculate age
       splitDob = dob.split("/");
-      var dobDate = new Date(splitDob[1] + splitDob[2]+", "+splitDob[0]);
-      var monthDigit = dobDate.getMonth();
-      var dobYear = splitDob[2];
-      var dobMonth = isNaN(monthDigit) ? 0 : (monthDigit);
-      dobMonth = (dobMonth<10) ? '0'+dobMonth: dobMonth;
-      var dobDate = (splitDob[0]<10) ? '0'+splitDob[0]: splitDob[0];
-      
-      var date1 = new Date(yyyy,mm,dd);
-      var date2 = new Date(dobYear,dobMonth,dobDate);
-      var diff = new Date(date1.getTime() - date2.getTime());
-      if((diff.getUTCFullYear() - 1970) == 0){
-        $("#age").val(diff.getUTCMonth()); // Gives month count of difference
-	$('label[for="age"]').css("transform", "translateY(-140%)"); 
-      }else{
-	$('label[for="age"]').css("transform", "translateY(-140%)"); 
-        $("#age").val((diff.getUTCFullYear() - 1970)); // Gives difference as year
-      }
+      dob = splitDob[2]+'-'+splitDob[1]+'-'+splitDob[0];
+      var years = moment().diff(dob, 'years',false);
+      $('label[for="age"]').css("transform", "translateY(-140%)"); 
+      $("#age").val(years); // Gives difference as year
     }
     
     function emptyTestResultSection() {
@@ -646,4 +627,11 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }
+    
+    $('#gestationalAge').on('change',function(){
+	if($('#gestationalAge').val()!= '' && ($('#gestationalAge').val() < 1 || $('#gestationalAge').val() > 50)){
+	    alert('Gestational Age can only be between 1 to 50 Weeks');
+	    $('#gestationalAge').val('');
+	}
+    });
 </script>

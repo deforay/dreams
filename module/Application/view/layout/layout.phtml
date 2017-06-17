@@ -27,12 +27,11 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
 $countryAdminUserMenuAccess = 'hide';
 $countryAdminLabMenuAccess = 'hide';
 $countryAdminAncsiteMenuAccess = 'hide';
-$countryAdminDashboardMenuAccess = 'hide';
+$countryAdminDashboardMenuAccess = 'show';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $countryAdminUserMenuAccess = 'show';
     $countryAdminLabMenuAccess = 'show';
     $countryAdminAncsiteMenuAccess = 'show';
-    $countryAdminDashboardMenuAccess = 'show';
 }else if($loginContainer->roleCode== 'LS'){
     $countryAdminUserMenuAccess = 'show';
     $countryAdminLabMenuAccess = 'show';

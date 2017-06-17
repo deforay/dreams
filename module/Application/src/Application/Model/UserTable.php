@@ -134,7 +134,7 @@ class UserTable extends AbstractTableGateway {
 	    $password = sha1($params['password'] . $configResult["password"]["salt"]);
 	    $data = array(
 		'full_name' => $params['fullName'],
-		'user_code' => $params['userCode'],
+		//'user_code' => $params['userCode'],
 		'user_name' => $params['userName'],
 		'password' => $password,
 		'role' => base64_decode($params['role']),
@@ -166,10 +166,10 @@ class UserTable extends AbstractTableGateway {
 	$loginContainer = new Container('user');
 	$common = new CommonService();
 	if(trim($parameters['countryId']) ==''){
-	    $aColumns = array('u.full_name','u.user_code','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
+	    $aColumns = array('u.full_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
 	    $orderColumns = array('u.full_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status','u.last_login');
 	}else{
-	   $aColumns = array('u.full_name','u.user_code','r.role_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
+	   $aColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status',"DATE_FORMAT(u.last_login,'%d-%b-%Y %H:%i:%s')");
 	   $orderColumns = array('u.full_name','r.role_name','u.user_name','u.email','u.mobile','u.has_view_only_access','u.status','u.last_login');
 	}
 
@@ -384,7 +384,7 @@ class UserTable extends AbstractTableGateway {
 	    $common = new CommonService();
 	    $data = array(
 		'full_name' => $params['fullName'],
-		'user_code' => $params['userCode'],
+		//'user_code' => $params['userCode'],
 		'user_name' => $params['userName'],
 		'role' => base64_decode($params['role']),
 		'email' => $params['email'],

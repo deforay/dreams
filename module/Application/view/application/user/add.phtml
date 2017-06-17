@@ -30,20 +30,13 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">code</i>
-                        <input id="userCode" name="userCode" type="text" class="validate" title="Please enter user code" onblur="checkNameValidation('user', 'user_code', this, null,'The user code that you entered already exist. Please enter different code.')">
-                        <label for="userCode" class="">User Code </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
                         <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" onblur="checkNameValidation('user', 'user_name', this, null,'The user name that you entered already exist. Please enter different name.')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
@@ -51,8 +44,6 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="password" class="">Password *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
@@ -60,6 +51,8 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="password" class="">Confirm Password *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
@@ -76,24 +69,22 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="role" class="">User Role *</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('user', 'email', this, null,'The user email that you entered already exist. Please enter different email id.')">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id">
                         <label for="email" class="">Email *</label>
-                    </div>
-                </div>
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" onblur="checkNameValidation('user', 'mobile', this, null,'The user mobile no. that you entered already exist. Please enter different mobile no');">
-                        <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
             </div>
             <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <i class="material-icons prefix">stay_primary_portrait</i>
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number">
+                        <label for="mobile" class="">Contact Number *</label>
+                    </div>
+                </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
@@ -101,6 +92,8 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-padding col m10 s10">
                         Has View Only Access ? *<br>
@@ -110,8 +103,6 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="hasViewOnlyAccessYesNo">No </label>
 		    </div>
                 </div>
-            </div>
-            <div class="row">
                 <?php
                 if(trim($countryId) > 0){
                 ?>
@@ -123,7 +114,7 @@ if(isset($countryId) && trim($countryId)!=''){
                                 <?php
                                 foreach($countries as $country){
                                     ?>
-                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($countryId ==$country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
+                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo($countryId == $country['country_id'])?'selected="selected"':''; ?>><?php echo ucwords($country['country_name']);?></option>
                                     <?php
                                 }
                                 ?>
@@ -146,13 +137,14 @@ if(isset($countryId) && trim($countryId)!=''){
                             <label for="country" class="">Country *</label>
                         </div>
                     </div>
-                <?php } ?>
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
-                        <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
-                        <label for="comments">Comments</label>
+                <?php } else { ?>
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                            <label for="comments">Comments</label>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
             </div>
             <div class="row clinicanSection" style="display:none;padding-bottom:20px;">
                 <div class="col s6">
@@ -205,6 +197,16 @@ if(isset($countryId) && trim($countryId)!=''){
                         <label for="lab" class="">Lab site name *</label>
                     </div>
                 </div>
+                <?php
+                if(trim($countryId) > 0){
+                ?>
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+                            <label for="comments">Comments</label>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
             <div class="col s12">
                 <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>

@@ -134,11 +134,11 @@ class DataCollectionTable extends AbstractTableGateway {
         */
 	$common = new CommonService();
 	if($parameters['countryId']== ''){
-	    $aColumns = array('da_c.study_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','t.test_status_name',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
-	    $orderColumns = array('da_c.study_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','t.test_status_name','da_c.added_on','u.user_name','c.country_name');
+	    $aColumns = array('da_c.study_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
+	    $orderColumns = array('da_c.study_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u.user_name','c.country_name');
 	}else{
-	    $aColumns = array('da_c.study_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','t.test_status_name',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
-	    $orderColumns = array('da_c.study_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','t.test_status_name','da_c.added_on','u.user_name');
+	    $aColumns = array('da_c.study_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
+	    $orderColumns = array('da_c.study_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u.user_name');
 	}
 
        /*
@@ -349,10 +349,11 @@ class DataCollectionTable extends AbstractTableGateway {
 		}else if(isset($userResult->user_id)){
 		    $unlockedBy = ucwords($userResult->full_name);
 		}
-	      $unlockedInfo = '<i class="zmdi zmdi-lock-open" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size: 1.3rem;"></i>';
+	      $unlockedInfo = '<i class="zmdi zmdi-lock-open unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size: 1.3rem;"></i>';
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    $row[] = $aRow['study_id'];
+	    $row[] = ucwords($aRow['test_status_name']);
 	    $row[] = $specimenCollectedDate;
 	    $row[] = ucwords($aRow['anc_site_name']);
 	    $row[] = $aRow['anc_site_code'];
@@ -373,7 +374,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = $asanteRapidRecencyAssay;
 	    $row[] = ucfirst($aRow['comments']);
-	    $row[] = ucwords($aRow['test_status_name']);
 	    $row[] = $common->humanDateFormat($addedDate[0])." ".$addedDate[1];
 	    $row[] = ucwords($aRow['user_name']);
 	    if($parameters['countryId']== ''){
@@ -385,6 +385,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if($loginContainer->roleCode== 'LDEO'){
 		if($aRow['test_status_name']== 'completed'){
 		   $dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+		}else if($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked'){
+		  $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		}
 	    }else if($loginContainer->roleCode== 'LS'){
 		if($aRow['test_status_name']== 'unlocked'){
@@ -393,9 +395,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else{
 		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
-	     
+	    //set lock/unlock for csc and cc
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		if($aRow['test_status_name']== 'completed' || $aRow['test_status_name']== 'unlocked'){
+		if($aRow['test_status_name']== 'completed'){
 		   $dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
 		}else if($aRow['test_status_name']== 'locked'){
 		   $dataLock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
@@ -896,8 +898,9 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchDashboardDetails($params){
+	$loginContainer = new Container('user');
 	$dbAdapter = $this->adapter;
-    $sql = new Sql($dbAdapter);
+        $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
@@ -905,15 +908,26 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
 						))
-				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_name','country_id'))
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('da_c.country')
 				   ->order('da_c.added_on desc');
+	if($loginContainer->roleCode == 'CC' && count($loginContainer->country) >0){
+            $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}else if($loginContainer->roleCode == 'LS' && count($loginContainer->laboratory) >0){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	}else if($loginContainer->roleCode == 'LDEO' && count($loginContainer->laboratory) >0){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	}else if($loginContainer->roleCode == 'ANCDEO' && count($loginContainer->clinic) >0){
+	   $dataCollectionQuery = $dataCollectionQuery->where('da_c.anc_site IN ("' . implode('", "', $loginContainer->clinic) . '")'); 
+	}else if($loginContainer->roleCode!= 'CSC'){
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>0));
+	}
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-    return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
     public function fetchCountriesLabAncDetails($params){
@@ -1431,6 +1445,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchCountryDashboardDetails($params){
+	$loginContainer = new Container('user');
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -1440,7 +1455,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
-				   ->join(array('cra'=>'clinic_risk_assessment'),'cra.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.study_id=da_c.study_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->where(array('da_c.country'=>$params['country']))
@@ -1448,6 +1463,15 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('f.province')
 				   ->order('da_c.added_on desc');
+	if($loginContainer->roleCode == 'LS' && count($loginContainer->laboratory) >0){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	}else if($loginContainer->roleCode == 'LDEO' && count($loginContainer->laboratory) >0){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	}else if($loginContainer->roleCode == 'ANCDEO' && count($loginContainer->clinic) >0){
+	   $dataCollectionQuery = $dataCollectionQuery->where('da_c.anc_site IN ("' . implode('", "', $loginContainer->clinic) . '")'); 
+	}else if($loginContainer->roleCode!= 'CSC' && $loginContainer->roleCode!= 'CC'){
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>0));
+	}
 	if(trim($params['province'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
 	}if(trim($params['reportingMonthYear'])!= ''){

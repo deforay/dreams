@@ -558,3 +558,6 @@ alter table facility add FOREIGN KEY(province) REFERENCES province(province_id)
 ALTER TABLE `anc_site` CHANGE `province` `province` INT(11) NULL DEFAULT NULL;
 
 alter table anc_site add FOREIGN KEY(province) REFERENCES province(province_id)
+
+--Pal 17/06/2017
+DELETE FROM `specimen_rejection_reason` WHERE `specimen_rejection_reason`.`rejection_reason_id` = 1

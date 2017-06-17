@@ -45,20 +45,13 @@ if(count($row['userLaboratories'])>0){
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">code</i>
-                        <input id="userCode" name="userCode" type="text" class="validate" title="Please enter user code" value="<?php echo $row->user_code;?>" onblur="checkNameValidation('user', 'user_code', this, '<?php echo "user_id##" .$row->user_id; ?>','The user code that you entered already exist. Please enter different code.')">
-                        <label for="userCode" class="">User Code </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
                         <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" value="<?php echo $row->user_name;?>" onblur="checkNameValidation('user', 'user_name', this, '<?php echo "user_id##" .$row->user_id; ?>','The user name that you entered already exist. Please enter different name.')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
@@ -66,8 +59,6 @@ if(count($row['userLaboratories'])>0){
                         <label for="password" class="">Password </label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">vpn_key</i>
@@ -75,6 +66,8 @@ if(count($row['userLaboratories'])>0){
                         <label for="password" class="">Confirm Password </label>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
@@ -91,20 +84,27 @@ if(count($row['userLaboratories'])>0){
                         <label for="role" class="">User Role *</label>
                     </div>
                 </div>
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <i class="material-icons prefix">email</i>
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email;?>">
+                        <label for="email" class="">Email *</label>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email;?>" onblur="checkNameValidation('user', 'email', this, '<?php echo "user_id##" .$row->user_id; ?>','The user email that you entered already exist. Please enter different email.')">
-                        <label for="email" class="">Email *</label>
+                        <i class="material-icons prefix">stay_primary_portrait</i>
+                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>">
+                        <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>" onblur="checkNameValidation('user', 'mobile', this, '<?php echo "user_id##" .$row->user_id; ?>','The user mobile no. that you entered already exist. Please enter different mobile no.')">
-                        <label for="mobile" class="">Contact Number *</label>
+                        <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $row->alt_contact;?>">
+                        <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
             </div>
@@ -112,13 +112,6 @@ if(count($row['userLaboratories'])>0){
             if($countryId > 0){
             ?>
                 <div class="row">
-                    <div class="col s6">
-                        <div class="input-field col m10 s10">
-                            <i class="material-icons prefix">stay_primary_portrait</i>
-                            <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $row->alt_contact;?>">
-                            <label for="altContact" class="">Alternate Contact</label>
-                        </div>
-                    </div>
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
                             Has View Only Access ? *<br>
@@ -128,8 +121,6 @@ if(count($row['userLaboratories'])>0){
                             <label for="hasViewOnlyAccessYesNo">No </label>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col s6" id="countrySingle">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
@@ -159,12 +150,6 @@ if(count($row['userLaboratories'])>0){
                                 ?>
                             </select>
                             <label for="country" class="">Country *</label>
-                        </div>
-                    </div>
-                    <div class="col s6">
-                        <div class="input-field col m10 s10">
-                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
-                            <label for="comments">Comments</label>
                         </div>
                     </div>
                 </div>
@@ -229,16 +214,15 @@ if(count($row['userLaboratories'])>0){
                             <label for="status" class="">User Status *</label>
                         </div>
                     </div>
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+                            <label for="comments">Comments</label>
+                        </div>
+                    </div>
                 </div>
             <?php } else { ?>
                 <div class="row">
-                    <div class="col s6">
-                        <div class="input-field col m10 s10">
-                            <i class="material-icons prefix">stay_primary_portrait</i>
-                            <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $row->alt_contact;?>">
-                            <label for="altContact" class="">Alternate Contact</label>
-                        </div>
-                    </div>
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
                             Has View Only Access ? *<br>
@@ -246,14 +230,6 @@ if(count($row['userLaboratories'])>0){
                             <label for="hasViewOnlyAccessYes">Yes </label>&nbsp;
                             <input id="hasViewOnlyAccessYesNo" class="with-gap isRequired" name="hasViewOnlyAccess" value="no" type="radio" <?php echo ($row->has_view_only_access == 'no') ? " checked='checked'" : ""; ?>>
                             <label for="hasViewOnlyAccessYesNo">No </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s6">
-                        <div class="input-field col m10 s10">
-                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
-                            <label for="comments">Comments</label>
                         </div>
                     </div>
                     <div class="col s6">
@@ -264,6 +240,14 @@ if(count($row['userLaboratories'])>0){
                                 <option value="inactive" <?php echo ($row->status == 'inactive') ? " selected='selected'" : ""; ?>>Inactive</option>
                             </select>
                             <label for="status" class="">User Status *</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6">
+                        <div class="input-field col m10 s10">
+                            <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+                            <label for="comments">Comments</label>
                         </div>
                     </div>
                 </div>

@@ -31,69 +31,59 @@ $loginContainer = new Container('user');
     <div class="row section-header">
         <h4 class="page-title">Dashboard (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
     </div>
-    <?php
-    if($loginContainer->roleCode == 'CSC'){
-    ?>
-        <div class="row" style="max-width:1109px;">
-            <form id="dashboardFilter" action="#">
-                <div class="col l12 m12 s12">
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option><?php } ?></select></div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
-                </div>
-                <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
-                </div>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card card-default">
-                    <div class="card-header white-text">
-                        Lab Data Reporting / Completed Forms
-                    </div>
-                    <div class="card-content clearfix">
-                        <table class="responsive-table striped">
-                            <thead>
-                            <tr>
-				<th>Province Name</th>
-                                <th>No. of Lab Tests</th>
-                                <th>No. of Risk Questionnaires</th>
-                                <th>No. of Complete Forms</th>
-                                <th>Month - Year</th>
-                                
-                            </tr>
-                            </thead>
-                            <tbody id="dashboardData">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card card-default">
-                    <table style="width:20%;">
-                        <tr>
-                            <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Sites</strong></td>
-                            <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Facilities</strong></td>
-                        </tr>
-                    </table>
-                    <div class="card-content map-container clearfix">
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php } else { ?>
-        <div class="row">
+    <div class="row" style="max-width:1109px;">
+        <form id="dashboardFilter" action="#">
             <div class="col l12 m12 s12">
-                Coming Soon..
+                <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option><?php } ?></select></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+                <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
+            </div>
+            <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card card-default">
+                <div class="card-header white-text">
+                    Lab Data Reporting / Completed Forms
+                </div>
+                <div class="card-content clearfix">
+                    <table class="responsive-table striped">
+                        <thead>
+                        <tr>
+                            <th>Province Name</th>
+                            <th>No. of Lab Tests</th>
+                            <th>No. of Risk Questionnaires</th>
+                            <th>No. of Complete Forms</th>
+                            <th>Month - Year</th>
+                            
+                        </tr>
+                        </thead>
+                        <tbody id="dashboardData">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    <?php } ?>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <div class="card card-default">
+                <table style="width:20%;">
+                    <tr>
+                        <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Sites</strong></td>
+                        <td><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Facilities</strong></td>
+                    </tr>
+                </table>
+                <div class="card-content map-container clearfix">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhZa4hDifE6p2sbaxJehS7gcrZOJScIqM"></script>
@@ -131,9 +121,7 @@ $loginContainer = new Container('user');
     }
     
     function getDataReportingLocations(){
-        var province = $('#province').val();
-        var reportingMonthYear = $('#reportingMonthYear').val();
-        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
+        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>'},
         function(data) {
             $('.map-container').html(data);
         });

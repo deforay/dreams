@@ -20,54 +20,44 @@ $loginContainer = new Container('user');
     <div class="row section-header">
         <h4 class="page-title">Dashboard</h4>
     </div>
-    <?php
-    if($loginContainer->roleCode == 'CSC'){
-    ?>
-        <div class="row">
-            <div class="col s12">
-                <div class="card card-default">
-                    <div class="card-header white-text">
-                        Lab Data Reporting / Completed Forms
-                    </div>
-                    <div class="card-content clearfix">
-                        <table class="responsive-table striped">
-                            <thead>
+    <div class="row">
+        <div class="col s12">
+            <div class="card card-default">
+                <div class="card-header white-text">
+                    Lab Data Reporting / Completed Forms
+                </div>
+                <div class="card-content clearfix">
+                    <table class="responsive-table striped">
+                        <thead>
+                        <tr>
+                            <th>Name of the Country</th>
+                            <th>No. of Lab Tests</th>
+                            <th>No. of Risk Questionnaires</th>
+                            <th>No. of Complete Forms</th>
+                            <th>Month - Year</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        if(count($row) >0){
+                            foreach($row as $country){
+                        ?>
                             <tr>
-                                <th>Name of the Country</th>
-                                <th>No. of Lab Tests</th>
-                                <th>No. of Risk Questionnaires</th>
-                                <th>No. of Complete Forms</th>
-                                <th>Month - Year</th>
+                                <td><?php echo ucwords($country['country_name']); ?></td>
+                                <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>?type=nlt&date=<?php echo base64_encode($country['month'].'/'.$country['year']); ?>" target="_blank" title="View"><?php echo $country['totalDataPoints']; ?></a></td>
+                                <td><?php echo (isset($country['assessments']))?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=nrq&date='.base64_encode($country['month'].'/'.$country['year']).'" target="_blank" title="View">'.$country['assessments'].'<a>':0; ?></td>
+                                <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>?type=nltc&date=<?php echo base64_encode($country['month'].'/'.$country['year']); ?>" target="_blank" title="View"><?php echo $country['dataPointFinalized']; ?></a></td>
+                                <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                            if(count($row) >0){
-                                foreach($row as $country){
-                            ?>
-                                <tr>
-                                    <td><?php echo ucwords($country['country_name']); ?></td>
-                                    <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>?type=nlt&date=<?php echo base64_encode($country['month'].'/'.$country['year']); ?>" target="_blank" title="View"><?php echo $country['totalDataPoints']; ?></a></td>
-                                    <td><?php echo (isset($country['assessments']))?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=nrq&date='.base64_encode($country['month'].'/'.$country['year']).'" target="_blank" title="View">'.$country['assessments'].'<a>':0; ?></td>
-                                    <td><a href="/data-collection/<?php echo base64_encode($country['country_id']);?>/nltc/<?php echo base64_encode($country['month'].'/'.$country['year']); ?>" target="_blank" title="View"><?php echo $country['dataPointFinalized']; ?></a></td>
-                                    <td><?php echo $country['month'].' - '.$country['year']; ?></td>
-                                </tr>
-                            <?php } } else { ?>
-                                <tr>
-                                    <td colspan="5">No data available..</td>
-                                </tr>
-                            <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
+                        <?php } } else { ?>
+                            <tr>
+                                <td colspan="5">No data available..</td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    <?php } else { ?>
-        <div class="row">
-            <div class="col l12 m12 s12">
-                Coming Soon..
-            </div>
-        </div>
-    <?php } ?>
+    </div>
 </div>

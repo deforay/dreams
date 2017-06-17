@@ -144,6 +144,12 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                             <p><?php echo $row->age; ?></p>
                         </div>
                     </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="gestationalAge" class="">Gestation Age (Weeks) </label><br>
+                            <p><?php echo $row->gestational_age; ?></p>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
             <fieldset style="border-color:#2196F3 ;border-style: solid;">
@@ -235,13 +241,13 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA >= 1000 (copies/ml)</strong> </label><br>
+                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA > 1000 (copies/ml)</strong> </label><br>
                           <p style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
                         </div>
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection (LAg-R & RNA >= 1000)</strong> </label><br>
+                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection (LAg-R & RNA > 1000)</strong> </label><br>
                           <p style="font-size:13px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
                         </div>
                     </div>
