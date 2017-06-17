@@ -26,7 +26,7 @@ class UserTable extends AbstractTableGateway {
             $sql = new Sql($dbAdapter);
 	    $loginTrackerDb = new LoginTrackerTable($dbAdapter);
             $userName = trim($params['userName']);
-            $password = sha1($params['password'].$configResult["password"]["salt"]);
+            $password = sha1(trim($params['password']).$configResult["password"]["salt"]);
 	    $isCountrySelected = false;
 	    if(isset($params['country']) && trim($params['country'])!= ''){
 	       $isCountrySelected = true;
