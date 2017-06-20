@@ -941,29 +941,30 @@ class DataCollectionTable extends AbstractTableGateway {
         $countriesLabAnc['labs'] = $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return $countriesLabAnc;
     }
-	public function fetchPatientRecordDetail($params){
-		$dbAdapter = $this->adapter;
+    
+    public function fetchPatientRecord($params){
+	$redirectUrl = '';
+	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-		$url = '';
-		$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id'))
-									->where(array('da_c.anc_patient_id'=>trim($params['patientId'])))
-									->where('(da_c.status="3" OR da_c.status="4")');
-		if($params['countryId']!=''){
-			$dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
-		}else if($params['dbCountryId']!=''){
-			$dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode(($params['dbCountryId']))));
-		}
-		$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-		$patientResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-		if($patientResult){
-			if($params['countryId']!=''){
-				$url = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
-			}else if($params['dbCountryId']!=''){
-				$url = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
-			}
-		}
-		return $url;
+	$patientQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id'))
+			    ->where(array('da_c.anc_patient_id'=>trim($params['patientId'])))
+			    ->where('(da_c.status="3" OR da_c.status="4")');
+	if($params['countryId']!=''){
+	    $patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
+	}else if($params['dbCountryId']!=''){
+	    $patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['dbCountryId']))));
 	}
+	$patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
+	$patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	if($patientResult){
+	    if($params['countryId']!=''){
+		$redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
+	    }else if($params['dbCountryId']!=''){
+		$redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
+	    }
+	}
+      return $redirectUrl;
+    }
     
     public function fecthAllLabLogbook($parameters){
 	$loginContainer = new Container('user');

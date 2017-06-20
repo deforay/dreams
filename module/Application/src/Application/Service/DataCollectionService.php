@@ -685,9 +685,9 @@ class DataCollectionService {
       return $dbAdapter->query($lrQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
-    public function getPatientRecordDetail($params){
+    public function getPatientRecord($params){
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
-        return $dataCollectionDb->fetchPatientRecordDetail($params);
+        return $dataCollectionDb->fetchPatientRecord($params);
     }
     
     public function checkDublicateClinicDataReport($params){

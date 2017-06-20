@@ -1000,14 +1000,14 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
 	
     function checkPatientRecord(){
-        patientId = $('#ancPatientId').val();
-        countryId = $('#chosenCountry').val();
-        dbCountryId = $('#country').val();
-        if($.trim(patientId)!='' && (countryId!='' || dbCountryId!='')){
+        var patientId = $('#ancPatientId').val();
+        var countryId = $('#chosenCountry').val();
+        var dbCountryId = $('#country').val();
+        if($.trim(patientId)!='' && ($.trim(countryId)!='' || $.trim(dbCountryId)!='')){
             $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId},
             function(data) {
-                if (data) {
-                    document.location.href=data;
+                if (data!= '') {
+                   document.location.href=data;
                 }
             });
         }
