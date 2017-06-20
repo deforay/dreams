@@ -90,6 +90,7 @@ if(count($labReportResult) >0){
           $html .='<thead>';
            $html .='<tr>';
            $html .='<th><strong>Specimen Collected Date</strong></th>';
+           $html .='<th><strong>Status</strong></th>';
            $html .='<th><strong>ANC Site Code/Name</strong></th>';
            $html .='<th><strong>ANC Patient ID</strong></th>';
            $html .='<th><strong>Age</strong></th>';
@@ -142,9 +143,15 @@ if(count($labReportResult) >0){
 	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
 	      $hIVRNAResult = 'Low Viral Load';
 	    }
+	    //set dc status
+	    $status = 'Results Completed';
+	    if($row['final_lag_avidity_odn'] <= 2 && (trim($row['hiv_rna']) == '' || $row['hiv_rna'] == null)){
+		$status = 'Results Awaited';
+	    }
 	    
             $html .='<tr>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
+              $html .='<td>'.$status.'</td>';
               $html .='<td>'.ucwords($row['anc_site_name'])." - ".$row['anc_site_code'].'</td>';
               $html .='<td>'.$row['anc_patient_id'].'</td>';
               $html .='<td>'.$row['age'].'</td>';
