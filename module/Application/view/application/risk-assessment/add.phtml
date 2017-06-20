@@ -102,7 +102,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord()">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -144,7 +144,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord()">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -778,6 +778,20 @@ if(!isset($countryId) || trim($countryId)== ''){
 	
         if(flag){
             document.getElementById('addRiskAssessmentForm').submit();
+        }
+    }
+	function checkPatientRecord(){
+        var patientId = $('#ancPatientId').val();
+		var countryId = $('#chosenCountry').val();
+        var dbCountryId = ($('#country').length) ? $('#country').val():'';
+        if($.trim(patientId)!=''){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,clinic:'clinic'},
+            function(data) {
+                if (data!= '') {
+					conf = confirm("This Patient "+$('#ancPatientId').val()+" already has risk assessment form submitted. Please click OK if you want to continue editing for this particular patient");
+					(conf)?document.location.href=data:$('#ancPatientId').val('');
+                }
+            });
         }
     }
 </script>

@@ -1002,12 +1002,13 @@ if(!isset($countryId) || trim($countryId)== ''){
     function checkPatientRecord(){
         var patientId = $('#ancPatientId').val();
         var countryId = $('#chosenCountry').val();
-        var dbCountryId = $('#country').val();
+        var dbCountryId = ($('#country').length) ? $('#country').val():'';
         if($.trim(patientId)!='' && ($.trim(countryId)!='' || $.trim(dbCountryId)!='')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,lab:'lab'},
             function(data) {
                 if (data!= '') {
-                   document.location.href=data;
+					conf = confirm("This Patient "+$('#ancPatientId').val()+" already has lab reporting form submitted. Please click OK if you want to continue editing for this particular patient");
+					(conf)?document.location.href=data:$('#ancPatientId').val('');
                 }
             });
         }
