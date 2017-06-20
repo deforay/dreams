@@ -102,8 +102,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter patient ID">
-                                <label for="ancPatientId" class="">Patient ID *</label>
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID">
+                                <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
                         <div class="col s4">
@@ -144,8 +144,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter patient ID">
-                                <label for="ancPatientId" class="">Patient ID *</label>
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID">
+                                <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
                         <div class="col s4">
@@ -663,6 +663,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     $('input:radio[name=ageAtFirstMarriage]').change(function () {
 	setAgeAtFirstMarriage('rd');
     });
+    
     function setAgeAtFirstMarriage(fromSource){
 	if(fromSource == 'txt'){
 	    if($('#ageAtFirstMarriageInYears').val()!= ''){
