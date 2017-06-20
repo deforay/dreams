@@ -111,7 +111,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);">
+				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord();">
 					<option data-code="" value=""> -- Select -- </option>
 					<?php
 					foreach($countries as $country){
@@ -199,7 +199,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID">
+				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" onblur="checkPatientRecord();" >
 				<label for="ancPatientId" class="">ANC Patient ID * </label>
 			    </div>
 			</div>
@@ -994,6 +994,20 @@ if(!isset($countryId) || trim($countryId)== ''){
                     document.getElementById(obj.id).value = "";
                 }else {
                     duplicateName = true;
+                }
+            });
+        }
+    }
+	
+    function checkPatientRecord(){
+        patientId = $('#ancPatientId').val();
+        countryId = $('#chosenCountry').val();
+        dbCountryId = $('#country').val();
+        if($.trim(patientId)!='' && (countryId!='' || dbCountryId!='')){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId},
+            function(data) {
+                if (data) {
+                    document.location.href=data;
                 }
             });
         }

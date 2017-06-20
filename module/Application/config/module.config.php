@@ -302,6 +302,15 @@ return array(
                         'action' => 'get-countries-lab-anc'
                     ),
                 ),
+            ),'check-patient-record' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/check-patient-record',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'check-patient-record'
+                    ),
+                ),
             ),'print-lab-logbook' => array(
                 'type' => 'segment',
                 'options' => array(

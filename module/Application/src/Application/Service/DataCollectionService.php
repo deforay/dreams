@@ -685,6 +685,11 @@ class DataCollectionService {
       return $dbAdapter->query($lrQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
+    public function getPatientRecordDetail($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchPatientRecordDetail($params);
+    }
+    
     public function checkDublicateClinicDataReport($params){
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
