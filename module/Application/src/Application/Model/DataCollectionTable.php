@@ -58,8 +58,6 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    $rapidAssayPnValidate = true;
-	    $rapidAssayRltValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -70,17 +68,15 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-		$rapidAssayPnValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
-		$rapidAssayRltValidate = ($params['asanteRapidRecencyAssayPn'] == 'n')?true:false;
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($rapidAssayPnValidate == false || $rapidAssayRltValidate == false)){
+		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}
 	    }
@@ -455,8 +451,6 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    $rapidAssayPnValidate = true;
-	    $rapidAssayRltValidate = true;
 	    if(!isset($params['age']) || trim($params['age'])== ''){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -467,17 +461,15 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-		$rapidAssayPnValidate = false;
                 $params['asanteRapidRecencyAssayPn'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
-		$rapidAssayRltValidate = ($params['asanteRapidRecencyAssayPn'] == 'n')?true:false;
                 $params['asanteRapidRecencyAssayRlt'] = NULL;
             }
 	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($rapidAssayPnValidate == false || $rapidAssayRltValidate == false)){
+		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}else if($params['formStatus'] == 2){
 		   $status = $params['formStatus']; 
@@ -945,45 +937,45 @@ class DataCollectionTable extends AbstractTableGateway {
     public function fetchPatientRecord($params){
 	$redirectUrl = '';
 	$dbAdapter = $this->adapter;
-    $sql = new Sql($dbAdapter);
-		if(isset($params['lab'])){
-			$patientQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id'))
-								->where(array('da_c.anc_patient_id'=>trim($params['patientId'])))
-								->where('(da_c.status="3" OR da_c.status="4")');
-			if($params['countryId']!=''){
-				$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
-			}else if($params['dbCountryId']!=''){
-				$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['dbCountryId']))));
-			}
-			$patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
-			$patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-			if($patientResult){
-				if($params['countryId']!=''){
-				$redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
-				}else if($params['dbCountryId']!=''){
-				$redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
-				}
-			}
-			return $redirectUrl;
-		}else if(isset($params['clinic'])){
-			$patientQuery = $sql->select()->from(array('cra' => 'clinic_risk_assessment'))->columns(array('assessment_id'))
-								->where(array('cra.anc_patient_id'=>trim($params['patientId'])));
-			if($params['countryId']!=''){
-				$patientQuery = $patientQuery->where(array('cra.country'=>base64_decode(($params['countryId']))));
-			}else if($params['dbCountryId']!=''){
-				$patientQuery = $patientQuery->where(array('cra.country'=>base64_decode(($params['dbCountryId']))));
-			}
-			$patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
-			$patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-			if($patientResult){
-				if($params['countryId']!=''){
-				$redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/".$params['countryId'];
-				}else if($params['dbCountryId']!=''){
-				$redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/";
-				}
-			}
-			return $redirectUrl;
+        $sql = new Sql($dbAdapter);
+	if(isset($params['type']) && $params['type'] == 'lab'){
+	    $patientQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id'))
+				->where(array('da_c.anc_patient_id'=>trim($params['patientId'])))
+				->where('(da_c.status="3" OR da_c.status="4")');
+	    if($params['countryId']!=''){
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
+	    }else if($params['dbCountryId']!=''){
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['dbCountryId']))));
+	    }
+	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
+	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	    if($patientResult){
+		if($params['countryId']!=''){
+		   $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
+		}else if($params['dbCountryId']!=''){
+		   $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
 		}
+	    }
+	  return $redirectUrl;
+	}else if(isset($params['type']) && $params['type'] == 'clinic'){
+	    $patientQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))->columns(array('assessment_id'))
+				->where(array('r_a.anc_patient_id'=>trim($params['patientId'])));
+	    if($params['countryId']!=''){
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['countryId']))));
+	    }else if($params['dbCountryId']!=''){
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['dbCountryId']))));
+	    }
+	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
+	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	    if($patientResult){
+		if($params['countryId']!=''){
+		   $redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/".$params['countryId'];
+		}else if($params['dbCountryId']!=''){
+		   $redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/";
+		}
+	    }
+	  return $redirectUrl;
+	}
     }
     
     public function fecthAllLabLogbook($parameters){

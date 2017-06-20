@@ -780,16 +780,17 @@ if(!isset($countryId) || trim($countryId)== ''){
             document.getElementById('addRiskAssessmentForm').submit();
         }
     }
-	function checkPatientRecord(){
+    
+    function checkPatientRecord(){
         var patientId = $('#ancPatientId').val();
-		var countryId = $('#chosenCountry').val();
+	var countryId = $('#chosenCountry').val();
         var dbCountryId = ($('#country').length) ? $('#country').val():'';
         if($.trim(patientId)!=''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,clinic:'clinic'},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,type:'clinic'},
             function(data) {
                 if (data!= '') {
-					conf = confirm("This Patient "+$('#ancPatientId').val()+" already has risk assessment form submitted. Please click OK if you want to continue editing for this particular patient");
-					(conf)?document.location.href=data:$('#ancPatientId').val('');
+		    conf = confirm("This Patient "+$('#ancPatientId').val()+" already has risk assessment form submitted. Please click OK if you want to continue editing for this particular patient");
+		    (conf)?document.location.href=data:$('#ancPatientId').val('');
                 }
             });
         }
