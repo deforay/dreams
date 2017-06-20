@@ -221,7 +221,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
 	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
@@ -260,7 +260,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	   $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
 	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');

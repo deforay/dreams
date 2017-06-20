@@ -41,12 +41,13 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
                         <select class="material-select isRequired" id="facilityType" name="facilityType" title="Please select facility type">
-                            <option value=""> -- Select -- </option>
                             <?php
                             foreach($facilityTypes as $facilityType){
+                                if($facilityType['facility_type_id'] == 2){
                                 ?>
-                                <option value="<?php echo base64_encode($facilityType['facility_type_id']);?>"><?php echo ucwords($facilityType['facility_type_name']);?></option>
+                                  <option value="<?php echo base64_encode($facilityType['facility_type_id']);?>"><?php echo ucwords($facilityType['facility_type_name']);?></option>
                                 <?php
+                                }
                             }
                             ?>
                         </select>

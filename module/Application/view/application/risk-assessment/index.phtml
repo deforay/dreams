@@ -43,12 +43,15 @@ if(!isset($countryId) || trim($countryId)== ''){
     .select-wrapper{
 	width:100%;
     }
+    #riskAssessmentDataTable_wrapper{
+	overflow-x:scroll;
+    }
     .dataTable_noWrap{
 	white-space: nowrap;
         overflow: hidden;
     }
     table.dataTable tbody td{
-	padding:4px 4px 4px 4px;
+	padding:2px 4px 0px 4px;
     }
 </style>
 <div id="page-content">
@@ -77,7 +80,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 <th>Lab Code</th>
                                 <th>Study ID</th>
 				<th>Interviewer Name</th>
-				<th>Patient ID</th>
+				<th>ANC Patient ID</th>
 				<th>Interview Date</th>
 				<th>Added On</th>
 				<th>Added By</th>
@@ -95,7 +98,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                                 <th>Lab Code</th>
                                 <th>Study ID</th>
 				<th>Interviewer Name</th>
-				<th>Patient ID</th>
+				<th>ANC Patient ID</th>
 				<th>Interview Date</th>
 				<th>Added On</th>
 				<th>Added By</th>

@@ -33,11 +33,11 @@ if(count($labReportResult) >0){
     // create new PDF document
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
-    $pdf->setSchemeName('DREAMS Lab Logbook','dreams-small-logo.png');
+    $pdf->setSchemeName('DREAMS Lab Results','dreams-small-logo.png');
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('DREAMS Lab Logbook');
+    $pdf->SetTitle('DREAMS Lab Results');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -101,13 +101,13 @@ if(count($labReportResult) >0){
            $html .='<th><strong>Date of Test Completion</strong></th>';
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
            if($infectionType =='show'){
-                $html .='<th><strong>Final LAg Avidity</strong></th>';
-                $html .='<th><strong>LAg Avidity Result</strong></th>';
+              $html .='<th><strong>Final LAg Avidity</strong></th>';
+              $html .='<th><strong>LAg Avidity Result</strong></th>';
            }if($vlReportType =='show'){
-               $html .='<th><strong>HIV RNA</strong></th>';
-               $html .='<th><strong>HIV RNA >= 1,000</strong></th>';
-           } if($infectionType =='show'){
-               $html .='<th><strong>Recent Infection</strong></th>';
+              $html .='<th><strong>HIV RNA</strong></th>';
+              $html .='<th><strong>HIV RNA > 1,000</strong></th>';
+           }if($infectionType =='show'){
+              $html .='<th><strong>Recent Infection</strong></th>';
            }
 	   $html .='<th><strong>Comments</strong></th>';
            $html .='</tr>';

@@ -92,8 +92,8 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter patient ID" value="<?php echo $row->anc_patient_id; ?>">
-                            <label for="ancPatientId" class="">Patient ID *</label>
+                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" value="<?php echo $row->anc_patient_id; ?>">
+                            <label for="ancPatientId" class="">ANC Patient ID *</label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -651,6 +651,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
     $('input:radio[name=noOfSexualPartnersInLastSixMonths]').change(function () {
 	setNoOfSexualPartnersInLastSixMonths('rd');
     });
+    
     function setNoOfSexualPartnersInLastSixMonths(fromSource){
 	if(fromSource == 'txt'){
 	    if($('#noOfSexualPartnersInLastSixMonthsInNumbers').val()!= ''){
