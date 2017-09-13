@@ -732,7 +732,7 @@ class DataCollectionService {
     }
     
     public function exportStudyOverviewInExcel($params){
-       $queryContainer = new Container('query');
+        $queryContainer = new Container('query');
         $common = new CommonService();
         if(isset($queryContainer->overviewQuery)){
             try{
