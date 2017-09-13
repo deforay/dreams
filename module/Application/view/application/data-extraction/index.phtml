@@ -98,6 +98,9 @@ if(!isset($countryId) || trim($countryId)== ''){
     table.dataTable tbody td{
 	padding:4px 4px 4px 4px;
     }
+    .redTxt{
+	color:#F44336 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -212,7 +215,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol13">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol14">Final LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol14">LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol15">LAg Avidity Result</label> <br>
@@ -268,7 +271,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
-				<th>Final LAg Avidity</th>
+				<th>LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA > 1,000</th>
@@ -298,7 +301,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
-				<th>Final LAg Avidity</th>
+				<th>LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA > 1,000</th>
@@ -360,6 +363,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 		  {"sClass":"dataTable_noWrap"}
 		<?php } ?>
             ],
+	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		if(aData[19] =='Negative' || (aData[14] > 2 && (aData[19] == 'Positive/Recent' || aData[19] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+	    },
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
             "bServerSide": true,

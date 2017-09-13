@@ -322,6 +322,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssay = 'Positive';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
 		$asanteRapidRecencyAssay = 'Negative';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
+		$asanteRapidRecencyAssay = 'Recent';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
 		$asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
@@ -797,6 +799,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssay = 'Positive';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
 		$asanteRapidRecencyAssay = 'Negative';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
+		$asanteRapidRecencyAssay = 'Recent';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
 		$asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
@@ -1192,6 +1196,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssay = 'Positive';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
 		$asanteRapidRecencyAssay = 'Negative';
+	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
+		$asanteRapidRecencyAssay = 'Recent';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
 		$asanteRapidRecencyAssay = 'Positive/Long Term';
 	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
@@ -1740,27 +1746,27 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
+	    $lagResult = '';
+	    $assay = '';
+	    //LAg assay
+	    if($aRow['lag_avidity_result']=='lt'){
+		$lagResult = 'Long Term';
+	    }else if($aRow['lag_avidity_result']=='r'){
+		$lagResult = 'Recent';
+	    }
+	    //rapid assay
+	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
+		$assay = 'Long Term';
+	    }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
+		$assay = 'Recent';
+	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
 	    $row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Incomplete</a>';
 	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View data"> Yes</a>':'No';
-	    //LAg assay
-	    if($aRow['lag_avidity_result']=='lt'){
-		$row[] = 'Long Term';
-	    }else if($aRow['lag_avidity_result']=='r'){
-		$row[] = 'Recent';
-	    }else {
-		$row[] = '';
-	    }
-	    //rapid assay
-	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
-		$row[] = 'Long Term';
-	    }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
-		$row[] = 'Recent';
-	    }else {
-		$row[] = '';
-	    }
+	    $row[] = $lagResult;
+	    $row[] = $assay;
 	    $output['aaData'][] = $row;
 	}
       return $output;

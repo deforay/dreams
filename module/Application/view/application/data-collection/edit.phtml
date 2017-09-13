@@ -139,7 +139,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
                             <input id="encAncPatientId" name="encAncPatientId" type="text" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
-                            <label for="encAncPatientId">Enc. Patient ID *</label>
+                            <label for="encAncPatientId">Encrypted Patient ID *</label>
                         </div>
                     </div>
                 </div>
@@ -234,13 +234,13 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		    </div>
 	        </div>
             </fieldset>
-            <fieldset style="border-color:#F44336;border-style: solid;">
+            <fieldset id="resultSection" style="border-color:#F44336;border-style: solid;">
                 <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
                             <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
-                            <label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
+                            <label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -258,9 +258,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                         <div class="input-padding col m10 s10 prePopulateAvidity">
                           <strong>LAg Avidity Result</strong> <br>
                            <label for="lagAvidityResult" style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></label>
-                          <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
-                          <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
                         </div>
                     </div>
@@ -268,9 +268,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                         <div class="input-padding col m10 s10 prePopulateHIVRNA">
                           <strong>HIV RNA > 1000 (copies/ml)</strong><br>
                            <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></label>
-                          <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="hivRnaGT1000Yes" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-                          <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="hivRnaGT1000No" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
                         </div>
                     </div>
@@ -278,9 +278,9 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
                         <div class="input-padding col m12 s12 prePopulateRecentInfection">
                           <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
                           <label for="recentInfection" style="font-size:13px;color:#fff;"><?php echo ucwords($row->recent_infection); ?></label>
-                          <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="recentInfectionYes" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-                          <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="recentInfectionNo" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
                         </div>
                     </div>
@@ -370,7 +370,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
         });
        <?php
        if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>
-	emptyTestResultSection();
+	 emptyTestResultSection();
        <?php } ?>
     });
     
@@ -428,7 +428,7 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
+	        $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
 		$('#hivRna,#hivRnaNew').addClass('isRequired');
@@ -436,15 +436,15 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 		if(parseInt($('#hivRna').val()) <= 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0)');
+		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
@@ -618,11 +618,13 @@ if(isset($asanteRapidRecencyAssy[0]) && trim($asanteRapidRecencyAssy[0])!= ''){
     }
     
     function emptyTestResultSection() {
-	if ($.trim($("#rejectionReason").val())!='') {
+	if ($.trim($("#rejectionReason").val())!= '') {
+	    $('#resultSection').hide();
 	    $(".testResultSection").val('').removeClass('isRequired').attr('readonly',true);
 	    $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
 	}else{
+	    $('#resultSection').show();
 	    $(".testResultSection").addClass('isRequired').attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}

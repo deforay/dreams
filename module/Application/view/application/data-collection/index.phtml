@@ -88,6 +88,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 	z-index: 1;
 	background:red;
     }*/
+    .redTxt{
+	color:#F44336 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -212,7 +215,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="encAncPatientId" name="encAncPatientId" type="text" readonly>
-				<label for="encAncPatientId">Enc. Patient ID *</label>
+				<label for="encAncPatientId">Encrypted Patient ID *</label>
 			    </div>
 			</div>
 		    </div>
@@ -307,13 +310,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 			</div>
 		    </div>
 		</fieldset>
-		<fieldset style="border-color:#F44336;border-style: solid;">
+		<fieldset id="resultSection" style="border-color:#F44336;border-style:solid;">
 		   <legend>TEST RESULT</legend>
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter final LAg avidity ODn">
-				<label for="finalLagAvidityOdn" class="">Final LAg Avidity ODn *</label>
+				<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
 			    </div>
 			</div>
 			<div class="col s4">
@@ -331,9 +334,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
 			      <strong>LAg Avidity Result</strong> <br>
 			      <label for="lagAvidityResult" style="font-size:13px;color:#fff;"></label>
-			      <input id="lagAvidityResultRecent" class="with-gap" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
-			      <input id="lagAvidityResultLongTerm" class="with-gap" name="lagAvidityResult" type="radio" value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
 			    </div>
 			</div>
@@ -341,9 +344,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
 			      <strong>HIV RNA > 1000 (copies/ml)</strong> <br>
 			      <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"></label>
-			      <input id="hivRnaGT1000Yes" class="with-gap" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="hivRnaGT1000Yes" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-			      <input id="hivRnaGT1000No" class="with-gap" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="hivRnaGT1000No" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
 			    </div>
 			</div>
@@ -351,9 +354,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    <div class="input-padding col m12 s12 prePopulateRecentInfection" style="visibility:hidden;">
 			      <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
 			      <label for="recentInfection" style="font-size:13px;color:#fff;"></label>
-			      <input id="recentInfectionYes" class="with-gap" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="recentInfectionYes" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-			      <input id="recentInfectionNo" class="with-gap" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <input id="recentInfectionNo" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
 			      <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
 			    </div>
 			</div>
@@ -456,7 +459,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol14">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol15">Final LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol15">LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity Result</label> <br>
@@ -519,7 +522,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
-				<th>Final LAg Avidity</th>
+				<th>LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA > 1,000</th>
@@ -556,7 +559,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
-				<th>Final LAg Avidity</th>
+				<th>LAg Avidity</th>
                                 <th>LAg Avidity Result</th>
 				<th>HIV RNA</th>
                                 <th>HIV RNA > 1,000</th>
@@ -630,6 +633,9 @@ if(!isset($countryId) || trim($countryId)== ''){
 		   {"sClass":"dataTable_noWrap","bSortable":false}
 		<?php } ?>
             ],
+	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		if(aData[20] =='Negative' || (aData[15] > 2 && (aData[20] == 'Positive/Recent' || aData[20] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+	    },
             "aaSorting": [[2, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
@@ -816,7 +822,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('Long Term (Final ODn > 2.0)');
+	        $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
 		$('#hivRna,#hivRnaNew').addClass('isRequired');
@@ -824,15 +830,15 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 		if(parseInt($('#hivRna').val()) <= 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term (Final ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
 		    $('#lagAvidityResultLongTerm').prop('checked',true);
 		}else if(parseInt($('#hivRna').val()) > 1000){
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
+		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}else{
 	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (Final ODn <= 2.0)');
+		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
@@ -1071,11 +1077,13 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     
     function emptyTestResultSection() {
-	if ($.trim($("#rejectionReason").val())!='') {
+	if ($.trim($("#rejectionReason").val())!= '') {
+	    $('#resultSection').hide();
             $(".testResultSection").val('').removeClass('isRequired').attr('readonly',true);
             $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
         }else{
+	    $('#resultSection').show();
 	    $(".testResultSection").addClass('isRequired').attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}

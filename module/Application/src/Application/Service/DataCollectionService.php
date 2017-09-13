@@ -267,7 +267,11 @@ class DataCollectionService {
                             ),
                         )
                     );
-                    
+                    $redTxtArray = array(
+                        'font' => array(
+                            'color' => array('rgb' => 'F44336')
+                        )
+                    );
                     $sheet->mergeCells('U1:V1');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -285,7 +289,7 @@ class DataCollectionService {
                     $sheet->setCellValue('M1', html_entity_decode('Receipt Date at Central Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('N1', html_entity_decode('Date of Test Completion', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('O1', html_entity_decode('Result Dispatched Date to Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P1', html_entity_decode('Final LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P1', html_entity_decode('LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('Q1', html_entity_decode('LAg Avidity Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('R1', html_entity_decode('HIV RNA ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('S1', html_entity_decode('HIV RNA > 1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -312,6 +316,7 @@ class DataCollectionService {
                     $sheet->getStyle('N1')->applyFromArray($styleArray);
                     $sheet->getStyle('O1')->applyFromArray($styleArray);
                     $sheet->getStyle('P1')->applyFromArray($styleArray);
+                    $sheet->getStyle('Q1')->applyFromArray($styleArray);
                     $sheet->getStyle('R1')->applyFromArray($styleArray);
                     $sheet->getStyle('S1')->applyFromArray($styleArray);
                     $sheet->getStyle('T1')->applyFromArray($styleArray);
@@ -322,7 +327,11 @@ class DataCollectionService {
                     }
                     $currentRow = 2;
                     foreach ($output as $rowData) {
+                        $lag = '';
+                        $assay1 = '';
+                        $assay2 = '';
                         $colNo = 0;
+                        $lstColumn = (count($rowData)-1);
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
@@ -341,8 +350,22 @@ class DataCollectionService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
+                            if($colNo == 15){ $lag = $value; }
+                            if($colNo == 20){ $assay1 = $value; }
+                            if($colNo == 21){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
-                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle); 
+                            if($colNo >21){
+                                if($lstColumn == 22){
+                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay1 == 'Recent') || $assay2 == 'Recent'))){
+                                    $sheet->getStyle('A'.$currentRow.':W'.$currentRow)->applyFromArray($redTxtArray);
+                                   }
+                                }else{
+                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay1 == 'Recent') || $assay2 == 'Recent'))){
+                                    $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
+                                   }
+                                }
+                            }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
                             $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
                             $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
@@ -351,14 +374,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'LAB-DATA-COLLECTION--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'LAB-DATA-COLLECTION-DOWNLOAD--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("LAB-DATA-COLLECTION--" . $exc->getMessage());
+                error_log("LAB-DATA-COLLECTION-DOWNLOAD--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
