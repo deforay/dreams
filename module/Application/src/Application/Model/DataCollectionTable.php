@@ -1115,12 +1115,12 @@ class DataCollectionTable extends AbstractTableGateway {
         */
        $start_date = '';
        $end_date = '';
-       if(isset($parameters['specimenCollectedDate']) && trim($parameters['specimenCollectedDate'])!= ''){
-	   $s_c_date = explode("to", $parameters['specimenCollectedDate']);
-	   if(isset($s_c_date[0]) && trim($s_c_date[0]) != "") {
-	     $start_date = $common->dateRangeFormat(trim($s_c_date[0]));
-	   }if(isset($s_c_date[1]) && trim($s_c_date[1]) != "") {
-	     $end_date = $common->dateRangeFormat(trim($s_c_date[1]));
+       if(isset($parameters['receiptDateAtCentralLab']) && trim($parameters['receiptDateAtCentralLab'])!= ''){
+	   $r_date = explode("to", $parameters['receiptDateAtCentralLab']);
+	   if(isset($r_date[0]) && trim($r_date[0]) != "") {
+	     $start_date = $common->dateRangeFormat(trim($r_date[0]));
+	   }if(isset($r_date[1]) && trim($r_date[1]) != "") {
+	     $end_date = $common->dateRangeFormat(trim($r_date[1]));
 	   }
 	}
        $dbAdapter = $this->adapter;
@@ -1147,14 +1147,18 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $sQuery = $sQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
+           $sQuery = $sQuery->where(array("da_c.receipt_date_at_central_lab >='" . $start_date ."'", "da_c.receipt_date_at_central_lab <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
-            $sQuery = $sQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
+            $sQuery = $sQuery->where(array("da_c.receipt_date_at_central_lab = '" . $start_date. "'"));
         }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
             $sQuery = $sQuery->where(array('da_c.anc_site'=>base64_decode($parameters['anc'])));
         }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
             $sQuery = $sQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
-        }
+        }if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
+           $sQuery = $sQuery->where('da_c.status = "2"');
+        }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
+	   $sQuery = $sQuery->where('da_c.status IN (3,4)'); 
+	}
 	//Custom Filter End
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -1194,14 +1198,18 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	//Custom Filter Start
 	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $tQuery = $tQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
+           $tQuery = $tQuery->where(array("da_c.receipt_date_at_central_lab >='" . $start_date ."'", "da_c.receipt_date_at_central_lab <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
+            $tQuery = $tQuery->where(array("da_c.receipt_date_at_central_lab = '" . $start_date. "'"));
         }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
             $tQuery = $tQuery->where(array('da_c.anc_site'=>base64_decode($parameters['anc'])));
         }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
             $tQuery = $tQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
-        }
+        }if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
+           $tQuery = $tQuery->where('da_c.status = "2"');
+        }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
+	   $tQuery = $tQuery->where('da_c.status IN (3,4)');
+	}
 	//Custom Filter End
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

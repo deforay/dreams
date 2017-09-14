@@ -18,7 +18,7 @@ $alertContainer->nbPages = count($dataResult);
             $this->SetFont('helvetica', 'B', 20);
              //Title
             $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
-	    $this->writeHTMLCell(0,'','','','<br/><hr/>',0,1,false,true,'C',true);
+	    $this->writeHTMLCell(0,'','','','<br/>',0,1,false,true,'C',true);
 	}
 	
 	// Page footer
@@ -60,11 +60,11 @@ $alertContainer->nbPages = count($dataResult);
 	$alertContainer->aliasPage = $page;
 	// create new PDF document
 	$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->setSchemeName('Lab Data Reporting Result','dreams-small-logo.png');
+        $pdf->setSchemeName('Laboratory Recency Test Result','dreams-small-logo.png');
         // set document information
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('Dream');
-        $pdf->SetTitle('Lab Data Reporting Result');
+        $pdf->SetTitle('Laboratory Recency Test Result');
         //$pdf->SetSubject('TCPDF Tutorial');
         //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
         
@@ -95,109 +95,69 @@ $alertContainer->nbPages = count($dataResult);
 	$pdf->AddPage();
 	$pdf->SetY(30,true,false);
 	
+	$patientDOB = '';
+	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
+	    $patientDOB = $common->viewDateFormat($data['patient_dob']);
+	}
 	$specimenCollectedDate = '';
-	if(isset($data['specimen_collected_date']) && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
+	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
 	    $specimenCollectedDate = $common->humanDateFormat($data['specimen_collected_date']);
 	}
 	$specimenPickedUpDateAtAnc = '';
-	if(isset($data['specimen_picked_up_date_at_anc']) && trim($data['specimen_picked_up_date_at_anc'])!= '' && $data['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+	if(isset($data['specimen_picked_up_date_at_anc']) && $data['specimen_picked_up_date_at_anc']!= null && trim($data['specimen_picked_up_date_at_anc'])!= '' && $data['specimen_picked_up_date_at_anc']!= '0000-00-00'){
 	    $specimenPickedUpDateAtAnc = $common->humanDateFormat($data['specimen_picked_up_date_at_anc']);
 	}
-	$patientDOB = '';
-	if(isset($data['patient_dob']) && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
-	    $patientDOB = $common->viewDateFormat($data['patient_dob']);
-	}
-	$rejectionCode = (isset($data['rejection_code']))?$data['rejection_code']:'';
 	$receiptDateAtCentralLab = '';
-	if(isset($data['receipt_date_at_central_lab']) && trim($data['receipt_date_at_central_lab'])!= '' && $data['receipt_date_at_central_lab']!= '0000-00-00'){
+	if(isset($data['receipt_date_at_central_lab']) && $data['receipt_date_at_central_lab']!= null && trim($data['receipt_date_at_central_lab'])!= '' && $data['receipt_date_at_central_lab']!= '0000-00-00'){
 	    $receiptDateAtCentralLab = $common->humanDateFormat($data['receipt_date_at_central_lab']);
 	}
 	$testCompletionDate = '';
-	if(isset($data['date_of_test_completion']) && trim($data['date_of_test_completion'])!= '' && $data['date_of_test_completion']!= '0000-00-00'){
+	if(isset($data['date_of_test_completion']) && $data['date_of_test_completion']!= null && trim($data['date_of_test_completion'])!= '' && $data['date_of_test_completion']!= '0000-00-00'){
 	    $testCompletionDate = $common->humanDateFormat($data['date_of_test_completion']);
 	}
+	$rejectionCode = (isset($data['rejection_code']))?$data['rejection_code']:'';
 	$resultDispatchedDateToClinic = '';
-	if(isset($data['result_dispatched_date_to_clinic']) && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
+	if(isset($data['result_dispatched_date_to_clinic']) && $data['result_dispatched_date_to_clinic']!= null && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	    $resultDispatchedDateToClinic = $common->humanDateFormat($data['result_dispatched_date_to_clinic']);
 	}
-	$specimenType ='';
-	if($data['specimen_type'] == 1){
-          $specimenType = 'Venous';
-        }else if($data['specimen_type'] == 2){
-          $specimenType = 'Plasma';
-        }else if($data['specimen_type'] == 3){
-           $specimenType = 'DBS';
-        }
-	$lAgAvidityResult = '';
-	if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='lt'){
-	    $lAgAvidityResult = 'Long Term';
-	}else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='r'){
-	    $lAgAvidityResult = 'Recent';
+	$resultImage = '';
+	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'r'){
+	    $resultImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
+	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'lt'){
+	    $resultImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
-	$hIVRNAResult = '';
-	if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='yes'){
-	    $hIVRNAResult = 'High Viral Load';
-	}else if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='no'){
-	    $hIVRNAResult = 'Low Viral Load';
-	}
-	$statusName = (isset($data['test_status_name']))?ucwords($data['test_status_name']):'';
 	//pdf content
 	$html = '';
-	$html .= '<table style="padding:2px;">';
-	$html .='<tr><td colspan="6" style="text-align:left;"><h5>SURVEILLANCE INFORMATION</h5></td></tr>';
-	$html .='<tr>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Study ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['study_id'].'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Specimen Collected</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$specimenCollectedDate.'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_site_code'].' - '.ucwords($data['anc_site_name']).'</td>';
-	$html.='</tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Specimen Picked Up at ANC</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.$specimenPickedUpDateAtAnc.'</td>';
-	$html .='</tr>';
-	$html .='<tr><td colspan="6" style="height:10px;"></td></tr>';
-	$html .='<tr><td colspan="6" style="text-align:left;"><h5>PATIENT INFORMATION</h5></td></tr>';
-	$html .='<tr>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ANC Patient ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['anc_patient_id'].'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>ART Number</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['art_patient_id'].'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Encrypted Patient ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['enc_anc_patient_id'].'</td>';
-	$html .='</tr>';
-	$html .='<tr>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>DOB</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$patientDOB.'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Age</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['age'].'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Gestation Age (Weeks)</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['gestational_age'].'</td>';
-	$html .='</tr>';
-	$html .='<tr><td colspan="6" style="height:10px;"></td></tr>';
-	$html .='<tr><td colspan="6" style="text-align:left;"><h5>LABORATORY INFORMATION</h5></td></tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Site Code/Name</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['facility_code'].' - '.ucwords($data['facility_name']).'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Lab Specimen ID</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['lab_specimen_id'].'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Speciemen Rejection Code</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$rejectionCode.'</td>';
-	$html .='</tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Receipt at Central Lab</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$receiptDateAtCentralLab.'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Test Completion</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$testCompletionDate.'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Date Of Result Dispatched To Clinic</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$resultDispatchedDateToClinic.'</td>';
-	$html .='</tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Specimen Type</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.$specimenType.'</td>';
-	$html .='</tr>';
-	$html .='<tr><td colspan="6" style="height:10px;"></td></tr>';
-	$html .='<tr><td colspan="6" style="text-align:left;"><h5>TEST RESULT</h5></td></tr>';
-	$html .='<tr>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>LAg Avidity ODn</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$data['final_lag_avidity_odn'].'</td>';
-	    $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA(copies/ml)</strong></td><td colspan="3" style="line-height:18px;font-size:10px;text-align:left;">'.$data['hiv_rna'].'</td>';
-	$html .='</tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>LAg Avidity Result</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.$lAgAvidityResult.'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>HIV RNA > 1000 (copies/ml)</strong> </td><td style="line-height:18px;font-size:10px;text-align:left;">'.$hIVRNAResult.'</td>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Recent Infection(LAg-R & RNA > 1000)</strong></td><td style="line-height:18px;font-size:10px;text-align:left;">'.ucfirst($data['recent_infection']).'</td>';
-	$html .='</tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Status</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.$statusName.'</td>';
-	$html .='</tr>';
-	$html .='<tr><td colspan="6" style="height:10px;"></td></tr>';
-	$html .='<tr>';
-	   $html .='<td style="line-height:18px;font-size:10px;text-align:left;"><strong>Comments</strong></td><td colspan="5" style="line-height:18px;font-size:10px;text-align:left;">'.ucfirst($data['comments']).'</td>';
-	$html .='</tr>';
+	$html .= '<table style="padding:2px;border:1px solid #f1f8fb;">';
+	    //facility info
+	    $html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Facility Information</td></tr>';
+	    $html .='<tr><td style="width:30%;line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ANC Site Name:</strong></td><td style="width:70%;line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.ucwords($data['anc_site_name']).'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ANC Site Code:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['anc_site_code'].'</td></tr>';
+	    //patient info
+	    $html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Patient Information</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ANC Patient ID:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['anc_patient_id'].'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ART Number:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['art_patient_id'].'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Age DOB/ Age:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$patientDOB.' / <strong>'.$data['age'].'</strong></td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ART Patient If (if any):</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['art_patient_id'].'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Gestation Age in (Weeks):</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['gestational_age'].'</td></tr>';
+	    //laboratory info
+	    $html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Laboratory Information</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Sample Collection Date:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$specimenCollectedDate.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Sample Pickup Date:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$specimenPickedUpDateAtAnc.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Sample Received at Recency/VL Lab:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$receiptDateAtCentralLab.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Date of Test Completion:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$testCompletionDate.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Specimen Rejection Code:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$rejectionCode.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Result Dispatch Date:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$resultDispatchedDateToClinic.'</td></tr>';
+	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
+		//test result info
+		$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;">Test Result</td></tr>';
+		$html .='<tr><td colspan="2">'.$resultImage.'</td></tr>';
+		//recency test result - lt/r info
+		//$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Recency Test Result - Long Term / Recent</td></tr>';
+		//$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Additional Information:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"></td></tr>';
+		//$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>LAg OD Value:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"></td></tr>';
+		//$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>VL(cp/ml):</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"></td></tr>';
+	    }
 	$html .='</table>';
 	$pdf->writeHTML($html);
 	$pdf->lastPage();
@@ -213,7 +173,7 @@ $alertContainer->nbPages = count($dataResult);
 	$resultPdf->setPrintHeader(false);
         $resultPdf->setPrintFooter(false);
 	$resultPdf->concat();
-	$resultFilename = 'Lab-Data-Reporting-Result-'.date('d-M-Y-H-i-s').'.pdf';
+	$resultFilename = 'Laboratory-Recency-Test-Result-'.date('d-M-Y-H-i-s').'.pdf';
 	$resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
 	echo $resultFilename;
     }
