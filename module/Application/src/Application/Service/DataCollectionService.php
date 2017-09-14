@@ -354,7 +354,7 @@ class DataCollectionService {
                             if($colNo == 19){ $assay1 = $value; }
                             if($colNo == 20){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
-                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle); 
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo >20){
                                 if($lstColumn == 21){
                                    if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
@@ -771,33 +771,66 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $output = array();
                     foreach ($sResult as $aRow) {
-                        $lagResult = '';
-	                $assay = '';
-                        //LAg assay
+                        $specimenCollectedDate = '';
+                        $status = 'Incomplete';
+                        $recentInfection = '';
+                        $hIVRNAResult = '';
+                        $rapidRecencyAssay = '';
+                        $rapidRecencyAssayDuration = '';
+                        //specimen collected date
+                        if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+                            $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+                        }
+                        //status
+                        if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 0){
+                            $aRow['labDataPresentComplete'] = -1;
+                        }if($aRow['labDataPresentComplete'] == 1){
+                           $status = 'Complete';
+                        }else if($aRow['labDataPresentComplete'] == -1){
+                          $status = 'Rejected';
+                        }
+                        //recent infection
                         if($aRow['lag_avidity_result']=='lt'){
-                            $lagResult = 'Long Term';
+                            $recentInfection = 'Long Term';
                         }else if($aRow['lag_avidity_result']=='r'){
-                            $lagResult = 'Recent';
+                            $recentInfection = 'Recent';
+                        }
+                        //HIV rna values
+                        if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+                            $hIVRNAResult = 'High Viral Load';
+                        }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+                            $hIVRNAResult = 'Low Viral Load';
                         }
                         //rapid assay
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
-                            if(isset($asanteRapidRecencyAssy['rrr'])){
+                            if(isset($asanteRapidRecencyAssy['rrdt'])){
+                                $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+                                if($asanteRapidRecencyAssayPn == 'p'){
+                                    $rapidRecencyAssay = 'Positive';
+                                }else if($asanteRapidRecencyAssayPn == 'n'){
+                                    $rapidRecencyAssay = 'Negative';
+                                }
+                            }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
                                 if($asanteRapidRecencyAssayRlt == 'r'){
-                                    $assay = 'Recent';
+                                    $rapidRecencyAssayDuration = 'Recent';
                                 }else if($asanteRapidRecencyAssayRlt == 'lt'){
-                                    $assay = 'Long Term';
+                                    $rapidRecencyAssayDuration = 'Long Term';
                                 }
                             }
                         }
                         $row = array();
                         $row[] = ucwords($aRow['province_name']);
                         $row[] = $aRow['study_id'];
-                        $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
-                        $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';
-                        $row[] = $lagResult;
-	                $row[] = $assay;
+                        $row[] = $specimenCollectedDate;
+                        $row[] = $status;
+                        $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
+                        $row[] = $aRow['hiv_rna'];
+                        $row[] = $hIVRNAResult;
+                        $row[] = $recentInfection;
+                        $row[] = $rapidRecencyAssay;
+                        $row[] = $rapidRecencyAssayDuration;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -824,15 +857,21 @@ class DataCollectionService {
                             ),
                         )
                     );
-                    
-                    $sheet->mergeCells('U1:V1');
-                    
+                    $redTxtArray = array(
+                        'font' => array(
+                            'color' => array('rgb' => 'F44336')
+                        )
+                    );
                     $sheet->setCellValue('A1', html_entity_decode('Province Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('HIV RNA ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('HIV RNA > 1,000 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Rapid Recency Diagnosis Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Rapid Recency Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -840,14 +879,21 @@ class DataCollectionService {
                     $sheet->getStyle('D1')->applyFromArray($styleArray);
                     $sheet->getStyle('E1')->applyFromArray($styleArray);
                     $sheet->getStyle('F1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1')->applyFromArray($styleArray);
+                    $sheet->getStyle('H1')->applyFromArray($styleArray);
+                    $sheet->getStyle('I1')->applyFromArray($styleArray);
+                    $sheet->getStyle('J1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
+                        $lag = '';
+                        $assay1 = '';
+                        $assay2 = '';
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 5){
+                            if($colNo > 9){
                                 break;
                             }
                             if (is_numeric($value)) {
@@ -855,8 +901,16 @@ class DataCollectionService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
+                            if($colNo == 7){ $lag = $value; }
+                            if($colNo == 8){ $assay1 = $value; }
+                            if($colNo == 9){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            if($colNo >8){
+                                if($assay1 =='Negative' || ($lag == 'Long Term' && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                  $sheet->getStyle('A'.$currentRow.':J'.$currentRow)->applyFromArray($redTxtArray);
+                                }
+                            }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
                             $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
                             $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);

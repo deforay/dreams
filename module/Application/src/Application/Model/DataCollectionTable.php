@@ -1622,7 +1622,8 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province_name','da_c.study_id','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.asante_rapid_recency_assy');
+	$aColumns = array('province_name','da_c.study_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$orderColumns = array('province_name','da_c.study_id','da_c.specimen_collected_date','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.hiv_rna_gt_1000','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
        /*
         * Paging
         */
@@ -1640,7 +1641,7 @@ class DataCollectionTable extends AbstractTableGateway {
        if (isset($parameters['iSortCol_0'])) {
            for ($i = 0; $i < intval($parameters['iSortingCols']); $i++) {
                if ($parameters['bSortable_' . intval($parameters['iSortCol_' . $i])] == "true") {
-                   $sOrder .= $aColumns[intval($parameters['iSortCol_' . $i])] . " " . ( $parameters['sSortDir_' . $i] ) . ",";
+                   $sOrder .= $orderColumns[intval($parameters['iSortCol_' . $i])] . " " . ( $parameters['sSortDir_' . $i] ) . ",";
                }
            }
            $sOrder = substr_replace($sOrder, "", -1);
@@ -1718,8 +1719,13 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->columns(array(
 						   'data_collection_id',
 						   'study_id',
+						   'specimen_collected_date',
+						   'rejection_reason',
 						   'country',
 						   'lag_avidity_result',
+						   'hiv_rna',
+						   'hiv_rna_gt_1000',
+						   'recent_infection',
 						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 						))
@@ -1778,8 +1784,13 @@ class DataCollectionTable extends AbstractTableGateway {
 				->columns(array(
 						'data_collection_id',
 						'study_id',
+						'specimen_collected_date',
+						'rejection_reason',
 						'country',
 						'lag_avidity_result',
+						'hiv_rna',
+						'hiv_rna_gt_1000',
+						'recent_infection',
 						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 					     ))
@@ -1818,33 +1829,67 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
+	    $specimenCollectedDate = '';
+	    $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) .'" target="_blank" title="View data"> Incomplete</a>';
 	    $lagResult = '';
-	    $assay = '';
+	    $hIVRNAResult = '';
+	    $rapidRecencyAssay = '';
+	    $rapidRecencyAssayDuration = '';
+	    //specimen collected date
+	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+	    }
+	    //status
+	    if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 0){
+		$aRow['labDataPresentComplete'] = -1;
+	    }if($aRow['labDataPresentComplete'] == 1){
+	       $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> Complete</a>';
+	    }else if($aRow['labDataPresentComplete'] == -1){
+	      $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> Rejected</a>';
+	    }
 	    //LAg assay
 	    if($aRow['lag_avidity_result']=='lt'){
 		$lagResult = 'Long Term';
 	    }else if($aRow['lag_avidity_result']=='r'){
 		$lagResult = 'Recent';
 	    }
+	    //HIV rna values
+	    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+		$hIVRNAResult = 'High Viral Load';
+	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+		$hIVRNAResult = 'Low Viral Load';
+	    }
 	    //rapid assay
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
-		if(isset($asanteRapidRecencyAssy['rrr'])){
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    if($asanteRapidRecencyAssayPn == 'p'){
+			$rapidRecencyAssay = 'Positive';
+		    }else if($asanteRapidRecencyAssayPn == 'n'){
+			$rapidRecencyAssay = 'Negative';
+		    }
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
 		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$assay = 'Recent';
+			$rapidRecencyAssayDuration = 'Recent';
 		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$assay = 'Long Term';
+			$rapidRecencyAssayDuration = 'Long Term';
 		    }
 		}
 	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);
 	    $row[] = $aRow['study_id'];
-	    $row[] = (($aRow['labDataPresentComplete'] == 1)) ? '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Complete</a>':'<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" target="_blank" title="View data"> Incomplete</a>';
+	    $row[] = $specimenCollectedDate;
+	    $row[] = $status;
 	    $row[] = (isset($aRow['assessment_id']))?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']). '/' . base64_encode($aRow['country']) . '" style="text-decoration:underline;" target="_blank" title="View data"> Yes</a>':'No';
 	    $row[] = $lagResult;
-	    $row[] = $assay;
+	    $row[] = $aRow['hiv_rna'];
+	    $row[] = $hIVRNAResult;
+	    $row[] = ucfirst($aRow['recent_infection']);
+	    $row[] = $rapidRecencyAssay;
+	    $row[] = $rapidRecencyAssayDuration;
 	    $output['aaData'][] = $row;
 	}
       return $output;
