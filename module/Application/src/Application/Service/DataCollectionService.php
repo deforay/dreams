@@ -199,18 +199,20 @@ class DataCollectionService {
                         }
                         $rapidRecencyAssay = '';
                         $rapidRecencyAssayDuration = '';
-                        if(isset($aRow['asante_rapid_recency_assy']) && trim($aRow['asante_rapid_recency_assy'])!= ''){
-                            $xplodRapidRecencyAssay = explode('/',$aRow['asante_rapid_recency_assy']);
-                            if(isset($xplodRapidRecencyAssay[0])){
-                                if($xplodRapidRecencyAssay[0] == 'p'){
+                        if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+                            $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+                            if(isset($asanteRapidRecencyAssy['rrdt'])){
+                                $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+                                if($asanteRapidRecencyAssayPn == 'p'){
                                     $rapidRecencyAssay = 'Positive';
-                                }else if($xplodRapidRecencyAssay[0] == 'n'){
+                                }else if($asanteRapidRecencyAssayPn == 'n'){
                                     $rapidRecencyAssay = 'Negative';
                                 }
-                            }if(isset($xplodRapidRecencyAssay[1])){
-                                if($xplodRapidRecencyAssay[1] == 'r'){
+                            }if(isset($asanteRapidRecencyAssy['rrr'])){
+                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+                                if($asanteRapidRecencyAssayRlt == 'r'){
                                     $rapidRecencyAssayDuration = 'Recent';
-                                }else if($xplodRapidRecencyAssay[1] == 'lt'){
+                                }else if($asanteRapidRecencyAssayRlt == 'lt'){
                                     $rapidRecencyAssayDuration = 'Long Term';
                                 }
                             }
@@ -355,11 +357,11 @@ class DataCollectionService {
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle); 
                             if($colNo >20){
                                 if($lstColumn == 21){
-                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay1 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
                                     $sheet->getStyle('A'.$currentRow.':V'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
-                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay1 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
                                     $sheet->getStyle('A'.$currentRow.':W'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }
@@ -769,25 +771,33 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $lagResult = '';
+	                $assay = '';
+                        //LAg assay
+                        if($aRow['lag_avidity_result']=='lt'){
+                            $lagResult = 'Long Term';
+                        }else if($aRow['lag_avidity_result']=='r'){
+                            $lagResult = 'Recent';
+                        }
+                        //rapid assay
+                        if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+                            $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+                            if(isset($asanteRapidRecencyAssy['rrr'])){
+                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+                                if($asanteRapidRecencyAssayRlt == 'r'){
+                                    $assay = 'Recent';
+                                }else if($asanteRapidRecencyAssayRlt == 'lt'){
+                                    $assay = 'Long Term';
+                                }
+                            }
+                        }
                         $row = array();
                         $row[] = ucwords($aRow['province_name']);
                         $row[] = $aRow['study_id'];
                         $row[] = (($aRow['labDataPresentComplete'] == 1)) ? 'Complete' : 'Incomplete';
                         $row[] = (isset($aRow['assessment_id']))? 'Yes' : 'No';
-                        if($aRow['lag_avidity_result']=='lt'){
-                            $row[] = 'Long Term';
-                        }else if($aRow['lag_avidity_result']=='r'){
-                            $row[] = 'Recent';
-                        }else {
-                            $row[] = '';
-                        }
-                        if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
-                            $row[] = 'Long Term';
-                        }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
-                            $row[] = 'Recent';
-                        }else {
-                            $row[] = '';
-                        }
+                        $row[] = $lagResult;
+	                $row[] = $assay;
                         $output[] = $row;
                     }
                     $styleArray = array(

@@ -42,19 +42,27 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 }else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
     $hIVRNAResult = 'Low Viral Load';
 }
-$asanteRapidRecencyAssay = '';
-if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/'){
-    $asanteRapidRecencyAssay = 'Positive';
-}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/'){
-    $asanteRapidRecencyAssay = 'Negative';
-}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/lt'){
-    $asanteRapidRecencyAssay = 'Positive/Long Term';
-}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/lt'){
-    $asanteRapidRecencyAssay = 'Negative/Long Term';
-}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='n/r'){
-    $asanteRapidRecencyAssay = 'Negative/Recent';
-}else if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy =='p/r'){
-    $asanteRapidRecencyAssay = 'Positive/Recent';
+$asanteRapidRecencyAssy = json_decode($row->asante_rapid_recency_assy,true);
+$asanteRapidRecencyAssayPn = '';
+$readerValueRRDT = '';
+$asanteRapidRecencyAssayRlt = '';
+$readerValueRRR = '';
+if(isset($asanteRapidRecencyAssy['rrdt'])){
+    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+    if($asanteRapidRecencyAssayPn == 'p'){
+        $asanteRapidRecencyAssayPn = 'Positive';
+    }else if($asanteRapidRecencyAssayPn == 'n'){
+        $asanteRapidRecencyAssayPn = 'Negative';
+    }
+    $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+}if(isset($asanteRapidRecencyAssy['rrr'])){
+    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+    if($asanteRapidRecencyAssayRlt == 'r'){
+        $asanteRapidRecencyAssayRlt = 'Recent';
+    }else if($asanteRapidRecencyAssayRlt == 'lt'){
+        $asanteRapidRecencyAssayRlt = 'Long Term';
+    }
+    $readerValueRRR = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
 }
 ?>
 <style>
@@ -64,6 +72,26 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
     .input-field{
         margin-top:0;
         height:56px;
+    }
+    #box-1{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+        margin-top:8px !important;
+        min-height:50px !important;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+    }
+    #box-2{
+	float:left;
+	width:44%;
+	border:2px dotted #333;
+        margin-top:8px !important;
+        min-height:50px !important;
     }
 </style>
 <div id="page-content">
@@ -213,7 +241,7 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                     </div>
                 </div>
             </fieldset>
-            <fieldset style="border-color:#F44336;border-style: solid;">
+            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>display:none;<?php } ?>">
                <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
@@ -254,9 +282,11 @@ if(trim($row->asante_rapid_recency_assy)!= '' && $row->asante_rapid_recency_assy
                 </div>
                 <div class="row">
                     <div class="col s4">
-                        <div class="input-field col m12 s12">
+                        <div class="input-field col m12 s12" style="min-height:86px;">
                           <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Assante) </label><br>
-                          <p><?php echo $asanteRapidRecencyAssay; ?></p>
+                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><?php echo $readerValueRRDT; ?></div>
+                          <div id="box-breaker">&rArr;</div>
+                          <div id="box-2" style="text-align:center;"><?php echo $asanteRapidRecencyAssayRlt; ?><br><?php echo $readerValueRRR; ?></div>
                         </div>
                     </div>
                     <div class="col s4">

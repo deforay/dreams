@@ -68,11 +68,23 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-                $params['asanteRapidRecencyAssayPn'] = NULL;
+                $params['asanteRapidRecencyAssayPn'] = '';
+            }if(!isset($params['readerValueRRDT'])){
+                $params['readerValueRRDT'] = '';
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
-                $params['asanteRapidRecencyAssayRlt'] = NULL;
+                $params['asanteRapidRecencyAssayRlt'] = '';
+            }if(!isset($params['readerValueRRR'])){
+                $params['readerValueRRR'] = '';
             }
-	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
+	    $asanteRapidRecencyAssay = array('rrdt'=>array(
+						'assay'=>$params['asanteRapidRecencyAssayPn'],
+						'reader'=>$params['readerValueRRDT']
+					    ),
+					    'rrr'=>array(
+						'assay'=>$params['asanteRapidRecencyAssayRlt'],
+						'reader'=>$params['readerValueRRR']
+					    )
+					);
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
@@ -104,7 +116,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna'=>$params['hivRna'],
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
-                        'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
+                        'asante_rapid_recency_assy'=>json_encode($asanteRapidRecencyAssay),
 			'comments'=>$params['comments'],
                         'country'=>$country,
 			'status'=>$status,
@@ -317,21 +329,35 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 		$hIVRNAResult = 'Low Viral Load';
 	    }
+	    
+	    $asanteRapidRecencyAssayPn = '';
+	    $asanteRapidRecencyAssayRlt = '';
 	    $asanteRapidRecencyAssay = '';
-	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/'){
-		$asanteRapidRecencyAssay = 'Positive';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
-		$asanteRapidRecencyAssay = 'Negative';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
-		$asanteRapidRecencyAssay = 'Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'Positive/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'Negative/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'Negative/Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'Positive/Recent';
+	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    if($asanteRapidRecencyAssayPn == 'p'){
+			$asanteRapidRecencyAssayPn = 'Positive';
+		    }else if($asanteRapidRecencyAssayPn == 'n'){
+			$asanteRapidRecencyAssayPn = 'Negative';
+		    }
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    if($asanteRapidRecencyAssayRlt == 'r'){
+			$asanteRapidRecencyAssayRlt = 'Recent';
+		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
+			$asanteRapidRecencyAssayRlt = 'Long Term';
+		    }
+		}
+		//set display value
+		if(trim($asanteRapidRecencyAssayPn)!= '' && trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn.'/'.$asanteRapidRecencyAssayRlt;
+		}else if(trim($asanteRapidRecencyAssayPn)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn;
+		}else if(trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayRlt;
+		}
 	    }
 	    $unlockedInfo = '';
 	    if(isset($aRow['unlocked_on']) && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= NULL && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
@@ -463,11 +489,23 @@ class DataCollectionTable extends AbstractTableGateway {
             } if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
             } if(!isset($params['asanteRapidRecencyAssayPn'])){
-                $params['asanteRapidRecencyAssayPn'] = NULL;
+                $params['asanteRapidRecencyAssayPn'] = '';
+            }if(!isset($params['readerValueRRDT'])){
+                $params['readerValueRRDT'] = '';
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
-                $params['asanteRapidRecencyAssayRlt'] = NULL;
+                $params['asanteRapidRecencyAssayRlt'] = '';
+            }if(!isset($params['readerValueRRDT'])){
+                $params['readerValueRRDT'] = '';
             }
-	    $asanteRapidRecencyAssay = $params['asanteRapidRecencyAssayPn'].'/'.$params['asanteRapidRecencyAssayRlt'];
+	    $asanteRapidRecencyAssay = array('rrdt'=>array(
+						'assay'=>$params['asanteRapidRecencyAssayPn'],
+						'reader'=>$params['readerValueRRDT']
+					    ),
+					    'rrr'=>array(
+						'assay'=>$params['asanteRapidRecencyAssayRlt'],
+						'reader'=>$params['readerValueRRR']
+					    )
+					);
 	    //set test status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
@@ -501,7 +539,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna'=>$params['hivRna'],
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
-                        'asante_rapid_recency_assy'=>$asanteRapidRecencyAssay,
+                        'asante_rapid_recency_assy'=>json_encode($asanteRapidRecencyAssay),
 			'comments'=>$params['comments'],
                         'status'=>$status,
                         'updated_on'=>$common->getDateTime(),
@@ -794,21 +832,34 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 		$hIVRNAResult = 'Low Viral Load';
 	    }
+	    $asanteRapidRecencyAssayPn = '';
+	    $asanteRapidRecencyAssayRlt = '';
 	    $asanteRapidRecencyAssay = '';
-	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/'){
-		$asanteRapidRecencyAssay = 'Positive';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
-		$asanteRapidRecencyAssay = 'Negative';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
-		$asanteRapidRecencyAssay = 'Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'Positive/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'Negative/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'Negative/Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'Positive/Recent';
+	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    if($asanteRapidRecencyAssayPn == 'p'){
+			$asanteRapidRecencyAssayPn = 'Positive';
+		    }else if($asanteRapidRecencyAssayPn == 'n'){
+			$asanteRapidRecencyAssayPn = 'Negative';
+		    }
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    if($asanteRapidRecencyAssayRlt == 'r'){
+			$asanteRapidRecencyAssayRlt = 'Recent';
+		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
+			$asanteRapidRecencyAssayRlt = 'Long Term';
+		    }
+		}
+		//set display value
+		if(trim($asanteRapidRecencyAssayPn)!= '' && trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn.'/'.$asanteRapidRecencyAssayRlt;
+		}else if(trim($asanteRapidRecencyAssayPn)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn;
+		}else if(trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayRlt;
+		}
 	    }
 	    
 	    $row[] = $aRow['study_id'];
@@ -1191,21 +1242,34 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 		$hIVRNAResult = 'Low Viral Load';
 	    }
+	    $asanteRapidRecencyAssayPn = '';
+	    $asanteRapidRecencyAssayRlt = '';
 	    $asanteRapidRecencyAssay = '';
-	    if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/'){
-		$asanteRapidRecencyAssay = 'Positive';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/'){
-		$asanteRapidRecencyAssay = 'Negative';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='/r'){
-		$asanteRapidRecencyAssay = 'Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/lt'){
-		$asanteRapidRecencyAssay = 'Positive/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/lt'){
-		$asanteRapidRecencyAssay = 'Negative/Long Term';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='n/r'){
-		$asanteRapidRecencyAssay = 'Negative/Recent';
-	    }else if(trim($aRow['asante_rapid_recency_assy'])!= '' && $aRow['asante_rapid_recency_assy'] =='p/r'){
-		$asanteRapidRecencyAssay = 'Positive/Recent';
+	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    if($asanteRapidRecencyAssayPn == 'p'){
+			$asanteRapidRecencyAssayPn = 'Positive';
+		    }else if($asanteRapidRecencyAssayPn == 'n'){
+			$asanteRapidRecencyAssayPn = 'Negative';
+		    }
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    if($asanteRapidRecencyAssayRlt == 'r'){
+			$asanteRapidRecencyAssayRlt = 'Recent';
+		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
+			$asanteRapidRecencyAssayRlt = 'Long Term';
+		    }
+		}
+		//set display value
+		if(trim($asanteRapidRecencyAssayPn)!= '' && trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn.'/'.$asanteRapidRecencyAssayRlt;
+		}else if(trim($asanteRapidRecencyAssayPn)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayPn;
+		}else if(trim($asanteRapidRecencyAssayRlt)!= ''){
+		    $asanteRapidRecencyAssay = $asanteRapidRecencyAssayRlt;
+		}
 	    }
 	    
 	    $row[] = $aRow['study_id'];
@@ -1672,8 +1736,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	}if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
 	    $sQuery = $sQuery->where('da_c.hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
-	    $sQuery = $sQuery->where('da_c.hiv_rna >= 1000');
-	}else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
+	    $sQuery = $sQuery->where('da_c.hiv_rna > 1000');
+	}if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
 	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
 	}
 	
@@ -1732,8 +1796,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	}if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
 	    $tQuery = $tQuery->where('da_c.hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
-	    $tQuery = $tQuery->where('da_c.hiv_rna >= 1000');
-	}else if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
+	    $tQuery = $tQuery->where('da_c.hiv_rna > 1000');
+	}if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
 	    $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -1755,10 +1819,16 @@ class DataCollectionTable extends AbstractTableGateway {
 		$lagResult = 'Recent';
 	    }
 	    //rapid assay
-	    if($aRow['asante_rapid_recency_assy']=='p/lt' || $aRow['asante_rapid_recency_assy']=='/lt'){
-		$assay = 'Long Term';
-	    }else if($aRow['asante_rapid_recency_assy']=='p/r' || $aRow['asante_rapid_recency_assy']=='/r'){
-		$assay = 'Recent';
+	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    if($asanteRapidRecencyAssayRlt == 'r'){
+			$assay = 'Recent';
+		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
+			$assay = 'Long Term';
+		    }
+		}
 	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);

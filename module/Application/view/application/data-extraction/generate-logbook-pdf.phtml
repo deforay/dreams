@@ -135,18 +135,20 @@ if(count($logbookResult) >0){
 	    
 	    $rapidRecencyAssay = '';
 	    $rapidRecencyAssayDuration = '';
-	    if(isset($row['asante_rapid_recency_assy']) && trim($row['asante_rapid_recency_assy'])!= ''){
-		$xplodRapidRecencyAssay = explode('/',$row['asante_rapid_recency_assy']);
-		if(isset($xplodRapidRecencyAssay[0])){
-		    if($xplodRapidRecencyAssay[0] == 'p'){
+	    if(trim($row['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    if($asanteRapidRecencyAssayPn == 'p'){
 			$rapidRecencyAssay = 'Positive';
-		    }else if($xplodRapidRecencyAssay[0] == 'n'){
+		    }else if($asanteRapidRecencyAssayPn == 'n'){
 			$rapidRecencyAssay = 'Negative';
 		    }
-		}if(isset($xplodRapidRecencyAssay[1])){
-		    if($xplodRapidRecencyAssay[1] == 'r'){
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    if($asanteRapidRecencyAssayRlt == 'r'){
 			$rapidRecencyAssayDuration = 'Recent';
-		    }else if($xplodRapidRecencyAssay[1] == 'lt'){
+		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
 			$rapidRecencyAssayDuration = 'Long Term';
 		    }
 		}

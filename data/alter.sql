@@ -561,3 +561,6 @@ alter table anc_site add FOREIGN KEY(province) REFERENCES province(province_id)
 
 --Pal 17/06/2017
 DELETE FROM `specimen_rejection_reason` WHERE `specimen_rejection_reason`.`rejection_reason_id` = 1
+
+--Pal 13/09/2017
+ALTER TABLE `data_collection` CHANGE `asante_rapid_recency_assy` `asante_rapid_recency_assy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
