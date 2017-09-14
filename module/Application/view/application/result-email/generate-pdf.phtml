@@ -173,7 +173,7 @@ $alertContainer->nbPages = count($dataResult);
 	$resultPdf->setPrintHeader(false);
         $resultPdf->setPrintFooter(false);
 	$resultPdf->concat();
-	$resultFilename = 'Laboratory-Recency-Test-Result-'.date('d-M-Y-H-i-s').'.pdf';
+	$resultFilename = 'LABORATORY-RECENCY-TEST-RESULT-'.date('d-M-Y-H-i-s').'.pdf';
 	$resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
 	echo $resultFilename;
     }

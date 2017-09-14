@@ -99,7 +99,8 @@ if(count($logbookResult) >0){
            $html .='<th><strong>HIV RNA</strong></th>';
            $html .='<th><strong>HIV RNA > 1,000</strong></th>';
            $html .='<th><strong>Recent Infection</strong></th>';
-           $html .='<th colspan="2"><strong>Rapid Recency Assay (Eg. Assante)</strong></th>';
+           $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
+           $html .='<th><strong>Rapid Recency Result</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -153,7 +154,11 @@ if(count($logbookResult) >0){
 		    }
 		}
 	    }
-            $html .='<tr>';
+	    $redTxt='';
+	    if($rapidRecencyAssay == 'Negative' || ($row['final_lag_avidity_odn'] > 2 && (($rapidRecencyAssay == 'Positive' && $rapidRecencyAssayDuration == 'Recent') || $rapidRecencyAssayDuration == 'Recent'))){
+		$redTxt = 'color:#F44336;';
+	    }
+            $html .='<tr style="'.$redTxt.'">';
               $html .='<td>'.$row['study_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
               $html .='<td>'.ucwords($row['anc_site_name'])." - ".$row['anc_site_code'].'</td>';
