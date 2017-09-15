@@ -155,8 +155,7 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Dispatch Date:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;'.$resultDispatchedDateToClinic.'</td></tr>';
 	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
 		//test result info
-		$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;">Test Result</td></tr>';
-		$html .='<tr><td colspan="2" style="line-height:18px;font-size:10px;text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg Ass </strong>- '.$lagAssay.'</td></tr>';
+		$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;">Test Result LAg Ass - '.$lagAssay.'</td></tr>';
 		$html .='<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;'.$lagAssayImage.'</td></tr>';
 		//recency test result - lt/r info
 		//$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Recency Test Result - Long Term / Recent</td></tr>';
