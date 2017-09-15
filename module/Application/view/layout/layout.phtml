@@ -2,7 +2,7 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $loginContainer = new Container('user');
-//User Access
+//Set menu access by config values
 $DRAccess = 'hide';
 $PRAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
@@ -15,7 +15,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
         $PRAccess = 'show';
     }
 }
-//Menu Access
+//Set main menu access
 $labMenuAccess = 'hide';
 $ancSiteMenuAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
@@ -23,7 +23,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
 }if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCDEO'){
    $ancSiteMenuAccess = 'show';
 }
-//Country Admin Submenu Access
+//Set country admin submenu access
 $countryAdminUserMenuAccess = 'hide';
 $countryAdminLabMenuAccess = 'hide';
 $countryAdminAncsiteMenuAccess = 'hide';
@@ -35,12 +35,8 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 }else if($loginContainer->roleCode== 'LS'){
     $countryAdminUserMenuAccess = 'show';
     $countryAdminLabMenuAccess = 'show';
-}else if($loginContainer->roleCode== 'LDEO'){
-    $countryAdminUserMenuAccess = 'show';
-}else if($loginContainer->roleCode== 'ANCDEO'){
-    $countryAdminUserMenuAccess = 'show';
 }
-//Country Lab Submenu Access
+//Set country lab submenu access
 $countryLabDataReportingAccess = 'hide';
 $countryLabDataExtractionAccess = 'hide';
 $countryLabResultEmailAccess = 'hide';
@@ -60,7 +56,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $countryLabDataReportingAccess = 'show';
     $countryLabDataExtractionAccess = 'show';
 }
-//Country Anc site Submenu Access
+//Set country anc submenu access
 $countryAncsiteDataExtractionAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCDEO'){
     $countryAncsiteDataExtractionAccess = 'show';
