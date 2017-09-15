@@ -221,6 +221,7 @@ class DataCollectionService {
                                 }
                             }
                         }
+                        
                         $row[] = $aRow['study_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = ucwords($aRow['anc_site_name']);

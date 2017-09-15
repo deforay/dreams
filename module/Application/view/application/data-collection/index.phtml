@@ -1074,9 +1074,11 @@ if(!isset($countryId) || trim($countryId)== ''){
 	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid},
 	    function(data){
 		if(data === "" || data === null || data === undefined){
+		    dcid = [];
 		    alert('OOPS..');
 		    $.unblockUI();
 		}else{
+		    dcid = [];
 		    $.unblockUI();
 		    window.open("/temporary/"+data, "_blank");
 		}
