@@ -242,18 +242,14 @@
     }
     
     function searchDataReporting(from){
-        if(from == 'search' || from == 'change' || from == 'reset'){
-          $.blockUI();
-        }
+        if(from == 'search' || from == 'change' || from == 'reset'){ $.blockUI(); }
         var anc = $('#anc').val();
         var specimenCollectedDate = $('#specimenCollectedDate').val();
         var facility = $('#facility').val();
         var mailSentStatus = $('#mailSentStatus').val();
         $.post("<?php echo $this->url('get-data-collection'); ?>", {anc:anc,specimenCollectedDate:specimenCollectedDate,facility:facility,mailSentStatus:mailSentStatus,chosenCountryId:$("#chosenCountryId").val()},
         function(data){
-          if(from == 'search' || from == 'change' || from == 'reset'){
-            $.unblockUI();
-          }
+          if(from == 'search' || from == 'change' || from == 'reset'){ $.unblockUI(); }
           $('.dataCollectionSection').html(data);
         });
     }

@@ -190,7 +190,7 @@ class CommonService {
                 )
             ));
             $transport->setOptions($options);
-            //get to email id
+            //get (To) email id
             $ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
                             ->where(array('anc.anc_site_id'=>base64_decode($params['anc'])));
             $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
@@ -207,7 +207,7 @@ class CommonService {
             $attachment->type = 'application/pdf';
             $attachment->encoding    = Mime::ENCODING_BASE64;
             $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-            $attachment->filename = 'Data-Reporting-Result-'.date('d-M-Y-H-i-s');
+            $attachment->filename = 'LABORATORY-RECENCY-TEST-RESULT-'.date('d-M-Y-H-i-s');
             $body = new MimeMessage();
             $body->setParts(array($html,$attachment));
 
@@ -218,14 +218,14 @@ class CommonService {
 
             $toArray = explode(",", $ancResult->email);
             foreach ($toArray as $toId) {
-                if ($toId != '') {
+                if (trim($toId) != '') {
                     $resultMail->addTo($toId);
                 }
             }
             if (isset($params['cc']) && trim($params['cc']) != "") {
                 $ccArray = explode(",", $params['cc']);
                 foreach ($ccArray as $ccId) {
-                    if ($ccId != '') {
+                    if (trim($ccId) != '') {
                         $resultMail->addCc($ccId);
                     }
                 }
@@ -233,7 +233,7 @@ class CommonService {
             if (isset($params['bcc']) && trim($params['bcc']) != "") {
                 $bccArray = explode(",", $params['bcc']);
                 foreach ($bccArray as $bccId) {
-                    if ($bccId != '') {
+                    if (trim($bccId) != '') {
                         $resultMail->addBcc($bccId);
                     }
                 }
@@ -246,12 +246,12 @@ class CommonService {
             }
             //remove file from temporary
             $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-            $alertContainer->msg = 'Data Reporting Result mailed successfully.';
+            $alertContainer->msg = 'Laboratory recency test result mailed successfully.';
           return true;
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
-            error_log('whoops! Something went wrong in mailer.');
+            error_log('Oops! Something went wrong in mailer.');
         }
     }
     
@@ -285,7 +285,7 @@ class CommonService {
     
     public function dateRangeFormat($date) {
         if (!isset($date) || $date == null || $date == "" || $date == "0000-00-00") {
-            return "0000-00-00";
+            return "";
         } else {
             $dateArray = explode('-', $date);
             if(sizeof($dateArray) == 0 ){
