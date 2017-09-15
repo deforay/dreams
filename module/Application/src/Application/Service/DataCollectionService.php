@@ -198,11 +198,14 @@ class DataCollectionService {
                             $hIVRNAResult = 'Low Viral Load';
                         }
                         $rapidRecencyAssay = '';
+                        $diagnosisReaderValue = '';
                         $rapidRecencyAssayDuration = '';
+                        $recencyReaderValue = '';
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+                                $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
                                 if($asanteRapidRecencyAssayPn == 'p'){
                                     $rapidRecencyAssay = 'Positive';
                                 }else if($asanteRapidRecencyAssayPn == 'n'){
@@ -210,6 +213,7 @@ class DataCollectionService {
                                 }
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+                                $recencyReaderValue = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
                                 if($asanteRapidRecencyAssayRlt == 'r'){
                                     $rapidRecencyAssayDuration = 'Recent';
                                 }else if($asanteRapidRecencyAssayRlt == 'lt'){
@@ -237,7 +241,9 @@ class DataCollectionService {
                         $row[] = $hIVRNAResult;
                         $row[] = $recencyInfection;
                         $row[] = $rapidRecencyAssay;
+                        $row[] = $diagnosisReaderValue;
                         $row[] = $rapidRecencyAssayDuration;
+                        $row[] = $recencyReaderValue;
                         $row[] = ucfirst($aRow['comments']);
                         if(!isset($params['countryId']) || trim($params['countryId'])== ''){
                             $row[] = ucfirst($aRow['country_name']);
@@ -294,10 +300,12 @@ class DataCollectionService {
                     $sheet->setCellValue('R1', html_entity_decode('HIV RNA > 1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('S1', html_entity_decode('Recent Infection (LAg Assay)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('T1', html_entity_decode('Rapid Recency Diagnosis Test', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('U1', html_entity_decode('Rapid Recency Result', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U1', html_entity_decode('Diagnosis Reader Value', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V1', html_entity_decode('Rapid Recency Result', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W1', html_entity_decode('Recency Reader Value', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                       $sheet->setCellValue('W1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                       $sheet->setCellValue('Y1', html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
@@ -322,8 +330,10 @@ class DataCollectionService {
                     $sheet->getStyle('T1')->applyFromArray($styleArray);
                     $sheet->getStyle('U1')->applyFromArray($styleArray);
                     $sheet->getStyle('V1')->applyFromArray($styleArray);
+                    $sheet->getStyle('W1')->applyFromArray($styleArray);
+                    $sheet->getStyle('X1')->applyFromArray($styleArray);
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                       $sheet->getStyle('W1')->applyFromArray($styleArray);
+                       $sheet->getStyle('Y1')->applyFromArray($styleArray);
                     }
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -337,11 +347,11 @@ class DataCollectionService {
                                 $value = "";
                             }
                             if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                if($colNo > 22){
+                                if($colNo > 24){
                                     break;
                                 }
                             }else{
-                                if($colNo > 21){
+                                if($colNo > 23){
                                     break;
                                 }
                             }
@@ -352,17 +362,17 @@ class DataCollectionService {
                             }
                             if($colNo == 15){ $lag = $value; }
                             if($colNo == 19){ $assay1 = $value; }
-                            if($colNo == 20){ $assay2 = $value; }
+                            if($colNo == 21){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo >20){
-                                if($lstColumn == 21){
+                            if($colNo >22){
+                                if($lstColumn == 23){
                                    if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
-                                    $sheet->getStyle('A'.$currentRow.':V'.$currentRow)->applyFromArray($redTxtArray);
+                                    $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
                                    if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
-                                    $sheet->getStyle('A'.$currentRow.':W'.$currentRow)->applyFromArray($redTxtArray);
+                                    $sheet->getStyle('A'.$currentRow.':Y'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }
                             }
@@ -374,14 +384,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'LAB-DATA-COLLECTION-DOWNLOAD--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'LAB-DATA-DOWNLOAD--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("LAB-DATA-COLLECTION-DOWNLOAD--" . $exc->getMessage());
+                error_log("LAB-DATA-DOWNLOAD--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  

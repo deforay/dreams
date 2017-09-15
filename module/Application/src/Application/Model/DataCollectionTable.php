@@ -1121,8 +1121,7 @@ class DataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
-		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	             ->where('da_c.status IN (2)');
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}
@@ -1141,7 +1140,7 @@ class DataCollectionTable extends AbstractTableGateway {
         }if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
            $sQuery = $sQuery->where('da_c.status = "2"');
         }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
-	   $sQuery = $sQuery->where('da_c.status IN (3,4)'); 
+	   $sQuery = $sQuery->where('da_c.status IN (1,3,4)'); 
 	}
 	//Custom Filter End
        if (isset($sWhere) && $sWhere != "") {
@@ -1172,8 +1171,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'))
 				  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'))
-				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	                          ->where('da_c.status IN (2)');
+				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}
@@ -1192,7 +1190,7 @@ class DataCollectionTable extends AbstractTableGateway {
         }if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
            $tQuery = $tQuery->where('da_c.status = "2"');
         }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
-	   $tQuery = $tQuery->where('da_c.status IN (3,4)');
+	   $tQuery = $tQuery->where('da_c.status IN (1,3,4)');
 	}
 	//Custom Filter End
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance

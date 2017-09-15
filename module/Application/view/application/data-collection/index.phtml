@@ -1092,6 +1092,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         }else{
 	    $('#resultSection').show();
 	    $(".testResultSection").addClass('isRequired').attr('readonly',false);
+	    $('#readerValueRRDT,#readerValueRRR').removeClass('isRequired');
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }
