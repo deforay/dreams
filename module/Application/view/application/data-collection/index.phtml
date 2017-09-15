@@ -1091,8 +1091,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
         }else{
 	    $('#resultSection').show();
-	    $(".testResultSection").addClass('isRequired').attr('readonly',false);
-	    $('#readerValueRRDT,#readerValueRRR').removeClass('isRequired');
+	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRR)").addClass('isRequired').attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }

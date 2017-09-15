@@ -98,6 +98,8 @@ $alertContainer->nbPages = count($dataResult);
 	$patientDOB = '';
 	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
 	    $patientDOB = $common->viewDateFormat($data['patient_dob']);
+	}else if(isset($data['age']) && $data['age']!= null && trim($data['age'])!= '' && $data['age'] >0){
+	    $patientDOB = $data['age'];
 	}
 	$specimenCollectedDate = '';
 	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
@@ -120,11 +122,14 @@ $alertContainer->nbPages = count($dataResult);
 	if(isset($data['result_dispatched_date_to_clinic']) && $data['result_dispatched_date_to_clinic']!= null && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	    $resultDispatchedDateToClinic = $common->humanDateFormat($data['result_dispatched_date_to_clinic']);
 	}
-	$resultImage = '';
+	$lagAssay = '';
+	$lagAssayImage = '';
 	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'r'){
-	    $resultImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
+	    $lagAssay = 'Recent';
+	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'lt'){
-	    $resultImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
+	    $lagAssay = 'Long Term';
+	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
 	//pdf content
 	$html = '';
@@ -137,7 +142,7 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Patient Information</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ANC Patient ID:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['anc_patient_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ART Number:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['art_patient_id'].'</td></tr>';
-	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Age DOB/ Age:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$patientDOB.' / <strong>'.$data['age'].'</strong></td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Age DOB/Age:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$patientDOB.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>ART Patient If (if any):</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['art_patient_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Gestation Age in (Weeks):</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">'.$data['gestational_age'].'</td></tr>';
 	    //laboratory info
@@ -151,7 +156,8 @@ $alertContainer->nbPages = count($dataResult);
 	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
 		//test result info
 		$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;">Test Result</td></tr>';
-		$html .='<tr><td colspan="2">'.$resultImage.'</td></tr>';
+		$html .='<tr><td colspan="2" style="line-height:18px;font-size:10px;text-align:left;"><strong>LAg Ass </strong>- '.$lagAssay.'</td></tr>';
+		$html .='<tr><td colspan="2">'.$lagAssayImage.'</td></tr>';
 		//recency test result - lt/r info
 		//$html .='<tr><td colspan="2" style="line-height:30px;text-align:left;font-size:16px;border:1px solid #f1f8fb;">Recency Test Result - Long Term / Recent</td></tr>';
 		//$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"><strong>Additional Information:</strong></td><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;"></td></tr>';
