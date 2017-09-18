@@ -146,11 +146,11 @@ class DataCollectionService {
     public function exportDataCollectionInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
-        if(isset($queryContainer->exportQuery)){
+        if(isset($queryContainer->dataCollectionQuery)){
             try{
                 $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
                 $sql = new Sql($dbAdapter);
-                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->exportQuery);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->dataCollectionQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
                     $excel = new PHPExcel();
@@ -499,13 +499,13 @@ class DataCollectionService {
     public function exportClinicDataCollectionInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
-        if(isset($queryContainer->clinicXportQuery)){
+        if(isset($queryContainer->clinicDataCollectionQuery)){
             try{
                 $ancFormDb = $this->sm->get('AncFormTable');
                 $ancFormFields = $ancFormDb->fetchActiveAncFormFields();
                 $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
                 $sql = new Sql($dbAdapter);
-                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->clinicXportQuery);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->clinicDataCollectionQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
                     $excel = new PHPExcel();

@@ -401,12 +401,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->clinicDataCollectionQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-       $queryContainer->clinicXportQuery = $sQuery;
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

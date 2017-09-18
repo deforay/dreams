@@ -13,7 +13,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 }
 ?>
 <style>
-    p{font-size:12.5px;font-weight:bold;}
+    .card p{font-size:12.5px;font-weight:bold;}
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -24,8 +24,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">View Risk Assessment</a>
        </div>
     </div>
-    <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
-        <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment',array('action'=>'edit')); ?>">
+    <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
         <div class="card">
             <h6 style="text-align:center;padding:12px 0px 6px 0px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
             <fieldset style="border-color:#2196F3;border-style:solid;">
@@ -86,14 +85,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if(trim($row->degree)!=''){
-                            if($row->degree=='noedu'){
+                        if($row->patient_degree!= null && trim($row->patient_degree)!=''){
+                            if($row->patient_degree=='noedu'){
                                 echo "No Education";
-                            }else if($row->degree=='primary'){
+                            }else if($row->patient_degree=='primary'){
                                 echo "Primary/Post-Primary/Vocational";
-                            }else if($row->degree=='secondary'){
+                            }else if($row->patient_degree=='secondary'){
                                 echo "Secondary/Post-Secondary";
-                            }else if($row->degree=='university'){
+                            }else if($row->patient_degree=='university'){
                                 echo "University/College";
                             }
                         }
@@ -109,7 +108,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             <div class="row" style="margin-bottom:0;">
                 <div class="col s4">
                     <p>
-                        <?php echo ucwords($row->are_married); ?>
+                        <?php echo ucwords($row->patient_ever_been_married); ?>
                     </p>
                 </div>
             </div>
@@ -122,7 +121,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s8">
                     <p>
                         <?php
-                        if(trim($row->age_at_first_marriage)!=''){
+                        if($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!=''){
                             if($row->age_at_first_marriage == 'dontknow'){
                                 echo "Don't Know";
                             }else if($row->age_at_first_marriage == 'refused'){
@@ -146,10 +145,10 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                        if($row->have_ever_been_widowed=='dontknow'){
+                        if($row->patient_ever_been_widowed=='dontknow'){
                             echo "Don't Know";
                         }else{
-                            echo ucwords($row->have_ever_been_widowed);
+                            echo ucwords($row->patient_ever_been_widowed);
                         }
                         ?>
                     </p>
@@ -164,7 +163,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                     <?php
-                    if(trim($row->current_marital_status)!=''){
+                    if($row->current_marital_status!= null && trim($row->current_marital_status)!=''){
                         if($row->current_marital_status == 'married'){
                             echo "Married/Cohabiting";
                         }else if($row->current_marital_status == 'nevermarried'){
@@ -195,7 +194,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if(trim($row->time_of_last_HIV_test)!=''){
+                        if($row->time_of_last_HIV_test!= null && trim($row->time_of_last_HIV_test)!=''){
                             if($row->time_of_last_HIV_test == 'nevertested'){
                                 echo "Never Tested";
                             }else if($row->time_of_last_HIV_test == 'lt3months'){
@@ -225,7 +224,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if(trim($row->last_HIV_test_status)!=''){
+                        if($row->last_HIV_test_status!= null && trim($row->last_HIV_test_status)!=''){
                             if($row->last_HIV_test_status == 'didnotreceive'){
                                 echo "I Did Not Receive Result";
                             }else if($row->last_HIV_test_status == 'hivplus'){
@@ -253,7 +252,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if(trim($row->partner_HIV_test_status)!=''){
+                        if($row->partner_HIV_test_status!= null && trim($row->partner_HIV_test_status)!=''){
                             if($row->partner_HIV_test_status == 'hivplus'){
                                 echo "HIV+";
                             }else if($row->partner_HIV_test_status == 'hivminus'){
@@ -278,7 +277,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if((trim($row->age_at_very_first_sex)!='') && is_numeric($row->age_at_very_first_sex)){
+                        if($row->age_at_very_first_sex!= null && trim($row->age_at_very_first_sex)!=''){
                             if($row->age_at_very_first_sex > 1){
                                 echo $row->age_at_very_first_sex." Years";    
                             }else if($row->age_at_very_first_sex == 1){
@@ -298,7 +297,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                        if(trim($row->reason_for_very_first_sex)!=''){
+                        if($row->reason_for_very_first_sex!= null && trim($row->reason_for_very_first_sex)!=''){
                             if($row->reason_for_very_first_sex == 'wantedto'){
                                 echo "Wanted To";
                             }else if($row->reason_for_very_first_sex == 'forcedto'){
@@ -322,10 +321,10 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                        if(trim($row->no_of_sexual_partners)!=''){
+                        if($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!=''){
                             if(is_numeric($row->no_of_sexual_partners) && $row->no_of_sexual_partners>1){
                                 echo $row->no_of_sexual_partners." Persons";
-                            }else if(is_numeric($row->no_of_sexual_partners) && $row->no_of_sexual_partners==1){
+                            }else if(is_numeric($row->no_of_sexual_partners) && $row->no_of_sexual_partners == 1){
                                 echo $row->no_of_sexual_partners." Person";
                             }else if($row->no_of_sexual_partners=='dontknow'){
                                 echo "Don't Know";
@@ -346,7 +345,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                        if(trim($row->no_of_sexual_partners_in_last_six_months)!=''){
+                        if($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!=''){
                             if(is_numeric($row->no_of_sexual_partners_in_last_six_months) && $row->no_of_sexual_partners_in_last_six_months>1){
                                 echo $row->no_of_sexual_partners_in_last_six_months." Persons";
                             }else if(is_numeric($row->no_of_sexual_partners_in_last_six_months) && $row->no_of_sexual_partners_in_last_six_months==1){
@@ -370,7 +369,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                            if(trim($row->age_of_main_sexual_partner_at_last_birthday)!=''){
+                            if($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!=''){
                                 if(is_numeric($row->age_of_main_sexual_partner_at_last_birthday) && $row->age_of_main_sexual_partner_at_last_birthday>1){
                                     echo $row->age_of_main_sexual_partner_at_last_birthday." Years";
                                 }else if(is_numeric($row->age_of_main_sexual_partner_at_last_birthday) && $row->age_of_main_sexual_partner_at_last_birthday==1){
@@ -394,7 +393,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                            if(trim($row->age_diff_of_main_sexual_partner)!=''){
+                            if($row->age_diff_of_main_sexual_partner!= null && trim($row->age_diff_of_main_sexual_partner)!=''){
                                 if($row->age_diff_of_main_sexual_partner=='lt5yearolder'){
                                     echo "< 5 Years Older";
                                 }else if($row->age_diff_of_main_sexual_partner=='5to10yearolder'){
@@ -428,11 +427,13 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
+                        if($row->is_partner_circumcised!= null && trim($row->is_partner_circumcised)!=''){
                             if($row->is_partner_circumcised=='dontknow'){
                                 echo "Don't Know";
                             }else{
                                 echo ucwords($row->is_partner_circumcised);
                             }
+                        }
                         ?>
                     </p>
                 </div>
@@ -446,17 +447,17 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                            if(trim($row->last_time_of_receiving_money_for_sex)!=''){
-                                if($row->last_time_of_receiving_money_for_sex=='lt6months'){
+                            if($row->last_time_of_receiving_gift_for_sex!= null && trim($row->last_time_of_receiving_gift_for_sex)!=''){
+                                if($row->last_time_of_receiving_gift_for_sex=='lt6months'){
                                     echo "< 6 Months Ago";
-                                }else if($row->last_time_of_receiving_money_for_sex=='6to12months'){
+                                }else if($row->last_time_of_receiving_gift_for_sex=='6to12months'){
                                     echo "6-12 Months Ago";
-                                }else if($row->last_time_of_receiving_money_for_sex=='gt12months'){
+                                }else if($row->last_time_of_receiving_gift_for_sex=='gt12months'){
                                     echo "> 12 Months Ago";
-                                }else if($row->last_time_of_receiving_money_for_sex=='dontknow'){
+                                }else if($row->last_time_of_receiving_gift_for_sex=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->last_time_of_receiving_money_for_sex);
+                                    echo ucwords($row->last_time_of_receiving_gift_for_sex);
                                 }
                             }
                         ?>
@@ -472,10 +473,10 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <p>
                         <?php
-                        if(trim($row->no_of_times_been_pregnant)!='' && is_numeric($row->no_of_times_been_pregnant)){
+                        if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!=''){
                             if($row->no_of_times_been_pregnant>1){
                                 echo $row->no_of_times_been_pregnant." Times";
-                            }else if($row->no_of_times_been_pregnant==1){
+                            }else if($row->no_of_times_been_pregnant == 1){
                                 echo $row->no_of_times_been_pregnant." Time";
                             }
                         }
@@ -492,7 +493,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s8">
                     <p>
                         <?php
-                            if(trim($row->no_of_times_condom_used_before_pregnancy)!=''){
+                            if($row->no_of_times_condom_used_before_pregnancy!= null && trim($row->no_of_times_condom_used_before_pregnancy)!=''){
                                 if($row->no_of_times_condom_used_before_pregnancy=='dontknow'){
                                     echo "Don't Know";
                                 }else{
@@ -512,7 +513,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s8">
                     <p>
                         <?php
-                            if(trim($row->no_of_times_condom_used_after_pregnancy)!=''){
+                            if($row->no_of_times_condom_used_after_pregnancy!= null && trim($row->no_of_times_condom_used_after_pregnancy)!=''){
                                 if($row->no_of_times_condom_used_after_pregnancy=='dontknow'){
                                     echo "Don't Know";
                                 }else{
@@ -532,11 +533,11 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                            if(trim($row->have_pain_in_lower_abdomen)!=''){
-                                if($row->have_pain_in_lower_abdomen=='dontknow'){
+                            if($row->has_patient_had_pain_in_lower_abdomen!= null && trim($row->has_patient_had_pain_in_lower_abdomen)!=''){
+                                if($row->has_patient_had_pain_in_lower_abdomen=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->have_pain_in_lower_abdomen);
+                                    echo ucwords($row->has_patient_had_pain_in_lower_abdomen);
                                 }
                             }
                         ?>
@@ -552,11 +553,11 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                            if(trim($row->have_treated_for_lower_abdomen_pain)!=''){
-                                if($row->have_treated_for_lower_abdomen_pain=='dontknow'){
+                            if($row->has_patient_been_treated_for_lower_abdomen_pain!= null && trim($row->has_patient_been_treated_for_lower_abdomen_pain)!=''){
+                                if($row->has_patient_been_treated_for_lower_abdomen_pain=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->have_treated_for_lower_abdomen_pain);
+                                    echo ucwords($row->has_patient_been_treated_for_lower_abdomen_pain);
                                 }
                             }
                         ?>
@@ -572,11 +573,11 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s6">
                     <p>
                         <?php
-                            if(trim($row->have_treated_for_syphilis)!=''){
-                                if($row->have_treated_for_syphilis=='dontknow'){
+                            if($row->has_patient_ever_been_treated_for_syphilis!= null && trim($row->has_patient_ever_been_treated_for_syphilis)!=''){
+                                if($row->has_patient_ever_been_treated_for_syphilis=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->have_treated_for_syphilis);
+                                    echo ucwords($row->has_patient_ever_been_treated_for_syphilis);
                                 }
                             }
                         ?>
@@ -593,16 +594,16 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s8">
                     <p>
                         <?php
-                            if(trim($row->no_of_days_had_drink_in_last_six_months)!=''){
-                                if(is_numeric($row->no_of_days_had_drink_in_last_six_months) && $row->no_of_days_had_drink_in_last_six_months>1){
-                                    echo $row->no_of_days_had_drink_in_last_six_months." Days";
-                                }else if(is_numeric($row->no_of_days_had_drink_in_last_six_months) && $row->no_of_days_had_drink_in_last_six_months==1){
-                                    echo $row->no_of_days_had_drink_in_last_six_months." Day";
-                                }else if($row->no_of_days_had_drink_in_last_six_months=='havenotdrink'){
+                            if($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!=''){
+                                if(is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months) && $row->has_patient_had_drink_with_alcohol_in_last_six_months>1){
+                                    echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Days";
+                                }else if(is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months) && $row->has_patient_had_drink_with_alcohol_in_last_six_months == 1){
+                                    echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Day";
+                                }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='havenotdrink'){
                                     echo "Haven't Had a Drink";
-                                }else if($row->no_of_days_had_drink_in_last_six_months=='dontknow'){
+                                }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='dontknow'){
                                     echo "Don't Know";
-                                }else if($row->no_of_days_had_drink_in_last_six_months=='refusedtoanswer'){
+                                }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='refusedtoanswer'){
                                     echo "Refused To Answer";
                                 }
                             }
@@ -612,20 +613,20 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    25. How often do you have 4 or more drinks with alcohol on one occasion (e.g. within 2 hours)?
+                    25. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours)
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
                     <p>
                         <?php
-                            if(trim($row->do_have_more_drinks_on_one_occasion)!=''){
-                                if($row->do_have_more_drinks_on_one_occasion == 'daily'){
+                            if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion!= null && trim($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion)!=''){
+                                if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'daily'){
                                     echo "Daily or On Most Days of The Week";
-                                }else if($row->do_have_more_drinks_on_one_occasion == 'dontknow'){
+                                }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->do_have_more_drinks_on_one_occasion);
+                                    echo ucwords($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion);
                                 }
                             }
                         ?>
@@ -641,11 +642,11 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s8">
                     <p>
                         <?php
-                            if(trim($row->have_tried_recreational_drugs)!=''){
-                                if($row->have_tried_recreational_drugs=='dontknow'){
+                            if($row->has_patient_ever_tried_recreational_drugs!= null && trim($row->has_patient_ever_tried_recreational_drugs)!=''){
+                                if($row->has_patient_ever_tried_recreational_drugs=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->have_tried_recreational_drugs);
+                                    echo ucwords($row->has_patient_ever_tried_recreational_drugs);
                                 }
                             }
                         ?>
@@ -661,13 +662,13 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s12" style="margin-bottom:20px;">
                     <p>
                         <?php
-                            if(trim($row->had_recreational_drugs_in_last_six_months)!=''){
-                                if($row->had_recreational_drugs_in_last_six_months=='yes'){
-                                    echo "Yes Specify Drug(s) ".$row->recreational_drugs;
-                                }else if($row->had_recreational_drugs_in_last_six_months=='dontknow'){
+                            if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!=''){
+                                if($row->has_patient_had_recreational_drugs_in_last_six_months=='yes'){
+                                    echo "Yes&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s):</span>&nbsp;".$row->recreational_drugs;
+                                }else if($row->has_patient_had_recreational_drugs_in_last_six_months=='dontknow'){
                                     echo "Don't Know";
                                 }else{
-                                    echo ucwords($row->had_recreational_drugs_in_last_six_months)   ;
+                                    echo ucwords($row->has_patient_had_recreational_drugs_in_last_six_months);
                                 }
                             }
                         ?>
@@ -678,6 +679,5 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
             </div>
         </div>
-        </form>
     </div>
 </div>

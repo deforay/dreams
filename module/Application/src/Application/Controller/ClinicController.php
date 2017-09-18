@@ -25,7 +25,7 @@ class ClinicController extends AbstractActionController{
             $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
             return new ViewModel(array(
                 'countryId'=>$countryId,
-                'ansSites'=>$ancSiteList,
+                'ancSites'=>$ancSiteList,
                 'ancFormFields'=>$ancFormFieldList
             ));
         }
@@ -58,7 +58,7 @@ class ClinicController extends AbstractActionController{
             return new ViewModel(array(
                 'row'=>$result,
                 'countryId'=>$countryId,
-                'ansSites'=>$ancSiteList,
+                'ancSites'=>$ancSiteList,
                 'ancFormFields'=>$ancFormFieldList
             ));
         }
@@ -78,7 +78,7 @@ class ClinicController extends AbstractActionController{
             $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
             return new ViewModel(array(
                     'countryId'=>$countryId,
-                    'ansSites'=>$ancSiteList,
+                    'ancSites'=>$ancSiteList,
                     'ancFormFields'=>$ancFormFieldList
                 ));
         }

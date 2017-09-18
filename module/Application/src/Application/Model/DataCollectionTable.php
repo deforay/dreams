@@ -742,12 +742,12 @@ class DataCollectionTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->dataCollectionQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-       $queryContainer->exportQuery = $sQuery;
+       
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1150,12 +1150,12 @@ class DataCollectionTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->logbookQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-       $queryContainer->logbookQuery = $sQuery;
+       
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1423,12 +1423,12 @@ class DataCollectionTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->labReportQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-       $queryContainer->labReportQuery = $sQuery;
+       
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1736,12 +1736,12 @@ class DataCollectionTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->overviewQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-       $queryContainer->overviewQuery = $sQuery;
+       
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

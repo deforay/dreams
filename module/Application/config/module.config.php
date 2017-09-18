@@ -491,6 +491,15 @@ return array(
                         'action' => 'export-study-overview'
                     ),
                 ),
+            ),'export-risk-assessment-excel' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-risk-assessment-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'export-excel'
+                    ),
+                ),
             )
         ),
     ),

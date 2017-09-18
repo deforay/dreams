@@ -117,7 +117,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                         <?php
 			foreach($occupationTypes as $occupation){
 			?>
-                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']); ?></option>
+                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->patient_occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']); ?></option>
 			<?php } ?>
                         <option value="other">Other</option>
                     </select>
@@ -135,10 +135,10 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <select id="degree" name="degree" class="material-select isRequired" title="Don't leave 2nd question">
                         <option value=""> -- Select -- </option>
-                        <option value="noedu" <?php echo ($row->degree == 'noedu')?'selected="selected"':''; ?>>No Education</option>
-                        <option value="primary" <?php echo ($row->degree == 'primary')?'selected="selected"':''; ?>>Primary/Post-Primary/Vocational</option>
-                        <option value="secondary" <?php echo ($row->degree == 'secondary')?'selected="selected"':''; ?>>Secondary/Post-Secondary</option>
-                        <option value="university" <?php echo ($row->degree == 'university')?'selected="selected"':''; ?>>University/College</option>
+                        <option value="noedu" <?php echo ($row->patient_degree == 'noedu')?'selected="selected"':''; ?>>No Education</option>
+                        <option value="primary" <?php echo ($row->patient_degree == 'primary')?'selected="selected"':''; ?>>Primary/Post-Primary/Vocational</option>
+                        <option value="secondary" <?php echo ($row->patient_degree == 'secondary')?'selected="selected"':''; ?>>Secondary/Post-Secondary</option>
+                        <option value="university" <?php echo ($row->patient_degree == 'university')?'selected="selected"':''; ?>>University/College</option>
                     </select>
                 </div>
             </div>
@@ -149,10 +149,10 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s4">
-                    <input id="areMarriedYes" class="with-gap isRequired" name="areMarried" title="Don't leave 3rd question" value="yes" type="radio" <?php echo ($row->are_married == 'yes')?'checked="checked"':''; ?>>
-		    <label for="areMarriedYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="areMarriedNo" class="with-gap" name="areMarried" value="no" type="radio" <?php echo ($row->are_married == 'no')?'checked="checked"':''; ?>>
-		    <label for="areMarriedNo" class="active">No </label>
+                    <input id="everBeenMarriedYes" class="with-gap isRequired" name="everBeenMarried" title="Don't leave 3rd question" value="yes" type="radio" <?php echo ($row->patient_ever_been_married == 'yes')?'checked="checked"':''; ?>>
+		    <label for="everBeenMarriedYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="no" type="radio" <?php echo ($row->patient_ever_been_married == 'no')?'checked="checked"':''; ?>>
+		    <label for="everBeenMarriedNo" class="active">No </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -176,14 +176,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="haveEverBeenWidowedYes" class="with-gap isRequired" name="haveEverBeenWidowed" title="Don't leave 5th question" value="yes" type="radio" <?php echo ($row->have_ever_been_widowed == 'yes')?'checked="checked"':''; ?>>
-		    <label for="haveEverBeenWidowedYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="haveEverBeenWidowedNo" class="with-gap" name="haveEverBeenWidowed" value="no" type="radio" <?php echo ($row->have_ever_been_widowed == 'no')?'checked="checked"':''; ?>>
-		    <label for="haveEverBeenWidowedNo" class="active">No </label>&nbsp&nbsp
-                    <input id="haveEverBeenWidowedDK" class="with-gap" name="haveEverBeenWidowed" value="dontknow" type="radio" <?php echo ($row->have_ever_been_widowed == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="haveEverBeenWidowedDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="haveEverBeenWidowedR" class="with-gap" name="haveEverBeenWidowed" value="refused" type="radio" <?php echo ($row->have_ever_been_widowed == 'refused')?'checked="checked"':''; ?>>
-		    <label for="haveEverBeenWidowedR" class="active">Refused </label>
+                    <input id="everBeenWidowedYes" class="with-gap isRequired" name="everBeenWidowed" title="Don't leave 5th question" value="yes" type="radio" <?php echo ($row->patient_ever_been_widowed == 'yes')?'checked="checked"':''; ?>>
+		    <label for="everBeenWidowedYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="everBeenWidowedNo" class="with-gap" name="everBeenWidowed" value="no" type="radio" <?php echo ($row->patient_ever_been_widowed == 'no')?'checked="checked"':''; ?>>
+		    <label for="everBeenWidowedNo" class="active">No </label>&nbsp&nbsp
+                    <input id="everBeenWidowedDK" class="with-gap" name="everBeenWidowed" value="dontknow" type="radio" <?php echo ($row->patient_ever_been_widowed == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="everBeenWidowedDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="everBeenWidowedR" class="with-gap" name="everBeenWidowed" value="refused" type="radio" <?php echo ($row->patient_ever_been_widowed == 'refused')?'checked="checked"':''; ?>>
+		    <label for="everBeenWidowedR" class="active">Refused </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -374,14 +374,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <select id="lastTimeOfReceivingMoneyForSex" name="lastTimeOfReceivingMoneyForSex" class="material-select isRequired" title="Don't leave 17th question">
+                    <select id="lastTimeOfReceivingGiftForSex" name="lastTimeOfReceivingGiftForSex" class="material-select isRequired" title="Don't leave 17th question">
                         <option value=""> -- Select -- </option>
-                        <option value="never" <?php echo ($row->last_time_of_receiving_money_for_sex == 'never')?'selected="selected"':''; ?>> Never</option>
-                        <option value="lt6months" <?php echo ($row->last_time_of_receiving_money_for_sex == 'lt6months')?'selected="selected"':''; ?>> < 6 Months Ago</option>
-                        <option value="6to12months" <?php echo ($row->last_time_of_receiving_money_for_sex == '6to12months')?'selected="selected"':''; ?>> 6-12 Months Ago</option>
-                        <option value="gt12months" <?php echo ($row->last_time_of_receiving_money_for_sex == 'gt12months')?'selected="selected"':''; ?>> > 12 Months Ago</option>
-                        <option value="dontknow" <?php echo ($row->last_time_of_receiving_money_for_sex == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
-                        <option value="refused" <?php echo ($row->last_time_of_receiving_money_for_sex == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                        <option value="never" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'never')?'selected="selected"':''; ?>> Never</option>
+                        <option value="lt6months" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'lt6months')?'selected="selected"':''; ?>> < 6 Months Ago</option>
+                        <option value="6to12months" <?php echo ($row->last_time_of_receiving_gift_for_sex == '6to12months')?'selected="selected"':''; ?>> 6-12 Months Ago</option>
+                        <option value="gt12months" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'gt12months')?'selected="selected"':''; ?>> > 12 Months Ago</option>
+                        <option value="dontknow" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'refused')?'selected="selected"':''; ?>>Refused</option>
                     </select>
                 </div>
             </div>
@@ -440,14 +440,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s6">
-                    <input id="havePainInLowerAbdomenYes" class="with-gap isRequired" name="havePainInLowerAbdomen" title="Don't leave 21st question" value="yes" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'yes')?'checked="checked"':''; ?>>
-		    <label for="havePainInLowerAbdomenYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="havePainInLowerAbdomenNo" class="with-gap" name="havePainInLowerAbdomen" value="no" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'no')?'checked="checked"':''; ?>>
-		    <label for="havePainInLowerAbdomenNo" class="active">No </label>&nbsp&nbsp
-                    <input id="havePainInLowerAbdomenDK" class="with-gap" name="havePainInLowerAbdomen" value="dontknow" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="havePainInLowerAbdomenDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="havePainInLowerAbdomenR" class="with-gap" name="havePainInLowerAbdomen" value="refused" type="radio" <?php echo ($row->have_pain_in_lower_abdomen == 'refused')?'checked="checked"':''; ?>>
-		    <label for="havePainInLowerAbdomenR" class="active">Refused </label>
+                    <input id="hasPatientHadPainInLowerAbdomenYes" class="with-gap isRequired" name="hasPatientHadPainInLowerAbdomen" title="Don't leave 21st question" value="yes" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadPainInLowerAbdomenYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientHadPainInLowerAbdomenNo" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="no" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadPainInLowerAbdomenNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientHadPainInLowerAbdomenDK" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="dontknow" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadPainInLowerAbdomenDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientHadPainInLowerAbdomenR" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="refused" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadPainInLowerAbdomenR" class="active">Refused </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -457,14 +457,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s6">
-                    <input id="haveTreatedForLowerAbdomenPainYes" class="with-gap isRequired" name="haveTreatedForLowerAbdomenPain" title="Don't leave 22nd question" value="yes" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'yes')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForLowerAbdomenPainYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="haveTreatedForLowerAbdomenPainNo" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="no" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'no')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForLowerAbdomenPainNo" class="active">No </label>&nbsp&nbsp
-                    <input id="haveTreatedForLowerAbdomenPainDK" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="dontknow" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForLowerAbdomenPainDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="haveTreatedForLowerAbdomenPainR" class="with-gap" name="haveTreatedForLowerAbdomenPain" value="refused" type="radio" <?php echo ($row->have_treated_for_lower_abdomen_pain == 'refused')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForLowerAbdomenPainR" class="active">Refused </label>
+                    <input id="hasPatientBeenTreatedForLowerAbdomenPainYes" class="with-gap isRequired" name="hasPatientBeenTreatedForLowerAbdomenPain" title="Don't leave 22nd question" value="yes" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientBeenTreatedForLowerAbdomenPainNo" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="no" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientBeenTreatedForLowerAbdomenPainDK" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="dontknow" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientBeenTreatedForLowerAbdomenPainR" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="refused" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainR" class="active">Refused </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -474,14 +474,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s6">
-                    <input id="haveTreatedForSyphilisyes" class="with-gap isRequired" name="haveTreatedForSyphilis" title="Don't leave 23rd question" value="yes" type="radio" <?php echo ($row->have_treated_for_syphilis == 'yes')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForSyphilisYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="haveTreatedForSyphilisNo" class="with-gap" name="haveTreatedForSyphilis" value="no" type="radio" <?php echo ($row->have_treated_for_syphilis == 'no')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForSyphilisNo" class="active">No </label>&nbsp&nbsp
-                    <input id="haveTreatedForSyphilisDK" class="with-gap" name="haveTreatedForSyphilis" value="dontknow" type="radio" <?php echo ($row->have_treated_for_syphilis == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForSyphilisDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="haveTreatedForSyphilisR" class="with-gap" name="haveTreatedForSyphilis" value="refused" type="radio" <?php echo ($row->have_treated_for_syphilis == 'refused')?'checked="checked"':''; ?>>
-		    <label for="haveTreatedForSyphilisR" class="active">Refused </label>
+                    <input id="hasPatientEverBeenTreatedForSyphilisYes" class="with-gap isRequired" name="hasPatientEverBeenTreatedForSyphilis" title="Don't leave 23rd question" value="yes" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenTreatedForSyphilisYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenTreatedForSyphilisNo" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="no" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenTreatedForSyphilisNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenTreatedForSyphilisDK" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenTreatedForSyphilisDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenTreatedForSyphilisR" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused </label>
                 </div>
             </div>
             <h6 style="padding:10px 0px 10px 6px;"><strong>Alcohol and drug use</strong></h6>
@@ -492,30 +492,30 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="noOfDaysHadDrinkInLastSixMonthsInDays" name="noOfDaysHadDrinkInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->no_of_days_had_drink_in_last_six_months == '' || $row->no_of_days_had_drink_in_last_six_months == null)?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->no_of_days_had_drink_in_last_six_months!= '' && is_numeric($row->no_of_days_had_drink_in_last_six_months))?$row->no_of_days_had_drink_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
-                    <input id="noOfDaysHadDrinkInLastSixMonthsNot" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
-		    <label for="noOfDaysHadDrinkInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
-                    <input id="noOfDaysHadDrinkInLastSixMonthsDK" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="noOfDaysHadDrinkInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="noOfDaysHadDrinkInLastSixMonthsR" class="with-gap" name="noOfDaysHadDrinkInLastSixMonths" value="refusedtoanswer" type="radio" <?php echo ($row->no_of_days_had_drink_in_last_six_months == 'refusedtoanswer')?'checked="checked"':''; ?>>
-		    <label for="noOfDaysHadDrinkInLastSixMonthsR" class="active">Refused To Answer</label>
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == '' || $row->has_patient_had_drink_with_alcohol_in_last_six_months == null)?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= '' && is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months))?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsR" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="refusedtoanswer" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'refusedtoanswer')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsR" class="active">Refused To Answer</label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    25. How often do you have 4 or more drinks with alcohol on one occasion * (e.g. within 2 hours)?
+                    25. How often do you have 4 or more drinks with alcohol on one occasion? * (e.g. within 2 hours)
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <select id="doHaveMoreDrinksOnOneOccasion" name="doHaveMoreDrinksOnOneOccasion" class="material-select isRequired" title="Don't leave 25th question">
+                    <select id="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" name="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" class="material-select isRequired" title="Don't leave 25th question">
                         <option value=""> -- Select -- </option>
-                        <option value="never" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'never')?'selected="selected"':''; ?>>Never</option>
-                        <option value="monthly" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'monthly')?'selected="selected"':''; ?>>Monthly</option>
-                        <option value="weekly" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'weekly')?'selected="selected"':''; ?>>Weekly</option>
-                        <option value="daily" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'daily')?'selected="selected"':''; ?>>Daily or On Most Days of The Week</option>
-                        <option value="dontknow" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
-                        <option value="refused" <?php echo ($row->do_have_more_drinks_on_one_occasion == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                        <option value="never" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'never')?'selected="selected"':''; ?>>Never</option>
+                        <option value="monthly" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'monthly')?'selected="selected"':''; ?>>Monthly</option>
+                        <option value="weekly" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'weekly')?'selected="selected"':''; ?>>Weekly</option>
+                        <option value="daily" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'daily')?'selected="selected"':''; ?>>Daily or On Most Days of The Week</option>
+                        <option value="dontknow" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
+                        <option value="refused" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'refused')?'selected="selected"':''; ?>>Refused</option>
                     </select>
                 </div>
             </div>
@@ -526,14 +526,14 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s8">
-                    <input id="haveTriedRecreationalDrugsYes" class="with-gap isRequired" name="haveTriedRecreationalDrugs" title="Don't leave 26th question" value="yes" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'yes')?'checked="checked"':''; ?>>
-		    <label for="haveTriedRecreationalDrugsYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="haveTriedRecreationalDrugsNo" class="with-gap" name="haveTriedRecreationalDrugs" value="no" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'no')?'checked="checked"':''; ?>>
-		    <label for="haveTriedRecreationalDrugsNo" class="active">No </label>&nbsp&nbsp
-                    <input id="haveTriedRecreationalDrugsDK" class="with-gap" name="haveTriedRecreationalDrugs" value="dontknow" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="haveTriedRecreationalDrugsDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="haveTriedRecreationalDrugsR" class="with-gap" name="haveTriedRecreationalDrugs" value="refused" type="radio" <?php echo ($row->have_tried_recreational_drugs == 'refused')?'checked="checked"':''; ?>>
-		    <label for="haveTriedRecreationalDrugsR" class="active">Refused</label>
+                    <input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap isRequired" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave 26th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverTriedRecreationalDrugsYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverTriedRecreationalDrugsNo" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="no" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverTriedRecreationalDrugsNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverTriedRecreationalDrugsDK" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverTriedRecreationalDrugsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverTriedRecreationalDrugsR" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="refused" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverTriedRecreationalDrugsR" class="active">Refused</label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -543,15 +543,15 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12" style="margin-bottom:20px;">
-                    <input id="hadRecreationalDrugsInLastSixMonthsYes" class="with-gap isRequired" name="hadRecreationalDrugsInLastSixMonths" title="Don't leave 27th question" value="yes" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'checked="checked"':''; ?>>
-		    <label for="hadRecreationalDrugsInLastSixMonthsYes" class="active">Yes </label>&nbsp&nbsp
-                    <span class="recreationalDrugs" style="display:<?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'':'none'; ?>;">Specify Drug(s) <input id="recreationalDrugs" name="recreationalDrugs" type="text" class="validate <?php echo ($row->had_recreational_drugs_in_last_six_months == 'yes')?'isRequired':''; ?>" title="Please enter recreational drugs" value="<?php echo $row->recreational_drugs; ?>" style="width:30%;">&nbsp;</span>
-                    <input id="hadRecreationalDrugsInLastSixMonthsNo" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="no" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'no')?'checked="checked"':''; ?>>
-		    <label for="hadRecreationalDrugsInLastSixMonthsNo" class="active">No </label>&nbsp&nbsp
-                    <input id="hadRecreationalDrugsInLastSixMonthsDK" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="hadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="hadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hadRecreationalDrugsInLastSixMonths" value="refused" type="radio" <?php echo ($row->had_recreational_drugs_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>
+                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="with-gap isRequired" name="hasPatientHadRecreationalDrugsInLastSixMonths" title="Don't leave 27th question" value="yes" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="active">Yes </label>&nbsp&nbsp
+                    <span class="recreationalDrugs" style="display:<?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'':'none'; ?>;">Specify Drug(s) <input id="recreationalDrugs" name="recreationalDrugs" type="text" class="validate <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'isRequired':''; ?>" title="Please enter recreational drugs" value="<?php echo $row->recreational_drugs; ?>" style="width:30%;">&nbsp;</span>
+                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsNo" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="no" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="refused" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>
                 </div>
             </div>
             <div class="col s12" style="margin-top:20px;">
@@ -592,7 +592,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
         }
     }
     
-    //occupation
+    //set occupation
     $('#occupation').on('change',function(){
 	if(this.value == 'other'){
 	    $('.occupationNew').show();
@@ -604,7 +604,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 	}
     });
     
-    //age at first marriage
+    //set age at first marriage
     $('#ageAtFirstMarriageInYears').on('change',function() {
 	setAgeAtFirstMarriage('txt');
     });
@@ -624,7 +624,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 	}
     }
     
-    //no.of sexual partners
+    //set no.of sexual partners
     $('#noOfSexualPartnersInNumbers').on('change',function() {
 	setNoOfSexualPartners('txt');
     });
@@ -644,7 +644,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 	}
     }
     
-    //no.of sexual partners in last six months
+    //set no.of sexual partners in last six months
     $('#noOfSexualPartnersInLastSixMonthsInNumbers').on('change',function() {
 	setNoOfSexualPartnersInLastSixMonths('txt');
     });
@@ -665,7 +665,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 	}
     }
     
-    //main sexual partner age at last birthday
+    //set main sexual partner age at last birthday
     $('#ageOfMainSexualPartnerAtLastBirthdayInYears').on('change',function() {
 	mainSexualPartnerAgeAtLastBirthday('txt');
     });
@@ -685,30 +685,30 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
 	}
     }
     
-    //no.of days had drinks in last six month
-    $('#noOfDaysHadDrinkInLastSixMonthsInDays').on('change',function() {
+    //set no.of days in last six months
+    $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').on('change',function() {
         noOfDaysHadDrinkInLastSixMonth('txt');
     });
-    $('input:radio[name=noOfDaysHadDrinkInLastSixMonths]').change(function () {
+    $('input:radio[name=hasPatientHadDrinkWithAlcoholInLastSixMonths]').change(function () {
 	noOfDaysHadDrinkInLastSixMonth('rd');
     });
     function noOfDaysHadDrinkInLastSixMonth(fromSource){
 	if(fromSource == 'txt'){
-	    if($('#noOfDaysHadDrinkInLastSixMonthsInDays').val()!= ''){
-		$('#noOfDaysHadDrinkInLastSixMonthsNot').prop('checked',false);
-		$('#noOfDaysHadDrinkInLastSixMonthsDK').prop('checked',false);
-		$('#noOfDaysHadDrinkInLastSixMonthsR').prop('checked',false);
+	    if($('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').val()!= ''){
+		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsNot').prop('checked',false);
+		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsDK').prop('checked',false);
+		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsR').prop('checked',false);
 	    }
-	    $('#noOfDaysHadDrinkInLastSixMonthsInDays').addClass('isRequired');
+	    $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').addClass('isRequired');
 	}else if(fromSource == 'rd'){
-	   $('#noOfDaysHadDrinkInLastSixMonthsInDays').val('');
-	   $('#noOfDaysHadDrinkInLastSixMonthsInDays').removeClass('isRequired');
+	   $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').val('');
+	   $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').removeClass('isRequired');
 	}
     }
     
-    //had drugs in last six months
-    $('input:radio[name=hadRecreationalDrugsInLastSixMonths]').change(function () {
-	if ($("input[name='hadRecreationalDrugsInLastSixMonths']:checked").val() == 'yes') {
+    //set recreational drugs
+    $('input:radio[name=hasPatientHadRecreationalDrugsInLastSixMonths]').change(function () {
+	if ($("input[name='hasPatientHadRecreationalDrugsInLastSixMonths']:checked").val() == 'yes') {
             $('.recreationalDrugs').show();
             $('#recreationalDrugs').addClass('isRequired');
             $('#recreationalDrugs').focus();

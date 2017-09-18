@@ -28,7 +28,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['country']) && trim($params['country'])!=''){
 		$country = base64_decode($params['country']);
 	    }else{
-                return $lastInsertedId;
+                return false;
             }
             $interviewDate = NULL;
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
@@ -37,8 +37,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
                 if($params['occupation'] == 'other'){
-                    $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
-                    $occupation = $occupationTypeDb->lastInsertValue;
+		    if(trim($params['occupationNew'])!= ''){
+                      $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
+                      $occupation = $occupationTypeDb->lastInsertValue;
+		    }
                 }else{
                    $occupation = base64_decode($params['occupation']);
                 }
@@ -67,14 +69,14 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
                $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday']; 
             }
-            $noOfDaysHadDrinkInLastSixMonths = NULL;
-            if(isset($params['noOfDaysHadDrinkInLastSixMonthsInDays']) && trim($params['noOfDaysHadDrinkInLastSixMonthsInDays'])!= ''){
-                $noOfDaysHadDrinkInLastSixMonths = $params['noOfDaysHadDrinkInLastSixMonthsInDays'];
-            }else if(isset($params['noOfDaysHadDrinkInLastSixMonths']) && trim($params['noOfDaysHadDrinkInLastSixMonths'])!= ''){
-               $noOfDaysHadDrinkInLastSixMonths = $params['noOfDaysHadDrinkInLastSixMonths']; 
+            $noOfDaysInLastSixMonths = NULL;
+            if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
+                $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'];
+            }else if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
+               $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonths']; 
             }
             $recreationalDrugs = NULL;
-            if(isset($params['hadRecreationalDrugsInLastSixMonths']) && trim($params['hadRecreationalDrugsInLastSixMonths'])== 'yes'){
+            if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
                 $recreationalDrugs = $params['recreationalDrugs'];
             }
             $data = array(
@@ -83,11 +85,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
-                    'occupation'=>$occupation,
-                    'degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
-                    'are_married'=>(isset($params['areMarried']) && trim($params['areMarried'])!= '')?$params['areMarried']:NULL,
+                    'patient_occupation'=>$occupation,
+                    'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
+                    'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
                     'age_at_first_marriage'=>$ageAtFirstMarriage,
-                    'have_ever_been_widowed'=>(isset($params['haveEverBeenWidowed']) && trim($params['haveEverBeenWidowed'])!= '')?$params['haveEverBeenWidowed']:NULL,
+                    'patient_ever_been_widowed'=>(isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL,
                     'current_marital_status'=>(isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL,
                     'time_of_last_HIV_test'=>(isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL,
                     'last_HIV_test_status'=>(isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL,
@@ -99,17 +101,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'age_of_main_sexual_partner_at_last_birthday'=>$ageOfMainSexualPartnersInLastBirthday,
                     'age_diff_of_main_sexual_partner'=>(isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL,
                     'is_partner_circumcised'=>(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= '')?$params['isPartnerCircumcised']:NULL,
-                    'last_time_of_receiving_money_for_sex'=>(isset($params['lastTimeOfReceivingMoneyForSex']) && trim($params['lastTimeOfReceivingMoneyForSex'])!= '')?$params['lastTimeOfReceivingMoneyForSex']:NULL,
+                    'last_time_of_receiving_gift_for_sex'=>(isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL,
                     'no_of_times_been_pregnant'=>(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= '')?$params['noOfTimesBeenPregnant']:NULL,
                     'no_of_times_condom_used_before_pregnancy'=>(isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL,
                     'no_of_times_condom_used_after_pregnancy'=>(isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL,
-                    'have_pain_in_lower_abdomen'=>(isset($params['havePainInLowerAbdomen']) && trim($params['havePainInLowerAbdomen'])!= '')?$params['havePainInLowerAbdomen']:NULL,
-                    'have_treated_for_lower_abdomen_pain'=>(isset($params['haveTreatedForLowerAbdomenPain']) && trim($params['haveTreatedForLowerAbdomenPain'])!= '')?$params['haveTreatedForLowerAbdomenPain']:NULL,
-                    'have_treated_for_syphilis'=>(isset($params['haveTreatedForSyphilis']) && trim($params['haveTreatedForSyphilis'])!= '')?$params['haveTreatedForSyphilis']:NULL,
-                    'no_of_days_had_drink_in_last_six_months'=>$noOfDaysHadDrinkInLastSixMonths,
-                    'do_have_more_drinks_on_one_occasion'=>(isset($params['doHaveMoreDrinksOnOneOccasion']) && trim($params['doHaveMoreDrinksOnOneOccasion'])!= '')?$params['doHaveMoreDrinksOnOneOccasion']:NULL,
-                    'have_tried_recreational_drugs'=>(isset($params['haveTriedRecreationalDrugs']) && trim($params['haveTriedRecreationalDrugs'])!= '')?$params['haveTriedRecreationalDrugs']:NULL,
-                    'had_recreational_drugs_in_last_six_months'=>(isset($params['hadRecreationalDrugsInLastSixMonths']) && trim($params['hadRecreationalDrugsInLastSixMonths'])!= '')?$params['hadRecreationalDrugsInLastSixMonths']:NULL,
+                    'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
+                    'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
+                    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+                    'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
+                    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
+                    'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
+                    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
                     'country'=>$country,
                     'added_on'=>$common->getDateTime(),
@@ -123,6 +125,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     
     public function fetchAllRiskAssessment($parameters){
         $loginContainer = new Container('user');
+	$queryContainer = new Container('query');
         $common = new CommonService();
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
@@ -204,6 +207,20 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * SQL queries
         * Get data to display
         */
+       $start_date = '';
+       $end_date = '';
+       if(isset($parameters['interviewDate']) && trim($parameters['interviewDate'])!= ''){
+	   $interview_date = explode("to", $parameters['interviewDate']);
+	   if(isset($interview_date[0]) && trim($interview_date[0]) != "") {
+	     $start_date = $common->dateRangeFormat(trim($interview_date[0]));
+	   }if(isset($interview_date[1]) && trim($interview_date[1]) != "") {
+	     $end_date = $common->dateRangeFormat(trim($interview_date[1]));
+	   }
+	}
+	$labArray = array();
+	if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
+	    $labArray = explode(',',$parameters['lab']);
+	}
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $mappedLab = array();
@@ -218,6 +235,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
+		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -225,8 +243,13 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+           $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
+        }else if (trim($start_date) != "") {
+            $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
+        }if(count($labArray) >0){
+	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $labArray) . '")');
+	}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
        if (isset($sWhere) && $sWhere != "") {
@@ -236,7 +259,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
+       $queryContainer->riskAssessmentQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
@@ -257,6 +280,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	$tQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
+		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -264,8 +288,13 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+           $tQuery = $tQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
+        }else if (trim($start_date) != "") {
+            $tQuery = $tQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
+        }if(count($labArray) >0){
+	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $labArray) . '")');
+	}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -278,12 +307,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-	    $row = array();
 	    $interviewDate = '';
-	    if(isset($aRow['interview_date']) && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
+	    if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
 		$interviewDate = $common->humanDateFormat($aRow['interview_date']);
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
+	    $row = array();
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['study_id'];
@@ -292,7 +321,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $row[] = $interviewDate;
 	    $row[] = $common->humanDateFormat($addedDate[0])." ".$addedDate[1];
 	    $row[] = ucwords($aRow['user_name']);
-	    if($parameters['countryId']== ''){
+	    if(trim($parameters['countryId']) == ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
 	    if($loginContainer->hasViewOnlyAccess =='no'){
@@ -308,7 +337,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
-                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.occupation",array('occupationName'=>'occupation'),'left')
+                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -318,10 +347,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
         if(isset($params['studyId']) && trim($params['studyId'])!= ''){
+	    $lastInsertedId = base64_decode($params['riskAssessmentId']);
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
             $common = new CommonService();
-            $lastInsertedId = base64_decode($params['riskAssessmentId']);
             $interviewDate = NULL;
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
@@ -329,8 +358,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
                 if($params['occupation'] == 'other'){
-                    $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
-                    $occupation = $occupationTypeDb->lastInsertValue;
+		    if(trim($params['occupationNew'])!= ''){
+                       $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
+                       $occupation = $occupationTypeDb->lastInsertValue;
+		    }
                 }else{
                    $occupation = base64_decode($params['occupation']);
                 }
@@ -359,14 +390,14 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
                $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday']; 
             }
-            $noOfDaysHadDrinkInLastSixMonths = NULL;
-            if(isset($params['noOfDaysHadDrinkInLastSixMonthsInDays']) && trim($params['noOfDaysHadDrinkInLastSixMonthsInDays'])!= ''){
-                $noOfDaysHadDrinkInLastSixMonths = $params['noOfDaysHadDrinkInLastSixMonthsInDays'];
-            }else if(isset($params['noOfDaysHadDrinkInLastSixMonths']) && trim($params['noOfDaysHadDrinkInLastSixMonths'])!= ''){
-               $noOfDaysHadDrinkInLastSixMonths = $params['noOfDaysHadDrinkInLastSixMonths']; 
+            $noOfDaysInLastSixMonths = NULL;
+            if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
+                $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'];
+            }else if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
+               $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonths']; 
             }
             $recreationalDrugs = NULL;
-            if(isset($params['hadRecreationalDrugsInLastSixMonths']) && trim($params['hadRecreationalDrugsInLastSixMonths'])== 'yes'){
+            if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
                 $recreationalDrugs = $params['recreationalDrugs'];
             }
             $data = array(
@@ -375,11 +406,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
-                    'occupation'=>$occupation,
-                    'degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
-                    'are_married'=>(isset($params['areMarried']) && trim($params['areMarried'])!= '')?$params['areMarried']:NULL,
+                    'patient_occupation'=>$occupation,
+                    'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
+                    'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
                     'age_at_first_marriage'=>$ageAtFirstMarriage,
-                    'have_ever_been_widowed'=>(isset($params['haveEverBeenWidowed']) && trim($params['haveEverBeenWidowed'])!= '')?$params['haveEverBeenWidowed']:NULL,
+                    'patient_ever_been_widowed'=>(isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL,
                     'current_marital_status'=>(isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL,
                     'time_of_last_HIV_test'=>(isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL,
                     'last_HIV_test_status'=>(isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL,
@@ -391,17 +422,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'age_of_main_sexual_partner_at_last_birthday'=>$ageOfMainSexualPartnersInLastBirthday,
                     'age_diff_of_main_sexual_partner'=>(isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL,
                     'is_partner_circumcised'=>(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= '')?$params['isPartnerCircumcised']:NULL,
-                    'last_time_of_receiving_money_for_sex'=>(isset($params['lastTimeOfReceivingMoneyForSex']) && trim($params['lastTimeOfReceivingMoneyForSex'])!= '')?$params['lastTimeOfReceivingMoneyForSex']:NULL,
+                    'last_time_of_receiving_gift_for_sex'=>(isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL,
                     'no_of_times_been_pregnant'=>(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= '')?$params['noOfTimesBeenPregnant']:NULL,
                     'no_of_times_condom_used_before_pregnancy'=>(isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL,
                     'no_of_times_condom_used_after_pregnancy'=>(isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL,
-                    'have_pain_in_lower_abdomen'=>(isset($params['havePainInLowerAbdomen']) && trim($params['havePainInLowerAbdomen'])!= '')?$params['havePainInLowerAbdomen']:NULL,
-                    'have_treated_for_lower_abdomen_pain'=>(isset($params['haveTreatedForLowerAbdomenPain']) && trim($params['haveTreatedForLowerAbdomenPain'])!= '')?$params['haveTreatedForLowerAbdomenPain']:NULL,
-                    'have_treated_for_syphilis'=>(isset($params['haveTreatedForSyphilis']) && trim($params['haveTreatedForSyphilis'])!= '')?$params['haveTreatedForSyphilis']:NULL,
-                    'no_of_days_had_drink_in_last_six_months'=>$noOfDaysHadDrinkInLastSixMonths,
-                    'do_have_more_drinks_on_one_occasion'=>(isset($params['doHaveMoreDrinksOnOneOccasion']) && trim($params['doHaveMoreDrinksOnOneOccasion'])!= '')?$params['doHaveMoreDrinksOnOneOccasion']:NULL,
-                    'have_tried_recreational_drugs'=>(isset($params['haveTriedRecreationalDrugs']) && trim($params['haveTriedRecreationalDrugs'])!= '')?$params['haveTriedRecreationalDrugs']:NULL,
-                    'had_recreational_drugs_in_last_six_months'=>(isset($params['hadRecreationalDrugsInLastSixMonths']) && trim($params['hadRecreationalDrugsInLastSixMonths'])!= '')?$params['hadRecreationalDrugsInLastSixMonths']:NULL,
+                    'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
+                    'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
+                    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+                    'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
+                    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
+                    'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
+                    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId

@@ -8,6 +8,7 @@ use Zend\Json\Json;
 class RiskAssessmentController extends AbstractActionController{
     public function indexAction(){
         $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+        $facilityService = $this->getServiceLocator()->get('FacilityService');
         $request = $this->getRequest();
         if ($request->isPost()){
             $parameters = $request->getPost();
@@ -20,8 +21,10 @@ class RiskAssessmentController extends AbstractActionController{
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $type=$this->params()->fromQuery('type');
         $date=base64_decode($this->params()->fromQuery('date'));
+        $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
         return new ViewModel(array(
             'countryId'=>$countryId,
+            'facilities'=>$facilityList,
             'type'=>$type,
             'date'=>$date
         ));
@@ -40,7 +43,7 @@ class RiskAssessmentController extends AbstractActionController{
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');
         $countryList=$countryService->getActiveCountries('risk-assessment',0);
-        $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
+        $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
         $occupationTypeList=$riskAssessmentService->getOccupationTypes();
         return new ViewModel(array(
                 'countries'=>$countryList,
@@ -62,38 +65,47 @@ class RiskAssessmentController extends AbstractActionController{
        $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
        $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
        $facilityService = $this->getServiceLocator()->get('FacilityService');
-       if(!isset($countryId) || trim($countryId)==''){
-            $country = $result->country;
-        }else{
+        if(isset($countryId) && trim($countryId)!=''){
             $country = $countryId;
-       }
-       $facilityList=$facilityService->getActivefacilities('data-collection',$country);
+        }else{
+            $country = $result->country;
+        }
+       $facilityList=$facilityService->getActivefacilities('risk-assessment',$country);
        $occupationTypeList=$riskAssessmentService->getOccupationTypes();
        return new ViewModel(array(
                 'facilities'=>$facilityList,
                 'occupationTypes'=>$occupationTypeList,
                 'row'=>$result,
-                'countryId'=>$countryId
+                'countryId'=>$country
             ));
     }
+    
     public function viewAction(){
-       $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
        $countryId=base64_decode($this->params()->fromRoute('countryId'));
        $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
+       $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
        $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
-       $facilityService = $this->getServiceLocator()->get('FacilityService');
-       if(!isset($countryId) || trim($countryId)==''){
-            $country = $result->country;
-        }else{
+        if(isset($countryId) && trim($countryId)!=''){
             $country = $countryId;
-       }
-       $facilityList=$facilityService->getActivefacilities('data-collection',$country);
-       $occupationTypeList=$riskAssessmentService->getOccupationTypes();
+        }else{
+            $country = $result->country;
+        }
        return new ViewModel(array(
-                'facilities'=>$facilityList,
-                'occupationTypes'=>$occupationTypeList,
                 'row'=>$result,
-                'countryId'=>$countryId
+                'countryId'=>$country
             ));
+    }
+    
+    public function exportExcelAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response=$riskAssessmentService->exportRiskAssessmentInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
     }
 }
