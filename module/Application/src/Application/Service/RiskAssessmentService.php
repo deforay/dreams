@@ -112,9 +112,9 @@ class RiskAssessmentService {
                             $ageAtFirstMarriage = 'Don\'t Know';
                         }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage']=='refused'){
                            $ageAtFirstMarriage = 'Refused'; 
-                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && is_numeric($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage'] >1){
+                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage'] >1){
                            $ageAtFirstMarriage = $aRow['age_at_first_marriage'].' Years';
-                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && is_numeric($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage'] == 1){
+                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage'] == 1){
                            $ageAtFirstMarriage = $aRow['age_at_first_marriage'].' Year';
                         }
                         $everBeenWidowed = '';
@@ -172,9 +172,9 @@ class RiskAssessmentService {
                             $partnerHIVTestStatus = 'Refused';
                         }
                         $ageAtVeryFirstSex = '';
-                        if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['partner_HIV_test_status'] > 1){
+                        if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['age_at_very_first_sex'] > 1){
                             $ageAtVeryFirstSex = $aRow['age_at_very_first_sex'].' Years';
-                        }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['partner_HIV_test_status'] == 1){
+                        }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['age_at_very_first_sex'] == 1){
                             $ageAtVeryFirstSex = $aRow['age_at_very_first_sex'].' Year';
                         }
                         $reasonForVeryFirstSex = '';
@@ -188,9 +188,9 @@ class RiskAssessmentService {
                           $reasonForVeryFirstSex = 'Refused';
                         }
                         $noofSexualPartners = '';
-                        if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && is_numeric($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners'] > 1){
+                        if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] > 1){
                             $noofSexualPartners = $aRow['no_of_sexual_partners'].' Persons';
-                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && is_numeric($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners'] == 1){
+                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] == 1){
                             $noofSexualPartners = $aRow['no_of_sexual_partners'].' Person';
                         }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] == 'dontknow'){
                             $noofSexualPartners = 'Don\'t Know';
@@ -198,9 +198,9 @@ class RiskAssessmentService {
                             $noofSexualPartners = 'Refused';
                         }
                         $noofSexualPartnersInLastSixMonths = '';
-                        if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && is_numeric($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months'] > 1){
+                        if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] > 1){
                             $noofSexualPartnersInLastSixMonths = $aRow['no_of_sexual_partners_in_last_six_months'].' Persons';
-                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && is_numeric($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months'] == 1){
+                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] == 1){
                             $noofSexualPartnersInLastSixMonths = $aRow['no_of_sexual_partners_in_last_six_months'].' Person';
                         }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] == 'dontknow'){
                             $noofSexualPartnersInLastSixMonths = 'Don\'t Know';
@@ -208,9 +208,9 @@ class RiskAssessmentService {
                             $noofSexualPartnersInLastSixMonths = 'Refused';
                         }
                         $ageofMainSexualPartnerAtLastBirthday = '';
-                        if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && is_numeric($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday'] > 1){
+                        if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] > 1){
                             $ageofMainSexualPartnerAtLastBirthday = $aRow['age_of_main_sexual_partner_at_last_birthday'].' Years';
-                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && is_numeric($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 1){
+                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 1){
                             $ageofMainSexualPartnerAtLastBirthday = $aRow['age_of_main_sexual_partner_at_last_birthday'].' Year';
                         }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 'dontknow'){
                             $ageofMainSexualPartnerAtLastBirthday = 'Don\'t Know';
