@@ -10,7 +10,6 @@ use Zend\Mail;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 use Zend\Mime\Mime as Mime;
-use TCPDF;
 
 class CommonService {
 
@@ -222,22 +221,22 @@ class CommonService {
                     $resultMail->addTo($toId);
                 }
             }
-            if (isset($params['cc']) && trim($params['cc']) != "") {
-                $ccArray = explode(",", $params['cc']);
-                foreach ($ccArray as $ccId) {
-                    if (trim($ccId) != '') {
-                        $resultMail->addCc($ccId);
-                    }
-                }
-            }
-            if (isset($params['bcc']) && trim($params['bcc']) != "") {
-                $bccArray = explode(",", $params['bcc']);
-                foreach ($bccArray as $bccId) {
-                    if (trim($bccId) != '') {
-                        $resultMail->addBcc($bccId);
-                    }
-                }
-            }
+            //if (isset($params['cc']) && trim($params['cc']) != "") {
+            //    $ccArray = explode(",", $params['cc']);
+            //    foreach ($ccArray as $ccId) {
+            //        if (trim($ccId) != '') {
+            //            $resultMail->addCc($ccId);
+            //        }
+            //    }
+            //}
+            //if (isset($params['bcc']) && trim($params['bcc']) != "") {
+            //    $bccArray = explode(",", $params['bcc']);
+            //    foreach ($bccArray as $bccId) {
+            //        if (trim($bccId) != '') {
+            //            $resultMail->addBcc($bccId);
+            //        }
+            //    }
+            //}
             $resultMail->setSubject($subject);
             $transport->send($resultMail);
             //update mail sent status

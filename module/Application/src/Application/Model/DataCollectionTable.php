@@ -300,7 +300,6 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-	    $row = array();
 	    $specimenCollectedDate = '';
 	    $specimenPickUpDateatAnc = '';
 	    $receiptDateAtCentralLab = '';
@@ -350,8 +349,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		    }
 		}
 	    }
-	    $unlockedInfo = '';
-	    if(isset($aRow['unlocked_on']) && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= NULL && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
+	    $userUnlockedHistory = '';
+	    if(isset($aRow['unlocked_on']) && $aRow['unlocked_on']!= null && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
 		$unlockedDate = explode(" ",$aRow['unlocked_on']);
 		$userQuery = $sql->select()->from(array('u' => 'user'))
 		                           ->columns(array('user_id','full_name'))
@@ -359,14 +358,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 		$unlockedBy = 'System';
-		if(isset($userResult->user_id) && $loginContainer->userId == $userResult->user_id){
+		if(isset($userResult->user_id) && $userResult->user_id == $loginContainer->userId){
 		    $unlockedBy = 'You';
 		}else if(isset($userResult->user_id)){
 		    $unlockedBy = ucwords($userResult->full_name);
 		}
-	      $unlockedInfo = '<i class="zmdi zmdi-lock-open unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size: 1.3rem;"></i>';
+	      $userUnlockedHistory = '<i class="zmdi zmdi-lock-open unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
+	    $row = array();
 	    $row[] = $aRow['study_id'];
 	    $row[] = ucwords($aRow['test_status_name']);
 	    $row[] = $specimenCollectedDate;
@@ -395,28 +395,33 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
-	    $dataLock = '';
+	    $dataView = '';
 	    $dataEdit = '';
+	    $dataLock = '';
+	    $pdfLink = '';
+	    //data view
 	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>';
-	    if($aRow['test_status_name']== 'completed'){
-		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
-	    }
 	    //for ls/ldeo
-	    if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
-		if($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked'){
-		  $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-		}
+	    if(($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO') && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
+		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
 	    //for csc/cc
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 		if($aRow['test_status_name']== 'locked'){
 		   $dataLock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
+	      $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
-	    $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
+	    //for data lock
+	    if($aRow['test_status_name']== 'completed'){
+		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>';
+	    }
+	    //for individual result pdf
+	    if($aRow['test_status_name']== 'locked'){
+	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
+	    }
 	    if($loginContainer->hasViewOnlyAccess =='no'){
-	       $row[] = $dataEdit.'&nbsp;&nbsp;'.$dataView.'&nbsp;&nbsp;'.$dataLock.'&nbsp;&nbsp;'.$pdfLink.'&nbsp;&nbsp;'.$unlockedInfo;
+	       $row[] = $dataEdit.'&nbsp;&nbsp;'.$dataView.'&nbsp;&nbsp;'.$dataLock.'&nbsp;&nbsp;'.$pdfLink.'&nbsp;&nbsp;'.$userUnlockedHistory;
 	    }
 	    $output['aaData'][] = $row;
 	}
