@@ -398,6 +398,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $dataView = '';
 	    $dataEdit = '';
 	    $dataLock = '';
+	    $dataUnlock = '';
 	    $pdfLink = '';
 	    //data view
 	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>';
@@ -408,7 +409,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //for csc/cc
 	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 		if($aRow['test_status_name']== 'locked'){
-		   $dataLock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
+		   $dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>';
 		}
 	      $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
@@ -421,7 +422,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    }
 	    if($loginContainer->hasViewOnlyAccess =='no'){
-	       $row[] = $dataEdit.'&nbsp;&nbsp;'.$dataView.'&nbsp;&nbsp;'.$dataLock.'&nbsp;&nbsp;'.$pdfLink.'&nbsp;&nbsp;'.$userUnlockedHistory;
+		$dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
+	       $row[] = $dataEdit.'&nbsp;&nbsp;'.$dataView.'&nbsp;&nbsp;'.$dataLockUnlock.'&nbsp;&nbsp;'.$pdfLink.'&nbsp;&nbsp;'.$userUnlockedHistory;
 	    }
 	    $output['aaData'][] = $row;
 	}
