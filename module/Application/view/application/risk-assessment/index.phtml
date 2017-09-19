@@ -108,7 +108,7 @@ if(!isset($countryId) || trim($countryId)== ''){
        </div>
     </div>
     <div class="row" style="max-width:1109px;">
-	<form id="searchFilterForm" action="#">
+	<form id="rASearchFilterForm" action="#">
 	    <div class="col l12 m12 s12">
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
 		<div class="col l2 m2 s2 left-align"><h6><strong>Interview Date </strong></h6></div>
@@ -117,7 +117,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		</div>
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>Lab site code/name</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <select id="lab" name="lab[]" class="material-select " title="Please select lab site code/name" multiple="multiple" style="width:40% !important;">
+		    <select id="lab" name="lab[]" class="material-select" title="Please select lab site code/name" multiple="multiple" style="width:40% !important;">
 			<?php
 			foreach($facilities as $facility){
 			?>
@@ -280,7 +280,8 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     
     function clearSearchFields(){
-        $('#searchFilterForm')[0].reset();
+        $('#rASearchFilterForm')[0].reset();
+	$('#rASearchFilterForm .select-dropdown').val('');
         searchRiskAssessmentData();
     }
     

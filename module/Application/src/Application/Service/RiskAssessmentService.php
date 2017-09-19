@@ -152,9 +152,9 @@ class RiskAssessmentService {
                         $resultofLastHIVTest = '';
                         if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='didnotreceive'){
                             $resultofLastHIVTest = 'I Did Not Receive Result';
-                        }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='hivplus'){
+                        }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='hivpos'){
                             $resultofLastHIVTest = 'HIV+';
-                        }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='hivminus'){
+                        }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='hivneg'){
                             $resultofLastHIVTest = 'HIV-';
                         }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='dontknow'){
                             $resultofLastHIVTest = 'Don\'t Know';
@@ -162,9 +162,9 @@ class RiskAssessmentService {
                             $resultofLastHIVTest = ucfirst($aRow['last_HIV_test_status']);
                         }
                         $partnerHIVTestStatus = '';
-                        if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='hivplus'){
+                        if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='hivpos'){
                             $partnerHIVTestStatus = 'HIV+';
-                        }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='hivminus'){
+                        }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='hivneg'){
                             $partnerHIVTestStatus = 'HIV-';
                         }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='idonotknow'){
                             $partnerHIVTestStatus = 'I Do Not Know';

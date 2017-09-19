@@ -269,16 +269,16 @@ if(isset($countryId) && trim($countryId)!=''){
     
     $('#role').on('change',function(e){
        var role = $('#role').val();
-       if(base64_decode(role)== 5){
-          $('.supervisorDeoSection').hide();
-          $('#lab').removeClass('isRequired');
-          $('.clinicanSection').show();
-          $('#ancSite').addClass('isRequired');
-       }else if(base64_decode(role)== 3 || base64_decode(role)== 4){
+       if(base64_decode(role)== 3 || base64_decode(role)== 4){
           $('.clinicanSection').hide();
           $('#ancSite').removeClass('isRequired');
           $('.supervisorDeoSection').show();
           $('#lab').addClass('isRequired');
+       }else if(base64_decode(role)== 5){
+          $('.supervisorDeoSection').hide();
+          $('#lab').removeClass('isRequired');
+          $('.clinicanSection').show();
+          $('#ancSite').addClass('isRequired');
        }else{
          $('.clinicanSection').hide();
          $('.supervisorDeoSection').hide();

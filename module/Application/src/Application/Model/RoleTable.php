@@ -177,7 +177,7 @@ class RoleTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $rolesQuery = $sql->select()->from(array('r' => 'role'))
                           ->where(array('r.role_status'=>'active'));
-        if(isset($country) && $country >0){
+        if(isset($country) && $country > 0){
             if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
                 $rolesQuery = $rolesQuery->where('r.role_code IN ("CC","LS","LDEO","ANCDEO")');
             }else if($loginContainer->roleCode== 'LS'){
@@ -193,6 +193,6 @@ class RoleTable extends AbstractTableGateway {
             }
         }
         $rolesQueryStr = $sql->getSqlStringForSqlObject($rolesQuery);
-        return $dbAdapter->query($rolesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return $dbAdapter->query($rolesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

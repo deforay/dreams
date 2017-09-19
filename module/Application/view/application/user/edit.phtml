@@ -153,7 +153,7 @@ if(count($row['userLaboratories'])>0){
                         </div>
                     </div>
                 </div>
-                <div class="row clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
+                <div class="row clinicanSection" style="<?php echo($row->role == 5)?'':'display:none;'; ?>">
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
                             Has Data Reporting Access ? *<br>
@@ -174,10 +174,10 @@ if(count($row['userLaboratories'])>0){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s6 clinicanSection" style="<?php echo($row->role ==5)?'':'display:none;'; ?>">
+                    <div class="col s6 clinicanSection" style="<?php echo($row->role == 5)?'':'display:none;'; ?>">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
-                            <select class="material-select <?php echo($row->role ==5)?'isRequired':''; ?>" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
+                            <select class="material-select <?php echo($row->role == 5)?'isRequired':''; ?>" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
                                 <?php
                                 foreach($ancSites as $anc){
                                     ?>
@@ -189,10 +189,10 @@ if(count($row['userLaboratories'])>0){
                             <label for="ancSite" class="">ANC site name *</label>
                         </div>
                     </div>
-                    <div class="col s6 supervisorDeoSection" style="<?php echo($row->role ==3 || $row->role ==4)?'':'display:none;'; ?>">
+                    <div class="col s6 supervisorDeoSection" style="<?php echo($row->role == 3 || $row->role == 4)?'':'display:none;'; ?>">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
-                            <select class="material-select <?php echo($row->role ==3 || $row->role ==4)?'isRequired':''; ?>" id="lab" name="lab[]" multiple title="Please select lab site name">
+                            <select class="material-select <?php echo($row->role == 3 || $row->role == 4)?'isRequired':''; ?>" id="lab" name="lab[]" multiple title="Please select lab site name">
                                 <?php
                                 foreach($facilities as $facility){
                                     ?>
@@ -309,7 +309,7 @@ if(count($row['userLaboratories'])>0){
             $("#countrySingle").hide();
             $("#countryMultiple").show();
         }else{
-            $("#countryMulti").val('');
+            //$("#countryMulti").val('');
             $("#countryMultiple").hide();
             $("#countrySingle").show();
         }
@@ -317,16 +317,18 @@ if(count($row['userLaboratories'])>0){
     
     $('#role').on('change',function(e){
        var role = $('#role').val();
-       if(base64_decode(role)== 5){
-          $('.supervisorDeoSection').hide();
-          $('#lab').removeClass('isRequired');
-          $('.clinicanSection').show();
-          $('#ancSite').addClass('isRequired');
-       }else if(base64_decode(role)== 3 || base64_decode(role)== 4){
+       if(base64_decode(role)== 3 || base64_decode(role)== 4){
           $('.clinicanSection').hide();
           $('#ancSite').removeClass('isRequired');
           $('.supervisorDeoSection').show();
+          if($('#lab').val() == null || $('#lab').val() == ''){ $('#editUserForm .supervisorDeoSection .select-dropdown').val(''); }
           $('#lab').addClass('isRequired');
+       }else if(base64_decode(role)== 5){
+          $('.supervisorDeoSection').hide();
+          $('#lab').removeClass('isRequired');
+          $('.clinicanSection').show();
+          if($('#ancSite').val() == null || $('#ancSite').val() == ''){ $('#editUserForm .clinicanSection .select-dropdown').val(''); }
+          $('#ancSite').addClass('isRequired');
        }else{
          $('.clinicanSection').hide();
          $('.supervisorDeoSection').hide();

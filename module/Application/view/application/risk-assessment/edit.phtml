@@ -8,7 +8,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
 }
 $interviewDate = '';
-if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
 ?>
@@ -162,7 +162,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate <?php echo ($row->age_at_first_marriage == '' || $row->age_at_first_marriage == null)?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= '' && is_numeric($row->age_at_first_marriage))?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate <?php echo ($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && is_numeric($row->age_at_first_marriage))?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
                     <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="dontknow" type="radio" <?php echo ($row->age_at_first_marriage == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="refused" type="radio" <?php echo ($row->age_at_first_marriage == 'refused')?'checked="checked"':''; ?>>
@@ -235,8 +235,8 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                     <select id="lastHIVTestStatus" name="lastHIVTestStatus" class="material-select isRequired" title="Don't leave 8th question">
                         <option value=""> -- Select -- </option>
                         <option value="didnotreceive" <?php echo ($row->last_HIV_test_status == 'didnotreceive')?'selected="selected"':''; ?>>I Did Not Receive Result</option>
-                        <option value="hivplus" <?php echo ($row->last_HIV_test_status == 'hivplus')?'selected="selected"':''; ?>>HIV+</option>
-                        <option value="hivminus" <?php echo ($row->last_HIV_test_status == 'hivminus')?'selected="selected"':''; ?>>HIV-</option>
+                        <option value="hivpos" <?php echo ($row->last_HIV_test_status == 'hivpos')?'selected="selected"':''; ?>>HIV+</option>
+                        <option value="hivneg" <?php echo ($row->last_HIV_test_status == 'hivneg')?'selected="selected"':''; ?>>HIV-</option>
                         <option value="indeterminate" <?php echo ($row->last_HIV_test_status == 'indeterminate')?'selected="selected"':''; ?>>Indeterminate</option>
                         <option value="dontknow" <?php echo ($row->last_HIV_test_status == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
                         <option value="refused" <?php echo ($row->last_HIV_test_status == 'refused')?'selected="selected"':''; ?>>Refused</option>
@@ -252,8 +252,8 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
                 <div class="col s4">
                     <select id="partnerHIVTestStatus" name="partnerHIVTestStatus" class="material-select isRequired" title="Don't leave 9th question">
                         <option value=""> -- Select -- </option>
-                        <option value="hivplus" <?php echo ($row->partner_HIV_test_status == 'hivplus')?'selected="selected"':''; ?>>HIV+</option>
-                        <option value="hivminus" <?php echo ($row->partner_HIV_test_status == 'hivminus')?'selected="selected"':''; ?>>HIV-</option>
+                        <option value="hivpos" <?php echo ($row->partner_HIV_test_status == 'hivpos')?'selected="selected"':''; ?>>HIV+</option>
+                        <option value="hivneg" <?php echo ($row->partner_HIV_test_status == 'hivneg')?'selected="selected"':''; ?>>HIV-</option>
                         <option value="idonotknow" <?php echo ($row->partner_HIV_test_status == 'idonotknow')?'selected="selected"':''; ?>>I Do Not Know</option>
                         <option value="refused" <?php echo ($row->partner_HIV_test_status == 'refused')?'selected="selected"':''; ?>>Refused</option>
                     </select>
@@ -294,7 +294,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners == '' || $row->no_of_sexual_partners == null)?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= '' && is_numeric($row->no_of_sexual_partners))?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && is_numeric($row->no_of_sexual_partners))?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners == 'refused')?'checked="checked"':''; ?>>
@@ -308,7 +308,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners_in_last_six_months == '' || $row->no_of_sexual_partners_in_last_six_months == null)?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= '' && is_numeric($row->no_of_sexual_partners_in_last_six_months))?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && is_numeric($row->no_of_sexual_partners_in_last_six_months))?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
@@ -322,7 +322,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == '' || $row->age_of_main_sexual_partner_at_last_birthday == null)?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= '' && is_numeric($row->age_of_main_sexual_partner_at_last_birthday))?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && is_numeric($row->age_of_main_sexual_partner_at_last_birthday))?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'refused')?'checked="checked"':''; ?>>
@@ -492,7 +492,7 @@ if(isset($row->interview_date) && trim($row->interview_date)!= '' && $row->inter
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == '' || $row->has_patient_had_drink_with_alcohol_in_last_six_months == null)?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= '' && is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months))?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months))?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>

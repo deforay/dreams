@@ -688,6 +688,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             
         $('.material-select').material_select();
         $('.select-wrapper').removeClass('isRequired');
+        $('#rASearchFilterForm .select-dropdown').val('');
+        $('#addUserForm .clinicanSection .select-dropdown').val('');
+        $('#addUserForm .supervisorDeoSection .select-dropdown').val('');
     });
     
     $('.checkNum').keydown(function (e) {

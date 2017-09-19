@@ -2,7 +2,7 @@
 $anc = '';
 $lab = '';
 //For ANC Site
-$anc.='<select id="ancSite" name="ancSite" class="material-select " title="Please select ANC site">';
+$anc.='<select id="ancSite" name="ancSite" class="material-select" title="Please select ANC site">';
 $anc.='<option value=""> -- Select -- </option>';
         foreach($response['ancsites'] as $ancSite){
           $anc.='<option value="'.base64_encode($ancSite['anc_site_id']).'">'.$ancSite['anc_site_code']." - ".ucwords($ancSite['anc_site_name']).'</option>';
@@ -10,7 +10,7 @@ $anc.='<option value=""> -- Select -- </option>';
 $anc.='</select>';
 $anc.='<label for="ancSite">ANC site name *</label>';
 //For Lab Site
-$lab.='<select id="lab" name="lab" class="material-select " title="Please select lab site code/name">';
+$lab.='<select id="lab" name="lab" class="material-select" title="Please select lab site code/name">';
 $lab.='<option value=""> -- Select -- </option>';
         foreach($response['labs'] as $facility){
           $lab.='<option value="'.base64_encode($facility['facility_id']).'">'.$facility['facility_code']." - ".ucwords($facility['facility_name']).'</option>';
