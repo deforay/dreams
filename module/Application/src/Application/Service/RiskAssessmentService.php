@@ -327,7 +327,7 @@ class RiskAssessmentService {
                         }
                         $row = array();
                         $row[] = $aRow['facility_code'].'-'.ucwords($aRow['facility_name']);
-                        $row[] = $aRow['study_id'];
+                        $row[] = $aRow['patient_barcode_id'];
                         $row[] = ucwords($aRow['interviewer_name']);
                         $row[] = $aRow['anc_patient_id'];
                         $row[] = $interviewDate;
@@ -397,7 +397,7 @@ class RiskAssessmentService {
                     $sheet->mergeCells('AC1:AG1');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Facility Code-Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Interviewer Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Interview Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);

@@ -86,14 +86,14 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
-        //Get locking hour to lock data
-        $lockingHour = '+72 hours';//Default locking hour
+        //Get data lock-hour hour
+        $lockHour = '+72 hours';//Default lock-hour
         $globalConfigQuery = $sql->select()->from(array('conf' => 'global_config'))
                                  ->where(array('conf.name'=>'locking_data_after_login'));
         $globalConfigQueryStr = $sql->getSqlStringForSqlObject($globalConfigQuery);
         $globalConfigResult = $dbAdapter->query($globalConfigQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-        if(isset($globalConfigResult->value) && trim($globalConfigResult->value) >0){
-            $lockingHour = '+'.$globalConfigResult->value.' hours';
+        if(isset($globalConfigResult->value) && $globalConfigResult->value > 0){
+            $lockHour = '+'.$globalConfigResult->value.' hours';
         }
         //To lock completed data
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -104,7 +104,7 @@ class DataCollectionService {
         if(isset($dataCollectionResult) && count($dataCollectionResult)>0){
             $now = date("Y-m-d H:i:s");
             foreach($dataCollectionResult as $dataCollection){
-               $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockingHour));
+               $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockHour));
                if($newDate <=$now){
                    $params = array();
                    $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
@@ -222,7 +222,7 @@ class DataCollectionService {
                             }
                         }
                         
-                        $row[] = $aRow['study_id'];
+                        $row[] = $aRow['patient_barcode_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['anc_site_code'];
@@ -281,7 +281,7 @@ class DataCollectionService {
                         )
                     );
                     
-                    $sheet->setCellValue('A1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Site Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -709,7 +709,7 @@ class DataCollectionService {
       return $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
-    public function getLastDataCollectionInfo(){
+    public function getLatestDataCollectionInfo(){
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $lrQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -783,19 +783,20 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $specimenCollectedDate = '';
-                        $status = 'Incomplete';
                         $recentInfection = '';
                         $hIVRNAResult = '';
                         $rapidRecencyAssay = '';
                         $rapidRecencyAssayDuration = '';
+                        $status = 'Incomplete';
+                        if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 0){
+                            $aRow['labDataPresentComplete'] = -1;
+                        }
                         //specimen collected date
                         if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
                             $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
                         }
                         //status
-                        if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 0){
-                            $aRow['labDataPresentComplete'] = -1;
-                        }if($aRow['labDataPresentComplete'] == 1){
+                        if($aRow['labDataPresentComplete'] == 1){
                            $status = 'Complete';
                         }else if($aRow['labDataPresentComplete'] == -1){
                           $status = 'Rejected';
@@ -833,7 +834,7 @@ class DataCollectionService {
                         }
                         $row = array();
                         $row[] = ucwords($aRow['province_name']);
-                        $row[] = $aRow['study_id'];
+                        $row[] = $aRow['patient_barcode_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = $status;
                         $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
@@ -874,7 +875,7 @@ class DataCollectionService {
                         )
                     );
                     $sheet->setCellValue('A1', html_entity_decode('Province Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);

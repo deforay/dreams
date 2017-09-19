@@ -19,7 +19,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     public function addRiskAssessmentDetails($params){
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
-        if(isset($params['studyId']) && trim($params['studyId'])!= ''){
+        if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
             $common = new CommonService();
@@ -81,7 +81,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
-                    'study_id'=>$params['studyId'],
+                    'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
@@ -131,11 +131,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if($parameters['countryId']== ''){
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
+	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name');
+	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
 	}else{
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.study_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
+	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name');
+	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name');
 	}
 
        /*
@@ -233,7 +233,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	   $mappedLab[] = $lab['laboratory_id'];
         }
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                      ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
+                      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
@@ -278,7 +278,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                      ->join(array('da_c' => 'data_collection'), "da_c.study_id=r_a.study_id",array())
+                      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
@@ -315,7 +315,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $row = array();
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
-	    $row[] = $aRow['study_id'];
+	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = ucwords($aRow['interviewer_name']);
 	    $row[] = $aRow['anc_patient_id'];
 	    $row[] = $interviewDate;
@@ -346,7 +346,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     public function updateRiskAssessmentDetails($params){
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
-        if(isset($params['studyId']) && trim($params['studyId'])!= ''){
+        if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
 	    $lastInsertedId = base64_decode($params['riskAssessmentId']);
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
@@ -402,7 +402,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
-                    'study_id'=>$params['studyId'],
+                    'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,

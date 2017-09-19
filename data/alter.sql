@@ -566,4 +566,11 @@ DELETE FROM `specimen_rejection_reason` WHERE `specimen_rejection_reason`.`rejec
 ALTER TABLE `data_collection` CHANGE `asante_rapid_recency_assy` `asante_rapid_recency_assy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 --Pal 15/09/2017
-ALTER TABLE `data_collection_event_log` CHANGE `asante_rapid_recency_assy` `asante_rapid_recency_assy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
+ALTER TABLE `data_collection_event_log` CHANGE `asante_rapid_recency_assy` `asante_rapid_recency_assy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 19/09/2017
+ALTER TABLE `data_collection` CHANGE `study_id` `patient_barcode_id` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `data_collection_event_log` CHANGE `study_id` `patient_barcode_id` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `study_id` `patient_barcode_id` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;

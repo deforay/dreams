@@ -92,8 +92,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID" value="<?php echo $row->study_id; ?>" onblur="checkNameValidation('data_collection', 'study_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The study id that you entered already exist. Please enter different id');">
-			    <label for="studyId" class="">Study ID *</label>
+			    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The id that you entered already exist. Please enter different id');">
+			    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 			</div>
 		    </div>
                     <div class="col s4">

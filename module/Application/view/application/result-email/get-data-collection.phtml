@@ -7,18 +7,18 @@
        foreach($dataList as $data){
             $lAgAvidityResult = '';
 	    if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'Long Term';
+		$lAgAvidityResult = '&nbsp;-&nbsp;Long Term';
 	    }else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'Recent';
+		$lAgAvidityResult = '&nbsp;-&nbsp;Recent';
 	    }
 	    $hIVRNAResult = '';
 	    if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='yes'){
-		$hIVRNAResult = 'High Viral Load';
+		$hIVRNAResult = '&nbsp;-&nbsp;High Viral Load';
 	    }else if(trim($data['hiv_rna_gt_1000'])!= '' && $data['hiv_rna_gt_1000'] =='no'){
-		$hIVRNAResult = 'Low Viral Load';
+		$hIVRNAResult = '&nbsp;-&nbsp;Low Viral Load';
 	    }
        ?>
-          <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id'].'&nbsp;-&nbsp;'.$lAgAvidityResult.'&nbsp;-&nbsp;'.$hIVRNAResult; ?></option>
+          <option value="<?php echo base64_encode($data['data_collection_id']); ?>"><?php echo $data['surveillance_id'].$lAgAvidityResult.$hIVRNAResult; ?></option>
         <?php } ?>
     </select><br/>
     </div>

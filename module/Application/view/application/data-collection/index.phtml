@@ -107,7 +107,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
 	    <div class="card">
 		<fieldset style="border-color:#88C542;border-style:solid;">
-		   <legend>SURVEILLANCE INFORMATION<span id="serialNo"></span></legend>
+		   <legend>SURVEILLANCE INFORMATION <span id="serialNo"></span></legend>
 			<?php
 			if(trim($countryId) ==''){
 			?>
@@ -127,8 +127,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID" onblur="checkNameValidation('data_collection', 'study_id', this, null,'The study id that you entered already exist. Please enter different id');">
-				    <label for="studyId" class="">Study ID *</label>
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, null,'The id that you entered already exist. Please enter different id');">
+				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
 			    <div class="col s4">
@@ -163,8 +163,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID" onblur="checkNameValidation('data_collection', 'study_id', this, null,'The study id that you entered already exist. Please enter different id');">
-				    <label for="studyId" class="">Study ID *</label>
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, null,'The id that you entered already exist. Please enter different id');">
+				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
 			    <div class="col s4">
@@ -401,8 +401,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<div class="col s12" style="margin-top:20px;">
 		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
 		    <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
-		    <input type="hidden" name="lDCId" id="lDCId" value="<?php echo (isset($lastDataCollection->data_collection_id))?$lastDataCollection->data_collection_id:'';?>"/>
-		    <input type="hidden" name="lCCode" id="lCCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
+		    <input type="hidden" name="lDCId" id="lDCId" value="<?php echo (isset($latestDataCollectionInfo->data_collection_id))?$latestDataCollectionInfo->data_collection_id:'';?>"/>
+		    <input type="hidden" name="cCode" id="cCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
 		    <input type="hidden" name="surveillanceId" id="surveillanceId"/>
 		    <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
 		    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
@@ -414,7 +414,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="study_id" class="showhideCheckBox" /> <label for="iCol0">Study ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol1"> Status</label> <br>
@@ -510,7 +510,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Study ID</th>
+                                <th>Patient Barcode ID</th>
 				<th>Status</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
@@ -548,7 +548,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Study ID</th>
+                                <th>Patient Barcode ID</th>
 				<th>Status</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site</th>
@@ -681,37 +681,48 @@ if(!isset($countryId) || trim($countryId)== ''){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
-       <?php
-       if(trim($countryId)!= ''){ ?>
-	    var lastDacId = $('#lDCId').val();
-	    var lastCCode = $('#lCCode').val();
-	    if($.trim(lastDacId)!= ''){
-		lastDacId = parseInt(lastDacId)+parseInt(1);
-		var surveillanceID = lastCCode+'00'+lastDacId;
+       <?php if(trim($countryId)!= ''){ ?>
+	    var latestCollId = $('#lDCId').val();
+	    var countryCode = $('#cCode').val();
+	    if($.trim(latestCollId)!= ''){
+		collId = parseInt(latestCollId)+parseInt(1);
+		if(collId.toString().length == 1){
+		    var surveillanceID = countryCode+'000'+collId;
+		}else if(collId.toString().length == 2){
+		    var surveillanceID = countryCode+'00'+collId;
+		}else{
+		    var surveillanceID = countryCode+collId;
+		}
 	    }else{
-	        var surveillanceID = lastCCode+'001';
+		var surveillanceID = countryCode+'0001';
 	    }
 	  $('#surveillanceId').val(surveillanceID);
-	  $('#serialNo').html(" ("+surveillanceID+")");
+	  $('#serialNo').html(' ('+surveillanceID+')');
        <?php } ?>
     });
     
     function generateSurveillanceID(cObj){
-	var lastDacId = $('#lDCId').val();
-	var lastCCode = $(cObj).find(':selected').data('code')
-	if ($.trim(lastCCode)!='') {
-	    if($.trim(lastDacId)!= ''){
-		lastDacId = parseInt(lastDacId)+parseInt(1);
-		var surveillanceID = lastCCode+'00'+lastDacId;
+	var latestCollId = $('#lDCId').val();
+	var countryCode = $(cObj).find(':selected').data('code')
+	if ($.trim(countryCode)!='') {
+	    if($.trim(latestCollId)!= ''){
+		collId = parseInt(latestCollId)+parseInt(1);
+		if(collId.toString().length == 1){
+		    var surveillanceID = countryCode+'000'+collId;
+		}else if(collId.toString().length == 2){
+		    var surveillanceID = countryCode+'00'+collId;
+		}else{
+		    var surveillanceID = countryCode+collId;
+		}
 	    }else{
-	       var surveillanceID = lastCCode+'001';
+	       var surveillanceID = countryCode+'0001';
 	    }
 	    $('#surveillanceId').val(surveillanceID);
 	    $('#serialNo').html(" ("+surveillanceID+")");
 	    $('label[for="surveillanceId"]').css("transform", "translateY(-140%)");
 	}else{
 	    $('#surveillanceId').val('');
-	    $('#serialNo').html("");
+	    $('#serialNo').html('');
 	}
     }
     

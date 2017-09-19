@@ -54,10 +54,10 @@ if(!isset($countryId) || trim($countryId)== ''){
     <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
         <form id="addRiskAssessmentForm" name="addRiskAssessmentForm" method="post" action="<?php echo $this->url('add-clinic-risk-assessment',array('action'=>'add')); ?>">
         <div class="card">
-            <h6 style="padding:10px 0px 10px 6px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
             <fieldset style="border-color:#2196F3;border-style:solid;">
                 <?php
-                if(trim($countryId) ==''){
+                if(trim($countryId) == ''){
                 ?>
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
@@ -88,8 +88,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID">
-                                <label for="studyId" class="">Study ID *</label>
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id">
+                                <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
                     </div>
@@ -130,8 +130,8 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="studyId" name="studyId" type="text" class="validate isRequired" title="Please enter study ID">
-                                <label for="studyId" class="">Study ID *</label>
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id">
+                                <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
                         <div class="col s4">
@@ -157,7 +157,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     </div>
                 <?php } ?>
             </fieldset>
-            <h6 style="padding:10px 0px 10px 6px;"><strong>Demographic Characteristics</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     1. What kind of work/occupation do you do most of the time? *
@@ -258,7 +258,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     </select>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;"><strong>HIV Testing History</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>HIV Testing History</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     7. When was the most recent time you were tested for HIV? *
@@ -312,7 +312,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     </select>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     10. How old were you when you had sexual intercourse for the very first time? *
@@ -537,7 +537,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused </label>
                 </div>
             </div>
-            <h6 style="padding:10px 0px 10px 6px;"><strong>Alcohol and drug use</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Alcohol and drug use</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     24. During the past 6 months, on how many days did you have at least one drink containing alcohol? *

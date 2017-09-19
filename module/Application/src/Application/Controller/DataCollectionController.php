@@ -26,9 +26,9 @@ class DataCollectionController extends AbstractActionController{
             $countryId = '';
             $type = '';
             $date = '';
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $type=$this->params()->fromQuery('type');
-            $date=base64_decode($this->params()->fromQuery('date'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            $type = $this->params()->fromQuery('type');
+            $date = base64_decode($this->params()->fromQuery('date'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
@@ -38,7 +38,7 @@ class DataCollectionController extends AbstractActionController{
             $rejectionReasonList=$commonService->getActiveRejectionReasons();
             $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
             $choosedCountryInfo=$countryService->getChoosedCountryInfo($countryId);
-            $lastDataCollectionInfo = $dataCollectionService->getLastDataCollectionInfo();
+            $latestDataCollectionInfo = $dataCollectionService->getLatestDataCollectionInfo();
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
@@ -48,7 +48,7 @@ class DataCollectionController extends AbstractActionController{
                 'rejectionReasons'=>$rejectionReasonList,
                 'facilities'=>$facilityList,
                 'choosedCountryInfo'=>$choosedCountryInfo,
-                'lastDataCollection'=>$lastDataCollectionInfo
+                'latestDataCollectionInfo'=>$latestDataCollectionInfo
             ));
         }
     }
