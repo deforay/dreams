@@ -175,7 +175,6 @@ class CommonService {
             $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
             $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
             $sql = new Sql($dbAdapter);
-            $dataCollectionDb = $this->sm->get('DataCollectionTable');
             // Setup SMTP transport using LOGIN authentication
             $transport = new SmtpTransport();
             $options = new SmtpOptions(array(
@@ -194,59 +193,66 @@ class CommonService {
                             ->where(array('anc.anc_site_id'=>base64_decode($params['anc'])));
             $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
             $ancResult = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-            
-            $fromEmail = $configResult["email"]["config"]["username"];
-            $fromFullName = $configResult["email"]["config"]["username"];
-            $subject = ucwords($params['subject']);
-
-            $html = new MimePart(ucfirst($params['message']));
-            $html->type = "text/html";
-
-            $attachment = new MimePart(fopen(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile'],'r'));
-            $attachment->type = 'application/pdf';
-            $attachment->encoding    = Mime::ENCODING_BASE64;
-            $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
-            $attachment->filename = 'LABORATORY-RECENCY-TEST-RESULT-'.date('d-M-Y-H-i-s');
-            $body = new MimeMessage();
-            $body->setParts(array($html,$attachment));
-
-            $resultMail = new Mail\Message();
-            $resultMail->setBody($body);
-            $resultMail->addFrom($fromEmail, $fromFullName);
-            $resultMail->addReplyTo($fromEmail, $fromFullName);
-
-            $toArray = explode(",", $ancResult->email);
-            foreach ($toArray as $toId) {
-                if (trim($toId) != '') {
-                    $resultMail->addTo($toId);
+            if(trim($ancResult->email)!= ''){
+                $fromEmail = $configResult["email"]["config"]["username"];
+                $fromFullName = $configResult["email"]["config"]["username"];
+                $subject = ucwords($params['subject']);
+    
+                $html = new MimePart(ucfirst($params['message']));
+                $html->type = "text/html";
+    
+                $attachment = new MimePart(fopen(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile'],'r'));
+                $attachment->type = 'application/pdf';
+                $attachment->encoding    = Mime::ENCODING_BASE64;
+                $attachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+                $attachment->filename = 'LABORATORY-RECENCY-TEST-RESULT-'.date('d-M-Y-H-i-s');
+                $body = new MimeMessage();
+                $body->setParts(array($html,$attachment));
+    
+                $resultMail = new Mail\Message();
+                $resultMail->setBody($body);
+                $resultMail->addFrom($fromEmail, $fromFullName);
+                $resultMail->addReplyTo($fromEmail, $fromFullName);
+    
+                $toArray = explode(",", $ancResult->email);
+                foreach ($toArray as $toId) {
+                    if (trim($toId) != '') {
+                        $resultMail->addTo($toId);
+                    }
                 }
+                //if (isset($params['cc']) && trim($params['cc']) != "") {
+                //    $ccArray = explode(",", $params['cc']);
+                //    foreach ($ccArray as $ccId) {
+                //        if (trim($ccId) != '') {
+                //            $resultMail->addCc($ccId);
+                //        }
+                //    }
+                //}
+                //if (isset($params['bcc']) && trim($params['bcc']) != "") {
+                //    $bccArray = explode(",", $params['bcc']);
+                //    foreach ($bccArray as $bccId) {
+                //        if (trim($bccId) != '') {
+                //            $resultMail->addBcc($bccId);
+                //        }
+                //    }
+                //}
+                $resultMail->setSubject($subject);
+                $transport->send($resultMail);
+                //update mail sent status
+                $dataCollectionDb = $this->sm->get('DataCollectionTable');
+                for($i=0;$i<count($params['dataCollection']);$i++){
+                    $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
+                }
+                //remove file from temporary
+                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+                $alertContainer->msg = 'Laboratory recency test result mailed successfully.';
+              return true;
+            }else{
+               //remove file from temporary
+                $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
+                $alertContainer->msg = 'Invalid (To) email id';
+              return false;
             }
-            //if (isset($params['cc']) && trim($params['cc']) != "") {
-            //    $ccArray = explode(",", $params['cc']);
-            //    foreach ($ccArray as $ccId) {
-            //        if (trim($ccId) != '') {
-            //            $resultMail->addCc($ccId);
-            //        }
-            //    }
-            //}
-            //if (isset($params['bcc']) && trim($params['bcc']) != "") {
-            //    $bccArray = explode(",", $params['bcc']);
-            //    foreach ($bccArray as $bccId) {
-            //        if (trim($bccId) != '') {
-            //            $resultMail->addBcc($bccId);
-            //        }
-            //    }
-            //}
-            $resultMail->setSubject($subject);
-            $transport->send($resultMail);
-            //update mail sent status
-            for($i=0;$i<count($params['dataCollection']);$i++){
-                $dataCollectionDb->update(array('result_mail_sent'=>'yes'),array('data_collection_id'=>base64_decode($params['dataCollection'][$i])));
-            }
-            //remove file from temporary
-            $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-            $alertContainer->msg = 'Laboratory recency test result mailed successfully.';
-          return true;
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
