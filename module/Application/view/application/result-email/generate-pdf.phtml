@@ -125,10 +125,10 @@ $alertContainer->nbPages = count($dataResult);
 	$lagAssay = '';
 	$lagAssayImage = '';
 	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'r'){
-	    $lagAssay = 'Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
+	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
 	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'lt'){
-	    $lagAssay = 'Long Term';
+	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term';
 	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
 	$rapidRecencyAssayDuration = '';
@@ -182,7 +182,7 @@ $alertContainer->nbPages = count($dataResult);
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Recency Test Result</td></tr>';
 	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
-	       $html .='<tr><td style="width:40%;line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td style="width:35%;line-height:18px;font-size:10px;text-align:left;border-top:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$lagAssay.'</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssayImage.'</td></tr>';
+	       $html .='<tr><td style="width:40%;line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td style="width:35%;line-height:18px;font-size:10px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssayImage.'</td></tr>';
 	       //$html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Assante:</strong></td><td colspan="2" style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
 	    }else {
 	       $html .='<tr><td style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Reported:</strong></td><td colspan="2" style="line-height:18px;font-size:10px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rejected</td></tr>';
