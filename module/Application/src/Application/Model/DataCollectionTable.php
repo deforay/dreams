@@ -365,6 +365,33 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 	      $userUnlockedHistory = '<i class="zmdi zmdi-lock-open unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
 	    }
+	    $dataView = '';
+	    $dataEdit = '';
+	    $dataLock = '';
+	    $dataUnlock = '';
+	    $pdfLink = '';
+	    //data view
+	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp;';
+	    //for ls/ldeo
+	    if(($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO') && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
+		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
+	    }
+	    //for csc/cc
+	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
+		if($aRow['test_status_name']== 'locked'){
+		   $dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
+		}else{
+		   $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';  
+		}
+	    }
+	    //for data lock
+	    if($aRow['test_status_name']== 'completed'){
+		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
+	    }
+	    //for individual result pdf
+	    if($aRow['test_status_name']== 'locked'){
+	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
+	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    $row = array();
 	    $row[] = $aRow['patient_barcode_id'];
@@ -394,34 +421,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['user_name']);
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
-	    }
-	    $dataView = '';
-	    $dataEdit = '';
-	    $dataLock = '';
-	    $dataUnlock = '';
-	    $pdfLink = '';
-	    //data view
-	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp;';
-	    //for ls/ldeo
-	    if(($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO') && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
-		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
-	    }
-	    //for csc/cc
-	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		if($aRow['test_status_name']== 'locked'){
-		   $dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
-		}
-	      $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
-	    }
-	    //for data lock
-	    if($aRow['test_status_name']== 'completed'){
-		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
-	    }
-	    //for individual result pdf
-	    if($aRow['test_status_name']== 'locked'){
-	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="Unlock"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
-	    }
-	    if($loginContainer->hasViewOnlyAccess =='no'){
+	    }if($loginContainer->hasViewOnlyAccess =='no'){
 		$dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	       $row[] = $dataEdit.$dataView.$dataLockUnlock.$pdfLink.$userUnlockedHistory;
 	    }
@@ -984,39 +984,65 @@ class DataCollectionTable extends AbstractTableGateway {
 	$redirectUrl = '';
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-	if(isset($params['type']) && $params['type'] == 'lab'){
+	if($params['type'] == 'lab' && $params['src'] == 'ancid'){
 	    $patientQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id'))
-				->where(array('da_c.anc_patient_id'=>trim($params['patientId'])))
+				->where(array('da_c.anc_patient_id'=>trim($params['ancPatientId'])))
 				->where('(da_c.status="3" OR da_c.status="4")');
-	    if($params['countryId']!=''){
+	    if($params['countryId']!= ''){
 		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
-	    }else if($params['dbCountryId']!=''){
-		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['dbCountryId']))));
+	    }else if($params['optCountryId']!= ''){
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['optCountryId']))));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	    if($patientResult){
-		if($params['countryId']!=''){
+		if($params['countryId']!= ''){
 		   $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
-		}else if($params['dbCountryId']!=''){
+		}else if($params['optCountryId']!= ''){
 		   $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
 		}
 	    }
 	  return $redirectUrl;
-	}else if(isset($params['type']) && $params['type'] == 'clinic'){
-	    $patientQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))->columns(array('assessment_id'))
-				->where(array('r_a.anc_patient_id'=>trim($params['patientId'])));
-	    if($params['countryId']!=''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['countryId']))));
-	    }else if($params['dbCountryId']!=''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['dbCountryId']))));
+	}else if($params['type'] == 'lab' && $params['src'] == 'barcodeid'){
+	    $patientQuery = $sql->select()->from(array('da_c' => 'data_collection'))->columns(array('data_collection_id','status'))
+				->where(array('da_c.patient_barcode_id'=>trim($params['patientBarcodeId'])));
+	    if($params['countryId']!= ''){
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
+	    }else if($params['optCountryId']!= ''){
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['optCountryId']))));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	    if($patientResult){
-		if($params['countryId']!=''){
+		if($params['countryId']!= ''){
+		   if($patientResult->status == 2){
+		      $redirectUrl = "/data-collection/view/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
+		   }else{
+		     $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/".$params['countryId'];
+		   }
+		}else if($params['optCountryId']!= ''){
+		   if($patientResult->status == 2){ 
+		      $redirectUrl = "/data-collection/view/".base64_encode($patientResult->data_collection_id)."/";
+		   }else{
+		      $redirectUrl = "/data-collection/edit/".base64_encode($patientResult->data_collection_id)."/";
+		   }
+		}
+	    }
+	  return $redirectUrl;
+	}else if($params['type'] == 'clinic'){
+	    $patientQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))->columns(array('assessment_id'))
+				->where(array('r_a.anc_patient_id'=>trim($params['ancPatientId'])));
+	    if($params['countryId']!= ''){
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['countryId']))));
+	    }else if($params['optCountryId']!= ''){
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['optCountryId']))));
+	    }
+	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
+	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	    if($patientResult){
+		if($params['countryId']!= ''){
 		   $redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/".$params['countryId'];
-		}else if($params['dbCountryId']!=''){
+		}else if($params['optCountryId']!= ''){
 		   $redirectUrl = "/clinic/risk-assessment/edit/".base64_encode($patientResult->assessment_id)."/";
 		}
 	    }

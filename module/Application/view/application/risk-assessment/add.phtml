@@ -771,6 +771,21 @@ if(!isset($countryId) || trim($countryId)== ''){
         }
     });
     
+    function checkPatientRecord(){
+        var ancPatientId = $('#ancPatientId').val();
+	var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+        if($.trim(ancPatientId)!= ''){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'clinic'},
+            function(data) {
+                if ($.trim(data)!= '') {
+		    var conf = confirm("The patient information with "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
+		    (conf)?document.location.href = data:$('#ancPatientId').val('');
+                }
+            });
+        }
+    }
+    
     function addRiskAssessment(){
         flag = deforayValidator.init({
             formId: 'addRiskAssessmentForm'
@@ -778,21 +793,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 	
         if(flag){
             document.getElementById('addRiskAssessmentForm').submit();
-        }
-    }
-    
-    function checkPatientRecord(){
-        var patientId = $('#ancPatientId').val();
-	var countryId = $('#chosenCountry').val();
-        var dbCountryId = ($('#country').length) ? $('#country').val():'';
-        if($.trim(patientId)!=''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,type:'clinic'},
-            function(data) {
-                if (data!= '') {
-		    conf = confirm("This Patient "+$('#ancPatientId').val()+" already has risk assessment form submitted. Please click OK if you want to continue editing for this particular patient");
-		    (conf)?document.location.href=data:$('#ancPatientId').val('');
-                }
-            });
         }
     }
 </script>

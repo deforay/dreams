@@ -59,7 +59,7 @@ class DataCollectionController extends AbstractActionController{
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $dataCollectionService->addDataCollection($params);
-            return $this->redirect()->toUrl($params['redirectUrl']);
+           return $this->redirect()->toUrl($params['redirectUrl']);
         }
     }
     
@@ -69,11 +69,14 @@ class DataCollectionController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService->updateDataCollection($params);
-            return $this->redirect()->toUrl($params['redirectUrl']);
+           return $this->redirect()->toUrl($params['redirectUrl']);
         }
+        $encodedCountryId = $this->params()->fromRoute('countryId');
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
         $result=$dataCollectionService->getDataCollection($dataCollectionId);
+        $preventUrl = (trim($encodedCountryId)!= '')?'/data-collection/'.$encodedCountryId:'/data-collection';
+        if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
         $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $commonService = $this->getServiceLocator()->get('CommonService');
         $facilityService = $this->getServiceLocator()->get('FacilityService');

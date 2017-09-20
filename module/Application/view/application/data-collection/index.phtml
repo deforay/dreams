@@ -114,7 +114,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord();">
+				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord('');">
 					<option data-code="" value=""> -- Select -- </option>
 					<?php
 					foreach($countries as $country){
@@ -127,7 +127,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			    </div>
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, null,'The id that you entered already exist. Please enter different id');">
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
 				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
@@ -163,7 +163,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, null,'The id that you entered already exist. Please enter different id');">
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
 				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
@@ -202,7 +202,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" onblur="checkPatientRecord();" >
+				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" onblur="checkPatientRecord('ancid');" >
 				<label for="ancPatientId" class="">ANC Patient ID * </label>
 			    </div>
 			</div>
@@ -1005,33 +1005,42 @@ if(!isset($countryId) || trim($countryId)== ''){
             document.getElementById('addDataReportingForm').submit();
         }
     }
+	
+    function checkPatientRecord(type){
+	if(type == 'barcodeid'){
+	    checkPatientBarcodeId();
+	}else if(type == 'ancid'){
+	    checkANCPateintId();
+	}else{
+	    checkANCPateintId();
+	    checkPatientBarcodeId();
+	}
+    }
     
-    function checkNameValidation(tableName, fieldName, obj, fnct, msg){
-        checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
-            $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+    function checkANCPateintId(){
+	var ancPatientId = $('#ancPatientId').val();
+        var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+	if($.trim(ancPatientId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'ancid'},
             function(data) {
-                if (data > 0){
-                    alert(msg);
-                    duplicateName = false;
-                    document.getElementById(obj.id).value = "";
-                }else {
-                    duplicateName = true;
+                if ($.trim(data)!= '') {
+		    var conf = confirm("The patient information with "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
+		    (conf)?document.location.href = data:$('#ancPatientId').val('');
                 }
             });
         }
     }
-	
-    function checkPatientRecord(){
-        var patientId = $('#ancPatientId').val();
-        var countryId = $('#chosenCountry').val();
-        var dbCountryId = ($('#country').length) ? $('#country').val():'';
-        if($.trim(patientId)!='' && ($.trim(countryId)!='' || $.trim(dbCountryId)!='')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientId: patientId,countryId:countryId,dbCountryId:dbCountryId,type:'lab'},
+    
+    function checkPatientBarcodeId(){
+	var patientBarcodeId = $('#patientBarcodeId').val();
+	var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'barcodeid'},
             function(data) {
-                if (data!= '') {
-		    conf = confirm("This Patient "+$('#ancPatientId').val()+" already has lab reporting form submitted. Please click OK if you want to continue editing for this particular patient");
-		    (conf)?document.location.href=data:$('#ancPatientId').val('');
+                if ($.trim(data)!= '') {
+		    document.location.href = data;
                 }
             });
         }
