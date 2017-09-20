@@ -267,7 +267,7 @@ class AncSiteTable extends AbstractTableGateway {
 	if(trim($countryId)!= '' && $countryId > 0){
 	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
         }
-	if($loginContainer->roleCode == 'ANCDEO'){
+	if($loginContainer->roleCode == 'ANCSC'){
             $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);

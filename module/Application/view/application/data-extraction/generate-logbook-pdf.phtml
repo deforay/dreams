@@ -96,8 +96,8 @@ if(count($logbookResult) >0){
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
            $html .='<th><strong>LAg Avidity</strong></th>';
            $html .='<th><strong>LAg Avidity Result</strong></th>';
-           $html .='<th><strong>HIV RNA</strong></th>';
-           $html .='<th><strong>HIV RNA > 1000</strong></th>';
+           $html .='<th><strong>HIV RNA (cp/ml)</strong></th>';
+           //$html .='<th><strong>HIV RNA > 1000</strong></th>';
            $html .='<th><strong>Recent Infection</strong></th>';
            $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
            $html .='<th><strong>Rapid Recency Result</strong></th>';
@@ -127,12 +127,12 @@ if(count($logbookResult) >0){
 	    }else if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='r'){
 	      $lAgAvidityResult = 'Recent';
 	    }
-	    $hIVRNAResult = '';
-	    if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
-	      $hIVRNAResult = 'High Viral Load';
-	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
-	      $hIVRNAResult = 'Low Viral Load';
-	    }
+	    //$hIVRNAResult = '';
+	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
+	    //  $hIVRNAResult = 'High Viral Load';
+	    //}else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
+	    //  $hIVRNAResult = 'Low Viral Load';
+	    //}
 	    
 	    $rapidRecencyAssay = '';
 	    $rapidRecencyAssayDuration = '';
@@ -174,7 +174,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
               $html .='<td>'.$lAgAvidityResult.'</td>';
               $html .='<td>'.$row['hiv_rna'].'</td>';
-              $html .='<td>'.$hIVRNAResult.'</td>';
+              //$html .='<td>'.$hIVRNAResult.'</td>';
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               $html .='<td>'.$rapidRecencyAssay.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';

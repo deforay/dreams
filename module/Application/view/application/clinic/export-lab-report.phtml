@@ -106,7 +106,7 @@ if(count($labReportResult) >0){
               $html .='<th><strong>LAg Avidity Result</strong></th>';
            }if($vlReportType =='show'){
               $html .='<th><strong>HIV RNA</strong></th>';
-              $html .='<th><strong>HIV RNA > 1000</strong></th>';
+              //$html .='<th><strong>HIV RNA > 1000</strong></th>';
            }if($infectionType =='show'){
               $html .='<th><strong>Recent Infection</strong></th>';
            }
@@ -137,13 +137,13 @@ if(count($labReportResult) >0){
 	    }else if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='r'){
 	      $lAgAvidityResult = 'Recent';
 	    }
-	    $hIVRNAResult = '';
-	    if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
-	      $hIVRNAResult = 'High Viral Load';
-	    }else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
-	      $hIVRNAResult = 'Low Viral Load';
-	    }
-	    //set dc status
+	    //$hIVRNAResult = '';
+	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
+	    //  $hIVRNAResult = 'High Viral Load';
+	    //}else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
+	    //  $hIVRNAResult = 'Low Viral Load';
+	    //}
+	    //status
 	    $status = 'Results Completed';
 	    if($row['final_lag_avidity_odn'] <= 2 && (trim($row['hiv_rna']) == '' || $row['hiv_rna'] == null)){
 		$status = 'Results Awaited';
@@ -167,7 +167,7 @@ if(count($labReportResult) >0){
                   $html .='<td>'.$lAgAvidityResult.'</td>';
               }if($vlReportType =='show'){
                   $html .='<td>'.$row['hiv_rna'].'</td>';
-                  $html .='<td>'.$hIVRNAResult.'</td>';
+                  //$html .='<td>'.$hIVRNAResult.'</td>';
               }if($infectionType =='show'){
                 $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               }

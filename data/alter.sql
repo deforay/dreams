@@ -385,7 +385,6 @@ UPDATE `role` SET `role_name` = 'ANC Data Entry Operator' WHERE `role`.`role_id`
 
 UPDATE `role` SET `role_code` = 'ANCDEO' WHERE `role`.`role_id` = 5;
 
-
 --Pal 05/01/2017
 alter table user add FOREIGN KEY(role) REFERENCES role(role_id)
 
@@ -574,3 +573,8 @@ ALTER TABLE `data_collection` CHANGE `study_id` `patient_barcode_id` VARCHAR(255
 ALTER TABLE `data_collection_event_log` CHANGE `study_id` `patient_barcode_id` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 ALTER TABLE `clinic_risk_assessment` CHANGE `study_id` `patient_barcode_id` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 20/09/2017
+UPDATE `role` SET `role_name` = 'ANC Study Coordinator' WHERE `role`.`role_id` = 5;
+
+UPDATE `role` SET `role_code` = 'ANCSC' WHERE `role`.`role_id` = 5; 

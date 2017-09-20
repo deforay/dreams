@@ -8,7 +8,7 @@ $PRAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $DRAccess = 'show';
     $PRAccess = 'show';
-}else if($loginContainer->roleCode== 'ANCDEO'){
+}else if($loginContainer->roleCode== 'ANCSC'){
     if($loginContainer->hasDRAccess == 'yes'){
         $DRAccess = 'show';
     }if($loginContainer->hasPRAccess == 'yes'){
@@ -20,7 +20,7 @@ $labMenuAccess = 'hide';
 $ancSiteMenuAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
     $labMenuAccess = 'show';
-}if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCDEO'){
+}if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCSC'){
    $ancSiteMenuAccess = 'show';
 }
 //Set country admin submenu access
@@ -58,7 +58,7 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 }
 //Set country anc submenu access
 $countryAncsiteDataExtractionAccess = 'hide';
-if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCDEO'){
+if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCSC'){
     $countryAncsiteDataExtractionAccess = 'show';
 }
 ?>

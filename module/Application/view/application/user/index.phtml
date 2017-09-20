@@ -57,7 +57,7 @@ if(!isset($countryId) || $countryId ==''){
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
 		<?php
-		if($loginContainer->hasViewOnlyAccess =='no' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCDEO')) {
+		if($loginContainer->hasViewOnlyAccess =='no' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
 		?>
 		  <span style="float:right;"><a href="/user/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
 		<?php } ?>

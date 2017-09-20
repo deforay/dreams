@@ -268,7 +268,7 @@ class UserTable extends AbstractTableGateway {
 		$sQuery = $sQuery->where(array('c.country_id'=> 0));
 	    }
 	}
-       if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
+       if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCSC' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
        }
        
@@ -311,7 +311,7 @@ class UserTable extends AbstractTableGateway {
 	    }
 	}
 	
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCDEO' || $loginContainer->roleCode== 'LDEO'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCSC' || $loginContainer->roleCode== 'LDEO'){
 	   $tQuery = $tQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
