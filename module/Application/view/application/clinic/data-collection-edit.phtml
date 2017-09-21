@@ -184,7 +184,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     });
     
     function getTotal(commonFieldClassName){
-        total = 0;
+        var total = 0;
         $('.'+commonFieldClassName).each( function(i,e) {
            /* you can use e.id instead of $(e).attr('id') */
             if($('#'+$(e).attr('id')).val()!= ''){
@@ -200,8 +200,8 @@ if(!isset($countryId) || trim($countryId)== ''){
         if($.trim(reportingMonthYear)!= '' && $.trim(anc)!= ''){
             $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {clDataCollectionID:'<?php echo base64_encode($row->cl_data_collection_id); ?>',reportingMonthYear: reportingMonthYear,anc:anc},
             function(data) {
-                if(data ==1){
-                    alert('Duplicate data not allowed..The anc and year/month that you have choosed already entered.');
+                if($.trim(data) == 1){
+                    alert('Duplicate data not allowed. The anc site and year/month that you have choosed already entered');
                     $('#reportingMonthYear').val('');
                 }
             });

@@ -92,7 +92,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkNameValidation('data_collection', 'patient_barcode_id', this, '<?php echo "data_collection_id##" .$row->data_collection_id; ?>','The id that you entered already exist. Please enter different id');">
+			    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord('barcodeid');">
 			    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 			</div>
 		    </div>
@@ -130,7 +130,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
+                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>" onblur="checkPatientRecord('ancid');">
                             <label for="ancPatientId" class="">ANC Patient ID * </label>
                         </div>
                     </div>
@@ -348,7 +348,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    </div>
             <div class="col s12" style="margin-top:20px;">
                 <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
-                <input type="hidden" name="chosenCountry" value="<?php echo $row->country; ?>"/>
+                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($row->country); ?>"/>
                 <input type="hidden" name="prevStatus" value="<?php echo $row->status; ?>"/>
 		<input type="hidden" name="surveillanceId" id="surveillanceId" value="<?php echo $row->surveillance_id; ?>"/>
 		<input type="hidden" name="formStatus" id="formStatus" value="<?php echo $row->status; ?>"/>
@@ -641,4 +641,46 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#gestationalAge').val('');
 	}
     });
+    
+    function checkPatientRecord(type){
+	if(type == 'barcodeid'){
+	    checkPatientBarcodeId();
+	}else if(type == 'ancid'){
+	    checkANCPatientId();
+	}else{
+	    checkPatientBarcodeId();
+	    checkANCPatientId();
+	}
+    }
+    
+    function checkPatientBarcodeId(){
+	var patientBarcodeId = $('#patientBarcodeId').val();
+	var countryId = $('#chosenCountry').val();
+	if($.trim(patientBarcodeId)!= '' && $.trim(countryId)!= ''){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {dataCollectionID:'<?php echo base64_encode($row->data_collection_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'lab',src:'barcodeid'},
+            function(data) {
+                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+            });
+        }
+    }
+    
+    function checkANCPatientId(){
+	var ancPatientId = $('#ancPatientId').val();
+        var countryId = $('#chosenCountry').val();
+	if($.trim(ancPatientId)!= '' && $.trim(countryId)!= ''){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {dataCollectionID:'<?php echo base64_encode($row->data_collection_id); ?>',ancPatientId: ancPatientId,countryId:countryId,type:'lab',src:'ancid'},
+            function(data) {
+                if ($.trim(data)!= '') {
+		    var conf = confirm("The lab data reporting with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
+		    if(conf){
+		       $.blockUI();	
+		       document.location.href = data;
+		    }else{
+		      $('#ancPatientId').val('');
+		      $('#encAncPatientId').val('');
+		    }
+                }
+            });
+        }
+    }
 </script>
