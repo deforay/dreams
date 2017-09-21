@@ -95,7 +95,7 @@ class DataCollectionService {
         if(isset($globalConfigResult->value) && $globalConfigResult->value > 0){
             $lockHour = '+'.$globalConfigResult->value.' hours';
         }
-        //To lock completed data
+        //To lock completed datas
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
                                    ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=>1));

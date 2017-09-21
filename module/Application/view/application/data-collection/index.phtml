@@ -1025,8 +1025,14 @@ if(!isset($countryId) || trim($countryId)== ''){
             $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'ancid'},
             function(data) {
                 if ($.trim(data)!= '') {
-		    var conf = confirm("The patient information with "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
-		    (conf)?document.location.href = data:$('#ancPatientId').val('');
+		    var conf = confirm("The lab data reporting with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
+		    if(conf){
+		       $.blockUI();	
+		       document.location.href = data;
+		    }else{
+		      $('#ancPatientId').val('');
+		      $('#encAncPatientId').val('');
+		    }
                 }
             });
         }
@@ -1039,9 +1045,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
             $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'barcodeid'},
             function(data) {
-                if ($.trim(data)!= '') {
-		    document.location.href = data;
-                }
+                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
             });
         }
     }

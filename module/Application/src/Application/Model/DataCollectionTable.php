@@ -58,16 +58,16 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    if(!isset($params['age']) || trim($params['age'])== ''){
+	    if(!isset($params['age'])){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
 		$lagAssayValidate = false;
                 $params['lagAvidityResult'] = NULL;
-            } if(!isset($params['hivRnaGT1000'])){
+            }if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
-            } if(!isset($params['recentInfection'])){
+            }if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
-            } if(!isset($params['asanteRapidRecencyAssayPn'])){
+            }if(!isset($params['asanteRapidRecencyAssayPn'])){
                 $params['asanteRapidRecencyAssayPn'] = '';
             }if(!isset($params['readerValueRRDT'])){
                 $params['readerValueRRDT'] = '';
@@ -85,7 +85,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						'reader'=>$params['readerValueRRR']
 					    )
 					);
-	    //set test status
+	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
 		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
@@ -478,16 +478,16 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
-	    if(!isset($params['age']) || trim($params['age'])== ''){
+	    if(!isset($params['age'])){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
 		$lagAssayValidate = false;
                 $params['lagAvidityResult'] = NULL;
-            } if(!isset($params['hivRnaGT1000'])){
+            }if(!isset($params['hivRnaGT1000'])){
                 $params['hivRnaGT1000'] = NULL;
-            } if(!isset($params['recentInfection'])){
+            }if(!isset($params['recentInfection'])){
                 $params['recentInfection'] = NULL;
-            } if(!isset($params['asanteRapidRecencyAssayPn'])){
+            }if(!isset($params['asanteRapidRecencyAssayPn'])){
                 $params['asanteRapidRecencyAssayPn'] = '';
             }if(!isset($params['readerValueRRDT'])){
                 $params['readerValueRRDT'] = '';
@@ -505,13 +505,13 @@ class DataCollectionTable extends AbstractTableGateway {
 						'reader'=>$params['readerValueRRR']
 					    )
 					);
-	    //set test status
+	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
 		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}else if($params['formStatus'] == 2){
-		   $status = $params['formStatus']; 
+		   $status = $params['formStatus'];//locked
 		}
 	    }
             $data = array(
@@ -567,13 +567,13 @@ class DataCollectionTable extends AbstractTableGateway {
     public function lockDataCollectionDetails($params){
 	$loginContainer = new Container('user');
 	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
 	$data = array(
 	    'status'=>2,
 	    'locked_on'=>$common->getDateTime(),
 	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
-	$dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
         $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
                                            ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
 				           ->order('da_c_e.data_collection_event_log_id desc');
@@ -589,13 +589,13 @@ class DataCollectionTable extends AbstractTableGateway {
     public function unlockDataCollectionDetails($params){
 	$loginContainer = new Container('user');
 	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
 	$data = array(
 	    'status'=>3,
 	    'unlocked_on'=>$common->getDateTime(),
 	    'unlocked_by'=>$loginContainer->userId
 	);
-	$dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
         $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
                                            ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
 				           ->order('da_c_e.data_collection_event_log_id desc');

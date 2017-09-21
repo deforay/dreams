@@ -775,12 +775,17 @@ if(!isset($countryId) || trim($countryId)== ''){
         var ancPatientId = $('#ancPatientId').val();
 	var countryId = $('#chosenCountry').val();
         var optCountryId = ($('#country').length) ? $('#country').val():'';
-        if($.trim(ancPatientId)!= ''){
+        if($.trim(ancPatientId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
             $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'clinic'},
             function(data) {
                 if ($.trim(data)!= '') {
-		    var conf = confirm("The patient information with "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
-		    (conf)?document.location.href = data:$('#ancPatientId').val('');
+		    var conf = confirm("The risk assessment form with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
+		    if(conf){
+		       $.blockUI();	
+		       document.location.href = data;
+		    }else{
+		      $('#ancPatientId').val('');
+		    }
                 }
             });
         }
