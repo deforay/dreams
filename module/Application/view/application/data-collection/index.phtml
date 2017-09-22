@@ -391,12 +391,12 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		</fieldset>
 		<div class="row">
-			<div class="col s4">
-			    <div class="input-field col m12 s12">
-				<textarea id="comments" name="comments" class="materialize-textarea"></textarea>
-				<label for="comments">Comments</label>
-			    </div>
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			    <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+			    <label for="comments">Comments</label>
 			</div>
+		    </div>
 		</div>
 		<div class="col s12" style="margin-top:20px;">
 		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
@@ -1010,14 +1010,26 @@ if(!isset($countryId) || trim($countryId)== ''){
 	if(type == 'barcodeid'){
 	    checkPatientBarcodeId();
 	}else if(type == 'ancid'){
-	    checkANCPateintId();
+	    checkANCPatientId();
 	}else{
-	    checkANCPateintId();
 	    checkPatientBarcodeId();
+	    checkANCPatientId();
 	}
     }
     
-    function checkANCPateintId(){
+    function checkPatientBarcodeId(){
+	var patientBarcodeId = $('#patientBarcodeId').val();
+	var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'barcodeid'},
+            function(data) {
+                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+            });
+        }
+    }
+    
+    function checkANCPatientId(){
 	var ancPatientId = $('#ancPatientId').val();
         var countryId = $('#chosenCountry').val();
         var optCountryId = ($('#country').length) ? $('#country').val():'';
@@ -1034,18 +1046,6 @@ if(!isset($countryId) || trim($countryId)== ''){
 		      $('#encAncPatientId').val('');
 		    }
                 }
-            });
-        }
-    }
-    
-    function checkPatientBarcodeId(){
-	var patientBarcodeId = $('#patientBarcodeId').val();
-	var countryId = $('#chosenCountry').val();
-        var optCountryId = ($('#country').length) ? $('#country').val():'';
-	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab',src:'barcodeid'},
-            function(data) {
-                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
             });
         }
     }

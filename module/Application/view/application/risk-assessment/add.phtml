@@ -62,7 +62,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);">
+                                <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord('');">
                                     <option value=""> -- Select -- </option>
                                     <?php
                                     foreach($countries as $country){
@@ -88,7 +88,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id">
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
                                 <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
@@ -102,7 +102,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord()">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord('ancid');">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -130,7 +130,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id">
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
                                 <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
@@ -144,7 +144,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord()">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord('ancid');">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -771,12 +771,35 @@ if(!isset($countryId) || trim($countryId)== ''){
         }
     });
     
-    function checkPatientRecord(){
+    function checkPatientRecord(type){
+	if(type == 'barcodeid'){
+	    checkPatientBarcodeId();
+	}else if(type == 'ancid'){
+	    checkANCPatientId();
+	}else{
+	    checkPatientBarcodeId();
+	    checkANCPatientId();
+	}
+    }
+    
+    function checkPatientBarcodeId(){
+	var patientBarcodeId = $('#patientBarcodeId').val();
+	var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'clinic',src:'barcodeid'},
+            function(data) {
+                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+            });
+        }
+    }
+    
+    function checkANCPatientId(){
         var ancPatientId = $('#ancPatientId').val();
 	var countryId = $('#chosenCountry').val();
         var optCountryId = ($('#country').length) ? $('#country').val():'';
         if($.trim(ancPatientId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'clinic'},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'clinic',src:'ancid'},
             function(data) {
                 if ($.trim(data)!= '') {
 		    var conf = confirm("The risk assessment form with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");

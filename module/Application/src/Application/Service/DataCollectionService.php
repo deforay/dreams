@@ -727,7 +727,7 @@ class DataCollectionService {
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $rQuery = $sql->select()->from(array('cl_da_c' => 'clinic_data_collection'))
-                                 ->columns(array('cl_data_collection_id'));
+                                ->columns(array('cl_data_collection_id'));
         if(isset($params['clDataCollectionID']) && trim($params['clDataCollectionID'])!= ''){
             $rQuery = $rQuery->where('cl_da_c.cl_data_collection_id != "'.base64_decode($params['clDataCollectionID']).'"');
         }if(isset($params['reportingMonthYear']) && trim($params['reportingMonthYear'])!= ''){
@@ -737,7 +737,7 @@ class DataCollectionService {
         }
         $rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
         $rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-        if($rResult){
+        if(isset($rResult->cl_data_collection_id)){
             return 1;
         }else{
             return 0;
