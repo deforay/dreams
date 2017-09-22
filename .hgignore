@@ -12,3 +12,6 @@ Thumbs.db
 Thumbs.db.orig
 .DS_Store
 .DS_Store.orig
+.git
+.gitattributes
+.gitignore
