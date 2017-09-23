@@ -11,6 +11,24 @@ $interviewDate = '';
 if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
+$hasPatientHurtBy = '';
+$patientHurtBy = '';
+$patientHurtByNoofTimes = '';
+if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+    $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
+    $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']:'';
+    $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']:'';
+    $patientHurtByNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']:'';
+}
+$hasPatientForcedForSex = '';
+$patientForcedForSex = '';
+$patientForcedForSexNoofTimes = '';
+if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+    $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
+    $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']:'';
+    $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']:'';
+    $patientForcedForSexNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']:'';
+}
 ?>
 <style>
     .card-default {
@@ -47,6 +65,9 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
         margin-left: 0;
         /*left: -184px*/
     }
+    .highlightedTxt{
+	text-decoration:underline;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -60,7 +81,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
     <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
         <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment',array('action'=>'edit')); ?>">
         <div class="card">
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
             <fieldset style="border-color:#2196F3;border-style:solid;">
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
@@ -102,9 +123,18 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                             <label for="interviewDate" class="">Interview Date *</label>
                         </div>
                     </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                        Participant received DREAMS services<br><br>	
+                        <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap isRequired" name="hasParticipantReceivedDreamsServices" title="Please select paricipant-dreams services received status" value="yes" type="radio" <?php echo ($row->has_participant_received_dreams_services == 'yes')?'checked="checked"':''; ?>>
+                        <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp&nbsp
+                        <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio" <?php echo ($row->has_participant_received_dreams_services == 'no')?'checked="checked"':''; ?>>
+                        <label for="hasParticipantReceivedDreamsServicesNo" class="active">No </label>&nbsp&nbsp
+                        </div>
+                    </div>
                 </div>
             </fieldset>
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Demographic Characteristics</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     1. What kind of work/occupation do you do most of the time? *
@@ -144,7 +174,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    3. Have you ever been married or lived with a partner in a union as if married? * &nbsp;(If no, go to question 7)
+                    3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married? * &nbsp;(If no, go to question 7)
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -157,7 +187,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    4. How old were you when you first got married or lived with a partner in a union? *
+                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -171,7 +201,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    5. Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? *
+                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -188,7 +218,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    6. What is your marital status now? *
+                    6. What is your marital status <span class="highlightedTxt">now</span>? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -205,10 +235,10 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </select>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>HIV Testing History</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>HIV Testing History</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    7. When was the most recent time you were tested for HIV? *
+                    7. When was the <span class="highlightedTxt">most recent</span> time you were tested for HIV? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -245,7 +275,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    9. What is your spouse/main sexual partner's HIV status? *
+                    9. What is your <span class="highlightedTxt">spouse/main</span> sexual partner's HIV status? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -259,10 +289,10 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </select>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    10. How old were you when you had sexual intercourse for the very first time? *
+                    10. How old were you when you had sexual intercourse for the very <span class="highlightedTxt">first</span> time? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -272,7 +302,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    11. The first time you had sex, was it because you wanted to or because you were forced to? *
+                    11. The <span class="highlightedTxt">first</span> time you had sex, was it because you wanted to or because you were forced to? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -289,7 +319,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    12. How many different people have you had sexual intercourse with in your entire life? *
+                    12. How many different people have you had sexual intercourse with <span class="highlightedTxt">in your entire life</span>? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -317,7 +347,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    14. How old was your main sexual partner on his last birthday? *
+                    14. How old was your <span class="highlightedTxt">main</span> sexual partner on his last birthday? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -352,7 +382,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    16. Is your main sexual partner circumcised? *
+                    16. Is your <span class="highlightedTxt">main</span> sexual partner circumcised? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -469,7 +499,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    23. Have you ever been diagnosed or treated for syphilis? *
+                    23. Have you <span class="highlightedTxt">ever</span> been diagnosed or treated for syphilis? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -484,10 +514,27 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
 		    <label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused </label>
                 </div>
             </div>
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Alcohol and drug use</strong></h6>
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
+                <div class="col s12">
+                    24. Have you ever received a vaccine to prevent human papillomavirus (HPV), a common virus that be passed through sexual contact? *
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <input id="hasPatientEverReceivedVaccineToPreventHPVYes" class="with-gap isRequired" name="hasPatientEverReceivedVaccineToPreventHPV" title="Don't leave 24th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverReceivedVaccineToPreventHPVNo" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="no" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverReceivedVaccineToPreventHPVDK" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverReceivedVaccineToPreventHPVR" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="refused" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVR" class="active">Refused </label>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Alcohol and drug use</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    24. During the past 6 months, on how many days did you have at least one drink containing alcohol? *
+                    25. During the past 6 months, on how many days did you have at least one drink containing alcohol? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -503,12 +550,12 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    25. How often do you have 4 or more drinks with alcohol on one occasion? * (e.g. within 2 hours)
+                    26. How often do you have 4 or more drinks with alcohol on one occasion? * (e.g. within 2 hours)
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <select id="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" name="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" class="material-select isRequired" title="Don't leave 25th question">
+                    <select id="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" name="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" class="material-select isRequired" title="Don't leave 26th question">
                         <option value=""> -- Select -- </option>
                         <option value="never" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'never')?'selected="selected"':''; ?>>Never</option>
                         <option value="monthly" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'monthly')?'selected="selected"':''; ?>>Monthly</option>
@@ -521,12 +568,12 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    26. Have you ever tried recreational drugs? *
+                    27. Have you <span class="highlightedTxt">ever</span> tried recreational drugs? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s8">
-                    <input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap isRequired" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave 26th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'yes')?'checked="checked"':''; ?>>
+                    <input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap isRequired" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave 27th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverTriedRecreationalDrugsYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="hasPatientEverTriedRecreationalDrugsNo" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="no" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'no')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverTriedRecreationalDrugsNo" class="active">No </label>&nbsp&nbsp
@@ -538,12 +585,12 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    27. In the last 6 months, have you taken any recreational drugs? *
+                    28. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s12" style="margin-bottom:20px;">
-                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="with-gap isRequired" name="hasPatientHadRecreationalDrugsInLastSixMonths" title="Don't leave 27th question" value="yes" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'checked="checked"':''; ?>>
+                <div class="col s12">
+                    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="with-gap isRequired" name="hasPatientHadRecreationalDrugsInLastSixMonths" title="Don't leave 28th question" value="yes" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="active">Yes </label>&nbsp&nbsp
                     <span class="recreationalDrugs" style="display:<?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'':'none'; ?>;">Specify Drug(s) <input id="recreationalDrugs" name="recreationalDrugs" type="text" class="validate <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'yes')?'isRequired':''; ?>" title="Please enter recreational drugs" value="<?php echo $row->recreational_drugs; ?>" style="width:30%;">&nbsp;</span>
                     <input id="hasPatientHadRecreationalDrugsInLastSixMonthsNo" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="no" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'no')?'checked="checked"':''; ?>>
@@ -552,6 +599,136 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
 		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="refused" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    29. Have you ever been emotionally or physically abused by your partner or someone important to you? *
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="hasPatientEverBeenAbusedBySomeoneYes" class="with-gap isRequired" name="hasPatientEverBeenAbusedBySomeone" title="Don't leave 29th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenAbusedBySomeoneYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenAbusedBySomeoneNo" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="no" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenAbusedBySomeoneNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenAbusedBySomeoneDK" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenAbusedBySomeoneDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenAbusedBySomeoneR" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenAbusedBySomeoneR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    30. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? *
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="with-gap isRequired" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" title="Don't leave 30th question" value="yes" type="radio" <?php echo ($hasPatientHurtBy == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="no" type="radio" <?php echo ($hasPatientHurtBy == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="dontknow" type="radio" <?php echo ($hasPatientHurtBy == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="refused" type="radio" <?php echo ($hasPatientHurtBy == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row patientHurtBySomeoneWithinLastYear" style="margin-bottom:0;display:<?php echo ($hasPatientHurtBy == 'yes')?'':'none'; ?>;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If YES, who
+                </div>
+            </div>
+	    <div class="row patientHurtBySomeoneWithinLastYear" style="margin-bottom:10px;display:<?php echo ($hasPatientHurtBy == 'yes')?'':'none'; ?>;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientHurtBySomeoneWithinLastYearH" class="with-gap <?php echo ($hasPatientHurtBy == 'yes')?'isRequired':''; ?>" name="patientHurtBySomeoneWithinLastYear" title="Don't leave 30th question partially" value="husband" type="radio" <?php echo ($patientHurtBy == 'husband')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearH" class="active">Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneWithinLastYearExH" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="ex-husband" type="radio" <?php echo ($patientHurtBy == 'ex-husband')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearExH" class="active">Ex-Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneWithinLastYearBf" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="boyfriend" type="radio" <?php echo ($patientHurtBy == 'boyfriend')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearBf" class="active">Boyfriend </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneWithinLastYearS" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="stranger" type="radio" <?php echo ($patientHurtBy == 'stranger')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearS" class="active">Stranger</label>
+		    <input id="patientHurtBySomeoneWithinLastYearO" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="other" type="radio" <?php echo ($patientHurtBy == 'other')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearO" class="active">Other</label>
+		    <input id="patientHurtBySomeoneWithinLastYearM" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="multiple" type="radio" <?php echo ($patientHurtBy == 'multiple')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" value="<?php echo $patientHurtByNoofTimes; ?>" style="width:10%;"> Times
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    31. Since you've been pregnant have you been slapped, kicked or otherwise physically hurt by someone? *
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="with-gap isRequired" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" title="Don't leave 31st question" value="yes" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="no" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    32. Within the last year, has anyone forced you to have sexual activities? *
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="hasPatientEverBeenForcedForSexWithinLastYearYes" class="with-gap isRequired" name="hasPatientEverBeenForcedForSexWithinLastYear" title="Don't leave 32nd question" value="yes" type="radio" <?php echo($hasPatientForcedForSex == 'yes')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenForcedForSexWithinLastYearNo" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="no" type="radio" <?php echo($hasPatientForcedForSex == 'no')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearNo" class="active">No </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenForcedForSexWithinLastYearDK" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="dontknow" type="radio" <?php echo($hasPatientForcedForSex == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="hasPatientEverBeenForcedForSexWithinLastYearR" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="refused" type="radio" <?php echo($hasPatientForcedForSex == 'refused')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row patientForcedForSexWithinLastYear" style="margin-bottom:0;display:<?php echo($hasPatientForcedForSex == 'yes')?'':'none'; ?>;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If YES, who
+                </div>
+            </div>
+	    <div class="row patientForcedForSexWithinLastYear" style="margin-bottom:10px;display:<?php echo($hasPatientForcedForSex == 'yes')?'':'none'; ?>;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientForcedForSexWithinLastYearH" class="with-gap <?php echo($hasPatientForcedForSex == 'yes')?'isRequired':''; ?>" name="patientForcedForSexWithinLastYear" title="Don't leave 32nd question partially" value="husband" type="radio" <?php echo($patientForcedForSex == 'husband')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearH" class="active">Husband </label>&nbsp&nbsp
+                    <input id="patientForcedForSexWithinLastYearExH" class="with-gap" name="patientForcedForSexWithinLastYear" value="ex-husband" type="radio" <?php echo($patientForcedForSex == 'ex-husband')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearExH" class="active">Ex-Husband </label>&nbsp&nbsp
+                    <input id="patientForcedForSexWithinLastYearBf" class="with-gap" name="patientForcedForSexWithinLastYear" value="boyfriend" type="radio" <?php echo($patientForcedForSex == 'boyfriend')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearBf" class="active">Boyfriend </label>&nbsp&nbsp
+                    <input id="patientForcedForSexWithinLastYearS" class="with-gap" name="patientForcedForSexWithinLastYear" value="stranger" type="radio" <?php echo($patientForcedForSex == 'stranger')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearS" class="active">Stranger</label>
+		    <input id="patientForcedForSexWithinLastYearO" class="with-gap" name="patientForcedForSexWithinLastYear" value="other" type="radio" <?php echo($patientForcedForSex == 'other')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearO" class="active">Other</label>
+		    <input id="patientForcedForSexWithinLastYearM" class="with-gap" name="patientForcedForSexWithinLastYear" value="multiple" type="radio" <?php echo($patientForcedForSex == 'multiple')?'checked="checked"':''; ?>>
+		    <label for="patientForcedForSexWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
+		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" value="<?php echo $patientForcedForSexNoofTimes; ?>" style="width:10%;"> Times
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    33. Are you afraid of your partner or anyone listed above? *
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    <input id="isPatientAfraidOfAnyoneYes" class="with-gap isRequired" name="isPatientAfraidOfAnyone" title="Don't leave 33rd question" value="yes" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'yes')?'checked="checked"':''; ?>>
+		    <label for="isPatientAfraidOfAnyoneYes" class="active">Yes </label>&nbsp&nbsp
+                    <input id="isPatientAfraidOfAnyoneNo" class="with-gap" name="isPatientAfraidOfAnyone" value="no" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'no')?'checked="checked"':''; ?>>
+		    <label for="isPatientAfraidOfAnyoneNo" class="active">No </label>&nbsp&nbsp
+                    <input id="isPatientAfraidOfAnyoneDK" class="with-gap" name="isPatientAfraidOfAnyone" value="dontknow" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'dontknow')?'checked="checked"':''; ?>>
+		    <label for="isPatientAfraidOfAnyoneDK" class="active">Don't Know </label>&nbsp&nbsp
+                    <input id="isPatientAfraidOfAnyoneR" class="with-gap" name="isPatientAfraidOfAnyone" value="refused" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'refused')?'checked="checked"':''; ?>>
+		    <label for="isPatientAfraidOfAnyoneR" class="active">Refused</label>
                 </div>
             </div>
             <div class="col s12" style="margin-top:20px;">
@@ -717,6 +894,42 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
            $('#recreationalDrugs').val('');
            $('#recreationalDrugs').removeClass('isRequired');
         }
+    });
+    
+    //set patient abused by
+    $('input:radio[name=hasPatientEverBeenHurtBySomeoneWithinLastYear]').change(function () {
+        if ($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val() == 'yes') {  
+	    $('.patientHurtBySomeoneWithinLastYear').show();
+	    $('#patientHurtBySomeoneWithinLastYearH').addClass('isRequired');
+	}else{
+	  $('.patientHurtBySomeoneWithinLastYear').hide();
+	  $('#patientHurtBySomeoneWithinLastYearH').removeClass('isRequired');
+	  $('#patientHurtBySomeoneWithinLastYearH').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearExH').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearBf').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearS').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearO').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearM').prop('checked',false);
+	  $('#patientHurtBySomeoneWithinLastYearInNoofTimes').val('');	    
+	}
+    });
+    
+    //set forced for sex within last year
+    $('input:radio[name=hasPatientEverBeenForcedForSexWithinLastYear]').change(function () {
+        if ($("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val() == 'yes') {  
+	    $('.patientForcedForSexWithinLastYear').show();
+	    $('#patientForcedForSexWithinLastYearH').addClass('isRequired');
+	}else{
+	  $('.patientForcedForSexWithinLastYear').hide();
+	  $('#patientForcedForSexWithinLastYearH').removeClass('isRequired');
+	  $('#patientForcedForSexWithinLastYearH').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearExH').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearBf').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearS').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearO').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearM').prop('checked',false);
+	  $('#patientForcedForSexWithinLastYearInNoofTimes').val('');	    
+	}
     });
     
     function checkPatientRecord(type){

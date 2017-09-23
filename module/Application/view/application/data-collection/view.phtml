@@ -45,8 +45,12 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 $asanteRapidRecencyAssy = json_decode($row->asante_rapid_recency_assy,true);
 $asanteRapidRecencyAssayPn = '';
 $readerValueRRDT = '';
+$readerValueRRDTLogVal = '';
+$readerValueRRDTLogValText = '';
 $asanteRapidRecencyAssayRlt = '';
 $readerValueRRR = '';
+$readerValueRRRLogVal = '';
+$readerValueRRRLogValText = '';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     if($asanteRapidRecencyAssayPn == 'p'){
@@ -55,6 +59,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         $asanteRapidRecencyAssayPn = 'Negative';
     }
     $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+    $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '')?round(log10($readerValueRRDT),1):'';
+    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && $readerValueRRDTLogVal >= 2.8)?'Positive':'Negative';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
     if($asanteRapidRecencyAssayRlt == 'r'){
@@ -63,6 +69,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         $asanteRapidRecencyAssayRlt = 'Long Term';
     }
     $readerValueRRR = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+    $readerValueRRRLogVal = (trim($readerValueRRR)!= '')?round(log10($readerValueRRR),1):'';
+    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && $readerValueRRRLogVal >= 3)?'Long Term':'Recent';
 }
 ?>
 <style>
@@ -77,8 +85,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	float:left;
 	width:44%;
 	border:2px dotted #333;
-        margin-top:8px !important;
-        min-height:50px !important;
+        margin-top:12px !important;
+        min-height:60px !important;
     }
     #box-breaker{
 	float:left;
@@ -90,8 +98,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	float:left;
 	width:44%;
 	border:2px dotted #333;
-        margin-top:8px !important;
-        min-height:50px !important;
+        margin-top:12px !important;
+        min-height:60px !important;
     }
 </style>
 <div id="page-content">
@@ -282,11 +290,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 </div>
                 <div class="row">
                     <div class="col s4">
-                        <div class="input-field col m12 s12" style="min-height:86px;">
-                          <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Assante) </label><br>
-                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><?php echo $readerValueRRDT; ?></div>
+                        <div class="input-field col m12 s12" style="min-height:140px;">
+                          <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Asante) </label><br>
+                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><?php echo $readerValueRRDT; ?><br><?php echo $readerValueRRDTLogVal; ?><br><?php echo $readerValueRRDTLogValText; ?></div>
                           <div id="box-breaker">&rArr;</div>
-                          <div id="box-2" style="text-align:center;"><?php echo $asanteRapidRecencyAssayRlt; ?><br><?php echo $readerValueRRR; ?></div>
+                          <div id="box-2" style="text-align:center;"><?php echo $asanteRapidRecencyAssayRlt; ?><br><?php echo $readerValueRRR; ?><br><?php echo $readerValueRRRLogVal; ?><br><?php echo $readerValueRRRLogValText; ?></div>
                         </div>
                     </div>
                     <div class="col s4">

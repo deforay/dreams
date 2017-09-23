@@ -577,4 +577,26 @@ ALTER TABLE `clinic_risk_assessment` CHANGE `study_id` `patient_barcode_id` VARC
 --Pal 20/09/2017
 UPDATE `role` SET `role_name` = 'ANC Study Coordinator' WHERE `role`.`role_id` = 5;
 
-UPDATE `role` SET `role_code` = 'ANCSC' WHERE `role`.`role_id` = 5; 
+UPDATE `role` SET `role_code` = 'ANCSC' WHERE `role`.`role_id` = 5;
+
+--Pal 22/09/2017
+INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status`) VALUES (NULL, 'Hairdresser', 'active'), (NULL, 'Retail/Market Vendor', 'active');
+
+INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status`) VALUES (NULL, 'Restaurant/Hotel Worker', 'active'), (NULL, 'Professional/Managerial', 'active');
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_received_vaccine_to_prevent_HPV` VARCHAR(45) NULL DEFAULT NULL AFTER `has_patient_ever_been_treated_for_syphilis`;
+
+--Pal 23/09/2017
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_been_abused_by_someone` VARCHAR(45) NULL DEFAULT NULL AFTER `recreational_drugs`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_been_hurt_by_someone_within_last_year` TEXT NULL DEFAULT NULL AFTER `has_patient_ever_been_abused_by_someone`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_been_hurt_by_someone_during_pregnancy` TEXT NULL DEFAULT NULL AFTER `has_patient_ever_been_hurt_by_someone_within_last_year`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_been_forced_for_sex_within_last_year` TEXT NULL DEFAULT NULL AFTER `has_patient_ever_been_hurt_by_someone_during_pregnancy`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `is_patient_afraid_of_anyone` VARCHAR(45) NULL DEFAULT NULL AFTER `has_patient_ever_been_forced_for_sex_within_last_year`;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_hurt_by_someone_during_pregnancy` `has_patient_ever_been_hurt_by_someone_during_pregnancy` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_participant_received_dreams_services` VARCHAR(45) NULL DEFAULT NULL AFTER `interview_date`;

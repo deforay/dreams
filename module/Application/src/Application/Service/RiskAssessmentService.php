@@ -291,6 +291,12 @@ class RiskAssessmentService {
                         }else if(isset($aRow['has_patient_ever_been_treated_for_syphilis']) && $aRow['has_patient_ever_been_treated_for_syphilis']!= null && trim($aRow['has_patient_ever_been_treated_for_syphilis'])!= ''){
                            $hasPatientEverBeenTreatedForSyphilis = ucwords($aRow['has_patient_ever_been_treated_for_syphilis']);
                         }
+                        $hasPatientEverReceivedVaccineToPreventHPV = '';
+                        if(isset($aRow['has_patient_ever_received_vaccine_to_prevent_HPV']) && $aRow['has_patient_ever_received_vaccine_to_prevent_HPV']!= null && trim($aRow['has_patient_ever_received_vaccine_to_prevent_HPV'])!= '' && $aRow['has_patient_ever_received_vaccine_to_prevent_HPV'] == 'dontknow'){
+                           $hasPatientEverReceivedVaccineToPreventHPV = 'Don\'t Know';
+                        }else if(isset($aRow['has_patient_ever_received_vaccine_to_prevent_HPV']) && $aRow['has_patient_ever_received_vaccine_to_prevent_HPV']!= null && trim($aRow['has_patient_ever_received_vaccine_to_prevent_HPV'])!= ''){
+                           $hasPatientEverReceivedVaccineToPreventHPV = ucwords($aRow['has_patient_ever_received_vaccine_to_prevent_HPV']);
+                        }
                         $hasPatientHadDrinkWithAlcoholInLastSixMonths = '';
                         if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] > 1){
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'].' Days';
@@ -331,6 +337,7 @@ class RiskAssessmentService {
                         $row[] = ucwords($aRow['interviewer_name']);
                         $row[] = $aRow['anc_patient_id'];
                         $row[] = $interviewDate;
+                        $row[] = (isset($aRow['has_participant_received_dreams_services']) && $aRow['has_participant_received_dreams_services']!= null && trim($aRow['has_participant_received_dreams_services'])!= '')?ucfirst($aRow['has_participant_received_dreams_services']):'';
                         $row[] = (isset($aRow['occupationName']))?ucwords($aRow['occupationName']):'';
                         $row[] = $patientDegree;
                         $row[] = (isset($aRow['patient_ever_been_married']) && $aRow['patient_ever_been_married']!= null && trim($aRow['patient_ever_been_married'])!= '')?ucfirst($aRow['patient_ever_been_married']):'';
@@ -354,6 +361,7 @@ class RiskAssessmentService {
                         $row[] = $hasPatientHadPainInLowerAbdomen;
                         $row[] = $hasPatientBeenTreatedForLowerAbdomenPain;
                         $row[] = $hasPatientEverBeenTreatedForSyphilis;
+                        $row[] = $hasPatientEverReceivedVaccineToPreventHPV;
                         $row[] = $hasPatientHadDrinkWithAlcoholInLastSixMonths;
                         $row[] = $hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion;
                         $row[] = $hasPatientEverTriedRecreaionalDrugs;
@@ -391,48 +399,55 @@ class RiskAssessmentService {
                     $sheet->mergeCells('C1:C2');
                     $sheet->mergeCells('D1:D2');
                     $sheet->mergeCells('E1:E2');
-                    $sheet->mergeCells('F1:K1');
-                    $sheet->mergeCells('L1:N1');
-                    $sheet->mergeCells('O1:AB1');
-                    $sheet->mergeCells('AC1:AG1');
+                    $sheet->mergeCells('F1:F2');
+                    $sheet->mergeCells('G1:L1');
+                    $sheet->mergeCells('M1:O1');
+                    $sheet->mergeCells('P1:AD1');
+                    $sheet->mergeCells('AE1:AI1');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Facility Code-Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Interviewer Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Interview Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('Demographic Characteristics ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F2', html_entity_decode('What kind of work/occupation do you do most of the time? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G2', html_entity_decode('What was the highest level of school that you completed or are attending now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H2', html_entity_decode('Have you ever been married or lived with a partner in a union as if married? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I2', html_entity_decode('How old were you when you first got married or lived with a partner in a union? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J2', html_entity_decode('Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K2', html_entity_decode('What is your marital status now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L1', html_entity_decode('HIV Testing History ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L2', html_entity_decode('When was the most recent time you were tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M2', html_entity_decode('What was the result of that HIV test? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N2', html_entity_decode('What is your spouse/main sexual partner\'s HIV status? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O1', html_entity_decode('Sexual Activity and History of Sexually Transmitted Infections ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O2', html_entity_decode('How old were you when you had sexual intercourse for the very first time? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P2', html_entity_decode('The first time you had sex, was it because you wanted to or because you were forced to? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q2', html_entity_decode('How many different people have you had sexual intercourse with in your entire life? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R2', html_entity_decode('How many different people have you had sex with in the last 6 months? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S2', html_entity_decode('How old was your main sexual partner on his last birthday? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T2', html_entity_decode('Is the age of your main sexual partner older, younger, or the same age as you? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('U2', html_entity_decode('Is your main sexual partner circumcised? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V2', html_entity_decode('When did you last receive money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('W2', html_entity_decode('How many times have you been pregnant? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('X2', html_entity_decode('Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Y2', html_entity_decode('Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Z2', html_entity_decode('In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AA1', html_entity_decode('If yes, were you treated for these symptoms? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AB1', html_entity_decode('Have you ever been diagnosed or treated for syphilis? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AC1', html_entity_decode('Alcohol and drug use ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AC2', html_entity_decode('During the past 6 months, on how many days did you have at least one drink containing alcohol? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AD2', html_entity_decode('How often do you have 4 or more drinks with alcohol on one occasion? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AE2', html_entity_decode('Have you ever tried recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AF2', html_entity_decode('In the last 6 months, have you taken any recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AG2', html_entity_decode('Recreational drugs', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('Participant received DREAMS services ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('G1', html_entity_decode('Demographic Characteristics ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G2', html_entity_decode('What kind of work/occupation do you do most of the time? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H2', html_entity_decode('What was the highest level of school that you completed or are attending now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I2', html_entity_decode('Have you ever been married or lived with a partner in a union as if married? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J2', html_entity_decode('How old were you when you first got married or lived with a partner in a union? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K2', html_entity_decode('Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L2', html_entity_decode('What is your marital status now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('M1', html_entity_decode('HIV Testing History ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M2', html_entity_decode('When was the most recent time you were tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N2', html_entity_decode('What was the result of that HIV test? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O2', html_entity_decode('What is your spouse/main sexual partner\'s HIV status? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('P1', html_entity_decode('Sexual Activity and History of Sexually Transmitted Infections ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P2', html_entity_decode('How old were you when you had sexual intercourse for the very first time? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q2', html_entity_decode('The first time you had sex, was it because you wanted to or because you were forced to? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R2', html_entity_decode('How many different people have you had sexual intercourse with in your entire life? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S2', html_entity_decode('How many different people have you had sex with in the last 6 months? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T2', html_entity_decode('How old was your main sexual partner on his last birthday? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U2', html_entity_decode('Is the age of your main sexual partner older, younger, or the same age as you? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V2', html_entity_decode('Is your main sexual partner circumcised? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W2', html_entity_decode('When did you last receive money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X2', html_entity_decode('How many times have you been pregnant? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Y2', html_entity_decode('Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Z2', html_entity_decode('Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AA2', html_entity_decode('In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AB2', html_entity_decode('If yes, were you treated for these symptoms? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AC2', html_entity_decode('Have you ever been diagnosed or treated for syphilis? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AD2', html_entity_decode('Have you ever received a vaccine to prevent human papillomavirus (HPV), a common virus that be passed through sexual contact? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('AE1', html_entity_decode('Alcohol and drug use ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AE2', html_entity_decode('During the past 6 months, on how many days did you have at least one drink containing alcohol? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AF2', html_entity_decode('How often do you have 4 or more drinks with alcohol on one occasion? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AG2', html_entity_decode('Have you ever tried recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AH2', html_entity_decode('In the last 6 months, have you taken any recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AI2', html_entity_decode('Recreational drugs', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                    
                     $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
@@ -441,18 +456,18 @@ class RiskAssessmentService {
                     $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
                     $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
                     $sheet->getStyle('F1:K1')->applyFromArray($styleArray);
-                    $sheet->getStyle('F2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1:G1')->applyFromArray($styleArray);
                     $sheet->getStyle('G2')->applyFromArray($styleArray);
                     $sheet->getStyle('H2')->applyFromArray($styleArray);
                     $sheet->getStyle('I2')->applyFromArray($styleArray);
                     $sheet->getStyle('J2')->applyFromArray($styleArray);
                     $sheet->getStyle('K2')->applyFromArray($styleArray);
-                    $sheet->getStyle('L1:N1')->applyFromArray($styleArray);
                     $sheet->getStyle('L2')->applyFromArray($styleArray);
+                    $sheet->getStyle('M1:O1')->applyFromArray($styleArray);
                     $sheet->getStyle('M2')->applyFromArray($styleArray);
                     $sheet->getStyle('N2')->applyFromArray($styleArray);
-                    $sheet->getStyle('O1:AB1')->applyFromArray($styleArray);
                     $sheet->getStyle('O2')->applyFromArray($styleArray);
+                    $sheet->getStyle('P1:AC1')->applyFromArray($styleArray);
                     $sheet->getStyle('P2')->applyFromArray($styleArray);
                     $sheet->getStyle('Q2')->applyFromArray($styleArray);
                     $sheet->getStyle('R2')->applyFromArray($styleArray);
@@ -466,12 +481,14 @@ class RiskAssessmentService {
                     $sheet->getStyle('Z2')->applyFromArray($styleArray);
                     $sheet->getStyle('AA2')->applyFromArray($styleArray);
                     $sheet->getStyle('AB2')->applyFromArray($styleArray);
-                    $sheet->getStyle('AC1:AG1')->applyFromArray($styleArray);
                     $sheet->getStyle('AC2')->applyFromArray($styleArray);
                     $sheet->getStyle('AD2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AE1:AI1')->applyFromArray($styleArray);
                     $sheet->getStyle('AE2')->applyFromArray($styleArray);
                     $sheet->getStyle('AF2')->applyFromArray($styleArray);
                     $sheet->getStyle('AG2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AH2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AI2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
                     foreach ($output as $rowData) {
@@ -481,7 +498,7 @@ class RiskAssessmentService {
                                 $value = "";
                             }
                             
-                            if($colNo > 32){
+                            if($colNo > 34){
                                 break;
                             }
                             if (is_numeric($value)) {

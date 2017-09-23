@@ -79,12 +79,37 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
                 $recreationalDrugs = $params['recreationalDrugs'];
             }
+	    $patientHurtBy = NULL;
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
+		if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])== 'yes'){
+		    $patientHurtBy = array(
+					    'has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],
+					    'patient_hurt_by'=>(isset($params['patientHurtBySomeoneWithinLastYear']) && trim($params['patientHurtBySomeoneWithinLastYear'])!= '')?$params['patientHurtBySomeoneWithinLastYear']:'',
+					    'no_of_times'=>$params['patientHurtBySomeoneWithinLastYearInNoofTimes']
+					);
+		}else{
+		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
+		}
+	    }
+	    $patientForcedForSex = NULL;
+	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
+		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
+		    $patientForcedForSex = array(
+					    'has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],
+					    'patient_forced_by'=>(isset($params['patientForcedForSexWithinLastYear']) && trim($params['patientForcedForSexWithinLastYear'])!= '')?$params['patientForcedForSexWithinLastYear']:'',
+					    'no_of_times'=>$params['patientForcedForSexWithinLastYearInNoofTimes']
+					);
+		}else{
+		    $patientForcedForSex = array('has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],'patient_forced_by'=>'','no_of_times'=>'');
+		}
+	    }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
+		    'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
                     'patient_occupation'=>$occupation,
                     'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
                     'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
@@ -108,11 +133,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
                     'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
                     'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+		    'has_patient_ever_received_vaccine_to_prevent_HPV'=>(isset($params['hasPatientEverReceivedVaccineToPreventHPV']) && trim($params['hasPatientEverReceivedVaccineToPreventHPV'])!= '')?$params['hasPatientEverReceivedVaccineToPreventHPV']:NULL,
                     'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
                     'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
                     'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
                     'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
+		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBy),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= '')?$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']:NULL,
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedForSex),
+		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'country'=>$country,
                     'added_on'=>$common->getDateTime(),
                     'added_by'=>$loginContainer->userId
@@ -400,12 +431,37 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
                 $recreationalDrugs = $params['recreationalDrugs'];
             }
+	    $patientHurtBy = NULL;
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
+		if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])== 'yes'){
+		    $patientHurtBy = array(
+					    'has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],
+					    'patient_hurt_by'=>(isset($params['patientHurtBySomeoneWithinLastYear']) && trim($params['patientHurtBySomeoneWithinLastYear'])!= '')?$params['patientHurtBySomeoneWithinLastYear']:'',
+					    'no_of_times'=>$params['patientHurtBySomeoneWithinLastYearInNoofTimes']
+					);
+		}else{
+		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
+		}
+	    }
+	    $patientForcedForSex = NULL;
+	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
+		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
+		    $patientForcedForSex = array(
+					    'has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],
+					    'patient_forced_by'=>(isset($params['patientForcedForSexWithinLastYear']) && trim($params['patientForcedForSexWithinLastYear'])!= '')?$params['patientForcedForSexWithinLastYear']:'',
+					    'no_of_times'=>$params['patientForcedForSexWithinLastYearInNoofTimes']
+					);
+		}else{
+		    $patientForcedForSex = array('has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],'patient_forced_by'=>'','no_of_times'=>'');
+		}
+	    }
             $data = array(
                     'lab'=>base64_decode($params['lab']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
+		    'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
                     'patient_occupation'=>$occupation,
                     'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
                     'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
@@ -429,11 +485,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
                     'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
                     'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+		    'has_patient_ever_received_vaccine_to_prevent_HPV'=>(isset($params['hasPatientEverReceivedVaccineToPreventHPV']) && trim($params['hasPatientEverReceivedVaccineToPreventHPV'])!= '')?$params['hasPatientEverReceivedVaccineToPreventHPV']:NULL,
                     'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
                     'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
                     'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
                     'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
+		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBy),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= '')?$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']:NULL,
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedForSex),
+		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId
                 );
