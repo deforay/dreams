@@ -520,6 +520,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	    $('#readerValueRRR').val('');
+	    $('#readerValueRRRLogVal').html('');
+	    $('#readerValueRRRLogValText').html('');
 	}
 	populateResult('');
     });
@@ -634,6 +636,10 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $(".testResultSection").val('').removeClass('isRequired').attr('readonly',true);
 	    $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
+	    $('#readerValueRRDTLogVal').html('');
+	    $('#readerValueRRDTLogValText').html('');
+	    $('#readerValueRRRLogVal').html('');
+	    $('#readerValueRRRLogValText').html('');
 	}else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRR)").addClass('isRequired').attr('readonly',false);
