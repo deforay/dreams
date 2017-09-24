@@ -227,13 +227,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		<div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 		       <div class="input-field col m12 s12">
-			   <select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
+			   <select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
 				<option value=""> -- Select -- </option>
 				<option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
 				<option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
 				<option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
 			   </select>
-			   <label for="specimenType">Specimen Type </label>
+			   <label for="specimenType">Specimen Type *</label>
 		       </div>
 		    </div>
 	        </div>

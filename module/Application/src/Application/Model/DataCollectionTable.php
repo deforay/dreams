@@ -58,6 +58,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
+	    $asanteValidate = true;
 	    if(!isset($params['age'])){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -75,6 +76,8 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRR'])){
                 $params['readerValueRRR'] = '';
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'p' && $params['asanteRapidRecencyAssayRlt']== ''))){
+                $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
@@ -88,7 +91,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}
 	    }
@@ -364,7 +367,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		}else if(isset($userResult->user_id)){
 		    $unlockedBy = ucwords($userResult->full_name);
 		}
-	      $userUnlockedHistory = '<i class="zmdi zmdi-lock-open unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
+	      $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
 	    }
 	    $dataView = '';
 	    $dataEdit = '';
@@ -479,6 +482,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $patientDOB = $common->dateFormat($params['dob']);
             }
 	    $lagAssayValidate = true;
+	    $asanteValidate = true;
 	    if(!isset($params['age'])){
                 $params['age'] = NULL;
             }if(!isset($params['lagAvidityResult'])){
@@ -496,6 +500,8 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRDT'])){
                 $params['readerValueRRDT'] = '';
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'p' && $params['asanteRapidRecencyAssayRlt']== ''))){
+                $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
@@ -509,7 +515,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}else if($params['formStatus'] == 2){
 		   $status = $params['formStatus'];//locked

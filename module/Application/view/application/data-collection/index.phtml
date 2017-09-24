@@ -299,13 +299,13 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-				<select id="specimenType" name="specimenType" class="material-select" title="Please select speciment type">
-					<option value=""> -- Select -- </option>
-					<option value="1">Venous</option>
-					<option value="2">Plasma</option>
-					<option value="3">DBS</option>
+				<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
+				    <option value=""> -- Select -- </option>
+				    <option value="1">Venous</option>
+				    <option value="2">Plasma</option>
+				    <option value="3">DBS</option>
 				</select>
-				<label for="specimenType">Specimen Type </label>
+				<label for="specimenType">Specimen Type *</label>
 			    </div>
 			</div>
 		    </div>
