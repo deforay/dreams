@@ -91,6 +91,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
 		}
 	    }
+	    $patientHurtBySomeoneDuringPregnancy = NULL;
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
+		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])== 'yes'){
+		    $patientHurtBySomeoneDuringPregnancy = array(
+					    'has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],
+					    'patient_hurt_by_someone_during_pregnancy'=>(isset($params['patientHurtBySomeoneDuringPregnancy']) && trim($params['patientHurtBySomeoneDuringPregnancy'])!= '')?$params['patientHurtBySomeoneDuringPregnancy']:''
+					);
+		}else{
+		    $patientHurtBySomeoneDuringPregnancy = array('has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],'patient_hurt_by_someone_during_pregnancy'=>'');
+		}
+	    }
 	    $patientForcedForSex = NULL;
 	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
 		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
@@ -140,9 +151,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
 		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBy),
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= '')?$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']:NULL,
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedForSex),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>($patientHurtBy !=NULL)?json_encode($patientHurtBy):'',
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'country'=>$country,
                     'added_on'=>$common->getDateTime(),
@@ -443,6 +454,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
 		}
 	    }
+	    $patientHurtBySomeoneDuringPregnancy = NULL;
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
+		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])== 'yes'){
+		    $patientHurtBySomeoneDuringPregnancy = array(
+					    'has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],
+					    'patient_hurt_by_someone_during_pregnancy'=>(isset($params['patientHurtBySomeoneDuringPregnancy']) && trim($params['patientHurtBySomeoneDuringPregnancy'])!= '')?$params['patientHurtBySomeoneDuringPregnancy']:''
+					);
+		}else{
+		    $patientHurtBySomeoneDuringPregnancy = array('has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],'patient_hurt_by_someone_during_pregnancy'=>'');
+		}
+	    }
 	    $patientForcedForSex = NULL;
 	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
 		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
@@ -492,9 +514,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
                     'recreational_drugs'=>$recreationalDrugs,
 		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBy),
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= '')?$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']:NULL,
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedForSex),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>($patientHurtBy !=NULL)?json_encode($patientHurtBy):'',
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId

@@ -13,21 +13,28 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
 }
 $hasPatientHurtBy = '';
 $patientHurtBy = '';
-$patientHurtByNoofTimes = '';
+$patientHurtByInNoofTimes = '';
 if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
     $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
     $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']:'';
     $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']:'';
-    $patientHurtByNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']:'';
+    $patientHurtByInNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']:'';
+}
+$hasPatientHurtBySomeoneDuringPregnancy = '';
+$patientHurtBySomeoneDuringPregnancy = '';
+if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+    $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
+    $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])!= '')?$hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']:'';
+    $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?$hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']:'';
 }
 $hasPatientForcedForSex = '';
 $patientForcedForSex = '';
-$patientForcedForSexNoofTimes = '';
+$patientForcedForSexInNoofTimes = '';
 if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
     $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
     $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']:'';
     $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']:'';
-    $patientForcedForSexNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']:'';
+    $patientForcedForSexInNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']:'';
 }
 ?>
 <style>
@@ -655,7 +662,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
 		    <label for="patientHurtBySomeoneWithinLastYearO" class="active">Other</label>
 		    <input id="patientHurtBySomeoneWithinLastYearM" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="multiple" type="radio" <?php echo ($patientHurtBy == 'multiple')?'checked="checked"':''; ?>>
 		    <label for="patientHurtBySomeoneWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" value="<?php echo $patientHurtByNoofTimes; ?>" style="width:10%;"> Times
+		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientHurtByInNoofTimes; ?>" style="width:10%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -665,14 +672,35 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s12" style="margin-bottom:20px;">
-                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="with-gap isRequired" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" title="Don't leave 31st question" value="yes" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'yes')?'checked="checked"':''; ?>>
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="with-gap isRequired" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" title="Don't leave 31st question" value="yes" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="no" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'no')?'checked="checked"':''; ?>>
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="no" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'no')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="active">No </label>&nbsp&nbsp
-                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="dontknow" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
-                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_hurt_by_someone_during_pregnancy == 'refused')?'checked="checked"':''; ?>>
+                    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="refused" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'refused')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused</label>
+                </div>
+            </div>
+            <div class="row patientHurtBySomeoneDuringPregnancy" style="margin-bottom:0;display:<?php echo($hasPatientHurtBySomeoneDuringPregnancy == 'yes')?'':'none'; ?>;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If YES, who
+                </div>
+            </div>
+	    <div class="row patientHurtBySomeoneDuringPregnancy" style="margin-bottom:10px;display:<?php echo($hasPatientHurtBySomeoneDuringPregnancy == 'yes')?'':'none'?>;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientHurtBySomeoneDuringPregnancyH" class="with-gap <?php echo($hasPatientHurtBySomeoneDuringPregnancy == 'yes')?'isRequired':''?>" name="patientHurtBySomeoneDuringPregnancy" title="Don't leave 31st question partially" value="husband" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'husband')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyH" class="active">Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyExH" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="ex-husband" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'ex-husband')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyExH" class="active">Ex-Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyBf" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="boyfriend" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'boyfriend')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyBf" class="active">Boyfriend </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyS" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="stranger" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'stranger')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyS" class="active">Stranger</label>
+		    <input id="patientHurtBySomeoneDuringPregnancyO" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="other" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'other')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyO" class="active">Other</label>
+		    <input id="patientHurtBySomeoneDuringPregnancyM" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="multiple" type="radio" <?php echo ($patientHurtBySomeoneDuringPregnancy == 'multiple')?'checked="checked"':''; ?>>
+		    <label for="patientHurtBySomeoneDuringPregnancyM" class="active">Multiple</label>
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -711,7 +739,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
 		    <label for="patientForcedForSexWithinLastYearO" class="active">Other</label>
 		    <input id="patientForcedForSexWithinLastYearM" class="with-gap" name="patientForcedForSexWithinLastYear" value="multiple" type="radio" <?php echo($patientForcedForSex == 'multiple')?'checked="checked"':''; ?>>
 		    <label for="patientForcedForSexWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" value="<?php echo $patientForcedForSexNoofTimes; ?>" style="width:10%;"> Times
+		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientForcedForSexInNoofTimes; ?>" style="width:10%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -911,6 +939,23 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
 	  $('#patientHurtBySomeoneWithinLastYearO').prop('checked',false);
 	  $('#patientHurtBySomeoneWithinLastYearM').prop('checked',false);
 	  $('#patientHurtBySomeoneWithinLastYearInNoofTimes').val('');	    
+	}
+    });
+    
+    //set patient hurt by someone during pregnancy
+    $('input:radio[name=hasPatientEverBeenHurtBySomeoneDuringPregnancy]').change(function () {
+        if ($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val() == 'yes') {  
+	    $('.patientHurtBySomeoneDuringPregnancy').show();
+	    $('#patientHurtBySomeoneDuringPregnancyH').addClass('isRequired');
+	}else{
+	  $('.patientHurtBySomeoneDuringPregnancy').hide();
+	  $('#patientHurtBySomeoneDuringPregnancyH').removeClass('isRequired');
+	  $('#patientHurtBySomeoneDuringPregnancyH').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyExH').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyBf').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyS').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyO').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyM').prop('checked',false);    
 	}
     });
     

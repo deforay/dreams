@@ -701,7 +701,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <label for="patientHurtBySomeoneWithinLastYearO" class="active">Other</label>
 		    <input id="patientHurtBySomeoneWithinLastYearM" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="multiple" type="radio">
 		    <label for="patientHurtBySomeoneWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" style="width:10%;"> Times
+		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:10%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -719,6 +719,27 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="refused" type="radio">
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row patientHurtBySomeoneDuringPregnancy" style="margin-bottom:0;display:none;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If YES, who
+                </div>
+            </div>
+	    <div class="row patientHurtBySomeoneDuringPregnancy" style="margin-bottom:10px;display:none;">
+                <div class="col s12" style="margin-bottom:20px;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientHurtBySomeoneDuringPregnancyH" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" title="Don't leave 31st question partially" value="husband" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyH" class="active">Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyExH" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="ex-husband" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyExH" class="active">Ex-Husband </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyBf" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="boyfriend" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyBf" class="active">Boyfriend </label>&nbsp&nbsp
+                    <input id="patientHurtBySomeoneDuringPregnancyS" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="stranger" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyS" class="active">Stranger</label>
+		    <input id="patientHurtBySomeoneDuringPregnancyO" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="other" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyO" class="active">Other</label>
+		    <input id="patientHurtBySomeoneDuringPregnancyM" class="with-gap" name="patientHurtBySomeoneDuringPregnancy" value="multiple" type="radio">
+		    <label for="patientHurtBySomeoneDuringPregnancyM" class="active">Multiple</label>
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -757,7 +778,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <label for="patientForcedForSexWithinLastYearO" class="active">Other</label>
 		    <input id="patientForcedForSexWithinLastYearM" class="with-gap" name="patientForcedForSexWithinLastYear" value="multiple" type="radio">
 		    <label for="patientForcedForSexWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" title="Please enter no. of times" style="width:10%;"> Times
+		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:10%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -956,6 +977,23 @@ if(!isset($countryId) || trim($countryId)== ''){
 	  $('#patientHurtBySomeoneWithinLastYearO').prop('checked',false);
 	  $('#patientHurtBySomeoneWithinLastYearM').prop('checked',false);
 	  $('#patientHurtBySomeoneWithinLastYearInNoofTimes').val('');	    
+	}
+    });
+    
+    //set patient hurt by someone during pregnancy
+    $('input:radio[name=hasPatientEverBeenHurtBySomeoneDuringPregnancy]').change(function () {
+        if ($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val() == 'yes') {  
+	    $('.patientHurtBySomeoneDuringPregnancy').show();
+	    $('#patientHurtBySomeoneDuringPregnancyH').addClass('isRequired');
+	}else{
+	  $('.patientHurtBySomeoneDuringPregnancy').hide();
+	  $('#patientHurtBySomeoneDuringPregnancyH').removeClass('isRequired');
+	  $('#patientHurtBySomeoneDuringPregnancyH').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyExH').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyBf').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyS').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyO').prop('checked',false);
+	  $('#patientHurtBySomeoneDuringPregnancyM').prop('checked',false);    
 	}
     });
     

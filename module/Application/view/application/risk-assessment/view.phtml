@@ -11,9 +11,37 @@ $interviewDate = '';
 if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
+$hasPatientHurtBy = '';
+$patientHurtBy = '';
+$patientHurtByInNoofTimes = '';
+if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+    $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
+    $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']);
+    $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']):'';
+    $patientHurtByInNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']." times":'';
+}
+$hasPatientHurtBySomeoneDuringPregnancy = '';
+$patientHurtBySomeoneDuringPregnancy = '';
+if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+    $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
+    $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']);
+    $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']):'';
+}
+$hasPatientForcedForSex = '';
+$patientForcedForSex = '';
+$patientForcedForSexInNoofTimes = '';
+if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+    $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
+    $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']);
+    $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?", ".ucwords($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']):'';
+    $patientForcedForSexInNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']." times":'';
+}
 ?>
 <style>
     .card p{font-size:12.5px;font-weight:bold;}
+    .highlightedTxt{
+	text-decoration:underline;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -26,7 +54,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
     </div>
     <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
         <div class="card">
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
             <fieldset style="border-color:#2196F3;border-style:solid;">
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
@@ -63,9 +91,15 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                             <p><?php echo $interviewDate; ?></p>
                         </div>
                     </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="interviewDate" class="">Participant received DREAMS services </label><br>
+                            <p><?php echo ($row->has_participant_received_dreams_services!= null && trim($row->has_participant_received_dreams_services)!= '')?ucfirst($row->has_participant_received_dreams_services):''; ?></p>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Demographic Characteristics</strong></h6>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     1. What kind of work/occupation do you do most of the time?
@@ -102,7 +136,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    3. Have you ever been married or lived with a partner in a union as if married? (If no, go to question 7)
+                    3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married? &nbsp;(If no, go to question 7)
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -112,9 +146,9 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
-                    4. How old were you when you first got married or lived with a partner in a union?
+                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -138,25 +172,27 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    5. Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them?
+                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
                     <p>
                         <?php
-                        if($row->patient_ever_been_widowed=='dontknow'){
-                            echo "Don't Know";
-                        }else{
-                            echo ucwords($row->patient_ever_been_widowed);
+                        if($row->patient_ever_been_widowed!= null && trim($row->patient_ever_been_widowed)!= ''){
+                            if($row->patient_ever_been_widowed=='dontknow'){
+                                echo "Don't Know";
+                            }else{
+                                echo ucwords($row->patient_ever_been_widowed);
+                            }
                         }
                         ?>
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
-                    6. What is your marital status now?
+                    6. What is your marital status <span class="highlightedTxt">now</span>?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -184,10 +220,10 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>HIV Testing History</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>HIV Testing History</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    7. When was the most recent time you were tested for HIV?
+                    7. When was the <span class="highlightedTxt">most recent</span> time you were tested for HIV?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -245,7 +281,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    9. What is your spouse/main sexual partner's HIV status?
+                    9. What is your <span class="highlightedTxt">spouse/main</span> sexual partner's HIV status?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -267,10 +303,10 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <h6 style="padding:0px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    10. How old were you when you had sexual intercourse for the very first time?
+                    10. How old were you when you had sexual intercourse for the very <span class="highlightedTxt">first</span> time?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -290,7 +326,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    11. The first time you had sex, was it because you wanted to or because you were forced to?
+                    11. The <span class="highlightedTxt">first</span> time you had sex, was it because you wanted to or because you were forced to?
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -312,9 +348,9 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
-                    12. How many different people have you had sexual intercourse with in your entire life?
+                    12. How many different people have you had sexual intercourse with <span class="highlightedTxt">in your entire life</span>?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -362,7 +398,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    14. How old was your main sexual partner on his last birthday?
+                    14. How old was your <span class="highlightedTxt">main</span> sexual partner on his last birthday?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -420,7 +456,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    16. Is your main sexual partner circumcised?
+                    16. Is your <span class="highlightedTxt">main</span> sexual partner circumcised?
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -438,7 +474,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
                     17. When did you last receive money/gifts in exchange for sex?
                 </div>
@@ -504,7 +540,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
                     20. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?
                 </div>
@@ -524,7 +560,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
                     21. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?
                 </div>
@@ -544,7 +580,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
                     22. If yes, were you treated for these symptoms?
                 </div>
@@ -564,9 +600,9 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
-                    23. Have you ever been diagnosed or treated for syphilis?
+                    23. Have you <span class="highlightedTxt">ever</span> been diagnosed or treated for syphilis?
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -584,10 +620,30 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <h6 style="padding:10px 0px 10px 6px;font-size:16px;text-decoration:underline;"><strong>Alcohol and drug use</strong></h6>
+            <div class="row" style="margin:16px 0px 0px 0px;">
+                <div class="col s12">
+                    24. Have you ever received a vaccine to prevent human papillomavirus (HPV), a common virus that be passed through sexual contact?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if($row->has_patient_ever_received_vaccine_to_prevent_HPV!= null && trim($row->has_patient_ever_received_vaccine_to_prevent_HPV)!= ''){
+                                if($row->has_patient_ever_received_vaccine_to_prevent_HPV=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->has_patient_ever_received_vaccine_to_prevent_HPV);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Alcohol and drug use</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    24. During the past 6 months, on how many days did you have at least one drink containing alcohol?
+                    25. During the past 6 months, on how many days did you have at least one drink containing alcohol?
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -595,9 +651,9 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     <p>
                         <?php
                             if($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= ''){
-                                if($row->has_patient_had_drink_with_alcohol_in_last_six_months > 1){
+                                if((int)$row->has_patient_had_drink_with_alcohol_in_last_six_months > 1){
                                     echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Days";
-                                }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months == 1){
+                                }else if((int)$row->has_patient_had_drink_with_alcohol_in_last_six_months == 1){
                                     echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Day";
                                 }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='havenotdrink'){
                                     echo "Haven't Had a Drink";
@@ -613,7 +669,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    25. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours)
+                    26. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours)
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -635,7 +691,7 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    26. Have you ever tried recreational drugs?
+                    27. Have you <span class="highlightedTxt">ever</span> tried recreational drugs?
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -653,13 +709,13 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin:16px 0px 0px 0px;">
                 <div class="col s12">
-                    27. In the last 6 months, have you taken any recreational drugs?
+                    28. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs?
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s12" style="margin-bottom:20px;">
+                <div class="col s12">
                     <p>
                         <?php
                             if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!= ''){
@@ -669,6 +725,77 @@ if(isset($row->interview_date) && $row->interview_date!= null && trim($row->inte
                                     echo "Don't Know";
                                 }else{
                                     echo ucwords($row->has_patient_had_recreational_drugs_in_last_six_months);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    29. Have you ever been emotionally or physically abused by your partner or someone important to you?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patient_ever_been_abused_by_someone)!= ''){
+                                if($row->has_patient_ever_been_abused_by_someone=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->has_patient_ever_been_abused_by_someone);
+                                }
+                            }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    30. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p><?php echo $hasPatientHurtBy.$patientHurtBy.$patientHurtByInNoofTimes; ?></p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    31. Since you've been pregnant have you been slapped, kicked or otherwise physically hurt by someone?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p><?php echo $hasPatientHurtBySomeoneDuringPregnancy.$patientHurtBySomeoneDuringPregnancy; ?></p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    32. Within the last year, has anyone forced you to have sexual activities?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s6">
+                    <p><?php echo $hasPatientForcedForSex.$patientForcedForSex.$patientForcedForSexInNoofTimes; ?></p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    33. Are you afraid of your partner or anyone listed above?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s6">
+                    <p>
+                        <?php
+                            if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_anyone)!= ''){
+                                if($row->is_patient_afraid_of_anyone=='dontknow'){
+                                    echo "Don't Know";
+                                }else{
+                                    echo ucwords($row->is_patient_afraid_of_anyone);
                                 }
                             }
                         ?>

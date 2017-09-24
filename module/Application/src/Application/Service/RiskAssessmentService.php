@@ -324,12 +324,47 @@ class RiskAssessmentService {
                            $hasPatientEverTriedRecreaionalDrugs = ucwords($aRow['has_patient_ever_tried_recreational_drugs']);
                         }
                         $hasPatientHadRecreaionalDrugsInLastSixMonths = '';
-                        if(isset($aRow['has_patient_had_recreational_drugs_in_last_six_months']) && $aRow['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($aRow['has_patient_had_recreational_drugs_in_last_six_months'])!= '' && $aRow['has_patient_had_recreational_drugs_in_last_six_months'] == 'yes'){
-                           $hasPatientHadRecreaionalDrugsInLastSixMonths = 'Yes';
-                        }else if(isset($aRow['has_patient_had_recreational_drugs_in_last_six_months']) && $aRow['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($aRow['has_patient_had_recreational_drugs_in_last_six_months'])!= '' && $aRow['has_patient_had_recreational_drugs_in_last_six_months'] == 'dontknow'){
+                        if(isset($aRow['has_patient_had_recreational_drugs_in_last_six_months']) && $aRow['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($aRow['has_patient_had_recreational_drugs_in_last_six_months'])!= '' && $aRow['has_patient_had_recreational_drugs_in_last_six_months'] == 'dontknow'){
                            $hasPatientHadRecreaionalDrugsInLastSixMonths = 'Don\'t Know';
                         }else if(isset($aRow['has_patient_had_recreational_drugs_in_last_six_months']) && $aRow['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($aRow['has_patient_had_recreational_drugs_in_last_six_months'])!= ''){
                            $hasPatientHadRecreaionalDrugsInLastSixMonths = ucwords($aRow['has_patient_had_recreational_drugs_in_last_six_months']);
+                        }
+                        $hasPatientEverBeenAbusedBySomeone = '';
+                        if(isset($aRow['has_patient_ever_been_abused_by_someone']) && $aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= '' && $aRow['has_patient_ever_been_abused_by_someone'] == 'dontknow'){
+                           $hasPatientEverBeenAbusedBySomeone = 'Don\'t Know';
+                        }else if(isset($aRow['has_patient_ever_been_abused_by_someone']) && $aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= ''){
+                           $hasPatientEverBeenAbusedBySomeone = ucwords($aRow['has_patient_ever_been_abused_by_someone']);
+                        }
+                        $hasPatientHurtBy = '';
+                        $patientHurtBy = '';
+                        $patientHurtByInNoofTimes = '';
+                        if(isset($aRow['has_patient_ever_been_hurt_by_someone_within_last_year']) && $aRow['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
+                            $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
+                            $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']);
+                            $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']):'';
+                            $patientHurtByInNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']." times":'';
+                        }
+                        $hasPatientHurtBySomeoneDuringPregnancy = '';
+                        $patientHurtBySomeoneDuringPregnancy = '';
+                        if(isset($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']) && $aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
+                            $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
+                            $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']);
+                            $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']):'';
+                        }
+                        $hasPatientForcedForSex = '';
+                        $patientForcedForSex = '';
+                        $patientForcedForSexInNoofTimes = '';
+                        if(isset($aRow['has_patient_ever_been_forced_for_sex_within_last_year']) && $aRow['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($aRow['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
+                            $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($aRow['has_patient_ever_been_forced_for_sex_within_last_year'],true);
+                            $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']);
+                            $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?", ".ucwords($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']):'';
+                            $patientForcedForSexInNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']." times":'';
+                        }
+                        $isPatientAfraidofAnyone = '';
+                        if(isset($aRow['is_patient_afraid_of_anyone']) && $aRow['is_patient_afraid_of_anyone']!= null && trim($aRow['is_patient_afraid_of_anyone'])!= '' && $aRow['is_patient_afraid_of_anyone'] == 'dontknow'){
+                           $isPatientAfraidofAnyone = 'Don\'t Know';
+                        }else if(isset($aRow['is_patient_afraid_of_anyone']) && $aRow['is_patient_afraid_of_anyone']!= null && trim($aRow['is_patient_afraid_of_anyone'])!= ''){
+                           $isPatientAfraidofAnyone = ucwords($aRow['is_patient_afraid_of_anyone']);
                         }
                         $row = array();
                         $row[] = $aRow['facility_code'].'-'.ucwords($aRow['facility_name']);
@@ -367,6 +402,11 @@ class RiskAssessmentService {
                         $row[] = $hasPatientEverTriedRecreaionalDrugs;
                         $row[] = $hasPatientHadRecreaionalDrugsInLastSixMonths;
                         $row[] = ucwords($aRow['recreational_drugs']);
+                        $row[] = $hasPatientEverBeenAbusedBySomeone;
+                        $row[] = $hasPatientHurtBy.$patientHurtBy.$patientHurtByInNoofTimes;
+                        $row[] = $hasPatientHurtBySomeoneDuringPregnancy.$patientHurtBySomeoneDuringPregnancy;
+                        $row[] = $hasPatientForcedForSex.$patientForcedForSex.$patientForcedForSexInNoofTimes;
+                        $row[] = $isPatientAfraidofAnyone;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -404,6 +444,7 @@ class RiskAssessmentService {
                     $sheet->mergeCells('M1:O1');
                     $sheet->mergeCells('P1:AD1');
                     $sheet->mergeCells('AE1:AI1');
+                    $sheet->mergeCells('AJ1:AN1');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Facility Code-Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -449,6 +490,13 @@ class RiskAssessmentService {
                     $sheet->setCellValue('AH2', html_entity_decode('In the last 6 months, have you taken any recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AI2', html_entity_decode('Recreational drugs', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
+                    $sheet->setCellValue('AJ1', html_entity_decode('Abuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AJ2', html_entity_decode('Have you ever been emotionally or physically abused by your partner or someone important to you? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AK2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AL2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AM2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AN2', html_entity_decode('Are you afraid of your partner or anyone listed above?', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
                    
                     $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
@@ -489,6 +537,12 @@ class RiskAssessmentService {
                     $sheet->getStyle('AG2')->applyFromArray($styleArray);
                     $sheet->getStyle('AH2')->applyFromArray($styleArray);
                     $sheet->getStyle('AI2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AJ1:AN1')->applyFromArray($styleArray);
+                    $sheet->getStyle('AJ2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AK2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AL2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AM2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AN2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
                     foreach ($output as $rowData) {
@@ -498,7 +552,7 @@ class RiskAssessmentService {
                                 $value = "";
                             }
                             
-                            if($colNo > 34){
+                            if($colNo > 39){
                                 break;
                             }
                             if (is_numeric($value)) {

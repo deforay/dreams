@@ -600,3 +600,6 @@ ALTER TABLE `clinic_risk_assessment` ADD `is_patient_afraid_of_anyone` VARCHAR(4
 ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_hurt_by_someone_during_pregnancy` `has_patient_ever_been_hurt_by_someone_during_pregnancy` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 ALTER TABLE `clinic_risk_assessment` ADD `has_participant_received_dreams_services` VARCHAR(45) NULL DEFAULT NULL AFTER `interview_date`;
+
+--Pal 24/09/2017
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_hurt_by_someone_during_pregnancy` `has_patient_ever_been_hurt_by_someone_during_pregnancy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
