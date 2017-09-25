@@ -35,7 +35,7 @@ $loginContainer = new Container('user');
     }
     .search-div label {
         margin-left: 0;
-        /*left: -184px*/
+        left: -184px;
     }
 </style>
 <div id="page-content">
@@ -53,7 +53,7 @@ $loginContainer = new Container('user');
                 <?php
 		if($loginContainer->hasViewOnlyAccess =='no') {
 		?>
-                 <span style="float:right;"><a href="<?php echo $this->url('country',array('action' => 'add')); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Country</a></span>
+                 <span style="float:right;"><a class="custom-add-btn" href="<?php echo $this->url('country',array('action' => 'add')); ?>"><i class="zmdi zmdi-plus"></i> Add Country</a></span>
                 <?php } ?>
                 </div>
                 <div class="card-content clearfix">

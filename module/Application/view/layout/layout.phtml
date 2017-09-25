@@ -142,6 +142,28 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             max-height:420px;
             overflow-y:scroll;
         }
+        .btn i, .btn-large i, .btn-floating i, .btn-large i, .btn-flat i{
+            font-size:1rem;
+        }
+        .custom-add-btn{
+           /*font-size:14px;*/
+           font-weight:bold; 
+           background-color:#fff !important;
+           color:#000 !important;
+           border:1px solid #cccccc;
+           -moz-border-radius:50px;
+           -webkit-border-radius:50px;
+           -o-border-radius:50px;
+           -ms-border-radius:50px;
+           border-radius:50px;
+           padding:2px 6px 2px 6px;
+        }
+        .custom-add-btn:hover{
+            background-color:#e5e5e5 !important;
+        }
+        .card-header span{
+            padding-top:1px;
+        }
     </style>
     <script src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>

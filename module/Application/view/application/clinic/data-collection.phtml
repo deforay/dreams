@@ -42,7 +42,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     .search-div label {
         margin-left: 0;
-        /*left: -184px*/
+        left: -184px;
     }
     #dataReportingDataTable_wrapper{
 	overflow-x:scroll;
@@ -259,6 +259,18 @@ if(!isset($countryId) || trim($countryId)== ''){
             }
         });
         
+	$('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
+       
        $('#reportingMonthYear').datepicker({
             changeMonth: true,
             changeYear: true,

@@ -38,7 +38,7 @@ if(!isset($countryId) || $countryId ==''){
     }
     .search-div label {
         margin-left: 0;
-        /*left: -184px*/
+        left: -184px;
     }
     .select-wrapper{
 	width:100%;
@@ -59,7 +59,7 @@ if(!isset($countryId) || $countryId ==''){
 		<?php
 		if($loginContainer->hasViewOnlyAccess =='no' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
 		?>
-		  <span style="float:right;"><a href="/user/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add User</a></span>
+		  <span style="float:right;"><a class="custom-add-btn" href="/user/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add User</a></span>
 		<?php } ?>
                 </div>
                 <div class="card-content clearfix">

@@ -83,7 +83,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     }
     .search-div label {
         margin-left: 0;
-        /*left: -184px*/
+        left: -184px;
     }
     .select-wrapper{
 	width:100%;
@@ -141,7 +141,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<?php
 		if($loginContainer->hasViewOnlyAccess =='no') {
 		?>
-		  <span style="float:right;"><a href="/clinic/risk-assessment/add/<?php echo base64_encode($countryId); ?>" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o"></i> Add Risk Assessment</a></span>
+		  <span style="float:right;"><a class="custom-add-btn" href="/clinic/risk-assessment/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add Risk Assessment</a></span>
 		<?php } ?>
 		</div>
                 <div class="card-content clearfix">
