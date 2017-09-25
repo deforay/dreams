@@ -49,7 +49,7 @@ class UserTable extends AbstractTableGateway {
 		if($loginResult->role_code =='CSC'){
 		    $isCountrySelected = false;
 		}else{
-		    //Set user countries
+		    //set user countries
 		    $countryMapQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
 					   ->where(array('c_map.user_id' => $loginResult->user_id));
 		    $countryMapQueryStr = $sql->getSqlStringForSqlObject($countryMapQuery);
@@ -82,7 +82,7 @@ class UserTable extends AbstractTableGateway {
 		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
-			//Update last login
+			//update last login
 		        $this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
 			$loginTrackerDb->addNewLogin($loginResult->user_id);
 			$loginContainer->userId = $loginResult->user_id;
@@ -100,7 +100,7 @@ class UserTable extends AbstractTableGateway {
 		       return 'login';
 		    }
 		}else{
-		    //Update last login
+		    //update last login
 		    $this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
 		    $loginTrackerDb->addNewLogin($loginResult->user_id);
 		    $loginContainer->userId = $loginResult->user_id;
