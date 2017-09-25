@@ -121,11 +121,14 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
         .collapsible-body ul li a.active:hover{
             color:#333 !important;
             font-size:13px;
-            font-weight:bold;
+            /*font-weight:bold;*/
         }
         .search-top-bar{
           margin-top:0;
           text-align:right;
+        }
+        .dataTables_wrapper select{
+            height:2.4rem !important;
         }
         #dropdown3{
             min-width:160px;
@@ -277,6 +280,10 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
+                                                        <?php } if($countryStudyOverviewReportAccess == 'show') { ?>
+                                                            <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
+                                                            </li>
                                                         <?php } ?>
                                                     </ul>
                                                 </div>
@@ -306,10 +313,6 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
                                                             <?php } if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
-                                                                </li>
-                                                            <?php } if($countryStudyOverviewReportAccess == 'show') { ?>
-                                                                <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>
@@ -685,13 +688,13 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $log
             splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+            $(".countryAdminMenu"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
             $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
-            $(".collapsibleCountryLabMenu"+atob(splits)).css("display","block");
-            $(".countryLabMenu"+atob(splits)).addClass("active");
-            $(".countryLabMenuSecond"+atob(splits)).addClass("active");
-            $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
-            $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else{
             $(".dashboardMenu").addClass("active");
         }
