@@ -247,8 +247,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
 	  $sQuery = $sQuery->where(array('da_c.status'=>2)); 
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
        if (isset($sWhere) && $sWhere != "") {
@@ -290,8 +289,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
 	   $tQuery = $tQuery->where(array('da_c.status'=>2)); 
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
@@ -730,8 +728,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
@@ -780,23 +777,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}
-	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
-	//Custom Filter Start
-	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $tQuery = $tQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
-        }else if (trim($start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
-        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.anc_site'=>base64_decode($parameters['anc'])));
-        }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
-        }if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $tQuery = $tQuery->where(array('da_c.country'=>base64_decode($parameters['country'])));  
-	}
-	//Custom Filter End
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);
@@ -1185,8 +1168,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}
-	if($loginContainer->roleCode== 'LS'){
+	}if($loginContainer->roleCode== 'LS'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
@@ -1235,25 +1217,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}
-	if($loginContainer->roleCode== 'LS'){
+	}if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
-	//Custom Filter Start
-	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $tQuery = $tQuery->where(array("da_c.receipt_date_at_central_lab >='" . $start_date ."'", "da_c.receipt_date_at_central_lab <='" . $end_date."'"));
-        }else if (trim($start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.receipt_date_at_central_lab = '" . $start_date. "'"));
-        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.anc_site'=>base64_decode($parameters['anc'])));
-        }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
-        }if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
-           $tQuery = $tQuery->where('da_c.status = "2"');
-        }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
-	   $tQuery = $tQuery->where('da_c.status IN (1,3,4)');
-	}
-	//Custom Filter End
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);
@@ -1462,8 +1428,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	             ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));
-	}
-	if($loginContainer->roleCode == 'ANCSC'){
+	}if($loginContainer->roleCode == 'ANCSC'){
             $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
         }
 	//Custom Filter Start
@@ -1509,21 +1474,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}
-	if($loginContainer->roleCode == 'ANCSC'){
+	}if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
         }
-	//Custom Filter Start
-	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $tQuery = $tQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
-        }else if (trim($start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
-        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.anc_site'=>base64_decode($parameters['anc'])));
-        }if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
-            $tQuery = $tQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
-        }
-	//Custom Filter End
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);
@@ -1833,27 +1786,6 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
-	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
-           $tQuery = $tQuery->where(array("da_c.specimen_collected_date >='" . $s_c_start_date ."'", "da_c.specimen_collected_date <='" . $s_c_end_date."'"));
-        }else if (trim($s_c_start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.specimen_collected_date = '" . $s_c_start_date. "'"));
-        }if(trim($s_t_start_date) != "" && trim($s_t_start_date)!= trim($s_t_end_date)) {
-           $tQuery = $tQuery->where(array("da_c.date_of_test_completion >='" . $s_t_start_date ."'", "da_c.date_of_test_completion <='" . $s_t_end_date."'"));
-        }else if (trim($s_t_start_date) != "") {
-            $tQuery = $tQuery->where(array("da_c.date_of_test_completion = '" . $s_t_start_date. "'"));
-        }if(trim($parameters['province'])!= ''){
-	    $tQuery = $tQuery->where(array('f.province'=>base64_decode($parameters['province'])));
-	}if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
-	    $tQuery = $tQuery->where('da_c.final_lag_avidity_odn < 2');
-	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
-	    $tQuery = $tQuery->where('da_c.final_lag_avidity_odn > 2');
-	}if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
-	    $tQuery = $tQuery->where('da_c.hiv_rna <= 1000');
-	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
-	    $tQuery = $tQuery->where('da_c.hiv_rna > 1000');
-	}if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
-	    $tQuery = $tQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
-	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);

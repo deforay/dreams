@@ -259,9 +259,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	     $end_date = $common->dateRangeFormat(trim($interview_date[1]));
 	   }
 	}
-	$labArray = array();
+	$labs = array();
 	if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
-	    $labArray = explode(',',$parameters['lab']);
+	    $labs = explode(',',$parameters['lab']);
 	}
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
@@ -289,8 +289,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
-        }if(count($labArray) >0){
-	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $labArray) . '")');
+        }if(count($labs) >0){
+	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $labs) . '")');
 	}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
@@ -327,16 +327,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
-	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
-	   $splitReportingMonthYear = explode("/",$parameters['date']);
-	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $tQuery = $tQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
-        }else if (trim($start_date) != "") {
-            $tQuery = $tQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
-        }if(count($labArray) >0){
-	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $labArray) . '")');
-	}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
