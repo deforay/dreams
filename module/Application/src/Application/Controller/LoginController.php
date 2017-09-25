@@ -25,8 +25,11 @@ class LoginController extends AbstractActionController{
             if($redirectUrl == 'home'){
                 $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
                 $dataCollectionService->automaticDataCollectionLockAfterLogin();
+            }if($redirectUrl == 'home' && $loginContainer->roleCode == 'CC'){
+                return $this->redirect()->toUrl('/dashboard/'.base64_encode($loginContainer->country[0]));
+            }else{
+                return $this->redirect()->toRoute($redirectUrl);
             }
-            return $this->redirect()->toRoute($redirectUrl);
         }
         if (isset($loginContainer->userId) && trim($loginContainer->userId)!= "") {
             return $this->redirect()->toRoute("home");
