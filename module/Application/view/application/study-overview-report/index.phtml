@@ -111,127 +111,117 @@ $loginContainer = new Container('user');
     <div class="row section-header">
         <h4 class="page-title">Study Overview Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
     </div>
-    <?php
-    if($loginContainer->roleCode == 'CSC'){
-    ?>
-        <div class="row" style="max-width:1109px;">
-            <form id="overviewFilter" action="#">
-                <div class="row">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="" title="Please enter specimen collected date" onclick="selectSampleCollectionDate();" readonly>
-                            <label for="specimenCollectedDate">Specimen Collected Date </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <input id="sampleTestedDate" name="sampleTestedDate" type="text" class="" title="Please enter sample tested date" onclick="selectSampleTestedDate();" readonly>
-                            <label for="sampleTestedDate">Specimen Tested Date </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select class="material-select" id="province" name="province" title="Please select province">
-                                <option value=""> -- Select -- </option>
-                                <?php foreach($provinces as $province) { ?>
-                                   <option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option>
-                                <?php } ?>
-                            </select>
-                            <label for="province">Provinces </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select class="material-select" id="finalLagAvidityOdn" name="finalLagAvidityOdn" title="Please select LAg avidity odn">
-                                <option value=""> -- Select -- </option>
-                                <option value="lt2"> <2 </option>
-                                <option value="gt2"> >2 </option>
-                            </select>
-                            <label for="final">LAg Avidity ODn </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select class="material-select" id="hivRna" name="hivRna" title="Please select HIV rna value">
-                                <option value=""> -- Select -- </option>
-                                <option value="lte1000"> <=1000 </option>
-                                <option value="gt1000"> >1000 </option>
-                            </select>
-                            <label for="hivRna">Viral Load </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select class="material-select" id="asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt">
-                                <option value=""> -- Select -- </option>
-                                <option value="r"> Recent </option>
-                                <option value="lt"> Long Term </option>
-                            </select>
-                            <label for="asanteRapidRecencyAssayRlt">Rapid Recency Assay </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col l12 m12 s12" style="text-align:center;">
-                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0);" onclick="searchStudyOverviewData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0);" onclick="extractOverviewData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
-	        </div>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card card-default">
-                    <div class="card-header white-text">
-                        Study Overview
-                    </div>
-                    <div class="card-content clearfix">
-                        <table id="studyOverviewDataTable" class="responsive-table striped">
-                            <thead>
-                            <tr>
-				<th>Province Name</th>
-                                <th>Patient Barcode ID</th>
-				<th>Specimen Collected Date</th>
-                                <th>Lab Data</th>
-                                <th>Behaviour Data</th>
-                                <th>LAg Recency Assay</th>
-                                <th>HIV RNA (cp/ml)</th>
-                                <!--<th>HIV RNA > 1000</th>-->
-                                <th>Recent Infection</th>
-                                <th>Rapid Recency Diagnosis Test</th>
-                                <th>Rapid Recency Result</th>
-                            </tr>
-                            </thead>
-			    <tfoot>
-                            <tr>
-				<th>Province Name</th>
-                                <th>Patient Barcode ID</th>
-				<th>Specimen Collected Date</th>
-                                <th>Lab Data</th>
-                                <th>Behaviour Data</th>
-                                <th>LAg Recency Assay</th>
-                                <th>HIV RNA (cp/ml)</th>
-                                <!--<th>HIV RNA > 1000</th>-->
-                                <th>Recent Infection</th>
-                                <th>Rapid Recency Diagnosis Test</th>
-                                <th>Rapid Recency Result</th>
-			    </tr>
-			    </tfoot>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php } else { ?>
-        <div class="row">
-            <div class="col l12 m12 s12">
-                Coming Soon..
-            </div>
-        </div>
-    <?php } ?>
+    <div class="row" style="max-width:1109px;">
+	<form id="overviewFilter" action="#">
+	    <div class="row">
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="" title="Please enter specimen collected date" onclick="selectSampleCollectionDate();" readonly>
+			<label for="specimenCollectedDate">Specimen Collected Date </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<input id="sampleTestedDate" name="sampleTestedDate" type="text" class="" title="Please enter sample tested date" onclick="selectSampleTestedDate();" readonly>
+			<label for="sampleTestedDate">Specimen Tested Date </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="province" name="province" title="Please select province">
+			    <option value=""> -- Select -- </option>
+			    <?php foreach($provinces as $province) { ?>
+			       <option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="province">Provinces </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="finalLagAvidityOdn" name="finalLagAvidityOdn" title="Please select LAg avidity odn">
+			    <option value=""> -- Select -- </option>
+			    <option value="lt2"> <2 </option>
+			    <option value="gt2"> >2 </option>
+			</select>
+			<label for="final">LAg Avidity ODn </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="hivRna" name="hivRna" title="Please select HIV rna value">
+			    <option value=""> -- Select -- </option>
+			    <option value="lte1000"> <=1000 </option>
+			    <option value="gt1000"> >1000 </option>
+			</select>
+			<label for="hivRna">Viral Load </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt">
+			    <option value=""> -- Select -- </option>
+			    <option value="r"> Recent </option>
+			    <option value="lt"> Long Term </option>
+			</select>
+			<label for="asanteRapidRecencyAssayRlt">Rapid Recency Assay </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchStudyOverviewData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractOverviewData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row">
+	<div class="col s12">
+	    <div class="card card-default">
+		<div class="card-header white-text">
+		    Study Overview
+		</div>
+		<div class="card-content clearfix">
+		    <table id="studyOverviewDataTable" class="responsive-table striped">
+			<thead>
+			<tr>
+			    <th>Province Name</th>
+			    <th>Patient Barcode ID</th>
+			    <th>Specimen Collected Date</th>
+			    <th>Lab Data</th>
+			    <th>Behaviour Data</th>
+			    <th>LAg Recency Assay</th>
+			    <th>HIV RNA (cp/ml)</th>
+			    <!--<th>HIV RNA > 1000</th>-->
+			    <th>Recent Infection</th>
+			    <th>Rapid Recency Diagnosis Test</th>
+			    <th>Rapid Recency Result</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+			    <th>Province Name</th>
+			    <th>Patient Barcode ID</th>
+			    <th>Specimen Collected Date</th>
+			    <th>Lab Data</th>
+			    <th>Behaviour Data</th>
+			    <th>LAg Recency Assay</th>
+			    <th>HIV RNA (cp/ml)</th>
+			    <!--<th>HIV RNA > 1000</th>-->
+			    <th>Recent Infection</th>
+			    <th>Rapid Recency Diagnosis Test</th>
+			    <th>Rapid Recency Result</th>
+			</tr>
+			</tfoot>
+			<tbody>
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
