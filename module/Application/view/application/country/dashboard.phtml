@@ -62,7 +62,7 @@ $loginContainer = new Container('user');
                             
                         </tr>
                         </thead>
-                        <tbody id="dashboardData">
+                        <tbody id="dashboardDetails">
                         </tbody>
                     </table>
                 </div>
@@ -114,9 +114,9 @@ $loginContainer = new Container('user');
     function searchLabReportingData(){
         var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
-        $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-data')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
+        $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
         function(data) {
-            $('#dashboardData').html(data);
+            $('#dashboardDetails').html(data);
         });
     }
     

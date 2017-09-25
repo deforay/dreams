@@ -411,8 +411,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 
        /* Total data set length */
         $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
-                     ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
-                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
+                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
         if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){

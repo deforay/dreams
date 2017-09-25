@@ -73,7 +73,7 @@ class CountryController extends AbstractActionController{
         )); 
     }
     
-    public function getDashboardDataAction(){
+    public function getDashboardDetailsAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
