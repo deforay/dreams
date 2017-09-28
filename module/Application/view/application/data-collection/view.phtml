@@ -59,7 +59,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         $asanteRapidRecencyAssayPn = 'HIV Negative';
     }
     $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
-    $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '')?round(log10($readerValueRRDT),1):'';
+    $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '') ? "log<sup>10</sup>". round(log10($readerValueRRDT),1):'';
     $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -102,6 +102,15 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         margin-top:12px !important;
         min-height:60px !important;
     }
+
+	#readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
+		text-align: center !important;
+		font-size:1em;
+	}
+
+	#readerValueRRDTLogValText, #readerValueRRRLogValText{
+		font-weight:bold;
+	}    
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -290,9 +299,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="min-height:140px;">
-                          <label for="asanteRapidRecencyAssay" class="">Rapid Recency Assay (Eg. Asante) </label><br>
+                <div class="col s6">
+                <div class="input-padding col m12 s12 l12">
+                   Rapid Recency Assay (Eg. Asante)
+                   <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
+                   <br>
                           <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><?php echo $readerValueRRDT; ?><br><?php echo $readerValueRRDTLogVal; ?><br><?php echo $readerValueRRDTLogValText; ?></div>
                           <div id="box-breaker">&rArr;</div>
                           <div id="box-2" style="text-align:center;"><?php echo $asanteRapidRecencyAssayRlt; ?><br><?php echo $readerValueRRR; ?><br><?php echo $readerValueRRRLogVal; ?><br><?php echo $readerValueRRRLogValText; ?></div>
