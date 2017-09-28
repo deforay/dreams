@@ -147,11 +147,12 @@ class DataCollectionService {
         $queryContainer = new Container('query');
         $common = new CommonService();
         $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LOGBOOK--':'LAB-DATA-DOWNLOAD--';
-        if(isset($queryContainer->dataCollectionQuery)){
+        $sQuery = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$queryContainer->logbookQuery:$queryContainer->dataCollectionQuery;
+        if(isset($sQuery)){
             try{
                 $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
                 $sql = new Sql($dbAdapter);
-                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->dataCollectionQuery);
+                $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
                     $excel = new PHPExcel();
@@ -208,9 +209,9 @@ class DataCollectionService {
                                 $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
                                 $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
                                 if($asanteRapidRecencyAssayPn == 'p'){
-                                    $rapidRecencyAssay = 'Positive';
+                                    $rapidRecencyAssay = 'HIV Positive';
                                 }else if($asanteRapidRecencyAssayPn == 'n'){
-                                    $rapidRecencyAssay = 'Negative';
+                                    $rapidRecencyAssay = 'HIV Negative';
                                 }
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -368,11 +369,11 @@ class DataCollectionService {
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo >21){
                                 if($lstColumn == 22){
-                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='HIV Negative' || ($lag > 2 && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
                                     $sheet->getStyle('A'.$currentRow.':W'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
-                                   if($assay1 =='Negative' || ($lag > 2 && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='HIV Negative' || ($lag > 2 && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
                                     $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }
@@ -819,9 +820,9 @@ class DataCollectionService {
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
                                 if($asanteRapidRecencyAssayPn == 'p'){
-                                    $rapidRecencyAssay = 'Positive';
+                                    $rapidRecencyAssay = 'HIV Positive';
                                 }else if($asanteRapidRecencyAssayPn == 'n'){
-                                    $rapidRecencyAssay = 'Negative';
+                                    $rapidRecencyAssay = 'HIV Negative';
                                 }
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -918,7 +919,7 @@ class DataCollectionService {
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > 7){
-                                if($assay1 =='Negative' || ($lag == 'Long Term' && (($assay1 == 'Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                if($assay1 =='HIV Negative' || ($lag == 'Long Term' && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
                                   $sheet->getStyle('A'.$currentRow.':I'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }

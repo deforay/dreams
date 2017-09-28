@@ -338,9 +338,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'Positive';
+			$asanteRapidRecencyAssayPn = 'HIV Positive';
 		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'Negative';
+			$asanteRapidRecencyAssayPn = 'HIV Negative';
 		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -826,9 +826,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'Positive';
+			$asanteRapidRecencyAssayPn = 'HIV Positive';
 		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'Negative';
+			$asanteRapidRecencyAssayPn = 'HIV Negative';
 		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -1190,7 +1190,6 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery->order($sOrder);
        }
        $queryContainer->logbookQuery = $sQuery;
-       $queryContainer->dataCollectionQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
@@ -1263,9 +1262,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'Positive';
+			$asanteRapidRecencyAssayPn = 'HIV Positive';
 		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'Negative';
+			$asanteRapidRecencyAssayPn = 'HIV Negative';
 		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
@@ -1828,9 +1827,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		    if($asanteRapidRecencyAssayPn == 'p'){
-			$rapidRecencyAssay = 'Positive';
+			$rapidRecencyAssay = 'HIV Positive';
 		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$rapidRecencyAssay = 'Negative';
+			$rapidRecencyAssay = 'HIV Negative';
 		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';

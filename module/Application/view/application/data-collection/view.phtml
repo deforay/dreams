@@ -54,9 +54,9 @@ $readerValueRRRLogValText = '';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     if($asanteRapidRecencyAssayPn == 'p'){
-        $asanteRapidRecencyAssayPn = 'Positive';
+        $asanteRapidRecencyAssayPn = 'HIV Positive';
     }else if($asanteRapidRecencyAssayPn == 'n'){
-        $asanteRapidRecencyAssayPn = 'Negative';
+        $asanteRapidRecencyAssayPn = 'HIV Negative';
     }
     $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
     $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '')?round(log10($readerValueRRDT),1):'';

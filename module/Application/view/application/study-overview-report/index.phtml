@@ -247,7 +247,7 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[8] =='Negative' || (aData[5] == 'Long Term' && ((aData[8] =='Positive' && aData[9] == 'Recent') || aData[9] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[8] =='HIV Negative' || (aData[5] == 'Long Term' && ((aData[8] =='HIV Positive' && aData[9] == 'Recent') || aData[9] == 'Recent'))){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[4, "desc"]],
             "bProcessing": true,

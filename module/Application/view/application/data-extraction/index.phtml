@@ -367,7 +367,7 @@ if(!isset($countryId)){
 		<?php } ?>
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[18] =='Negative' || (aData[14] > 2 && ((aData[18] == 'Positive' && aData[19] == 'Recent') || aData[19] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[18] =='HIV Negative' || (aData[14] > 2 && ((aData[18] == 'HIV Positive' && aData[19] == 'Recent') || aData[19] == 'Recent'))){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
