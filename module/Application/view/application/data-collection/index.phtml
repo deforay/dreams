@@ -94,6 +94,16 @@ if(isset($date) && trim($date)!= ''){
     .redTxt{
 	color:#F44336 !important;
     }
+
+	#readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
+		text-align: center !important;
+		font-size:1em;
+	}
+
+	#readerValueRRDTLogValText, #readerValueRRRLogValText{
+		font-weight:bold;
+	}
+
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -365,17 +375,20 @@ if(isset($date) && trim($date)!= ''){
 			</div>
 		    </div>
 		    <div class="row" style="margin-bottom:0;">
-			<div class="col s5">
-			   <div class="input-padding col m12 s12">
-			      Rapid Recency Assay (Eg. Asante)<br>
+			<div class="col s6">
+			   <div class="input-padding col m12 s12 l12">
+			      Rapid Recency Assay (Eg. Asante)
+				  <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
+				  <br>
 			      <div id="box-1">
 				<input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="p"/>
 				<label for="asanteRapidRecencyAssayP">Positive </label><br>
 				<input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="n"/>
 				<label for="asanteRapidRecencyAssayN">Negative </label><br>
 				<input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value"/>
-				<br><div id="readerValueRRDTLogVal"></div>
-				<br><div id="readerValueRRDTLogValText"></div>
+				<br>
+				<div id="readerValueRRDTLogVal" style="text-align:center;"></div>
+				<div id="readerValueRRDTLogValText"></div>
 			      </div>
 			      <div id="box-breaker">&rArr;</div>
 			      <div id="box-2">
@@ -385,7 +398,7 @@ if(isset($date) && trim($date)!= ''){
 			        <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
 				<input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value"/>
 				<br><div id="readerValueRRRLogVal"></div>
-				<br><div id="readerValueRRRLogValText"></div>
+				<div id="readerValueRRRLogValText"></div>
 			      </div>
 			    </div>
 			</div>
@@ -1157,7 +1170,7 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
 	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
-	   $('#readerValueRRDTLogVal').html(readerValueRRDTLogVal);
+	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{
 	   $('#readerValueRRDTLogVal').html('');
@@ -1170,7 +1183,7 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
 	   var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
 	   var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term':'Recent';
-	   $('#readerValueRRRLogVal').html(readerValueRRRLogVal);
+	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
 	   $('#readerValueRRRLogValText').html(readerValueRRRLogValText);
 	}else{
 	    $('#readerValueRRRLogVal').html('');
