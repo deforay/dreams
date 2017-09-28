@@ -1419,10 +1419,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $mappedANC[] = $anc['clinic_id'];
        }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+                     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	             ->where('da_c.status IN (2)');
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+	             //->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));
 	}if($loginContainer->roleCode == 'ANCSC'){
@@ -1465,10 +1466,11 @@ class DataCollectionTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+	                        ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
-	                        ->where('da_c.status IN (2)');
+				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+	                        //->where('da_c.status IN (2)');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}if($loginContainer->roleCode == 'ANCSC'){
@@ -1514,9 +1516,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
 	    //status
-	    $status = 'Results Completed';
 	    if($aRow['final_lag_avidity_odn'] <= 2 && (trim($aRow['hiv_rna']) == '' || $aRow['hiv_rna'] == null)){
 		$status = 'Results Awaited';
+	    }else{
+		$status = ucwords($aRow['test_status_name']);
 	    }
 	    
 	    $row[] = $specimenCollectedDate;

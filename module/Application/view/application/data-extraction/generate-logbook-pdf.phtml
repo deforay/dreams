@@ -119,7 +119,9 @@ if(count($logbookResult) >0){
            //$html .='<th><strong>HIV RNA > 1000</strong></th>';
            $html .='<th><strong>Recent Infection</strong></th>';
            $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
+	   $html .='<th><strong>Diagnosis Reader Value</strong></th>';
            $html .='<th><strong>Rapid Recency Result</strong></th>';
+	   $html .='<th><strong>Recency Reader Value</strong></th>';
 	   $html .='<th><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
@@ -155,11 +157,14 @@ if(count($logbookResult) >0){
 	    //}
 	    
 	    $rapidRecencyAssay = '';
+	    $diagnosisReaderValue = '';
 	    $rapidRecencyAssayDuration = '';
+	    $recencyReaderValue = '';
 	    if(trim($row['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
 		    if($asanteRapidRecencyAssayPn == 'p'){
 			$rapidRecencyAssay = 'Positive';
 		    }else if($asanteRapidRecencyAssayPn == 'n'){
@@ -167,6 +172,7 @@ if(count($logbookResult) >0){
 		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    $recencyReaderValue = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
 		    if($asanteRapidRecencyAssayRlt == 'r'){
 			$rapidRecencyAssayDuration = 'Recent';
 		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
@@ -197,7 +203,9 @@ if(count($logbookResult) >0){
               //$html .='<td>'.$hIVRNAResult.'</td>';
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               $html .='<td>'.$rapidRecencyAssay.'</td>';
+	      $html .='<td>'.$diagnosisReaderValue.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
+	      $html .='<td>'.$recencyReaderValue.'</td>';
 	      $html .='<td></td>';
             $html .='</tr>';
           }

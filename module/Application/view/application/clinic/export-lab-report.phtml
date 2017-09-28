@@ -144,9 +144,10 @@ if(count($labReportResult) >0){
 	    //  $hIVRNAResult = 'Low Viral Load';
 	    //}
 	    //status
-	    $status = 'Results Completed';
 	    if($row['final_lag_avidity_odn'] <= 2 && (trim($row['hiv_rna']) == '' || $row['hiv_rna'] == null)){
 		$status = 'Results Awaited';
+	    }else{
+		$status = ucwords($row['test_status_name']);
 	    }
 	    
             $html .='<tr>';
