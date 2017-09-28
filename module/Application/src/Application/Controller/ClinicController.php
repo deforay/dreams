@@ -20,14 +20,18 @@ class ClinicController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId);
-            $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
-            return new ViewModel(array(
-                'countryId'=>$countryId,
-                'ancSites'=>$ancSiteList,
-                'ancFormFields'=>$ancFormFieldList
-            ));
+            if(trim($countryId)!= ''){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId);
+                $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'ancFormFields'=>$ancFormFieldList,
+                    'countryId'=>$countryId
+                ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
         }
     }
     
@@ -49,18 +53,26 @@ class ClinicController extends AbstractActionController{
             $dataCollectionService->updateClinicDataCollection($params);
             return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
-            $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId);
-            $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
-            return new ViewModel(array(
-                'row'=>$result,
-                'countryId'=>$countryId,
-                'ancSites'=>$ancSiteList,
-                'ancFormFields'=>$ancFormFieldList
-            ));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(trim($countryId)!= ''){
+                $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
+                if($result){
+                    $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId);
+                    $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                    return new ViewModel(array(
+                        'row'=>$result,
+                        'ancSites'=>$ancSiteList,
+                        'ancFormFields'=>$ancFormFieldList,
+                        'countryId'=>$countryId
+                    ));
+                }else{
+                   return $this->redirect()->toRoute('home');
+                }
+            }else{
+               return $this->redirect()->toRoute('home');
+            }
         }
     }
     
@@ -72,15 +84,19 @@ class ClinicController extends AbstractActionController{
             $result = $dataCollectionService->getAllClinicalDataExtractions($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId);
-            $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
-            return new ViewModel(array(
-                    'countryId'=>$countryId,
-                    'ancSites'=>$ancSiteList,
-                    'ancFormFields'=>$ancFormFieldList
-                ));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(trim($countryId)!= ''){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId);
+                $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                return new ViewModel(array(
+                        'ancSites'=>$ancSiteList,
+                        'ancFormFields'=>$ancFormFieldList,
+                        'countryId'=>$countryId
+                    ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
         }
     }
     
@@ -106,15 +122,19 @@ class ClinicController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
-            $facilityList=$facilityService->getActivefacilities('anc-lab-report',$countryId);
-            return new ViewModel(array(
-                'ancSites'=>$ancSiteList,
-                'facilities'=>$facilityList,
-                'countryId'=>$countryId
-            ));
+            if(trim($countryId)!= ''){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $facilityService = $this->getServiceLocator()->get('FacilityService');
+                $ancSiteList=$ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
+                $facilityList=$facilityService->getActivefacilities('anc-lab-report',$countryId);
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'facilities'=>$facilityList,
+                    'countryId'=>$countryId
+                ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
         }
     }
     

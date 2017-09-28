@@ -35,7 +35,7 @@ class LoginController extends AbstractActionController{
             return $this->redirect()->toRoute("home");
         }else{
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('login',0);
+            $countryList=$countryService->getActiveCountries('login','');
             $viewModel = new ViewModel(array(
                 'countries'=>$countryList
             ));

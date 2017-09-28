@@ -1,11 +1,10 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId) || trim($countryId)== ''){
-    $countryId = '';
-    $link = "/clinic/data-collection";
-}else{
+if(trim($countryId)!= ''){
     $link = "/clinic/data-collection/".base64_encode($countryId);
+}else{
+    $link = "/clinic/data-collection";
 }
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>

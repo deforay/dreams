@@ -1,6 +1,4 @@
 <?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
 if(isset($countryId) && trim($countryId)!=''){
     $link = "/anc-site/".base64_encode($countryId);
 }else{
@@ -31,7 +29,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" onblur="checkNameValidation('anc_site', 'anc_site_code', this, null,'The anc site code that you entered already exist. Please enter different code.')">
+                        <input id="ancSiteCode" name="ancSiteCode" type="text" class="validate isRequired" title="Please enter ANC site code" onblur="checkNameValidation('anc_site', 'anc_site_code', this, null,'The anc site code that you entered already exist. Please enter different code')">
                         <label for="ancSiteCode" class="">ANC Site Code *</label>
                     </div>
                 </div>
@@ -57,8 +55,8 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" onblur="checkNameValidation('anc_site', 'email', this, null,'The anc site email that you entered already exist. Please enter different email id.')">
-                        <label for="email" class="">Email *</label>
+                        <input id="email" name="email" type="text" class="validate isRequired" placeholder="eg-user1@gmail.com,user2@gmail.com" title="Please enter email-id">
+                        <label for="email" class="">Email(s) *</label>
                     </div>
                 </div>
             </div>
@@ -73,7 +71,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no.');">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" onblur="checkNameValidation('anc_site', 'phone_number', this, null,'The contact no. that you entered already exist. Please enter different contact no');">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -145,7 +143,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </div>
             <div class="col s12">
-                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
+                <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addFacility();">ADD</a>&nbsp;&nbsp;
             </div>
@@ -176,7 +174,7 @@ if(isset($countryId) && trim($countryId)!=''){
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
+        if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
                 if (data > 0){

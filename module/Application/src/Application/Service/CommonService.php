@@ -190,6 +190,7 @@ class CommonService {
             $transport->setOptions($options);
             //get (To) email id
             $ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
+                            ->columns(array('email'))
                             ->where(array('anc.anc_site_id'=>base64_decode($params['anc'])));
             $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
             $ancResult = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -214,25 +215,25 @@ class CommonService {
                 $resultMail->addFrom($fromEmail, $fromFullName);
                 $resultMail->addReplyTo($fromEmail, $fromFullName);
     
-                $toArray = explode(",", $ancResult->email);
-                foreach ($toArray as $toId) {
-                    if (trim($toId) != '') {
-                        $resultMail->addTo($toId);
+                $toArray = explode(",",$ancResult->email);
+                foreach ($toArray as $toEmail) {
+                    if (trim($toEmail) != '') {
+                        $resultMail->addTo($toEmail);
                     }
                 }
                 //if (isset($params['cc']) && trim($params['cc']) != "") {
-                //    $ccArray = explode(",", $params['cc']);
-                //    foreach ($ccArray as $ccId) {
-                //        if (trim($ccId) != '') {
-                //            $resultMail->addCc($ccId);
+                //    $ccArray = explode(",",$params['cc']);
+                //    foreach ($ccArray as $ccEmail) {
+                //        if (trim($ccEmail) != '') {
+                //            $resultMail->addCc($ccEmail);
                 //        }
                 //    }
                 //}
                 //if (isset($params['bcc']) && trim($params['bcc']) != "") {
-                //    $bccArray = explode(",", $params['bcc']);
-                //    foreach ($bccArray as $bccId) {
-                //        if (trim($bccId) != '') {
-                //            $resultMail->addBcc($bccId);
+                //    $bccArray = explode(",",$params['bcc']);
+                //    foreach ($bccArray as $bccEmail) {
+                //        if (trim($bccEmail) != '') {
+                //            $resultMail->addBcc($bccEmail);
                 //        }
                 //    }
                 //}

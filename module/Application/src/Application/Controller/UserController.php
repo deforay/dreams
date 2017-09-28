@@ -23,9 +23,9 @@ class UserController extends AbstractActionController{
             $result = $userService->getAllUsers($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('user',$countryId);
+            $countryList = $countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId
@@ -38,18 +38,18 @@ class UserController extends AbstractActionController{
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $userService->addUser($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $roleService = $this->getServiceLocator()->get('RoleService');
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $result=$roleService->getActiveRoles($countryId);
-            $countryList=$countryService->getActiveCountries('user',$countryId);
-            $allCountryList=$countryService->getActiveCountries('login',$countryId);
-            $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
-            $facilityList=$facilityService->getActivefacilities('user',$countryId);
+            $result = $roleService->getActiveRoles($countryId);
+            $countryList = $countryService->getActiveCountries('user',$countryId);
+            $allCountryList = $countryService->getActiveCountries('login',$countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId);
+            $facilityList = $facilityService->getActivefacilities('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
                 'countries'=>$countryList,
@@ -66,30 +66,33 @@ class UserController extends AbstractActionController{
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $userService->updateUser($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $userId=base64_decode($this->params()->fromRoute('id'));
-            $result=$userService->getUser($userId);
-        
-            $roleService = $this->getServiceLocator()->get('RoleService');
-            $countryService = $this->getServiceLocator()->get('CountryService');
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $roleResult=$roleService->getActiveRoles($countryId);
-            $countryList=$countryService->getActiveCountries('user',$countryId);
-            $allCountryList=$countryService->getActiveCountries('login',$countryId);
-            $ancSiteList=$ancSiteService->getActiveAncSites('user',$countryId);
-            $facilityList=$facilityService->getActivefacilities('user',$countryId);
-            return new ViewModel(array(
-                'row'=>$result,
-                'countries'=>$countryList,
-                'allCountries'=>$allCountryList,
-                'ancSites'=>$ancSiteList,
-                'facilities'=>$facilityList,
-                'roleData'=>$roleResult,
-                'countryId'=>$countryId
-            ));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            $userId = base64_decode($this->params()->fromRoute('id'));
+            $result = $userService->getUser($userId);
+            if(isset($result->user_id)){
+                $roleService = $this->getServiceLocator()->get('RoleService');
+                $countryService = $this->getServiceLocator()->get('CountryService');
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $facilityService = $this->getServiceLocator()->get('FacilityService');
+                $roleResult = $roleService->getActiveRoles($countryId);
+                $countryList = $countryService->getActiveCountries('user',$countryId);
+                $allCountryList = $countryService->getActiveCountries('login',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId);
+                $facilityList = $facilityService->getActivefacilities('user',$countryId);
+                return new ViewModel(array(
+                    'row'=>$result,
+                    'countries'=>$countryList,
+                    'allCountries'=>$allCountryList,
+                    'ancSites'=>$ancSiteList,
+                    'facilities'=>$facilityList,
+                    'roleData'=>$roleResult,
+                    'countryId'=>$countryId
+                ));
+            }else{
+                return $this->redirect()->toUrl('/user/'.$this->params()->fromRoute('countryId'));
+            }
         }
     }
     

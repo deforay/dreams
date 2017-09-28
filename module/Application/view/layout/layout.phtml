@@ -114,7 +114,7 @@ if($loginContainer->roleCode== 'ANCSC'){
           text-align:right;
         }
         .dataTables_wrapper select{
-            height:2.4rem !important;
+            height:1.8rem !important;
         }
         #dropdown3{
             min-width:160px;
@@ -194,9 +194,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                     <li class="dashboardMenu menuAll">
                         <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
                     </li>
-                    <?php
-                    if($loginContainer->roleCode =='CSC'){
-                    ?>
+                    <?php if($loginContainer->roleCode =='CSC'){ ?>
                         <li class="cscMenu menuAll">
                             <div class="collapsible-header waves-effect cscMenu menuAll"><i class="zmdi zmdi-accounts-list-alt"></i> Chief Coordinator <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body collapsibleAll collapsibleCSCMenu">
@@ -294,7 +292,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
+                                                                    <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Logbook for Recency Test</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>

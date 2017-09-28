@@ -28,7 +28,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">code</i>
-                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter lab code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab code that you entered already exist. Please enter different code.')">
+                        <input id="facilityCode" name="facilityCode" type="text" class="validate isRequired" title="Please enter lab code" value="<?php echo $row->facility_code; ?>" onblur="checkNameValidation('facility', 'facility_code', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab code that you entered already exist. Please enter different code')">
                         <label for="facilityCode" class="">Lab Code *</label>
                     </div>
                 </div>
@@ -54,8 +54,8 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="checkNameValidation('facility', 'email', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab email that you entered already exist. Please enter different email id.')">
-                        <label for="email" class="">Email *</label>
+                        <input id="email" name="email" type="text" class="validate isRequired" placeholder="eg-user1@gmail.com,user2@gmail.com" title="Please enter email-id" value="<?php echo $row->email; ?>">
+                        <label for="email" class="">Email(s) *</label>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('facility', 'phone_number', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab contact no. that you entered already exist. Please enter different contact no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('facility', 'phone_number', this, '<?php echo "facility_id##" .$row->facility_id; ?>','The lab contact no. that you entered already exist. Please enter different contact no')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -153,7 +153,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 </div>
             </div>
             <div class="col s6">
-                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
+                <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <input id="facilityId" name="facilityId" type="hidden" value="<?php echo base64_encode($row->facility_id); ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateLab();">UPDATE</a>&nbsp;&nbsp;
@@ -185,7 +185,7 @@ if(isset($countryId) && trim($countryId)!=''){
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
+        if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
                 if (data > 0){

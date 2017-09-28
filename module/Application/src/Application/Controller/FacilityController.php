@@ -24,7 +24,7 @@ class FacilityController extends AbstractActionController{
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('facility',0);
+            $countryList=$countryService->getActiveCountries('facility','');
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId
@@ -38,7 +38,7 @@ class FacilityController extends AbstractActionController{
             $params = $request->getPost();
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $facilityService->addFacility($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
@@ -60,22 +60,26 @@ class FacilityController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $facilityService->updateFacility($params);
-            return $this->redirect()->toUrl($params['chosenCountryId']);
+            return $this->redirect()->toUrl($params['redirectUrl']);
         }
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
-        $facilityId=base64_decode($this->params()->fromRoute('id'));
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $facilityId=base64_decode($this->params()->fromRoute('id'));
         $result=$facilityService->getFacility($facilityId);
-        $countryList=$countryService->getActiveCountries('facility',$countryId);
-        $provinceList=$countryService->getProvincesByCountry($countryId);
-        $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
-        return new ViewModel(array(
-            'countries'=>$countryList,
-            'provinces'=>$provinceList,
-            'facilityTypes'=>$facilityTypeList,
-            'row'=>$result,
-            'countryId'=>$countryId
-        ));
+        if(isset($result->facility_id)){
+            $countryList=$countryService->getActiveCountries('facility',$countryId);
+            $provinceList=$countryService->getProvincesByCountry($countryId);
+            $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
+            return new ViewModel(array(
+                'countries'=>$countryList,
+                'provinces'=>$provinceList,
+                'facilityTypes'=>$facilityTypeList,
+                'row'=>$result,
+                'countryId'=>$countryId
+            ));
+        }else{
+           return $this->redirect()->toUrl('/facility/'.$this->params()->fromRoute('countryId')); 
+        }
     }
 }

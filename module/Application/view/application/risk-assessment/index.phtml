@@ -1,9 +1,6 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId) || trim($countryId)== ''){
-    $countryId = '';
-}
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
 <style>

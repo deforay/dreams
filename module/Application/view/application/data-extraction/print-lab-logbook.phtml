@@ -1,7 +1,3 @@
-<?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
-?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
 <style>
     .ranges{display: none;}
@@ -101,10 +97,10 @@ $loginContainer = new Container('user');
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Print Lab Logbook</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Logbook for Recency Test</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Print Lab Logbook</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Logbook for Recency Test</a>
        </div>
     </div>
     <div class="row" style="max-width:1109px;">
@@ -158,47 +154,48 @@ $loginContainer = new Container('user');
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol0">Receipt Date at Lab</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol1">Specimen Collected Date</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol1">Patient Barcode ID</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol2">ANC Site</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol3">ANC Site Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol3">ANC Site</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol4">ANC Patient ID</label>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol4">ANC Site Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="age" class="showhideCheckBox" /> <label for="iCol5">Age</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol5">ANC Patient ID</label>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol6">Specimen Pick Up Date at ANC</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="age" class="showhideCheckBox" /> <label for="iCol6">Age</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol7">Lab Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol7">Specimen Pick Up Date at ANC</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol8">Lab Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol8">Lab Name</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol9">Lab Specimen ID</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol9">Lab Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol10">Rejection Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol10">Lab Specimen ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol11">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol12">Date of Test Completion</label> <br>
@@ -233,13 +230,14 @@ $loginContainer = new Container('user');
     <div class="row dashboard-wrapper content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Logbook List
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Recency Test List
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
                 <div class="card-content clearfix">
                     <table id="labLogbookDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
+				<th>Receipt Date at Lab</th>
                                 <th>Patient Barcode ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site Name</th>
@@ -251,7 +249,6 @@ $loginContainer = new Container('user');
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -265,6 +262,7 @@ $loginContainer = new Container('user');
                         </thead>
 			<tfoot>
                             <tr>
+				<th>Receipt Date at Lab</th>
                                 <th>Patient Barcode ID</th>
                                 <th>Specimen Collected Date</th>
 				<th>ANC Site Name</th>
@@ -276,7 +274,6 @@ $loginContainer = new Container('user');
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -333,7 +330,7 @@ $loginContainer = new Container('user');
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 		if(aData[18] =='Negative' || (aData[14] > 2 && ((aData[18] == 'Positive' && aData[19] == 'Recent') || aData[19] == 'Recent'))){ $(nRow).addClass("redTxt"); }
 	    },
-            "aaSorting": [[1, "desc"]],
+            "aaSorting": [[0, "asc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('print-lab-logbook'); ?>",
@@ -416,10 +413,24 @@ $loginContainer = new Container('user');
     
     function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", { },
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',lab:$("#lab").val() },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate logbook pdf.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+    
+    function extractLabLogbookData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',frmSrc:'log'},
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

@@ -60,15 +60,19 @@ class DataExtractionController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('lab-logbook',$countryId);
-            $facilityList=$facilityService->getActivefacilities('lab-logbook',$countryId);
-            return new ViewModel(array(
-                'countryId'=>$countryId,
-                'ancSites'=>$ancSiteList,
-                'facilities'=>$facilityList
-            ));
+            if(trim($countryId)!= ''){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $facilityService = $this->getServiceLocator()->get('FacilityService');
+                $ancSiteList = $ancSiteService->getActiveAncSites('lab-logbook',$countryId);
+                $facilityList = $facilityService->getActivefacilities('lab-logbook',$countryId);
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'facilities'=>$facilityList,
+                    'countryId'=>$countryId
+                ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
         }
     }
     
@@ -76,10 +80,12 @@ class DataExtractionController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $facilityList = $facilityService->getActivefacilities('lab-logbook',$params['countryId']);
             $logbookResult=$dataCollectionService->getLogbookResult($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('logbookResult' =>$logbookResult));
+            $viewModel->setVariables(array('params'=>$params,'facilityList'=>$facilityList,'logbookResult' =>$logbookResult));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

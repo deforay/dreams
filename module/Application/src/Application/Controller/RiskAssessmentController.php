@@ -19,16 +19,19 @@ class RiskAssessmentController extends AbstractActionController{
         $type = '';
         $date = '';
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
-        $type=$this->params()->fromQuery('type');
-        $date=base64_decode($this->params()->fromQuery('date'));
-        $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
-        return new ViewModel(array(
-            'countryId'=>$countryId,
-            'facilities'=>$facilityList,
-            'type'=>$type,
-            'date'=>$date
-        ));
-        
+        if(trim($countryId)!= ''){
+            $type=$this->params()->fromQuery('type');
+            $date=$this->params()->fromQuery('date');
+            $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
+            return new ViewModel(array(
+                'facilities'=>$facilityList,
+                'type'=>$type,
+                'date'=>$date,
+                'countryId'=>$countryId
+            ));
+        }else{
+           return $this->redirect()->toRoute('home'); 
+        }
     }
     
     public function addAction(){
@@ -39,18 +42,22 @@ class RiskAssessmentController extends AbstractActionController{
             $riskAssessmentService->addRiskAssessment($params);
             return $this->redirect()->toUrl($params['redirectUrl']);
         }
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
-        $countryService = $this->getServiceLocator()->get('CountryService');
-        $facilityService = $this->getServiceLocator()->get('FacilityService');
-        $countryList=$countryService->getActiveCountries('risk-assessment',0);
-        $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
-        $occupationTypeList=$riskAssessmentService->getOccupationTypes();
-        return new ViewModel(array(
-                'countries'=>$countryList,
-                'facilities'=>$facilityList,
-                'occupationTypes'=>$occupationTypeList,
-                'countryId'=>$countryId
-            ));
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
+        if(trim($countryId)!= ''){
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $countryList = $countryService->getActiveCountries('risk-assessment','');
+            $facilityList = $facilityService->getActivefacilities('risk-assessment',$countryId);
+            $occupationTypeList = $riskAssessmentService->getOccupationTypes();
+            return new ViewModel(array(
+                    'countries'=>$countryList,
+                    'facilities'=>$facilityList,
+                    'occupationTypes'=>$occupationTypeList,
+                    'countryId'=>$countryId
+                ));
+        }else{
+           return $this->redirect()->toRoute('home'); 
+        }
     }
     
     public function editAction(){
@@ -62,38 +69,44 @@ class RiskAssessmentController extends AbstractActionController{
           return $this->redirect()->toUrl($params['redirectUrl']);
        }
        $countryId=base64_decode($this->params()->fromRoute('countryId'));
-       $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
-       $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
-       $facilityService = $this->getServiceLocator()->get('FacilityService');
-        if(isset($countryId) && trim($countryId)!=''){
-            $country = $countryId;
-        }else{
-            $country = $result->country;
-        }
-       $facilityList=$facilityService->getActivefacilities('risk-assessment',$country);
-       $occupationTypeList=$riskAssessmentService->getOccupationTypes();
-       return new ViewModel(array(
-                'facilities'=>$facilityList,
-                'occupationTypes'=>$occupationTypeList,
-                'row'=>$result,
-                'countryId'=>$country
-            ));
+       if(trim($countryId)!= ''){
+            $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
+            $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
+            if($result){
+                $facilityService = $this->getServiceLocator()->get('FacilityService');
+                $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
+                $occupationTypeList=$riskAssessmentService->getOccupationTypes();
+                return new ViewModel(array(
+                        'facilities'=>$facilityList,
+                        'occupationTypes'=>$occupationTypeList,
+                        'row'=>$result,
+                        'countryId'=>$countryId
+                     ));
+            }else{
+               return $this->redirect()->toRoute('home'); 
+            }
+       }else{
+        return $this->redirect()->toRoute('home');
+       }
     }
     
     public function viewAction(){
        $countryId=base64_decode($this->params()->fromRoute('countryId'));
-       $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
-       $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-       $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
-        if(isset($countryId) && trim($countryId)!=''){
-            $country = $countryId;
+       if(trim($countryId)!= ''){
+        $riskAssessmentId = base64_decode($this->params()->fromRoute('id'));
+        $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+        $result = $riskAssessmentService->getRiskAssessment($riskAssessmentId);
+        if($result){
+         return new ViewModel(array(
+                  'row'=>$result,
+                  'countryId'=>$countryId
+              ));
         }else{
-            $country = $result->country;
+         return $this->redirect()->toRoute('home');
         }
-       return new ViewModel(array(
-                'row'=>$result,
-                'countryId'=>$country
-            ));
+       }else{
+        return $this->redirect()->toRoute('home');
+       }
     }
     
     public function exportExcelAction(){

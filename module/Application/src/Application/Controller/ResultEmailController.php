@@ -16,13 +16,13 @@ use Zend\View\Model\ViewModel;
 class ResultEmailController extends AbstractActionController{
     public function indexAction(){
         $countryId=base64_decode($this->params()->fromRoute('countryId'));
-        if(isset($countryId) && trim($countryId)!= ''){
+        if(trim($countryId)!= ''){
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
-            $facilityList=$facilityService->getActivefacilities('result-email',$countryId);
-            $ancList=$ancSiteService->getActiveAncSites('result-email',$countryId);
-            $testStatusList=$commonService->getAllTestStatus();
+            $facilityList = $facilityService->getActivefacilities('result-email',$countryId);
+            $ancList = $ancSiteService->getActiveAncSites('result-email',$countryId);
+            $testStatusList = $commonService->getAllTestStatus();
             return new ViewModel(array(
             'facilityList'=>$facilityList,
             'ancList'=>$ancList,

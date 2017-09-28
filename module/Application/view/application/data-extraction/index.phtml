@@ -1,7 +1,5 @@
 <?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
-if(!isset($countryId) || trim($countryId)== ''){
+if(!isset($countryId)){
     $countryId = '';
 }
 ?>
@@ -206,7 +204,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol10">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol11">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol11">Receipt Date at Lab</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol12">Date of Test Completion</label> <br>
@@ -271,7 +269,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
+				<th>Receipt Date at Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -302,7 +300,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
+				<th>Receipt Date at Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>

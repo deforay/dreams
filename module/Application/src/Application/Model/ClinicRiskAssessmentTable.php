@@ -378,9 +378,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
     
     public function updateRiskAssessmentDetails($params){
         $loginContainer = new Container('user');
-        $lastInsertedId = 0;
+        $assessmentId = 0;
         if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
-	    $lastInsertedId = base64_decode($params['riskAssessmentId']);
+	    $assessmentId = base64_decode($params['riskAssessmentId']);
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
             $common = new CommonService();
@@ -512,8 +512,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId
                 );
-            $this->update($data,array('assessment_id'=>$lastInsertedId));
+            $this->update($data,array('assessment_id'=>$assessmentId));
         }
-      return $lastInsertedId; 
+      return $assessmentId;
     }
 }

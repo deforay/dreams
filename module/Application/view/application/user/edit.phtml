@@ -46,7 +46,7 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">power_settings_new</i>
-                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" value="<?php echo $row->user_name;?>" onblur="checkNameValidation('user', 'user_name', this, '<?php echo "user_id##" .$row->user_id; ?>','The user name that you entered already exist. Please enter different name.')">
+                        <input id="userName" name="userName" type="text" class="validate isRequired" title="Please enter user name" value="<?php echo $row->user_name;?>" onblur="checkNameValidation('user', 'user_name', this, '<?php echo "user_id##" .$row->user_id; ?>','The user name that you entered already exist. Please enter different name')">
                         <label for="userName" class="">User Name *</label>
                     </div>
                 </div>
@@ -108,9 +108,7 @@ if(count($row['userLaboratories'])>0){
                     </div>
                 </div>
             </div>
-            <?php
-            if($countryId > 0){
-            ?>
+            <?php if($countryId > 0){ ?>
                 <div class="row">
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
@@ -253,7 +251,7 @@ if(count($row['userLaboratories'])>0){
                 </div>
             <?php } ?>
             <div class="col s12">
-                <input type="hidden" name="chosenCountryId" value="<?php echo $link; ?>"/>
+                <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <input id="userId" name="userId" type="hidden" value="<?php echo base64_encode($row->user_id);?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" onclick="editUser();" class="waves-effect waves-light btn-small white-text pink margin-bottom-10">UPDATE</a>&nbsp;&nbsp;
@@ -266,21 +264,21 @@ if(count($row['userLaboratories'])>0){
     duplicateName = true;
     function editUser(){
         flag = deforayValidator.init({
-               formId: 'editUserForm'
+            formId: 'editUserForm'
         });
         
         if(flag){
             if(duplicateName){
-            if($('#country').length  >0 || $('#countryMulti').length >0){  
-                var country = $("#country").val();
-                var countryMulti = $("#countryMulti").val();
-                if((country=='' || country==null) && (countryMulti=='' || countryMulti==null)){
-                    alert("Please choose country");
-                    return false;
+                if($('#country').length  >0 || $('#countryMulti').length >0){
+                    var country = $("#country").val();
+                    var countryMulti = $("#countryMulti").val();
+                    if((country=='' || country==null) && (countryMulti=='' || countryMulti==null)){
+                        alert("Please choose country");
+                        return false;
+                    }
                 }
+                document.getElementById('editUserForm').submit();
             }
-            document.getElementById('editUserForm').submit();
-        }
         }
     }
     $(document).ready(function() {
@@ -289,7 +287,7 @@ if(count($row['userLaboratories'])>0){
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
+        if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
                 if (data > 0){

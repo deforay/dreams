@@ -282,8 +282,7 @@ class FacilityTable extends AbstractTableGateway {
                                ->where(array('f.status'=>'active'));
 	if(trim($countryId)!='' && $countryId >0){
             $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
-        }
-	if($loginContainer->roleCode== 'LS'){
+        } if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $facilitiesQuery = $facilitiesQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
 	}
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);

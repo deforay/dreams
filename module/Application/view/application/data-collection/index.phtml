@@ -1,11 +1,13 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId) || trim($countryId)== ''){
+if(isset($date) && trim($date)!= ''){
+    $link = "/";
+}else if(isset($countryId) && trim($countryId)!= ''){
+    $link = "/data-collection/".base64_encode($countryId);
+}else{
     $countryId = '';
     $link = "/data-collection";
-}else{
-    $link = "/data-collection/".base64_encode($countryId);
 }
 ?>
 <style>
@@ -64,6 +66,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	width:12%;
 	font-size:40px;
 	text-align:center;
+	padding-top:6vh;
     }
     #box-2{
 	float:left;
@@ -215,7 +218,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="encAncPatientId" name="encAncPatientId" type="text" readonly>
-				<label for="encAncPatientId">Encrypted Patient ID *</label>
+				<label for="encAncPatientId">Encrypted ANC Patient ID *</label>
 			    </div>
 			</div>
 		    </div>
@@ -279,8 +282,8 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0;">
-				<input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab">
-				<label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
+				<input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at lab">
+				<label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label>
 			    </div>
 			</div>
 			<div class="col s4">
@@ -403,7 +406,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    </div>
 		</div>
 		<div class="col s12" style="margin-top:20px;">
-		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
+		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo (trim($countryId)!= '')?base64_encode($countryId):'';?>"/>
 		    <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
 		    <input type="hidden" name="lDCId" id="lDCId" value="<?php echo (isset($latestDataCollectionInfo->data_collection_id))?$latestDataCollectionInfo->data_collection_id:'';?>"/>
 		    <input type="hidden" name="cCode" id="cCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
@@ -454,7 +457,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Central Lab</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol13">Date of Test Completion</label> <br>
@@ -526,7 +529,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
+				<th>Receipt Date at Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -564,7 +567,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	                        <th>Lab Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
-				<th>Receipt Date at Central Lab</th>
+				<th>Receipt Date at Lab</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -978,17 +981,17 @@ if(!isset($countryId) || trim($countryId)== ''){
 		$('#dob').val('');
 	    }
 	}
-	//check specimen picked up date at anc/receipt at central lab
+	//check specimen picked up date at anc/receipt at lab
 	if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
 	    if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
-		alert('Date of receipt at central lab could not be earlier than specimen picked up date!');
+		alert('Date of receipt at lab could not be earlier than specimen picked up date!');
 		$('#dateOfReceiptAtCentralLab').val('');
 	    }
 	}
-	//check receipt at central lab/test completion
+	//check receipt at lab/test completion
 	if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
 	    if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
-		alert('Test completion date could not be earlier than date of receipt at central lab!');
+		alert('Test completion date could not be earlier than date of receipt at lab!');
 		$('#dateOfTestCompletion').val('');
 	    }
 	}
@@ -1137,6 +1140,7 @@ if(!isset($countryId) || trim($countryId)== ''){
         }else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRR)").addClass('isRequired').attr('readonly',false);
+	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }
@@ -1152,7 +1156,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 	var readerValueRRDT = $('#readerValueRRDT').val();
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
-	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive':'Negative';
+	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 	   $('#readerValueRRDTLogVal').html(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{

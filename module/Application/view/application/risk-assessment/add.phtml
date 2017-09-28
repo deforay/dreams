@@ -1,9 +1,8 @@
 <?php
-if(!isset($countryId) || trim($countryId)== ''){
-    $countryId = '';
-    $link = "/clinic/risk-assessment";
-}else{
+if(trim($countryId)!= ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
+}else{
+   $link = "/clinic/risk-assessment"; 
 }
 ?>
 <style>
@@ -85,7 +84,7 @@ if(!isset($countryId) || trim($countryId)== ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-			    Participant received DREAMS services<br><br>	
+			    Participant received DREAMS services *<br><br>	
 			    <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap isRequired" name="hasParticipantReceivedDreamsServices" title="Please select paricipant-dreams services received status" value="yes" type="radio">
 			    <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp&nbsp
 			    <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio">
@@ -136,7 +135,7 @@ if(!isset($countryId) || trim($countryId)== ''){
                         </div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-			    Participant received DREAMS services<br><br>	
+			    Participant received DREAMS services *<br><br>	
 			    <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap isRequired" name="hasParticipantReceivedDreamsServices" title="Please select paricipant-dreams services received status" value="yes" type="radio">
 			    <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp&nbsp
 			    <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio">
@@ -787,7 +786,7 @@ if(!isset($countryId) || trim($countryId)== ''){
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
+        if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
                 if (data > 0){

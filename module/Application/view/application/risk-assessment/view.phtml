@@ -1,11 +1,10 @@
 <?php
 use Application\Service\CommonService;
 $common = new CommonService();
-if(!isset($countryId) || trim($countryId)== ''){
-    $countryId = '';
-    $link = "/clinic/risk-assessment";
-}else{
+if(trim($countryId)!= ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
+}else{
+   $link = "/clinic/risk-assessment"; 
 }
 $interviewDate = '';
 if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){

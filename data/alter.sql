@@ -603,3 +603,8 @@ ALTER TABLE `clinic_risk_assessment` ADD `has_participant_received_dreams_servic
 
 --Pal 24/09/2017
 ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_hurt_by_someone_during_pregnancy` `has_patient_ever_been_hurt_by_someone_during_pregnancy` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 28/09/2017
+ALTER TABLE `facility` CHANGE `email` `email` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `anc_site` CHANGE `email` `email` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 

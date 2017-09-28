@@ -60,7 +60,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     }
     $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
     $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '')?round(log10($readerValueRRDT),1):'';
-    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && $readerValueRRDTLogVal >= 2.8)?'Positive':'Negative';
+    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
     if($asanteRapidRecencyAssayRlt == 'r'){
@@ -70,7 +70,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     }
     $readerValueRRR = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
     $readerValueRRRLogVal = (trim($readerValueRRR)!= '')?round(log10($readerValueRRR),1):'';
-    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && $readerValueRRRLogVal >= 3)?'Long Term':'Recent';
+    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term':'Recent';
 }
 ?>
 <style>
@@ -93,6 +93,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	width:12%;
 	font-size:40px;
 	text-align:center;
+        padding-top:3vh;
     }
     #box-2{
 	float:left;
@@ -161,7 +162,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="encAncPatientId" class="">Encrypted Patient ID </label><br>
+                            <label for="encAncPatientId" class="">Encrypted ANC Patient ID </label><br>
                             <p><?php echo $row->enc_anc_patient_id; ?></p>
                         </div>
                     </div>
@@ -213,7 +214,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label><br>
+                            <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label><br>
                             <p><?php echo $receiptDateAtCentralLab; ?></p>
                         </div>
                     </div>

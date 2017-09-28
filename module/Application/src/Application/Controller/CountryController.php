@@ -42,11 +42,15 @@ class CountryController extends AbstractActionController{
             $countryService->updateCountry($params);
             return $this->redirect()->toRoute('country');
         }
-        $countryId=base64_decode($this->params()->fromRoute('id'));
-        $result=$countryService->getCountry($countryId);
-        return new ViewModel(array(
-            'row'=>$result
-        ));
+        $countryId = base64_decode($this->params()->fromRoute('id'));
+        $result = $countryService->getCountry($countryId);
+        if($result){
+            return new ViewModel(array(
+                'row'=>$result
+            ));
+        }else{
+           return $this->redirect()->toRoute('country'); 
+        }
     }
     
     public function getCountryProvincesAction(){
@@ -67,10 +71,14 @@ class CountryController extends AbstractActionController{
         $countryService = $this->getServiceLocator()->get('CountryService');
         $countryInfo = $countryService->getCountry($countryId);
         $provinces = $countryService->getProvincesByCountry($countryId);
-        return new ViewModel(array(
-            'countryInfo'=>$countryInfo,
-            'provinces'=>$provinces
-        )); 
+        if($countryInfo){
+            return new ViewModel(array(
+                'countryInfo'=>$countryInfo,
+                'provinces'=>$provinces
+            ));
+        }else{
+           return $this->redirect()->toRoute('home');
+        }
     }
     
     public function getDashboardDetailsAction(){

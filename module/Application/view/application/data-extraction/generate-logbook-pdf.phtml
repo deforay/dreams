@@ -1,11 +1,30 @@
 <?php
 $common = new \Application\Service\CommonService();
 if(count($logbookResult) >0){
+    //set labs
+    $selectedLab = '';
+    $displayLab = '';
+    $allLabs = array();
+    $displayAllLabs = '';
+    if(isset($params['lab']) && trim($params['lab'])!= ''){
+	$selectedLab = base64_decode($params['lab']);
+    }
+    if(isset($facilityList) && count($facilityList) > 0){
+	foreach($facilityList as $facility){
+	    $allLabs[] = ' '.ucwords($facility['facility_name']);
+	    if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
+		$displayLab = ucwords($facility['facility_name']);
+	    }
+	}
+       $displayAllLabs = implode(',',$allLabs);
+    }
+    $additionalTxt = (trim($displayLab)!= '')?' : '.$displayLab:' :'.$displayAllLabs;
     //header and footer
     class MYPDF extends TCPDF {
-        public function setSchemeName($heading,$logo) {
+        public function setSchemeName($heading,$logo,$additionalTxt) {
 	  $this->heading = $heading;
 	  $this->logo = $logo;
+	  $this->additionalTxt = $additionalTxt;
         }
 	
         //Page header
@@ -16,8 +35,8 @@ if(count($logbookResult) >0){
              //Set font
             $this->SetFont('helvetica', 'B', 20);
              //Title
-            $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
-	    $this->writeHTMLCell(0,'','','','<br/><hr/>',0,1,false,true,'C',true);
+            $this->writeHTMLCell(0,'',36,10,$this->heading.'<span style="font-size:16px;font-weight:normal;">'.$this->additionalTxt.'</span>',0,1,false,true,'C',true);
+	    //$this->writeHTMLCell(0,'','','','<br/><hr/>',0,1,false,true,'C',true);
         }
     
         // Page footer
@@ -33,11 +52,11 @@ if(count($logbookResult) >0){
     // create new PDF document
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
-    $pdf->setSchemeName('Lab Logbook','dreams-small-logo.png');
+    $pdf->setSchemeName('Logbook for Recency Test','dreams-small-logo.png',$additionalTxt);
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('Lab Logbook');
+    $pdf->SetTitle('Logbook for Recency Test');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -77,7 +96,7 @@ if(count($logbookResult) >0){
     $pdf->SetMargins(10, 28, 10, true);
     //$pdf->SetFooterMargin(10);
     $pdf->SetY(28,true,false);
-    
+    //pdf content
     $html = '';
       $html.='<table border="1" style="padding:2px;">';
           $html .='<thead>';
@@ -91,7 +110,7 @@ if(count($logbookResult) >0){
            $html .='<th><strong>Lab Site Name/Code</strong></th>';
            $html .='<th><strong>Lab Specimen ID</strong></th>';
            $html .='<th><strong>Rejection Code</strong></th>';
-           $html .='<th><strong>Receipt Date at Central Lab</strong></th>';
+           $html .='<th><strong>Receipt Date at Lab</strong></th>';
            $html .='<th><strong>Date of Test Completion</strong></th>';
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
            $html .='<th><strong>LAg Avidity</strong></th>';
@@ -101,6 +120,7 @@ if(count($logbookResult) >0){
            $html .='<th><strong>Recent Infection</strong></th>';
            $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
            $html .='<th><strong>Rapid Recency Result</strong></th>';
+	   $html .='<th><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -178,12 +198,13 @@ if(count($logbookResult) >0){
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               $html .='<td>'.$rapidRecencyAssay.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
+	      $html .='<td></td>';
             $html .='</tr>';
           }
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $filename = 'LAB-LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
+    $filename = 'LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{

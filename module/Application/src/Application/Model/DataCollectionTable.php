@@ -27,7 +27,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(isset($params['country']) && trim($params['country'])!=''){
 		$country = base64_decode($params['country']);
 	    }else{
-		return $lastInsertedId;
+		return false;
 	    }
             $specimenCollectedDate = NULL;
             if(isset($params['specimenCollectedDate']) && trim($params['specimenCollectedDate'])!= ''){
@@ -547,7 +547,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );
-	    if(base64_decode($params['status'])!= $params['prevStatus']){
+	    if(base64_decode($params['status']) !=$params['prevStatus']){
 		if(base64_decode($params['status'])== 2){
 		    $data['locked_on'] = $common->getDateTime();
 		    $data['locked_by'] = $loginContainer->userId;
@@ -938,14 +938,10 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->order('da_c.added_on desc');
 	if($loginContainer->roleCode == 'CC' && count($loginContainer->country) >0){
             $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	}else if($loginContainer->roleCode == 'LS' && count($loginContainer->laboratory) >0){
-	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
-	}else if($loginContainer->roleCode == 'LDEO' && count($loginContainer->laboratory) >0){
+	}else if(($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO') && count($loginContainer->laboratory) >0){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode == 'ANCSC' && count($loginContainer->clinic) >0){
 	   $dataCollectionQuery = $dataCollectionQuery->where('da_c.anc_site IN ("' . implode('", "', $loginContainer->clinic) . '")'); 
-	}else if($loginContainer->roleCode!= 'CSC'){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>0));
 	}
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
       return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
@@ -1069,8 +1065,8 @@ class DataCollectionTable extends AbstractTableGateway {
         */
 	$common = new CommonService();
 	
-	$aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
-	$orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$aColumns = array("DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$orderColumns = array('receipt_date_at_central_lab','da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
 
        /*
         * Paging
@@ -1194,6 +1190,7 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery->order($sOrder);
        }
        $queryContainer->logbookQuery = $sQuery;
+       $queryContainer->dataCollectionQuery = $sQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
@@ -1280,6 +1277,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 	    }
 	    
+	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = $specimenCollectedDate;
 	    $row[] = ucwords($aRow['anc_site_name']);
@@ -1291,7 +1289,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['lab_specimen_id'];
 	    $row[] = ucwords($aRow['rejection_code']);
-	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
 	    $row[] = $aRow['final_lag_avidity_odn'];
@@ -1566,14 +1563,10 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('f.province')
 				   ->order('da_c.added_on desc');
-	if($loginContainer->roleCode == 'LS' && count($loginContainer->laboratory) >0){
-	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
-	}else if($loginContainer->roleCode == 'LDEO' && count($loginContainer->laboratory) >0){
+	if(($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO') && count($loginContainer->laboratory) >0){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode == 'ANCSC' && count($loginContainer->clinic) >0){
 	   $dataCollectionQuery = $dataCollectionQuery->where('da_c.anc_site IN ("' . implode('", "', $loginContainer->clinic) . '")'); 
-	}else if($loginContainer->roleCode!= 'CSC' && $loginContainer->roleCode!= 'CC'){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>0));
 	}if(trim($params['province'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
 	}if(trim($params['reportingMonthYear'])!= ''){

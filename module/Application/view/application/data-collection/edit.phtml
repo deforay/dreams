@@ -67,6 +67,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	width:12%;
 	font-size:40px;
 	text-align:center;
+	padding-top:6vh;
     }
     #box-2{
 	float:left;
@@ -143,7 +144,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
                             <input id="encAncPatientId" name="encAncPatientId" type="text" value="<?php echo $row['enc_anc_patient_id']; ?>" readonly>
-                            <label for="encAncPatientId">Encrypted Patient ID *</label>
+                            <label for="encAncPatientId">Encrypted ANC Patient ID *</label>
                         </div>
                     </div>
                 </div>
@@ -207,8 +208,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0;">
-                            <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at central lab" value="<?php echo $receiptDateAtCentralLab; ?>">
-                            <label for="dateOfReceiptAtCentralLab" class="">Date of Receipt at Central Lab </label>
+                            <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at lab" value="<?php echo $receiptDateAtCentralLab; ?>">
+                            <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -565,17 +566,17 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		$('#dob').val('');
 	    }
 	}
-	//check specimen picked up date at anc/receipt at central lab
+	//check specimen picked up date at anc/receipt at lab
 	if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
 	    if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
-		alert('Date of receipt at central lab could not be earlier than specimen picked up date!');
+		alert('Date of receipt at lab could not be earlier than specimen picked up date!');
 		$('#dateOfReceiptAtCentralLab').val('');
 	    }
 	}
-	//check receipt at central lab/test completion
+	//check receipt at lab/test completion
 	if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
 	    if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
-		alert('Test completion date could not be earlier than date of receipt at central lab!');
+		alert('Test completion date could not be earlier than date of receipt at lab!');
 		$('#dateOfTestCompletion').val('');
 	    }
 	}
@@ -600,7 +601,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;
-        if(checkValue!=''){
+        if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
                 if (data > 0){
@@ -655,6 +656,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	}else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRR)").addClass('isRequired').attr('readonly',false);
+	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }
@@ -712,7 +714,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	var readerValueRRDT = $('#readerValueRRDT').val();
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
-	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive':'Negative';
+	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 	   $('#readerValueRRDTLogVal').html(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{
