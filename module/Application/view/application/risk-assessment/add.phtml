@@ -145,6 +145,41 @@ if(trim($countryId)!= ''){
                     </div>
                 <?php } ?>
             </fieldset>
+	    <fieldset style="border-color:#F44336;border-style:solid;margin-top:10px;">
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			Rapid Recency Result *<br><br>
+			<input id="hasPatientHadRapidRecencyTestYes" class="with-gap isRequired" name="hasPatientHadRapidRecencyTest" title="Please select patient rapid recency test status" value="done" type="radio">
+			<label for="hasPatientHadRapidRecencyTestYes" class="active">Done </label>&nbsp&nbsp
+			<input id="hasPatientHadRapidRecencyTestNo" class="with-gap" name="hasPatientHadRapidRecencyTest" value="notdone" type="radio">
+			<label for="hasPatientHadRapidRecencyTestNo" class="active">Not Done </label>&nbsp&nbsp
+			</div>
+		    </div>
+		    <div class="col s4 rrrSection" style="display:none;">
+			<div class="input-field col m12 s12">
+			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select" title="Please select HIV diagnostic line">
+                            <option value=""> -- Select -- </option>
+			    <option value="positive">Positive</option>
+			    <option value="negative">Negative</option>
+			    <option value="inderminate">Inderminate</option>
+                        </select>
+                        <label for="rrrHIVDiagnostic">HIV Diagnostic Line </label>
+			</div>
+		    </div>
+		    <div class="col s4 rrrRecency rrrSection" style="display:none;">
+			<div class="input-field col m12 s12">
+			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
+                            <option value=""> -- Select -- </option>
+			    <option value="recent">Recent</option>
+			    <option value="longterm">Long Term</option>
+			    <option value="inderminate">Inderminate</option>
+                        </select>
+                        <label for="rrrRecency">Recency Line </label>
+			</div>
+		    </div>
+		</div>
+	    </fieldset>
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
@@ -752,7 +787,7 @@ if(trim($countryId)!= ''){
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s12" style="margin-bottom:20px;">
+                <div class="col s12">
                     <input id="isPatientAfraidOfAnyoneYes" class="with-gap isRequired" name="isPatientAfraidOfAnyone" title="Don't leave 33rd question" value="yes" type="radio">
 		    <label for="isPatientAfraidOfAnyoneYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="isPatientAfraidOfAnyoneNo" class="with-gap" name="isPatientAfraidOfAnyone" value="no" type="radio">
@@ -761,6 +796,12 @@ if(trim($countryId)!= ''){
 		    <label for="isPatientAfraidOfAnyoneDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="isPatientAfraidOfAnyoneR" class="with-gap" name="isPatientAfraidOfAnyone" value="refused" type="radio">
 		    <label for="isPatientAfraidOfAnyoneR" class="active">Refused</label>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:10px;">
+                <div class="input-field col s6">
+                    <textarea id="comment" name="comment" class="materialize-textarea" title="Please enter comment"></textarea>
+                    <label for="comment">Comment </label>
                 </div>
             </div>
             <div class="col s12" style="margin-top:20px;">
@@ -977,6 +1018,26 @@ if(trim($countryId)!= ''){
 	  $('#patientForcedForSexWithinLastYearO').prop('checked',false);
 	  $('#patientForcedForSexWithinLastYearM').prop('checked',false);
 	  $('#patientForcedForSexWithinLastYearInNoofTimes').val('');	    
+	}
+    });
+    
+    //set patient recency test status
+    $('input:radio[name=hasPatientHadRapidRecencyTest]').change(function () {
+	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
+	    $('.rrrSection').show();
+	}else{
+	   $('.rrrSection').hide();
+	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
+	   //$('#rrrRecency option:first').prop('selected', true);
+	}
+    });
+    
+    //recency show/hide based on HIV diagostic
+    $('#rrrHIVDiagnostic').on('change',function () {
+	if ($('#rrrHIVDiagnostic').val() == 'negative') {
+	    $('.rrrRecency').hide();
+	}else{
+	    $('.rrrRecency').show();
 	}
     });
     

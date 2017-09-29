@@ -36,6 +36,7 @@ use Application\Model\LoginTrackerTable;
 use Application\Model\OccupationTypeTable;
 use Application\Model\ClinicRiskAssessmentTable;
 use Application\Model\ProvinceTable;
+use Application\Model\AncRapidRecencyTable;
 
 class Module{
     public function onBootstrap(MvcEvent $e){
@@ -202,6 +203,10 @@ class Module{
                 },'ProvinceTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new ProvinceTable($dbAdapter);
+                    return $table;
+                },'AncRapidRecencyTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new AncRapidRecencyTable($dbAdapter);
                     return $table;
                 }
             ),

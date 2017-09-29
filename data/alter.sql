@@ -607,4 +607,24 @@ ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_hurt_by_someo
 --Pal 28/09/2017
 ALTER TABLE `facility` CHANGE `email` `email` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
-ALTER TABLE `anc_site` CHANGE `email` `email` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
+ALTER TABLE `anc_site` CHANGE `email` `email` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 29/09/2017
+ALTER TABLE `clinic_risk_assessment` ADD `comment` TEXT NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`;
+
+CREATE TABLE `anc_rapid_recency` (
+  `anc_rapid_recency_id` int(11) NOT NULL,
+  `assessment_id` int(11) NOT NULL,
+  `has_patient_had_rapid_recency_test` varchar(45) DEFAULT NULL,
+  `HIV_diagnostic_line` varchar(45) DEFAULT NULL,
+  `recency_line` varchar(45) DEFAULT NULL
+)
+
+ALTER TABLE `anc_rapid_recency`
+  ADD PRIMARY KEY (`anc_rapid_recency_id`),
+  ADD KEY `assessment_id` (`assessment_id`);
+  
+ALTER TABLE `anc_rapid_recency`
+  MODIFY `anc_rapid_recency_id` int(11) NOT NULL AUTO_INCREMENT;
+  
+alter table anc_rapid_recency add FOREIGN KEY(assessment_id) REFERENCES clinic_risk_assessment(assessment_id)

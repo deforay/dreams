@@ -20,9 +20,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
         if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
+	    $common = new CommonService();
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
-            $common = new CommonService();
             if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
 		$country = base64_decode($params['chosenCountry']);
 	    }else if(isset($params['country']) && trim($params['country'])!=''){
@@ -155,12 +155,31 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
 		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
-                    'country'=>$country,
+                    'comment'=>$params['comment'],
+		    'country'=>$country,
                     'added_on'=>$common->getDateTime(),
                     'added_by'=>$loginContainer->userId
                 );
             $this->insert($data);
             $lastInsertedId = $this->lastInsertValue;
+	    if($lastInsertedId >0){
+		$ancRapidRecencyDb = new AncRapidRecencyTable($dbAdapter);
+		$HIVDiagnosticVal = '';
+		$recencyVal = '';
+		if(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])== 'done'){
+		    $HIVDiagnosticVal = (isset($params['rrrHIVDiagnostic']) && trim($params['rrrHIVDiagnostic'])!= '')?$params['rrrHIVDiagnostic']:NULL;
+		    if($HIVDiagnosticVal!= 'negative'){
+		       $recencyVal = (isset($params['rrrRecency']) && trim($params['rrrRecency'])!= '')?$params['rrrRecency']:NULL;
+		    }
+		}
+		$rrData = array(
+			    'assessment_id'=>$lastInsertedId,
+			    'has_patient_had_rapid_recency_test'=>(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])!= '')?$params['hasPatientHadRapidRecencyTest']:NULL,
+			    'HIV_diagnostic_line'=>$HIVDiagnosticVal,
+			    'recency_line'=>$recencyVal
+			);
+	        $ancRapidRecencyDb->insert($rrData);
+	    }
         }
       return $lastInsertedId;
     }
@@ -371,6 +390,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -381,9 +401,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $assessmentId = 0;
         if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
 	    $assessmentId = base64_decode($params['riskAssessmentId']);
+	    $common = new CommonService();
             $dbAdapter = $this->adapter;
 	    $occupationTypeDb = new OccupationTypeTable($dbAdapter);
-            $common = new CommonService();
             $interviewDate = NULL;
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
@@ -509,10 +529,27 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
 		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
+		    'comment'=>$params['comment'],
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId
                 );
             $this->update($data,array('assessment_id'=>$assessmentId));
+	    //rapid recency result section
+	    $ancRapidRecencyDb = new AncRapidRecencyTable($dbAdapter);
+	    $HIVDiagnosticVal = '';
+	    $recencyVal = '';
+	    if(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])== 'done'){
+		$HIVDiagnosticVal = (isset($params['rrrHIVDiagnostic']) && trim($params['rrrHIVDiagnostic'])!= '')?$params['rrrHIVDiagnostic']:NULL;
+		if($HIVDiagnosticVal!= 'negative'){
+		   $recencyVal = (isset($params['rrrRecency']) && trim($params['rrrRecency'])!= '')?$params['rrrRecency']:NULL;
+		}
+	    }
+	    $rrData = array(
+			'has_patient_had_rapid_recency_test'=>(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])!= '')?$params['hasPatientHadRapidRecencyTest']:NULL,
+			'HIV_diagnostic_line'=>$HIVDiagnosticVal,
+			'recency_line'=>$recencyVal
+		    );
+	    $ancRapidRecencyDb->update($rrData,array('assessment_id'=>$assessmentId));
         }
       return $assessmentId;
     }

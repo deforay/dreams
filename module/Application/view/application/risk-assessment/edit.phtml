@@ -106,6 +106,41 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                     </div>
                 </div>
             </fieldset>
+            <fieldset style="border-color:#F44336;border-style:solid;margin-top:10px;">
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s4">
+			<div class="input-field col m12 s12">
+			Rapid Recency Result *<br><br>
+			<input id="hasPatientHadRapidRecencyTestYes" class="with-gap isRequired" name="hasPatientHadRapidRecencyTest" title="Please select patient rapid recency test status" value="done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'checked="checked"':''; ?>>
+			<label for="hasPatientHadRapidRecencyTestYes" class="active">Done </label>&nbsp&nbsp
+			<input id="hasPatientHadRapidRecencyTestNo" class="with-gap" name="hasPatientHadRapidRecencyTest" value="notdone" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'notdone')?'checked="checked"':''; ?>>
+			<label for="hasPatientHadRapidRecencyTestNo" class="active">Not Done </label>&nbsp&nbsp
+			</div>
+		    </div>
+		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
+			<div class="input-field col m12 s12">
+			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select" title="Please select HIV diagnostic line">
+                            <option value=""> -- Select -- </option>
+			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>Positive</option>
+			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>Negative</option>
+			    <option value="inderminate" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'inderminate')?'selected="selected"':''; ?>>Inderminate</option>
+                        </select>
+                        <label for="rrrHIVDiagnostic">HIV Diagnostic Line </label>
+			</div>
+		    </div>
+		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative'))?'':'none'; ?>">
+			<div class="input-field col m12 s12">
+			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
+                            <option value=""> -- Select -- </option>
+			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>Recent</option>
+			    <option value="longterm" <?php echo (isset($row->recency_line) && $row->recency_line == 'longterm')?'selected="selected"':''; ?>>Long Term</option>
+			    <option value="inderminate" <?php echo (isset($row->recency_line) && $row->recency_line == 'inderminate')?'selected="selected"':''; ?>>Inderminate</option>
+                        </select>
+                        <label for="rrrRecency">Recency Line </label>
+			</div>
+		    </div>
+		</div>
+	    </fieldset>
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
@@ -713,7 +748,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s12" style="margin-bottom:20px;">
+                <div class="col s12">
                     <input id="isPatientAfraidOfAnyoneYes" class="with-gap isRequired" name="isPatientAfraidOfAnyone" title="Don't leave 33rd question" value="yes" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'yes')?'checked="checked"':''; ?>>
 		    <label for="isPatientAfraidOfAnyoneYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="isPatientAfraidOfAnyoneNo" class="with-gap" name="isPatientAfraidOfAnyone" value="no" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'no')?'checked="checked"':''; ?>>
@@ -722,6 +757,12 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
 		    <label for="isPatientAfraidOfAnyoneDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="isPatientAfraidOfAnyoneR" class="with-gap" name="isPatientAfraidOfAnyone" value="refused" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'refused')?'checked="checked"':''; ?>>
 		    <label for="isPatientAfraidOfAnyoneR" class="active">Refused</label>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="input-field col s6">
+                    <textarea id="comment" name="comment" class="materialize-textarea" title="Please enter comment"><?php echo $row->comment; ?></textarea>
+                    <label for="comment">Comment </label>
                 </div>
             </div>
             <div class="col s12" style="margin-top:20px;">
@@ -939,6 +980,26 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
 	  $('#patientForcedForSexWithinLastYearO').prop('checked',false);
 	  $('#patientForcedForSexWithinLastYearM').prop('checked',false);
 	  $('#patientForcedForSexWithinLastYearInNoofTimes').val('');	    
+	}
+    });
+    
+    //set patient recency test status
+    $('input:radio[name=hasPatientHadRapidRecencyTest]').change(function () {
+	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
+	    $('.rrrSection').show();
+	}else{
+	   $('.rrrSection').hide();
+	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
+	   //$('#rrrRecency option:first').prop('selected', true);
+	}
+    });
+    
+    //recency show/hide based on HIV diagostic
+    $('#rrrHIVDiagnostic').on('change',function () {
+	if ($('#rrrHIVDiagnostic').val() == 'negative') {
+	    $('.rrrRecency').hide();
+	}else{
+	    $('.rrrRecency').show();
 	}
     });
     
