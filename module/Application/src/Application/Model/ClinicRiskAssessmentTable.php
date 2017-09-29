@@ -390,7 +390,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
-				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -545,11 +545,16 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}
 	    }
 	    $rrData = array(
+		        'assessment_id'=>$assessmentId,
 			'has_patient_had_rapid_recency_test'=>(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])!= '')?$params['hasPatientHadRapidRecencyTest']:NULL,
 			'HIV_diagnostic_line'=>$HIVDiagnosticVal,
 			'recency_line'=>$recencyVal
 		    );
-	    $ancRapidRecencyDb->update($rrData,array('assessment_id'=>$assessmentId));
+	    if(isset($params['ancRapidRecencyId']) && trim($params['ancRapidRecencyId'])!= ''){
+		$ancRapidRecencyDb->update($rrData,array('assessment_id'=>$assessmentId));
+	    }else{
+	        $ancRapidRecencyDb->insert($rrData);
+	    }
         }
       return $assessmentId;
     }
