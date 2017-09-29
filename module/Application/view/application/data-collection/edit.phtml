@@ -42,11 +42,12 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 }else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
     $hIVRNAResult = 'Low Viral Load';
 }
-$asanteRapidRecencyAssy = json_decode($row->asante_rapid_recency_assy,true);
+
 $asanteRapidRecencyAssayPn = '';
 $readerValueRRDT = '';
 $asanteRapidRecencyAssayRlt = '';
 $readerValueRRR = '';
+$asanteRapidRecencyAssy = (trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
@@ -75,16 +76,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	border:2px dotted #333;
         margin-top:8px !important;
     }
-
-
-	#readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
-		text-align: center !important;
-		font-size:1em;
-	}
-
-	#readerValueRRDTLogValText, #readerValueRRRLogValText{
-		font-weight:bold;
-	}	
+    #readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
+	text-align: center !important;
+	font-size:1em;
+    }
+    #readerValueRRDTLogValText, #readerValueRRRLogValText{
+	font-weight:bold;
+    }	
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -265,7 +263,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                         </div>
                     </div>
                     <div class="col s4">
-                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm of lab data reporting</a>
+                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
                     </div>
                 </div>
                 <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">

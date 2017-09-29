@@ -42,7 +42,7 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 }else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
     $hIVRNAResult = 'Low Viral Load';
 }
-$asanteRapidRecencyAssy = json_decode($row->asante_rapid_recency_assy,true);
+
 $asanteRapidRecencyAssayPn = '';
 $readerValueRRDT = '';
 $readerValueRRDTLogVal = '';
@@ -51,6 +51,7 @@ $asanteRapidRecencyAssayRlt = '';
 $readerValueRRR = '';
 $readerValueRRRLogVal = '';
 $readerValueRRRLogValText = '';
+$asanteRapidRecencyAssy = (trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     if($asanteRapidRecencyAssayPn == 'p'){
@@ -275,7 +276,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                         </div>
                     </div>
                     <div class="col s4">
-                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm of lab data reporting</a>
+                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
                     </div>
                 </div>
                 <div class="row" style="background-color:#ff69b4;border-radius:30px;margin-top:10px;">
