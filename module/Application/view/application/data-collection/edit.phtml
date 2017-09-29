@@ -299,11 +299,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                 </div>
                 <div class="row" style="margin-bottom:10px;">
-				<div class="col s6">
-				<div class="input-padding col m12 s12 l12">
-				   Rapid Recency Assay (Eg. Asante)
-				   <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
-				   <br>
+		    <div class="col s6">
+			<div class="input-padding col m12 s12 l12">
+			  Rapid Recency Assay (Eg. Asante)
+			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
+			    <br>
                           <div id="box-1">
                             <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
                             <label for="asanteRapidRecencyAssayP">HIV Positive </label><br>
@@ -333,7 +333,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    </div>
 		    <?php
 		    if($row->final_lag_avidity_odn > 2 && (($asanteRapidRecencyAssayPn == 'p' && $asanteRapidRecencyAssayRlt =='r') || ($asanteRapidRecencyAssayPn == '' && $asanteRapidRecencyAssayRlt =='r'))){ ?>
-			<div class="col s4">
+			<div class="col s3">
 			    <span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
 			</div>
 		    <?php } ?>
