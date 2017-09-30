@@ -872,6 +872,7 @@ class DataCollectionTable extends AbstractTableGateway {
     
     public function fetchSearchableDataCollection($params){
 	$loginContainer = new Container('user');
+	$common = new CommonService();
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$mappedLab = array();
@@ -883,7 +884,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	foreach($uMapResult as $lab){
 	    $mappedLab[] = $lab['laboratory_id'];
 	}
-	$common = new CommonService();
+	
 	$start_date = '';
 	$end_date = '';
 	if(isset($params['specimenCollectedDate']) && trim($params['specimenCollectedDate'])!= ''){
@@ -897,16 +898,14 @@ class DataCollectionTable extends AbstractTableGateway {
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 	                           ->columns(array('data_collection_id','surveillance_id','lag_avidity_result','hiv_rna_gt_1000'))
 				   ->where(array('da_c.status'=>2));
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}
-	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+	}if(trim($start_date) != "" && trim($end_date) != "" && trim($start_date)!= trim($end_date)) {
            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
-        }
-	if(isset($params['chosenCountryId']) && trim($params['chosenCountryId'])!= ''){
-            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountryId'])));
+        }if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!= ''){
+            $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountry'])));
         }if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
         }if(isset($params['facility']) && trim($params['facility'])!= ''){
@@ -1164,7 +1163,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}if($loginContainer->roleCode== 'LS'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	//Custom Filter Start
@@ -1213,7 +1212,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
-	}if($loginContainer->roleCode== 'LS'){
+	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance

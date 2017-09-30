@@ -1,6 +1,4 @@
 <?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
 if(isset($countryId) && trim($countryId)!=''){
     $link = "/user/".base64_encode($countryId);
 }else{
@@ -104,7 +102,7 @@ if(isset($countryId) && trim($countryId)!=''){
 		    </div>
                 </div>
                 <?php
-                if($countryId > 0){
+                if($countryId >0){
                 ?>
                     <div class="col s6" id="countrySingle">
                         <div class="input-field col m10 s10">
@@ -229,12 +227,12 @@ if(isset($countryId) && trim($countryId)!=''){
                 if($('#country').length  >0 || $('#countryMulti').length >0){
                     var country = $("#country").val();
                     var countryMulti = $("#countryMulti").val();
-                    if((country=='' || country==null) && (countryMulti=='' || countryMulti==null)){
+                    if((country == '' || country == null) && (countryMulti == '' || countryMulti == null)){
                         alert("Please choose country");
                         return false;
                     }
                 }
-                document.getElementById('addUserForm').submit();
+              document.getElementById('addUserForm').submit();
             }
         }
     }

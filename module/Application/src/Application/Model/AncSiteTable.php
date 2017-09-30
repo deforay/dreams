@@ -267,9 +267,13 @@ class AncSiteTable extends AbstractTableGateway {
 	if(trim($countryId)!= '' && $countryId > 0){
 	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
         } if($loginContainer->roleCode == 'ANCSC'){
-            $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
+	    if(count($mappedANC) ==0){
+	      $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN (0)');
+	    }else{
+              $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
+	    }
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
-        return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

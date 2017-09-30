@@ -190,6 +190,8 @@ class RoleTable extends AbstractTableGateway {
         }else{
             if($loginContainer->roleCode == 'CSC'){
                 $rolesQuery = $rolesQuery->where('r.role_code IN ("CSC")');
+            }else{
+               $rolesQuery = $rolesQuery->where('r.role_code NOT IN ("CSC","CC","LS","LDEO","ANCSC")');
             }
         }
         $rolesQueryStr = $sql->getSqlStringForSqlObject($rolesQuery);

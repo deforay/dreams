@@ -26,7 +26,7 @@ class UserCountryMapTable extends AbstractTableGateway {
         if($sResult){
             $this->delete(array('user_id'=>$userId));
         }
-        $params['country'] = array_values(array_unique($params['country']));
+        $params['country'] = array_values(array_unique(array_filter($params['country'])));
         if(count($params['country'])>0){
             $c = count($params['country']);
             for($i=0;$i<$c;$i++){

@@ -80,6 +80,12 @@ class UserTable extends AbstractTableGateway {
 			}
 		    }
 		}
+		//to prevent listing unmapped(all) anc/lab
+		if($loginResult->role_code == 'ANCSC' && count($userClinic) ==0){
+		    $userClinic[] = 0;
+		}else if(($loginResult->role_code == 'LS' || $loginResult->role_code == 'LDEO') && count($userLaboratory) ==0){
+		    $userLaboratory[] = 0;
+		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
 			//update last login
@@ -100,19 +106,24 @@ class UserTable extends AbstractTableGateway {
 		       return 'login';
 		    }
 		}else{
-		    //update last login
-		    $this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
-		    $loginTrackerDb->addNewLogin($loginResult->user_id);
-		    $loginContainer->userId = $loginResult->user_id;
-		    $loginContainer->userName = $loginResult->user_name;
-		    $loginContainer->roleCode = $loginResult->role_code;
-		    $loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
-		    $loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
-		    $loginContainer->hasPRAccess = $loginResult->has_print_report_access;
-		    $loginContainer->country = $userCountry;
-		    $loginContainer->clinic = $userClinic;
-		    $loginContainer->laboratory = $userLaboratory;
-		    return 'home';
+		    if($loginResult->role_code!= 'CSC' && count($userCountry) ==0){
+			$alertContainer->msg = 'You are not mapped to any country. Please contact admin for further assistance!';
+		       return 'login';
+		    }else{
+			//update last login
+			$this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
+			$loginTrackerDb->addNewLogin($loginResult->user_id);
+			$loginContainer->userId = $loginResult->user_id;
+			$loginContainer->userName = $loginResult->user_name;
+			$loginContainer->roleCode = $loginResult->role_code;
+			$loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
+			$loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
+			$loginContainer->hasPRAccess = $loginResult->has_print_report_access;
+			$loginContainer->country = $userCountry;
+			$loginContainer->clinic = $userClinic;
+			$loginContainer->laboratory = $userLaboratory;
+			return 'home';
+		    }
 		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';

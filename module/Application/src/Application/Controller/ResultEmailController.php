@@ -40,7 +40,7 @@ class ResultEmailController extends AbstractActionController{
             $params = $request->getPost();
             $commonService = $this->getServiceLocator()->get('CommonService');
             $commonService->sendResultMail($params);
-            return $this->redirect()->toUrl('/result-email/'.$params['chosenCountryId']);
+            return $this->redirect()->toUrl('/result-email/'.$params['chosenCountry']);
         }
       return new ViewModel();
     }

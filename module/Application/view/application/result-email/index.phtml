@@ -149,7 +149,7 @@
                 <div class="col s12 dataCollectionSection"></div>
             </div>
             <div class="col s12">
-                <input type="hidden" name="chosenCountryId" id="chosenCountryId" value="<?php echo base64_encode($countryId); ?>"/>
+                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
                 <input type="hidden" name="pdfFile" id="pdfFile" />
                 <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();"><i class="zmdi zmdi-mail-send"></i> SEND</a>&nbsp;&nbsp;
@@ -247,7 +247,7 @@
         var specimenCollectedDate = $('#specimenCollectedDate').val();
         var facility = $('#facility').val();
         var mailSentStatus = $('#mailSentStatus').val();
-        $.post("<?php echo $this->url('get-data-collection'); ?>", {anc:anc,specimenCollectedDate:specimenCollectedDate,facility:facility,mailSentStatus:mailSentStatus,chosenCountryId:$("#chosenCountryId").val()},
+        $.post("<?php echo $this->url('get-data-collection'); ?>", {anc:anc,specimenCollectedDate:specimenCollectedDate,facility:facility,mailSentStatus:mailSentStatus,chosenCountry:$("#chosenCountry").val()},
         function(data){
           if(from == 'search' || from == 'change' || from == 'reset'){ $.unblockUI(); }
           $('.dataCollectionSection').html(data);

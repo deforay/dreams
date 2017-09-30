@@ -108,7 +108,7 @@ if(count($row['userLaboratories'])>0){
                     </div>
                 </div>
             </div>
-            <?php if($countryId > 0){ ?>
+            <?php if($countryId >0){ ?>
                 <div class="row">
                     <div class="col s6">
                         <div class="input-padding col m10 s10">
@@ -272,15 +272,16 @@ if(count($row['userLaboratories'])>0){
                 if($('#country').length  >0 || $('#countryMulti').length >0){
                     var country = $("#country").val();
                     var countryMulti = $("#countryMulti").val();
-                    if((country=='' || country==null) && (countryMulti=='' || countryMulti==null)){
+                    if((country == '' || country == null) && (countryMulti == '' || countryMulti == null)){
                         alert("Please choose country");
                         return false;
                     }
                 }
-                document.getElementById('editUserForm').submit();
+              document.getElementById('editUserForm').submit();
             }
         }
     }
+    
     $(document).ready(function() {
         checkUserRole('<?php echo base64_encode($row->role);?>');
     });
