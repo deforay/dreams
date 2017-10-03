@@ -31,9 +31,9 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
 $lAgAvidityResult = '';
-if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'lt'){
+if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'long term'){
     $lAgAvidityResult = 'Long Term';
-}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'r'){
+}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'recent'){
     $lAgAvidityResult = 'Recent';
 }
 $hIVRNAResult = '';
@@ -258,8 +258,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'*'; ?></label>
+                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
                         </div>
                     </div>
                     <div class="col s4">
@@ -271,9 +271,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                         <div class="input-padding col m10 s10 prePopulateAvidity">
                           <strong>LAg Avidity Result</strong> <br>
                            <label for="lagAvidityResult" style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></label>
-                          <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'r')?'checked="checked"':''; ?> value="r" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'recent')?'checked="checked"':''; ?> value="recent" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
-                          <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'lt')?'checked="checked"':''; ?> value="lt" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+                          <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'long term')?'checked="checked"':''; ?> value="long term" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
                           <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
                         </div>
                     </div>
@@ -305,19 +305,19 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
 			    <br>
                           <div id="box-1">
-                            <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'p')?'checked="checked"':''; ?> value="p"/>
+                            <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Positive')?'checked="checked"':''; ?> value="HIV Positive"/>
                             <label for="asanteRapidRecencyAssayP">HIV Positive </label><br>
-                            <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'n')?'checked="checked"':''; ?> value="n"/>
+                            <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'checked="checked"':''; ?> value="HIV Negative"/>
                             <label for="asanteRapidRecencyAssayN">HIV Negative </label><br>
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" value="<?php echo $readerValueRRDT; ?>" onblur="getReaderValueRRDTLogVal();"/>
 			    <br><div id="readerValueRRDTLogVal"></div>
 			    <div id="readerValueRRDTLogValText"></div>
                           </div>
-                          <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">&rArr;</div>
-                          <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'n')?'visibility:hidden;':''; ?>">
-                            <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'r')?'checked="checked"':''; ?> value="r"/>
+                          <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">&rArr;</div>
+                          <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">
+                            <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'recent')?'checked="checked"':''; ?> value="recent"/>
                             <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label><br>
-                            <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'lt')?'checked="checked"':''; ?> value="lt"/>
+                            <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'long term')?'checked="checked"':''; ?> value="long term"/>
                             <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" value="<?php echo $readerValueRRR; ?>" onblur="getReaderValueRRRLogVal();"/>
 			    <br><div id="readerValueRRRLogVal"></div>
@@ -327,12 +327,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
 		    <div class="col s3">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'r')?'':'*'; ?></label>
+                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
                         </div>
 		    </div>
 		    <?php
-		    if($row->final_lag_avidity_odn > 2 && (($asanteRapidRecencyAssayPn == 'p' && $asanteRapidRecencyAssayRlt =='r') || ($asanteRapidRecencyAssayPn == '' && $asanteRapidRecencyAssayRlt =='r'))){ ?>
+		    if($row->final_lag_avidity_odn > 2 && (($asanteRapidRecencyAssayPn == 'HIV Positive' && $asanteRapidRecencyAssayRlt =='recent') || ($asanteRapidRecencyAssayPn == '' && $asanteRapidRecencyAssayRlt =='recent'))){ ?>
 			<div class="col s3">
 			    <span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
 			</div>
@@ -526,9 +526,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     }
     
     $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
-	if(this.value == 'p') {
+	if(this.value == 'HIV Positive') {
 	    $('#box-2,#box-breaker').css('visibility','visible');
-	}else if(this.value == 'n'){
+	}else if(this.value == 'HIV Negative'){
 	    $('#box-2,#box-breaker').css('visibility','hidden');
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);

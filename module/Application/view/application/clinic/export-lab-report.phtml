@@ -131,12 +131,7 @@ if(count($labReportResult) >0){
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
-            $lAgAvidityResult = '';
-	    if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='lt'){
-	      $lAgAvidityResult = 'Long Term';
-	    }else if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='r'){
-	      $lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
 	    //$hIVRNAResult = '';
 	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
 	    //  $hIVRNAResult = 'High Viral Load';

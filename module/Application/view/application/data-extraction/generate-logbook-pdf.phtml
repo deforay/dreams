@@ -14,6 +14,7 @@ if(count($logbookResult) >0){
 	    $allLabs[] = ' '.ucwords($facility['facility_name']);
 	    if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
 		$displayLab = ucwords($facility['facility_name']);
+		break;
 	    }
 	}
        $displayAllLabs = implode(',',$allLabs);
@@ -35,7 +36,7 @@ if(count($logbookResult) >0){
              //Set font
             $this->SetFont('helvetica', 'B', 20);
              //Title
-            $this->writeHTMLCell(0,'',36,10,$this->heading.'<span style="font-size:16px;font-weight:normal;">'.$this->additionalTxt.'</span>',0,1,false,true,'C',true);
+            $this->writeHTMLCell(0,'',36,10,$this->heading.'<span style="font-size:18px;font-weight:normal;">'.$this->additionalTxt.'</span>',0,1,false,true,'C',true);
 	    //$this->writeHTMLCell(0,'','','','<br/><hr/>',0,1,false,true,'C',true);
         }
     
@@ -143,12 +144,7 @@ if(count($logbookResult) >0){
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
-            $lAgAvidityResult = '';
-	    if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='lt'){
-	      $lAgAvidityResult = 'Long Term';
-	    }else if(trim($row['lag_avidity_result'])!= '' && $row['lag_avidity_result'] =='r'){
-	      $lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
 	    //$hIVRNAResult = '';
 	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
 	    //  $hIVRNAResult = 'High Viral Load';
@@ -163,21 +159,11 @@ if(count($logbookResult) >0){
 	    if(trim($row['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		    $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
-		    if($asanteRapidRecencyAssayPn == 'p'){
-			$rapidRecencyAssay = 'HIV Positive';
-		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$rapidRecencyAssay = 'HIV Negative';
-		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
-		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+		    $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		    $recencyReaderValue = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
-		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$rapidRecencyAssayDuration = 'Recent';
-		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$rapidRecencyAssayDuration = 'Long Term';
-		    }
 		}
 	    }
 	    $redTxt='';

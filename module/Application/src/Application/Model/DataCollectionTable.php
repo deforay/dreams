@@ -76,7 +76,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRR'])){
                 $params['readerValueRRR'] = '';
-            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'p' && $params['asanteRapidRecencyAssayRlt']== ''))){
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
@@ -91,7 +91,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}
 	    }
@@ -318,12 +318,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 	    }
-	    $lAgAvidityResult = '';
-	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'Long Term';
-	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
 	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
 	//	$hIVRNAResult = 'High Viral Load';
@@ -337,18 +332,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'HIV Positive';
-		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'HIV Negative';
-		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
-		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$asanteRapidRecencyAssayRlt = 'Recent';
-		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$asanteRapidRecencyAssayRlt = 'Long Term';
-		    }
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
 	    }
 	    $userUnlockedHistory = '';
@@ -496,7 +481,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRDT'])){
                 $params['readerValueRRDT'] = '';
-            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'p' && $params['asanteRapidRecencyAssayRlt']== ''))){
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
@@ -511,7 +496,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'r' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'r' && trim($params['hivRna']) == '')){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		}else if($params['formStatus'] == 2){
 		   $status = $params['formStatus'];//locked
@@ -807,12 +792,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 	    }
-	    $lAgAvidityResult = '';
-	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'Long Term';
-	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
 	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
 	//	$hIVRNAResult = 'High Viral Load';
@@ -825,18 +805,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'HIV Positive';
-		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'HIV Negative';
-		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
-		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$asanteRapidRecencyAssayRlt = 'Recent';
-		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$asanteRapidRecencyAssayRlt = 'Long Term';
-		    }
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
 	    }
 	    
@@ -1242,12 +1212,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 	    }
-	    $lAgAvidityResult = '';
-	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'Long Term';
-	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
 	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
 	//	$hIVRNAResult = 'High Viral Load';
@@ -1260,18 +1225,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-		    if($asanteRapidRecencyAssayPn == 'p'){
-			$asanteRapidRecencyAssayPn = 'HIV Positive';
-		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$asanteRapidRecencyAssayPn = 'HIV Negative';
-		    }
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
-		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$asanteRapidRecencyAssayRlt = 'Recent';
-		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$asanteRapidRecencyAssayRlt = 'Long Term';
-		    }
+		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
 	    }
 	    
@@ -1484,7 +1439,6 @@ class DataCollectionTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-	    $row = array();
 	    $specimenCollectedDate = '';
 	    $specimenPickUpDateatAnc = '';
 	    $receiptDateAtCentralLab = '';
@@ -1501,12 +1455,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 	    }
-	    $lAgAvidityResult = '';
-	    if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-		$lAgAvidityResult = 'Long Term';
-	    }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-		$lAgAvidityResult = 'Recent';
-	    }
+	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
 	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
 	//	$hIVRNAResult = 'High Viral Load';
@@ -1519,7 +1468,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else{
 		$status = ucwords($aRow['test_status_name']);
 	    }
-	    
+	    $row = array();
 	    $row[] = $specimenCollectedDate;
 	    $row[] = $status;
 	    $row[] = ucwords($aRow['anc_site_name']);
@@ -1783,10 +1732,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);
 	$output = array(
-		   "sEcho" => intval($parameters['sEcho']),
-		   "iTotalRecords" => $iTotal,
-		   "iTotalDisplayRecords" => $iFilteredTotal,
-		   "aaData" => array()
+	    "sEcho" => intval($parameters['sEcho']),
+	    "iTotalRecords" => $iTotal,
+	    "iTotalDisplayRecords" => $iFilteredTotal,
+	    "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
 	    $specimenCollectedDate = '';
@@ -1809,11 +1758,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	      $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> Rejected</a>';
 	    }
 	    //LAg assay
-	    if($aRow['lag_avidity_result']=='lt'){
-		$lagResult = 'Long Term';
-	    }else if($aRow['lag_avidity_result']=='r'){
-		$lagResult = 'Recent';
-	    }
+	    $lagResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	    //HIV rna values
 	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
 	//	$hIVRNAResult = 'High Viral Load';
@@ -1824,19 +1769,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-		    if($asanteRapidRecencyAssayPn == 'p'){
-			$rapidRecencyAssay = 'HIV Positive';
-		    }else if($asanteRapidRecencyAssayPn == 'n'){
-			$rapidRecencyAssay = 'HIV Negative';
-		    }
+		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
-		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-		    if($asanteRapidRecencyAssayRlt == 'r'){
-			$rapidRecencyAssayDuration = 'Recent';
-		    }else if($asanteRapidRecencyAssayRlt == 'lt'){
-			$rapidRecencyAssayDuration = 'Long Term';
-		    }
+		    $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
 	    }
 	    $row = array();

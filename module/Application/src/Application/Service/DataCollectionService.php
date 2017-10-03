@@ -187,12 +187,7 @@ class DataCollectionService {
                         if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
                             $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
                         }
-                        $recencyInfection = '';
-                        if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='lt'){
-                            $recencyInfection = 'Long Term';
-                        }else if(trim($aRow['lag_avidity_result'])!= '' && $aRow['lag_avidity_result'] =='r'){
-                            $recencyInfection = 'Recent';
-                        }
+                        $recencyInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         //$hIVRNAResult = '';
                         //if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
                         //    $hIVRNAResult = 'High Viral Load';
@@ -206,21 +201,11 @@ class DataCollectionService {
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
-                                $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+                                $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
                                 $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
-                                if($asanteRapidRecencyAssayPn == 'p'){
-                                    $rapidRecencyAssay = 'HIV Positive';
-                                }else if($asanteRapidRecencyAssayPn == 'n'){
-                                    $rapidRecencyAssay = 'HIV Negative';
-                                }
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
-                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+                                $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
                                 $recencyReaderValue = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
-                                if($asanteRapidRecencyAssayRlt == 'r'){
-                                    $rapidRecencyAssayDuration = 'Recent';
-                                }else if($asanteRapidRecencyAssayRlt == 'lt'){
-                                    $rapidRecencyAssayDuration = 'Long Term';
-                                }
                             }
                         }
                         
@@ -803,11 +788,7 @@ class DataCollectionService {
                           $status = 'Rejected';
                         }
                         //recent infection
-                        if($aRow['lag_avidity_result']=='lt'){
-                            $recentInfection = 'Long Term';
-                        }else if($aRow['lag_avidity_result']=='r'){
-                            $recentInfection = 'Recent';
-                        }
+                        $recentInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         //HIV rna values
                         //if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
                         //    $hIVRNAResult = 'High Viral Load';
@@ -818,19 +799,9 @@ class DataCollectionService {
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
-                                $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-                                if($asanteRapidRecencyAssayPn == 'p'){
-                                    $rapidRecencyAssay = 'HIV Positive';
-                                }else if($asanteRapidRecencyAssayPn == 'n'){
-                                    $rapidRecencyAssay = 'HIV Negative';
-                                }
+                                $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
-                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-                                if($asanteRapidRecencyAssayRlt == 'r'){
-                                    $rapidRecencyAssayDuration = 'Recent';
-                                }else if($asanteRapidRecencyAssayRlt == 'lt'){
-                                    $rapidRecencyAssayDuration = 'Long Term';
-                                }
+                                $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
                             }
                         }
                         $row = array();

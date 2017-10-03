@@ -124,10 +124,10 @@ $alertContainer->nbPages = count($dataResult);
 	}
 	$lagAssay = '';
 	$lagAssayImage = '';
-	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'r'){
+	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
 	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
 	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
-	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'lt'){
+	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'long term'){
 	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term';
 	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
@@ -135,12 +135,7 @@ $alertContainer->nbPages = count($dataResult);
 	if(isset($data['asante_rapid_recency_assy']) && trim($data['asante_rapid_recency_assy'])!= ''){
 	    $asanteRapidRecencyAssy = json_decode($data['asante_rapid_recency_assy'],true);
 	    if(isset($asanteRapidRecencyAssy['rrr'])){
-		$asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
-		if($asanteRapidRecencyAssayRlt == 'r'){
-		    $rapidRecencyAssayDuration = 'Recent';
-		}else if($asanteRapidRecencyAssayRlt == 'lt'){
-		    $rapidRecencyAssayDuration = 'Long Term';
-		}
+		$rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 	    }
 	}
 	$hivRna = '';

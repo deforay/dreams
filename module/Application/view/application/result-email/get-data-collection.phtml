@@ -6,9 +6,9 @@
        <?php
        foreach($dataList as $data){
             $lAgAvidityResult = '';
-	    if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='lt'){
+	    if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='long term'){
 		$lAgAvidityResult = '&nbsp;-&nbsp;Long Term';
-	    }else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='r'){
+	    }else if(trim($data['lag_avidity_result'])!= '' && $data['lag_avidity_result'] =='recent'){
 		$lAgAvidityResult = '&nbsp;-&nbsp;Recent';
 	    }
 	    $hIVRNAResult = '';
