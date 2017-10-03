@@ -801,7 +801,7 @@ class DataCollectionService {
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
-                                $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
+                                $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
                             }
                         }
                         $row = array();
