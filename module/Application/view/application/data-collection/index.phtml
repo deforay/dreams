@@ -112,7 +112,7 @@ if(isset($date) && trim($date)!= ''){
        </div>
     </div>
     <?php
-    if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+    if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
 	<div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
 	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;">Hide this form</a>
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>">
@@ -558,7 +558,7 @@ if(isset($date) && trim($date)!= ''){
                                  <th>Country</th>
 				<?php } ?>
 				<?php
-                                if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
                                    <th style="width:120px !important;text-align:center;">Action</th>
 				<?php } ?>
                             </tr>
@@ -596,7 +596,7 @@ if(isset($date) && trim($date)!= ''){
                                  <th>Country</th>
 				<?php } ?>
 				<?php
-                                if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
                                   <th style="text-align:center;">Action</th>
 				<?php } ?>
                             </tr>
@@ -651,7 +651,7 @@ if(isset($date) && trim($date)!= ''){
 		  {"sClass":"dataTable_noWrap"},
 		<?php } ?>
 		<?php
-                if($loginContainer->hasViewOnlyAccess =='no'){ ?>
+                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
 		   {"sClass":"dataTable_noWrap","bSortable":false}
 		<?php } ?>
             ],

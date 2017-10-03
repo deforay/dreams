@@ -147,7 +147,7 @@ class CountryTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['country_name']);
            $row[] = $aRow['country_code'];
            $row[] = ucwords($aRow['country_status']);
-           if($loginContainer->hasViewOnlyAccess =='no') {
+           if($loginContainer->hasViewOnlyAccess!= 'yes') {
               $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            }
            $output['aaData'][] = $row;
@@ -186,12 +186,12 @@ class CountryTable extends AbstractTableGateway {
             }else if(trim($country)!= '' && $country >0){
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country));
             }else{
-                if($loginContainer->roleCode != 'CSC' && count($loginContainer->country) >0){
+                if($loginContainer->roleCode!= 'CSC'){
                     $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
                 }
             }
         }
         $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);
-        return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

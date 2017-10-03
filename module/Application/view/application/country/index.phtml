@@ -51,7 +51,7 @@ $loginContainer = new Container('user');
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Country List
                 <?php
-		if($loginContainer->hasViewOnlyAccess =='no') {
+		if($loginContainer->hasViewOnlyAccess!= 'yes') {
 		?>
                  <span style="float:right;"><a class="custom-add-btn" href="<?php echo $this->url('country',array('action' => 'add')); ?>"><i class="zmdi zmdi-plus"></i> Add Country</a></span>
                 <?php } ?>
@@ -64,7 +64,7 @@ $loginContainer = new Container('user');
                                 <th>Country Code</th>
                                 <th>Country Status</th>
                                 <?php
-                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
                                   <th>Action</th>
                                 <?php } ?>
@@ -76,7 +76,7 @@ $loginContainer = new Container('user');
                                 <th>Country Code</th>
                                 <th>Country Status</th>
                                 <?php
-                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
                                   <th>Action</th>
                                 <?php } ?>
@@ -103,7 +103,7 @@ $loginContainer = new Container('user');
             {"sClass":"center"},
             {"sClass":"left"},
             <?php
-            if($loginContainer->hasViewOnlyAccess =='no') {
+            if($loginContainer->hasViewOnlyAccess!= 'yes') {
             ?>
               {"sClass":"center","bSortable":false}
             <?php } ?>

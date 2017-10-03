@@ -81,10 +81,15 @@ class UserTable extends AbstractTableGateway {
 		    }
 		}
 		//to prevent listing unmapped(all) anc/lab
-		if($loginResult->role_code == 'ANCSC' && count($userClinic) ==0){
-		    $userClinic[] = 0;
+		if($loginResult->role_code!= 'CSC' && count($userCountry) ==0){
+		    $alertContainer->msg = 'You are not mapped to any country. Please contact admin for further assistance!';
+		   return 'login';
 		}else if(($loginResult->role_code == 'LS' || $loginResult->role_code == 'LDEO') && count($userLaboratory) ==0){
-		    $userLaboratory[] = 0;
+		    $alertContainer->msg = 'You are not mapped to any laboratory. Please contact admin for further assistance!';
+		   return 'login';
+		}else if($loginResult->role_code == 'ANCSC' && count($userClinic) ==0){
+		    $alertContainer->msg = 'You are not mapped to any anc site. Please contact admin for further assistance!';
+		   return 'login';
 		}
 		if($isCountrySelected){
 		    if(in_array($selectedCountry,$userCountry)){
@@ -103,27 +108,22 @@ class UserTable extends AbstractTableGateway {
 		       return 'home';
 		    }else{
 		       $alertContainer->msg = 'Please check the country that you have choosen..!';
-		       return 'login';
+		      return 'login';
 		    }
 		}else{
-		    if($loginResult->role_code!= 'CSC' && count($userCountry) ==0){
-			$alertContainer->msg = 'You are not mapped to any country. Please contact admin for further assistance!';
-		       return 'login';
-		    }else{
-			//update last login
-			$this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
-			$loginTrackerDb->addNewLogin($loginResult->user_id);
-			$loginContainer->userId = $loginResult->user_id;
-			$loginContainer->userName = $loginResult->user_name;
-			$loginContainer->roleCode = $loginResult->role_code;
-			$loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
-			$loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
-			$loginContainer->hasPRAccess = $loginResult->has_print_report_access;
-			$loginContainer->country = $userCountry;
-			$loginContainer->clinic = $userClinic;
-			$loginContainer->laboratory = $userLaboratory;
-			return 'home';
-		    }
+		    //update last login
+		    $this->update(array('last_login'=>$common->getDateTime()),array('user_id'=>$loginResult->user_id));
+		    $loginTrackerDb->addNewLogin($loginResult->user_id);
+		    $loginContainer->userId = $loginResult->user_id;
+		    $loginContainer->userName = $loginResult->user_name;
+		    $loginContainer->roleCode = $loginResult->role_code;
+		    $loginContainer->hasViewOnlyAccess = $loginResult->has_view_only_access;
+		    $loginContainer->hasDRAccess = $loginResult->has_data_reporting_access;
+		    $loginContainer->hasPRAccess = $loginResult->has_print_report_access;
+		    $loginContainer->country = $userCountry;
+		    $loginContainer->clinic = $userClinic;
+		    $loginContainer->laboratory = $userLaboratory;
+		   return 'home';
 		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
@@ -355,7 +355,7 @@ class UserTable extends AbstractTableGateway {
 	    $row[] = $access;
 	    $row[] = ucwords($aRow['status']);
 	    $row[] = $lastLogin;
-	    if($loginContainer->hasViewOnlyAccess =='no') {
+	    if($loginContainer->hasViewOnlyAccess!= 'yes') {
 	       $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
 	    $output['aaData'][] = $row;
@@ -429,12 +429,12 @@ class UserTable extends AbstractTableGateway {
 	$config = new \Zend\Config\Reader\Ini();
 	$configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
 	$changedPassword = sha1($params['newPassword'] . $configResult["password"]["salt"]);
-	$updated = $this->update(array('password'=>$changedPassword),array('user_id'=>$loginContainer->userId));
-	if($updated >0){
+	$hasUpdated = $this->update(array('password'=>$changedPassword),array('user_id'=>$loginContainer->userId));
+	if($hasUpdated >0){
 	    $alertContainer->msg = 'Your have successfully updated your password.';
 	    return true;
 	}else{
-	    $alertContainer->msg = 'OOPS..Unable to change your password.';
+	    $alertContainer->msg = 'OOPS..Error while updating your password.';
 	    return false;
 	}
     }

@@ -126,8 +126,10 @@ $loginContainer = new Container('user');
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchRiskAssessmentData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<a href="javascript:void(0);" onclick="searchRiskAssessmentData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+		<?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
+		   &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="extractRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<?php } ?>
 	    </div>
 	</form>
     </div>
@@ -135,9 +137,7 @@ $loginContainer = new Container('user');
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Risk Assessment List
-		<?php
-		if($loginContainer->hasViewOnlyAccess =='no') {
-		?>
+		<?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
 		  <span style="float:right;"><a class="custom-add-btn" href="/clinic/risk-assessment/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add Risk Assessment</a></span>
 		<?php } ?>
 		</div>
@@ -157,8 +157,9 @@ $loginContainer = new Container('user');
                                 if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
+				<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
+                                  <th>Action</th>
 				<?php } ?>
-                                <th>Action</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -175,8 +176,9 @@ $loginContainer = new Container('user');
                                 if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
+				<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
+                                  <th>Action</th>
 				<?php } ?>
-                                <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -212,8 +214,9 @@ $loginContainer = new Container('user');
 		if(trim($countryId)== ''){
 		?>
 		  {"sClass":"dataTable_noWrap"},
+		<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
+                  {"sClass":"dataTable_noWrap"}
 		<?php } ?>
-                {"sClass":"dataTable_noWrap"}
             ],
             "aaSorting": [[5, "desc"]],
             "bProcessing": true,

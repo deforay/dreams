@@ -27,6 +27,10 @@ class LoginController extends AbstractActionController{
                 $dataCollectionService->automaticDataCollectionLockAfterLogin();
             }if($redirectUrl == 'home' && $loginContainer->roleCode == 'CC'){
                 return $this->redirect()->toUrl('/dashboard/'.base64_encode($loginContainer->country[0]));
+            }else if($redirectUrl == 'home' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
+                return $this->redirect()->toUrl('/data-collection/'.base64_encode($loginContainer->country[0]));
+            }else if($redirectUrl == 'home' && $loginContainer->roleCode == 'ANCSC'){
+                return $this->redirect()->toUrl('/clinic/data-collection/'.base64_encode($loginContainer->country[0]));
             }else{
                 return $this->redirect()->toRoute($redirectUrl);
             }
@@ -35,7 +39,7 @@ class LoginController extends AbstractActionController{
             return $this->redirect()->toRoute("home");
         }else{
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('login','');
+            $countryList = $countryService->getActiveCountries('login','');
             $viewModel = new ViewModel(array(
                 'countries'=>$countryList
             ));

@@ -107,7 +107,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                 </div>
             </fieldset>
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Recency Test Result</strong></h6>
-            <fieldset style="border-color:#F44336;border-style:solid;">
+            <fieldset id="rtrSection" style="height:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'auto':'90px'; ?>;border-color:#F44336;border-style:solid;">
 		<div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
@@ -129,7 +129,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                         <label for="rrrHIVDiagnostic">HIV Diagnostic Line </label>
 			</div>
 		    </div>
-		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || $row->HIV_diagnostic_line !='negative'))?'':'none'; ?>">
+		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>">
 			<div class="input-field col m12 s12">
 			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
                             <option value=""> -- Select -- </option>
@@ -988,8 +988,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
     //set patient recency test status
     $('input:radio[name=hasPatientHadRapidRecencyTest]').change(function () {
 	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
+            $('#rtrSection').css('height','auto');
 	    $('.rrrSection').show();
 	}else{
+           $('#rtrSection').css('height','90px');
 	   $('.rrrSection').hide();
 	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
 	   //$('#rrrRecency option:first').prop('selected', true);

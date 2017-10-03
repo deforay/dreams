@@ -75,9 +75,7 @@ if(trim($countryId)!= ''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Monthly Reporting</a>
        </div>
     </div>
-    <?php
-    if($loginContainer->hasViewOnlyAccess =='no') {
-    ?>
+    <?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
         <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
                 <div class="col l12 m12 s12">
@@ -177,7 +175,7 @@ if(trim($countryId)!= ''){
                                 <?php } ?>
                                 <th>Comments</th>
                                 <?php
-                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
                                   <th style="width:120px !important;">Action</th>
                                 <?php } ?>
@@ -199,7 +197,7 @@ if(trim($countryId)!= ''){
                                 <?php } ?>
                                 <th>Comments</th>
                                 <?php
-                                if($loginContainer->hasViewOnlyAccess =='no') {
+                                if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
                                   <th>Action</th>
                                 <?php } ?>
@@ -235,7 +233,7 @@ if(trim($countryId)!= ''){
                 <?php } ?>
                 {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php
-                if($loginContainer->hasViewOnlyAccess =='no') {
+                if($loginContainer->hasViewOnlyAccess!= 'yes') {
                 ?>
                   {"sClass":"dataTable_noWrap","bSortable":false}
                 <?php } ?>

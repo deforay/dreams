@@ -57,7 +57,7 @@ if(!isset($countryId) || $countryId ==''){
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
 		<?php
-		if($loginContainer->hasViewOnlyAccess =='no' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
+		if($loginContainer->hasViewOnlyAccess!= 'yes' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
 		?>
 		  <span style="float:right;"><a class="custom-add-btn" href="/user/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add User</a></span>
 		<?php } ?>
@@ -79,7 +79,7 @@ if(!isset($countryId) || $countryId ==''){
                                 <th>Status</th>
                                 <th>Last Login</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess =='no') {
+				if($loginContainer->hasViewOnlyAccess!= 'yes') {
 				?>
                                    <th style="width:80px !important;">Action</th>
 				<?php } ?>
@@ -100,7 +100,7 @@ if(!isset($countryId) || $countryId ==''){
                                 <th>Status</th>
                                 <th>Last Login</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess =='no') {
+				if($loginContainer->hasViewOnlyAccess!= 'yes') {
 				?>
                                   <th>Action</th>
 				<?php } ?>
@@ -136,7 +136,7 @@ if(!isset($countryId) || $countryId ==''){
 		{"sClass":"left"},
 		{"sClass":"center"},
 		<?php
-		if($loginContainer->hasViewOnlyAccess =='no') {
+		if($loginContainer->hasViewOnlyAccess!= 'yes') {
 		?>
 		  {"sClass":"center","bSortable":false}
 		<?php } ?>

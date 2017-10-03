@@ -239,7 +239,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
               $row[] = '<div>'.$colVal.'&nbsp;&nbsp;</div>';
            }
            $row[] = ucfirst($aRow['comments']);
-           if($loginContainer->hasViewOnlyAccess =='no') {
+           if($loginContainer->hasViewOnlyAccess!= 'yes') {
               $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            }
            $output['aaData'][] = $row;

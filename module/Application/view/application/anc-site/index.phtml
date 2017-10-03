@@ -83,7 +83,7 @@ if(!isset($countryId)){
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Site List
 		<?php
-		if($loginContainer->hasViewOnlyAccess =='no') {
+		if($loginContainer->hasViewOnlyAccess!= 'yes') {
 		?>
 		  <span style="float:right;"><a class="custom-add-btn" href="/anc-site/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add ANC Site</a></span>
 		<?php } ?>
@@ -104,7 +104,7 @@ if(!isset($countryId)){
 				<?php } ?>
                                 <th>Status</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess =='no') {
+				if($loginContainer->hasViewOnlyAccess!= 'yes') {
 				?>
                                   <th>Action</th>
 				<?php } ?>
@@ -124,7 +124,7 @@ if(!isset($countryId)){
 				<?php } ?>
                                 <th>Status</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess =='no') {
+				if($loginContainer->hasViewOnlyAccess!= 'yes') {
 				?>
                                   <th>Action</th>
 				<?php } ?>
@@ -159,7 +159,7 @@ if(!isset($countryId)){
 		<?php } ?>
 		{"sClass":"left"},
 		<?php
-		if($loginContainer->hasViewOnlyAccess =='no') {
+		if($loginContainer->hasViewOnlyAccess!= 'yes') {
 		?>
 		  {"sClass":"center","bSortable":false}
 		<?php } ?>

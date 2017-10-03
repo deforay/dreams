@@ -199,7 +199,7 @@ class AncSiteTable extends AbstractTableGateway {
 	       $row[] = ucwords($aRow['country_name']);
 	    }
 	    $row[] = ucwords($aRow['status']);
-	    if($loginContainer->hasViewOnlyAccess =='no') {
+	    if($loginContainer->hasViewOnlyAccess!= 'yes') {
 	       $row[] = '<a href="/anc-site/edit/' . base64_encode($aRow['anc_site_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
 	    $output['aaData'][] = $row;
