@@ -232,26 +232,26 @@ if(trim($countryId)!= ''){
 		    <label for="everBeenMarriedNo" class="active">No </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? *
+                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate isRequired checkNum" title="Please enter years" style="width:10%;"> Years&nbsp;
+                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate years checkNum isRequired" title="Please enter years" style="width:10%;"> Years&nbsp;
                     <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="dontknow" type="radio">
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="refused" type="radio">
 		    <label for="ageAtFirstMarriageR" class="active">Refused </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;">
                 <div class="col s12">
-                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? *
+                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s6">
                     <input id="everBeenWidowedYes" class="with-gap isRequired" name="everBeenWidowed" title="Don't leave 5th question" value="yes" type="radio">
 		    <label for="everBeenWidowedYes" class="active">Yes </label>&nbsp&nbsp
@@ -263,13 +263,13 @@ if(trim($countryId)!= ''){
 		    <label for="everBeenWidowedR" class="active">Refused </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    6. What is your marital status <span class="highlightedTxt">now</span>? *
+                    6. What is your marital status <span class="highlightedTxt">now</span>? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
-                <div class="col s4">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
+                <div class="col s4 currentMaritalStatus">
                     <select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select isRequired" title="Don't leave 6th question">
                         <option value=""> -- Select -- </option>
                         <option value="married">Married/Cohabiting</option>
@@ -344,7 +344,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired checkNum" title="Please enter years" style="width:20%;"> Years
+                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired years checkNum" title="Please enter years" style="width:20%;"> Years
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -371,7 +371,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate isRequired checkNum" title="Please enter no. of persons" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate persons checkNum isRequired" title="Please enter no. of persons" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio">
 		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio">
@@ -385,7 +385,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate isRequired checkNum" title="Please enter no. of persons" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate persons checkNum isRequired" title="Please enter no. of persons" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio">
 		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio">
@@ -399,7 +399,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate isRequired checkNum" title="Please enter years" style="width:10%;"> Years&nbsp;
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate isRequired years checkNum" title="Please enter years" style="width:13%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio">
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio">
@@ -469,7 +469,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate isRequired checkNum" title="Don't leave 18th question" style="width:20%;"> Times
+                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate times checkNum isRequired" title="Don't leave 18th question" style="width:20%;"> Times
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -586,7 +586,7 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate isRequired checkNum" title="Please enter no. of days" style="width:10%;"> Days&nbsp;
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate days checkNum isRequired" title="Please enter no. of days" style="width:10%;"> Days&nbsp;
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio">
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio">
@@ -702,7 +702,7 @@ if(trim($countryId)!= ''){
 		    <label for="patientHurtBySomeoneWithinLastYearO" class="active">Other</label>
 		    <input id="patientHurtBySomeoneWithinLastYearM" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="multiple" type="radio">
 		    <label for="patientHurtBySomeoneWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:12%;"> Times
+		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate nooftimes checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:12%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -779,7 +779,7 @@ if(trim($countryId)!= ''){
 		    <label for="patientForcedForSexWithinLastYearO" class="active">Other</label>
 		    <input id="patientForcedForSexWithinLastYearM" class="with-gap" name="patientForcedForSexWithinLastYear" value="multiple" type="radio">
 		    <label for="patientForcedForSexWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:12%;"> Times
+		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate nooftimes checkNum" placeholder="Total no.of times" title="Please enter no. of times" style="width:12%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -1042,6 +1042,67 @@ if(trim($countryId)!= ''){
 	}else{
 	    $('.rrrRecency').show();
 	}
+    });
+    
+    //enable/disable Demographic Characteristics fields based on q.3
+    $('input:radio[name=everBeenMarried]').change(function () {
+	if ($("input[name='everBeenMarried']:checked").val() == 'no') {
+	    //css section
+	    $(".everBeenMarriedSectionRequired").css("visibility","hidden");
+	    $(".everBeenMarriedSection").css("color","rgba(0,0,0,0.26)");
+	    $('#ageAtFirstMarriageInYears').css("pointer-events","none");
+	    $("input[name='ageAtFirstMarriage']").attr("disabled","disabled");
+	    $("input[name='everBeenWidowed']").attr("disabled","disabled");
+	    $(".currentMaritalStatus").css("pointer-events","none");
+	    //validate/content section
+	    $("#ageAtFirstMarriageInYears").val("");
+	    $("#ageAtFirstMarriageDK").prop('checked',false);
+	    $("#ageAtFirstMarriageR").prop('checked',false);
+	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
+	    $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
+	    $("input[name='everBeenWidowed']").removeClass("isRequired");
+	}else{
+	    //css section
+	    $(".everBeenMarriedSectionRequired").css("visibility","visible");
+	    $(".everBeenMarriedSection").css("color","");
+	    $('#ageAtFirstMarriageInYears').css("pointer-events","auto");
+	    $("input[name='ageAtFirstMarriage']").removeAttr("disabled");
+	    $("input[name='everBeenWidowed']").removeAttr("disabled");
+	    $(".currentMaritalStatus").css("pointer-events","auto");
+	    //validate/content section
+	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").addClass("isRequired");
+	    $("input[name='everBeenWidowed']").addClass("isRequired");
+	}
+    });
+    
+    //age range validation
+    $('.years').on('change',function() {
+	var years = $('#'+this.id).val();
+	if(parseInt(years) < 1 || parseInt(years) > 100) { alert('Age range should be 1-100'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //person range validation
+    $('.persons').on('change',function() {
+	var persons = $('#'+this.id).val();
+	if(parseInt(persons) > 10000) { alert('Person range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //pregnancy range validation
+    $('.times').on('change',function() {
+	var times = $('#'+this.id).val();
+	if(parseInt(times) > 15) { alert('No.of pregnancy range should be 0-15'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //alcohol days range validation
+    $('.days').on('change',function() {
+	var days = $('#'+this.id).val();
+	if(parseInt(days) > 185) { alert('No.of days can\'t be more than 185'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //patient hurt/forced to have sex range validation
+    $('.nooftimes').on('change',function() {
+	var nooftimes = $('#'+this.id).val();
+	if(parseInt(nooftimes) > 10000) { alert('Total no.of times range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
     });
     
     function checkPatientRecord(type){

@@ -206,6 +206,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo (int)$row->age_at_first_marriage." Years";
                             }else if((int)$row->age_at_first_marriage == 1){
                                 echo (int)$row->age_at_first_marriage." Year";
+                            }else{
+                                echo ucwords($row->age_at_first_marriage);
                             }
                         }
                         ?>
@@ -256,6 +258,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                             echo "Don't Know";
                         }else if($row->current_marital_status == 'refused'){
                             echo "Refused";
+                        }else{
+                            echo ucwords($row->current_marital_status);
                         }
                     }
                     ?>

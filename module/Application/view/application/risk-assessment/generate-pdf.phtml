@@ -125,7 +125,9 @@ $common = new \Application\Service\CommonService();
                $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Years";
             }else if((int)$data['age_at_first_marriage'] == 1){
                 $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Year";
-            }
+            }else{
+		$agtAtFirstMarriage = ucwords($data['age_at_first_marriage']);
+	    }
         }
         $haveYouEverBeenWidowed = '';
         if($data['patient_ever_been_widowed']!= null && trim($data['patient_ever_been_widowed'])!= ''){
@@ -151,7 +153,9 @@ $common = new \Application\Service\CommonService();
                 $patientCurrentMaritalStatus = "Don't Know";
             }else if($data['current_marital_status'] == 'refused'){
                 $patientCurrentMaritalStatus = "Refused";
-            }
+            }else{
+		$patientCurrentMaritalStatus = ucwords($data['current_marital_status']);
+	    }
         }
         $timeofLastHIVTest = '';
         if($data['time_of_last_HIV_test']!= null && trim($data['time_of_last_HIV_test'])!= ''){

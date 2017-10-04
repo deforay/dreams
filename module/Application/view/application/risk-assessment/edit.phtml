@@ -187,32 +187,32 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s4">
-                    <input id="everBeenMarriedYes" class="with-gap isRequired" name="everBeenMarried" title="Don't leave 3rd question" value="yes" type="radio" <?php echo ($row->patient_ever_been_married == 'yes')?'checked="checked"':''; ?>>
+                    <input id="everBeenMarriedYes" class="with-gap isRequired" name="everBeenMarried" title="Don't leave 3rd question" value="yes" type="radio" onchange="manageCharacteristicFields();" <?php echo ($row->patient_ever_been_married == 'yes')?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedYes" class="active">Yes </label>&nbsp&nbsp
-                    <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="no" type="radio" <?php echo ($row->patient_ever_been_married == 'no')?'checked="checked"':''; ?>>
+                    <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="no" type="radio" onchange="manageCharacteristicFields();" <?php echo ($row->patient_ever_been_married == 'no')?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedNo" class="active">No </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? *
+                    4. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate <?php echo ($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && (int)$row->age_at_first_marriage >0)?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate years checkNum<?php echo ($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?>" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && (int)$row->age_at_first_marriage >0)?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
                     <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="dontknow" type="radio" <?php echo ($row->age_at_first_marriage == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="refused" type="radio" <?php echo ($row->age_at_first_marriage == 'refused')?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageR" class="active">Refused </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;">
                 <div class="col s12">
-                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? *
+                    5. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s6">
                     <input id="everBeenWidowedYes" class="with-gap isRequired" name="everBeenWidowed" title="Don't leave 5th question" value="yes" type="radio" <?php echo ($row->patient_ever_been_widowed == 'yes')?'checked="checked"':''; ?>>
 		    <label for="everBeenWidowedYes" class="active">Yes </label>&nbsp&nbsp
@@ -224,13 +224,13 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="everBeenWidowedR" class="active">Refused </label>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;margin-top:16px;">
+            <div class="row everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    6. What is your marital status <span class="highlightedTxt">now</span>? *
+                    6. What is your marital status <span class="highlightedTxt">now</span>? <span class="everBeenMarriedSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:10px;">
-                <div class="col s4">
+            <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
+                <div class="col s4 currentMaritalStatus">
                     <select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select isRequired" title="Don't leave 6th question">
                         <option value=""> -- Select -- </option>
                         <option value="married" <?php echo ($row->current_marital_status == 'married')?'selected="selected"':''; ?>>Married/Cohabiting</option>
@@ -305,7 +305,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired checkNum" title="Please enter years" value="<?php echo $row->age_at_very_first_sex; ?>" style="width:20%;"> Years
+                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired years checkNum" title="Please enter years" value="<?php echo $row->age_at_very_first_sex; ?>" style="width:20%;"> Years
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -332,7 +332,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && (int)$row->no_of_sexual_partners >0)?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate persons checkNum <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?>" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && (int)$row->no_of_sexual_partners >0)?$row->no_of_sexual_partners:'';?>" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners == 'refused')?'checked="checked"':''; ?>>
@@ -346,7 +346,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && (int)$row->no_of_sexual_partners_in_last_six_months >0)?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate persons checkNum <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?>" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && (int)$row->no_of_sexual_partners_in_last_six_months >0)?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
@@ -360,7 +360,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && (int)$row->age_of_main_sexual_partner_at_last_birthday >0)?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate years checkNum <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?>" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && (int)$row->age_of_main_sexual_partner_at_last_birthday >0)?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:13%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'refused')?'checked="checked"':''; ?>>
@@ -430,7 +430,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate isRequired checkNum" title="Don't leave 18th question" value="<?php echo $row->no_of_times_been_pregnant; ?>" style="width:20%;"> Times
+                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate times checkNum isRequired" title="Don't leave 18th question" value="<?php echo $row->no_of_times_been_pregnant; ?>" style="width:20%;"> Times
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -547,7 +547,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months >0)?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate days checkNum <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?>" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months >0)?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
@@ -663,7 +663,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="patientHurtBySomeoneWithinLastYearO" class="active">Other</label>
 		    <input id="patientHurtBySomeoneWithinLastYearM" class="with-gap" name="patientHurtBySomeoneWithinLastYear" value="multiple" type="radio" <?php echo ($patientHurtBy == 'multiple')?'checked="checked"':''; ?>>
 		    <label for="patientHurtBySomeoneWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientHurtByInNoofTimes; ?>" style="width:12%;"> Times
+		    <input id="patientHurtBySomeoneWithinLastYearInNoofTimes" name="patientHurtBySomeoneWithinLastYearInNoofTimes" type="text" class="validate nooftimes checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientHurtByInNoofTimes; ?>" style="width:12%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -740,7 +740,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="patientForcedForSexWithinLastYearO" class="active">Other</label>
 		    <input id="patientForcedForSexWithinLastYearM" class="with-gap" name="patientForcedForSexWithinLastYear" value="multiple" type="radio" <?php echo($patientForcedForSex == 'multiple')?'checked="checked"':''; ?>>
 		    <label for="patientForcedForSexWithinLastYearM" class="active">Multiple</label>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientForcedForSexInNoofTimes; ?>" style="width:12%;"> Times
+		    <input id="patientForcedForSexWithinLastYearInNoofTimes" name="patientForcedForSexWithinLastYearInNoofTimes" type="text" class="validate nooftimes checkNum" placeholder="Total no.of times" title="Please enter no. of times" value="<?php echo $patientForcedForSexInNoofTimes; ?>" style="width:12%;"> Times
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -787,6 +787,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             format: 'dd/mm/yyyy',
 	    max: new Date('Today')
         });
+       manageCharacteristicFields();
     });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
@@ -1005,6 +1006,67 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	}else{
 	    $('.rrrRecency').show();
 	}
+    });
+    
+    //enable/disable Demographic Characteristics fields based on q.3
+    function manageCharacteristicFields(){
+	if ($("input[name='everBeenMarried']:checked").val() == 'no') {
+	    //css section
+	    $(".everBeenMarriedSectionRequired").css("visibility","hidden");
+	    $(".everBeenMarriedSection").css("color","rgba(0,0,0,0.26)");
+	    $('#ageAtFirstMarriageInYears').css("pointer-events","none");
+	    $("input[name='ageAtFirstMarriage']").attr("disabled","disabled");
+	    $("input[name='everBeenWidowed']").attr("disabled","disabled");
+	    $(".currentMaritalStatus").css("pointer-events","none");
+	    //validate/content section
+	    $("#ageAtFirstMarriageInYears").val("");
+	    $("#ageAtFirstMarriageDK").prop('checked',false);
+	    $("#ageAtFirstMarriageR").prop('checked',false);
+	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
+	    $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
+	    $("input[name='everBeenWidowed']").removeClass("isRequired");
+	}else{
+	    //css section
+	    $(".everBeenMarriedSectionRequired").css("visibility","visible");
+	    $(".everBeenMarriedSection").css("color","");
+	    $('#ageAtFirstMarriageInYears').css("pointer-events","auto");
+	    $("input[name='ageAtFirstMarriage']").removeAttr("disabled");
+	    $("input[name='everBeenWidowed']").removeAttr("disabled");
+	    $(".currentMaritalStatus").css("pointer-events","auto");
+	    //validate/content section
+	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").addClass("isRequired");
+	    $("input[name='everBeenWidowed']").addClass("isRequired");
+	}
+    }
+    
+    //age range validation
+    $('.years').on('change',function() {
+	var years = $('#'+this.id).val();
+	if(parseInt(years) < 1 || parseInt(years) > 100) { alert('Age range should be 1-100'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //person range validation
+    $('.persons').on('change',function() {
+	var persons = $('#'+this.id).val();
+	if(parseInt(persons) > 10000) { alert('Person range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //pregnancy range validation
+    $('.times').on('change',function() {
+	var times = $('#'+this.id).val();
+	if(parseInt(times) > 15) { alert('No.of pregnancy range should be 0-15'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //alcohol days range validation
+    $('.days').on('change',function() {
+	var days = $('#'+this.id).val();
+	if(parseInt(days) > 185) { alert('No.of days can\'t be more than 185'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+    });
+    
+    //patient hurt/forced to have sex range validation
+    $('.nooftimes').on('change',function() {
+	var nooftimes = $('#'+this.id).val();
+	if(parseInt(nooftimes) > 10000) { alert('Total no.of times range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
     });
     
     function checkPatientRecord(type){

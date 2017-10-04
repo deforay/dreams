@@ -45,6 +45,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                    $occupation = base64_decode($params['occupation']);
                 }
             }
+	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 'no'){
+	      $params['ageAtFirstMarriageInYears'] = '';
+	      $params['ageAtFirstMarriage'] = 'not applicable';
+	      $params['everBeenWidowed'] = 'not applicable';
+	      $params['currentMaritalStatus'] = 'not applicable';
+	    }
             $ageAtFirstMarriage = NULL;
             if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
                 $ageAtFirstMarriage = $params['ageAtFirstMarriageInYears'];
@@ -423,6 +429,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                    $occupation = base64_decode($params['occupation']);
                 }
             }
+	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 'no'){
+	      $params['ageAtFirstMarriageInYears'] = '';
+	      $params['ageAtFirstMarriage'] = 'not applicable';
+	      $params['everBeenWidowed'] = 'not applicable';
+	      $params['currentMaritalStatus'] = 'not applicable';
+	    }
             $ageAtFirstMarriage = NULL;
             if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
                 $ageAtFirstMarriage = $params['ageAtFirstMarriageInYears'];
