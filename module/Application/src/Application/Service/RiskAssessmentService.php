@@ -586,4 +586,22 @@ class RiskAssessmentService {
             return "";
         }
     }
+    
+    public function generateRiskAssessmentPdf($params){
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $aQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+                                   ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
+                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left');
+        if(count($params['assessment'])>0){
+            $assessmentArray = array();
+            for($i=0;$i<count($params['assessment']);$i++){
+                $assessmentArray[] = base64_decode($params['assessment'][$i]);
+            }
+            $aQuery = $aQuery->where('r_a.assessment_id IN ("' . implode('", "', $assessmentArray) . '")');
+        }
+        $aQueryStr = $sql->getSqlStringForSqlObject($aQuery);
+      return $dbAdapter->query($aQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
 }

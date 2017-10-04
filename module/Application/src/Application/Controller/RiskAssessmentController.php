@@ -121,4 +121,17 @@ class RiskAssessmentController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function generatePdfAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $dataResult=$riskAssessmentService->generateRiskAssessmentPdf($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('dataResult' =>$dataResult));
+            $viewModel->setTerminal(true);
+           return $viewModel;
+        }
+    }
 }

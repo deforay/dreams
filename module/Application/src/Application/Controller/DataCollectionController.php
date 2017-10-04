@@ -179,6 +179,7 @@ class DataCollectionController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
     public function checkPatientRecordAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {

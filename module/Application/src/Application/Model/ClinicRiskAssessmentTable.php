@@ -360,10 +360,16 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $interviewDate = '';
+	    $edit = '';
 	    if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
 		$interviewDate = $common->humanDateFormat($aRow['interview_date']);
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
+	    if($loginContainer->hasViewOnlyAccess!='yes'){
+		$edit = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp';
+	    }
+	    $view = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';
+	    $pdf = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    $row = array();
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
@@ -375,9 +381,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['user_name']);
 	    if(trim($parameters['countryId']) == ''){
 	       $row[] = ucwords($aRow['country_name']);
-	    }if($loginContainer->hasViewOnlyAccess!='yes'){
-	       $row[] = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
+	    $row[] = $edit.$view.$pdf;
 	    $output['aaData'][] = $row;
 	}
        return $output;

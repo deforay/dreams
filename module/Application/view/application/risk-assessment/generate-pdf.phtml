@@ -1,0 +1,544 @@
+<?php
+$common = new \Application\Service\CommonService();
+    class MYPDF extends TCPDF {
+	public function setSchemeName($heading,$logo) {
+	    $this->heading = $heading;
+	    $this->logo = $logo;
+	}
+	
+	public function Header() {
+	    // Logo
+            $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
+            $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+             //Set font
+            $this->SetFont('helvetica', 'B', 20);
+             //Title
+            $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
+	    $this->writeHTMLCell(0,'','','','<br/>',0,1,false,true,'C',true);
+	}
+	
+	// Page footer
+	public function Footer() {
+	    // Position at 15 mm from bottom
+	    $this->SetY(-15);
+	    // Set font
+	    $this->SetFont('helvetica', 'I', 8);
+	    // Page number
+	    $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+	}
+    }
+   
+    $filename = '';
+    foreach($dataResult as $data){
+	// create new PDF document
+	$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->setSchemeName('Risk Assessment','dreams-small-logo.png');
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Dream');
+        $pdf->SetTitle('Risk Assessment');
+        //$pdf->SetSubject('TCPDF Tutorial');
+        //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+        
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        
+        // set margins
+        //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_RIGHT);
+        //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        
+	// set font
+	$pdf->SetFont('helvetica', '', 10);
+	
+	$pdf->AddPage();
+	$pdf->SetMargins(10, 26, 10, true);
+	$pdf->SetY(26,true,false);
+	
+	$interviewDate = '';
+	if(isset($data['interview_date']) && $data['interview_date']!= null && trim($data['interview_date'])!= '' && $data['interview_date']!= '0000-00-00'){
+	    $interviewDate = $common->viewDateFormat($data['interview_date']);
+	}
+        $hasPatientHadRapidRecencyTest = '';
+        if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test']!= null && trim($data['has_patient_had_rapid_recency_test'])!= ''){
+            if($data['has_patient_had_rapid_recency_test'] == 'notdone'){
+               $hasPatientHadRapidRecencyTest = "Not Done";
+            }else{
+               $hasPatientHadRapidRecencyTest = ucfirst($data['has_patient_had_rapid_recency_test']); 
+            }
+        }
+        $HIVDiagnosticVal = '';
+        $HIVDiagnostic = false;
+        if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done'){
+            $HIVDiagnostic = true;
+           if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line'])!= ''){
+              $HIVDiagnosticVal = ucfirst($data['HIV_diagnostic_line']);
+           }
+        }
+        $recencyVal = '';
+        $recency = false;
+        if((isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done') && ((!isset($data['HIV_diagnostic_line']) || (isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line'] !='negative')))){
+            $recency = true;
+           if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line'])!= ''){
+                if($data['recency_line'] == 'longterm'){
+                   $recencyVal = "Long Term";
+                }else{
+                   $recencyVal = ucfirst($data['recency_line']); 
+                }
+           }
+        }
+        //occupation
+        $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']):'';
+        //education
+        $education = '';
+        if($data['patient_degree']!= null && trim($data['patient_degree'])!= ''){
+            if($data['patient_degree']=='noedu'){
+                $education = "No Education";
+            }else if($data['patient_degree']=='primary'){
+                $education = "Primary/Post-Primary/Vocational";
+            }else if($data['patient_degree']=='secondary'){
+               $education = "Secondary/Post-Secondary";
+            }else if($data['patient_degree']=='university'){
+               $education = "University/College";
+            }
+        }
+        $agtAtFirstMarriage = '';
+        if($data['age_at_first_marriage']!= null && trim($data['age_at_first_marriage'])!= ''){
+            if($data['age_at_first_marriage'] == 'dontknow'){
+                $agtAtFirstMarriage = "Don't Know";
+            }else if($data['age_at_first_marriage'] == 'refused'){
+                $agtAtFirstMarriage = "Refused";
+            }else if((int)$data['age_at_first_marriage'] > 1){
+               $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Years";
+            }else if((int)$data['age_at_first_marriage'] == 1){
+                $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Year";
+            }
+        }
+        $haveYouEverBeenWidowed = '';
+        if($data['patient_ever_been_widowed']!= null && trim($data['patient_ever_been_widowed'])!= ''){
+            if($data['patient_ever_been_widowed']=='dontknow'){
+                $haveYouEverBeenWidowed = "Don't Know";
+            }else{
+               $haveYouEverBeenWidowed = ucwords($data['patient_ever_been_widowed']);
+            }
+        }
+        $patientCurrentMaritalStatus = '';
+        if($data['current_marital_status']!= null && trim($data['current_marital_status'])!= ''){
+            if($data['current_marital_status'] == 'married'){
+                $patientCurrentMaritalStatus = "Married/Cohabiting";
+            }else if($data['current_marital_status'] == 'nevermarried'){
+                $patientCurrentMaritalStatus = "Never Married/Cohabiting";
+            }else if($data['current_marital_status'] == 'widowed'){
+                $patientCurrentMaritalStatus = "widowed";
+            }else if($data['current_marital_status'] == 'separated'){
+                $patientCurrentMaritalStatus = "Separated";
+            }else if($data['current_marital_status'] == 'divorced'){
+                $patientCurrentMaritalStatus = "Divorced";
+            }else if($data['current_marital_status'] == 'dontknow'){
+                $patientCurrentMaritalStatus = "Don't Know";
+            }else if($data['current_marital_status'] == 'refused'){
+                $patientCurrentMaritalStatus = "Refused";
+            }
+        }
+        $timeofLastHIVTest = '';
+        if($data['time_of_last_HIV_test']!= null && trim($data['time_of_last_HIV_test'])!= ''){
+            if($data['time_of_last_HIV_test'] == 'nevertested'){
+                $timeofLastHIVTest = "Never Tested";
+            }else if($data['time_of_last_HIV_test'] == 'lt3months'){
+                $timeofLastHIVTest = "< 3 Months Ago";
+            }else if($data['time_of_last_HIV_test'] == '3to6months'){
+                $timeofLastHIVTest = "3-6 Months Ago";
+            }else if($data['time_of_last_HIV_test'] == '7to12months'){
+                $timeofLastHIVTest = "7-12 Months Ago";
+            }else if($data['time_of_last_HIV_test'] == 'gt12months'){
+                $timeofLastHIVTest = "> 12 months";
+            }else if($data['time_of_last_HIV_test'] == 'dontknow'){
+                $timeofLastHIVTest = "Don't Know";
+            }else if($data['time_of_last_HIV_test'] == 'refused'){
+                $timeofLastHIVTest = "Refused";
+            }
+        }
+        $resultofLastHIVTest = '';
+        if($data['last_HIV_test_status']!= null && trim($data['last_HIV_test_status'])!= ''){
+            if($data['last_HIV_test_status'] == 'didnotreceive'){
+                $resultofLastHIVTest = "I Did Not Receive Result";
+            }else if($data['last_HIV_test_status'] == 'hivpos'){
+                $resultofLastHIVTest = "HIV+";
+            }else if($data['last_HIV_test_status'] == 'hivneg'){
+                $resultofLastHIVTest = "HIV-";
+            }else if($data['last_HIV_test_status'] == 'indeterminate'){
+                $resultofLastHIVTest = "Indeterminate";
+            }else if($data['last_HIV_test_status'] == 'dontknow'){
+                $resultofLastHIVTest = "Don't Know";
+            }else if($data['last_HIV_test_status'] == 'refused'){
+                $resultofLastHIVTest = "Refused";
+            }
+        }
+        $partnerHIVTestStatus = '';
+        if($data['partner_HIV_test_status']!= null && trim($data['partner_HIV_test_status'])!= ''){
+            if($data['partner_HIV_test_status'] == 'hivpos'){
+                $partnerHIVTestStatus = "HIV+";
+            }else if($data['partner_HIV_test_status'] == 'hivneg'){
+                $partnerHIVTestStatus = "HIV-";
+            }else if($data['partner_HIV_test_status'] == 'idonotknow'){
+                $partnerHIVTestStatus = "I Do Not Know";
+            }else if($data['partner_HIV_test_status'] == 'refused'){
+                $partnerHIVTestStatus = "Refused";
+            }
+        }
+        $ageAtVeryFirstSex = '';
+        if($data['age_at_very_first_sex']!= null && trim($data['age_at_very_first_sex'])!= ''){
+            if((int)$data['age_at_very_first_sex'] > 1){
+                $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Years";    
+            }else if((int)$data['age_at_very_first_sex'] == 1){
+                $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Year";
+            }
+        }
+        $reasonForVerFirstSex = '';
+        if($data['reason_for_very_first_sex']!= null && trim($data['reason_for_very_first_sex'])!= ''){
+            if($data['reason_for_very_first_sex'] == 'wantedto'){
+                $reasonForVerFirstSex = "Wanted To";
+            }else if($data['reason_for_very_first_sex'] == 'forcedto'){
+                $reasonForVerFirstSex = "Forced To";
+            }else if($data['reason_for_very_first_sex'] == 'dontknow'){
+                $reasonForVerFirstSex = "Don't Know";
+            }else if($data['reason_for_very_first_sex'] == 'refused'){
+                $reasonForVerFirstSex = "Refused";
+            }
+        }
+        $noofSexualPartners = '';
+        if($data['no_of_sexual_partners']!= null && trim($data['no_of_sexual_partners'])!= ''){
+            if((int)$data['no_of_sexual_partners'] > 1){
+                $noofSexualPartners = (int)$data['no_of_sexual_partners']." Persons";
+            }else if((int)$data['no_of_sexual_partners'] == 1){
+                $noofSexualPartners = (int)$data['no_of_sexual_partners']." Person";
+            }else if($data['no_of_sexual_partners']=='dontknow'){
+                $noofSexualPartners = "Don't Know";
+            }else if($data['no_of_sexual_partners']=='refused'){
+                $noofSexualPartners = "Refused";
+            }
+        }
+        $noofSexualPartnersinLastSixMonths = '';
+        if($data['no_of_sexual_partners_in_last_six_months']!= null && trim($data['no_of_sexual_partners_in_last_six_months'])!= ''){
+            if((int)$data['no_of_sexual_partners_in_last_six_months'] > 1){
+                $noofSexualPartnersinLastSixMonths = (int)$data['no_of_sexual_partners_in_last_six_months']." Persons";
+            }else if((int)$data['no_of_sexual_partners_in_last_six_months'] == 1){
+                $noofSexualPartnersinLastSixMonths = (int)$data['no_of_sexual_partners_in_last_six_months']." Person";
+            }else if($data['no_of_sexual_partners_in_last_six_months']=='dontknow'){
+                $noofSexualPartnersinLastSixMonths = "Don't Know";
+            }else if($data['no_of_sexual_partners_in_last_six_months']=='refused'){
+                $noofSexualPartnersinLastSixMonths = "Refused";
+            }
+        }
+        $ageofMainSexualPartneratLastBirthday = '';
+        if($data['age_of_main_sexual_partner_at_last_birthday']!= null && trim($data['age_of_main_sexual_partner_at_last_birthday'])!= ''){
+            if((int)$data['age_of_main_sexual_partner_at_last_birthday'] > 1){
+                $ageofMainSexualPartneratLastBirthday = (int)$data['age_of_main_sexual_partner_at_last_birthday']." Years";
+            }else if((int)$data['age_of_main_sexual_partner_at_last_birthday'] == 1){
+                $ageofMainSexualPartneratLastBirthday = (int)$data['age_of_main_sexual_partner_at_last_birthday']." Year";
+            }else if($data['age_of_main_sexual_partner_at_last_birthday']=='dontknow'){
+                $ageofMainSexualPartneratLastBirthday = "Don't Know";
+            }else if($data['age_of_main_sexual_partner_at_last_birthday']=='refused'){
+                $ageofMainSexualPartneratLastBirthday = "Refused";
+            }
+        }
+        $ageDiffofMainSexualPartner = '';
+        if($data['age_diff_of_main_sexual_partner']!= null && trim($data['age_diff_of_main_sexual_partner'])!= ''){
+            if($data['age_diff_of_main_sexual_partner']=='lt5yearolder'){
+                $ageDiffofMainSexualPartner = "< 5 Years Older";
+            }else if($data['age_diff_of_main_sexual_partner']=='5to10yearolder'){
+                $ageDiffofMainSexualPartner = "5-10 Years Older";
+            }else if($data['age_diff_of_main_sexual_partner']=='10yearsolder'){
+                $ageDiffofMainSexualPartner = ">10 Years Older";
+            }else if($data['age_diff_of_main_sexual_partner']=='sameage'){
+                $ageDiffofMainSexualPartner = "Same Age";
+            }else if($data['age_diff_of_main_sexual_partner']=='lt5yearyounger'){
+                $ageDiffofMainSexualPartner = "< 5 Years Younger";
+            }else if($data['age_diff_of_main_sexual_partner']=='5to10yearyounger'){
+                $ageDiffofMainSexualPartner = "5-10 Years Younger";
+            }else if($data['age_diff_of_main_sexual_partner']=='gt10yearyounger'){
+                $ageDiffofMainSexualPartner = ">10 Years Younger";
+            }else if($data['age_diff_of_main_sexual_partner']=='dontknow'){
+                $ageDiffofMainSexualPartner = "Don't Know";
+            }else if($data['age_diff_of_main_sexual_partner']=='refused'){
+                $ageDiffofMainSexualPartner = "Refused";
+            }
+        }
+        $ispartnerCircumcised = '';
+        if($data['is_partner_circumcised']!= null && trim($data['is_partner_circumcised'])!= ''){
+            if($data['is_partner_circumcised']=='dontknow'){
+                $ispartnerCircumcised = "Don't Know";
+            }else{
+                $ispartnerCircumcised = ucwords($data['is_partner_circumcised']);
+            }
+        }
+        $lastTimeofReceivingGiftForSex = '';
+        if($data['last_time_of_receiving_gift_for_sex']!= null && trim($data['last_time_of_receiving_gift_for_sex'])!= ''){
+            if($data['last_time_of_receiving_gift_for_sex']=='lt6months'){
+                $lastTimeofReceivingGiftForSex = "< 6 Months Ago";
+            }else if($data['last_time_of_receiving_gift_for_sex']=='6to12months'){
+                $lastTimeofReceivingGiftForSex = "6-12 Months Ago";
+            }else if($data['last_time_of_receiving_gift_for_sex']=='gt12months'){
+                $lastTimeofReceivingGiftForSex = "> 12 Months Ago";
+            }else if($data['last_time_of_receiving_gift_for_sex']=='dontknow'){
+                $lastTimeofReceivingGiftForSex = "Don't Know";
+            }else{
+                $lastTimeofReceivingGiftForSex = ucwords($data['last_time_of_receiving_gift_for_sex']);
+            }
+        }
+        $patientNoofTimesBeenPregnant = '';
+        if($data['no_of_times_been_pregnant']!= null && trim($data['no_of_times_been_pregnant'])!= ''){
+            if((int)$data['no_of_times_been_pregnant']>1){
+                $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Times";
+            }else if((int)$data['no_of_times_been_pregnant'] == 1){
+                $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Time";
+            }
+        }
+	$noofTimesCondomUsedBeforePregnancy = '';
+	if($data['no_of_times_condom_used_before_pregnancy']!= null && trim($data['no_of_times_condom_used_before_pregnancy'])!= ''){
+	    if($data['no_of_times_condom_used_before_pregnancy']=='dontknow'){
+		$noofTimesCondomUsedBeforePregnancy = "Don't Know";
+	    }else{
+		$noofTimesCondomUsedBeforePregnancy = ucwords($data['no_of_times_condom_used_before_pregnancy']);
+	    }
+	}
+	$noofTimesCondomUsedAfterPregnancy = '';
+	if($data['no_of_times_condom_used_after_pregnancy']!= null && trim($data['no_of_times_condom_used_after_pregnancy'])!= ''){
+	    if($data['no_of_times_condom_used_after_pregnancy']=='dontknow'){
+		$noofTimesCondomUsedAfterPregnancy = "Don't Know";
+	    }else{
+		$noofTimesCondomUsedAfterPregnancy = ucwords($data['no_of_times_condom_used_after_pregnancy']);
+	    }
+	}
+	$hasPatientHadPaininLowerAbdomen = '';
+	if($data['has_patient_had_pain_in_lower_abdomen']!= null && trim($data['has_patient_had_pain_in_lower_abdomen'])!= ''){
+	    if($data['has_patient_had_pain_in_lower_abdomen']=='dontknow'){
+		$hasPatientHadPaininLowerAbdomen = "Don't Know";
+	    }else{
+		$hasPatientHadPaininLowerAbdomen = ucwords($data['has_patient_had_pain_in_lower_abdomen']);
+	    }
+	}
+	$hasPatientTreatedForLowerAbdomenPain = '';
+	if($data['has_patient_been_treated_for_lower_abdomen_pain']!= null && trim($data['has_patient_been_treated_for_lower_abdomen_pain'])!= ''){
+	    if($data['has_patient_been_treated_for_lower_abdomen_pain']=='dontknow'){
+		$hasPatientTreatedForLowerAbdomenPain = "Don't Know";
+	    }else{
+		$hasPatientTreatedForLowerAbdomenPain = ucwords($data['has_patient_been_treated_for_lower_abdomen_pain']);
+	    }
+	}
+	$haspatientEverBeenTreatedForSyphilis = '';
+	if($data['has_patient_ever_been_treated_for_syphilis']!= null && trim($data['has_patient_ever_been_treated_for_syphilis'])!= ''){
+	    if($data['has_patient_ever_been_treated_for_syphilis']=='dontknow'){
+		$haspatientEverBeenTreatedForSyphilis = "Don't Know";
+	    }else{
+		$haspatientEverBeenTreatedForSyphilis = ucwords($data['has_patient_ever_been_treated_for_syphilis']);
+	    }
+	}
+	$hasPatientEverReceivedVaccinetoPreventHPV = '';
+	if($data['has_patient_ever_received_vaccine_to_prevent_HPV']!= null && trim($data['has_patient_ever_received_vaccine_to_prevent_HPV'])!= ''){
+	    if($data['has_patient_ever_received_vaccine_to_prevent_HPV']=='dontknow'){
+		$hasPatientEverReceivedVaccinetoPreventHPV = "Don't Know";
+	    }else{
+		$hasPatientEverReceivedVaccinetoPreventHPV = ucwords($data['has_patient_ever_received_vaccine_to_prevent_HPV']);
+	    }
+	}
+	$hasPatientHadDrinkWithAlcoholinLastSixMonths = '';
+	if($data['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($data['has_patient_had_drink_with_alcohol_in_last_six_months'])!= ''){
+	    if((int)$data['has_patient_had_drink_with_alcohol_in_last_six_months'] > 1){
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = (int)$data['has_patient_had_drink_with_alcohol_in_last_six_months']." Days";
+	    }else if((int)$data['has_patient_had_drink_with_alcohol_in_last_six_months'] == 1){
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = (int)$data['has_patient_had_drink_with_alcohol_in_last_six_months']." Day";
+	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='havenotdrink'){
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Haven't Had a Drink";
+	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='dontknow'){
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Don't Know";
+	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='refusedtoanswer'){
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Refused To Answer";
+	    }
+	}
+	$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = '';
+	if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']!= null && trim($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'])!= ''){
+	    if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 'daily'){
+		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = "Daily or On Most Days of The Week";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 'dontknow'){
+		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = "Don't Know";
+	    }else{
+		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = ucwords($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']);
+	    }
+	}
+	$hasPatientEverTriedRecreationalDrugs = '';
+	if($data['has_patient_ever_tried_recreational_drugs']!= null && trim($data['has_patient_ever_tried_recreational_drugs'])!= ''){
+	    if($data['has_patient_ever_tried_recreational_drugs']=='dontknow'){
+		$hasPatientEverTriedRecreationalDrugs = "Don't Know";
+	    }else{
+		$hasPatientEverTriedRecreationalDrugs = ucwords($data['has_patient_ever_tried_recreational_drugs']);
+	    }
+	}
+	$hasPatientHadRecreationalDrugsinLastSixMonths = '';
+	if($data['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($data['has_patient_had_recreational_drugs_in_last_six_months'])!= ''){
+	    if($data['has_patient_had_recreational_drugs_in_last_six_months']=='yes'){
+		$hasPatientHadRecreationalDrugsinLastSixMonths = "Yes&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s):</span>&nbsp;".ucwords($data['recreational_drugs']);
+	    }else if($data['has_patient_had_recreational_drugs_in_last_six_months']=='dontknow'){
+		$hasPatientHadRecreationalDrugsinLastSixMonths = "Don't Know";
+	    }else{
+		$hasPatientHadRecreationalDrugsinLastSixMonths = ucwords($data['has_patient_had_recreational_drugs_in_last_six_months']);
+	    }
+	}
+	$hasPatientEverBeenAbusedbySomeone = '';
+	if($data['has_patient_ever_been_abused_by_someone']!= null && trim($data['has_patient_ever_been_abused_by_someone'])!= ''){
+	    if($data['has_patient_ever_been_abused_by_someone']=='dontknow'){
+		$hasPatientEverBeenAbusedbySomeone = "Don't Know";
+	    }else{
+		$hasPatientEverBeenAbusedbySomeone = ucwords($data['has_patient_ever_been_abused_by_someone']);
+	    }
+	}
+	$hasPatientHurtBy = '';
+	$patientHurtBy = '';
+	$patientHurtByInNoofTimes = '';
+	if($data['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($data['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
+	    $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($data['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
+	    $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']);
+	    $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']):'';
+	    $patientHurtByInNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']." times":'';
+	}
+	$hasPatientHurtBySomeoneDuringPregnancy = '';
+	$patientHurtBySomeoneDuringPregnancy = '';
+	if($data['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
+	    $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
+	    $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']);
+	    $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']):'';
+	}
+	$hasPatientForcedForSex = '';
+	$patientForcedForSex = '';
+	$patientForcedForSexInNoofTimes = '';
+	if($data['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($data['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
+	    $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($data['has_patient_ever_been_forced_for_sex_within_last_year'],true);
+	    $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']);
+	    $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?", ".ucwords($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']):'';
+	    $patientForcedForSexInNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']." times":'';
+	}
+	$isPatientAfraidofAnyone = '';
+	if($data['is_patient_afraid_of_anyone']!= null && trim($data['is_patient_afraid_of_anyone'])!= ''){
+	    if($data['is_patient_afraid_of_anyone']=='dontknow'){
+		$isPatientAfraidofAnyone = "Don't Know";
+	    }else{
+		$isPatientAfraidofAnyone = ucwords($data['is_patient_afraid_of_anyone']);
+	    }
+	}
+	//pdf content
+	$html = '';
+	$html .= '<table style="padding:2px;">';
+	$html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Sample Particpant Risk Questionnaire</td></tr>';
+	    $html .='<tr><td colspan="3">';
+	        $html .= '<table style="padding:2px;border:1px solid #b2daff;">';
+		    $html .='<tr><td style="line-height:20px;font-size:11px;font-weight:bold;">Name of Facility</td><td style="line-height:20px;font-size:11px;font-weight:bold;">Patient Barcode ID</td><td style="line-height:20px;font-size:11px;font-weight:bold;">Interviewer Name</td></tr>';
+		    $html .='<tr><td style="line-height:20px;font-size:11px;">'.ucwords($data['facility_name']).'</td><td style="line-height:20px;font-size:11px;">'.$data['patient_barcode_id'].'</td><td style="line-height:20px;font-size:11px;">'.ucwords($data['interviewer_name']).'</td></tr>';
+		    $html .='<tr><td style="line-height:20px;font-size:11px;font-weight:bold;">ANC Patient ID </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Interview Date </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Participant received DREAMS services </td></tr>';
+		    $html .='<tr><td style="line-height:20px;font-size:11px;">'.$data['anc_patient_id'].'</td><td style="line-height:20px;font-size:11px;">'.$interviewDate.'</td><td style="line-height:20px;font-size:11px;">'.ucfirst($data['has_participant_received_dreams_services']).'</td></tr>';
+	        $html .= '</table>';
+	    $html .='</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Recency Test Result</td></tr>';
+	    $html .='<tr><td colspan="3">';
+	        $html .= '<table style="padding:2px;border:1px solid #ffcccc;">';
+		    $html .='<tr>';
+		      $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Rapid Recency Result </td>';
+		      if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">HIV Diagnostic Line </td>'; }
+		      if($recency) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Recency Line </td>'; }
+		    $html .='</tr>';
+		    $html .='<tr>';
+			$html .='<td style="line-height:20px;font-size:11px;">'.$hasPatientHadRapidRecencyTest.'</td>';
+			if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;">'.$HIVDiagnosticVal.'</td>'; }
+			if($recency) { $html .='<td style="line-height:20px;font-size:11px;">'.$recencyVal.'</td>'; }
+		    $html .='</tr>';
+	        $html .= '</table>';
+	    $html .='</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Demographic Characteristics</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">1. What kind of work/occupation do you do most of the time?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$occupation.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">2. What was the highest level of school that you completed or are attending now?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$education.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">3. Have you ever been married or lived with a partner in a union as if married? (If no, go to question 7) </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.ucwords($data['patient_ever_been_married']).'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">4. How old were you when you first got married or lived with a partner in a union? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$agtAtFirstMarriage.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">5. Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$haveYouEverBeenWidowed.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">6. What is your marital status now? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientCurrentMaritalStatus.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">HIV Testing History</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">7. When was the most recent time you were tested for HIV? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$timeofLastHIVTest.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">8. What was the result of that HIV test? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$resultofLastHIVTest.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">9. What is your spouse/main sexual partner\'s HIV status?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$partnerHIVTestStatus.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Sexual Activity and History of Sexually Transmitted Infections</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">10. How old were you when you had sexual intercourse for the very first time?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageAtVeryFirstSex.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">11. The first time you had sex, was it because you wanted to or because you were forced to?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$reasonForVerFirstSex.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">12. How many different people have you had sexual intercourse with in your entire life?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofSexualPartners.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">13. How many different people have you had sex with in the last 6 months?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofSexualPartnersinLastSixMonths.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">14. How old was your main sexual partner on his last birthday?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageofMainSexualPartneratLastBirthday.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">15. Is the age of your main sexual partner older, younger, or the same age as you?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageDiffofMainSexualPartner.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">16. Is your main sexual partner circumcised? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ispartnerCircumcised.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">17. When did you last receive money/gifts in exchange for sex? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$lastTimeofReceivingGiftForSex.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">18. How many times have you been pregnant? (including this pregnancy) </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientNoofTimesBeenPregnant.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">19. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedBeforePregnancy.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">20. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedAfterPregnancy.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">21. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadPaininLowerAbdomen.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">22. If yes, were you treated for these symptoms? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientTreatedForLowerAbdomenPain.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">23. Have you ever been diagnosed or treated for syphilis? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$haspatientEverBeenTreatedForSyphilis.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">24. Have you ever received a vaccine to prevent human papillomavirus (HPV), a common virus that be passed through sexual contact? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverReceivedVaccinetoPreventHPV.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Alcohol and drug use</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">25. During the past 6 months, on how many days did you have at least one drink containing alcohol? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadDrinkWithAlcoholinLastSixMonths.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">26. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours) </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">27. Have you ever tried recreational drugs? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverTriedRecreationalDrugs.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">28. In the last 6 months, have you taken any recreational drugs? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadRecreationalDrugsinLastSixMonths.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Abuse</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">29. Have you ever been emotionally or physically abused by your partner or someone important to you? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedbySomeone.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">30. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBy.$patientHurtBy.$patientHurtByInNoofTimes.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">31. Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBySomeoneDuringPregnancy.$patientHurtBySomeoneDuringPregnancy.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">32. Within the last year, has anyone forced you to have sexual activities? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientForcedForSex.$patientForcedForSex.$patientForcedForSexInNoofTimes.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">33. Are you afraid of your partner or anyone listed above? </td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$isPatientAfraidofAnyone.'</td></tr>';
+	$html .='</table>';
+	$pdf->writeHTML($html);
+	$filename = 'RISK-ASSESSMNET--'.date('d-M-Y-H-i-s').'.pdf';
+	$pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
+    }
+    echo $filename;

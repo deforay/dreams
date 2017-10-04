@@ -67,7 +67,7 @@ class ResultEmailController extends AbstractActionController{
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataResult' =>$dataResult));
             $viewModel->setTerminal(true);
-            return $viewModel;
+           return $viewModel;
         }
     }
   

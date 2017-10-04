@@ -500,6 +500,15 @@ return array(
                         'action' => 'export-excel'
                     ),
                 ),
+            ),'generate-risk-assessment-pdf' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/generate-risk-assessment-pdf',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'generate-pdf'
+                    ),
+                ),
             )
         ),
     ),

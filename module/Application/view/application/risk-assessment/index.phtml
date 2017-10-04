@@ -157,9 +157,8 @@ $loginContainer = new Container('user');
                                 if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
-				<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
-                                  <th>Action</th>
 				<?php } ?>
+                                <th>Action</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -176,9 +175,8 @@ $loginContainer = new Container('user');
                                 if(trim($countryId)== ''){
                                 ?>
                                  <th>Country</th>
-				<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
-                                  <th>Action</th>
 				<?php } ?>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -210,13 +208,10 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		<?php
-		if(trim($countryId)== ''){
-		?>
+		<?php if(trim($countryId)== ''){ ?>
 		  {"sClass":"dataTable_noWrap"},
-		<?php } if($loginContainer->hasViewOnlyAccess!= 'yes'){ ?>
-                  {"sClass":"dataTable_noWrap"}
 		<?php } ?>
+                {"sClass":"dataTable_noWrap"}
             ],
             "aaSorting": [[5, "desc"]],
             "bProcessing": true,
@@ -297,5 +292,23 @@ $loginContainer = new Container('user');
 		window.open("/temporary/"+data, "_blank");
 	    }
 	});
+    }
+    
+    assessid = [];
+    function printAssessmentForm(ID){
+	assessid.push(ID);
+	$.blockUI();
+	$.post("<?php echo $this->url('generate-risk-assessment-pdf'); ?>", {assessment:assessid},
+	    function(data){
+		if(data === "" || data === null || data === undefined){
+		    assessid = [];
+		    alert('OOPS..');
+		    $.unblockUI();
+		}else{
+		    assessid = [];
+		    $.unblockUI();
+		    window.open("/temporary/"+data, "_blank");
+		}
+	    });
     }
 </script>

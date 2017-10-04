@@ -7,13 +7,13 @@ if(trim($countryId)!= ''){
    $link = "/clinic/risk-assessment"; 
 }
 $interviewDate = '';
-if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
 $hasPatientHurtBy = '';
 $patientHurtBy = '';
 $patientHurtByInNoofTimes = '';
-if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
     $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
     $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']:'';
     $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?$hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']:'';
@@ -21,7 +21,7 @@ if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->
 }
 $hasPatientHurtBySomeoneDuringPregnancy = '';
 $patientHurtBySomeoneDuringPregnancy = '';
-if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+if($row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
     $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])!= '')?$hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']:'';
     $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?$hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']:'';
@@ -29,7 +29,7 @@ if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->
 $hasPatientForcedForSex = '';
 $patientForcedForSex = '';
 $patientForcedForSexInNoofTimes = '';
-if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
     $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
     $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']:'';
     $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?$hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']:'';
@@ -200,7 +200,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate <?php echo ($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && is_numeric($row->age_at_first_marriage))?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate <?php echo ($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && (int)$row->age_at_first_marriage >0)?$row->age_at_first_marriage:'';?>" style="width:10%;"> Years&nbsp;
                     <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="dontknow" type="radio" <?php echo ($row->age_at_first_marriage == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="refused" type="radio" <?php echo ($row->age_at_first_marriage == 'refused')?'checked="checked"':''; ?>>
@@ -332,7 +332,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && is_numeric($row->no_of_sexual_partners))?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && (int)$row->no_of_sexual_partners >0)?$row->no_of_sexual_partners:'';?>" style="width:10%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners == 'refused')?'checked="checked"':''; ?>>
@@ -346,7 +346,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && is_numeric($row->no_of_sexual_partners_in_last_six_months))?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
+                    <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && (int)$row->no_of_sexual_partners_in_last_six_months >0)?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:10%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
@@ -360,7 +360,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s6">
-                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && is_numeric($row->age_of_main_sexual_partner_at_last_birthday))?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
+                    <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?> checkNum" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && (int)$row->age_of_main_sexual_partner_at_last_birthday >0)?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:10%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'refused')?'checked="checked"':''; ?>>
@@ -547,7 +547,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s8">
-                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && is_numeric($row->has_patient_had_drink_with_alcohol_in_last_six_months))?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
+                    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?> checkNum" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months >0)?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>

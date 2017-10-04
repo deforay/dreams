@@ -7,13 +7,13 @@ if(trim($countryId)!= ''){
    $link = "/clinic/risk-assessment"; 
 }
 $interviewDate = '';
-if(isset($row->interview_date) && $row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
 $hasPatientHurtBy = '';
 $patientHurtBy = '';
 $patientHurtByInNoofTimes = '';
-if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
     $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
     $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']);
     $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']):'';
@@ -21,7 +21,7 @@ if(isset($row->has_patient_ever_been_hurt_by_someone_within_last_year) && $row->
 }
 $hasPatientHurtBySomeoneDuringPregnancy = '';
 $patientHurtBySomeoneDuringPregnancy = '';
-if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+if($row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
     $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']);
     $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']):'';
@@ -29,7 +29,7 @@ if(isset($row->has_patient_ever_been_hurt_by_someone_during_pregnancy) && $row->
 $hasPatientForcedForSex = '';
 $patientForcedForSex = '';
 $patientForcedForSexInNoofTimes = '';
-if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
     $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
     $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']);
     $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?", ".ucwords($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']):'';
@@ -60,7 +60,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                         <div class="input-field col m12 s12">
                             <label for="ancSite">Name of Facility</label><br/>
                             <p>
-                                <?php echo $row->facility_name;?>
+                                <?php echo ucwords($row->facility_name);?>
                             </p>
                         </div>
                     </div>
@@ -149,7 +149,7 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <p><?php echo ($row->occupationName)?$row->occupationName:''; ?></p>
+                    <p><?php echo (isset($row->occupationName))?$row->occupationName:''; ?></p>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -202,10 +202,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                                 echo "Don't Know";
                             }else if($row->age_at_first_marriage == 'refused'){
                                 echo "Refused";
-                            }else if($row->age_at_first_marriage > 1){
-                                echo $row->age_at_first_marriage." Years";
-                            }else if($row->age_at_first_marriage == 1){
-                                echo $row->age_at_first_marriage." Year";
+                            }else if((int)$row->age_at_first_marriage > 1){
+                                echo (int)$row->age_at_first_marriage." Years";
+                            }else if((int)$row->age_at_first_marriage == 1){
+                                echo (int)$row->age_at_first_marriage." Year";
                             }
                         }
                         ?>
@@ -356,10 +356,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                     <p>
                         <?php
                         if($row->age_at_very_first_sex!= null && trim($row->age_at_very_first_sex)!= ''){
-                            if($row->age_at_very_first_sex > 1){
-                                echo $row->age_at_very_first_sex." Years";    
-                            }else if($row->age_at_very_first_sex == 1){
-                                echo $row->age_at_very_first_sex." Year";
+                            if((int)$row->age_at_very_first_sex > 1){
+                                echo (int)$row->age_at_very_first_sex." Years";    
+                            }else if((int)$row->age_at_very_first_sex == 1){
+                                echo (int)$row->age_at_very_first_sex." Year";
                             }
                         }
                         ?>
@@ -400,10 +400,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                     <p>
                         <?php
                         if($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= ''){
-                            if($row->no_of_sexual_partners > 1){
-                                echo $row->no_of_sexual_partners." Persons";
-                            }else if($row->no_of_sexual_partners == 1){
-                                echo $row->no_of_sexual_partners." Person";
+                            if((int)$row->no_of_sexual_partners > 1){
+                                echo (int)$row->no_of_sexual_partners." Persons";
+                            }else if((int)$row->no_of_sexual_partners == 1){
+                                echo (int)$row->no_of_sexual_partners." Person";
                             }else if($row->no_of_sexual_partners=='dontknow'){
                                 echo "Don't Know";
                             }else if($row->no_of_sexual_partners=='refused'){
@@ -424,10 +424,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                     <p>
                         <?php
                         if($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= ''){
-                            if($row->no_of_sexual_partners_in_last_six_months > 1){
-                                echo $row->no_of_sexual_partners_in_last_six_months." Persons";
-                            }else if($row->no_of_sexual_partners_in_last_six_months == 1){
-                                echo $row->no_of_sexual_partners_in_last_six_months." Person";
+                            if((int)$row->no_of_sexual_partners_in_last_six_months > 1){
+                                echo (int)$row->no_of_sexual_partners_in_last_six_months." Persons";
+                            }else if((int)$row->no_of_sexual_partners_in_last_six_months == 1){
+                                echo (int)$row->no_of_sexual_partners_in_last_six_months." Person";
                             }else if($row->no_of_sexual_partners_in_last_six_months=='dontknow'){
                                 echo "Don't Know";
                             }else if($row->no_of_sexual_partners_in_last_six_months=='refused'){
@@ -448,10 +448,10 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                     <p>
                         <?php
                             if($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= ''){
-                                if($row->age_of_main_sexual_partner_at_last_birthday > 1){
-                                    echo $row->age_of_main_sexual_partner_at_last_birthday." Years";
-                                }else if($row->age_of_main_sexual_partner_at_last_birthday == 1){
-                                    echo $row->age_of_main_sexual_partner_at_last_birthday." Year";
+                                if((int)$row->age_of_main_sexual_partner_at_last_birthday > 1){
+                                    echo (int)$row->age_of_main_sexual_partner_at_last_birthday." Years";
+                                }else if((int)$row->age_of_main_sexual_partner_at_last_birthday == 1){
+                                    echo (int)$row->age_of_main_sexual_partner_at_last_birthday." Year";
                                 }else if($row->age_of_main_sexual_partner_at_last_birthday=='dontknow'){
                                     echo "Don't Know";
                                 }else if($row->age_of_main_sexual_partner_at_last_birthday=='refused'){
@@ -551,13 +551,13 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                 <div class="col s4">
                     <p>
                         <?php
-                        if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= ''){
-                            if($row->no_of_times_been_pregnant>1){
-                                echo $row->no_of_times_been_pregnant." Times";
-                            }else if($row->no_of_times_been_pregnant == 1){
-                                echo $row->no_of_times_been_pregnant." Time";
+                            if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= ''){
+                                if((int)$row->no_of_times_been_pregnant>1){
+                                    echo (int)$row->no_of_times_been_pregnant." Times";
+                                }else if((int)$row->no_of_times_been_pregnant == 1){
+                                    echo (int)$row->no_of_times_been_pregnant." Time";
+                                }
                             }
-                        }
                         ?>
                     </p>
                 </div>
@@ -694,9 +694,9 @@ if(isset($row->has_patient_ever_been_forced_for_sex_within_last_year) && $row->h
                         <?php
                             if($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= ''){
                                 if((int)$row->has_patient_had_drink_with_alcohol_in_last_six_months > 1){
-                                    echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Days";
+                                    echo (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months." Days";
                                 }else if((int)$row->has_patient_had_drink_with_alcohol_in_last_six_months == 1){
-                                    echo $row->has_patient_had_drink_with_alcohol_in_last_six_months." Day";
+                                    echo (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months." Day";
                                 }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='havenotdrink'){
                                     echo "Haven't Had a Drink";
                                 }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='dontknow'){
