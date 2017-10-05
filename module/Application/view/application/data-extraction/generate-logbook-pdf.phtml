@@ -1,5 +1,8 @@
 <?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
+$alertContainer->pageHeight = 46;
 if(count($logbookResult) >0){
     //set ancs
     $selectedANC = '';
@@ -54,8 +57,10 @@ if(count($logbookResult) >0){
     $filterContent = '';
     $filterContent .='<table>';
     $filterContent .='<tr><td colspan="4" style="line-height:30px;"></td></tr>';
-    $filterContent .='<tr><td style="font-size:14px;text-align:left;">ANC Site</td><td style="font-size:14px;font-weight:normal;text-align:left;">'.$ancs.'</td><td style="font-size:14px;text-align:left;">Lab Site/Facility</td><td style="font-size:14px;font-weight:normal;text-align:left;">'.$labs.'</td></tr>';
-    $filterContent .='<tr><td style="font-size:14px;text-align:left;">Receipt Date at Lab</td><td style="font-size:14px;font-weight:normal;text-align:left;">'.$receiptDateatLab.'</td><td style="font-size:14px;text-align:left;">Result Reported</td><td style="font-size:14px;font-weight:normal;text-align:left;">'.$resultReported.'</td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">ANC Site</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$ancs.'</td><td style="width:15%;font-size:14px;text-align:left;">Lab Site/Facility</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$labs.'</td></tr>';
+    $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">Receipt Date at Lab</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$receiptDateatLab.'</td><td style="width:15%;font-size:14px;text-align:left;">Result Reported</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$resultReported.'</td></tr>';
+    $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
     $filterContent .='</table>';
     
     //header and footer
@@ -68,6 +73,7 @@ if(count($logbookResult) >0){
 	
         //Page header
         public function Header() {
+	    $alertContainer = new Container('alert');
             // Logo
             $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
             $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
@@ -76,6 +82,7 @@ if(count($logbookResult) >0){
              //Title
             $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
 	    $this->writeHTMLCell(0,'','','',$this->filterContent,0,1,false,true,'C',true);
+	    $alertContainer->pageHeight = $this->GetY();
         }
     
         // Page footer
@@ -132,9 +139,9 @@ if(count($logbookResult) >0){
     $pdf->SetFont('helvetica', '', 10);
     
     $pdf->AddPage();
-    $pdf->SetMargins(10, 42, 10, true);
+    $pdf->SetMargins(10, $alertContainer->pageHeight, 10, true);
     //$pdf->SetFooterMargin(10);
-    $pdf->SetY(42,true,false);
+    $pdf->SetY($alertContainer->pageHeight,true,false);
     //pdf content
     $html = '';
       $html.='<table border="1" style="padding:2px;">';
