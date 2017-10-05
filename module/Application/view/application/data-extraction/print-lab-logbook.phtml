@@ -413,7 +413,7 @@
     
     function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',lab:$("#lab").val() },
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),anc:$("#anc").val(),lab:$("#lab").val(),status:$("#status").val() },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate logbook pdf.');
@@ -427,7 +427,7 @@
     
     function extractLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',frmSrc:'log'},
+	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),anc:$("#anc").val(),lab:$("#lab").val(),status:$("#status").val(),frmSrc:'log'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate excel.');

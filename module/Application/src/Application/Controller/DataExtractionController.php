@@ -59,7 +59,7 @@ class DataExtractionController extends AbstractActionController{
             $result = $dataCollectionService->getAllLabLogbook($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
@@ -80,12 +80,14 @@ class DataExtractionController extends AbstractActionController{
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $facilityList = $facilityService->getActivefacilities('lab-logbook',$params['countryId']);
+            $ancSiteList = $ancSiteService->getActiveAncSites('generate-logbook-pdf',$params['countryId']);
+            $facilityList = $facilityService->getActivefacilities('generate-logbook-pdf',$params['countryId']);
             $logbookResult=$dataCollectionService->getLogbookResult($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('params'=>$params,'facilityList'=>$facilityList,'logbookResult' =>$logbookResult));
+            $viewModel->setVariables(array('params'=>$params,'ancSites'=>$ancSiteList,'facilities'=>$facilityList,'logbookResult' =>$logbookResult));
             $viewModel->setTerminal(true);
             return $viewModel;
         }
