@@ -913,6 +913,7 @@ class DataCollectionService {
                         }
                         $row = array();
                         $row[] = ucwords($aRow['province_name']);
+                        $row[] = $aRow['anc_site_code'];
                         $row[] = $aRow['patient_barcode_id'];
                         $row[] = $specimenCollectedDate;
                         $row[] = $status;
@@ -954,15 +955,16 @@ class DataCollectionService {
                         )
                     );
                     $sheet->setCellValue('A1', html_entity_decode('Province Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    //$sheet->setCellValue('G1', html_entity_decode('HIV RNA > 1000 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('Rapid Recency Diagnosis Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('Rapid Recency Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('ANC Facility ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    //$sheet->setCellValue('H1', html_entity_decode('HIV RNA > 1000 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Lab Rapid Recency Diagnosis Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Lab Rapid Recency Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -973,6 +975,7 @@ class DataCollectionService {
                     $sheet->getStyle('G1')->applyFromArray($styleArray);
                     $sheet->getStyle('H1')->applyFromArray($styleArray);
                     $sheet->getStyle('I1')->applyFromArray($styleArray);
+                    $sheet->getStyle('J1')->applyFromArray($styleArray);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $lag = '';
@@ -983,7 +986,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 8){
+                            if($colNo > 9){
                                 break;
                             }
                             if (is_numeric($value)) {
@@ -991,14 +994,14 @@ class DataCollectionService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                            if($colNo == 5){ $lag = $value; }
-                            if($colNo == 7){ $assay1 = $value; }
-                            if($colNo == 8){ $assay2 = $value; }
+                            if($colNo == 6){ $lag = $value; }
+                            if($colNo == 8){ $assay1 = $value; }
+                            if($colNo == 9){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > 7){
+                            if($colNo > 8){
                                 if($assay1 =='HIV Negative' || ($lag == 'Long Term' && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
-                                  $sheet->getStyle('A'.$currentRow.':I'.$currentRow)->applyFromArray($redTxtArray);
+                                  $sheet->getStyle('A'.$currentRow.':J'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);

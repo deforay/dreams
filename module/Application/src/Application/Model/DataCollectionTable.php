@@ -1552,8 +1552,8 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province_name','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
-	$orderColumns = array('province_name','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$aColumns = array('province_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$orderColumns = array('province_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
        /*
         * Paging
         */
@@ -1659,6 +1659,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'asante_rapid_recency_assy',
 						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 						))
+				   ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
@@ -1724,6 +1725,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						'asante_rapid_recency_assy',
 						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
 					     ))
+				->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
@@ -1776,6 +1778,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['province_name']);
+	    $row[] = $aRow['anc_site_code'];
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = $specimenCollectedDate;
 	    $row[] = $status;

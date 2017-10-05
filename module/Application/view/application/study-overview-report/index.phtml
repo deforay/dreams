@@ -188,6 +188,7 @@ $loginContainer = new Container('user');
 			<thead>
 			<tr>
 			    <th>Province Name</th>
+			    <th>ANC Facility ID</th>
 			    <th>Patient Barcode ID</th>
 			    <th>Specimen Collected Date</th>
 			    <th>Lab Data</th>
@@ -196,13 +197,14 @@ $loginContainer = new Container('user');
 			    <th>HIV RNA (cp/ml)</th>
 			    <!--<th>HIV RNA > 1000</th>-->
 			    <th>Recent Infection</th>
-			    <th>Rapid Recency Diagnosis Test</th>
-			    <th>Rapid Recency Result</th>
+			    <th>Lab Rapid Recency Diagnosis Test</th>
+			    <th>Lab Rapid Recency Result</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
 			    <th>Province Name</th>
+			    <th>ANC Facility ID</th>
 			    <th>Patient Barcode ID</th>
 			    <th>Specimen Collected Date</th>
 			    <th>Lab Data</th>
@@ -211,8 +213,8 @@ $loginContainer = new Container('user');
 			    <th>HIV RNA (cp/ml)</th>
 			    <!--<th>HIV RNA > 1000</th>-->
 			    <th>Recent Infection</th>
-			    <th>Rapid Recency Diagnosis Test</th>
-			    <th>Rapid Recency Result</th>
+			    <th>Lab Rapid Recency Diagnosis Test</th>
+			    <th>Lab Rapid Recency Result</th>
 			</tr>
 			</tfoot>
 			<tbody>
@@ -235,21 +237,22 @@ $loginContainer = new Container('user');
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap","bSortable":false},
-		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
-		{"sClass":"dataTable_noWrap","bSortable":false}
+		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[8] =='HIV Negative' || (aData[5] == 'Long Term' && ((aData[8] =='HIV Positive' && aData[9] == 'Recent') || aData[9] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[9] =='HIV Negative' || (aData[6] == 'Long Term' && ((aData[9] =='HIV Positive' && aData[10] == 'Recent') || aData[10] == 'Recent'))){ $(nRow).addClass("redTxt"); }
 	    },
-            "aaSorting": [[4, "desc"]],
+            "aaSorting": [[5, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('study-overview-report'); ?>",
