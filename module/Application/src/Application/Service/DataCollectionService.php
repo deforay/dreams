@@ -336,7 +336,6 @@ class DataCollectionService {
                         $row[] = $resultDispatchedDateToClinic;
                         $row[] = $aRow['final_lag_avidity_odn'];
                         $row[] = $aRow['hiv_rna'];
-                        //$row[] = $hIVRNAResult;
                         $row[] = $recencyInfection;
                         $row[] = $rapidRecencyAssay;
                         $row[] = $diagnosisReaderValue;

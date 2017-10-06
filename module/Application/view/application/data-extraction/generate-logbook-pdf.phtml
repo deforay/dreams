@@ -148,24 +148,28 @@ if(count($logbookResult) >0){
 	   $html .='<th><strong>Receipt Date at Lab</strong></th>';
            $html .='<th><strong>Patient Barcode ID</strong></th>';
            $html .='<th><strong>Specimen Collected Date</strong></th>';
-           $html .='<th><strong>ANC Site Name/Code</strong></th>';
-           $html .='<th><strong>ANC Patient ID</strong></th>';
+           $html .='<th><strong>ANC Site</strong></th>';
+	   $html .='<th><strong>ANC Site Code</strong></th>';
+           $html .='<th><strong>Encrypted ANC Patient ID</strong></th>';
+	   $html .='<th><strong>ANC Patient ID</strong></th>';
            $html .='<th><strong>Age</strong></th>';
            $html .='<th><strong>Specimen Pick Up Date at ANC</strong></th>';
-           $html .='<th><strong>Lab Site Name/Code</strong></th>';
+           $html .='<th><strong>Lab/Facility</strong></th>';
+	   $html .='<th><strong>Lab/Facility Code</strong></th>';
            $html .='<th><strong>Lab Specimen ID</strong></th>';
            $html .='<th><strong>Rejection Code</strong></th>';
            $html .='<th><strong>Date of Test Completion</strong></th>';
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
-           $html .='<th><strong>LAg Avidity</strong></th>';
-           $html .='<th><strong>LAg Avidity Result</strong></th>';
+           $html .='<th><strong>LAg Avidity ODn</strong></th>';
+           //$html .='<th><strong>LAg Avidity Result</strong></th>';
            $html .='<th><strong>HIV RNA (cp/ml)</strong></th>';
            //$html .='<th><strong>HIV RNA > 1000</strong></th>';
-           $html .='<th><strong>Recent Infection</strong></th>';
+           $html .='<th><strong>Recent Infection (LAg Assay)</strong></th>';
            $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
 	   $html .='<th><strong>Diagnosis Reader Value</strong></th>';
            $html .='<th><strong>Rapid Recency Result</strong></th>';
 	   $html .='<th><strong>Recency Reader Value</strong></th>';
+	   $html .='<th><strong>Comments</strong></th>';
 	   $html .='<th><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
           $html .='</thead>';
@@ -187,7 +191,7 @@ if(count($logbookResult) >0){
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
-	    $lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
+	    //$lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
 	    //$hIVRNAResult = '';
 	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
 	    //  $hIVRNAResult = 'High Viral Load';
@@ -217,24 +221,26 @@ if(count($logbookResult) >0){
 	      $html .='<td>'.$receiptDateAtCentralLab.'</td>';
               $html .='<td>'.$row['patient_barcode_id'].'</td>';
               $html .='<td>'.$specimenCollectedDate.'</td>';
-              $html .='<td>'.ucwords($row['anc_site_name'])." - ".$row['anc_site_code'].'</td>';
-              $html .='<td>'.$row['anc_patient_id'].'</td>';
+              $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
+	      $html .='<td>'.$row['anc_site_code'].'</td>';
+	      $html .='<td>'.$row['enc_anc_patient_id'].'</td>';
+              $html .='<td></td>';
               $html .='<td>'.$row['age'].'</td>';
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
-              $html .='<td>'.ucwords($row['facility_name'])." - ".$row['facility_code'].'</td>';
+              $html .='<td>'.ucwords($row['facility_name']).'</td>';
+	      $html .='<td>'.$row['facility_code'].'</td>';
               $html .='<td>'.$row['lab_specimen_id'].'</td>';
               $html .='<td>'.ucwords($row['rejection_code']).'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
               $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
-              $html .='<td>'.$lAgAvidityResult.'</td>';
               $html .='<td>'.$row['hiv_rna'].'</td>';
-              //$html .='<td>'.$hIVRNAResult.'</td>';
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               $html .='<td>'.$rapidRecencyAssay.'</td>';
 	      $html .='<td>'.$diagnosisReaderValue.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
 	      $html .='<td>'.$recencyReaderValue.'</td>';
+	      $html .='<td>'.ucfirst($row['comments']).'</td>';
 	      $html .='<td></td>';
             $html .='</tr>';
           }
