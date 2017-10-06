@@ -881,7 +881,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
 						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(status = 2, 1,0))"),
+						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
