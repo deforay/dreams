@@ -85,6 +85,7 @@ class DataCollectionService {
         $loginContainer = new Container('user');
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
         $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+        $clinicRiskAssessmentDb = $this->sm->get('ClinicRiskAssessmentTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $global = array();
@@ -142,6 +143,30 @@ class DataCollectionService {
             }
         }
         //clinic data end
+        //clinic risk assessment data start
+        $lockHour = '+48 hours';//default clinic risk assessment data lock-hour
+        //set clinic risk assessment data's lock-hour
+        if(isset($global['locking_risk_assessment_data_after_login']) && (int)$global['locking_risk_assessment_data_after_login'] > 0){
+            $lockHour = '+'.(int)$global['locking_risk_assessment_data_after_login'].' hours';
+        }
+        //To lock completed clinic risk assessment datas
+        $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+                                   ->columns(array('assessment_id','added_on'))
+                                   ->where(array('r_a.added_by'=>$loginContainer->userId,'r_a.status'=>1));
+        $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+        $riskAssessmentResult = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        if(count($riskAssessmentResult)>0){
+            $now = date("Y-m-d H:i:s");
+            foreach($riskAssessmentResult as $riskAssessment){
+               $newDate = date("Y-m-d H:i:s", strtotime($riskAssessment['added_on'] . $lockHour));
+               if($newDate <=$now){
+                   $params = array();
+                   $params['assessment'] = base64_encode($riskAssessment['assessment_id']);
+                   $clinicRiskAssessmentDb->lockRiskAssessmentDetails($params);
+               }
+            }
+        }
+        //clinic risk assessment data end
       return true;
     }
     

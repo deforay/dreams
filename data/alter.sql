@@ -636,11 +636,11 @@ ALTER TABLE `clinic_data_collection` ADD `locked_on` DATETIME NULL DEFAULT NULL 
 
 ALTER TABLE `clinic_data_collection` CHANGE `status` `status` INT(11) NULL DEFAULT NULL;
 
-INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES ('', 'locking_clinic_data_after_login', '48');
-
-update global_config set display_name ="Locking Clinic Data After Login" WHERE name ="locking_clinic_data_after_login"
-
 --Pal 06/10/2017
 ALTER TABLE `clinic_risk_assessment` ADD `status` INT(11) NULL DEFAULT NULL AFTER `country`;
 
-ALTER TABLE `clinic_risk_assessment` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`; 
+ALTER TABLE `clinic_risk_assessment` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`;
+
+INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
+('Locking Clinic Data After Login', 'locking_clinic_data_after_login', '48'),
+('Locking Clinic Risk Assessment Data After Login', 'locking_risk_assessment_data_after_login', '48');
