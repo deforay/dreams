@@ -345,12 +345,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 		$unlockedBy = 'System';
-		if(isset($userResult->user_id) && $userResult->user_id == $loginContainer->userId){
-		    $unlockedBy = 'You';
-		}else if(isset($userResult->user_id)){
-		    $unlockedBy = ucwords($userResult->full_name);
+		if(isset($userResult->user_id)){
+		    $unlockedBy = ($userResult->user_id == $loginContainer->userId)?'You':ucwords($userResult->full_name);
 		}
-	      $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
+	       $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
 	    }
 	    $dataView = '';
 	    $dataEdit = '';
@@ -359,22 +357,19 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $pdfLink = '';
 	    //data view
 	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp;';
-	    //for ls/ldeo
-	    if(($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO') && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
+	    //for edit
+	    if($loginContainer->hasViewOnlyAccess!='yes' && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
 		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
+	    } if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'completed'){
+		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
 	    }
 	    //for csc/cc
-	    if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
-		if($aRow['test_status_name']== 'locked'){
-		   $dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
-		}else{
-		   $dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';  
-		}if($aRow['test_status_name']== 'completed'){
-		   $dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
-	        }
+	    if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
 	    }
+	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	    //for individual result pdf
-	    if($aRow['test_status_name']== 'locked'){
+	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
 	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
@@ -407,7 +402,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }if($loginContainer->hasViewOnlyAccess!= 'yes') {
-		$dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	       $row[] = $dataEdit.$dataView.$dataLockUnlock.$pdfLink.$userUnlockedHistory;
 	    }
 	    $output['aaData'][] = $row;
@@ -532,15 +526,6 @@ class DataCollectionTable extends AbstractTableGateway {
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );
-	    if(base64_decode($params['status']) !=$params['prevStatus']){
-		if(base64_decode($params['status'])== 2){
-		    $data['locked_on'] = $common->getDateTime();
-		    $data['locked_by'] = $loginContainer->userId;
-		}else if(base64_decode($params['status'])== 3){
-		    $data['unlocked_on'] = $common->getDateTime();
-		    $data['unlocked_by'] = $loginContainer->userId;
-		}
-	    }
 	    $this->update($data,array('data_collection_id'=>$dataCollectionId));
 	    //Add a new row into data collection event log table
 	    $dbAdapter = $this->adapter;

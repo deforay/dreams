@@ -311,4 +311,32 @@ $loginContainer = new Container('user');
 		}
 	    });
     }
+    
+    function lockRiskAssessment(ID){
+	var conf = confirm("Are you sure you want to lock this risk assessment data?");
+	if(conf){
+	    $.post("<?php echo $this->url('lock-risk-assessment-data'); ?>", {assessment:ID},
+		function(data){
+		    if($.trim(data) == 0 || $.trim(data) == ''){
+		      alert("OOPS..");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
+    
+    function unlockRiskAssessment(ID){
+	var conf = confirm("Are you sure you want to unlock this risk assessment data?");
+	if(conf){
+	    $.post("<?php echo $this->url('unlock-risk-assessment-data'); ?>", {assessment:ID},
+		function(data){
+		    if($.trim(data) == 0 || $.trim(data) == ''){
+		      alert("OOPS..");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
 </script>

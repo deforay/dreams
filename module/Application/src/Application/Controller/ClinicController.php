@@ -163,4 +163,30 @@ class ClinicController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function lockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->lockClinicDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function unlockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response=$dataCollectionService->unlockClinicDataCollection($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

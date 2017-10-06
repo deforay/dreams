@@ -599,9 +599,19 @@ class RiskAssessmentService {
             for($i=0;$i<count($params['assessment']);$i++){
                 $assessmentArray[] = base64_decode($params['assessment'][$i]);
             }
-            $aQuery = $aQuery->where('r_a.assessment_id IN ("' . implode('", "', $assessmentArray) . '")');
+           $aQuery = $aQuery->where('r_a.assessment_id IN ("' . implode('", "', $assessmentArray) . '")');
         }
         $aQueryStr = $sql->getSqlStringForSqlObject($aQuery);
       return $dbAdapter->query($aQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function lockRiskAssessment($params){
+        $clinicRiskAssessmentDb = $this->sm->get('ClinicRiskAssessmentTable');
+       return $clinicRiskAssessmentDb->lockRiskAssessmentDetails($params);
+    }
+    
+    public function unlockRiskAssessment($params){
+        $clinicRiskAssessmentDb = $this->sm->get('ClinicRiskAssessmentTable');
+       return $clinicRiskAssessmentDb->unlockRiskAssessmentDetails($params);
     }
 }

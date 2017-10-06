@@ -18,9 +18,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
     
     public function addClinicDataCollectionDetails($params){
         $loginContainer = new Container('user');
+        $common = new CommonService();
         $lastInsertedId = 0;
         if(isset($params['anc']) && trim($params['anc'])!= ''){
-            $common = new CommonService();
             //set characteristics data
             $reportingArray = array();
             if(count($params['field']) >0){
@@ -39,6 +39,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         'characteristics_data'=>$characteristicsVal,
                         'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
+                        'status'=>1,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
                     );
@@ -133,13 +134,14 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                   ->where(array('cl_map.user_id'=>$loginContainer->userId));
        $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
        $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-       //Get all mapped ANC
+       //get all mapped ANC
        foreach($uMapResult as $anc){
 	   $mappedANC[] = $anc['clinic_id'];
        }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
-                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
+                     ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
             $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -177,7 +179,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        /* Total data set length */
        $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
-                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
+                     ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
           $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -195,21 +198,21 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $ancFormDb = new AncFormTable($dbAdapter);
        $ancFormFieldList = $ancFormDb->fetchActiveAncFormFields();
        foreach ($rResult as $aRow) {
-           $row = array();
-           $reportingMonth = '';
-           $reportingYear = '';
-           if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
-               $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
-               $reportingMonth = $xplodReportingMonthYear[0];
-               $reportingYear = $xplodReportingMonthYear[1];
-           }
-           $row[] = ucwords($aRow['anc_site_name']);
-           $row[] = $aRow['anc_site_code'];
-           $row[] = ucfirst($reportingMonth);
-           $row[] = $reportingYear;
-           $row[] = ucwords($aRow['country_name']);
-           foreach($ancFormFieldList as $key=>$value){
-                //For non-existing fields
+            $reportingMonth = '';
+            $reportingYear = '';
+            if($aRow['reporting_month_year']!= null && trim($aRow['reporting_month_year'])!= ''){
+                $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
+                $reportingMonth = $xplodReportingMonthYear[0];
+                $reportingYear = $xplodReportingMonthYear[1];
+            }
+            $row = array();
+            $row[] = ucwords($aRow['anc_site_name']);
+            $row[] = $aRow['anc_site_code'];
+            $row[] = ucfirst($reportingMonth);
+            $row[] = $reportingYear;
+            $row[] = ucwords($aRow['country_name']);
+            foreach($ancFormFieldList as $key=>$value){
+                //for non-existing fields
                 $colVal = '';
                 $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                 $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
@@ -219,7 +222,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
-                            //Re-intialize to show existing fields
+                            //re-intialize to show existing fields
                             $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
@@ -236,13 +239,25 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         }
                     }
                 }
-              $row[] = '<div>'.$colVal.'&nbsp;&nbsp;</div>';
-           }
-           $row[] = ucfirst($aRow['comments']);
-           if($loginContainer->hasViewOnlyAccess!= 'yes') {
-              $row[] = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-           }
-           $output['aaData'][] = $row;
+               $row[] = '<div>&nbsp;&nbsp;'.$colVal.'&nbsp;&nbsp;</div>';
+            }
+            $dataEdit = '';
+	    $dataLock = '';
+	    $dataUnlock = '';
+            //for edit
+            if($loginContainer->hasViewOnlyAccess!= 'yes') {
+                $dataEdit = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
+            } if($loginContainer->hasViewOnlyAccess!= 'yes' && $aRow['test_status_name']== 'completed'){
+                $dataLock = '<a href="javascript:void(0);" onclick="lockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
+            }
+            //for csc/cc
+            if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!= 'yes' && $aRow['test_status_name']== 'locked'){
+                $dataUnlock = '<a href="javascript:void(0);" onclick="unlockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
+            }
+            $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
+            $row[] = ucfirst($aRow['comments']);
+            $row[] = $dataEdit.$dataLockUnlock;
+            $output['aaData'][] = $row;
        }
       return $output;
     }
@@ -253,11 +268,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
     
     public function updateClinicDataCollectionDetails($params){
         $loginContainer = new Container('user');
+        $common = new CommonService();
         $clinicDataCollectionId = 0;
         if(isset($params['anc']) && trim($params['anc'])!= ''){
             $clinicDataCollectionId = base64_decode($params['clinicDataCollectionId']);
-            $common = new CommonService();
-            //Set updated characteristics data
+            //set updated characteristics data
             $reportingArray = array();
             if(count($params['field']) >0){
                 for($f=0;$f<count($params['field']);$f++){
@@ -269,12 +284,14 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                 }
             }
             $characteristicsVal = ($reportingArray >0)?json_encode($reportingArray):NULL;
+            $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
                         'characteristics_data'=>$characteristicsVal,
                         'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
+                        'status'=>$status,
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );
@@ -369,13 +386,14 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                   ->where(array('cl_map.user_id'=>$loginContainer->userId));
        $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
        $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-       //Get all mapped ANC
+       //get all mapped ANC
        foreach($uMapResult as $anc){
 	   $mappedANC[] = $anc['clinic_id'];
        }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
-                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+                     ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
+                     ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
             $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -412,7 +430,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        /* Total data set length */
         $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
-                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'));
+                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
+                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -444,7 +463,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $row[] = $reportingYear;
            $row[] = ucwords($aRow['country_name']);
            foreach($ancFormFieldList as $key=>$value){
-                //For non-existing fields
+                //for non-existing fields
                 $colVal = '';
                 $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                 $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
@@ -454,7 +473,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
-                            //Re-intialize to show existing fields
+                            //re-intialize to show existing fields
                             $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
@@ -471,11 +490,37 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                         }
                     }
                 }
-              $row[] = '<div>'.$colVal.'&nbsp;&nbsp;</div>';
+              $row[] = '<div>&nbsp;&nbsp;'.$colVal.'&nbsp;&nbsp;</div>';
            }
            $row[] = ucfirst($aRow['comments']);
            $output['aaData'][] = $row;
        }
       return $output;
+    }
+    
+    public function lockClinicDataCollectionDetails($params){
+        $loginContainer = new Container('user');
+	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$data = array(
+	    'status'=>2,
+	    'locked_on'=>$common->getDateTime(),
+	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+	);
+      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clDataCollectionId'])));
+    }
+    
+    public function unlockClinicDataCollectionDetails($params){
+        $loginContainer = new Container('user');
+	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$data = array(
+	    'status'=>3,
+	    'locked_on'=>$common->getDateTime(),
+	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+	);
+      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clDataCollectionId'])));
     }
 }

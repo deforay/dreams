@@ -81,27 +81,32 @@ class DataCollectionService {
         return $dataCollectionDb->unlockDataCollectionDetails($params);
     }
     
-    public function automaticDataCollectionLockAfterLogin(){
+    public function autoDataLockAfterLogin(){
         $loginContainer = new Container('user');
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
-        $lockHour = '+72 hours';//Default lock-hour
-        //Get data's lock-hour
-        $globalConfigQuery = $sql->select()->from(array('conf' => 'global_config'))
-                                 ->where(array('conf.name'=>'locking_data_after_login'));
+        $global = array();
+        $globalConfigQuery = $sql->select()->from(array('conf' => 'global_config'));
         $globalConfigQueryStr = $sql->getSqlStringForSqlObject($globalConfigQuery);
-        $globalConfigResult = $dbAdapter->query($globalConfigQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-        if(isset($globalConfigResult->value) && (int)$globalConfigResult->value > 0){
-            $lockHour = '+'.(int)$globalConfigResult->value.' hours';
+        $globalConfigResult = $dbAdapter->query($globalConfigQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        for ($i = 0; $i < sizeof($globalConfigResult); $i++) {
+           $global[$globalConfigResult[$i]['name']] = $globalConfigResult[$i]['value'];
         }
-        //To lock completed datas
+        //lab data start
+        $lockHour = '+72 hours';//default lab data lock-hour
+        //set lab data's lock-hour
+        if(isset($global['locking_data_after_login']) && (int)$global['locking_data_after_login'] > 0){
+            $lockHour = '+'.(int)$global['locking_data_after_login'].' hours';
+        }
+        //To lock completed lab datas
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
-                                   ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=>1));
+                                   ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=> 1));
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
         $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-        if(isset($dataCollectionResult) && count($dataCollectionResult)>0){
+        if(count($dataCollectionResult)>0){
             $now = date("Y-m-d H:i:s");
             foreach($dataCollectionResult as $dataCollection){
                $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockHour));
@@ -111,10 +116,33 @@ class DataCollectionService {
                    $dataCollectionDb->lockDataCollectionDetails($params);
                }
             }
-          return true;
-        }else{
-            return false;
         }
+        //lab data end
+        //clinic data start
+        $lockHour = '+48 hours';//default clinic data lock-hour
+        //set clinic data's lock-hour
+        if(isset($global['locking_clinic_data_after_login']) && (int)$global['locking_clinic_data_after_login'] > 0){
+            $lockHour = '+'.(int)$global['locking_clinic_data_after_login'].' hours';
+        }
+        //To lock completed clinic datas
+        $clinicDataCollectionQuery = $sql->select()->from(array('cl_da_c' => 'clinic_data_collection'))
+                                   ->columns(array('cl_data_collection_id','added_on'))
+                                   ->where(array('cl_da_c.added_by'=>$loginContainer->userId,'cl_da_c.status'=>1));
+        $clinicDataCollectionQueryStr = $sql->getSqlStringForSqlObject($clinicDataCollectionQuery);
+        $clinicDataCollectionResult = $dbAdapter->query($clinicDataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        if(count($clinicDataCollectionResult)>0){
+            $now = date("Y-m-d H:i:s");
+            foreach($clinicDataCollectionResult as $clinicDataCollection){
+               $newDate = date("Y-m-d H:i:s", strtotime($clinicDataCollection['added_on'] . $lockHour));
+               if($newDate <=$now){
+                   $params = array();
+                   $params['clDataCollectionId'] = base64_encode($clinicDataCollection['cl_data_collection_id']);
+                   $clinicDataCollectionDb->lockClinicDataCollectionDetails($params);
+               }
+            }
+        }
+        //clinic data end
+      return true;
     }
     
     public function requestForUnlockDataCollection($params){
@@ -165,8 +193,8 @@ class DataCollectionService {
                     $displayLab = '';
                     $allLabs = array();
                     $displayAllLabs = '';
-                    $resultReported = 'Completed Tests, Pending Tests';
                     $receiptDateatLab = '';
+                    $resultReported = 'Completed Tests, Pending Tests';
                     $headerRow = 1;
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                         $headerRow = 4;
@@ -181,8 +209,7 @@ class DataCollectionService {
                             foreach($ancSites as $anc){
                                 $allANCs[] = ' '.ucwords($anc['anc_site_name']);
                                 if(trim($selectedANC)!= '' && $selectedANC == $anc['anc_site_id']){
-                                    $displayANC = ucwords($anc['anc_site_name']);
-                                    break;
+                                    $displayANC = ucwords($anc['anc_site_name']); break;
                                 }
                             }
                            $displayAllANCs = implode(',',$allANCs);
@@ -196,22 +223,21 @@ class DataCollectionService {
                             foreach($facilities as $facility){
                                 $allLabs[] = ' '.ucwords($facility['facility_name']);
                                 if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
-                                    $displayLab = ucwords($facility['facility_name']);
-                                    break;
+                                    $displayLab = ucwords($facility['facility_name']); break;
                                 }
                             }
                            $displayAllLabs = implode(',',$allLabs);
                         }
                         $labs = (trim($displayLab)!= '')?$displayLab:$displayAllLabs;
+                        //set receipt date at lab
+                        if(trim($params['date'])!= ''){
+                            $receiptDateatLab = $params['date'];
+                        }
                         //set result reported
                         if(trim($params['status']) == 'completed'){
                             $resultReported = 'Completed Tests';
                         }else if(trim($params['status']) == 'pending'){
                             $resultReported = 'Pending Tests';
-                        }
-                        //set receipt date at lab
-                        if(trim($params['date'])!= ''){
-                            $receiptDateatLab = $params['date'];
                         }
                     }
                     $excel = new PHPExcel();
@@ -301,6 +327,7 @@ class DataCollectionService {
                     }
                     $styleArray = array(
                         'font' => array(
+                            'size' => 12,
                             'bold' => true,
                         ),
                         'alignment' => array(
@@ -333,14 +360,25 @@ class DataCollectionService {
                             'size' => 22
                         )
                     );
-                    $filterLabelArray = array(
+                    $labelArray = array(
                         'font' => array(
                             'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
                         )
                     );
-                    $sheet->getRowDimension('1')->setRowHeight(-1);
+                    $wrapTxtArray = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        )
+                    );
                     
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
+                      $sheet->mergeCells('A1:X1');
+                      
                       $sheet->setCellValue('A1', html_entity_decode('Logbook for Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('A2', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('B2', html_entity_decode($ancs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -387,11 +425,18 @@ class DataCollectionService {
                     }
                     
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
+                      $sheet->getRowDimension(1)->setRowHeight(-1);
+                      $sheet->getRowDimension(2)->setRowHeight(-1);
+                      $sheet->getStyle('B2')->getAlignment()->setWrapText(true);
+                      $sheet->getStyle('D2')->getAlignment()->setWrapText(true);
+                      
                       $sheet->getStyle('A1')->applyFromArray($titleTxtArray);
-                      $sheet->getStyle('A2')->applyFromArray($filterLabelArray);
-                      $sheet->getStyle('C2')->applyFromArray($filterLabelArray);
-                      $sheet->getStyle('A3')->applyFromArray($filterLabelArray);
-                      $sheet->getStyle('C3')->applyFromArray($filterLabelArray);
+                      $sheet->getStyle('A2')->applyFromArray($labelArray);
+                      $sheet->getStyle('B2')->applyFromArray($wrapTxtArray);
+                      $sheet->getStyle('C2')->applyFromArray($labelArray);
+                      $sheet->getStyle('D2')->applyFromArray($wrapTxtArray);
+                      $sheet->getStyle('A3')->applyFromArray($labelArray);
+                      $sheet->getStyle('C3')->applyFromArray($labelArray);
                     }
                     $sheet->getStyle('A'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$headerRow)->applyFromArray($styleArray);
@@ -622,7 +667,7 @@ class DataCollectionService {
                         $row[] = $reportingYear;
                         $row[] = ucwords($aRow['country_name']);
                         foreach($ancFormFields as $key=>$value){
-                            //For non-existing fields
+                            //for non-existing fields
                             $col1Val = '0';
                             $col2Val = '0';
                             $col3Val = '0';
@@ -631,7 +676,7 @@ class DataCollectionService {
                                 $fields = json_decode($aRow['characteristics_data'],true);
                                 foreach($fields as $fieldName=>$fieldValue){
                                     if($key == $fieldName){
-                                        //Re-intialize to show existing fields
+                                        //re-intialize to show existing fields
                                         foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                             $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                            if($characteristicsName =='age_lt_15'){
@@ -657,6 +702,7 @@ class DataCollectionService {
                     }
                     $styleArray = array(
                         'font' => array(
+                            'size' => 12,
                             'bold' => true,
                         ),
                         'alignment' => array(
@@ -927,6 +973,7 @@ class DataCollectionService {
                     }
                     $styleArray = array(
                         'font' => array(
+                            'size' => 12,
                             'bold' => true,
                         ),
                         'alignment' => array(
@@ -1026,5 +1073,15 @@ class DataCollectionService {
         }else{
             return "";
         } 
+    }
+    
+    public function lockClinicDataCollection($params){
+       $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+      return $clinicDataCollectionDb->lockClinicDataCollectionDetails($params);
+    }
+    
+    public function unlockClinicDataCollection($params){
+       $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+      return $clinicDataCollectionDb->unlockClinicDataCollectionDetails($params); 
     }
 }

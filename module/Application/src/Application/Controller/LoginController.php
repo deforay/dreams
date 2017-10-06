@@ -24,7 +24,7 @@ class LoginController extends AbstractActionController{
             //data collection automatic lock
             if($redirectUrl == 'home'){
                 $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-                $dataCollectionService->automaticDataCollectionLockAfterLogin();
+                $dataCollectionService->autoDataLockAfterLogin();
             }if($redirectUrl == 'home' && $loginContainer->roleCode == 'CC'){
                 return $this->redirect()->toUrl('/dashboard/'.base64_encode($loginContainer->country[0]));
             }else if($redirectUrl == 'home' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){

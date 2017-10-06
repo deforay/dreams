@@ -2,13 +2,19 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
-$alertContainer->pageHeight = 46;
+$alertContainer->headerSize = 46;
 if(count($logbookResult) >0){
-    //set ancs
     $selectedANC = '';
     $displayANC = '';
     $allANCs = array();
     $displayAllANCs = '';
+    $selectedLab = '';
+    $displayLab = '';
+    $allLabs = array();
+    $displayAllLabs = '';
+    $receiptDateatLab = '';
+    $resultReported = 'Completed Tests, Pending Tests';
+    //set ancs
     if(trim($params['anc'])!= ''){
 	$selectedANC = base64_decode($params['anc']);
     }
@@ -16,18 +22,13 @@ if(count($logbookResult) >0){
 	foreach($ancSites as $anc){
 	    $allANCs[] = ' '.ucwords($anc['anc_site_name']);
 	    if(trim($selectedANC)!= '' && $selectedANC == $anc['anc_site_id']){
-		$displayANC = ucwords($anc['anc_site_name']);
-		break;
+		$displayANC = ucwords($anc['anc_site_name']); break;
 	    }
 	}
        $displayAllANCs = implode(',',$allANCs);
     }
     $ancs = (trim($displayANC)!= '')?$displayANC:$displayAllANCs;
     //set labs
-    $selectedLab = '';
-    $displayLab = '';
-    $allLabs = array();
-    $displayAllLabs = '';
     if(trim($params['lab'])!= ''){
 	$selectedLab = base64_decode($params['lab']);
     }
@@ -35,20 +36,17 @@ if(count($logbookResult) >0){
 	foreach($facilities as $facility){
 	    $allLabs[] = ' '.ucwords($facility['facility_name']);
 	    if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
-		$displayLab = ucwords($facility['facility_name']);
-		break;
+		$displayLab = ucwords($facility['facility_name']); break;
 	    }
 	}
        $displayAllLabs = implode(',',$allLabs);
     }
     $labs = (trim($displayLab)!= '')?$displayLab:$displayAllLabs;
     //set receipt date at lab
-    $receiptDateatLab = '';
     if(trim($params['date'])!= ''){
 	$receiptDateatLab = $params['date'];
     }
     //set result reported
-    $resultReported = 'Completed Tests, Pending Tests';
     if(trim($params['status']) == 'completed'){
 	$resultReported = 'Completed Tests';
     }else if(trim($params['status']) == 'pending'){
@@ -82,7 +80,7 @@ if(count($logbookResult) >0){
              //Title
             $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
 	    $this->writeHTMLCell(0,'','','',$this->filterContent,0,1,false,true,'C',true);
-	    $alertContainer->pageHeight = $this->GetY();
+	    $alertContainer->headerSize = $this->GetY();
         }
     
         // Page footer
@@ -139,9 +137,9 @@ if(count($logbookResult) >0){
     $pdf->SetFont('helvetica', '', 10);
     
     $pdf->AddPage();
-    $pdf->SetMargins(10, $alertContainer->pageHeight, 10, true);
+    $pdf->SetMargins(10, $alertContainer->headerSize, 10, true);
     //$pdf->SetFooterMargin(10);
-    $pdf->SetY($alertContainer->pageHeight,true,false);
+    $pdf->SetY($alertContainer->headerSize,true,false);
     //pdf content
     $html = '';
       $html.='<table border="1" style="padding:2px;">';

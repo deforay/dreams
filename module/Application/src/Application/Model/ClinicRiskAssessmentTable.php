@@ -163,6 +163,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'comment'=>$params['comment'],
 		    'country'=>$country,
+		    'status'=>1,
                     'added_on'=>$common->getDateTime(),
                     'added_by'=>$loginContainer->userId
                 );
@@ -304,7 +305,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
-                      ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
+                      ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
+		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
 	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
@@ -349,7 +351,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
-                      ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'));
+                      ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
+		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
 	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
@@ -366,16 +369,32 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	);
 	foreach ($rResult as $aRow) {
 	    $interviewDate = '';
-	    $edit = '';
+	    $dataView = '';
+	    $dataEdit = '';
+	    $dataLock = '';
+	    $dataUnlock = '';
+	    $pdfLink = '';
 	    if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
 		$interviewDate = $common->humanDateFormat($aRow['interview_date']);
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
-	    if($loginContainer->hasViewOnlyAccess!='yes'){
-		$edit = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp';
+	    //data view
+	    $dataView = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';
+	    //for edit
+	    if($loginContainer->hasViewOnlyAccess!='yes' && ($aRow['test_status_name']== 'incomplete' || $aRow['test_status_name']== 'unlocked')){
+		$dataEdit = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp';
+	    } if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'completed'){
+		$dataLock = '<a href="javascript:void(0);" onclick="lockRiskAssessment(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
 	    }
-	    $view = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';
-	    $pdf = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
+	    //for csc/cc
+	    if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockRiskAssessment(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
+	    }
+	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
+	    //for individual assessment pdf
+	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+	       $pdfLink = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
+	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
@@ -388,7 +407,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    if(trim($parameters['countryId']) == ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
-	    $row[] = $edit.$view.$pdf;
+	    $row[] = $dataEdit.$dataView.$dataLockUnlock.$pdfLink;
 	    $output['aaData'][] = $row;
 	}
        return $output;
@@ -504,6 +523,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientForcedForSex = array('has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],'patient_forced_by'=>'','no_of_times'=>'');
 		}
 	    }
+	    $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
                     'lab'=>base64_decode($params['lab']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
@@ -546,6 +566,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
 		    'comment'=>$params['comment'],
+		    'status'=>$status,
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId
                 );
@@ -573,5 +594,31 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }
         }
       return $assessmentId;
+    }
+    
+    public function lockRiskAssessmentDetails($params){
+        $loginContainer = new Container('user');
+	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$data = array(
+	    'status'=>2,
+	    'locked_on'=>$common->getDateTime(),
+	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+	);
+      return $this->update($data,array('assessment_id'=>base64_decode($params['assessment'])));
+    }
+    
+    public function unlockRiskAssessmentDetails($params){
+        $loginContainer = new Container('user');
+	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$data = array(
+	    'status'=>3,
+	    'locked_on'=>$common->getDateTime(),
+	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+	);
+      return $this->update($data,array('assessment_id'=>base64_decode($params['assessment'])));
     }
 }

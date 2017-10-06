@@ -762,15 +762,16 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="input-field col s6">
-                    <textarea id="comment" name="comment" class="materialize-textarea" title="Please enter comment"><?php echo $row->comment; ?></textarea>
-                    <label for="comment">Comment </label>
+                    <textarea id="comment" name="comment" class="materialize-textarea" title="Please enter comments"><?php echo $row->comment; ?></textarea>
+                    <label for="comment">Comments </label>
                 </div>
             </div>
             <div class="col s12" style="margin-top:20px;">
-                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
-                <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
                 <input id="ancRapidRecencyId" name="ancRapidRecencyId" type="hidden" value="<?php echo (isset($row->anc_rapid_recency_id))?base64_encode($row->anc_rapid_recency_id):''; ?>"/>
+                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
+                <input type="hidden" name="status" id="status" value="<?php echo base64_encode($row->status); ?>"/>
+                <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateRiskAssessment();">UPDATE</a>&nbsp;&nbsp;
             </div>

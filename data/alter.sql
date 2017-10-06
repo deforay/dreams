@@ -628,3 +628,19 @@ ALTER TABLE `anc_rapid_recency`
   MODIFY `anc_rapid_recency_id` int(11) NOT NULL AUTO_INCREMENT;
   
 alter table anc_rapid_recency add FOREIGN KEY(assessment_id) REFERENCES clinic_risk_assessment(assessment_id)
+
+--Pal 05/10/2017
+ALTER TABLE `clinic_data_collection` ADD `status` INT(11) NULL DEFAULT '1' AFTER `country`;
+
+ALTER TABLE `clinic_data_collection` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`;
+
+ALTER TABLE `clinic_data_collection` CHANGE `status` `status` INT(11) NULL DEFAULT NULL;
+
+INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES ('', 'locking_clinic_data_after_login', '48');
+
+update global_config set display_name ="Locking Clinic Data After Login" WHERE name ="locking_clinic_data_after_login"
+
+--Pal 06/10/2017
+ALTER TABLE `clinic_risk_assessment` ADD `status` INT(11) NULL DEFAULT NULL AFTER `country`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `locked_on` DATETIME NULL DEFAULT NULL AFTER `updated_by`, ADD `locked_by` INT(11) NULL DEFAULT NULL AFTER `locked_on`, ADD `unlocked_on` DATETIME NULL DEFAULT NULL AFTER `locked_by`, ADD `unlocked_by` INT(11) NULL DEFAULT NULL AFTER `unlocked_on`; 

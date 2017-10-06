@@ -29,7 +29,7 @@ if(trim($countryId)!= ''){
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="editClinicDataReportingForm" name="editClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-edit'); ?>">
-            <div class="col l12 m12 s12">
+            <div class="col l12 m12 s12" style="pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;">
                 <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
                 <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" value="<?php echo ucfirst($row->reporting_month_year); ?>" readonly/></div>
             </div>
@@ -48,7 +48,7 @@ if(trim($countryId)!= ''){
                             </thead>
                             <tbody>
                                 <?php
-                                //Set characteristics array data from josn data
+                                //set characteristics array data from josn data
                                 if(isset($row->characteristics_data) && trim($row->characteristics_data)!= ''){
                                   $fieldArray = array();
                                   $fields = json_decode($row->characteristics_data,true);
@@ -58,19 +58,24 @@ if(trim($countryId)!= ''){
                                     }
                                   }
                                 }
-                                $f=1;
+                                $r=1;
                                 foreach($ancFormFields as $key=>$value){
                                     $fieldName = $key;
                                     $formLabel = ucwords(str_replace("_"," ",$key));
                                     $formLabel = str_replace("No","No.",$formLabel);
-                                    //Set readonly on 'No'
-                                    $commonFieldsStyle = 'pointer-events:auto;';
-                                    $totalStyle = 'pointer-events:none;';
+                                    //set readonly fields based on age disaggregation
+                                    $commonFieldsStyle = ($row->status == 2)?'pointer-events:none;':'pointer-events:auto;';
+                                    $styleTotal = 'pointer-events:none;';
+				    $commonFieldsIsRequired = 'isRequired';
+				    $isRequiredTotal = '';
                                     if($value == 'no'){
                                         $commonFieldsStyle = 'pointer-events:none;';
-                                        $totalStyle = 'pointer-events:auto;';
+					//enable/disable No. Of Clients Who Received Recency Result fields based on status
+                                        $styleTotal = ($row->status == 2 && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
+					$commonFieldsIsRequired = '';
+					$isRequiredTotal = 'isRequired';
                                     }
-                                    //Set characteristics value
+                                    //set characteristics value
 				    $ageLt15 = '';
 				    $age15To19 ='';
 				    $age20to24 = '';
@@ -83,17 +88,17 @@ if(trim($countryId)!= ''){
                                     }
                                 ?>
                                     <tr>
-                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
-                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                      <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" value="<?php echo $total; ?>" style="height:2rem;<?php echo $totalStyle; ?>"/></td>
+                                      <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?> *</td>
+                                      <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                      <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" value="<?php echo $total; ?>" style="height:2rem;<?php echo $styleTotal; ?>"/></td>
                                     </tr>
-                                <?php $f++; } ?>
+                                <?php $r++; } ?>
 				<tr>
 				    <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
 				    <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
-					<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;"><?php echo $row->comments; ?></textarea>
+					<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;"><?php echo $row->comments; ?></textarea>
 				    </td>
 				</tr>
                             </tbody>
@@ -104,6 +109,7 @@ if(trim($countryId)!= ''){
             <div class="col s12" style="margin-top:20px;">
                 <input type="hidden" name="clinicDataCollectionId" id="clinicDataCollectionId" value="<?php echo base64_encode($row->cl_data_collection_id); ?>"/>
 		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
+		<input type="hidden" name="status" id="status" value="<?php echo base64_encode($row->status); ?>"/>
 		<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
@@ -156,7 +162,7 @@ if(trim($countryId)!= ''){
             $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {clDataCollectionID:'<?php echo base64_encode($row->cl_data_collection_id); ?>',reportingMonthYear: reportingMonthYear,anc:anc},
             function(data) {
                 if($.trim(data) == 1){
-                    alert('Duplicate data not allowed. The anc site and year/month that you have choosed already entered');
+                    alert('Duplicate data not allowed. The monthly data for anc site and year/month that you have choosed already entered');
                     $('#reportingMonthYear').val('');
                 }
             });

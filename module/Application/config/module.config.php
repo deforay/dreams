@@ -509,6 +509,42 @@ return array(
                         'action' => 'generate-pdf'
                     ),
                 ),
+            ),'lock-clinic-data-collection' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/clinic-data-collection/lock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'lock'
+                    ),
+                ),
+            ),'unlock-clinic-data-collection' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/clinc-data-collection/unlock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'unlock'
+                    ),
+                ),
+            ),'lock-risk-assessment-data' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/risk-assessment/lock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'lock'
+                    ),
+                ),
+            ),'unlock-risk-assessment-data' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/risk-assessment/unlock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'unlock'
+                    ),
+                ),
             )
         ),
     ),

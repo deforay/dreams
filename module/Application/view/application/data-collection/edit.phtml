@@ -362,12 +362,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 </div>
 	    </div>
             <div class="col s12" style="margin-top:20px;">
-                <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
-                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($row->country); ?>"/>
-                <input type="hidden" name="prevStatus" value="<?php echo $row->status; ?>"/>
+		<input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
 		<input type="hidden" name="surveillanceId" id="surveillanceId" value="<?php echo $row->surveillance_id; ?>"/>
+                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($row->country); ?>"/>
 		<input type="hidden" name="formStatus" id="formStatus" value="<?php echo $row->status; ?>"/>
-                <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
+		<input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                 <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
             </div>

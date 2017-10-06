@@ -134,4 +134,30 @@ class RiskAssessmentController extends AbstractActionController{
            return $viewModel;
         }
     }
+    
+    public function lockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response=$riskAssessmentService->lockRiskAssessment($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function unlockAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response=$riskAssessmentService->unlockRiskAssessment($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

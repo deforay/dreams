@@ -99,27 +99,31 @@ if(trim($countryId)!= ''){
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $f=1;
+                                    $r=1;
                                     foreach($ancFormFields as $key=>$value){
                                         $fieldName = $key;
                                         $formLabel = ucwords(str_replace("_"," ",$key));
                                         $formLabel = str_replace("No","No.",$formLabel);
-                                        //Set readonly on 'No'
+                                        //set readonly fields based on age disaggregation
                                         $commonFieldsStyle = 'pointer-events:auto;';
-                                        $totalStyle = 'pointer-events:none;';
+                                        $styleTotal = 'pointer-events:none;';
+					$commonFieldsIsRequired = 'isRequired';
+					$isRequiredTotal = '';
                                         if($value == 'no'){
                                             $commonFieldsStyle = 'pointer-events:none;';
-                                            $totalStyle = 'pointer-events:auto;';
+                                            $styleTotal = 'pointer-events:auto;';
+					    $commonFieldsIsRequired = '';
+					    $isRequiredTotal = 'isRequired';
                                         }
                                     ?>
                                         <tr>
-                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $f; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
-                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
-                                          <td style="<?php echo($f > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum" style="height:2rem;<?php echo $totalStyle; ?>"/></td>
+                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?> *</td>
+                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
+                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;<?php echo $styleTotal; ?>"/></td>
                                         </tr>
-                                    <?php $f++; } ?>
+                                    <?php $r++; } ?>
                                     <tr>
                                         <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
                                         <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
@@ -338,11 +342,39 @@ if(trim($countryId)!= ''){
             $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {reportingMonthYear: reportingMonthYear,anc:anc},
             function(data) {
                 if($.trim(data) == 1){
-                    alert('Duplicate data not allowed. The anc site and year/month that you have choosed already entered');
+                    alert('Duplicate data not allowed. The monthly data for anc site and year/month that you have choosed already entered');
                     $('#reportingMonthYear').val('');
                 }
             });
         }
+    }
+    
+    function lockClinicDataCollection(ID){
+	var conf = confirm("Are you sure you want to lock this clinic data reporting?");
+	if(conf){
+	    $.post("<?php echo $this->url('lock-clinic-data-collection'); ?>", {clDataCollectionId:ID},
+		function(data){
+		    if($.trim(data) == 0 || $.trim(data) == ''){
+		      alert("OOPS..");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
+    
+    function unlockClinicDataCollection(ID){
+	var conf = confirm("Are you sure you want to unlock this clinic data reporting?");
+	if(conf){
+	    $.post("<?php echo $this->url('unlock-clinic-data-collection'); ?>", {clDataCollectionId:ID},
+		function(data){
+		    if($.trim(data) == 0 || $.trim(data) == ''){
+		      alert("OOPS..");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
     }
     
     function addDataReporting(){
