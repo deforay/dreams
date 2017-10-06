@@ -401,7 +401,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['user_name']);
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
-	    }if($loginContainer->hasViewOnlyAccess!= 'yes') {
+	    } if($loginContainer->hasViewOnlyAccess!= 'yes') {
 	       $row[] = $dataEdit.$dataView.$dataLockUnlock.$pdfLink.$userUnlockedHistory;
 	    }
 	    $output['aaData'][] = $row;

@@ -165,10 +165,10 @@ if(count($logbookResult) >0){
            $html .='<th><strong>HIV RNA (cp/ml)</strong></th>';
            //$html .='<th><strong>HIV RNA > 1000</strong></th>';
            $html .='<th><strong>Recent Infection (LAg Assay)</strong></th>';
-           $html .='<th><strong>Rapid Recency Diagnosis Test</strong></th>';
-	   $html .='<th><strong>Diagnosis Reader Value</strong></th>';
-           $html .='<th><strong>Rapid Recency Result</strong></th>';
-	   $html .='<th><strong>Recency Reader Value</strong></th>';
+	   $html .='<th><strong>Positive Verification Line Reader Value (log10)</strong></th>';
+           $html .='<th><strong>HIV Verification Classification</strong></th>';
+	   $html .='<th><strong>Long Term Line Reader Value (log10)</strong></th>';
+           $html .='<th><strong>HIV Recency Classification</strong></th>';
 	   $html .='<th><strong>Comments</strong></th>';
 	   $html .='<th><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
@@ -236,10 +236,10 @@ if(count($logbookResult) >0){
               $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
               $html .='<td>'.$row['hiv_rna'].'</td>';
               $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
-              $html .='<td>'.$rapidRecencyAssay.'</td>';
 	      $html .='<td>'.$diagnosisReaderValue.'</td>';
-              $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
+              $html .='<td>'.$rapidRecencyAssay.'</td>';
 	      $html .='<td>'.$recencyReaderValue.'</td>';
+              $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
 	      $html .='<td></td>';
             $html .='</tr>';
