@@ -178,6 +178,7 @@ if(trim($countryId)!= ''){
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
                                 <th>Comments</th>
+				<th>Status</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
@@ -200,6 +201,7 @@ if(trim($countryId)!= ''){
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
                                 <th>Comments</th>
+				<th>Status</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
@@ -235,7 +237,8 @@ if(trim($countryId)!= ''){
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php } ?>
-                {"sClass":"dataTable_noWrap","bSortable":false},
+                {"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
                 <?php
                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                 ?>

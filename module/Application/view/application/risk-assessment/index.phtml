@@ -158,6 +158,7 @@ $loginContainer = new Container('user');
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
+				<th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -176,6 +177,7 @@ $loginContainer = new Container('user');
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
+				<th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -211,7 +213,8 @@ $loginContainer = new Container('user');
 		<?php if(trim($countryId)== ''){ ?>
 		  {"sClass":"dataTable_noWrap"},
 		<?php } ?>
-                {"sClass":"dataTable_noWrap"}
+		{"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap","bSortable":false}
             ],
             "aaSorting": [[5, "desc"]],
             "bProcessing": true,

@@ -411,6 +411,7 @@ class RiskAssessmentService {
                     }
                     $styleArray = array(
                         'font' => array(
+                            'size' => 12,
                             'bold' => true,
                         ),
                         'alignment' => array(

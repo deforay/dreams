@@ -55,8 +55,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 
-       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
+       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments','test_status_name');
+       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments','test_status_name');
 
        /*
         * Paging
@@ -256,6 +256,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             }
             $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
             $row[] = ucfirst($aRow['comments']);
+            $row[] = ucfirst($aRow['test_status_name']);
             $row[] = $dataEdit.$dataLockUnlock;
             $output['aaData'][] = $row;
        }
@@ -308,7 +309,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
 
        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name');
+       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
 
        /*
         * Paging
@@ -393,7 +394,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
-                     ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
+                     ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
+                     ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
             $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -431,7 +433,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         $tQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                       ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
-                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
+                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
+                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
@@ -449,7 +452,6 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
        $ancFormDb = new AncFormTable($dbAdapter);
        $ancFormFieldList = $ancFormDb->fetchActiveAncFormFields();
        foreach ($rResult as $aRow) {
-           $row = array();
            $reportingMonth = '';
            $reportingYear = '';
            if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
@@ -457,6 +459,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                $reportingMonth = $xplodReportingMonthYear[0];
                $reportingYear = $xplodReportingMonthYear[1];
            }
+           $row = array();
            $row[] = ucwords($aRow['anc_site_name']);
            $row[] = $aRow['anc_site_code'];
            $row[] = ucfirst($reportingMonth);
