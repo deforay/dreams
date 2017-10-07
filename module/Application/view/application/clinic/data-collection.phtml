@@ -102,22 +102,26 @@ if(trim($countryId)!= ''){
                                     $r=1;
                                     foreach($ancFormFields as $key=>$value){
                                         $fieldName = $key;
-                                        $formLabel = ucwords(str_replace("_"," ",$key));
-                                        $formLabel = str_replace("No","No.",$formLabel);
+                                        $tempLabel = ucwords(str_replace("_"," ",$key));
+                                        $formLabel = str_replace("No","No.",$tempLabel). ' *';
                                         //set readonly fields based on age disaggregation
                                         $commonFieldsStyle = 'pointer-events:auto;';
                                         $styleTotal = 'pointer-events:none;';
 					$commonFieldsIsRequired = 'isRequired';
 					$isRequiredTotal = '';
+					$labelStyle = '';
                                         if($value == 'no'){
+					    $mandatoryicon = ($fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
+					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
+					    $labelStyle= ($fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
                                             $commonFieldsStyle = 'pointer-events:none;';
                                             $styleTotal = 'pointer-events:auto;';
 					    $commonFieldsIsRequired = '';
-					    $isRequiredTotal = 'isRequired';
+					    $isRequiredTotal = ($fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
                                         }
                                     ?>
                                         <tr>
-                                          <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?> *</td>
+                                          <td style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
                                           <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
                                           <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
                                           <td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;<?php echo $commonFieldsStyle; ?>"/></td>
