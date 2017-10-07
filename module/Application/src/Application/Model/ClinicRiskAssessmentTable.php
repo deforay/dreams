@@ -617,8 +617,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
 	$data = array(
 	    'status'=>3,
-	    'locked_on'=>$common->getDateTime(),
-	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+	    'unlocked_on'=>$common->getDateTime(),
+	    'unlocked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
       return $this->update($data,array('assessment_id'=>base64_decode($params['assessment'])));
     }
