@@ -320,8 +320,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" onblur="getReaderValueRRDTLogVal();"/>
 			    <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
 			    <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
-			    <br><div id="readerValueRRDTLogVal"><?php echo $readerValueRRDTLogVal; ?></div>
-			    <div id="readerValueRRDTLogValText"><?php echo $readerValueRRDTLogValText; ?></div>
+			    <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
+			    <div id="readerValueRRDTLogValText"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogValText; ?></div>
                           </div>
                           <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">&rArr;</div>
                           <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">
@@ -332,8 +332,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" onblur="getReaderValueRRRLogVal();"/>
 			    <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
 			    <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
-			    <br><div id="readerValueRRRLogVal"><?php echo $readerValueRRRLogVal; ?></div>
-			    <div id="readerValueRRRLogValText"><?php echo $readerValueRRRLogValText; ?></div>
+			    <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
+			    <div id="readerValueRRRLogValText"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogValText; ?></div>
                           </div>
                         </div>
                     </div>
