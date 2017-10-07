@@ -31,9 +31,9 @@ if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched
     $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
 }
 $lAgAvidityResult = '';
-if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'lt'){
+if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'long term'){
     $lAgAvidityResult = 'Long Term';
-}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'r'){
+}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'recent'){
     $lAgAvidityResult = 'Recent';
 }
 $hIVRNAResult = '';
@@ -44,23 +44,19 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 }
 
 $asanteRapidRecencyAssayPn = '';
-$readerValueRRDT = '';
 $readerValueRRDTLogVal = '';
 $readerValueRRDTLogValText = '';
 $asanteRapidRecencyAssayRlt = '';
-$readerValueRRR = '';
 $readerValueRRRLogVal = '';
 $readerValueRRRLogValText = '';
-$asanteRapidRecencyAssy = (trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
+$asanteRapidRecencyAssy = ($row->asante_rapid_recency_assy!= null && trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-    $readerValueRRDT = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
-    $readerValueRRDTLogVal = (trim($readerValueRRDT)!= '') ? "log<sub>10</sub> : ". round(log10($readerValueRRDT),1):'';
+    $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
     $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
-    $readerValueRRR = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
-    $readerValueRRRLogVal = (trim($readerValueRRR)!= '')?"log<sub>10</sub> : ". round(log10($readerValueRRR),1):'';
+    $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
     $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term':'Recent';
 }
 ?>
@@ -294,9 +290,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                           Rapid Recency Assay (Eg. Asante)
                            <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
                            <br>
-                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><?php echo $readerValueRRDT; ?><br><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDT) == '')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDT) == '')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div>
+                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDTLogVal) == '')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDTLogVal) == '')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div>
                           <div id="box-breaker" style="display:<?php echo ($asanteRapidRecencyAssayPn == 'HIV Negative')?'none':''; ?>">&rArr;</div>
-                          <div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'HIV Negative')?'none':''; ?>"><?php echo $asanteRapidRecencyAssayRlt; ?><br><?php echo $readerValueRRR; ?><br><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRR) == '')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRR) == '')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
+                          <div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'HIV Negative')?'none':''; ?>"><?php echo $asanteRapidRecencyAssayRlt; ?><br><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRRLogVal) == '')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRRLogVal) == '')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
                         </div>
                     </div>
                     <div class="col s4">

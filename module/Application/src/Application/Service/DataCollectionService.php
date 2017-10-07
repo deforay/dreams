@@ -306,17 +306,17 @@ class DataCollectionService {
                         //    $hIVRNAResult = 'Low Viral Load';
                         //}
                         $rapidRecencyAssay = '';
-                        $diagnosisReaderValue = '';
+                        $diagnosisReaderLogVal = '';
                         $rapidRecencyAssayDuration = '';
-                        $recencyReaderValue = '';
+                        $recencyReaderLogVal = '';
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
-                                $diagnosisReaderValue = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+                                $diagnosisReaderLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
-                                $recencyReaderValue = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+                                $recencyReaderLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
                             }
                         }
                         
@@ -338,9 +338,9 @@ class DataCollectionService {
                         $row[] = $aRow['hiv_rna'];
                         $row[] = $aRow['final_lag_avidity_odn'];
                         $row[] = $recencyInfection;
-                        $row[] = $diagnosisReaderValue;
+                        $row[] = $diagnosisReaderLogVal;
                         $row[] = $rapidRecencyAssay;
-                        $row[] = $recencyReaderValue;
+                        $row[] = $recencyReaderLogVal;
                         $row[] = $rapidRecencyAssayDuration;
                         $row[] = ucfirst($aRow['comments']);
                         if(!isset($params['countryId']) || trim($params['countryId'])== ''){

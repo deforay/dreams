@@ -384,6 +384,7 @@ if(isset($date) && trim($date)!= ''){
 				<input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="HIV Negative"/>
 				<label for="asanteRapidRecencyAssayN">HIV Negative </label><br>
 				<input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value"/>
+				<input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
 				<br><div id="readerValueRRDTLogVal"></div>
 				<div id="readerValueRRDTLogValText"></div>
 			      </div>
@@ -394,6 +395,7 @@ if(isset($date) && trim($date)!= ''){
 			        <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="long term"/>
 			        <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
 				<input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value"/>
+				<input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
 				<br><div id="readerValueRRRLogVal"></div>
 				<div id="readerValueRRRLogValText"></div>
 			      </div>
@@ -1134,7 +1136,7 @@ if(isset($date) && trim($date)!= ''){
 	    $('#readerValueRRRLogValText').html('');
         }else{
 	    $('#resultSection').show();
-	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRR)").addClass('isRequired').attr('readonly',false);
+	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").addClass('isRequired').attr('readonly',false);
 	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
@@ -1152,9 +1154,11 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
 	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
+	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{
+	   $('#readerValueRRDTLog').val('');
 	   $('#readerValueRRDTLogVal').html('');
 	   $('#readerValueRRDTLogValText').html('');
 	}
@@ -1165,9 +1169,11 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
 	   var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
 	   var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term':'Recent';
+	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
 	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
 	   $('#readerValueRRRLogValText').html(readerValueRRRLogValText);
 	}else{
+	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    $('#readerValueRRRLogValText').html('');
 	}

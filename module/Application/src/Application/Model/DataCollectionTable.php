@@ -70,22 +70,22 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['recentInfection'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayPn'])){
                 $params['asanteRapidRecencyAssayPn'] = '';
-            }if(!isset($params['readerValueRRDT'])){
-                $params['readerValueRRDT'] = '';
+            }if(!isset($params['readerValueRRDTLog'])){
+                $params['readerValueRRDTLog'] = '';
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
                 $params['asanteRapidRecencyAssayRlt'] = '';
-            }if(!isset($params['readerValueRRR'])){
-                $params['readerValueRRR'] = '';
+            }if(!isset($params['readerValueRRRLog'])){
+                $params['readerValueRRRLog'] = '';
             }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
-						'reader'=>$params['readerValueRRDT']
+						'reader'=>$params['readerValueRRDTLog']
 					    ),
 					    'rrr'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayRlt'],
-						'reader'=>$params['readerValueRRR']
+						'reader'=>$params['readerValueRRRLog']
 					    )
 					);
 	    //status
@@ -467,22 +467,24 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['recentInfection'] = NULL;
             }if(!isset($params['asanteRapidRecencyAssayPn'])){
                 $params['asanteRapidRecencyAssayPn'] = '';
-            }if(!isset($params['readerValueRRDT'])){
-                $params['readerValueRRDT'] = '';
+            }if(!isset($params['readerValueRRDTLog'])){
+                $params['readerValueRRDTLog'] = '';
             }if(!isset($params['asanteRapidRecencyAssayRlt'])){
                 $params['asanteRapidRecencyAssayRlt'] = '';
-            }if(!isset($params['readerValueRRDT'])){
-                $params['readerValueRRDT'] = '';
+            }if(!isset($params['readerValueRRRLog'])){
+                $params['readerValueRRRLog'] = '';
             }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
+	    $readerValueRRDTLog = (trim($params['readerValueRRDTLog'])!= '')?$params['readerValueRRDTLog']:$params['readerValueRRDTLogOld'];
+	    $readerValueRRRLog = (trim($params['readerValueRRRLog'])!= '')?$params['readerValueRRRLog']:$params['readerValueRRRLogOld'];
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
-						'reader'=>$params['readerValueRRDT']
+						'reader'=>$readerValueRRDTLog
 					    ),
 					    'rrr'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayRlt'],
-						'reader'=>$params['readerValueRRR']
+						'reader'=>$readerValueRRRLog
 					    )
 					);
 	    //status
