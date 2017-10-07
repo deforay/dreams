@@ -227,7 +227,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
 	      $html .='<td>'.$row['anc_site_code'].'</td>';
 	      $html .='<td>'.$row['enc_anc_patient_id'].'</td>';
-              $html .='<td> </td>';//set empty value
+              $html .='<td></td>';//set empty value
               $html .='<td>'.$row['age'].'</td>';
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name']).'</td>';
@@ -244,13 +244,13 @@ if(count($logbookResult) >0){
 	      $html .='<td>'.$recencyReaderValue.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
-	      $html .='<td></td>';
+	      $html .='<td></td>';//set empty value
             $html .='</tr>';
           }
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $filename = 'LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
+    $filename = 'LAB-LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{

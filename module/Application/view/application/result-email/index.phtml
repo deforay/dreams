@@ -70,7 +70,7 @@
                 </div>
                <div class="col s6">
                     <div class="input-field col m12 s12">
-                       <select id="facility" name="facility" class="material-select" title="Please select facility/lab">
+                       <select id="facility" name="facility" class="material-select" title="Please select lab/facility">
                             <option value="">All</option>
                            <?php
                            foreach($facilityList as $facility){
@@ -78,7 +78,7 @@
                              <option value="<?php echo base64_encode($facility['facility_id']); ?>"><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
                            <?php } ?>
                         </select>
-                        <label for="facility">Facility/Lab Site Name</label>
+                        <label for="facility">Lab/Facility</label>
                     </div>
                 </div>
             </div>

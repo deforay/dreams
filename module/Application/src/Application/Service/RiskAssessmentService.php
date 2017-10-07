@@ -91,6 +91,7 @@ class RiskAssessmentService {
                     $cacheSettings = array('memoryCacheSize' => '80MB');
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $interviewDate = '';
@@ -407,6 +408,7 @@ class RiskAssessmentService {
                         $row[] = $hasPatientHurtBySomeoneDuringPregnancy.$patientHurtBySomeoneDuringPregnancy;
                         $row[] = $hasPatientForcedForSex.$patientForcedForSex.$patientForcedForSexInNoofTimes;
                         $row[] = $isPatientAfraidofAnyone;
+                        $row[] = ucfirst($aRow['comment']);
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -446,8 +448,9 @@ class RiskAssessmentService {
                     $sheet->mergeCells('P1:AD1');
                     $sheet->mergeCells('AE1:AI1');
                     $sheet->mergeCells('AJ1:AN1');
+                    $sheet->mergeCells('AO1:AO2');
                     
-                    $sheet->setCellValue('A1', html_entity_decode('Facility Code-Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A1', html_entity_decode('Lab/Facility', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Interviewer Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -498,7 +501,9 @@ class RiskAssessmentService {
                     $sheet->setCellValue('AM2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AN2', html_entity_decode('Are you afraid of your partner or anyone listed above?', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                   
+                    $sheet->setCellValue('AO1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    
                     $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
                     $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
@@ -544,6 +549,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('AL2')->applyFromArray($styleArray);
                     $sheet->getStyle('AM2')->applyFromArray($styleArray);
                     $sheet->getStyle('AN2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AO1:AO2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
                     foreach ($output as $rowData) {
@@ -553,7 +559,7 @@ class RiskAssessmentService {
                                 $value = "";
                             }
                             
-                            if($colNo > 39){
+                            if($colNo > 40){
                                 break;
                             }
                             if (is_numeric($value)) {

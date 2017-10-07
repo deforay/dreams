@@ -112,9 +112,9 @@ $loginContainer = new Container('user');
 		<div class="col l3 m3 s3 left-align">
 		    <input id="interviewDate" name="interviewDate" type="text" title="Please enter interview date" onclick="selectDate();" readonly>
 		</div>
-		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>Lab site code/name</strong></h6></div>
+		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>Lab/Facility</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <select id="lab" name="lab[]" class="material-select" title="Please select lab site code/name" multiple="multiple" style="width:40% !important;">
+		    <select id="lab" name="lab[]" class="material-select" title="Please select lab/facility" multiple="multiple" style="width:40% !important;">
 			<?php
 			foreach($facilities as $facility){
 			?>
@@ -145,8 +145,8 @@ $loginContainer = new Container('user');
                     <table id="riskAssessmentDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Lab Name</th>
-                                <th>Lab Code</th>
+                                <th>Lab/Facility</th>
+                                <th>Lab/Facility Code</th>
                                 <th>Patient Barcode ID</th>
 				<th>Interviewer Name</th>
 				<th>ANC Patient ID</th>
@@ -159,13 +159,13 @@ $loginContainer = new Container('user');
                                  <th>Country</th>
 				<?php } ?>
 				<th>Status</th>
-                                <th>Action</th>
+                                <th style="width:120px !important;text-align:center;">Action</th>
                             </tr>
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Lab Name</th>
-                                <th>Lab Code</th>
+                                <th>Lab/Facility</th>
+                                <th>Lab/Facility Code</th>
                                 <th>Patient Barcode ID</th>
 				<th>Interviewer Name</th>
 				<th>ANC Patient ID</th>
@@ -178,7 +178,7 @@ $loginContainer = new Container('user');
                                  <th>Country</th>
 				<?php } ?>
 				<th>Status</th>
-                                <th>Action</th>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </tfoot>
                         <tbody>

@@ -54,9 +54,13 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-
-       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments','test_status_name');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments','test_status_name');
+       if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+       }else{
+        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+       }
 
        /*
         * Paging
@@ -210,7 +214,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $row[] = $aRow['anc_site_code'];
             $row[] = ucfirst($reportingMonth);
             $row[] = $reportingYear;
-            $row[] = ucwords($aRow['country_name']);
+            if($parameters['countryId']== ''){
+              $row[] = ucwords($aRow['country_name']);
+            }
             foreach($ancFormFieldList as $key=>$value){
                 //for non-existing fields
                 $colVal = '';
@@ -245,19 +251,19 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 	    $dataLock = '';
 	    $dataUnlock = '';
             //for edit
-            if($loginContainer->hasViewOnlyAccess!= 'yes') {
-                $dataEdit = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
-            } if($loginContainer->hasViewOnlyAccess!= 'yes' && $aRow['test_status_name']== 'completed'){
+            $dataEdit = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
+            if($aRow['test_status_name']== 'completed'){
                 $dataLock = '<a href="javascript:void(0);" onclick="lockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-10" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
             }
             //for csc/cc
-            if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!= 'yes' && $aRow['test_status_name']== 'locked'){
+            if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $aRow['test_status_name']== 'locked'){
                 $dataUnlock = '<a href="javascript:void(0);" onclick="unlockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-10" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
             }
             $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
-            $row[] = ucfirst($aRow['comments']);
             $row[] = ucfirst($aRow['test_status_name']);
-            $row[] = $dataEdit.$dataLockUnlock;
+            if($loginContainer->hasViewOnlyAccess!= 'yes'){
+              $row[] = $dataEdit.$dataLockUnlock;
+            }
             $output['aaData'][] = $row;
        }
       return $output;
@@ -307,9 +313,13 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-
-       $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
-       $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+       if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+       }else{
+          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+       }
 
        /*
         * Paging
@@ -397,7 +407,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
-            $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
+          $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
         }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
@@ -464,7 +474,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $row[] = $aRow['anc_site_code'];
            $row[] = ucfirst($reportingMonth);
            $row[] = $reportingYear;
-           $row[] = ucwords($aRow['country_name']);
+           if($parameters['countryId']== ''){
+              $row[] = ucwords($aRow['country_name']);
+           }
            foreach($ancFormFieldList as $key=>$value){
                 //for non-existing fields
                 $colVal = '';
@@ -511,7 +523,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 	    'locked_on'=>$common->getDateTime(),
 	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
-      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clDataCollectionId'])));
+      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clinicDataCollectionId'])));
     }
     
     public function unlockClinicDataCollectionDetails($params){
@@ -524,6 +536,6 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 	    'locked_on'=>$common->getDateTime(),
 	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
-      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clDataCollectionId'])));
+      return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clinicDataCollectionId'])));
     }
 }

@@ -137,7 +137,7 @@ class DataCollectionService {
                $newDate = date("Y-m-d H:i:s", strtotime($clinicDataCollection['added_on'] . $lockHour));
                if($newDate <=$now){
                    $params = array();
-                   $params['clDataCollectionId'] = base64_encode($clinicDataCollection['cl_data_collection_id']);
+                   $params['clinicDataCollectionId'] = base64_encode($clinicDataCollection['cl_data_collection_id']);
                    $clinicDataCollectionDb->lockClinicDataCollectionDetails($params);
                }
             }
@@ -201,7 +201,7 @@ class DataCollectionService {
         $common = new CommonService();
         $ancSiteDb = $this->sm->get('AncSiteTable');
         $facilityDb = $this->sm->get('FacilityTable');
-        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LOGBOOK--':'LAB-DATA-DOWNLOAD--';
+        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LAB-LOGBOOK--':'LAB-DATA-DOWNLOAD--';
         $sQuery = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$queryContainer->logbookQuery:$queryContainer->dataCollectionQuery;
         if(isset($sQuery)){
             try{
@@ -346,7 +346,7 @@ class DataCollectionService {
                         if(!isset($params['countryId']) || trim($params['countryId'])== ''){
                             $row[] = ucfirst($aRow['country_name']);
                         }if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $row[] = '';
+                          $row[] = '';//set empty value
                         }
                         $output[] = $row;
                     }
@@ -718,6 +718,7 @@ class DataCollectionService {
                     $cacheSettings = array('memoryCacheSize' => '80MB');
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
@@ -732,7 +733,9 @@ class DataCollectionService {
                         $row[] = $aRow['anc_site_code'];
                         $row[] = ucfirst($reportingMonth);
                         $row[] = $reportingYear;
-                        $row[] = ucwords($aRow['country_name']);
+                        if($params['countryId']== ''){
+                          $row[] = ucwords($aRow['country_name']);
+                        }
                         foreach($ancFormFields as $key=>$value){
                             //for non-existing fields
                             $col1Val = '0';
@@ -797,9 +800,11 @@ class DataCollectionService {
                     $sheet->mergeCells('B1:B2');
                     $sheet->mergeCells('C1:C2');
                     $sheet->mergeCells('D1:D2');
-                    $sheet->mergeCells('E1:E2');
+                    if($params['countryId']== ''){
+                      $sheet->mergeCells('E1:E2');
+                    }
                      
-                    $e1 = 5;
+                    $e1 = ($params['countryId']== '')?5:4;
                     foreach($ancFormFields as $fieldRow){
                         $e2 = $e1+3;
                         $cellName1Value = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
@@ -815,8 +820,10 @@ class DataCollectionService {
                     $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Month ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $a1 = 5;
+                    if($params['countryId']== ''){
+                       $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    }
+                    $a1 = ($params['countryId']== '')?5:4;
                     foreach($ancFormFields as $key=>$value){
                         $columnTitle = ucwords(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
@@ -841,7 +848,7 @@ class DataCollectionService {
                     $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
                     $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
                     $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
-                    $f1 = 5;
+                    $f1 = ($params['countryId']== '')?5:4;
                     foreach($ancFormFields as $fieldRow){
                         $f2 = $f1+3;
                         $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
@@ -986,6 +993,7 @@ class DataCollectionService {
                     $cacheSettings = array('memoryCacheSize' => '80MB');
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $specimenCollectedDate = '';

@@ -455,10 +455,10 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol7">Specimen Pick Up Date at ANC</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol8">Lab Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol8">Lab/Facility</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol9">Lab Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol9">Lab/Facility Code</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol10">Lab Specimen ID</label> <br>
@@ -497,23 +497,20 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">HIV Recency Classification</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol21">Comments</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol21">Added On</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol22">Added On</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol23">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol22">Added by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId)== ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="24"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol24">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="23"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol23">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="23"/>
+	      <input type="hidden" id="countColumn" value="22"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -535,8 +532,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
-	                        <th>Lab Name</th>
-	                        <th>Lab Code</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>
@@ -549,7 +546,6 @@ if(isset($date) && trim($date)!= ''){
 				<th>Recent Infection</th>
                                 <th>HIV Verification Classification</th>
 				<th>HIV Recency Classification</th>
-                                <th>Comments</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
@@ -557,10 +553,7 @@ if(isset($date) && trim($date)!= ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
-				<?php
-                                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-                                   <th style="width:120px !important;text-align:center;">Action</th>
-				<?php } ?>
+                                <th style="width:120px !important;text-align:center;">Action</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -573,8 +566,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
-	                        <th>Lab Name</th>
-	                        <th>Lab Code</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>
@@ -587,7 +580,6 @@ if(isset($date) && trim($date)!= ''){
 				<th>Recent Infection</th>
                                 <th>HIV Verification Classification</th>
 				<th>HIV Recency Classification</th>
-                                <th>Comments</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
@@ -595,10 +587,7 @@ if(isset($date) && trim($date)!= ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
-				<?php
-                                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-                                  <th style="text-align:center;">Action</th>
-				<?php } ?>
+                                <th style="text-align:center;">Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -644,16 +633,12 @@ if(isset($date) && trim($date)!= ''){
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
 		?>
 		  {"sClass":"dataTable_noWrap"},
 		<?php } ?>
-		<?php
-                if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-		   {"sClass":"dataTable_noWrap","bSortable":false}
-		<?php } ?>
+		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 		if(aData[19] =='HIV Negative' || (aData[15] > 2 && ((aData[19] == 'HIV Positive' && aData[20] == 'Recent') || aData[20] == 'Recent'))){ $(nRow).addClass("redTxt"); }

@@ -169,20 +169,21 @@ if(trim($countryId)!= ''){
                                 <th>Clinic ID</th>
 				<th>Month</th>
 				<th>Year</th>
-                                <th>Country</th>
-                                <?php
-                                foreach($ancFormFields as $key=>$value){
+				<?php
+                                if(trim($countryId)== ''){ ?>
+                                 <th>Country</th>
+                                <?php }
+				foreach($ancFormFields as $key=>$value){
                                     $formLabel = ucwords(str_replace("_"," ",$key));
                                     $formLabel = str_replace("No","No.",$formLabel);
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
-                                <th>Comments</th>
 				<th>Status</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
-                                  <th style="width:120px !important;">Action</th>
+                                  <th style="width:120px !important;text-align:center;">Action</th>
                                 <?php } ?>
                             </tr>
                         </thead>
@@ -192,20 +193,21 @@ if(trim($countryId)!= ''){
                                 <th>Clinic ID</th>
 				<th>Month</th>
 				<th>Year</th>
-                                <th>Country</th>
-                                <?php
+				<?php
+                                if(trim($countryId)== ''){ ?>
+                                 <th>Country</th>
+                                <?php }
                                 foreach($ancFormFields as $key=>$value){
                                     $formLabel = ucwords(str_replace("_"," ",$key));
                                     $formLabel = str_replace("No","No.",$formLabel);
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
                                 <?php } ?>
-                                <th>Comments</th>
 				<th>Status</th>
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
-                                  <th>Action</th>
+                                  <th style="text-align:center;">Action</th>
                                 <?php } ?>
                             </tr>
                         </tfoot>
@@ -232,12 +234,13 @@ if(trim($countryId)!= ''){
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		<?php
+                if(trim($countryId)== ''){ ?>
 		{"sClass":"dataTable_noWrap"},
-                <?php
+                <?php }
                 foreach($ancFormFields as $key=>$value){ ?>
 		  {"sClass":"dataTable_noWrap","bSortable":false},
                 <?php } ?>
-                {"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
                 <?php
                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
@@ -355,7 +358,7 @@ if(trim($countryId)!= ''){
     function lockClinicDataCollection(ID){
 	var conf = confirm("Are you sure you want to lock this clinic data reporting?");
 	if(conf){
-	    $.post("<?php echo $this->url('lock-clinic-data-collection'); ?>", {clDataCollectionId:ID},
+	    $.post("<?php echo $this->url('lock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
 		    if($.trim(data) == 0 || $.trim(data) == ''){
 		      alert("OOPS..");
@@ -369,7 +372,7 @@ if(trim($countryId)!= ''){
     function unlockClinicDataCollection(ID){
 	var conf = confirm("Are you sure you want to unlock this clinic data reporting?");
 	if(conf){
-	    $.post("<?php echo $this->url('unlock-clinic-data-collection'); ?>", {clDataCollectionId:ID},
+	    $.post("<?php echo $this->url('unlock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
 		    if($.trim(data) == 0 || $.trim(data) == ''){
 		      alert("OOPS..");

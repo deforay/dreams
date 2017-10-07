@@ -133,9 +133,9 @@ if(!isset($countryId)){
 	    </div>
 	    <div class="col l12 m12 s12">
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l2 m2 s2 left-align"><h6><strong>Lab Site/Facility </strong></h6></div>
+		<div class="col l2 m2 s2 left-align"><h6><strong>Lab/Facility </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <select class="material-select" id="lab" name="lab" title="Please select lab site" style="width:40% !important;">
+		    <select class="material-select" id="lab" name="lab" title="Please select lab/facility" style="width:40% !important;">
 			<option value="">All</option>
 			<?php
 			foreach($facilities as $lab){
@@ -192,10 +192,10 @@ if(!isset($countryId)){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol6">Specimen Pick Up Date at ANC</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol7">Lab Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol7">Lab/Facility</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol8">Lab Code</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol8">Lab/Facility Code</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol9">Lab Specimen ID</label> <br>
@@ -265,8 +265,8 @@ if(!isset($countryId)){
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
-	                        <th>Lab Name</th>
-	                        <th>Lab Code</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>
@@ -296,8 +296,8 @@ if(!isset($countryId)){
 				<th>ANC Patient ID</th>
                                 <th>Age</th>
                                 <th>Specimen Pick Up Date at ANC</th>
-	                        <th>Lab Name</th>
-	                        <th>Lab Code</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>

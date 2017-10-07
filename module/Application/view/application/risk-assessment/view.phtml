@@ -848,6 +848,20 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </p>
                 </div>
             </div>
+            <?php if($row->comment!= null && trim($row->comment)!= ''){ ?>
+                <div class="row" style="margin:10px 0px 0px 0px;">
+                    <div class="col s12">
+                       Comments
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s6">
+                        <p style="font-weight:normal;">
+                            <?php echo ucfirst($row->comment); ?>
+                        </p>
+                    </div>
+                </div>
+            <?php } ?>
             <div class="col s12" style="margin-top:20px;">
                 <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
             </div>

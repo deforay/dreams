@@ -198,12 +198,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	if($parameters['countryId']== ''){
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name','test_status_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
-	}else{
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','test_status_name');
 	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','test_status_name');
+	}else{
+	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name','test_status_name');
+	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
 	}
 
        /*
@@ -289,17 +289,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
 	    $labs = explode(',',$parameters['lab']);
 	}
-       $dbAdapter = $this->adapter;
-       $sql = new Sql($dbAdapter);
-       $mappedLab = array();
-       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
-                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
-       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
-       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-       //Get all mapped lab
-        foreach($uMapResult as $lab){
-	   $mappedLab[] = $lab['laboratory_id'];
-        }
+	$dbAdapter = $this->adapter;
+	$sql = new Sql($dbAdapter);
+	$mappedANC = array();
+	$uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
+				   ->where(array('cl_map.user_id'=>$loginContainer->userId));
+	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	//get all mapped ANC
+	foreach($uMapResult as $anc){
+	    $mappedANC[] = $anc['clinic_id'];
+	}
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
                       ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
@@ -307,19 +307,19 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
-        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
-	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	if($loginContainer->roleCode == 'ANCSC'){
+           $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
-        }if(count($labs) >0){
+        } if(count($labs) >0){
 	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $labs) . '")');
-	}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
-	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -353,10 +353,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
-        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	   $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId']),'r_a.country'=>trim($parameters['countryId'])));
-	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where('r_a.lab IN ("' . implode('", "', $mappedLab) . '")');
+	if($loginContainer->roleCode == 'ANCSC'){
+           $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
