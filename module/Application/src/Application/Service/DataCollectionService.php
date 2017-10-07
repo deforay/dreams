@@ -270,6 +270,7 @@ class DataCollectionService {
                     $cacheSettings = array('memoryCacheSize' => '80MB');
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
@@ -399,9 +400,45 @@ class DataCollectionService {
                             'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
                         )
                     );
-                    
+                    $lagAssayArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        ),
+                        'fill' => array(
+                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '9bc2e6')
+                        )
+                    );
+                    $rapidRecencyAssayArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        ),
+                        'fill' => array(
+                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => 'ffe699')
+                        )
+                    );
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                      $sheet->mergeCells('A1:X1');
                       $sheet->mergeCells('Q3:R3');
                       $sheet->mergeCells('S3:V3');
                       
@@ -454,19 +491,19 @@ class DataCollectionService {
                     
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                       $sheet->getRowDimension(1)->setRowHeight(-1);
-                      $sheet->getRowDimension(2)->setRowHeight(-1);
-                      $sheet->getStyle('B2')->getAlignment()->setWrapText(true);
-                      $sheet->getStyle('D2')->getAlignment()->setWrapText(true);
+                      //$sheet->getRowDimension(2)->setRowHeight(-1);
+                      //$sheet->getStyle('B2')->getAlignment()->setWrapText(true);
+                      //$sheet->getStyle('D2')->getAlignment()->setWrapText(true);
                       
                       $sheet->getStyle('A1')->applyFromArray($titleTxtArray);
                       $sheet->getStyle('A2')->applyFromArray($labelArray);
-                      $sheet->getStyle('B2')->applyFromArray($wrapTxtArray);
                       $sheet->getStyle('C2')->applyFromArray($labelArray);
-                      $sheet->getStyle('D2')->applyFromArray($wrapTxtArray);
+                      //$sheet->getStyle('B2')->applyFromArray($wrapTxtArray);
+                      //$sheet->getStyle('D2')->applyFromArray($wrapTxtArray);
                       $sheet->getStyle('A3')->applyFromArray($labelArray);
                       $sheet->getStyle('C3')->applyFromArray($labelArray);
-                      $sheet->getStyle('Q3:R3')->applyFromArray($styleArray);
-                      $sheet->getStyle('S3:V3')->applyFromArray($styleArray);
+                      $sheet->getStyle('Q3:R3')->applyFromArray($lagAssayArray);
+                      $sheet->getStyle('S3:V3')->applyFromArray($rapidRecencyAssayArray);
                     }
                     $sheet->getStyle('A'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$headerRow)->applyFromArray($styleArray);
