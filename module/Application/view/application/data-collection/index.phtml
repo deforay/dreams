@@ -685,7 +685,7 @@ if(isset($date) && trim($date)!= ''){
        <?php if(trim($countryId)!= ''){ ?>
 	    var latestCollId = $('#lDCId').val();
 	    var countryCode = $('#cCode').val();
-	    var count = ($.trim(latestCollId)!= '')?latestCollId:1;
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
 	    var sid = '0000';
             var pad = '000000';
 	    var ctxt = '' + count;
@@ -698,15 +698,14 @@ if(isset($date) && trim($date)!= ''){
     
     function generateSurveillanceID(cObj){
 	var latestCollId = $('#lDCId').val();
-	var countryCode = $(cObj).find(':selected').data('code')
+	var countryCode = $(cObj).find(':selected').data('code');
 	if ($.trim(countryCode)!='') {
-	    var count = ($.trim(latestCollId)!= '')?latestCollId:1;
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
 	    var sid = '0000';
 	    var ctxt = '' + count;
 	    var surveillanceID = countryCode + sid.substr(0, sid.length - ctxt.length) + ctxt;
 	    $('#surveillanceId').val(surveillanceID);
 	    $('#serialNo').html(" ("+surveillanceID+")");
-	    $('label[for="surveillanceId"]').css("transform", "translateY(-140%)");
 	}else{
 	    $('#surveillanceId').val('');
 	    $('#serialNo').html('');
@@ -715,9 +714,9 @@ if(isset($date) && trim($date)!= ''){
     
     function generatePatientBarcodeID(cObj){
 	var latestCollId = $('#lDCId').val();
-	var countryCode = $(cObj).find(':selected').data('code')
+	var countryCode = $(cObj).find(':selected').data('code');
 	if ($.trim(countryCode)!='') {
-	    var count = ($.trim(latestCollId)!= '')?latestCollId:1;
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
 	    var pad = '000000';
 	    var ctxt = '' + count;
 	    $('#patientBarcodeId').val(countryCode + pad.substr(0, pad.length - ctxt.length) + ctxt);
