@@ -45,15 +45,23 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 
 $asanteRapidRecencyAssayPn = '';
 $readerValueRRDTLog = '';
+$readerValueRRDTLogVal = '';
+$readerValueRRDTLogValText = '';
 $asanteRapidRecencyAssayRlt = '';
 $readerValueRRRLog = '';
+$readerValueRRRLogVal = '';
+$readerValueRRRLogValText = '';
 $asanteRapidRecencyAssy = (trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     $readerValueRRDTLog = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+    $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
+    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
     $readerValueRRRLog = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+    $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
+    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term':'Recent';
 }
 ?>
 <style>
@@ -312,8 +320,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" onblur="getReaderValueRRDTLogVal();"/>
 			    <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
 			    <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
-			    <br><div id="readerValueRRDTLogVal"></div>
-			    <div id="readerValueRRDTLogValText"></div>
+			    <br><div id="readerValueRRDTLogVal"><?php echo $readerValueRRDTLogVal; ?></div>
+			    <div id="readerValueRRDTLogValText"><?php echo $readerValueRRDTLogValText; ?></div>
                           </div>
                           <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">&rArr;</div>
                           <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">
@@ -324,8 +332,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" onblur="getReaderValueRRRLogVal();"/>
 			    <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
 			    <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
-			    <br><div id="readerValueRRRLogVal"></div>
-			    <div id="readerValueRRRLogValText"></div>
+			    <br><div id="readerValueRRRLogVal"><?php echo $readerValueRRRLogVal; ?></div>
+			    <div id="readerValueRRRLogValText"><?php echo $readerValueRRRLogValText; ?></div>
                           </div>
                         </div>
                     </div>
@@ -732,6 +740,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	   $('#readerValueRRDTLog').val(''); 
 	   $('#readerValueRRDTLogVal').html('');
 	   $('#readerValueRRDTLogValText').html('');
+	   //populate the old rrdt log val
+	   var readerValueRRDTLogOldVal = $('#readerValueRRDTLogOld').val();
+	   if($.trim(readerValueRRDTLogOldVal)!= '' && !isNaN(readerValueRRDTLogOldVal)){
+	     var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'HIV Positive':'HIV Negative';
+	     $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogOldVal);
+	     $('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
+	   }
 	}
     }
     
@@ -747,6 +762,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    $('#readerValueRRRLogValText').html('');
+	    //populate the old rrr log val
+	    var readerValueRRRLogOldVal = $('#readerValueRRRLogOld').val();
+	    if($.trim(readerValueRRRLogOldVal)!= '' && !isNaN(readerValueRRRLogOldVal)){
+	     var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term':'Recent';
+	     $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
+	     $('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
+	    }
 	}
     }
 </script>
