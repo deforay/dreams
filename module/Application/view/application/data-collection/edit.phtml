@@ -667,8 +667,10 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $(".testResultSection").val('').removeClass('isRequired').attr('readonly',true);
 	    $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
+	    $('#readerValueRRDTLogOld').val('');
 	    $('#readerValueRRDTLogVal').html('');
 	    $('#readerValueRRDTLogValText').html('');
+	    $('#readerValueRRRLogOld').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    $('#readerValueRRRLogValText').html('');
 	}else{
@@ -740,13 +742,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	   $('#readerValueRRDTLog').val(''); 
 	   $('#readerValueRRDTLogVal').html('');
 	   $('#readerValueRRDTLogValText').html('');
-	   //populate the old rrdt log val
-	   var readerValueRRDTLogOldVal = $('#readerValueRRDTLogOld').val();
-	   if($.trim(readerValueRRDTLogOldVal)!= '' && !isNaN(readerValueRRDTLogOldVal)){
-	     var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'HIV Positive':'HIV Negative';
-	     $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogOldVal);
-	     $('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
-	   }
+	   populateOldRRDTLogVal();//populate the old rrdt log val
 	}
     }
     
@@ -762,13 +758,25 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    $('#readerValueRRRLogValText').html('');
-	    //populate the old rrr log val
-	    var readerValueRRRLogOldVal = $('#readerValueRRRLogOld').val();
-	    if($.trim(readerValueRRRLogOldVal)!= '' && !isNaN(readerValueRRRLogOldVal)){
-	     var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term':'Recent';
-	     $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
-	     $('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
-	    }
+	    populateOldRRRLogVal();//populate the old rrr log val
+	}
+    }
+    
+    function populateOldRRDTLogVal(){
+	var readerValueRRDTLogOldVal = $('#readerValueRRDTLogOld').val();
+	if($.trim(readerValueRRDTLogOldVal)!= '' && !isNaN(readerValueRRDTLogOldVal)){
+	    var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'HIV Positive':'HIV Negative';
+	    $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogOldVal);
+	    $('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
+	}
+    }
+    
+    function populateOldRRRLogVal(){
+	var readerValueRRRLogOldVal = $('#readerValueRRRLogOld').val();
+	if($.trim(readerValueRRRLogOldVal)!= '' && !isNaN(readerValueRRRLogOldVal)){
+	    var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term':'Recent';
+	    $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
+	    $('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
 	}
     }
 </script>

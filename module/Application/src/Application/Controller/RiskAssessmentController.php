@@ -69,10 +69,13 @@ class RiskAssessmentController extends AbstractActionController{
           return $this->redirect()->toUrl($params['redirectUrl']);
        }
        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+       $encodedCountryId = $this->params()->fromRoute('countryId');
        if(trim($countryId)!= ''){
             $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
             $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
             if($result){
+                $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
+                if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
                 $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
                 $occupationTypeList=$riskAssessmentService->getOccupationTypes();

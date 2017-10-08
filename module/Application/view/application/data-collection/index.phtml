@@ -138,7 +138,7 @@ if(isset($date) && trim($date)!= ''){
 			    </div>
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" readonly onblur="checkPatientRecord('barcodeid');">
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
 				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
@@ -174,7 +174,7 @@ if(isset($date) && trim($date)!= ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" readonly onblur="checkPatientRecord('barcodeid');">
+				    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
 				    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
 				</div>
 			    </div>
@@ -688,11 +688,11 @@ if(isset($date) && trim($date)!= ''){
 	    var latestCollId = $('#lDCId').val();
 	    var countryCode = $('#cCode').val();
 	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
-	    var sid = '0000';
-            var pad = '000000';
+	    var siddigit = '0000';
+            var biddigit = '000000';
 	    var ctxt = '' + count;
-	    var surveillanceID = countryCode + sid.substr(0, sid.length - ctxt.length) + ctxt;
-	    $('#patientBarcodeId').val(countryCode + pad.substr(0, pad.length - ctxt.length) + ctxt);
+	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
+	    $('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
 	    $('#surveillanceId').val(surveillanceID);
 	    $('#serialNo').html(' ('+surveillanceID+')');
        <?php } ?>
@@ -703,9 +703,9 @@ if(isset($date) && trim($date)!= ''){
 	var countryCode = $(cObj).find(':selected').data('code');
 	if ($.trim(countryCode)!='') {
 	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
-	    var sid = '0000';
+	    var siddigit = '0000';
 	    var ctxt = '' + count;
-	    var surveillanceID = countryCode + sid.substr(0, sid.length - ctxt.length) + ctxt;
+	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
 	    $('#surveillanceId').val(surveillanceID);
 	    $('#serialNo').html(" ("+surveillanceID+")");
 	}else{
@@ -719,9 +719,9 @@ if(isset($date) && trim($date)!= ''){
 	var countryCode = $(cObj).find(':selected').data('code');
 	if ($.trim(countryCode)!='') {
 	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
-	    var pad = '000000';
+	    var biddigit = '000000';
 	    var ctxt = '' + count;
-	    $('#patientBarcodeId').val(countryCode + pad.substr(0, pad.length - ctxt.length) + ctxt);
+	    $('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
 	    $('label[for="patientBarcodeId"]').css("transform", "translateY(-140%)");
 	}else{
 	    $('#patientBarcodeId').val('');
