@@ -58,15 +58,15 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <select id="lab" name="lab" class="material-select isRequired" title="Please select facility">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($facilities as $facility){
-                                ?>
-                                  <option value="<?php echo base64_encode($facility['facility_id']); ?>" <?php echo ($row->lab == $facility['facility_id'])?'selected="selected"':''; ?>><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
-                                <?php } ?>
-                            </select>
-                            <label for="ancSite">Name of Facility *</label>
+                        <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC Site">
+                           <option value=""> -- Select -- </option>
+                           <?php
+                            foreach($ancSites as $anc){
+                            ?>
+                            <option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo ($anc['anc_site_id'] == $row->anc)?'selected="selected"':''; ?>><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+                            <?php } ?>
+                        </select>
+                            <label for="ancSite">ANC Site *</label>
                         </div>
                     </div>
                     <div class="col s4">

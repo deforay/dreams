@@ -644,3 +644,6 @@ ALTER TABLE `clinic_risk_assessment` ADD `locked_on` DATETIME NULL DEFAULT NULL 
 INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
 ('Locking Clinic Data After Login', 'locking_clinic_data_after_login', '48'),
 ('Locking Clinic Risk Assessment Data After Login', 'locking_risk_assessment_data_after_login', '48');
+
+--Pal 09/10/2017
+ALTER TABLE `clinic_risk_assessment` CHANGE `lab` `anc` INT(11) NULL DEFAULT NULL; 

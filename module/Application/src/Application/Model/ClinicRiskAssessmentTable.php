@@ -121,7 +121,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}
 	    }
             $data = array(
-                    'lab'=>base64_decode($params['lab']),
+                    'anc'=>base64_decode($params['ancSite']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
@@ -199,11 +199,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','test_status_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','test_status_name');
+	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','test_status_name');
 	}else{
-	    $aColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name','test_status_name');
-	    $orderColumns = array('f.facility_name','f.facility_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name','test_status_name');
+	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
 	}
 
        /*
@@ -285,9 +285,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	     $end_date = $common->dateRangeFormat(trim($interview_date[1]));
 	   }
 	}
-	$labs = array();
-	if(isset($parameters['lab']) && trim($parameters['lab'])!= ''){
-	    $labs = explode(',',$parameters['lab']);
+	$ancs = array();
+	if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+	    $ancs = explode(',',$parameters['anc']);
 	}
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
@@ -302,13 +302,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	}
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
-                      ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
-		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name','anc_site_code'))
+		              ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
-	if($loginContainer->roleCode == 'ANCSC'){
-           $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+              if(count($ancs) >0){
+                $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $ancs) . '")');
+            }else if($loginContainer->roleCode == 'ANCSC'){
+           $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
@@ -318,9 +320,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
-        } if(count($labs) >0){
-	    $sQuery = $sQuery->where('r_a.lab IN ("' . implode('", "', $labs) . '")');
-	}
+        }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -348,13 +348,13 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
-                      ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name','facility_code'))
-		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name','anc_site_code'))
+		              ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
 	if($loginContainer->roleCode == 'ANCSC'){
-           $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+           $tQuery = $tQuery->where('r_a.anc IN ("' . implode('", "', $mappedANC) . '")');
         }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
 	}
@@ -410,8 +410,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	       $pdfLink = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    }
 	    $row = array();
-	    $row[] = ucwords($aRow['facility_name']);
-	    $row[] = $aRow['facility_code'];
+	    $row[] = ucwords($aRow['anc_site_name']);
+	    $row[] = $aRow['anc_site_code'];
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = ucwords($aRow['interviewer_name']);
 	    $row[] = $aRow['anc_patient_id'];
@@ -432,11 +432,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                                   ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
+                                   ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
-				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				                   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
-	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+	   $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
@@ -540,7 +540,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }
 	    $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
-                    'lab'=>base64_decode($params['lab']),
+                    'anc'=>base64_decode($params['ancSite']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],

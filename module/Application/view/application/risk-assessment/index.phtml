@@ -112,14 +112,14 @@ $loginContainer = new Container('user');
 		<div class="col l3 m3 s3 left-align">
 		    <input id="interviewDate" name="interviewDate" type="text" title="Please enter interview date" onclick="selectDate();" readonly>
 		</div>
-		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>Lab/Facility</strong></h6></div>
+		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <select id="lab" name="lab[]" class="material-select" title="Please select lab/facility" multiple="multiple" style="width:40% !important;">
+		    <select id="anc" name="anc[]" class="material-select" title="Please select ANC Site" multiple="multiple" style="width:40% !important;">
 			<?php
-			foreach($facilities as $facility){
-			?>
-			  <option value="<?php echo $facility['facility_id']; ?>"><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
-			<?php } ?>
+            foreach($ancSites as $anc){
+            ?>
+            <option value="<?php echo $anc['anc_site_id']; ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+            <?php } ?>
 		    </select>
 		</div>
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
@@ -145,8 +145,8 @@ $loginContainer = new Container('user');
                     <table id="riskAssessmentDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-                                <th>Lab/Facility</th>
-                                <th>Lab/Facility Code</th>
+                                <th>ANC Site</th>
+                                <th>ANC Site Code</th>
                                 <th>Patient Barcode ID</th>
 				<th>Interviewer Name</th>
 				<th>ANC Patient ID</th>
@@ -164,8 +164,8 @@ $loginContainer = new Container('user');
                         </thead>
 			<tfoot>
                             <tr>
-                                <th>Lab/Facility</th>
-                                <th>Lab/Facility Code</th>
+                                <th>ANC Site</th>
+                                <th>ANC Site Code</th>
                                 <th>Patient Barcode ID</th>
 				<th>Interviewer Name</th>
 				<th>ANC Patient ID</th>
@@ -225,7 +225,7 @@ $loginContainer = new Container('user');
 		aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
                 aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
                 aoData.push({"name": "interviewDate", "value": $('#interviewDate').val()});
-                aoData.push({"name": "lab", "value": $('#lab').val()});
+                aoData.push({"name": "anc", "value": $('#anc').val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

@@ -8,7 +8,7 @@ use Zend\Json\Json;
 class RiskAssessmentController extends AbstractActionController{
     public function indexAction(){
         $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-        $facilityService = $this->getServiceLocator()->get('FacilityService');
+        $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $request = $this->getRequest();
         if ($request->isPost()){
             $parameters = $request->getPost();
@@ -22,9 +22,9 @@ class RiskAssessmentController extends AbstractActionController{
         if(trim($countryId)!= ''){
             $type=$this->params()->fromQuery('type');
             $date=$this->params()->fromQuery('date');
-            $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
             return new ViewModel(array(
-                'facilities'=>$facilityList,
+                'ancSites'=>$ancSiteList,
                 'type'=>$type,
                 'date'=>$date,
                 'countryId'=>$countryId
@@ -45,13 +45,13 @@ class RiskAssessmentController extends AbstractActionController{
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $facilityService = $this->getServiceLocator()->get('FacilityService');
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $countryList = $countryService->getActiveCountries('risk-assessment','');
-            $facilityList = $facilityService->getActivefacilities('risk-assessment',$countryId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
             $occupationTypeList = $riskAssessmentService->getOccupationTypes();
             return new ViewModel(array(
                     'countries'=>$countryList,
-                    'facilities'=>$facilityList,
+                    'ancSites'=>$ancSiteList,
                     'occupationTypes'=>$occupationTypeList,
                     'countryId'=>$countryId
                 ));
@@ -76,11 +76,11 @@ class RiskAssessmentController extends AbstractActionController{
             if($result){
                 $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
                 if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
-                $facilityService = $this->getServiceLocator()->get('FacilityService');
-                $facilityList=$facilityService->getActivefacilities('risk-assessment',$countryId);
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
                 $occupationTypeList=$riskAssessmentService->getOccupationTypes();
                 return new ViewModel(array(
-                        'facilities'=>$facilityList,
+                        'ancSites'=>$ancSiteList,
                         'occupationTypes'=>$occupationTypeList,
                         'row'=>$result,
                         'countryId'=>$countryId

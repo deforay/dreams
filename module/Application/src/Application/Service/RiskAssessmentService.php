@@ -368,7 +368,7 @@ class RiskAssessmentService {
                            $isPatientAfraidofAnyone = ucwords($aRow['is_patient_afraid_of_anyone']);
                         }
                         $row = array();
-                        $row[] = $aRow['facility_code'].'-'.ucwords($aRow['facility_name']);
+                        $row[] = $aRow['anc_site_code'].'-'.ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['patient_barcode_id'];
                         $row[] = ucwords($aRow['interviewer_name']);
                         $row[] = $aRow['anc_patient_id'];
@@ -450,7 +450,7 @@ class RiskAssessmentService {
                     $sheet->mergeCells('AJ1:AN1');
                     $sheet->mergeCells('AO1:AO2');
                     
-                    $sheet->setCellValue('A1', html_entity_decode('Lab/Facility', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Interviewer Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -598,7 +598,7 @@ class RiskAssessmentService {
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $aQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                                   ->join(array('f' => 'facility'), "f.facility_id=r_a.lab",array('facility_name'))
+                                   ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
 				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left');
         if(count($params['assessment'])>0){
