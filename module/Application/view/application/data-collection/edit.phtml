@@ -160,8 +160,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
                             <input id="encAncPatientId" name="encAncPatientId" type="hidden" value="<?php echo $row['enc_anc_patient_id']; ?>">
-							<label for="encAncPatientId" style="transform:translateY(-140%);">Encrypted ANC Patient ID </label>
-							<p class="encAncPatientId" style="width:100%;"><?php echo $row['enc_anc_patient_id']; ?></p>
+			    <label for="encAncPatientId" style="transform:translateY(-140%);">Encrypted ANC Patient ID </label>
+			    <p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:10px;"><?php echo $row['enc_anc_patient_id']; ?></p>
                         </div>
                     </div>
                 </div>
@@ -637,12 +637,14 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     $('#ancPatientId').on('keyup',function(){
 	if(this.value == ''){
 	   $('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
+	   $('.encAncPatientId').css('padding-top','30px');
 	   $('.encAncPatientId').html('');
 	   $('#encAncPatientId').val('');
 	}else{
 	   $('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
 	   $.post("<?php echo $this->url('rot47'); ?>", {pId: this.value},
 	    function(data) {
+		$('.encAncPatientId').css('padding-top','10px');
 		$('.encAncPatientId').html(data);
 		$('#encAncPatientId').val(data);
 	    });
@@ -725,8 +727,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		       $.blockUI();	
 		       document.location.href = data;
 		    }else{
+		      $('.encAncPatientId').css('padding-top','30px');
 		      $('#ancPatientId').val('');
-			  $('.encAncPatientId').html('');
+		      $('.encAncPatientId').html('');
 		      $('#encAncPatientId').val('');
 		    }
                 }
