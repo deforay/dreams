@@ -114,7 +114,7 @@ if(trim($countryId)!= ''){
 					    $mandatoryicon = ($fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
 					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
 					    $labelStyle= ($fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
-                                            $commonFieldsStyle = 'pointer-events:none;';
+                                            $commonFieldsStyle = 'pointer-events:none;display:none;';
                                             $styleTotal = 'pointer-events:auto;';
 					    $commonFieldsIsRequired = '';
 					    $isRequiredTotal = ($fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
