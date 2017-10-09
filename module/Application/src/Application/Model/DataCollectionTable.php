@@ -91,9 +91,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
-		    $status = 4;//incomplete
-		}
+			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+				$status = 4;//incomplete
+			}
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -490,11 +490,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
-		    $status = 4;//incomplete
-		}else if($params['formStatus'] == 2){
-		   $status = $params['formStatus'];//locked
-		}
+			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+				$status = 4;//incomplete
+			}else if($params['formStatus'] == 2){
+			    $status = $params['formStatus'];//locked
+			}
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],

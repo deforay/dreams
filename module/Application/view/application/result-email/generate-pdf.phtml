@@ -124,7 +124,10 @@ $alertContainer->nbPages = count($dataResult);
 	}
 	$lagAssay = '';
 	$lagAssayImage = '';
-	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
+	$rejectedImage = '';
+	if($data['rejection_reason']!= null && trim($data['rejection_reason'])!= '' && $data['rejection_reason'] > 0){
+		$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
+	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
 	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
 	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'long term'){
@@ -179,7 +182,7 @@ $alertContainer->nbPages = count($dataResult);
 	       $html .='<tr><td style="width:40%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td style="width:35%;line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssayImage.'</td></tr>';
 	    //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
 	    }else {
-	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Reported:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rejected</td></tr>';
+	       $html .='<tr><td style="width:40%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Reported:</strong></td><td style="width:35%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rejected</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$rejectedImage.'</td></tr>';
 	    }
 	    //if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
 	    //viral load info
