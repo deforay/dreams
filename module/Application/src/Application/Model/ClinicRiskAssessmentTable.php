@@ -291,32 +291,25 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	}
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
-	$mappedANC = array();
-	$uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
-				   ->where(array('cl_map.user_id'=>$loginContainer->userId));
-	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
-	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	//get all mapped ANC
-	foreach($uMapResult as $anc){
-	    $mappedANC[] = $anc['clinic_id'];
-	}
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                       ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array())
                       ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name','anc_site_code'))
-		              ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
-              if(count($ancs) >0){
-                $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $ancs) . '")');
-            }else if($loginContainer->roleCode == 'ANCSC'){
-           $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	if(count($ancs) >0){
+	   $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $ancs) . '")');
+        }else if($loginContainer->roleCode == 'ANCSC'){
+	   $sQuery = $sQuery->where(array('r_a.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	}else if($loginContainer->roleCode== 'CC'){
+	    $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+	} if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
@@ -354,9 +347,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'));
 	if($loginContainer->roleCode == 'ANCSC'){
-           $tQuery = $tQuery->where('r_a.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	   $tQuery = $tQuery->where(array('r_a.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	}else if($loginContainer->roleCode== 'CC'){
+	    $tQuery = $tQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -434,7 +429,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
-				                   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	   $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();

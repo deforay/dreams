@@ -30,6 +30,6 @@ class AncFormTable extends AbstractTableGateway {
         }
         // using assign to automatically create view variables
         // the column names will now become view variables
-        return $arr;
+       return $arr;
     }
 }

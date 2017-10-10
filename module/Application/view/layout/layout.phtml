@@ -672,6 +672,12 @@ if($loginContainer->roleCode== 'ANCSC'){
         }
     });
     
+    $(document).ready(function () {
+        $("body").on("contextmenu",function(e){
+          //return false;
+        });
+    });
+    
     $(document).ready(function(){
         <?php
         if (isset($alertContainer->msg) && $alertContainer->msg != "") {

@@ -201,7 +201,7 @@ class DataCollectionService {
         $common = new CommonService();
         $ancSiteDb = $this->sm->get('AncSiteTable');
         $facilityDb = $this->sm->get('FacilityTable');
-        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LAB-LOGBOOK--':'LAB-DATA-DOWNLOAD--';
+        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LAB-LOGBOOK--':'LAB-DATA-REPORT--';
         $sQuery = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$queryContainer->logbookQuery:$queryContainer->dataCollectionQuery;
         if(isset($sQuery)){
             try{
@@ -762,9 +762,11 @@ class DataCollectionService {
                                     }
                                 }
                             }
-                          $row[] = $col1Val;
-                          $row[] = $col2Val;
-                          $row[] = $col3Val;
+                          if($value == 'yes'){
+                            $row[] = $col1Val;
+                            $row[] = $col2Val;
+                            $row[] = $col3Val;
+                          }
                           $row[] = $col4Val;
                         }
                         $row[] = ucfirst($aRow['comments']);
@@ -805,16 +807,18 @@ class DataCollectionService {
                     }
                      
                     $e1 = ($params['countryId']== '')?5:4;
-                    foreach($ancFormFields as $fieldRow){
-                        $e2 = $e1+3;
-                        $cellName1Value = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
-                        $cellName2Value = $sheet->getCellByColumnAndRow($e2, 1)->getColumn();
-                        $sheet->mergeCells($cellName1Value.'1:'.$cellName2Value.'1');
+                    foreach($ancFormFields as $key=>$value){
+                        $e2 = ($value == 'yes')?$e1+3:$e1;
+                        if($value == 'yes'){
+                            $startCell = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                            $endCell = $sheet->getCellByColumnAndRow($e2, 1)->getColumn();
+                            $sheet->mergeCells($startCell.'1:'.$endCell.'1');
+                        }
                       $e1 = $e2;
                       $e1++;
                     }
-                    $cellNameValue = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
-                    $sheet->mergeCells($cellNameValue.'1:'.$cellNameValue.'2');
+                    $cellName = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
+                    $sheet->mergeCells($cellName.'1:'.$cellName.'2');
                     
                     $sheet->setCellValue('A1', html_entity_decode('Clinic Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -827,21 +831,26 @@ class DataCollectionService {
                     foreach($ancFormFields as $key=>$value){
                         $columnTitle = ucwords(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
-                        $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
-                        $subCellName1Value = $sheet->getCellByColumnAndRow($a1, 2)->getColumn();
-                        $subCellName2Value = $sheet->getCellByColumnAndRow($a1+1, 2)->getColumn();
-                        $subCellName3Value = $sheet->getCellByColumnAndRow($a1+2, 2)->getColumn();
-                        $subCellName4Value = $sheet->getCellByColumnAndRow($a1+3, 2)->getColumn();
-                        $sheet->setCellValue($cellNameValue.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue($subCellName1Value.'2', html_entity_decode('Age < 15', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue($subCellName2Value.'2', html_entity_decode('Age 15-19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue($subCellName3Value.'2', html_entity_decode('Age 20-24', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue($subCellName4Value.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $a1+=3;  
+                        $cellName = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
+                        $sheet->setCellValue($cellName.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        if($value == 'yes'){
+                            $subCellOne = $sheet->getCellByColumnAndRow($a1, 2)->getColumn();
+                            $subCellTwo = $sheet->getCellByColumnAndRow($a1+1, 2)->getColumn();
+                            $subCellThree = $sheet->getCellByColumnAndRow($a1+2, 2)->getColumn();
+                            $subCellFour = $sheet->getCellByColumnAndRow($a1+3, 2)->getColumn();
+                            $sheet->setCellValue($subCellOne.'2', html_entity_decode('Age < 15', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue($subCellTwo.'2', html_entity_decode('Age 15-19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue($subCellThree.'2', html_entity_decode('Age 20-24', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue($subCellFour.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }else{
+                            $subCellOne = $sheet->getCellByColumnAndRow($a1, 2)->getColumn();
+                            $sheet->setCellValue($subCellOne.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }
+                      if($value == 'yes'){ $a1+=3; }
                       $a1++;
                     }
-                    $cellNameValue = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
-                    $sheet->setCellValue($cellNameValue.'1', html_entity_decode('Comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $cellName = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
+                    $sheet->setCellValue($cellName.'1', html_entity_decode('Comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
@@ -849,27 +858,34 @@ class DataCollectionService {
                     $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
                     $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
                     $f1 = ($params['countryId']== '')?5:4;
-                    foreach($ancFormFields as $fieldRow){
-                        $f2 = $f1+3;
-                        $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
-                        $cellName2Value = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
-                        $subCellName1Value = $sheet->getCellByColumnAndRow($f1, 2)->getColumn();
-                        $subCellName2Value = $sheet->getCellByColumnAndRow($f1+1, 2)->getColumn();
-                        $subCellName3Value = $sheet->getCellByColumnAndRow($f1+2, 2)->getColumn();
-                        $subCellName4Value = $sheet->getCellByColumnAndRow($f1+3, 2)->getColumn();
-                        $sheet->getStyle($cellName1Value.'1:'.$cellName2Value.'1')->applyFromArray($styleArray);
-                        $sheet->getStyle($subCellName1Value.'2')->applyFromArray($styleArray);
-                        $sheet->getStyle($subCellName2Value.'2')->applyFromArray($styleArray);
-                        $sheet->getStyle($subCellName3Value.'2')->applyFromArray($styleArray);
-                        $sheet->getStyle($subCellName4Value.'2')->applyFromArray($styleArray);
+                    foreach($ancFormFields as $key=>$value){
+                        $f2 = ($value == 'yes')?$f1+3:$f1;
+                        if($value == 'yes'){
+                            $startCell = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                            $endCell = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
+                            $subCellone = $sheet->getCellByColumnAndRow($f1, 2)->getColumn();
+                            $subCellTwo = $sheet->getCellByColumnAndRow($f1+1, 2)->getColumn();
+                            $subCellThree = $sheet->getCellByColumnAndRow($f1+2, 2)->getColumn();
+                            $subCellFour = $sheet->getCellByColumnAndRow($f1+3, 2)->getColumn();
+                            $sheet->getStyle($startCell.'1:'.$endCell.'1')->applyFromArray($styleArray);
+                            $sheet->getStyle($subCellone.'2')->applyFromArray($styleArray);
+                            $sheet->getStyle($subCellTwo.'2')->applyFromArray($styleArray);
+                            $sheet->getStyle($subCellThree.'2')->applyFromArray($styleArray);
+                            $sheet->getStyle($subCellFour.'2')->applyFromArray($styleArray);
+                        }else{
+                           $startCell = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                           $sheet->getStyle($startCell.'1')->applyFromArray($styleArray);
+                           $subCellone = $sheet->getCellByColumnAndRow($f1, 2)->getColumn();
+                           $sheet->getStyle($subCellone.'2')->applyFromArray($styleArray);
+                        }
                       $f1 = $f2;
                       $f1++;
                     }
-                    $cellName1Value = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
-                    $sheet->getStyle($cellName1Value.'1:'.$cellName1Value.'2')->applyFromArray($styleArray);
+                    $cellName = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
+                    $sheet->getStyle($cellName.'1:'.$cellName.'2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
-                    $highestColumn = ($f1+1)-1;
+                    $highestColumn = $f1;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
@@ -893,14 +909,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'ANC-DATA-COLLECTION--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'ANC-DATA-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "";
                 }
             }catch (Exception $exc) {
-                error_log("ANC-DATA-COLLECTION--" . $exc->getMessage());
+                error_log("ANC-DATA-REPORT--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  

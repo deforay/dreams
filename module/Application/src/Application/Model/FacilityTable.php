@@ -271,7 +271,7 @@ class FacilityTable extends AbstractTableGateway {
 				   ->where(array('l_map.user_id'=>$loginContainer->userId));
 	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
 	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	//Get all mapped lab
+	//get all mapped lab
 	foreach($uMapResult as $lab){
 	    $mappedLab[] = $lab['laboratory_id'];
 	}
@@ -280,11 +280,7 @@ class FacilityTable extends AbstractTableGateway {
 	if(trim($countryId)!='' && $countryId >0){
             $facilitiesQuery = $facilitiesQuery->where(array('f.country'=>$countryId));
         } if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
-	    if(count($mappedLab) ==0){
-	      $facilitiesQuery = $facilitiesQuery->where('f.facility_id IN (0)');
-	    }else{
-	      $facilitiesQuery = $facilitiesQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
-	    }
+	    $facilitiesQuery = $facilitiesQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
 	}
         $facilitiesQueryStr = $sql->getSqlStringForSqlObject($facilitiesQuery);
        return $dbAdapter->query($facilitiesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

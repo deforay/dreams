@@ -81,7 +81,7 @@ class UserTable extends AbstractTableGateway {
 		    }
 		}
 		//to prevent listing unmapped(all) anc/lab
-		if($loginResult->role_code!= 'CSC' && count($userCountry) ==0){
+		if($loginResult->role_code !='CSC' && count($userCountry) ==0){
 		    $alertContainer->msg = 'You are not mapped to any country. Please contact admin for further assistance!';
 		   return 'login';
 		}else if(($loginResult->role_code == 'LS' || $loginResult->role_code == 'LDEO') && count($userLaboratory) ==0){
@@ -275,10 +275,9 @@ class UserTable extends AbstractTableGateway {
 	}else{
 	    if($loginContainer->roleCode == 'CSC'){
 	       $sQuery = $sQuery->where('r.role_code IN ("CSC")');
-	    }else{
-		$sQuery = $sQuery->where(array('c.country_id'=> 0));
 	    }
 	}
+	//Note: CC can manage their own country users
        if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'ANCSC' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('u.user_id IN ("' . implode('", "', $createdByUser) . '")');
        }
@@ -317,8 +316,6 @@ class UserTable extends AbstractTableGateway {
 	}else{
 	    if($loginContainer->roleCode == 'CSC'){
 	       $tQuery = $tQuery->where('r.role_code IN ("CSC")');
-	    }else{
-		$tQuery = $tQuery->where(array('c.country_id'=> 0));
 	    }
 	}
 	

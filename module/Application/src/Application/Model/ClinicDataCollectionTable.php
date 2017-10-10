@@ -134,27 +134,20 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
-       $mappedANC = array();
-       $uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
-                                  ->where(array('cl_map.user_id'=>$loginContainer->userId));
-       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
-       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-       //get all mapped ANC
-       foreach($uMapResult as $anc){
-	   $mappedANC[] = $anc['clinic_id'];
-       }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
-            $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-          $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
-        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
-          $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
+           $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+            $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+        }else if($loginContainer->roleCode== 'CC'){
+	   $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	} if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+           $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
         }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
-          $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
+           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
         }
     
        if (isset($sWhere) && $sWhere != "") {
@@ -187,10 +180,12 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
-          $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-          $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
-        }
+           $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+            $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+        }else if($loginContainer->roleCode== 'CC'){
+	   $tQuery = $tQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
        $iTotal = count($tResult);
@@ -221,9 +216,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             foreach($ancFormFieldList as $key=>$value){
                 //for non-existing fields
                 $colVal = '';
-                $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
-                $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                if($value == 'yes'){
+                    $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
+                    $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                }
                 $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
@@ -234,11 +231,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                if($characteristicsName =='age_lt_15'){
-                                  $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_15_to_19'){
-                                  $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
                                   $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
@@ -407,25 +404,18 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
-       $mappedANC = array();
-       $uMapQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
-                                  ->where(array('cl_map.user_id'=>$loginContainer->userId));
-       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
-       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-       //get all mapped ANC
-       foreach($uMapResult as $anc){
-	   $mappedANC[] = $anc['clinic_id'];
-       }
        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
-          $sQuery = $sQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-          $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
-        }if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+           $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+            $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+        }else if($loginContainer->roleCode== 'CC'){
+	   $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
         }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
@@ -461,10 +451,12 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                       ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
                       ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
-            $tQuery = $tQuery->where('cl_da_c.anc IN ("' . implode('", "', $mappedANC) . '")');
-        }if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-          $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
-        }
+           $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
+        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+            $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+        }else if($loginContainer->roleCode== 'CC'){
+	   $tQuery = $tQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
        $iTotal = count($tResult);
@@ -495,9 +487,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            foreach($ancFormFieldList as $key=>$value){
                 //for non-existing fields
                 $colVal = '';
-                $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
-                $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                if($value == 'yes'){
+                    $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
+                    $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                }
                 $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
@@ -508,11 +502,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                if($characteristicsName =='age_lt_15'){
-                                  $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_15_to_19'){
-                                  $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.',';
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
                                   $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }

@@ -258,7 +258,7 @@ class AncSiteTable extends AbstractTableGateway {
 				   ->where(array('cl_map.user_id'=>$loginContainer->userId));
 	$uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
 	$uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	//Get all mapped ANC
+	//get all mapped ANC
 	foreach($uMapResult as $anc){
 	    $mappedANC[] = $anc['clinic_id'];
 	}
@@ -267,11 +267,7 @@ class AncSiteTable extends AbstractTableGateway {
 	if(trim($countryId)!= '' && $countryId > 0){
 	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
         } if($loginContainer->roleCode == 'ANCSC'){
-	    if(count($mappedANC) ==0){
-	      $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN (0)');
-	    }else{
-              $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
-	    }
+            $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
        return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
