@@ -867,6 +867,7 @@ class DataCollectionService {
                             $subCellTwo = $sheet->getCellByColumnAndRow($f1+1, 2)->getColumn();
                             $subCellThree = $sheet->getCellByColumnAndRow($f1+2, 2)->getColumn();
                             $subCellFour = $sheet->getCellByColumnAndRow($f1+3, 2)->getColumn();
+                            
                             $sheet->getStyle($startCell.'1:'.$endCell.'1')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellone.'2')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellTwo.'2')->applyFromArray($styleArray);
