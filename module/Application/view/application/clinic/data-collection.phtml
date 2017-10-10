@@ -79,14 +79,12 @@ if(trim($countryId)!= ''){
         <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
                 <div class="col l12 m12 s12">
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
-                    <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
-                </div>
-                <div class="col l12 m12 s12">
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
+			    <div class="col l12 m12 s12">
+				<div class="col l6 m6 s6" style="text-align:center;"><strong>Anc Site *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option><?php } ?></select></div>
+				<div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+			    </div>
                             <table id="ancFormTable" class="responsive-table display">
                                 <thead>
                                     <tr>
@@ -110,8 +108,8 @@ if(trim($countryId)!= ''){
                                         $styleTotal = 'pointer-events:none;display:none;';
 					$commonFieldsIsRequired = 'isRequired';
 					$isRequiredTotal = '';
-                    $labelStyle= ($fieldName!= 'no_of_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
-                    $lblStyleTotal = '';
+                                        $labelStyle= ($fieldName!= 'no_of_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+                                        $lblStyleTotal = '';
                                         if($value == 'no'){
 					    $mandatoryicon = ($fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
 					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
@@ -126,9 +124,9 @@ if(trim($countryId)!= ''){
                                         <tr>
                                           <td style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
                                           <td <?php echo($value == 'no')?'colspan="4"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-                                    <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-                                        <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-                                            <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>"/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $lblStyleTotal; ?>">0</div></td>
+                                         <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+                                         <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+                                         <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>"/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $lblStyleTotal; ?>">0</div></td>
                                         </tr>
                                     <?php $r++; } ?>
                                     <tr>
@@ -280,7 +278,7 @@ if(trim($countryId)!= ''){
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
-       $(document).on('keyup', "input[type='text']", function(){
+       $('#search-items').on('keyup', function(){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
