@@ -97,14 +97,13 @@ $alertContainer->nbPages = count($dataResult);
 	$pdf->AddPage();
 	$pdf->SetY(30,true,false);
 	
-	$dobLabel = '';
 	$dob = '';
+	$dobLabel = 'Date of Birth';
 	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
-	    $dobLabel = 'Date of Birth';
 	    $dob = $common->humanDateFormat($data['patient_dob']);
 	}else if(isset($data['age']) && $data['age']!= null && trim($data['age'])!= '' && $data['age'] >0){
-	    $dobLabel = 'Age (Years)';
 	    $dob = $data['age'];
+	    $dobLabel = 'Age (Years)';
 	}
 	$specimenCollectedDate = '';
 	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
