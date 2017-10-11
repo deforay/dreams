@@ -244,14 +244,14 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	}if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	} if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	}if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	}if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
+	} if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
 	  $sQuery = $sQuery->where(array('da_c.status'=>2));
 	}
        if (isset($sWhere) && $sWhere != "") {
@@ -1570,8 +1570,8 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
-	$orderColumns = array('province_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy');
+	$aColumns = array('province_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
+	$orderColumns = array('province_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','r_a.assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
        /*
         * Paging
         */
@@ -1681,6 +1681,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
 				   ->where(array('da_c.country'=>$parameters['country']));
 	//custom filter start
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1748,6 +1749,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
+				->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1808,6 +1810,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = $rapidRecencyAssay;
 	    $row[] = $rapidRecencyAssayDuration;
+	    $row[] = (isset($aRow['has_patient_had_rapid_recency_test']))?ucwords($aRow['has_patient_had_rapid_recency_test']):'';
 	    $output['aaData'][] = $row;
 	}
       return $output;

@@ -1061,6 +1061,7 @@ class DataCollectionService {
                         $row[] = $recentInfection;
                         $row[] = $rapidRecencyAssay;
                         $row[] = $rapidRecencyAssayDuration;
+                        $row[] = (isset($aRow['has_patient_had_rapid_recency_test']))?ucwords($aRow['has_patient_had_rapid_recency_test']):'';
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1104,6 +1105,7 @@ class DataCollectionService {
                     $sheet->setCellValue('H1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I1', html_entity_decode('HIV Verification Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('J1', html_entity_decode('HIV Recency Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K1', html_entity_decode('Rapid Recency Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1115,6 +1117,8 @@ class DataCollectionService {
                     $sheet->getStyle('H1')->applyFromArray($styleArray);
                     $sheet->getStyle('I1')->applyFromArray($styleArray);
                     $sheet->getStyle('J1')->applyFromArray($styleArray);
+                    $sheet->getStyle('K1')->applyFromArray($styleArray);
+                    
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $lag = '';
@@ -1125,7 +1129,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 9){
+                            if($colNo > 10){
                                 break;
                             }
                             if (is_numeric($value)) {
@@ -1138,9 +1142,9 @@ class DataCollectionService {
                             if($colNo == 9){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > 8){
+                            if($colNo > 9){
                                 if($assay1 =='HIV Negative' || ($lag == 'Long Term' && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
-                                  $sheet->getStyle('A'.$currentRow.':J'.$currentRow)->applyFromArray($redTxtArray);
+                                  $sheet->getStyle('A'.$currentRow.':K'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);

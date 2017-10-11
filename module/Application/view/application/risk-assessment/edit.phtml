@@ -114,7 +114,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			Rapid Recency Result *<br><br>
 			<input id="hasPatientHadRapidRecencyTestYes" class="with-gap isRequired" name="hasPatientHadRapidRecencyTest" title="Please select patient rapid recency test status" value="done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'checked="checked"':''; ?>>
 			<label for="hasPatientHadRapidRecencyTestYes" class="active">Done </label>&nbsp&nbsp
-			<input id="hasPatientHadRapidRecencyTestNo" class="with-gap" name="hasPatientHadRapidRecencyTest" value="notdone" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'notdone')?'checked="checked"':''; ?>>
+			<input id="hasPatientHadRapidRecencyTestNo" class="with-gap" name="hasPatientHadRapidRecencyTest" value="not done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'not done')?'checked="checked"':''; ?>>
 			<label for="hasPatientHadRapidRecencyTestNo" class="active">Not Done </label>&nbsp&nbsp
 			</div>
 		    </div>

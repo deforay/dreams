@@ -74,11 +74,7 @@ $common = new \Application\Service\CommonService();
 	}
         $hasPatientHadRapidRecencyTest = '';
         if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test']!= null && trim($data['has_patient_had_rapid_recency_test'])!= ''){
-            if($data['has_patient_had_rapid_recency_test'] == 'notdone'){
-               $hasPatientHadRapidRecencyTest = "Not Done";
-            }else{
-               $hasPatientHadRapidRecencyTest = ucfirst($data['has_patient_had_rapid_recency_test']); 
-            }
+            $hasPatientHadRapidRecencyTest = ucwords($data['has_patient_had_rapid_recency_test']);
         }
         $HIVDiagnosticVal = '';
         $HIVDiagnostic = false;

@@ -107,11 +107,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			   <p>
                            <?php
                             if(isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test!= null && trim($row->has_patient_had_rapid_recency_test)!= ''){
-                                if($row->has_patient_had_rapid_recency_test == 'notdone'){
-                                    echo "Not Done";
-                                }else{
-                                   echo ucfirst($row->has_patient_had_rapid_recency_test); 
-                                }
+                                echo ucwords($row->has_patient_had_rapid_recency_test);
                             }
                            ?>
                            </p>
