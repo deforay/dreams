@@ -24,12 +24,14 @@ $alertContainer->nbPages = count($dataResult);
 	// Page footer
 	public function Footer() {
 	    $alertContainer = new Container('alert');
+	    $common = new \Application\Service\CommonService();
 	    // Position at 15 mm from bottom
 	    $this->SetY(-15);
 	    // Set font
 	    $this->SetFont('helvetica', 'I', 8);
 	    // Page number
-	    $this->Cell(0, 10, 'Page '.$alertContainer->aliasPage.'/'.$alertContainer->nbPages, 0, false, 'C', 0, '', 0, false, 'T', 'M');
+	    $this->writeHTMLCell(0,'','','','Page '.$alertContainer->aliasPage.'/'.$alertContainer->nbPages,0,1,false,true,'C',true);
+	    $this->writeHTMLCell(0,'','','','Printed on - '.$common->getDateTime(),0,1,false,true,'A',true);
 	}
     }
     
@@ -95,11 +97,14 @@ $alertContainer->nbPages = count($dataResult);
 	$pdf->AddPage();
 	$pdf->SetY(30,true,false);
 	
-	$patientDOB = '';
+	$dobLabel = '';
+	$dob = '';
 	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
-	    $patientDOB = $common->viewDateFormat($data['patient_dob']);
+	    $dobLabel = 'Date of Birth';
+	    $dob = $common->humanDateFormat($data['patient_dob']);
 	}else if(isset($data['age']) && $data['age']!= null && trim($data['age'])!= '' && $data['age'] >0){
-	    $patientDOB = $data['age'];
+	    $dobLabel = 'Age (Years)';
+	    $dob = $data['age'];
 	}
 	$specimenCollectedDate = '';
 	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
@@ -122,17 +127,22 @@ $alertContainer->nbPages = count($dataResult);
 	if(isset($data['result_dispatched_date_to_clinic']) && $data['result_dispatched_date_to_clinic']!= null && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	    $resultDispatchedDateToClinic = $common->humanDateFormat($data['result_dispatched_date_to_clinic']);
 	}
+	$lblLAgAssay = '';
 	$lagAssay = '';
-	$lagAssayImage = '';
-	$rejectedImage = '';
+	$rejectionName = '';
+	//$lagAssayImage = '';
+	//$rejectedImage = '';
 	if($data['rejection_reason']!= null && trim($data['rejection_reason'])!= '' && $data['rejection_reason'] > 0){
-		$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
+	    $rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
+	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
+	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
 	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
-	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
+	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'long term'){
-	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term';
-	    $lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
+	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
+	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term';
+	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
 	$rapidRecencyAssayDuration = '';
 	if(isset($data['asante_rapid_recency_assy']) && trim($data['asante_rapid_recency_assy'])!= ''){
@@ -148,8 +158,8 @@ $alertContainer->nbPages = count($dataResult);
 	$hivRnagt1000 = '';
 	$viralLoadImage = '';
 	if(isset($data['hiv_rna_gt_1000']) && $data['hiv_rna_gt_1000'] > 1000){
-	    $hivRnagt1000 = ' (High Viral Load)';
-	    $viralLoadImage = '<img src="'.$this->basePath() .'/assets/images/smiley_frown.png" alt="High Viral Load">';
+	   $hivRnagt1000 = ' (High Viral Load)';
+	   $viralLoadImage = '<img src="'.$this->basePath() .'/assets/images/smiley_frown.png" alt="High Viral Load">';
 	}else if(isset($data['hiv_rna_gt_1000']) && $data['hiv_rna_gt_1000'] <= 1000){
 	   $hivRnagt1000 = ' (Low Viral Load)';
 	   $viralLoadImage = '<img src="'.$this->basePath() .'/assets/images/smiley_smile.png" alt="Low Viral Load">';
@@ -166,10 +176,11 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Patient Barcode ID:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['patient_barcode_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ANC Patient ID:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['anc_patient_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ART Number:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['art_patient_id'].'</td></tr>';
-	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Age DOB/Age:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$patientDOB.'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$dobLabel.':</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$dob.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Gestation Age in (Weeks):</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['gestational_age'].'</td></tr>';
 	    //laboratory info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Laboratory Information</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Lab/Facility:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucwords($data['facility_name']).'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sample Collection Date:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$specimenCollectedDate.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sample Pickup Date:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$specimenPickedUpDateAtAnc.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sample Received at Recency/VL Lab:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$receiptDateAtCentralLab.'</td></tr>';
@@ -179,15 +190,15 @@ $alertContainer->nbPages = count($dataResult);
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;">Recency Test Result</td></tr>';
 	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
-	       $html .='<tr><td style="width:40%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td style="width:35%;line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssayImage.'</td></tr>';
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">'.$lblLAgAssay.'</td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td></tr>';
 	    //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
 	    }else {
-	       $html .='<tr><td style="width:40%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Reported:</strong></td><td style="width:35%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rejected</td><td style="width:25%;text-align:left;border-top:1px solid #f1f8fb;">'.$rejectedImage.'</td></tr>';
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample Reject ('.$rejectionName.')</td></tr>';
 	    }
-	    //if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
 	    //viral load info
-	    //$html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Viral Load Result</td></tr>';
-	    //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>HIV RNA:</strong></td><td style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$hivRna.$hivRnagt1000.'</td><td style="text-align:left;border-top:1px solid #f1f8fb;">'.$viralLoadImage.'</td></tr>';
+	    //if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
+	    //   $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Viral Load Result</td></tr>';
+	    //   $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>HIV RNA:</strong></td><td style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$hivRna.$hivRnagt1000.'</td><td style="text-align:left;border-top:1px solid #f1f8fb;">'.$viralLoadImage.'</td></tr>';
 	    //}
 	$html .='</table>';
 	$pdf->writeHTML($html);

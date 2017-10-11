@@ -122,17 +122,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
                             <label for="rrrRecency">Recency Line </label><br>
-                            <p>
-                            <?php
-                            if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
-                                if($row->recency_line == 'longterm'){
-                                    echo "Long Term";
-                                }else{
-                                   echo ucfirst($row->recency_line); 
-                                }
-                            }
-                            ?>
-                            </p>
+                            <p><?php echo (isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= '')?ucwords($row->recency_line):''; ?></p>
 			</div>
 		    </div>
 		</div>

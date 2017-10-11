@@ -80,21 +80,17 @@ $common = new \Application\Service\CommonService();
         $HIVDiagnostic = false;
         if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done'){
             $HIVDiagnostic = true;
-           if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line'])!= ''){
+            if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line'])!= ''){
               $HIVDiagnosticVal = ucfirst($data['HIV_diagnostic_line']);
-           }
+            }
         }
         $recencyVal = '';
         $recency = false;
         if((isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done') && ((!isset($data['HIV_diagnostic_line']) || (isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line'] !='negative')))){
             $recency = true;
-           if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line'])!= ''){
-                if($data['recency_line'] == 'longterm'){
-                   $recencyVal = "Long Term";
-                }else{
-                   $recencyVal = ucfirst($data['recency_line']); 
-                }
-           }
+            if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line'])!= ''){
+                $recencyVal = ucwords($data['recency_line']);
+            }
         }
         //occupation
         $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']):'';

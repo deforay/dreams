@@ -184,7 +184,7 @@ class DataCollectionService {
                       ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
-		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code','rejection_name'=>'rejection_reason'),'left');
         if(count($params['dataCollection'])>0){
             $dataCollectionArray = array();
             for($i=0;$i<count($params['dataCollection']);$i++){

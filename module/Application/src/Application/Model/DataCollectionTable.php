@@ -1481,10 +1481,14 @@ class DataCollectionTable extends AbstractTableGateway {
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
 	    //status
+	    $status = ucwords($aRow['test_status_name']);
 	    if($aRow['final_lag_avidity_odn'] <= 2 && (trim($aRow['hiv_rna']) == '' || $aRow['hiv_rna'] == null)){
 		$status = 'Results Awaited';
-	    }else{
-		$status = ucwords($aRow['test_status_name']);
+	    }
+	    //for individual result pdf
+	    $pdfLink = '';
+	    if($loginContainer->hasViewOnlyAccess!='yes'){
+	       $pdfLink = '<a href="javascript:void(0);" onclick="printLabResult(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
 	    }
 	    $row = array();
 	    $row[] = $specimenCollectedDate;
@@ -1507,6 +1511,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //$row[] = $hIVRNAResult;
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = ucfirst($aRow['comments']);
+	    if($loginContainer->hasViewOnlyAccess!='yes'){
+	       $row[] = $pdfLink;
+	    }
 	   $output['aaData'][] = $row;
 	}
        return $output;

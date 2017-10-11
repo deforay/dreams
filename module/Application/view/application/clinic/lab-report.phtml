@@ -257,6 +257,9 @@ $loginContainer = new Container('user');
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
 				<th>Comments</th>
+				<?php if($loginContainer->hasViewOnlyAccess!='yes'){ ?>
+				   <th>Action</th>
+				<?php } ?>
                             </tr>
                         </thead>
 			<tfoot>
@@ -281,6 +284,9 @@ $loginContainer = new Container('user');
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
 				<th>Comments</th>
+				<?php if($loginContainer->hasViewOnlyAccess!='yes'){ ?>
+				   <th>Action</th>
+				<?php } ?>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -322,7 +328,10 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"}
+		{"sClass":"dataTable_noWrap"},
+		<?php if($loginContainer->hasViewOnlyAccess!='yes'){ ?>
+		   {"sClass":"dataTable_noWrap","bSortable":false}
+		<?php } ?>
             ],
             "aaSorting": [[0, "desc"]],
             "bProcessing": true,
@@ -433,6 +442,24 @@ $loginContainer = new Container('user');
     function clearSearchFields(){
         $('#searchFilterForm')[0].reset();
         searchLabReportData();
+    }
+    
+    dcid = [];
+    function printLabResult(ID){
+	dcid.push(ID);
+	$.blockUI();
+	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid},
+	    function(data){
+		if(data === "" || data === null || data === undefined){
+		    dcid = [];
+		    alert('OOPS..');
+		    $.unblockUI();
+		}else{
+		    dcid = [];
+		    $.unblockUI();
+		    window.open("/temporary/"+data, "_blank");
+		}
+	    });
     }
     
     function extractLabReportData(){

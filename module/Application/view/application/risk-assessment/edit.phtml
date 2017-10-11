@@ -124,7 +124,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                             <option value=""> -- Select -- </option>
 			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>Positive</option>
 			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>Negative</option>
-			    <option value="inderminate" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'inderminate')?'selected="selected"':''; ?>>Inderminate</option>
+			    <option value="invalid" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
                         </select>
                         <label for="rrrHIVDiagnostic">HIV Diagnostic Line </label>
 			</div>
@@ -134,8 +134,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
                             <option value=""> -- Select -- </option>
 			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>Recent</option>
-			    <option value="longterm" <?php echo (isset($row->recency_line) && $row->recency_line == 'longterm')?'selected="selected"':''; ?>>Long Term</option>
-			    <option value="inderminate" <?php echo (isset($row->recency_line) && $row->recency_line == 'inderminate')?'selected="selected"':''; ?>>Inderminate</option>
+			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>Long Term</option>
+			    <option value="invalid" <?php echo (isset($row->recency_line) && $row->recency_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
                         </select>
                         <label for="rrrRecency">Recency Line </label>
 			</div>

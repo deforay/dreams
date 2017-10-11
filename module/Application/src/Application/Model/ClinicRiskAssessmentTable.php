@@ -402,7 +402,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	    //for individual assessment pdf
 	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
-	       $pdfLink = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
+	       $pdfLink = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-10" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
 	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['anc_site_name']);
