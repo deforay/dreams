@@ -18,19 +18,33 @@ class FacilityTable extends AbstractTableGateway {
     public function addFacilityDetails($params){
         $lastInsertedId = 0;
 	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
-	    //set province
 	    $dbAdapter = $this->adapter;
-	    $provinceDb = new ProvinceTable($dbAdapter);
+	    $locationDetailsDb = new LocationDetailsTable($dbAdapter);
 	    $province = null;
+	    $district = null;
+	    //set province
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
-		$provinceData = array(
-		                  'province_name'=>$params['provinceNew'],
+		$locationData = array(
+		                  'parent_location'=>0,
+		                  'location_name'=>$params['provinceNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$provinceDb->insert($provinceData);
-		$province = $provinceDb->lastInsertValue;
+		$locationDetailsDb->insert($locationData);
+		$province = $locationDetailsDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
+	    }
+	    //set district
+	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
+		$locationData = array(
+		                  'parent_location'=>$province,
+		                  'location_name'=>$params['districtNew'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$locationDetailsDb->insert($locationData);
+		$district = $locationDetailsDb->lastInsertValue;
+	    }else if(isset($params['district']) && trim($params['district'])!= ''){
+		$district = base64_decode($params['district']);
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
@@ -41,6 +55,7 @@ class FacilityTable extends AbstractTableGateway {
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
 		'province' => $province,
+		'district'=>$district,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],
@@ -228,19 +243,33 @@ class FacilityTable extends AbstractTableGateway {
         $facilityId = 0;
 	if(isset($params['facilityName']) && trim($params['facilityName'])!= ''){
 	    $facilityId = base64_decode($params['facilityId']);
-	    //set province
 	    $dbAdapter = $this->adapter;
-	    $provinceDb = new ProvinceTable($dbAdapter);
+	    $locationDetailsDb = new LocationDetailsTable($dbAdapter);
 	    $province = null;
+	    $district = null;
+	    //set province
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
-		$provinceData = array(
-		                  'province_name'=>$params['provinceNew'],
+		$locationData = array(
+		                  'parent_location'=>0,
+		                  'location_name'=>$params['provinceNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$provinceDb->insert($provinceData);
-		$province = $provinceDb->lastInsertValue;
+		$locationDetailsDb->insert($locationData);
+		$province = $locationDetailsDb->lastInsertValue;
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
+	    }
+	    //set district
+	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
+		$locationData = array(
+		                  'parent_location'=>$province,
+		                  'location_name'=>$params['districtNew'],
+		                  'country'=>base64_decode($params['country'])
+				);
+		$locationDetailsDb->insert($locationData);
+		$district = $locationDetailsDb->lastInsertValue;
+	    }else if(isset($params['district']) && trim($params['district'])!= ''){
+		$district = base64_decode($params['district']);
 	    }
 	    $data = array(
 		'facility_name' => $params['facilityName'],
@@ -251,6 +280,7 @@ class FacilityTable extends AbstractTableGateway {
 		'phone_number' => $params['mobile'],
 		'country' => base64_decode($params['country']),
 		'province' => $province,
+		'district'=>$district,
 		'address' => $params['address'],
 		'latitude' => $params['latitude'],
 		'longitude' => $params['longitude'],

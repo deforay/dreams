@@ -1532,7 +1532,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('country'))
-				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
+				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -1577,8 +1577,8 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('province_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
-	$orderColumns = array('province_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','r_a.assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
+	$aColumns = array('location_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
+	$orderColumns = array('location_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','r_a.assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
        /*
         * Paging
         */
@@ -1686,7 +1686,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						))
 				   ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
-				   ->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
+				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
 				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
 				   ->where(array('da_c.country'=>$parameters['country']));
@@ -1754,7 +1754,7 @@ class DataCollectionTable extends AbstractTableGateway {
 					     ))
 				->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
-				->join(array('p'=>'province'),'p.province_id=f.province',array('province_name'))
+				->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
 				->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
@@ -1805,7 +1805,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 	    }
 	    $row = array();
-	    $row[] = ucwords($aRow['province_name']);
+	    $row[] = ucwords($aRow['location_name']);
 	    $row[] = $aRow['anc_site_code'];
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = $specimenCollectedDate;

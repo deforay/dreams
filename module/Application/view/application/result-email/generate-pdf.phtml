@@ -97,6 +97,7 @@ $alertContainer->nbPages = count($dataResult);
 	$pdf->AddPage();
 	$pdf->SetY(30,true,false);
 	
+	$districtName = (isset($data['location_name']))?ucwords($data['location_name']):'';
 	$dob = '';
 	$dobLabel = 'Date of Birth';
 	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
@@ -170,6 +171,7 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Facility Information</td></tr>';
 	    $html .='<tr><td style="width:40%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ANC Site Name:</strong></td><td colspan="2" style="width:60%;line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucwords($data['anc_site_name']).'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ANC Site Code:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['anc_site_code'].'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>District Name:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$districtName.'</td></tr>';
 	    //patient info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Patient Information</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Patient Barcode ID:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['patient_barcode_id'].'</td></tr>';

@@ -34,6 +34,7 @@ use Application\Model\OccupationTypeTable;
 use Application\Model\ClinicRiskAssessmentTable;
 use Application\Model\ProvinceTable;
 use Application\Model\AncRapidRecencyTable;
+use Application\Model\LocationDetailsTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -295,6 +296,10 @@ class Module{
                 },'AncRapidRecencyTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new AncRapidRecencyTable($dbAdapter);
+                    return $table;
+                },'LocationDetailsTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new LocationDetailsTable($dbAdapter);
                     return $table;
                 }
             ),

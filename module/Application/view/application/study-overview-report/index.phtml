@@ -131,7 +131,7 @@ $loginContainer = new Container('user');
 			<select class="material-select" id="province" name="province" title="Please select province">
 			    <option value=""> -- Select -- </option>
 			    <?php foreach($provinces as $province) { ?>
-			       <option value="<?php echo base64_encode($province['province_id']); ?>"><?php echo ucwords($province['province_name']); ?></option>
+			       <option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option>
 			    <?php } ?>
 			</select>
 			<label for="province">Provinces </label>

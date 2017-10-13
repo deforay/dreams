@@ -70,10 +70,12 @@ class FacilityController extends AbstractActionController{
         if(isset($result->facility_id)){
             $countryList=$countryService->getActiveCountries('facility',$countryId);
             $provinceList=$countryService->getProvincesByCountry($countryId);
+            $districtList=$countryService->getDistrictsByProvince(((int)($result->province) >0)?(int)$result->province:0);
             $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'provinces'=>$provinceList,
+                'districts'=>$districtList,
                 'facilityTypes'=>$facilityTypeList,
                 'row'=>$result,
                 'countryId'=>$countryId

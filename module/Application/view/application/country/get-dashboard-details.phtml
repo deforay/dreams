@@ -3,7 +3,7 @@ if(count($response) >0){
     foreach($response as $country){
 ?>
     <tr>
-        <td><?php echo ucwords($country['province_name']); ?></td>
+        <td><?php echo ucwords($country['location_name']); ?></td>
         <td><?php echo ($country['totalDataPoints'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=nlt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalDataPoints'].'</a>':0; ?></td>
         <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country']) . '?type=nrq&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
         <td><?php echo ($country['dataPointFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=nltc&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['dataPointFinalized'].'</a>':0; ?></td>

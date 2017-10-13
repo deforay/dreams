@@ -101,7 +101,7 @@ if(isset($countryId) && trim($countryId)!=''){
                             <?php
                             foreach($provinces as $province){
                                 ?>
-                                <option value="<?php echo base64_encode($province['province_id']);?>"><?php echo ucwords($province['province_name']);?></option>
+                                <option value="<?php echo base64_encode($province['location_id']);?>"><?php echo ucwords($province['location_name']);?></option>
                                 <?php
                             }
                             ?>
@@ -109,6 +109,25 @@ if(isset($countryId) && trim($countryId)!=''){
                         </select>
                         <label for="province" class="">Province *</label>
                         <input type="text" id="provinceNew" name="provinceNew" placeholder="Enter Province" title="Please enter province name" class="validate" style="display:none;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <div class="input-field col m10 s10 ajaxDistrict">
+                        <i class="material-icons prefix">room</i>
+                        <select class="material-select validate isRequired" id="district" name="district" title="Please select district" onchange="checkDistrict(this.value);">
+                            <option value=""> -- Select -- </option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="district" class="">District *</label>
+                        <input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>
+                    </div>
+                </div>
+                <div class="col s6">
+                    <div class="input-field col m10 s10">
+                        <textarea id="address" name="address" class="materialize-textarea"></textarea>
+                        <label for="address">Address</label>
                     </div>
                 </div>
             </div>
@@ -131,12 +150,6 @@ if(isset($countryId) && trim($countryId)!=''){
             <div class="row">
                 <div class="col s6">
                     <div class="input-field col m10 s10">
-                        <textarea id="address" name="address" class="materialize-textarea"></textarea>
-                        <label for="address">Address</label>
-                    </div>
-                </div>
-                <div class="col s6">
-                    <div class="input-field col m10 s10">
                         <textarea id="comments" name="comments" class="materialize-textarea"></textarea>
                         <label for="comments">Comments</label>
                     </div>
@@ -156,11 +169,22 @@ if(isset($countryId) && trim($countryId)!=''){
         if(val == 'other'){
             $('#provinceNew').show();
             $('#provinceNew').addClass('isRequired');
-       }else{
+        }else{
             $('#provinceNew').hide();
             $('#provinceNew').val('');
             $('#provinceNew').removeClass('isRequired');
-       } 
+        } 
+    }
+    
+    function checkDistrict(val){
+       if(val == 'other'){
+            $('#districtNew').show();
+            $('#districtNew').addClass('isRequired');
+        }else{
+            $('#districtNew').hide();
+            $('#districtNew').val('');
+            $('#districtNew').removeClass('isRequired');
+        }  
     }
     
     $('#country').on('change',function(){
@@ -170,6 +194,26 @@ if(isset($countryId) && trim($countryId)!=''){
             $('#province').material_select();
             $('div').removeClass('isRequired');
         });
+    });
+    
+    $('#province').on('change',function(){
+        if(this.value!= 'other'){
+            $.post("<?php echo $this->url('country', array('action' => 'get-province-districts')); ?>", {province: this.value},
+            function(data) {
+                $('.ajaxDistrict').html(data);
+                $('#district').material_select();
+                $('div').removeClass('isRequired');
+            });
+        }else{
+            $districts = '';
+            $districts+= '<i class="material-icons prefix">room</i>';
+            $districts+='<select class="material-select validate isRequired" id="district" name="district" title="Please select district" onchange="checkDistrict(this.value);"><option value=""> -- Select -- </option><option value="other">Other</option></select>';
+            $districts+='<label for="district" class="">District *</label>';
+            $districts+='<input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>';
+            $('.ajaxDistrict').html($districts);
+            $('#district').material_select();
+            $('div').removeClass('isRequired');
+        }
     });
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){

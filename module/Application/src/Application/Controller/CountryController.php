@@ -62,12 +62,25 @@ class CountryController extends AbstractActionController{
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
-            return $viewModel;
+           return $viewModel;
+        }  
+    }
+    
+    public function getProvinceDistrictsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $response=$countryService->getDistrictsByProvince(base64_decode($params['province']));
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+           return $viewModel;
         }  
     }
     
     public function dashboardAction(){
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
         $countryInfo = $countryService->getCountry($countryId);
         $provinces = $countryService->getProvincesByCountry($countryId);

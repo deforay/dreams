@@ -646,4 +646,41 @@ INSERT INTO `global_config` (`display_name`, `name`, `value`) VALUES
 ('Locking Clinic Risk Assessment Data After Login', 'locking_risk_assessment_data_after_login', '48');
 
 --Pal 09/10/2017
-ALTER TABLE `clinic_risk_assessment` CHANGE `lab` `anc` INT(11) NULL DEFAULT NULL; 
+ALTER TABLE `clinic_risk_assessment` CHANGE `lab` `anc` INT(11) NULL DEFAULT NULL;
+
+--Pal 12/10/2017
+ALTER TABLE `facility` ADD `district` INT(11) NULL DEFAULT NULL AFTER `province`;
+
+ALTER TABLE `anc_site` ADD `district` INT(11) NULL DEFAULT NULL AFTER `province`;
+
+CREATE TABLE `location_details` (
+  `location_id` int(11) NOT NULL,
+  `parent_location` int(11) DEFAULT NULL,
+  `location_name` varchar(255) DEFAULT NULL,
+  `location_code` varchar(255) DEFAULT NULL,
+  `latitude` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) DEFAULT NULL,
+  `country` int(11) DEFAULT NULL
+)
+
+ALTER TABLE `location_details`
+  ADD PRIMARY KEY (`location_id`);
+  
+ALTER TABLE `location_details`
+  MODIFY `location_id` int(11) NOT NULL AUTO_INCREMENT
+
+alter table location_details add FOREIGN KEY(country) REFERENCES country(country_id)
+
+alter table anc_site drop FOREIGN KEY anc_site_ibfk_1
+ALTER TABLE anc_site DROP INDEX province
+
+alter table anc_site add FOREIGN KEY(province) REFERENCES location_details(location_id)
+alter table anc_site add FOREIGN KEY(district) REFERENCES location_details(location_id)
+
+alter table facility drop FOREIGN KEY facility_ibfk_1
+
+ALTER TABLE facility DROP INDEX province
+
+alter table facility add FOREIGN KEY(province) REFERENCES location_details(location_id)
+
+alter table facility add FOREIGN KEY(district) REFERENCES location_details(location_id)
