@@ -38,7 +38,7 @@ class UserController extends AbstractActionController{
         if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $userService->addUser($params);
-            return $this->redirect()->toUrl($params['redirectUrl']);
+           return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $roleService = $this->getServiceLocator()->get('RoleService');
@@ -66,7 +66,7 @@ class UserController extends AbstractActionController{
          if($this->getRequest()->isPost()){
             $params=$this->getRequest()->getPost();
             $userService->updateUser($params);
-            return $this->redirect()->toUrl($params['redirectUrl']);
+           return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $userId = base64_decode($this->params()->fromRoute('id'));
