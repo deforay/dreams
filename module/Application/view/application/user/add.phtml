@@ -123,7 +123,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="col s6" id="countryMultiple" style="display:none;">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
-                            <select class="material-select countryMulti" id="countryMulti" name="country[]" multiple="multiple" title="Please select country">
+                            <select class="material-select countryMulti" id="countryMulti" name="countryMulti[]" multiple="multiple" title="Please select country">
                                 <?php
                                 foreach($allCountries as $allCountry){
                                     ?>
@@ -132,7 +132,7 @@ if(isset($countryId) && trim($countryId)!=''){
                                 }
                                 ?>
                             </select>
-                            <label for="country" class="">Country *</label>
+                            <label for="countryMulti" class="">Country *</label>
                         </div>
                     </div>
                 <?php } else { ?>
@@ -225,9 +225,13 @@ if(isset($countryId) && trim($countryId)!=''){
         if(flag){
             if(duplicateName){
                 if($('#country').length  >0 || $('#countryMulti').length >0){
-                    var country = $("#country").val();
-                    var countryMulti = $("#countryMulti").val();
-                    if((country == '' || country == null) && (countryMulti == '' || countryMulti == null)){
+                    var role = $('#role').val();
+                    if(base64_decode(role) == 3 || base64_decode(role) == 4 || base64_decode(role) == 5){
+                       country = $("#country").val(); 
+                    }else if(base64_decode(role) == 2) {
+                       country = $("#countryMulti").val();
+                    }
+                    if((country == null || $.trim(country) == '')){
                         alert("Please choose country");
                         return false;
                     }

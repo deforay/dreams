@@ -16,7 +16,7 @@ class UserClinicMapTable extends AbstractTableGateway {
     }
     
     public function addUserClinicMapDetails($params,$userId){
-        //To check existing map-clinics nd delete
+        //TO check existing map-clinics nd delete
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$sQuery = $sql->select()->from(array('cl_map' => 'user_clinic_map'))
@@ -27,7 +27,7 @@ class UserClinicMapTable extends AbstractTableGateway {
             $this->delete(array('user_id'=>$userId));
         }
     
-	if(base64_decode($params['role'])== 5&& count($params['ancSite'])>0){
+	if(base64_decode($params['role'])== 5 && count($params['ancSite'])>0){
 	    $c = count($params['ancSite']);
 	    for($i=0;$i<$c;$i++){
 		if(trim($params['ancSite'][$i])){

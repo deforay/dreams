@@ -71,14 +71,11 @@ $loginContainer = new Container('user');
     <div class="row">
         <div class="col s12">
             <div class="card card-default">
-                <table style="width:22%;">
-                    <tr>
-                        <td style="text-align:right;"><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Site</strong></td>
-                        <td style="text-align:left;"><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Lab/Facility</strong></td>
-                    </tr>
-                </table>
-                <div class="card-content map-container clearfix">
-                   
+		<div class="col l12 m12 s12" style="margin-top:3vh;">
+		    <div class="col l2 m2 s2"><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Site</strong></div>
+		    <div class="col l2 m2 s2"><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Lab/Facility</strong></div>
+		</div>
+                <div class="card-content map-container clearfix" style="padding-top:20px;">
                 </div>
             </div>
         </div>

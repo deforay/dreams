@@ -16,7 +16,7 @@ class UserLaboratoryMapTable extends AbstractTableGateway {
     }
     
     public function addUserLaboratoryMapDetails($params,$userId){
-        //To check existing map-laboratory nd delete
+        //TO check existing map-laboratory nd delete
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$sQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))

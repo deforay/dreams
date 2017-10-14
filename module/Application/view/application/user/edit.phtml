@@ -4,10 +4,15 @@ if(isset($countryId) && trim($countryId)!=''){
 }else{
     $link = "/user";
 }
-$countryList = array();
+$userCountry = '';
+$userCountryList = array();
 if(count($row['userCountries'])>0){
-    foreach($row['userCountries'] as $userCountry){
-        $countryList[] = $userCountry['country_id'];
+    if($row->role!= 2){
+        $userCountry = $row['userCountries'][0]['country_id'];
+    }else{
+        foreach($row['userCountries'] as $userCountries){
+            $userCountryList[] = $userCountries['country_id'];
+        }
     }
 }
 $ancList = array();
@@ -127,7 +132,7 @@ if(count($row['userLaboratories'])>0){
                                 <?php
                                 foreach($countries as $country){
                                     ?>
-                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo in_array($country['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
+                                    <option value="<?php echo base64_encode($country['country_id']);?>" <?php echo ($country['country_id'] == $userCountry)? "selected=selected" : ""; ?>><?php echo ucwords($country['country_name']);?></option>
                                     <?php
                                 }
                                 ?>
@@ -138,16 +143,16 @@ if(count($row['userLaboratories'])>0){
                     <div class="col s6" id="countryMultiple">
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
-                            <select class="material-select countryMulti" id="countryMulti" name="country[]" multiple="multiple" title="Please select country" >
+                            <select class="material-select countryMulti" id="countryMulti" name="countryMulti[]" multiple="multiple" title="Please select country" >
                                 <?php
                                 foreach($allCountries as $allCountry){
                                     ?>
-                                    <option value="<?php echo base64_encode($allCountry['country_id']);?>" <?php echo in_array($allCountry['country_id'], $countryList) ? "selected=selected" : ""; ?>><?php echo ucwords($allCountry['country_name']);?></option>
+                                    <option value="<?php echo base64_encode($allCountry['country_id']);?>" <?php echo in_array($allCountry['country_id'], $userCountryList) ? "selected=selected" : ""; ?>><?php echo ucwords($allCountry['country_name']);?></option>
                                     <?php
                                 }
                                 ?>
                             </select>
-                            <label for="country" class="">Country *</label>
+                            <label for="countryMulti" class="">Country *</label>
                         </div>
                     </div>
                 </div>
@@ -270,9 +275,13 @@ if(count($row['userLaboratories'])>0){
         if(flag){
             if(duplicateName){
                 if($('#country').length  >0 || $('#countryMulti').length >0){
-                    var country = $("#country").val();
-                    var countryMulti = $("#countryMulti").val();
-                    if((country == '' || country == null) && (countryMulti == '' || countryMulti == null)){
+                    var role = $('#role').val();
+                    if(base64_decode(role) == 3 || base64_decode(role) == 4 || base64_decode(role) == 5){
+                       country = $("#country").val(); 
+                    }else if(base64_decode(role) == 2) {
+                       country = $("#countryMulti").val();
+                    }
+                    if((country == null || $.trim(country) == '')){
                         alert("Please choose country");
                         return false;
                     }

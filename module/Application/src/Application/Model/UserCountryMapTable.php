@@ -16,7 +16,7 @@ class UserCountryMapTable extends AbstractTableGateway {
     }
     
     public function addUserCountryMapDetails($params,$userId){
-        //To check existing map-countries nd delete
+        //TO check existing map-countries nd delete
         $dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$sQuery = $sql->select()->from(array('c_map' => 'user_country_map'))
@@ -26,6 +26,11 @@ class UserCountryMapTable extends AbstractTableGateway {
         if($sResult){
             $this->delete(array('user_id'=>$userId));
         }
+	if(base64_decode($params['role'])== 2){
+	   $params['country'] = $params['countryMulti'];
+	}else if(base64_decode($params['role'])== 3 || base64_decode($params['role'])== 4 || base64_decode($params['role'])== 5){
+	   $params['country'] = $params['country'];
+	}
         $params['country'] = array_values(array_unique(array_filter($params['country'])));
         if(count($params['country'])>0){
             $c = count($params['country']);

@@ -106,7 +106,7 @@ if(isset($countryId) && trim($countryId)!=''){
                             ?>
                             <option value="other">Other</option>
                         </select>
-                        <label for="province" class="">Province *</label>
+                        <label for="province" class="" style="transform:translateY(0%);">Province *</label>
                         <input type="text" id="provinceNew" name="provinceNew" placeholder="Enter Province" title="Please enter province name" class="validate" style="display:none;"/>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ if(isset($countryId) && trim($countryId)!=''){
                             ?>
                             <option value="other">Other</option>
                         </select>
-                        <label for="district" class="">District *</label>
+                        <label for="district" class="" style="transform:translateY(0%);">District *</label>
                         <input type="text" id="districtNew" name="districtNew" placeholder="Enter District" title="Please enter district name" class="validate" style="display:none;"/>
                     </div>
                 </div>
@@ -189,7 +189,8 @@ if(isset($countryId) && trim($countryId)!=''){
             $('#provinceNew').hide();
             $('#provinceNew').val('');
             $('#provinceNew').removeClass('isRequired');
-        } 
+        }
+        getProvinceDistricts(val);
     }
     
     function checkDistrict(val){
@@ -212,9 +213,9 @@ if(isset($countryId) && trim($countryId)!=''){
         });
     });
     
-    $('#province').on('change',function(){
-        if(this.value!= 'other'){
-            $.post("<?php echo $this->url('country', array('action' => 'get-province-districts')); ?>", {province: this.value},
+    function getProvinceDistricts(val){
+        if(val!= 'other'){
+            $.post("<?php echo $this->url('country', array('action' => 'get-province-districts')); ?>", {province: val},
             function(data) {
                 $('.ajaxDistrict').html(data);
                 $('#district').material_select();
@@ -230,7 +231,7 @@ if(isset($countryId) && trim($countryId)!=''){
             $('#district').material_select();
             $('div').removeClass('isRequired');
         }
-    });
+    }
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
         checkValue = document.getElementById(obj.id).value;

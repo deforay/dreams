@@ -1,9 +1,9 @@
 <?php
-$avai = 0;
+$location = 0;
 if(isset($response['facilities']) && count($response['facilities']) > 0){
     foreach($response['facilities'] as $facilities){
         if(trim($facilities['latitude'])!= '' && trim($facilities['longitude'])!= ''){
-            $avai+=1;
+            $location+=1;
         }
     }
 }
@@ -11,17 +11,17 @@ if(isset($response['facilities']) && count($response['facilities']) > 0){
 if(isset($response['anc']) && count($response['anc']) > 0){
     foreach($response['anc'] as $anc){
         if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
-           $avai+=1; 
+           $location+=1;
         }
     }
 }
-if($avai > 0) {
-?>
+if($location > 0) { ?>
     <div class="gmap" id="gmap" style="min-height: 500px;width:100%;"></div>
     <script>
         $(document).ready(function(){
             var map;
             var bounds = new google.maps.LatLngBounds();
+            var prev_infowindow = false;
             var mapOptions = {
                 mapTypeId: 'roadmap',
                 scrollwheel: false
@@ -40,7 +40,8 @@ if($avai > 0) {
                  lat: "<?php echo $facilities['latitude']; ?>",
                  lon: "<?php echo $facilities['longitude']; ?>",
                  title: "<?php echo ucwords($facilities['facility_name']);?>",
-                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"
+                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>",
+                 label : "<h5><?php echo ucwords($facilities['facility_name']);?></h5>"
                 },
                 <?php } } } ?>
                 //anc sites
@@ -53,7 +54,8 @@ if($avai > 0) {
                  lat: "<?php echo $anc['latitude']; ?>",
                  lon: "<?php echo $anc['longitude']; ?>",
                  title: "<?php echo ucwords($anc['anc_site_name']);?>",
-                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"
+                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>",
+                 label : "<h5><?php echo ucwords($anc['anc_site_name']);?></h5>"
                 },
                 <?php } } } ?>
             ];
@@ -65,10 +67,21 @@ if($avai > 0) {
                 marker = new google.maps.Marker({
                     position: position,
                     map: map,
-                    title: markers[i]['title'],
+                    //title: markers[i]['title'],
                     icon : markers[i]['icon'],
                 });
-                
+                marker['infowindow'] = new google.maps.InfoWindow({
+                    content: markers[i]['label']    
+                });
+                google.maps.event.addListener(marker, 'mouseover', function() {
+                    if( prev_infowindow ) {
+                       prev_infowindow.close();
+                    }
+            
+                    prev_infowindow = this['infowindow'];
+                    prev_infowindow.open(map, this);
+                    setTimeout(function() { prev_infowindow.close(); }, 3000);
+                });
                 // Automatically center the map fitting all markers on the screen
                 map.fitBounds(bounds);
             }
