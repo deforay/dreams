@@ -134,12 +134,24 @@ class CommonService {
         }
     }
     
-    public static function getDateTime($timezone = 'Asia/Calcutta') {
+    public static function getDateTime($timezone = 'UTC', $humanFriendly = false) {
+        
+        if($timezone == 'UTC'){
+            $timezone = date_default_timezone_get();
+        }
         $date = new \DateTime(date('Y-m-d H:i:s'), new \DateTimeZone($timezone));
-        return $date->format('Y-m-d H:i:s');
+        if($humanFriendly){
+            return $date->format('d-M-Y H:i:s');
+        }else{
+            return $date->format('Y-m-d H:i:s');
+        }
+        
     }
     
-    public static function getDate($timezone = 'Asia/Calcutta') {
+    public static function getDate($timezone = 'UTC') {
+            if($timezone == 'UTC'){
+                $timezone = date_default_timezone_get();
+            }
            $date = new \DateTime(date('Y-m-d'), new \DateTimeZone($timezone));
            return $date->format('Y-m-d');
     }

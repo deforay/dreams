@@ -202,7 +202,7 @@ class DataCollectionService {
         $common = new CommonService();
         $ancSiteDb = $this->sm->get('AncSiteTable');
         $facilityDb = $this->sm->get('FacilityTable');
-        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LAB-LOGBOOK--':'LAB-DATA-REPORT--';
+        $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'Lab-Logbook-HIV-Recency-':'Lab-HIV-Recency-';
         $sQuery = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$queryContainer->logbookQuery:$queryContainer->dataCollectionQuery;
         if(isset($sQuery)){
             try{
@@ -268,7 +268,7 @@ class DataCollectionService {
                     }
                     $excel = new PHPExcel();
                     $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    $cacheSettings = array('memoryCacheSize' => '512MB');
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
@@ -444,10 +444,10 @@ class DataCollectionService {
                       $sheet->mergeCells('S3:V3');
                       
                       $sheet->setCellValue('A1', html_entity_decode('Logbook for Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('A2', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('B2', html_entity_decode($ancs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('C2', html_entity_decode('Lab Site/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('D2', html_entity_decode($labs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      //$sheet->setCellValue('A2', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      //$sheet->setCellValue('B2', html_entity_decode($ancs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('A2', html_entity_decode('Lab Site/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('B2', html_entity_decode($labs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('A3', html_entity_decode('Receipt Date at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('B3', html_entity_decode($receiptDateatLab, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('C3', html_entity_decode('Result Reported ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
