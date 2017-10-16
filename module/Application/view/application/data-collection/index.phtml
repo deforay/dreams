@@ -125,7 +125,7 @@ if(isset($date) && trim($date)!= ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);generatePatientBarcodeID(this);checkPatientRecord('');">
+				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();checkPatientRecord('');">
 					<option data-code="" value=""> -- Select -- </option>
 					<?php
 					foreach($countries as $country){
@@ -693,9 +693,9 @@ if(isset($date) && trim($date)!= ''){
             var biddigit = '000000';
 	    var ctxt = '' + count;
 	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
-	    $('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
+	    //$('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
 	    $('#surveillanceId').val(surveillanceID);
-	    $('#serialNo').html(' ('+surveillanceID+')');
+	    //$('#serialNo').html(' ('+surveillanceID+')');
        <?php } ?>
     });
     
