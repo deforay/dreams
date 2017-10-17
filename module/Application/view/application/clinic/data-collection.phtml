@@ -79,9 +79,10 @@ if(trim($countryId)!= ''){
        </div>
     </div>
     <?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-        <div class="row dashboard-wrapper content-container" style="margin-bottom:20px;">
+        <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;">Hide this form</a>
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
-                <div class="col l12 m12 s12">
+                <div class="col l12 m12 s12" style="padding:0 !important;">
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
 			    <div class="col l12 m12 s12" style="margin-bottom:1vh;">
@@ -166,7 +167,7 @@ if(trim($countryId)!= ''){
         </form>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <div class="col l12 m12 s12">
+        <div class="col l12 m12 s12" style="padding:0 !important;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Data Reporting List</div>
                 <div class="card-content clearfix">
@@ -327,6 +328,18 @@ if(trim($countryId)!= ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
+    });
+    
+    $("a.formHide").click(function(){
+	$("#addClinicDataReportingForm").toggle();
+	if ($.trim($(this).text()) === 'Hide this form') {
+           $(this).text('Show this form');
+	   $('.formContainer').css('margin-bottom','0px');
+	} else {
+	   $(this).text('Hide this form');
+	   $('.formContainer').css('margin-bottom','20px');
+	}
+      return false;
     });
     
     function getTotal(commonFieldClassName){

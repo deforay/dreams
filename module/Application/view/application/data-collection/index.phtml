@@ -2,6 +2,7 @@
 use Zend\Session\Container;
 $loginContainer = new Container('user');
 if(isset($date) && trim($date)!= ''){
+    $countryId = '';
     $link = "/";
 }else if(isset($countryId) && trim($countryId)!= ''){
     $link = "/data-collection/".base64_encode($countryId);

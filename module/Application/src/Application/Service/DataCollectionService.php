@@ -28,7 +28,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->addDataCollectionDetails($params);
            if($result>0){
             $adapter->commit();
-               $alertContainer->msg = 'Lab Data Reporting added successfully.';
+               $alertContainer->msg = 'Lab Data with Patient Barcode ID '.$params['patientBarcodeId'].' has been added successfully.';
            }else{
               $alertContainer->msg = 'OOPS..';
            }
@@ -59,7 +59,7 @@ class DataCollectionService {
            $result = $dataCollectionDb->updateDataCollectionDetails($params);
            if($result>0){
                $adapter->commit();
-               $alertContainer->msg = 'Lab Data Reporting updated successfully.';
+               $alertContainer->msg = 'Lab Data with Patient Barcode ID '.$params['patientBarcodeId'].' has been updated successfully.';
            }else{
               $alertContainer->msg = 'OOPS..';
            }
