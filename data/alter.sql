@@ -684,3 +684,6 @@ ALTER TABLE facility DROP INDEX province
 alter table facility add FOREIGN KEY(province) REFERENCES location_details(location_id)
 
 alter table facility add FOREIGN KEY(district) REFERENCES location_details(location_id)
+
+--Pal 17/10/2017
+INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status`) VALUES (NULL, 'Response Not Available', 'active');
