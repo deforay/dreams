@@ -14,7 +14,7 @@ class StudyOverviewReportController extends AbstractActionController{
             $result = $dataCollectionService->getStudyOverviewData($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $countryInfo = $countryService->getCountry($countryId);
             if($countryInfo){

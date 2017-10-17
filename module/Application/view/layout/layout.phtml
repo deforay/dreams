@@ -252,8 +252,11 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                             <li class="countryAncsiteMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
+                                                            <li class="ancAsanteResultMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a class="ancAsanteResultMenu<?php echo $country['country_id']; ?>" href="/anc-asante-result/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-download"></i> ANC Asante Result</a>
+                                                            </li>
                                                             <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
+                                                                <a class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -667,6 +670,17 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
             $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
+        }else if(splitsUrl[1]=='anc-asante-result'){
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+            $(".countryAdminMenu"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
+            $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
+            $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }

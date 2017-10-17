@@ -545,6 +545,24 @@ return array(
                         'action' => 'unlock'
                     ),
                 ),
+            ),'anc-asante-result' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/anc-asante-result[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'anc-asante-result'
+                    ),
+                ),
+            ),'export-asante-result' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/export-asante-result',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'export-anc-asante-result'
+                    ),
+                ),
             )
         ),
     ),

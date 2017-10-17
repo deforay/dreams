@@ -1169,7 +1169,7 @@ class DataCollectionService {
             }  
         }else{
             return "";
-        } 
+        }
     }
     
     public function lockClinicDataCollection($params){

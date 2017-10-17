@@ -1,0 +1,253 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+?>
+<style>
+    .card-header{
+        background-color:#ff69b4;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        padding: 10px 20px;
+    }
+    table th,table td{
+        text-align:center;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    table.dataTable tbody td {
+        padding: 8px 18px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    @font-face {
+        font-family: 'Glyphicons Halflings';
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot');
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+      }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    * {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    /*.left{float: right !important;}*/
+    #ms-dataCollection{
+        width:100%;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">ANC Asante Result (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+    </div>
+    <div class="row" style="max-width:1109px;">
+	<form id="asanteResultFilter" action="#">
+	    <div class="row">
+                <div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="anc" name="anc" title="Please select anc site">
+			    <option value=""> -- Select -- </option>
+			    <?php foreach($ancSites as $anc) { ?>
+			       <option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="anc">ANC Site </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="district" name="district" title="Please select district">
+			    <option value=""> -- Select -- </option>
+			    <?php foreach($districts as $district) { ?>
+			       <option value="<?php echo base64_encode($district['location_id']); ?>"><?php echo ucwords($district['location_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="district">Districts </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="recencyLine" name="recencyLine">
+			    <option value=""> -- Select -- </option>
+			    <option value="recent"> Recent </option>
+			    <option value="long term"> Long Term </option>
+                            <option value="invalid"> Invalid </option>
+			</select>
+			<label for="recencyLine">HIV Recency Classification </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchAsanteResult();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractAsanteResult();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row">
+	<div class="col s12">
+	    <div class="card card-default">
+		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Asante Result</div>
+		<div class="card-content clearfix">
+		    <table id="asanteResultDataTable" class="responsive-table striped">
+			<thead>
+			<tr>
+			    <th>Patient Barcode ID</th>
+			    <th>ANC Site</th>
+			    <th>District Name</th>
+			    <th>HIV Verification Classification</th>
+			    <th>HIV Recency Classification</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+			    <th>Patient Barcode ID</th>
+			    <th>ANC Site</th>
+			    <th>District Name</th>
+			    <th>HIV Verification Classification</th>
+			    <th>HIV Recency Classification</th>
+			</tr>
+			</tfoot>
+			<tbody>
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+       oTable = $('#asanteResultDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"}
+            ],
+            "aaSorting": [[0, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('anc-asante-result'); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                aoData.push({"name": "country", "value": '<?php echo $countryInfo->country_id; ?>' });
+                aoData.push({"name": "anc", "value": $('#anc').val()});
+                aoData.push({"name": "district", "value": $('#district').val()});
+		aoData.push({"name": "recencyLine", "value": $('#recencyLine').val()});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+        $('.dataTables_filter').empty(); // clears the content generated
+        $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+        $(document).on('keyup', "input[type='text']", function(){
+                    var oTable = $('.dataTable').dataTable();
+                    oTable.fnFilter($(this).val());
+                });
+    });
+    
+    function searchAsanteResult(){
+        oTable.fnDraw(false);
+    }
+    
+    function clearSearchFields(){
+       $('#asanteResultFilter')[0].reset();
+       searchAsanteResult();
+    }
+    
+    function extractAsanteResult(){
+        $.blockUI();
+	$.post("<?php echo $this->url('export-asante-result'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+</script>

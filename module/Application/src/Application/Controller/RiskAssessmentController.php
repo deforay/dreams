@@ -75,7 +75,7 @@ class RiskAssessmentController extends AbstractActionController{
             $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
             if($result){
                 $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
-                if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
+                if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); }
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
                 $occupationTypeList=$riskAssessmentService->getOccupationTypes();
@@ -157,6 +157,45 @@ class RiskAssessmentController extends AbstractActionController{
             $params = $request->getPost();
             $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
             $response=$riskAssessmentService->unlockRiskAssessment($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function ancAsanteResultAction(){
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $parameters = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $result = $riskAssessmentService->getANCAsanteResults($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryInfo = $countryService->getCountry($countryId);
+            if($countryInfo){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId);
+                $districts = $countryService->getDistrictsByCountry($countryId);
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'districts'=>$districts,
+                    'countryInfo'=>$countryInfo
+                ));
+            }else{
+               return $this->redirect()->toRoute('home');
+            }
+        }
+    }
+    
+    public function exportAncAsanteResultAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response=$riskAssessmentService->exportAsanteResultInExcel($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
