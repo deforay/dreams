@@ -153,7 +153,10 @@ if(trim($countryId)!= ''){
             </form>
         </div>
     <?php } ?>
-    <div class="row" style="max-width:1109px;">
+    <div id="showListButton" class="row dashboard-wrapper content-container" style="margin-bottom: 10px;">
+       <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadANCDataList();">Show ANC Data List</a>
+    </div>
+    <div class="row ancDataList" style="max-width:1109px;display:none;">
 	<form id="dataCollectionFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
@@ -166,7 +169,7 @@ if(trim($countryId)!= ''){
             </div>
         </form>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row dashboard-wrapper content-container ancDataList" style="display:none;">
         <div class="col l12 m12 s12" style="padding:0 !important;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Data Reporting List</div>
@@ -232,7 +235,54 @@ if(trim($countryId)!= ''){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script>
     $(document).ready(function(){
-        oTable = $('#dataReportingDataTable').dataTable({
+       $('#reportingMonthYear').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#reportingMonthYear').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+                checkDublicateDataReporting();
+            },
+            onChangeMonthYear: function(e){
+                checkDublicateDataReporting();
+            }
+       });
+       
+       $('#reportingMonthYearFilter').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#reportingMonthYearFilter').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYearFilter').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYearFilter').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
+            }
+       });
+    });
+    
+    var oTable = null;
+    function loadANCDataList(){
+	$(".ancDataList").show();
+	$("#showListButton").hide();
+	oTable = $('#dataReportingDataTable').dataTable({
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
             },
@@ -286,49 +336,7 @@ if(trim($countryId)!= ''){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
                 });
-       
-       $('#reportingMonthYear').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'M/yy',
-            maxDate: 'Today',
-            beforeShow : function(input, inst) {
-                tmp = $('#reportingMonthYear').val().split('/');
-                var dat = new Date('1 ' + tmp[0] + ' 1969');
-                $('#reportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
-                $('#reportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
-            },
-            onClose: function(dateText, inst) {
-                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
-                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
-                checkDublicateDataReporting();
-            },
-            onChangeMonthYear: function(e){
-                checkDublicateDataReporting();
-            }
-       });
-       
-       $('#reportingMonthYearFilter').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'M/yy',
-            maxDate: 'Today',
-            beforeShow : function(input, inst) {
-                tmp = $('#reportingMonthYearFilter').val().split('/');
-                var dat = new Date('1 ' + tmp[0] + ' 1969');
-                $('#reportingMonthYearFilter').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
-                $('#reportingMonthYearFilter').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
-            },
-            onClose: function(dateText, inst) {
-                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
-                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
-            }
-       });
-    });
+    }
     
     $("a.formHide").click(function(){
 	$("#addClinicDataReportingForm").toggle();

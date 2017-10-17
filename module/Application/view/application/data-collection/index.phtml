@@ -518,8 +518,9 @@ if(isset($date) && trim($date)!= ''){
 	    <?php } ?>
 	</div>
     </div>
-    <!--<br><br>-->
-    <a href="javascript:void(0);" style="margin-left:4%;" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" id="showListButton" onclick="loadLabDataList();">Show Lab Data List</a>
+    <div id="showListButton" class="row dashboard-wrapper content-container" style="margin-bottom: 10px;">
+       <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadLabDataList();">Show Lab Data List</a>
+    </div>
     <div class="row dashboard-wrapper content-container hideDataTable" id="labDataList" style="display:none;">
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
@@ -670,8 +671,6 @@ if(isset($date) && trim($date)!= ''){
             }
         });
 
-
-
 	for(colNo=0;colNo <=$("#countColumn").val();colNo++){
             $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
             if(oTable.fnSettings().aoColumns[colNo].bVisible){
@@ -680,8 +679,6 @@ if(isset($date) && trim($date)!= ''){
                 $("#iCol"+colNo+"-sort").hide();    
             }
         }
-
-
        
        $('.dataTables_filter').empty(); // clears the content generated
        $('.dataTables_filter').append(
@@ -690,7 +687,6 @@ if(isset($date) && trim($date)!= ''){
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
-
     }									
 
     $(document).ready(function() {
