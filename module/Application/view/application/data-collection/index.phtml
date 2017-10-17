@@ -126,7 +126,7 @@ if(isset($date) && trim($date)!= ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12">
-				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);generatePatientBarcodeID(this);checkPatientRecord('');">
+				    <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();checkPatientRecord('');">
 					<option data-code="" value=""> -- Select -- </option>
 					<?php
 					foreach($countries as $country){
@@ -427,6 +427,7 @@ if(isset($date) && trim($date)!= ''){
 		    <input type="hidden" name="surveillanceId" id="surveillanceId"/>
 		    <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
 		    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
+			<a href="javascript:void(0);" style="float:right !important;font-size:1.1em;" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" id="showListButton" onclick="loadLabDataList();">Show Lab Data List</a>
 		</div>
 	    </div>
 	    </form>
@@ -518,7 +519,13 @@ if(isset($date) && trim($date)!= ''){
 	    <?php } ?>
 	</div>
     </div>
-    <div class="row dashboard-wrapper content-container hideDataTable">
+
+	<br>
+	<br> 
+	
+
+
+    <div class="row dashboard-wrapper content-container hideDataTable" id="labDataList" style="display:none;">
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
@@ -605,8 +612,14 @@ if(isset($date) && trim($date)!= ''){
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
 <script>
-    $(document).ready(function() {
-       oTable = $('#dataReportingDataTable').dataTable({
+	var oTable = null;
+
+    function loadLabDataList(){
+
+		$("#labDataList").show();
+		$("#showListButton").hide();
+
+		oTable = $('#dataReportingDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
@@ -664,9 +677,10 @@ if(isset($date) && trim($date)!= ''){
                 });
             }
         });
-       
-        $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
-        for(colNo=0;colNo <=$("#countColumn").val();colNo++){
+
+
+
+		for(colNo=0;colNo <=$("#countColumn").val();colNo++){
             $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
             if(oTable.fnSettings().aoColumns[colNo].bVisible){
                 $("#iCol"+colNo+"-sort").show();    
@@ -674,14 +688,31 @@ if(isset($date) && trim($date)!= ''){
                 $("#iCol"+colNo+"-sort").hide();    
             }
         }
+
+
        
-       $('.dataTables_filter').empty(); // clears the content generated
+		$('.dataTables_filter').empty(); // clears the content generated
        $('.dataTables_filter').append(
                 "<div class='input-field col s6 search-div right' style='width: 250px'>" +
                 "    <i class='material-icons search-icon'>search</i> "+
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
+
+	}									
+
+
+
+    $(document).ready(function() {
+       
+
+
+		//loadLabDataList();
+
+
+
+       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+       
        $('#search-items').on('keyup', function(){
                     var oTable = $('.dataTable').dataTable();
                     oTable.fnFilter($(this).val());
@@ -694,9 +725,9 @@ if(isset($date) && trim($date)!= ''){
             var biddigit = '000000';
 	    var ctxt = '' + count;
 	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
-	    $('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
+	    //$('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
 	    $('#surveillanceId').val(surveillanceID);
-	    $('#serialNo').html(' ('+surveillanceID+')');
+	    //$('#serialNo').html(' ('+surveillanceID+')');
        <?php } ?>
     });
     

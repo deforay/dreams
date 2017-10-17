@@ -58,7 +58,7 @@ if(count($logbookResult) >0){
     $filterContent = '';
     $filterContent .='<table>';
     $filterContent .='<tr><td colspan="4" style="line-height:30px;"></td></tr>';
-    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">'.$breaks.' ANC Site</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$ancs.'</td><td style="width:15%;font-size:14px;text-align:left;">'.$breaks.' Lab Site/Facility</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$breaks.$labs.'</td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">'.$breaks.'Lab Site/Facility</td><td colspan="3" style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$breaks.$labs.'</td></tr>';
     $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
     $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">Receipt Date at Lab</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$receiptDateatLab.'</td><td style="width:15%;font-size:14px;text-align:left;">Result Reported</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$resultReported.'</td></tr>';
     $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
@@ -97,13 +97,14 @@ if(count($logbookResult) >0){
         }
     }
     // create new PDF document
-    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    //$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'A3', true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
     $pdf->setSchemeName('Logbook for Recency Test','dreams-small-logo.png',$filterContent);
     // set document information
-    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetCreator('HIV Recency');
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('Logbook for Recency Test');
+    $pdf->SetTitle('Logbook for HIV Recency Test');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -148,34 +149,34 @@ if(count($logbookResult) >0){
       $html.='<table border="1" style="padding:2px;">';
           $html .='<thead>';
            $html .='<tr>';
-	    $html .='<th rowspan="2"><strong>Receipt Date at Lab</strong></th>';
-	    $html .='<th rowspan="2"><strong>Patient Barcode ID</strong></th>';
-	    $html .='<th rowspan="2"><strong>Specimen Collected Date</strong></th>';
-	    $html .='<th rowspan="2"><strong>ANC Site</strong></th>';
-	    $html .='<th rowspan="2"><strong>ANC Site Code</strong></th>';
-	    $html .='<th rowspan="2"><strong>Encrypted ANC Patient ID</strong></th>';
-	    $html .='<th rowspan="2"><strong>ANC Patient ID</strong></th>';
-	    $html .='<th rowspan="2"><strong>Age</strong></th>';
-	    $html .='<th rowspan="2"><strong>Specimen Pick Up Date at ANC</strong></th>';
-	    $html .='<th rowspan="2"><strong>Lab/Facility</strong></th>';
-	    $html .='<th rowspan="2"><strong>Lab/Facility Code</strong></th>';
-	    $html .='<th rowspan="2"><strong>Lab Specimen ID</strong></th>';
-	    $html .='<th rowspan="2"><strong>Rejection Code</strong></th>';
-	    $html .='<th rowspan="2"><strong>Date of Test Completion</strong></th>';
-	    $html .='<th rowspan="2"><strong>Result Dispatched Date to Clinic</strong></th>';
-	    $html .='<th rowspan="2"><strong>HIV RNA (cp/ml)</strong></th>';
-	    $html .='<th colspan="2" style="background-color:#9bc2e6;"><strong>LAg Assay </strong></th>';
-	    $html .='<th colspan="4" style="background-color:#ffe699;"><strong>Rapid Recency Assay </strong></th>';
-	    $html .='<th rowspan="2"><strong>Comments</strong></th>';
-	    $html .='<th rowspan="2"><strong>Manager\'s Approval</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Receipt Date at Lab</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Patient Barcode ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Specimen Collected Date</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Site</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Site Code</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Encrypted ANC Patient ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Patient ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Age</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Specimen Pick Up Date at ANC</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility Code</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Specimen ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Rejection Code</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Date of Test Completion</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Result Dispatched Date to Clinic</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>HIV RNA (cp/ml)</strong></th>';
+	    $html .='<th colspan="2"  style="white-space: nowrap;text-align:center;"><br><strong>LAg Assay </strong></th>';
+	    $html .='<th colspan="4"  style="white-space: nowrap;text-align:center;"><br><strong>Rapid Recency Assay </strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Comments</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
 	   $html .='<tr>';
-	    $html .='<th><strong>LAg Avidity ODn</strong></th>';
-	    $html .='<th><strong>Recent Infection (LAg Assay)</strong></th>';
-	    $html .='<th><strong>Positive Verification Line Reader Value (log10)</strong></th>';
-            $html .='<th><strong>HIV Verification Classification</strong></th>';
-	    $html .='<th><strong>Long Term Line Reader Value (log10)</strong></th>';
-            $html .='<th><strong>HIV Recency Classification</strong></th>';
+	    $html .='<th  style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Recent Infection (LAg Assay)</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line Reader Value (log10)</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>HIV Verification Classification</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Long Term Line Reader Value (log10)</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>HIV Recency Classification</strong></th>';
 	   $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -230,7 +231,7 @@ if(count($logbookResult) >0){
 	      $html .='<td>'.$row['anc_site_code'].'</td>';
 	      $html .='<td>'.$row['enc_anc_patient_id'].'</td>';
               $html .='<td></td>';//set empty value
-              $html .='<td>'.$row['age'].'</td>';
+              $html .='<td style="text-align:center;">'.$row['age'].'</td>';
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name']).'</td>';
 	      $html .='<td>'.$row['facility_code'].'</td>';
@@ -239,11 +240,11 @@ if(count($logbookResult) >0){
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
 	      $html .='<td>'.$row['hiv_rna'].'</td>';
-              $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
+              $html .='<td style="text-align:center;">'.$row['final_lag_avidity_odn'].'</td>';
               $html .='<td>'.$recencyInfection.'</td>';
-	      $html .='<td>'.$diagnosisReaderLogVal.'</td>';
+	      $html .='<td style="text-align:center;">'.$diagnosisReaderLogVal.'</td>';
               $html .='<td>'.$rapidRecencyAssay.'</td>';
-	      $html .='<td>'.$recencyReaderLogVal.'</td>';
+	      $html .='<td style="text-align:center;">'.$recencyReaderLogVal.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
 	      $html .='<td></td>';//set empty value
@@ -252,7 +253,7 @@ if(count($logbookResult) >0){
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $filename = 'LAB-LOGBOOK--'.date('d-M-Y-H-i-s').'.pdf';
+    $filename = 'Lab-Logbook-HIV-Recency-'.date('d-M-Y-H-i-s').'-'.rand().'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{

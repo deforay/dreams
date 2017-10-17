@@ -26,12 +26,12 @@ $alertContainer->nbPages = count($dataResult);
 	    $alertContainer = new Container('alert');
 	    $common = new \Application\Service\CommonService();
 	    // Position at 15 mm from bottom
-	    $this->SetY(-15);
+	    $this->SetY(-20);
 	    // Set font
 	    $this->SetFont('helvetica', 'I', 8);
 	    // Page number
 	    $this->writeHTMLCell(0,'','','','Page '.$alertContainer->aliasPage.'/'.$alertContainer->nbPages,0,1,false,true,'C',true);
-	    $this->writeHTMLCell(0,'','','','Printed on - '.$common->getDateTime(),0,1,false,true,'A',true);
+	    $this->writeHTMLCell(0,'','','','Printed on - '.$common->getDateTime(date_default_timezone_get(), true),0,1,false,true,'C',true);
 	}
     }
     
@@ -136,12 +136,12 @@ $alertContainer->nbPages = count($dataResult);
 	    $rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
 	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
-	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
-	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent <br>(This result suggest that patient was likely infected with the HIV virus within the last 6 months or so)';
+	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
+	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent</h3><span style="text-align:left;">(This result suggests that patient was likely infected with the HIV virus within the last 6 months or so)</span>';
 	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'long term'){
 	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
-	    $lagAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term';
+	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Long Term</h3>';
 	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/long-term.png" alt="Long Term">';
 	}
 	$rapidRecencyAssayDuration = '';
@@ -216,7 +216,7 @@ $alertContainer->nbPages = count($dataResult);
 	$resultPdf->setPrintHeader(false);
         $resultPdf->setPrintFooter(false);
 	$resultPdf->concat();
-	$resultFilename = 'LABORATORY-RECENCY-TEST-RESULT-'.date('d-M-Y-H-i-s').'.pdf';
+	$resultFilename = 'Lab-HIV-Recency-Test-Result-'.$data['patient_barcode_id'].'-'.date('d-M-Y-H-i-s').'.pdf';
 	$resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
 	echo $resultFilename;
     }
