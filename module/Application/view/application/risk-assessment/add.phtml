@@ -457,13 +457,13 @@ if(trim($countryId)!= ''){
             <div class="row" style="margin-bottom:0;">
                 <div class="col s8">
                     <input id="isPartnerCircumcisedYes" class="with-gap isRequired" name="isPartnerCircumcised" title="Don't leave 16th question" value="yes" type="radio">
-		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp&;nbsp
                     <input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="no" type="radio">
-		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp;&nbsp
                     <input id="isPartnerCircumcisedDK" class="with-gap" name="isPartnerCircumcised" value="dontknow" type="radio">
-		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp;&nbsp
                     <input id="isPartnerCircumcisedR" class="with-gap" name="isPartnerCircumcised" value="refused" type="radio">
-		    <label for="isPartnerCircumcisedR" class="active">Refused </label>&nbsp;&nbsp;
+		    <label for="isPartnerCircumcisedR" class="active">Refused </label>&nbsp;&nbsp
 		    <input id="isPartnerCircumcisedRNA" class="with-gap" name="isPartnerCircumcised" value="response not available" type="radio">
 		    <label for="isPartnerCircumcisedRNA" class="active">Response Not Available </label>
                 </div>
@@ -1132,7 +1132,8 @@ if(trim($countryId)!= ''){
 	    $("input[name='everBeenWidowed']").removeAttr("disabled");
 	    $(".currentMaritalStatus").css("pointer-events","auto");
 	    //validate/content section
-	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").addClass("isRequired");
+	    if($("#ageAtFirstMarriageInYears").val()!= '') { $("#ageAtFirstMarriageInYears").addClass("isRequired"); }
+	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	}
     });

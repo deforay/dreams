@@ -315,8 +315,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s4">
-                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired years checkNum" title="Please enter years" value="<?php echo $row->age_at_very_first_sex; ?>" style="width:20%;"> Years
+                <div class="col s6">
+                    <input id="ageAtVeryFirstSex" name="ageAtVeryFirstSex" type="text" class="validate isRequired years checkNum" title="Please enter years" value="<?php echo $row->age_at_very_first_sex; ?>" <?php echo ($row->age_at_very_first_sex == 'Response Not Available')?'readonly':''; ?> style="width:20%;"> Years &nbsp;&nbsp;
+                    <input id="ageAtVeryFirstSexRNA" class="with-gap" name="ageAtVeryFirstSexRNA" value="NA" type="checkbox" <?php echo ($row->age_at_very_first_sex == 'Response Not Available')?'checked="checked"':''; ?>>
+		    <label for="ageAtVeryFirstSexRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -325,7 +327,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s10">
                     <input id="reasonForVeryFirstSexWT" class="with-gap isRequired" name="reasonForVeryFirstSex" title="Don't leave 11th question" value="wantedto" type="radio" <?php echo ($row->reason_for_very_first_sex == 'wantedto')?'checked="checked"':''; ?>>
 		    <label for="reasonForVeryFirstSexWT" class="active">Wanted To </label>&nbsp&nbsp
                     <input id="reasonForVeryFirstSexFT" class="with-gap" name="reasonForVeryFirstSex" value="forcedto" type="radio" <?php echo ($row->reason_for_very_first_sex == 'forcedto')?'checked="checked"':''; ?>>
@@ -333,7 +335,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="reasonForVeryFirstSexDK" class="with-gap" name="reasonForVeryFirstSex" value="dontknow" type="radio" <?php echo ($row->reason_for_very_first_sex == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="reasonForVeryFirstSexDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="reasonForVeryFirstSexR" class="with-gap" name="reasonForVeryFirstSex" value="refused" type="radio" <?php echo ($row->reason_for_very_first_sex == 'refused')?'checked="checked"':''; ?>>
-		    <label for="reasonForVeryFirstSexR" class="active">Refused </label>
+		    <label for="reasonForVeryFirstSexR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="reasonForVeryFirstSexRNA" class="with-gap" name="reasonForVeryFirstSex" value="response not available" type="radio" <?php echo ($row->reason_for_very_first_sex == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="reasonForVeryFirstSexRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -342,12 +346,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate persons checkNum <?php echo ($row->no_of_sexual_partners== null || trim($row->no_of_sexual_partners) == '')?'isRequired':''; ?>" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && (int)$row->no_of_sexual_partners >0)?$row->no_of_sexual_partners:'';?>" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners == 'refused')?'checked="checked"':''; ?>>
-		    <label for="noOfSexualPartnersR" class="active">Refused </label>
+		    <label for="noOfSexualPartnersR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="noOfSexualPartnersRNA" class="with-gap" name="noOfSexualPartners" value="response not available" type="radio" <?php echo ($row->no_of_sexual_partners == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -356,12 +362,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate persons checkNum <?php echo ($row->no_of_sexual_partners_in_last_six_months == null || $row->no_of_sexual_partners_in_last_six_months == '')?'isRequired':''; ?>" title="Please enter no. of persons" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && (int)$row->no_of_sexual_partners_in_last_six_months >0)?$row->no_of_sexual_partners_in_last_six_months:'';?>" style="width:13%;"> Persons&nbsp;
                     <input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="refused" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
-		    <label for="noOfSexualPartnersInLastSixMonthsR" class="active">Refused </label>
+		    <label for="noOfSexualPartnersInLastSixMonthsR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="noOfSexualPartnersInLastSixMonthsRNA" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="response not available" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="noOfSexualPartnersInLastSixMonthsRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -370,12 +378,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate years checkNum <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || $row->age_of_main_sexual_partner_at_last_birthday == '')?'isRequired':''; ?>" title="Please enter years" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && (int)$row->age_of_main_sexual_partner_at_last_birthday >0)?$row->age_of_main_sexual_partner_at_last_birthday:'';?>" style="width:13%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="dontknow" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="refused" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'refused')?'checked="checked"':''; ?>>
-		    <label for="ageOfMainSexualPartnerAtLastBirthdayR" class="active">Refused </label>
+		    <label for="ageOfMainSexualPartnerAtLastBirthdayR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="ageOfMainSexualPartnerAtLastBirthdayRNA" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="response not available" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="ageOfMainSexualPartnerAtLastBirthdayRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -396,6 +406,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                         <option value="gt10yearyounger" <?php echo ($row->age_diff_of_main_sexual_partner == 'gt10yearyounger')?'selected="selected"':''; ?>> >10 Years Younger</option>
                         <option value="dontknow" <?php echo ($row->age_diff_of_main_sexual_partner == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
                         <option value="refused" <?php echo ($row->age_diff_of_main_sexual_partner == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                        <option value="response not available" <?php echo ($row->age_diff_of_main_sexual_partner == 'response not available')?'selected="selected"':''; ?>>Response Not Available</option>
                     </select>
                 </div>
             </div>
@@ -405,15 +416,17 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="isPartnerCircumcisedYes" class="with-gap isRequired" name="isPartnerCircumcised" title="Don't leave 16th question" value="yes" type="radio" <?php echo ($row->is_partner_circumcised == 'yes')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp;&nbsp
                     <input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="no" type="radio" <?php echo ($row->is_partner_circumcised == 'no')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp;&nbsp
                     <input id="isPartnerCircumcisedDK" class="with-gap" name="isPartnerCircumcised" value="dontknow" type="radio" <?php echo ($row->is_partner_circumcised == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp&nbsp
+		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp;&nbsp
                     <input id="isPartnerCircumcisedR" class="with-gap" name="isPartnerCircumcised" value="refused" type="radio" <?php echo ($row->is_partner_circumcised == 'refused')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedR" class="active">Refused </label>
+		    <label for="isPartnerCircumcisedR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="isPartnerCircumcisedRNA" class="with-gap" name="isPartnerCircumcised" value="response not available" type="radio" <?php echo ($row->is_partner_circumcised == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="isPartnerCircumcisedRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -431,6 +444,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                         <option value="gt12months" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'gt12months')?'selected="selected"':''; ?>> > 12 Months Ago</option>
                         <option value="dontknow" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
                         <option value="refused" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                        <option value="response not available" <?php echo ($row->last_time_of_receiving_gift_for_sex == 'response not available')?'selected="selected"':''; ?>>Response Not Available</option>
                     </select>
                 </div>
             </div>
@@ -440,8 +454,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s4">
-                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate times checkNum isRequired" title="Don't leave 18th question" value="<?php echo $row->no_of_times_been_pregnant; ?>" style="width:20%;"> Times
+                <div class="col s6">
+                    <input id="noOfTimesBeenPregnant" name="noOfTimesBeenPregnant" type="text" class="validate times checkNum isRequired" title="Don't leave 18th question" value="<?php echo $row->no_of_times_been_pregnant; ?>" <?php echo ($row->no_of_times_been_pregnant == 'sometimes')?'readonly':''; ?> style="width:20%;"> Times&nbsp;&nbsp;
+		    <input id="noOfTimesBeenPregnantRNA" class="with-gap" name="noOfTimesBeenPregnantRNA" value="NA" type="checkbox" <?php echo ($row->no_of_times_been_pregnant == 'Response Not Available')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesBeenPregnantRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -450,7 +466,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s8">
+                <div class="col s10">
                     <input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap isRequired" name="noOfTimesCondomUsedBeforePregnancy" title="Don't leave 19th question" value="always" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'always')?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedBeforePregnancyA" class="active">Always </label>&nbsp&nbsp
                     <input id="noOfTimesCondomUsedBeforePregnancyS" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="sometimes" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'sometimes')?'checked="checked"':''; ?>>
@@ -460,7 +476,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="noOfTimesCondomUsedBeforePregnancyDK" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="dontknow" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedBeforePregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfTimesCondomUsedBeforePregnancyR" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="refused" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'refused')?'checked="checked"':''; ?>>
-		    <label for="noOfTimesCondomUsedBeforePregnancyR" class="active">Refused </label>
+		    <label for="noOfTimesCondomUsedBeforePregnancyR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="noOfTimesCondomUsedBeforePregnancyRNA" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="response not available" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedBeforePregnancyRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -469,7 +487,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s8">
+                <div class="col s10">
                     <input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap isRequired" name="noOfTimesCondomUsedAfterPregnancy" title="Don't leave 20th question" value="always" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'always')?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedAfterPregnancyA" class="active">Always </label>&nbsp&nbsp
                     <input id="noOfTimesCondomUsedAfterPregnancyS" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="sometimes" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'sometimes')?'checked="checked"':''; ?>>
@@ -479,7 +497,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="noOfTimesCondomUsedAfterPregnancyDK" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="dontknow" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedAfterPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="noOfTimesCondomUsedAfterPregnancyR" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="refused" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'refused')?'checked="checked"':''; ?>>
-		    <label for="noOfTimesCondomUsedAfterPregnancyR" class="active">Refused </label>
+		    <label for="noOfTimesCondomUsedAfterPregnancyR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="noOfTimesCondomUsedAfterPregnancyRNA" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="response not available" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="noOfTimesCondomUsedAfterPregnancyRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -488,7 +508,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="hasPatientHadPainInLowerAbdomenYes" class="with-gap isRequired" name="hasPatientHadPainInLowerAbdomen" title="Don't leave 21st question" value="yes" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadPainInLowerAbdomenYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="hasPatientHadPainInLowerAbdomenNo" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="no" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'no')?'checked="checked"':''; ?>>
@@ -496,7 +516,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientHadPainInLowerAbdomenDK" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="dontknow" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadPainInLowerAbdomenDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientHadPainInLowerAbdomenR" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="refused" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientHadPainInLowerAbdomenR" class="active">Refused </label>
+		    <label for="hasPatientHadPainInLowerAbdomenR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="hasPatientHadPainInLowerAbdomenRNA" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="response not available" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadPainInLowerAbdomenRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -505,7 +527,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="hasPatientBeenTreatedForLowerAbdomenPainYes" class="with-gap isRequired" name="hasPatientBeenTreatedForLowerAbdomenPain" title="Don't leave 22nd question" value="yes" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientBeenTreatedForLowerAbdomenPainYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="hasPatientBeenTreatedForLowerAbdomenPainNo" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="no" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'no')?'checked="checked"':''; ?>>
@@ -513,7 +535,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientBeenTreatedForLowerAbdomenPainDK" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="dontknow" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientBeenTreatedForLowerAbdomenPainDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientBeenTreatedForLowerAbdomenPainR" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="refused" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientBeenTreatedForLowerAbdomenPainR" class="active">Refused </label>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="hasPatientBeenTreatedForLowerAbdomenPainRNA" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="response not available" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientBeenTreatedForLowerAbdomenPainRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -522,7 +546,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="hasPatientEverBeenTreatedForSyphilisYes" class="with-gap isRequired" name="hasPatientEverBeenTreatedForSyphilis" title="Don't leave 23rd question" value="yes" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenTreatedForSyphilisYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenTreatedForSyphilisNo" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="no" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'no')?'checked="checked"':''; ?>>
@@ -530,7 +554,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverBeenTreatedForSyphilisDK" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenTreatedForSyphilisDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenTreatedForSyphilisR" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused </label>
+		    <label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="hasPatientEverBeenTreatedForSyphilisRNA" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="response not available" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenTreatedForSyphilisRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -539,7 +565,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
-                <div class="col s6">
+                <div class="col s8">
                     <input id="hasPatientEverReceivedVaccineToPreventHPVYes" class="with-gap isRequired" name="hasPatientEverReceivedVaccineToPreventHPV" title="Don't leave 24th question" value="yes" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'yes')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverReceivedVaccineToPreventHPVYes" class="active">Yes </label>&nbsp&nbsp
                     <input id="hasPatientEverReceivedVaccineToPreventHPVNo" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="no" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'no')?'checked="checked"':''; ?>>
@@ -547,7 +573,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverReceivedVaccineToPreventHPVDK" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverReceivedVaccineToPreventHPVDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverReceivedVaccineToPreventHPVR" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="refused" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverReceivedVaccineToPreventHPVR" class="active">Refused </label>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="hasPatientEverReceivedVaccineToPreventHPVRNA" class="with-gap" name="hasPatientEverReceivedVaccineToPreventHPV" value="response not available" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_HPV == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverReceivedVaccineToPreventHPVRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Alcohol and drug use</strong></h6>
@@ -557,14 +585,16 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s8">
+                <div class="col s10">
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" name="hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate days checkNum <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == null || $row->has_patient_had_drink_with_alcohol_in_last_six_months == '')?'isRequired':''; ?>" title="Please enter no. of days" value="<?php echo($row->has_patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->has_patient_had_drink_with_alcohol_in_last_six_months)!= '' && (int)$row->has_patient_had_drink_with_alcohol_in_last_six_months >0)?$row->has_patient_had_drink_with_alcohol_in_last_six_months:'';?>" style="width:10%;"> Days&nbsp;
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="havenotdrink" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'havenotdrink')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsNot" class="active">Haven't Had a Drink </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsR" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="refusedtoanswer" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'refusedtoanswer')?'checked="checked"':''; ?>>
-		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsR" class="active">Refused To Answer</label>
+		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsR" class="active">Refused To Answer</label>&nbsp;&nbsp;
+		    <input id="hasPatientHadDrinkWithAlcoholInLastSixMonthsRNA" class="with-gap" name="hasPatientHadDrinkWithAlcoholInLastSixMonths" value="response not available" type="radio" <?php echo ($row->has_patient_had_drink_with_alcohol_in_last_six_months == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadDrinkWithAlcoholInLastSixMonthsRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -582,6 +612,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                         <option value="daily" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'daily')?'selected="selected"':''; ?>>Daily or On Most Days of The Week</option>
                         <option value="dontknow" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'dontknow')?'selected="selected"':''; ?>>Don't Know</option>
                         <option value="refused" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'refused')?'selected="selected"':''; ?>>Refused</option>
+                        <option value="response not available" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 'response not available')?'selected="selected"':''; ?>>Response Not Available</option>
                     </select>
                 </div>
             </div>
@@ -599,7 +630,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverTriedRecreationalDrugsDK" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverTriedRecreationalDrugsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverTriedRecreationalDrugsR" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="refused" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverTriedRecreationalDrugsR" class="active">Refused</label>
+		    <label for="hasPatientEverTriedRecreationalDrugsR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverTriedRecreationalDrugsRNA" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="response not available" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverTriedRecreationalDrugsRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;margin-top:16px;">
@@ -617,7 +650,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="dontknow" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="refused" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientHadRecreationalDrugsInLastSixMonthsRNA" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="response not available" type="radio" <?php echo ($row->has_patient_had_recreational_drugs_in_last_six_months == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientHadRecreationalDrugsInLastSixMonthsRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
@@ -635,7 +670,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverBeenAbusedBySomeoneDK" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="dontknow" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenAbusedBySomeoneDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenAbusedBySomeoneR" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="refused" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverBeenAbusedBySomeoneR" class="active">Refused</label>
+		    <label for="hasPatientEverBeenAbusedBySomeoneR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverBeenAbusedBySomeoneRNA" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="response not available" type="radio" <?php echo ($row->has_patient_ever_been_abused_by_someone == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenAbusedBySomeoneRNA" class="active">Response Not Available </label>
                 </div>
             </div>
 	    <div class="row" style="margin-bottom:0;">
@@ -652,7 +689,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="dontknow" type="radio" <?php echo ($hasPatientHurtBy == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="refused" type="radio" <?php echo ($hasPatientHurtBy == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="active">Refused</label>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverBeenHurtBySomeoneWithinLastYearRNA" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="response not available" type="radio" <?php echo ($hasPatientHurtBy == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneWithinLastYearRNA" class="active">Response Not Available </label>
                 </div>
             </div>
 	    <div class="row patientHurtBySomeoneWithinLastYear" style="margin-bottom:0;display:<?php echo ($hasPatientHurtBy == 'yes')?'':'none'; ?>;">
@@ -691,7 +730,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="dontknow" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="refused" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused</label>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyRNA" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="response not available" type="radio" <?php echo ($hasPatientHurtBySomeoneDuringPregnancy == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row patientHurtBySomeoneDuringPregnancy" style="margin-bottom:0;display:<?php echo($hasPatientHurtBySomeoneDuringPregnancy == 'yes')?'':'none'; ?>;">
@@ -729,7 +770,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="hasPatientEverBeenForcedForSexWithinLastYearDK" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="dontknow" type="radio" <?php echo($hasPatientForcedForSex == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="hasPatientEverBeenForcedForSexWithinLastYearDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="hasPatientEverBeenForcedForSexWithinLastYearR" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="refused" type="radio" <?php echo($hasPatientForcedForSex == 'refused')?'checked="checked"':''; ?>>
-		    <label for="hasPatientEverBeenForcedForSexWithinLastYearR" class="active">Refused</label>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverBeenForcedForSexWithinLastYearRNA" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="response not available" type="radio" <?php echo($hasPatientForcedForSex == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="hasPatientEverBeenForcedForSexWithinLastYearRNA" class="active">Response Not Available </label>
                 </div>
             </div>
 	    <div class="row patientForcedForSexWithinLastYear" style="margin-bottom:0;display:<?php echo($hasPatientForcedForSex == 'yes')?'':'none'; ?>;">
@@ -768,7 +811,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <input id="isPatientAfraidOfAnyoneDK" class="with-gap" name="isPatientAfraidOfAnyone" value="dontknow" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'dontknow')?'checked="checked"':''; ?>>
 		    <label for="isPatientAfraidOfAnyoneDK" class="active">Don't Know </label>&nbsp&nbsp
                     <input id="isPatientAfraidOfAnyoneR" class="with-gap" name="isPatientAfraidOfAnyone" value="refused" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'refused')?'checked="checked"':''; ?>>
-		    <label for="isPatientAfraidOfAnyoneR" class="active">Refused</label>
+		    <label for="isPatientAfraidOfAnyoneR" class="active">Refused</label>&nbsp;&nbsp;
+		    <input id="isPatientAfraidOfAnyoneRNA" class="with-gap" name="isPatientAfraidOfAnyone" value="response not available" type="radio" <?php echo ($row->is_patient_afraid_of_anyone == 'response not available')?'checked="checked"':''; ?>>
+		    <label for="isPatientAfraidOfAnyoneRNA" class="active">Response Not Available </label>
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -863,6 +908,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if($('#noOfSexualPartnersInNumbers').val()!= ''){
 		$('#noOfSexualPartnersDK').prop('checked',false);
 		$('#noOfSexualPartnersR').prop('checked',false);
+                $('#noOfSexualPartnersRNA').prop('checked',false);
 	    }
 	    $('#noOfSexualPartnersInNumbers').addClass('isRequired');
 	}else if(fromSource == 'rd'){
@@ -884,6 +930,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if($('#noOfSexualPartnersInLastSixMonthsInNumbers').val()!= ''){
 		$('#noOfSexualPartnersInLastSixMonthsDK').prop('checked',false);
 		$('#noOfSexualPartnersInLastSixMonthsR').prop('checked',false);
+                $('#noOfSexualPartnersInLastSixMonthsRNA').prop('checked',false);
 	    }
 	    $('#noOfSexualPartnersInLastSixMonthsInNumbers').addClass('isRequired');
 	}else if(fromSource == 'rd'){
@@ -904,6 +951,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if($('#ageOfMainSexualPartnerAtLastBirthdayInYears').val()!= ''){
 		$('#ageOfMainSexualPartnerAtLastBirthdayDK').prop('checked',false);
 		$('#ageOfMainSexualPartnerAtLastBirthdayR').prop('checked',false);
+                $('#ageOfMainSexualPartnerAtLastBirthdayRNA').prop('checked',false);
 	    }
 	    $('#ageOfMainSexualPartnerAtLastBirthdayInYears').addClass('isRequired');
 	}else if(fromSource == 'rd'){
@@ -925,6 +973,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsNot').prop('checked',false);
 		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsDK').prop('checked',false);
 		$('#hasPatientHadDrinkWithAlcoholInLastSixMonthsR').prop('checked',false);
+                $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsRNA').prop('checked',false);
 	    }
 	    $('#hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays').addClass('isRequired');
 	}else if(fromSource == 'rd'){
@@ -1035,6 +1084,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    $("#ageAtFirstMarriageInYears").val("");
 	    $("#ageAtFirstMarriageDK").prop('checked',false);
 	    $("#ageAtFirstMarriageR").prop('checked',false);
+            $("#ageAtFirstMarriageRNA").prop('checked',false);
 	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
 	    $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
 	    $("input[name='everBeenWidowed']").removeClass("isRequired");
@@ -1047,10 +1097,31 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    $("input[name='everBeenWidowed']").removeAttr("disabled");
 	    $(".currentMaritalStatus").css("pointer-events","auto");
 	    //validate/content section
-	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").addClass("isRequired");
+            if($("#ageAtFirstMarriageInYears").val()!= '') { $("#ageAtFirstMarriageInYears").addClass("isRequired"); }
+	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	}
     }
+    
+    $('#ageAtVeryFirstSexRNA').change(function () {
+	if($(this).is(":checked")) {
+	    $("#ageAtVeryFirstSex").val("Response Not Available");
+	    $("#ageAtVeryFirstSex").prop("readonly",true);
+	}else{
+	   $("#ageAtVeryFirstSex").val("");
+	   $("#ageAtVeryFirstSex").prop("readonly",false);
+	}
+    });
+    
+    $('#noOfTimesBeenPregnantRNA').change(function () {
+	if($(this).is(":checked")) {
+	    $("#noOfTimesBeenPregnant").val("Response Not Available");
+	    $("#noOfTimesBeenPregnant").prop("readonly",true);
+	}else{
+	   $("#noOfTimesBeenPregnant").val("");
+	   $("#noOfTimesBeenPregnant").prop("readonly",false);
+	}
+    });
     
     //age range validation
     $('.years').on('change',function() {

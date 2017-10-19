@@ -156,6 +156,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo "Secondary/Post-Secondary";
                             }else if($row->patient_degree=='university'){
                                 echo "University/College";
+                            }else{
+                                echo ucwords($row->patient_degree);
                             }
                         }
                         ?>
@@ -184,14 +186,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <p>
                         <?php
                         if($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= ''){
-                            if($row->age_at_first_marriage == 'dontknow'){
-                                echo "Don't Know";
-                            }else if($row->age_at_first_marriage == 'refused'){
-                                echo "Refused";
-                            }else if((int)$row->age_at_first_marriage > 1){
+                            if((int)$row->age_at_first_marriage > 1){
                                 echo (int)$row->age_at_first_marriage." Years";
                             }else if((int)$row->age_at_first_marriage == 1){
                                 echo (int)$row->age_at_first_marriage." Year";
+                            }else if($row->age_at_first_marriage == 'dontknow'){
+                                echo "Don't Know";
                             }else{
                                 echo ucwords($row->age_at_first_marriage);
                             }
@@ -234,16 +234,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                             echo "Married/Cohabiting";
                         }else if($row->current_marital_status == 'nevermarried'){
                             echo "Never Married/Cohabiting";
-                        }else if($row->current_marital_status == 'widowed'){
-                            echo "widowed";
-                        }else if($row->current_marital_status == 'separated'){
-                            echo "Separated";
-                        }else if($row->current_marital_status == 'divorced'){
-                            echo "Divorced";
                         }else if($row->current_marital_status == 'dontknow'){
                             echo "Don't Know";
-                        }else if($row->current_marital_status == 'refused'){
-                            echo "Refused";
                         }else{
                             echo ucwords($row->current_marital_status);
                         }
@@ -275,8 +267,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo "> 12 months";
                             }else if($row->time_of_last_HIV_test == 'dontknow'){
                                 echo "Don't Know";
-                            }else if($row->time_of_last_HIV_test == 'refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->time_of_last_HIV_test);
                             }
                         }
                         ?>
@@ -299,12 +291,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo "HIV+";
                             }else if($row->last_HIV_test_status == 'hivneg'){
                                 echo "HIV-";
-                            }else if($row->last_HIV_test_status == 'indeterminate'){
-                                echo "Indeterminate";
                             }else if($row->last_HIV_test_status == 'dontknow'){
                                 echo "Don't Know";
-                            }else if($row->last_HIV_test_status == 'refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->last_HIV_test_status);
                             }
                         }
                         ?>
@@ -327,8 +317,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo "HIV-";
                             }else if($row->partner_HIV_test_status == 'idonotknow'){
                                 echo "I Do Not Know";
-                            }else if($row->partner_HIV_test_status == 'refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->partner_HIV_test_status);
                             }
                         }
                         ?>
@@ -350,6 +340,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo (int)$row->age_at_very_first_sex." Years";    
                             }else if((int)$row->age_at_very_first_sex == 1){
                                 echo (int)$row->age_at_very_first_sex." Year";
+                            }else{
+                                echo ucwords($row->age_at_very_first_sex);
                             }
                         }
                         ?>
@@ -372,8 +364,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo "Forced To";
                             }else if($row->reason_for_very_first_sex == 'dontknow'){
                                 echo "Don't Know";
-                            }else if($row->reason_for_very_first_sex == 'refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->reason_for_very_first_sex);
                             }
                         }
                         ?>
@@ -396,8 +388,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo (int)$row->no_of_sexual_partners." Person";
                             }else if($row->no_of_sexual_partners=='dontknow'){
                                 echo "Don't Know";
-                            }else if($row->no_of_sexual_partners=='refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->no_of_sexual_partners);
                             }
                         }
                         ?>
@@ -420,8 +412,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo (int)$row->no_of_sexual_partners_in_last_six_months." Person";
                             }else if($row->no_of_sexual_partners_in_last_six_months=='dontknow'){
                                 echo "Don't Know";
-                            }else if($row->no_of_sexual_partners_in_last_six_months=='refused'){
-                                echo "Refused";
+                            }else{
+                                echo ucwords($row->no_of_sexual_partners_in_last_six_months);
                             }
                         }
                         ?>
@@ -444,8 +436,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                     echo (int)$row->age_of_main_sexual_partner_at_last_birthday." Year";
                                 }else if($row->age_of_main_sexual_partner_at_last_birthday=='dontknow'){
                                     echo "Don't Know";
-                                }else if($row->age_of_main_sexual_partner_at_last_birthday=='refused'){
-                                    echo "Refused";
+                                }else{
+                                    echo ucwords($row->age_of_main_sexual_partner_at_last_birthday);
                                 }
                             }
                         ?>
@@ -478,8 +470,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                     echo ">10 Years Younger";
                                 }else if($row->age_diff_of_main_sexual_partner=='dontknow'){
                                     echo "Don't Know";
-                                }else if($row->age_diff_of_main_sexual_partner=='refused'){
-                                    echo "Refused";
+                                }else{
+                                    echo ucwords($row->age_diff_of_main_sexual_partner);
                                 }
                             }
                         ?>
@@ -546,6 +538,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                     echo (int)$row->no_of_times_been_pregnant." Times";
                                 }else if((int)$row->no_of_times_been_pregnant == 1){
                                     echo (int)$row->no_of_times_been_pregnant." Time";
+                                }else{
+                                    echo ucwords($row->no_of_times_been_pregnant);
                                 }
                             }
                         ?>
@@ -693,6 +687,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                     echo "Don't Know";
                                 }else if($row->has_patient_had_drink_with_alcohol_in_last_six_months=='refusedtoanswer'){
                                     echo "Refused To Answer";
+                                }else{
+                                    echo ucwords($row->has_patient_had_drink_with_alcohol_in_last_six_months);
                                 }
                             }
                         ?>

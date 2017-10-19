@@ -687,3 +687,8 @@ alter table facility add FOREIGN KEY(district) REFERENCES location_details(locat
 
 --Pal 17/10/2017
 INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status`) VALUES (NULL, 'Response Not Available', 'active');
+
+--Pal 19/10/2017
+ALTER TABLE `clinic_risk_assessment` CHANGE `age_at_very_first_sex` `age_at_very_first_sex` VARCHAR(45) NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `no_of_times_been_pregnant` `no_of_times_been_pregnant` VARCHAR(45) NULL DEFAULT NULL;

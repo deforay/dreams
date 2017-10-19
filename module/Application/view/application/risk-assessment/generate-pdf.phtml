@@ -105,7 +105,9 @@ $common = new \Application\Service\CommonService();
                $education = "Secondary/Post-Secondary";
             }else if($data['patient_degree']=='university'){
                $education = "University/College";
-            }
+            }else{
+	       $education = ucwords($data['patient_degree']);
+	    }
         }
         $agtAtFirstMarriage = '';
         if($data['age_at_first_marriage']!= null && trim($data['age_at_first_marriage'])!= ''){
@@ -135,16 +137,8 @@ $common = new \Application\Service\CommonService();
                 $patientCurrentMaritalStatus = "Married/Cohabiting";
             }else if($data['current_marital_status'] == 'nevermarried'){
                 $patientCurrentMaritalStatus = "Never Married/Cohabiting";
-            }else if($data['current_marital_status'] == 'widowed'){
-                $patientCurrentMaritalStatus = "widowed";
-            }else if($data['current_marital_status'] == 'separated'){
-                $patientCurrentMaritalStatus = "Separated";
-            }else if($data['current_marital_status'] == 'divorced'){
-                $patientCurrentMaritalStatus = "Divorced";
             }else if($data['current_marital_status'] == 'dontknow'){
                 $patientCurrentMaritalStatus = "Don't Know";
-            }else if($data['current_marital_status'] == 'refused'){
-                $patientCurrentMaritalStatus = "Refused";
             }else{
 		$patientCurrentMaritalStatus = ucwords($data['current_marital_status']);
 	    }
@@ -163,8 +157,8 @@ $common = new \Application\Service\CommonService();
                 $timeofLastHIVTest = "> 12 months";
             }else if($data['time_of_last_HIV_test'] == 'dontknow'){
                 $timeofLastHIVTest = "Don't Know";
-            }else if($data['time_of_last_HIV_test'] == 'refused'){
-                $timeofLastHIVTest = "Refused";
+            }else{
+                $timeofLastHIVTest = ucwords($data['time_of_last_HIV_test']);
             }
         }
         $resultofLastHIVTest = '';
@@ -175,12 +169,10 @@ $common = new \Application\Service\CommonService();
                 $resultofLastHIVTest = "HIV+";
             }else if($data['last_HIV_test_status'] == 'hivneg'){
                 $resultofLastHIVTest = "HIV-";
-            }else if($data['last_HIV_test_status'] == 'indeterminate'){
-                $resultofLastHIVTest = "Indeterminate";
             }else if($data['last_HIV_test_status'] == 'dontknow'){
                 $resultofLastHIVTest = "Don't Know";
-            }else if($data['last_HIV_test_status'] == 'refused'){
-                $resultofLastHIVTest = "Refused";
+            }else{
+                $resultofLastHIVTest = ucwords($data['last_HIV_test_status']);
             }
         }
         $partnerHIVTestStatus = '';
@@ -191,8 +183,8 @@ $common = new \Application\Service\CommonService();
                 $partnerHIVTestStatus = "HIV-";
             }else if($data['partner_HIV_test_status'] == 'idonotknow'){
                 $partnerHIVTestStatus = "I Do Not Know";
-            }else if($data['partner_HIV_test_status'] == 'refused'){
-                $partnerHIVTestStatus = "Refused";
+            }else{
+                $partnerHIVTestStatus = ucwords($data['partner_HIV_test_status']);
             }
         }
         $ageAtVeryFirstSex = '';
@@ -201,7 +193,9 @@ $common = new \Application\Service\CommonService();
                 $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Years";    
             }else if((int)$data['age_at_very_first_sex'] == 1){
                 $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Year";
-            }
+            }else{
+		$ageAtVeryFirstSex = ucwords($data['age_at_very_first_sex']);
+	    }
         }
         $reasonForVerFirstSex = '';
         if($data['reason_for_very_first_sex']!= null && trim($data['reason_for_very_first_sex'])!= ''){
@@ -211,8 +205,8 @@ $common = new \Application\Service\CommonService();
                 $reasonForVerFirstSex = "Forced To";
             }else if($data['reason_for_very_first_sex'] == 'dontknow'){
                 $reasonForVerFirstSex = "Don't Know";
-            }else if($data['reason_for_very_first_sex'] == 'refused'){
-                $reasonForVerFirstSex = "Refused";
+            }else{
+                $reasonForVerFirstSex = ucwords($data['reason_for_very_first_sex']);
             }
         }
         $noofSexualPartners = '';
@@ -223,8 +217,8 @@ $common = new \Application\Service\CommonService();
                 $noofSexualPartners = (int)$data['no_of_sexual_partners']." Person";
             }else if($data['no_of_sexual_partners']=='dontknow'){
                 $noofSexualPartners = "Don't Know";
-            }else if($data['no_of_sexual_partners']=='refused'){
-                $noofSexualPartners = "Refused";
+            }else{
+                $noofSexualPartners = ucwords($data['no_of_sexual_partners']);
             }
         }
         $noofSexualPartnersinLastSixMonths = '';
@@ -235,8 +229,8 @@ $common = new \Application\Service\CommonService();
                 $noofSexualPartnersinLastSixMonths = (int)$data['no_of_sexual_partners_in_last_six_months']." Person";
             }else if($data['no_of_sexual_partners_in_last_six_months']=='dontknow'){
                 $noofSexualPartnersinLastSixMonths = "Don't Know";
-            }else if($data['no_of_sexual_partners_in_last_six_months']=='refused'){
-                $noofSexualPartnersinLastSixMonths = "Refused";
+            }else{
+                $noofSexualPartnersinLastSixMonths = ucwords($data['no_of_sexual_partners_in_last_six_months']);
             }
         }
         $ageofMainSexualPartneratLastBirthday = '';
@@ -247,8 +241,8 @@ $common = new \Application\Service\CommonService();
                 $ageofMainSexualPartneratLastBirthday = (int)$data['age_of_main_sexual_partner_at_last_birthday']." Year";
             }else if($data['age_of_main_sexual_partner_at_last_birthday']=='dontknow'){
                 $ageofMainSexualPartneratLastBirthday = "Don't Know";
-            }else if($data['age_of_main_sexual_partner_at_last_birthday']=='refused'){
-                $ageofMainSexualPartneratLastBirthday = "Refused";
+            }else{
+                $ageofMainSexualPartneratLastBirthday = ucwords($data['age_of_main_sexual_partner_at_last_birthday']);
             }
         }
         $ageDiffofMainSexualPartner = '';
@@ -269,8 +263,8 @@ $common = new \Application\Service\CommonService();
                 $ageDiffofMainSexualPartner = ">10 Years Younger";
             }else if($data['age_diff_of_main_sexual_partner']=='dontknow'){
                 $ageDiffofMainSexualPartner = "Don't Know";
-            }else if($data['age_diff_of_main_sexual_partner']=='refused'){
-                $ageDiffofMainSexualPartner = "Refused";
+            }else{
+                $ageDiffofMainSexualPartner = ucwords($data['age_diff_of_main_sexual_partner']);
             }
         }
         $ispartnerCircumcised = '';
@@ -301,7 +295,9 @@ $common = new \Application\Service\CommonService();
                 $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Times";
             }else if((int)$data['no_of_times_been_pregnant'] == 1){
                 $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Time";
-            }
+            }else{
+		$patientNoofTimesBeenPregnant = ucwords($data['no_of_times_been_pregnant']);
+	    }
         }
 	$noofTimesCondomUsedBeforePregnancy = '';
 	if($data['no_of_times_condom_used_before_pregnancy']!= null && trim($data['no_of_times_condom_used_before_pregnancy'])!= ''){
@@ -363,6 +359,8 @@ $common = new \Application\Service\CommonService();
 		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Don't Know";
 	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='refusedtoanswer'){
 		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Refused To Answer";
+	    }else{
+		$hasPatientHadDrinkWithAlcoholinLastSixMonths = ucwords($data['has_patient_had_drink_with_alcohol_in_last_six_months']);
 	    }
 	}
 	$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = '';
