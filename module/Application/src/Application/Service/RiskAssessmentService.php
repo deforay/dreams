@@ -107,16 +107,18 @@ class RiskAssessmentService {
                             $patientDegree = 'Secondary/Post-Secondary';
                         }else if(isset($aRow['patient_degree']) && $aRow['patient_degree']!= null && trim($aRow['patient_degree'])!= '' && $aRow['patient_degree']=='university'){
                             $patientDegree = 'University/College';
+                        }else if(isset($aRow['patient_degree']) && $aRow['patient_degree']!= null && trim($aRow['patient_degree'])!= ''){
+                            $patientDegree = ucwords($aRow['patient_degree']);
                         }
                         $ageAtFirstMarriage = '';
-                        if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage']=='dontknow'){
-                            $ageAtFirstMarriage = 'Don\'t Know';
-                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage']=='refused'){
-                           $ageAtFirstMarriage = 'Refused'; 
-                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage'] >1){
+                        if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && (int)$aRow['age_at_first_marriage'] >1){
                            $ageAtFirstMarriage = $aRow['age_at_first_marriage'].' Years';
-                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage'] == 1){
+                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && (int)$aRow['age_at_first_marriage'] == 1){
                            $ageAtFirstMarriage = $aRow['age_at_first_marriage'].' Year';
+                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= '' && $aRow['age_at_first_marriage']=='dontknow'){
+                            $ageAtFirstMarriage = 'Don\'t Know';
+                        }else if(isset($aRow['age_at_first_marriage']) && $aRow['age_at_first_marriage']!= null && trim($aRow['age_at_first_marriage'])!= ''){
+                            $ageAtFirstMarriage = ucwords($aRow['age_at_first_marriage']);
                         }
                         $everBeenWidowed = '';
                         if(isset($aRow['patient_ever_been_widowed']) && $aRow['patient_ever_been_widowed']!= null && trim($aRow['patient_ever_been_widowed'])!= '' && $aRow['patient_ever_been_widowed']=='dontknow'){
@@ -147,8 +149,8 @@ class RiskAssessmentService {
                            $timeOfLastHIVTest = '> 12 months'; 
                         }else if(isset($aRow['time_of_last_HIV_test']) && $aRow['time_of_last_HIV_test']!= null && trim($aRow['time_of_last_HIV_test'])!= '' && $aRow['time_of_last_HIV_test']=='dontknow'){
                            $timeOfLastHIVTest = 'Don\'t Know';
-                        }else if(isset($aRow['time_of_last_HIV_test']) && $aRow['time_of_last_HIV_test']!= null && trim($aRow['time_of_last_HIV_test'])!= '' && $aRow['time_of_last_HIV_test']=='refused'){
-                           $timeOfLastHIVTest = 'Refused';
+                        }else if(isset($aRow['time_of_last_HIV_test']) && $aRow['time_of_last_HIV_test']!= null && trim($aRow['time_of_last_HIV_test'])!= ''){
+                           $timeOfLastHIVTest = ucwords($aRow['time_of_last_HIV_test']);
                         }
                         $resultofLastHIVTest = '';
                         if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='didnotreceive'){
@@ -169,14 +171,16 @@ class RiskAssessmentService {
                             $partnerHIVTestStatus = 'HIV-';
                         }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='idonotknow'){
                             $partnerHIVTestStatus = 'I Do Not Know';
-                        }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='refused'){
-                            $partnerHIVTestStatus = 'Refused';
+                        }else if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= ''){
+                            $partnerHIVTestStatus = ucwords($aRow['partner_HIV_test_status']);
                         }
                         $ageAtVeryFirstSex = '';
-                        if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['age_at_very_first_sex'] > 1){
+                        if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && (int)$aRow['age_at_very_first_sex'] > 1){
                             $ageAtVeryFirstSex = $aRow['age_at_very_first_sex'].' Years';
-                        }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && $aRow['age_at_very_first_sex'] == 1){
+                        }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && (int)$aRow['age_at_very_first_sex'] == 1){
                             $ageAtVeryFirstSex = $aRow['age_at_very_first_sex'].' Year';
+                        }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= ''){
+                           $ageAtVeryFirstSex = ucwords($aRow['age_at_very_first_sex']); 
                         }
                         $reasonForVeryFirstSex = '';
                         if(isset($aRow['reason_for_very_first_sex']) && $aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= '' && $aRow['reason_for_very_first_sex'] == 'wantedto'){
@@ -185,38 +189,38 @@ class RiskAssessmentService {
                           $reasonForVeryFirstSex = 'Forced To';  
                         }else if(isset($aRow['reason_for_very_first_sex']) && $aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= '' && $aRow['reason_for_very_first_sex'] == 'dontknow'){
                           $reasonForVeryFirstSex = 'Don\'t Know';  
-                        }else if(isset($aRow['reason_for_very_first_sex']) && $aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= '' && $aRow['reason_for_very_first_sex'] == 'refused'){
-                          $reasonForVeryFirstSex = 'Refused';
+                        }else if(isset($aRow['reason_for_very_first_sex']) && $aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= ''){
+                          $reasonForVeryFirstSex = ucwords($aRow['reason_for_very_first_sex']);
                         }
                         $noofSexualPartners = '';
-                        if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] > 1){
+                        if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && (int)$aRow['no_of_sexual_partners'] > 1){
                             $noofSexualPartners = $aRow['no_of_sexual_partners'].' Persons';
-                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] == 1){
+                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && (int)$aRow['no_of_sexual_partners'] == 1){
                             $noofSexualPartners = $aRow['no_of_sexual_partners'].' Person';
                         }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] == 'dontknow'){
                             $noofSexualPartners = 'Don\'t Know';
-                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= '' && $aRow['no_of_sexual_partners'] == 'refused'){
-                            $noofSexualPartners = 'Refused';
+                        }else if(isset($aRow['no_of_sexual_partners']) && $aRow['no_of_sexual_partners']!= null && trim($aRow['no_of_sexual_partners'])!= ''){
+                            $noofSexualPartners = ucwords($aRow['no_of_sexual_partners']);
                         }
                         $noofSexualPartnersInLastSixMonths = '';
-                        if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] > 1){
+                        if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && (int)$aRow['no_of_sexual_partners_in_last_six_months'] > 1){
                             $noofSexualPartnersInLastSixMonths = $aRow['no_of_sexual_partners_in_last_six_months'].' Persons';
-                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] == 1){
+                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && (int)$aRow['no_of_sexual_partners_in_last_six_months'] == 1){
                             $noofSexualPartnersInLastSixMonths = $aRow['no_of_sexual_partners_in_last_six_months'].' Person';
                         }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] == 'dontknow'){
                             $noofSexualPartnersInLastSixMonths = 'Don\'t Know';
-                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= '' && $aRow['no_of_sexual_partners_in_last_six_months'] == 'refused'){
-                            $noofSexualPartnersInLastSixMonths = 'Refused';
+                        }else if(isset($aRow['no_of_sexual_partners_in_last_six_months']) && $aRow['no_of_sexual_partners_in_last_six_months']!= null && trim($aRow['no_of_sexual_partners_in_last_six_months'])!= ''){
+                            $noofSexualPartnersInLastSixMonths = ucwords($aRow['no_of_sexual_partners_in_last_six_months']);
                         }
                         $ageofMainSexualPartnerAtLastBirthday = '';
-                        if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] > 1){
+                        if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && (int)$aRow['age_of_main_sexual_partner_at_last_birthday'] > 1){
                             $ageofMainSexualPartnerAtLastBirthday = $aRow['age_of_main_sexual_partner_at_last_birthday'].' Years';
-                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 1){
+                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && (int)$aRow['age_of_main_sexual_partner_at_last_birthday'] == 1){
                             $ageofMainSexualPartnerAtLastBirthday = $aRow['age_of_main_sexual_partner_at_last_birthday'].' Year';
                         }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 'dontknow'){
                             $ageofMainSexualPartnerAtLastBirthday = 'Don\'t Know';
-                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= '' && $aRow['age_of_main_sexual_partner_at_last_birthday'] == 'refused'){
-                            $ageofMainSexualPartnerAtLastBirthday = 'Refused';
+                        }else if(isset($aRow['age_of_main_sexual_partner_at_last_birthday']) && $aRow['age_of_main_sexual_partner_at_last_birthday']!= null && trim($aRow['age_of_main_sexual_partner_at_last_birthday'])!= ''){
+                            $ageofMainSexualPartnerAtLastBirthday = ucwords($aRow['age_of_main_sexual_partner_at_last_birthday']);
                         }
                         $ageDiffofMainSexualPartner = '';
                         if(isset($aRow['age_diff_of_main_sexual_partner']) && $aRow['age_diff_of_main_sexual_partner']!= null && trim($aRow['age_diff_of_main_sexual_partner'])!= '' && $aRow['age_diff_of_main_sexual_partner'] == 'lt5yearolder'){
@@ -235,8 +239,8 @@ class RiskAssessmentService {
                             $ageDiffofMainSexualPartner = '>10 Years Younger';
                         }else if(isset($aRow['age_diff_of_main_sexual_partner']) && $aRow['age_diff_of_main_sexual_partner']!= null && trim($aRow['age_diff_of_main_sexual_partner'])!= '' && $aRow['age_diff_of_main_sexual_partner'] == 'dontknow'){
                             $ageDiffofMainSexualPartner = 'Don\'t Know';
-                        }else if(isset($aRow['age_diff_of_main_sexual_partner']) && $aRow['age_diff_of_main_sexual_partner']!= null && trim($aRow['age_diff_of_main_sexual_partner'])!= '' && $aRow['age_diff_of_main_sexual_partner'] == 'refused'){
-                            $ageDiffofMainSexualPartner = 'Refused';
+                        }else if(isset($aRow['age_diff_of_main_sexual_partner']) && $aRow['age_diff_of_main_sexual_partner']!= null && trim($aRow['age_diff_of_main_sexual_partner'])!= ''){
+                            $ageDiffofMainSexualPartner = ucwords($aRow['age_diff_of_main_sexual_partner']);
                         }
                         $isPatientCircumcised = '';
                         if(isset($aRow['is_partner_circumcised']) && $aRow['is_partner_circumcised']!= null && trim($aRow['is_partner_circumcised'])!= '' && $aRow['is_partner_circumcised'] == 'dontknow'){
@@ -257,10 +261,12 @@ class RiskAssessmentService {
                            $lastTimeofReceivingGiftForSex = ucwords($aRow['last_time_of_receiving_gift_for_sex']);
                         }
                         $noofTimesBeenPregnant = '';
-                        if(isset($aRow['no_of_times_been_pregnant']) && $aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && $aRow['no_of_times_been_pregnant']>1){
+                        if(isset($aRow['no_of_times_been_pregnant']) && $aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && (int)$aRow['no_of_times_been_pregnant']>1){
                            $noofTimesBeenPregnant = $aRow['no_of_times_been_pregnant'].' Times';
-                        }else if(isset($aRow['no_of_times_been_pregnant']) && $aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && $aRow['no_of_times_been_pregnant']==1){
+                        }else if(isset($aRow['no_of_times_been_pregnant']) && $aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && (int)$aRow['no_of_times_been_pregnant']==1){
                            $noofTimesBeenPregnant = $aRow['no_of_times_been_pregnant'].' Time';
+                        }else if(isset($aRow['no_of_times_been_pregnant']) && $aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= ''){
+                           $noofTimesBeenPregnant = ucwords($aRow['no_of_times_been_pregnant']);
                         }
                         $noofTimesCondomUsedBeforePregnancy = '';
                         if(isset($aRow['no_of_times_condom_used_before_pregnancy']) && $aRow['no_of_times_condom_used_before_pregnancy']!= null && trim($aRow['no_of_times_condom_used_before_pregnancy'])!= '' && $aRow['no_of_times_condom_used_before_pregnancy'] == 'dontknow'){
@@ -299,9 +305,9 @@ class RiskAssessmentService {
                            $hasPatientEverReceivedVaccineToPreventHPV = ucwords($aRow['has_patient_ever_received_vaccine_to_prevent_HPV']);
                         }
                         $hasPatientHadDrinkWithAlcoholInLastSixMonths = '';
-                        if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] > 1){
+                        if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && (int)$aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] > 1){
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'].' Days';
-                        }else if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] == 1){
+                        }else if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && (int)$aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] == 1){
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'].' Day'; 
                         }else if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] == 'havenotdrink'){
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = 'Haven\'t Had a Drink';
@@ -309,6 +315,8 @@ class RiskAssessmentService {
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = 'Don\'t Know';
                         }else if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= '' && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months'] == 'refusedtoanswer'){
                            $hasPatientHadDrinkWithAlcoholInLastSixMonths = 'Refused To Answer';
+                        }else if(isset($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']) && $aRow['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($aRow['has_patient_had_drink_with_alcohol_in_last_six_months'])!= ''){
+                           $hasPatientHadDrinkWithAlcoholInLastSixMonths = ucwords($aRow['has_patient_had_drink_with_alcohol_in_last_six_months']); 
                         }
                         $hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion = '';
                         if(isset($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']) && $aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']!= null && trim($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'])!= '' && $aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 'daily'){
