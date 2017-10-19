@@ -683,6 +683,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
             $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
+        }else if(splitsUrl[1]=='study-files'){
+           $(".studyFilesMenu").addClass("active");
         }else{
             $(".dashboardMenu").addClass("active");
         }
