@@ -41,7 +41,7 @@ class RoleService {
     
     public function getAllRoles($parameters){
         $roleDb = $this->sm->get('RoleTable');
-        return $roleDb->fetchAllRoles($parameters);
+       return $roleDb->fetchAllRoles($parameters);
     }
     
     public function getRole($roleId){

@@ -223,7 +223,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                             </div>
                         </li>
                     <?php } ?>
-                    
+                    <li class="studyFilesMenu menuAll">
+                        <a href="<?php echo $this->url('study-files'); ?>" class="collapsible-header studyFilesMenu menuAll"><i class="zmdi zmdi-cloud-upload"></i> Study Files</a>
+                    </li>
                     <?php
                     $countries = $this->GetActiveCountries('layout','');
                     if(isset($countries) && count($countries)>0){
@@ -253,7 +255,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <a class="countryAncsiteMenu<?php echo $country['country_id']; ?>" href="/anc-site/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-hospital"></i> Manage ANC Sites</a>
                                                             </li>
                                                             <li class="ancAsanteResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="ancAsanteResultMenu<?php echo $country['country_id']; ?>" href="/anc-asante-result/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-download"></i> ANC Asante Result</a>
+                                                                <a class="ancAsanteResultMenu<?php echo $country['country_id']; ?>" href="/anc-asante-result/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Asante Result</a>
                                                             </li>
                                                             <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>

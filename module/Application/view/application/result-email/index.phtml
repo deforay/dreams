@@ -60,101 +60,101 @@
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="resultMail" name="resultMail" method="post" action="<?php echo $this->url('result-email-send'); ?>">
-        <div class="card">
-            <div class="row" style="padding-top:10px;">
-                <div class="col s6">
-                    <div class="input-field col m12 s12">
-                        <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="" title="Please enter specimen collected date" onclick="selectDate();" readonly>
-                        <label for="specimenCollectedDate">Specimen Collected Date </label>
+            <div class="card">
+                <div class="row" style="padding-top:10px;">
+                    <div class="col s6">
+                        <div class="input-field col m12 s12">
+                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="" title="Please enter specimen collected date" onclick="selectDate();" readonly>
+                            <label for="specimenCollectedDate">Specimen Collected Date </label>
+                        </div>
+                    </div>
+                   <div class="col s6">
+                        <div class="input-field col m12 s12">
+                           <select id="facility" name="facility" class="material-select" title="Please select lab/facility">
+                                <option value="">All</option>
+                               <?php
+                               foreach($facilityList as $facility){
+                               ?>
+                                 <option value="<?php echo base64_encode($facility['facility_id']); ?>"><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
+                               <?php } ?>
+                            </select>
+                            <label for="facility">Lab/Facility</label>
+                        </div>
                     </div>
                 </div>
-               <div class="col s6">
-                    <div class="input-field col m12 s12">
-                       <select id="facility" name="facility" class="material-select" title="Please select lab/facility">
-                            <option value="">All</option>
-                           <?php
-                           foreach($facilityList as $facility){
-                           ?>
-                             <option value="<?php echo base64_encode($facility['facility_id']); ?>"><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
-                           <?php } ?>
-                        </select>
-                        <label for="facility">Lab/Facility</label>
+                <div class="row">
+                    <div class="col s6">
+                        <div class="input-field col m12 s12">
+                           <select id="mailSentStatus" name="mailSentStatus" class="material-select" title="Please select mail sent status">
+                               <option value="">All Specimen</option>
+                               <option value="no" selected>Specimen Not Yet Mailed</option>
+                               <option value="yes">Mailed Specimen</option>
+                            </select>
+                            <label for="mailSentStatus">Mail Sent Status</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col s6">
-                    <div class="input-field col m12 s12">
-                       <select id="mailSentStatus" name="mailSentStatus" class="material-select" title="Please select mail sent status">
-                           <option value="">All Specimen</option>
-                           <option value="no" selected>Specimen Not Yet Mailed</option>
-                           <option value="yes">Mailed Specimen</option>
-                        </select>
-                        <label for="mailSentStatus">Mail Sent Status</label>
+                <div class="col s12" style="text-align:center;margin-bottom:20px;">
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                        <div class="input-field col m8 s8">
+                            <input id="subject" name="subject" type="text" class="validate isRequired" title="Please enter subject">
+                            <label for="subject" class="">Subject *</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col s12" style="text-align:center;margin-bottom:20px;">
-                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
-            </div>
-            <div class="row" style="margin-bottom:0;">
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                        <div class="input-field col m8 s8">
+                            <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site" onchange="searchDataReporting('change');">
+                                <option value=""> -- Select -- </option>
+                               <?php
+                               foreach($ancList as $anc){
+                               ?>
+                                 <option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+                               <?php } ?>
+                            </select>
+                            <label for="anc">ANC Site (To)*</label>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                        <div class="input-field col m8 s8">
+                            <input id="cc" name="cc" type="text" class="validate " title="Please enter CC">
+                            <label for="cc" class="">CC </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                        <div class="input-field col m8 s8">
+                            <input id="bcc" name="bcc" type="text" class="validate " title="Please enter BCC">
+                            <label for="bcc" class="">BCC </label>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col s12">
+                        <div class="input-field col m8 s8">
+                            <textarea id="message" name="message" class="materialize-textarea isRequired" title="Please enter message"></textarea>
+                            <label for="message">Message *</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 dataCollectionSection"></div>
+                </div>
                 <div class="col s12">
-                    <div class="input-field col m8 s8">
-                        <input id="subject" name="subject" type="text" class="validate isRequired" title="Please enter subject">
-                        <label for="subject" class="">Subject *</label>
-                    </div>
+                    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
+                    <input type="hidden" name="pdfFile" id="pdfFile" />
+                    <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">SEND </a>&nbsp;&nbsp;
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;">
-                <div class="col s12">
-                    <div class="input-field col m8 s8">
-                        <select id="anc" name="anc" class="material-select isRequired" title="Please select anc site" onchange="searchDataReporting('change');">
-                            <option value=""> -- Select -- </option>
-                           <?php
-                           foreach($ancList as $anc){
-                           ?>
-                             <option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
-                           <?php } ?>
-                        </select>
-                        <label for="anc">ANC Site (To)*</label>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="row" style="margin-bottom:0;">
-                <div class="col s12">
-                    <div class="input-field col m8 s8">
-                        <input id="cc" name="cc" type="text" class="validate " title="Please enter CC">
-                        <label for="cc" class="">CC </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="margin-bottom:0;">
-                <div class="col s12">
-                    <div class="input-field col m8 s8">
-                        <input id="bcc" name="bcc" type="text" class="validate " title="Please enter BCC">
-                        <label for="bcc" class="">BCC </label>
-                    </div>
-                </div>
-            </div>-->
-            <div class="row">
-                <div class="col s12">
-                    <div class="input-field col m8 s8">
-                        <textarea id="message" name="message" class="materialize-textarea isRequired" title="Please enter message"></textarea>
-                        <label for="message">Message *</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 dataCollectionSection"></div>
-            </div>
-            <div class="col s12">
-                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
-                <input type="hidden" name="pdfFile" id="pdfFile" />
-                <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">SEND </a>&nbsp;&nbsp;
-            </div>
-        </div>
         </form>
     </div>
 </div>

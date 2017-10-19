@@ -35,6 +35,7 @@ use Application\Model\ClinicRiskAssessmentTable;
 use Application\Model\ProvinceTable;
 use Application\Model\AncRapidRecencyTable;
 use Application\Model\LocationDetailsTable;
+use Application\Model\StudyFilesTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -300,6 +301,10 @@ class Module{
                 },'LocationDetailsTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new LocationDetailsTable($dbAdapter);
+                    return $table;
+                },'StudyFilesTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new StudyFilesTable($dbAdapter);
                     return $table;
                 }
             ),

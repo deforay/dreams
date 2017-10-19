@@ -263,7 +263,7 @@ class CommonService {
             }else{
                //remove file from temporary
                 $this->removeDirectory(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$params['pdfFile']);
-                $alertContainer->msg = 'Invalid (To) email id';
+                $alertContainer->msg = 'Invalid (TO) email id';
               return false;
             }
         } catch (Exception $e) {
@@ -320,6 +320,45 @@ class CommonService {
             }
             return $newDate .= $mon . "-" . $dateArray[0];
         }
+    }
+    
+    public function uploadStudyFile($params){
+        $alertContainer = new Container('alert');
+        $loginContainer = new Container('user');
+        $studyFilesDb = $this->sm->get('StudyFilesTable');
+        if(!file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files") && !is_dir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files")) {
+            mkdir(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files");
+        }
+        $data = array(
+                      'file_description'=>trim($params['description']),
+                      'uploaded_on'=>$this->getDateTime(),
+                      'uploaded_by'=>$loginContainer->userId
+                    );
+        $studyFilesDb->insert($data);
+        $studyFileId = $studyFilesDb->lastInsertValue;
+        //file upload section
+        $studyFile = '';
+        if(isset($_FILES['studyFile']['name']) && !empty($_FILES['studyFile']['name'])) {
+            $supportedFormatArray = array('txt','csv','xls','xlsx','doc','pdf');
+	    $fileExtension = pathinfo($_FILES['studyFile']['name'], PATHINFO_EXTENSION);
+	    if(in_array($fileExtension,$supportedFormatArray)){
+	        $studyFile = 'study-'.$studyFileId.".".$fileExtension;
+	        move_uploaded_file($_FILES["studyFile"]["tmp_name"], UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files" . DIRECTORY_SEPARATOR . $studyFile);
+	        $studyFilesDb->update(array('file_name'=>$studyFile),array('study_file_id'=>$studyFileId));
+                $alertContainer->msg = 'Study file has been uploaded successfully.';
+               return true;
+            }else{
+                $alertContainer->msg = 'The format of the file you\'ve submitted is not among the formats supported by DREAMS. The supported formats include .txt, .csv, .xls, .xlsx, .doc, .pdf';
+               return false;
+            }
+        }else{
+           return false; 
+        }
+    }
+    
+    public function getStudyFiles($parameters){
+        $studyFilesDb = $this->sm->get('StudyFilesTable');
+       return $studyFilesDb->fetchStudyFiles($parameters);
     }
 }
 

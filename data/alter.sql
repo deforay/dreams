@@ -692,3 +692,20 @@ INSERT INTO `occupation_type` (`occupation_id`, `occupation`, `occupation_status
 ALTER TABLE `clinic_risk_assessment` CHANGE `age_at_very_first_sex` `age_at_very_first_sex` VARCHAR(45) NULL DEFAULT NULL;
 
 ALTER TABLE `clinic_risk_assessment` CHANGE `no_of_times_been_pregnant` `no_of_times_been_pregnant` VARCHAR(45) NULL DEFAULT NULL;
+
+CREATE TABLE `study_files` (
+  `study_file_id` int(11) NOT NULL,
+  `file_name` varchar(500) DEFAULT NULL,
+  `file_description` text,
+  `uploaded_on` datetime DEFAULT NULL,
+  `uploaded_by` int(11) DEFAULT NULL
+)
+
+ALTER TABLE `study_files`
+  ADD PRIMARY KEY (`study_file_id`),
+  ADD KEY `added_by` (`uploaded_by`);
+  
+ALTER TABLE `study_files`
+  MODIFY `study_file_id` int(11) NOT NULL AUTO_INCREMENT
+  
+alter table study_files add FOREIGN KEY(uploaded_by) REFERENCES user(user_id)

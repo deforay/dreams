@@ -137,7 +137,7 @@ $alertContainer->nbPages = count($dataResult);
 	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
 	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
-	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent</h3><span style="text-align:left;">(This result suggests that patient was likely infected with the HIV virus within the last 6 months or so)</span>';
+	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent</h3><span style="text-align:left;">(This result suggests that patient was likely infected with the HIV virus within the last 12 months or so)</span>';
 	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'long term'){
 	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';

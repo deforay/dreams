@@ -5,37 +5,25 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
+use Application\Service\CommonService;
 
 
-class CountryTable extends AbstractTableGateway {
+class StudyFilesTable extends AbstractTableGateway {
 
-    protected $table = 'country';
+    protected $table = 'study_files';
 
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
     }
     
-    public function addCountryDetails($params){
-        $lastInsertedId = 0;
-        if(isset($params['countryName']) && trim($params['countryName'])!= ''){
-            $data=array('country_name'=>$params['countryName'],
-                        'country_code'=>$params['countryCode'],
-                        'comments'=>$params['comments'],
-                        'country_status'=>'active'
-                        );
-            $this->insert($data);
-            $lastInsertedId = $this->lastInsertValue;
-        }
-      return $lastInsertedId;
-    }
-    
-    public function fetchAllCountries($parameters){
+    public function fetchStudyFiles($parameters){
         $loginContainer = new Container('user');
-         /* Array of database columns which should be read and sent back to DataTables. Use a space where
+        $common = new CommonService();
+        /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-
-       $aColumns = array('country_name','country_code','country_status');
+        $aColumns = array('file_name','file_description',"DATE_FORMAT(s_f.uploaded_on,'%d-%b-%Y %H:%i:%s')",'user_name');
+        $orderColumns = array('file_name','file_description','s_f.uploaded_on','user_name');
 
        /*
         * Paging
@@ -54,7 +42,7 @@ class CountryTable extends AbstractTableGateway {
        if (isset($parameters['iSortCol_0'])) {
            for ($i = 0; $i < intval($parameters['iSortingCols']); $i++) {
                if ($parameters['bSortable_' . intval($parameters['iSortCol_' . $i])] == "true") {
-                   $sOrder .= $aColumns[intval($parameters['iSortCol_' . $i])] . " " . ( $parameters['sSortDir_' . $i] ) . ",";
+                   $sOrder .= $orderColumns[intval($parameters['iSortCol_' . $i])] . " " . ( $parameters['sSortDir_' . $i] ) . ",";
                }
            }
            $sOrder = substr_replace($sOrder, "", -1);
@@ -108,7 +96,13 @@ class CountryTable extends AbstractTableGateway {
         */
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
-       $sQuery = $sql->select()->from('country');
+       $sQuery = $sql->select()->from(array('s_f'=>'study_files'))
+                     ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
+                     ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
+        if($loginContainer->roleCode!= 'CSC'){
+           $sQuery = $sQuery->where('c_map.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+        }
+       
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
        }
@@ -116,12 +110,10 @@ class CountryTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);
        }
-
        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery); // Get the string of the Sql, instead of the Select-instance 
        //echo $sQueryStr;die;
        $rResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -134,64 +126,35 @@ class CountryTable extends AbstractTableGateway {
        $iFilteredTotal = count($aResultFilterTotal);
 
        /* Total data set length */
-       $iTotal = $this->select()->count();
+        $tQuery = $sql->select()->from(array('s_f'=>'study_files'))
+                      ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
+                      ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
+        if($loginContainer->roleCode!= 'CSC'){
+           $tQuery = $tQuery->where('c_map.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+        }
+       $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
+       $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       $iTotal = count($tResult);
        $output = array(
            "sEcho" => intval($parameters['sEcho']),
            "iTotalRecords" => $iTotal,
            "iTotalDisplayRecords" => $iFilteredTotal,
            "aaData" => array()
        );
-       
        foreach ($rResult as $aRow) {
-           $row = array();
-           $row[] = ucwords($aRow['country_name']);
-           $row[] = $aRow['country_code'];
-           $row[] = ucwords($aRow['country_status']);
-           if($loginContainer->hasViewOnlyAccess!= 'yes') {
-              $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
-           }
-          $output['aaData'][] = $row;
-       }
-       return $output;
-    }
-    
-    public function fetchCountry($countryId){
-        return $this->select(array('country_id'=>$countryId))->current();
-    }
-    
-    public function updateCountryDetails($params){
-        $countryId = 0;
-        if(isset($params['countryName']) && trim($params['countryName'])!= ''){
-            $countryId = base64_decode($params['countryId']);
-            $data=array('country_name'=>$params['countryName'],
-                        'country_code'=>$params['countryCode'],
-                        'comments'=>$params['comments'],
-                        'country_status'=>$params['countryStatus']
-                        );
-            $this->update($data,array('country_id'=>$countryId));
-        }
-      return $countryId;
-    }
-    
-    public function fetchActiveCountries($from,$country){
-        $loginContainer = new Container('user');
-        $dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
-        $countriesQuery = $sql->select()->from(array('c' => 'country'))
-                              ->where(array('c.country_status'=>'active'))
-                              ->order('c.country_name asc');
-        if(trim($from)!= 'login'){
-            if(is_array($country) && count($country) >0){
-                $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $country) . '")');
-            }else if(trim($country)!= '' && $country >0){
-                $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country));
-            }else{
-                if($loginContainer->roleCode!= 'CSC'){
-                    $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
-                }
+            $download = '';
+            if($aRow['file_name']!= null && trim($aRow['file_name'])!= '' && file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files". DIRECTORY_SEPARATOR . $aRow['file_name'])){
+              $download = '<a href="/uploads/study-files/'.$aRow['file_name'].'" title="Download" download="" style="font-size:18px;"><i class="zmdi zmdi-cloud-download"></i> </a>';
             }
-        }
-        $countriesQueryStr = $sql->getSqlStringForSqlObject($countriesQuery);
-       return $dbAdapter->query($countriesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+            $uploadedDate = explode(" ",$aRow['uploaded_on']);
+            $row = array();
+            $row[] = $aRow['file_name'];
+            $row[] = ucfirst($aRow['file_description']);
+            $row[] = $common->humanDateFormat($uploadedDate[0])." ".$uploadedDate[1];
+            $row[] = ucwords($aRow['user_name']);
+            $row[] = $download;
+            $output['aaData'][] = $row;
+       }
+      return $output;
     }
 }

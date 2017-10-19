@@ -15,7 +15,7 @@ use Zend\View\Model\ViewModel;
 
 class ResultEmailController extends AbstractActionController{
     public function indexAction(){
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
@@ -42,7 +42,6 @@ class ResultEmailController extends AbstractActionController{
             $commonService->sendResultMail($params);
             return $this->redirect()->toUrl('/result-email/'.$params['chosenCountry']);
         }
-      return new ViewModel();
     }
     
     public function getDataCollectionAction(){

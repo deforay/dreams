@@ -563,6 +563,15 @@ return array(
                         'action' => 'export-anc-asante-result'
                     ),
                 ),
+            ),'study-files' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/study-files[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\StudyFiles',
+                        'action' => 'index',
+                    ),
+                ),
             )
         ),
     ),
@@ -601,7 +610,8 @@ return array(
             'Application\Controller\ResultSms' => 'Application\Controller\ResultSmsController',
             'Application\Controller\Clinic' => 'Application\Controller\ClinicController',
             'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController',
-            'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController'
+            'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController',
+            'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController'
         ),
     ),
     'controller_plugins' => array(
