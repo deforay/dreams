@@ -328,7 +328,7 @@ if(isset($date) && trim($date)!= ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter final LAg avidity ODn">
+				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter LAg avidity ODn">
 				<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
 			    </div>
 			</div>
@@ -694,9 +694,10 @@ if(isset($date) && trim($date)!= ''){
        $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
        
        $('#search-items').on('keyup', function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+            var oTable = $('.dataTable').dataTable();
+            oTable.fnFilter($(this).val());
+        });
+       
        <?php if(trim($countryId)!= ''){ ?>
 	    var latestCollId = $('#lDCId').val();
 	    var countryCode = $('#cCode').val();
@@ -704,10 +705,9 @@ if(isset($date) && trim($date)!= ''){
 	    var siddigit = '0000';
             var biddigit = '000000';
 	    var ctxt = '' + count;
-	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
 	    //$('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
-	    $('#surveillanceId').val(surveillanceID);
-	    //$('#serialNo').html(' ('+surveillanceID+')');
+	    $('#surveillanceId').val(countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt);
+	    //$('#serialNo').html(' ('+countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt+')');
        <?php } ?>
     });
     
@@ -718,9 +718,8 @@ if(isset($date) && trim($date)!= ''){
 	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
 	    var siddigit = '0000';
 	    var ctxt = '' + count;
-	    var surveillanceID = countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt;
-	    $('#surveillanceId').val(surveillanceID);
-	    $('#serialNo').html(" ("+surveillanceID+")");
+	    $('#surveillanceId').val(countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt);
+	    $('#serialNo').html(" ("+countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt+")");
 	}else{
 	    $('#surveillanceId').val('');
 	    $('#serialNo').html('');

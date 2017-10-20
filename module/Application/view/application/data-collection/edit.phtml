@@ -105,7 +105,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
         <div class="card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION (<span id="serialNo"><?php echo $row->surveillance_id; ?></span>)</legend>
+               <legend>SURVEILLANCE INFORMATION <!--(<span id="serialNo">< ?php echo $row->surveillance_id; ?></span>)--></legend>
                 <div class="row" style="margin-bottom:0;">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
@@ -261,7 +261,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter final LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
+                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
                             <label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
                         </div>
                     </div>
