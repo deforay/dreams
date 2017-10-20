@@ -709,3 +709,8 @@ ALTER TABLE `study_files`
   MODIFY `study_file_id` int(11) NOT NULL AUTO_INCREMENT
   
 alter table study_files add FOREIGN KEY(uploaded_by) REFERENCES user(user_id)
+
+--Pal 20/10/2017
+ALTER TABLE `data_collection` ADD `date_of_form_completion` DATETIME NULL DEFAULT NULL AFTER `country`;
+
+ALTER TABLE `data_collection_event_log` ADD `date_of_form_completion` DATETIME NULL DEFAULT NULL AFTER `country`

@@ -90,10 +90,12 @@ class DataCollectionTable extends AbstractTableGateway {
 					);
 	    //status
 	    $status = 1;//complete
+	    $formCompletionDate = $common->getDateTime();
 	    if($rejectionReason == NULL){
-			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
-				$status = 4;//incomplete
-			}
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+		    $status = 4;//incomplete
+		    $formCompletionDate = NULL;
+		}
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -122,6 +124,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'asante_rapid_recency_assy'=>json_encode($asanteRapidRecencyAssay),
 			'comments'=>$params['comments'],
                         'country'=>$country,
+			'date_of_form_completion'=>$formCompletionDate,
 			'status'=>$status,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
@@ -497,12 +500,15 @@ class DataCollectionTable extends AbstractTableGateway {
 					);
 	    //status
 	    $status = 1;//complete
+	    $formCompletion = true;
+	    $formCompletionDate = $common->getDateTime();
 	    if($rejectionReason == NULL){
-			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
-			    $status = 4;//incomplete
-			}else if($params['formStatus'] == 2){
-			    $status = $params['formStatus'];//locked
-			}
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+		    $status = 4;//incomplete
+		    $formCompletionDate = NULL;
+		}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){
+		    $formCompletion = false;//submitted with the status 'completed/unlocked' with completed date
+		}
 	    }
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -534,6 +540,9 @@ class DataCollectionTable extends AbstractTableGateway {
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
                     );
+	    if($formCompletion){
+		$data['date_of_form_completion'] = $formCompletionDate;
+	    }
 	    $this->update($data,array('data_collection_id'=>$dataCollectionId));
 	    //Add a new row into data collection event log table
 	    $dbAdapter = $this->adapter;
