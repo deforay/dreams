@@ -714,3 +714,5 @@ alter table study_files add FOREIGN KEY(uploaded_by) REFERENCES user(user_id)
 ALTER TABLE `data_collection` ADD `date_of_form_completion` DATETIME NULL DEFAULT NULL AFTER `country`;
 
 ALTER TABLE `data_collection_event_log` ADD `date_of_form_completion` DATETIME NULL DEFAULT NULL AFTER `country`
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `lab` `anc` INT(11) NULL DEFAULT NULL; 

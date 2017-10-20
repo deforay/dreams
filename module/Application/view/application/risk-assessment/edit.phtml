@@ -418,11 +418,11 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             <div class="row" style="margin-bottom:0;">
                 <div class="col s8">
                     <input id="isPartnerCircumcisedYes" class="with-gap isRequired" name="isPartnerCircumcised" title="Don't leave 16th question" value="yes" type="radio" <?php echo ($row->is_partner_circumcised == 'yes')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp;&nbsp
+		    <label for="isPartnerCircumcisedYes" class="active">Yes </label>&nbsp;&nbsp;
                     <input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="no" type="radio" <?php echo ($row->is_partner_circumcised == 'no')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp;&nbsp
+		    <label for="isPartnerCircumcisedNo" class="active">No </label>&nbsp;&nbsp;
                     <input id="isPartnerCircumcisedDK" class="with-gap" name="isPartnerCircumcised" value="dontknow" type="radio" <?php echo ($row->is_partner_circumcised == 'dontknow')?'checked="checked"':''; ?>>
-		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp;&nbsp
+		    <label for="isPartnerCircumcisedDK" class="active">Don't Know </label>&nbsp;&nbsp;
                     <input id="isPartnerCircumcisedR" class="with-gap" name="isPartnerCircumcised" value="refused" type="radio" <?php echo ($row->is_partner_circumcised == 'refused')?'checked="checked"':''; ?>>
 		    <label for="isPartnerCircumcisedR" class="active">Refused </label>&nbsp;&nbsp;
 		    <input id="isPartnerCircumcisedRNA" class="with-gap" name="isPartnerCircumcised" value="response not available" type="radio" <?php echo ($row->is_partner_circumcised == 'response not available')?'checked="checked"':''; ?>>

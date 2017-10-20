@@ -1,7 +1,3 @@
-<?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
-?>
 <style>
     .card-header{
         background-color:#ff69b4;
@@ -34,6 +30,7 @@ $loginContainer = new Container('user');
                             <th>No. of Lab Tests</th>
                             <th>No. of Risk Questionnaires</th>
                             <th>No. of Complete Forms</th>
+                            <th>ANC Recency Result</th>
                             <th>Month - Year</th>
                         </tr>
                         </thead>
@@ -44,14 +41,15 @@ $loginContainer = new Container('user');
                         ?>
                             <tr>
                                 <td><?php echo ucwords($country['country_name']); ?></td>
-                                <td><?php echo ($country['totalDataPoints'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=nlt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalDataPoints'].'</a>':0; ?></td>
-                                <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=nrq&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
-                                <td><?php echo ($country['dataPointFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=nltc&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['dataPointFinalized'].'</a>':0; ?></td>
+                                <td><?php echo ($country['totalDataPoints'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalDataPoints'].'</a>':0; ?></td>
+                                <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-rq&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
+                                <td><?php echo ($country['dataPointFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-ltc&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['dataPointFinalized'].'</a>':0; ?></td>
+                                <td><?php echo (isset($country['recencyResultDone']) && $country['recencyResultDone'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=anc-rr&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['recencyResultDone'].'</a>':0; ?></td>
                                 <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                             </tr>
                         <?php } } else { ?>
                             <tr>
-                                <td colspan="5">No data available..</td>
+                                <td colspan="6">No data available..</td>
                             </tr>
                         <?php } ?>
                         </tbody>

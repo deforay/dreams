@@ -254,8 +254,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
-	  $sQuery = $sQuery->where(array('da_c.status'=>2));
+	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-ltc'){
+	    $sQuery = $sQuery->where(array('da_c.status'=>2));
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -297,11 +297,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
-	   $splitReportingMonthYear = explode("/",$parameters['date']);
-	   $tQuery = $tQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 'nltc'){
-	   $tQuery = $tQuery->where(array('da_c.status'=>2)); 
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -914,8 +909,9 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recencyResultDone' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -1539,9 +1535,10 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
 						))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(assessment_id)")),'left')
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('country'))
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recencyResultDone' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
