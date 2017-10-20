@@ -111,14 +111,12 @@ $common = new \Application\Service\CommonService();
         }
         $agtAtFirstMarriage = '';
         if($data['age_at_first_marriage']!= null && trim($data['age_at_first_marriage'])!= ''){
-            if($data['age_at_first_marriage'] == 'dontknow'){
-                $agtAtFirstMarriage = "Don't Know";
-            }else if($data['age_at_first_marriage'] == 'refused'){
-                $agtAtFirstMarriage = "Refused";
-            }else if((int)$data['age_at_first_marriage'] > 1){
+            if((int)$data['age_at_first_marriage'] > 1){
                $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Years";
             }else if((int)$data['age_at_first_marriage'] == 1){
                 $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Year";
+            }else if($data['age_at_first_marriage'] == 'dontknow'){
+                $agtAtFirstMarriage = "Don't Know";
             }else{
 		$agtAtFirstMarriage = ucwords($data['age_at_first_marriage']);
 	    }
