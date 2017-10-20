@@ -134,7 +134,7 @@ class RiskAssessmentService {
                         }else if(isset($aRow['current_marital_status']) && $aRow['current_marital_status']!= null && trim($aRow['current_marital_status'])!= '' && $aRow['current_marital_status']=='dontknow'){
                            $currentMaritalStatus = 'Don\'t Know';
                         }else if(isset($aRow['current_marital_status']) && $aRow['current_marital_status']!= null && trim($aRow['current_marital_status'])!= ''){
-                           $currentMaritalStatus = ucfirst($aRow['current_marital_status']);
+                           $currentMaritalStatus = ucwords($aRow['current_marital_status']);
                         }
                         $timeOfLastHIVTest = '';
                         if(isset($aRow['time_of_last_HIV_test']) && $aRow['time_of_last_HIV_test']!= null && trim($aRow['time_of_last_HIV_test'])!= '' && $aRow['time_of_last_HIV_test']=='nevertested'){
@@ -162,7 +162,7 @@ class RiskAssessmentService {
                         }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= '' && $aRow['last_HIV_test_status']=='dontknow'){
                             $resultofLastHIVTest = 'Don\'t Know';
                         }else if(isset($aRow['last_HIV_test_status']) && $aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= ''){
-                            $resultofLastHIVTest = ucfirst($aRow['last_HIV_test_status']);
+                            $resultofLastHIVTest = ucwords($aRow['last_HIV_test_status']);
                         }
                         $partnerHIVTestStatus = '';
                         if(isset($aRow['partner_HIV_test_status']) && $aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= '' && $aRow['partner_HIV_test_status']=='hivpos'){
