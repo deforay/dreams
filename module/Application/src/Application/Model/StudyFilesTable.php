@@ -142,7 +142,7 @@ class StudyFilesTable extends AbstractTableGateway {
            "aaData" => array()
        );
        foreach ($rResult as $aRow) {
-            $download = '';
+            $download = 'File not available/missed';
             if($aRow['file_name']!= null && trim($aRow['file_name'])!= '' && file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files". DIRECTORY_SEPARATOR . $aRow['file_name'])){
               $download = '<a href="/uploads/study-files/'.$aRow['file_name'].'" title="Download" download="" style="font-size:18px;"><i class="zmdi zmdi-cloud-download"></i> </a>';
             }

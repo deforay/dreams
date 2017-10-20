@@ -180,7 +180,7 @@ class RiskAssessmentService {
                         }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= '' && (int)$aRow['age_at_very_first_sex'] == 1){
                             $ageAtVeryFirstSex = $aRow['age_at_very_first_sex'].' Year';
                         }else if(isset($aRow['age_at_very_first_sex']) && $aRow['age_at_very_first_sex']!= null && trim($aRow['age_at_very_first_sex'])!= ''){
-                           $ageAtVeryFirstSex = ucwords($aRow['age_at_very_first_sex']); 
+                           $ageAtVeryFirstSex = ucwords($aRow['age_at_very_first_sex']);
                         }
                         $reasonForVeryFirstSex = '';
                         if(isset($aRow['reason_for_very_first_sex']) && $aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= '' && $aRow['reason_for_very_first_sex'] == 'wantedto'){
