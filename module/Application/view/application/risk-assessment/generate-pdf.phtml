@@ -438,7 +438,7 @@ $common = new \Application\Service\CommonService();
 	        $html .= '<table style="padding:2px;border:1px solid #b2daff;">';
 		    $html .='<tr><td style="line-height:20px;font-size:11px;font-weight:bold;">ANC Site</td><td style="line-height:20px;font-size:11px;font-weight:bold;">Patient Barcode ID</td><td style="line-height:20px;font-size:11px;font-weight:bold;">Interviewer Name</td></tr>';
 		    $html .='<tr><td style="line-height:20px;font-size:11px;">'.ucwords($data['anc_site_name']).'</td><td style="line-height:20px;font-size:11px;">'.$data['patient_barcode_id'].'</td><td style="line-height:20px;font-size:11px;">'.ucwords($data['interviewer_name']).'</td></tr>';
-		    $html .='<tr><td style="line-height:20px;font-size:11px;font-weight:bold;">ANC Patient ID </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Interview Date </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Participant received DREAMS services </td></tr>';
+		    $html .='<tr><td style="line-height:20px;font-size:11px;font-weight:bold;">ANC Patient ID </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Interview Date </td><td style="line-height:20px;font-size:11px;font-weight:bold;">Has participant received DREAMS services ?</td></tr>';
 		    $html .='<tr><td style="line-height:20px;font-size:11px;">'.$data['anc_patient_id'].'</td><td style="line-height:20px;font-size:11px;">'.$interviewDate.'</td><td style="line-height:20px;font-size:11px;">'.ucfirst($data['has_participant_received_dreams_services']).'</td></tr>';
 	        $html .= '</table>';
 	    $html .='</td></tr>';
