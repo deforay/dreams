@@ -19,30 +19,47 @@ class AncSiteTable extends AbstractTableGateway {
         $lastInsertedId = 0;
 	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
 	    $dbAdapter = $this->adapter;
+	    $sql = new Sql($dbAdapter);
 	    $locationDetailsDb = new LocationDetailsTable($dbAdapter);
 	    $province = null;
 	    $district = null;
 	    //set province
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
-		$locationData = array(
+		$sQuery = $sql->select()->from(array('l'=>'location_details'))
+			      ->where(array('l.location_name'=>trim($params['provinceNew']),'l.parent_location'=>0));
+		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
+		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if($sQueryResult){
+		   $province = $sQueryResult->location_id;
+		}else{
+		    $locationData = array(
 		                  'parent_location'=>0,
 		                  'location_name'=>$params['provinceNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$locationDetailsDb->insert($locationData);
-		$province = $locationDetailsDb->lastInsertValue;
+		    $locationDetailsDb->insert($locationData);
+		    $province = $locationDetailsDb->lastInsertValue;
+		}
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
 	    }
 	    //set district
 	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
-		$locationData = array(
+		$sQuery = $sql->select()->from(array('l'=>'location_details'))
+			      ->where(array('l.location_name'=>trim($params['districtNew'])));
+		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
+		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if($sQueryResult){
+		    $district = $sQueryResult->location_id;
+		}else{
+		    $locationData = array(
 		                  'parent_location'=>$province,
 		                  'location_name'=>$params['districtNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$locationDetailsDb->insert($locationData);
-		$district = $locationDetailsDb->lastInsertValue;
+		    $locationDetailsDb->insert($locationData);
+		    $district = $locationDetailsDb->lastInsertValue; 
+		}
 	    }else if(isset($params['district']) && trim($params['district'])!= ''){
 		$district = base64_decode($params['district']);
 	    }
@@ -231,30 +248,47 @@ class AncSiteTable extends AbstractTableGateway {
 	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
 	    $ancSiteId = base64_decode($params['ancSiteId']);
 	    $dbAdapter = $this->adapter;
+	    $sql = new Sql($dbAdapter);
 	    $locationDetailsDb = new LocationDetailsTable($dbAdapter);
 	    $province = null;
 	    $district = null;
 	    //set province
 	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
-		$locationData = array(
+		$sQuery = $sql->select()->from(array('l'=>'location_details'))
+			      ->where(array('l.location_name'=>trim($params['provinceNew']),'l.parent_location'=>0));
+		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
+		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if($sQueryResult){
+		   $province = $sQueryResult->location_id;
+		}else{
+		    $locationData = array(
 		                  'parent_location'=>0,
 		                  'location_name'=>$params['provinceNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$locationDetailsDb->insert($locationData);
-		$province = $locationDetailsDb->lastInsertValue;
+		    $locationDetailsDb->insert($locationData);
+		    $province = $locationDetailsDb->lastInsertValue;
+		}
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
 	    }
 	    //set district
 	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
-		$locationData = array(
+		$sQuery = $sql->select()->from(array('l'=>'location_details'))
+			      ->where(array('l.location_name'=>trim($params['districtNew'])));
+		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
+		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if($sQueryResult){
+		    $district = $sQueryResult->location_id;
+		}else{
+		    $locationData = array(
 		                  'parent_location'=>$province,
 		                  'location_name'=>$params['districtNew'],
 		                  'country'=>base64_decode($params['country'])
 				);
-		$locationDetailsDb->insert($locationData);
-		$district = $locationDetailsDb->lastInsertValue;
+		    $locationDetailsDb->insert($locationData);
+		    $district = $locationDetailsDb->lastInsertValue; 
+		}
 	    }else if(isset($params['district']) && trim($params['district'])!= ''){
 		$district = base64_decode($params['district']);
 	    }
