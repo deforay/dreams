@@ -46,7 +46,7 @@ class AncSiteTable extends AbstractTableGateway {
 	    //set district
 	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
 		$sQuery = $sql->select()->from(array('l'=>'location_details'))
-			      ->where(array('l.location_name'=>trim($params['districtNew'])));
+			      ->where(array('l.location_name'=>trim($params['districtNew']),'l.parent_location'=>$province));
 		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
 		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 		if($sQueryResult){
@@ -275,7 +275,7 @@ class AncSiteTable extends AbstractTableGateway {
 	    //set district
 	    if(isset($params['districtNew']) && trim($params['districtNew'])!= ''){
 		$sQuery = $sql->select()->from(array('l'=>'location_details'))
-			      ->where(array('l.location_name'=>trim($params['districtNew'])));
+			      ->where(array('l.location_name'=>trim($params['districtNew']),'l.parent_location'=>$province));
 		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
 		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 		if($sQueryResult){
