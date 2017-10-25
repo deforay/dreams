@@ -951,9 +951,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(isset($params['dataCollectionID']) && trim($params['dataCollectionID'])!= ''){
                 $patientQuery = $patientQuery->where('da_c.data_collection_id != "'.base64_decode($params['dataCollectionID']).'"');
             }if(isset($params['countryId']) && trim($params['countryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode($params['countryId'])));
 	    }else if(isset($params['optCountryId']) && trim($params['optCountryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['optCountryId']))));
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode($params['optCountryId'])));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -979,9 +979,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(isset($params['dataCollectionID']) && trim($params['dataCollectionID'])!= ''){
                 $patientQuery = $patientQuery->where('da_c.data_collection_id != "'.base64_decode($params['dataCollectionID']).'"');
             }if(isset($params['countryId']) && trim($params['countryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['countryId']))));
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode($params['countryId'])));
 	    }else if(isset($params['optCountryId']) && trim($params['optCountryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode(($params['optCountryId']))));
+		$patientQuery = $patientQuery->where(array('da_c.country'=>base64_decode($params['optCountryId'])));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -998,9 +998,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(isset($params['assessmentId']) && trim($params['assessmentId'])!= ''){
                 $patientQuery = $patientQuery->where('r_a.assessment_id != "'.base64_decode($params['assessmentId']).'"');
             }if(isset($params['countryId']) && trim($params['countryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['countryId']))));
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode($params['countryId'])));
 	    }else if(isset($params['optCountryId']) && trim($params['optCountryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['optCountryId']))));
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode($params['optCountryId'])));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -1017,9 +1017,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(isset($params['assessmentId']) && trim($params['assessmentId'])!= ''){
                 $patientQuery = $patientQuery->where('r_a.assessment_id != "'.base64_decode($params['assessmentId']).'"');
             }if(isset($params['countryId']) && trim($params['countryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['countryId']))));
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode($params['countryId'])));
 	    }else if(isset($params['optCountryId']) && trim($params['optCountryId'])!= ''){
-		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode(($params['optCountryId']))));
+		$patientQuery = $patientQuery->where(array('r_a.country'=>base64_decode($params['optCountryId'])));
 	    }
 	    $patientQueryStr = $sql->getSqlStringForSqlObject($patientQuery);
 	    $patientResult = $dbAdapter->query($patientQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();

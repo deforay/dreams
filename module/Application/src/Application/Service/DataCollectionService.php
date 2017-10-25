@@ -966,13 +966,15 @@ class DataCollectionService {
             $rQuery = $rQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($params['reportingMonthYear'])));
         }if(isset($params['anc']) && trim($params['anc'])!= ''){
             $rQuery = $rQuery->where(array('cl_da_c.anc'=>base64_decode($params['anc'])));
+        }if(isset($params['countryId']) && trim($params['countryId'])!= ''){
+            $rQuery = $rQuery->where(array('cl_da_c.country'=>base64_decode($params['countryId'])));
         }
         $rQueryStr = $sql->getSqlStringForSqlObject($rQuery);
         $rResult = $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
         if(isset($rResult->cl_data_collection_id)){
-            return 1;
+            return "/clinic/data-collection/edit/".base64_encode($rResult->cl_data_collection_id)."/".$params['countryId'];
         }else{
-            return 0;
+            return "";
         }
     }
     

@@ -185,7 +185,7 @@ class DataCollectionController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->getPatientRecord($params);
+            $response = $dataCollectionService->getPatientRecord($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

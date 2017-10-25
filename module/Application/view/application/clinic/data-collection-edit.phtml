@@ -178,12 +178,10 @@ if(trim($countryId)!= ''){
         var reportingMonthYear = $('#reportingMonthYear').val();
         var anc = $('#anc').val();
         if($.trim(reportingMonthYear)!= '' && $.trim(anc)!= ''){
-            $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {clDataCollectionID:'<?php echo base64_encode($row->cl_data_collection_id); ?>',reportingMonthYear: reportingMonthYear,anc:anc},
+            $.post("<?php echo $this->url('check-duplicate-data-report'); ?>", {clDataCollectionID:'<?php echo base64_encode($row->cl_data_collection_id); ?>',reportingMonthYear: reportingMonthYear,anc:anc,countryId:'<?php echo base64_encode($countryId); ?>'},
             function(data) {
-                if($.trim(data) == 1){
-                    alert('Duplicate data not allowed. The monthly data for anc site and year/month that you have choosed already entered');
-                    $('#reportingMonthYear').val('');
-                }
+                //alert('Duplicate data not allowed. The monthly data for anc site and year/month that you have choosed already entered');
+		if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
             });
         }
     }
