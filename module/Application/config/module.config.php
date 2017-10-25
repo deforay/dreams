@@ -566,10 +566,19 @@ return array(
             ),'study-files' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/study-files[/:action][/][:id]',
+                    'route' => '/study-files[/][:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\StudyFiles',
                         'action' => 'index',
+                    ),
+                ),
+            ),'upload-study-files' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/study-files/upload[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\StudyFiles',
+                        'action' => 'upload'
                     ),
                 ),
             )

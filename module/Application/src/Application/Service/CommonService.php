@@ -331,6 +331,7 @@ class CommonService {
         }
         $data = array(
                       'file_description'=>trim($params['description']),
+                      'country_id'=>base64_decode($params['chosenCountry']),
                       'uploaded_on'=>$this->getDateTime(),
                       'uploaded_by'=>$loginContainer->userId
                     );

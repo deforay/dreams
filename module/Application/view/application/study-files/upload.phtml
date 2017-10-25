@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row dashboard-wrapper content-container">
-        <form id="studyFileUpload" name="studyFileUpload" method="post" enctype="multipart/form-data" action="<?php echo $this->url('study-files',array('action'=>'upload')); ?>">
+        <form id="studyFileUpload" name="studyFileUpload" method="post" enctype="multipart/form-data" action="<?php echo $this->url('upload-study-files'); ?>">
             <div class="card">
                 <div class="row" style="margin-bottom:10px;">
                     <div class="col s12">
@@ -29,7 +29,8 @@
                     </div>
                 </div>
                 <div class="col s12">
-                    <a href="/study-files" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
+                    <a href="/study-files/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                     <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">UPLOAD </a>&nbsp;&nbsp;
                 </div>
             </div>

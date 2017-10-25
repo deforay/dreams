@@ -61,7 +61,7 @@ $loginContainer = new Container('user');
 	    <div class="card card-default">
 		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Study Files
                   <?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-                    <span style="float:right;"><a class="custom-add-btn" href="/study-files/upload"><i class="zmdi zmdi-cloud-upload"></i> Upload</a></span>
+                    <span style="float:right;"><a class="custom-add-btn" href="/study-files/upload/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-cloud-upload"></i> Upload</a></span>
                   <?php } ?>
                 </div>
 		<div class="card-content clearfix">
@@ -114,6 +114,7 @@ $loginContainer = new Container('user');
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('study-files'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
+		aoData.push({"name": "country", "value": '<?php echo $countryId; ?>' });
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

@@ -21,6 +21,16 @@ class StudyFilesController extends AbstractActionController{
             $commonService = $this->getServiceLocator()->get('CommonService');
             $result = $commonService->getStudyFiles($parameters);
            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId = '';
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(trim($countryId)!= ''){
+                return new ViewModel(array(
+                    'countryId'=>$countryId
+                ));
+            }else{
+               return $this->redirect()->toRoute('home'); 
+            }
         }
     }
     
@@ -30,8 +40,18 @@ class StudyFilesController extends AbstractActionController{
             $params = $request->getPost();
             $commonService = $this->getServiceLocator()->get('CommonService');
             $commonService->uploadStudyFile($params);
-           return $this->redirect()->toUrl('/study-files');
-        }  
+           return $this->redirect()->toUrl('/study-files/'.$params['chosenCountry']);
+        }else{
+            $countryId = '';
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(trim($countryId)!= ''){
+                return new ViewModel(array(
+                    'countryId'=>$countryId
+                ));
+            }else{
+               return $this->redirect()->toRoute('home'); 
+            }
+        }
     }
   
 }

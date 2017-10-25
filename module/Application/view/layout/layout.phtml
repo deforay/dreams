@@ -223,9 +223,6 @@ if($loginContainer->roleCode== 'ANCSC'){
                             </div>
                         </li>
                     <?php } ?>
-                    <li class="studyFilesMenu menuAll">
-                        <a href="<?php echo $this->url('study-files'); ?>" class="collapsible-header studyFilesMenu menuAll"><i class="zmdi zmdi-cloud-upload"></i> Study Files</a>
-                    </li>
                     <?php
                     $countries = $this->GetActiveCountries('layout','');
                     if(isset($countries) && count($countries)>0){
@@ -235,6 +232,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                             <div class="collapsible-header waves-effect menuAll countryMenu<?php echo $country['country_id']; ?>"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body collapsibleAll collapsibleCountryMenu<?php echo $country['country_id']; ?>" style="">
                                 <ul>
+                                    <li class="studyFilesMenu<?php echo $country['country_id']; ?> menuAll">
+                                        <a href="/study-files/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header studyFilesMenu<?php echo $country['country_id']; ?> menuAll"><i class="zmdi zmdi-cloud-upload"></i> Study Files</a>
+                                    </li>
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <?php if($adminMenuAccess == 'show'){ ?>
@@ -684,7 +684,11 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
             $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
         }else if(splitsUrl[1]=='study-files'){
-           $(".studyFilesMenu").addClass("active");
+            splits=str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".studyFilesMenu"+atob(splits)).addClass("active");
+            $(".studyFilesMenu"+atob(splits)).css("color","#fff");
         }else{
             $(".dashboardMenu").addClass("active");
         }
@@ -692,7 +696,7 @@ if($loginContainer->roleCode== 'ANCSC'){
     
     $(document).ready(function () {
         $("body").on("contextmenu",function(e){
-          return false;
+          //return false;
         });
     });
     

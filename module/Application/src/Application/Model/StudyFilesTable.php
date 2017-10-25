@@ -99,8 +99,8 @@ class StudyFilesTable extends AbstractTableGateway {
        $sQuery = $sql->select()->from(array('s_f'=>'study_files'))
                      ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
                      ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
-        if($loginContainer->roleCode!= 'CSC'){
-           $sQuery = $sQuery->where('c_map.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+           $sQuery = $sQuery->where(array('s_f.country_id'=>$parameters['country']));
         }
        
        if (isset($sWhere) && $sWhere != "") {
@@ -129,8 +129,8 @@ class StudyFilesTable extends AbstractTableGateway {
         $tQuery = $sql->select()->from(array('s_f'=>'study_files'))
                       ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
                       ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
-        if($loginContainer->roleCode!= 'CSC'){
-           $tQuery = $tQuery->where('c_map.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
+        if(isset($parameters['country']) && trim($parameters['country'])!= ''){
+           $tQuery = $tQuery->where(array('s_f.country_id'=>$parameters['country']));
         }
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
        $tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
@@ -142,9 +142,9 @@ class StudyFilesTable extends AbstractTableGateway {
            "aaData" => array()
        );
        foreach ($rResult as $aRow) {
-            $download = 'File not available/missed';
+            $download_file = 'File not available/missed';
             if($aRow['file_name']!= null && trim($aRow['file_name'])!= '' && file_exists(UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files". DIRECTORY_SEPARATOR . $aRow['file_name'])){
-              $download = '<a href="/uploads/study-files/'.$aRow['file_name'].'" title="Download" download="" style="font-size:18px;"><i class="zmdi zmdi-cloud-download"></i> </a>';
+              $download_file = '<a href="/uploads/study-files/'.$aRow['file_name'].'" title="Download" download="" style="font-size:18px;"><i class="zmdi zmdi-cloud-download"></i> </a>';
             }
             $uploadedDate = explode(" ",$aRow['uploaded_on']);
             $row = array();
@@ -152,7 +152,7 @@ class StudyFilesTable extends AbstractTableGateway {
             $row[] = ucfirst($aRow['file_description']);
             $row[] = $common->humanDateFormat($uploadedDate[0])." ".$uploadedDate[1];
             $row[] = ucwords($aRow['user_name']);
-            $row[] = $download;
+            $row[] = $download_file;
             $output['aaData'][] = $row;
        }
       return $output;
