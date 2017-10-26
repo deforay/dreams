@@ -97,8 +97,7 @@ class StudyFilesTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('s_f'=>'study_files'))
-                     ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
-                     ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
+                     ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'));
         if(isset($parameters['country']) && trim($parameters['country'])!= ''){
            $sQuery = $sQuery->where(array('s_f.country_id'=>$parameters['country']));
         }
@@ -127,8 +126,7 @@ class StudyFilesTable extends AbstractTableGateway {
 
        /* Total data set length */
         $tQuery = $sql->select()->from(array('s_f'=>'study_files'))
-                      ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'))
-                      ->join(array('c_map'=>'user_country_map'),'c_map.user_id=u.user_id',array(),'left');
+                      ->join(array('u'=>'user'),'u.user_id=s_f.uploaded_by',array('user_name'));
         if(isset($parameters['country']) && trim($parameters['country'])!= ''){
            $tQuery = $tQuery->where(array('s_f.country_id'=>$parameters['country']));
         }

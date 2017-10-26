@@ -62,28 +62,27 @@ if(trim($countryId)!= ''){
                                 foreach($ancFormFields as $key=>$value){
                                     $fieldName = $key;
                                     $tempLabel = ucwords(str_replace("_"," ",$key));
-				    $commonFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_recency_result')?'readonly':'';
-                                    $mandatoryicon = ($fieldName!= 'no_of_recency_result')?' *':'';
+				    $commonFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'readonly':'';
+                                    $mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
                                     $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
                                     //set readonly fields based on age disaggregation
-                                    $commonFieldsStyle = ($row->status == 2 && $fieldName!= 'no_of_recency_result')?'pointer-events:none;':'pointer-events:auto;';
+                                    $commonFieldsStyle = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
                                     $styleTotal = 'pointer-events:none;display:none;';
-				    $commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result')?'isRequired':'';
-                                    $labelStyle= ($fieldName!= 'no_of_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
-				    $totalFieldReadOnly = '';
-                                    $lblStyleTotal = '';
+				    $commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
 				    $isRequiredTotal = '';
+                                    $labelStyle = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+                                    $lblStyleTotal = '';
+				    $totalFieldReadOnly = '';
                                     if($value == 'no'){
-					$totalFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_clients_who_received_recency_result')?'readonly':'';
-					$mandatoryicon = ($fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
+					$totalFieldReadOnly = ($row->status == 2)?'readonly':'';
+					$mandatoryicon = ' *';
 					$formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
-					$labelStyle= ($fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+					$labelStyle = '';
                                         $commonFieldsStyle = 'pointer-events:none;display:none;';
-					//enable/disable No. Of Clients Who Received Recency Result fields based on status
-                                        $styleTotal = ($row->status == 2 && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
+                                        $styleTotal = ($row->status == 2)?'pointer-events:none;':'pointer-events:auto;';
                                         $lblStyleTotal = 'display:none;';
 					$commonFieldsIsRequired = '';
-					$isRequiredTotal = ($fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
+					$isRequiredTotal = 'isRequired';
                                     }
                                     //set characteristics value
 				    $ageLt15 = '';

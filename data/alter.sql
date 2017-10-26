@@ -728,3 +728,16 @@ ALTER TABLE `clinic_risk_assessment` CHANGE `lab` `anc` INT(11) NULL DEFAULT NUL
 ALTER TABLE `study_files` ADD `country_id` INT(11) NULL DEFAULT NULL AFTER `file_description`;
 
 alter table study_files add FOREIGN KEY(country_id) REFERENCES country(country_id)
+
+--Pal 26/10/2017
+UPDATE `anc_form` SET `age_disaggregation` = 'yes' WHERE `anc_form`.`field_id` = 3;
+
+UPDATE `anc_form` SET `age_disaggregation` = 'yes' WHERE `anc_form`.`field_id` = 7;
+
+UPDATE `anc_form` SET `age_disaggregation` = 'yes' WHERE `anc_form`.`field_id` = 8;
+
+UPDATE `anc_form` SET `age_disaggregation` = 'yes' WHERE `anc_form`.`field_id` = 10;
+
+INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`) VALUES (NULL, 'no_eligible_but_refused_to_participate_in_study', 'yes', 'active');
+
+INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`) VALUES (NULL, 'no_of_pregnant_mothers_>=_25_years_attending_their_first_ANC_visit_for_current_pregnancy', 'no', 'active');

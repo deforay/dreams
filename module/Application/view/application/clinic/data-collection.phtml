@@ -105,24 +105,24 @@ if(trim($countryId)!= ''){
                                     foreach($ancFormFields as $key=>$value){
                                         $fieldName = $key;
                                         $tempLabel = ucwords(str_replace("_"," ",$key));
-                                        $mandatoryicon = ($fieldName!= 'no_of_recency_result')?' *':'';
+                                        $mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
                                         $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
                                         //set readonly fields based on age disaggregation
                                         $commonFieldsStyle = 'pointer-events:auto;';
                                         $styleTotal = 'pointer-events:none;display:none;';
-					$commonFieldsIsRequired = 'isRequired';
-					$isRequiredTotal = '';
-                                        $labelStyle= ($fieldName!= 'no_of_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+                                        $labelStyle = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
                                         $lblStyleTotal = '';
+					$commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
+					$isRequiredTotal = '';
                                         if($value == 'no'){
-					    $mandatoryicon = ($fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
+					    $mandatoryicon = ' *';
 					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
-					    $labelStyle= ($fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+					    $labelStyle = '';
                                             $commonFieldsStyle = 'pointer-events:none;display:none;';
                                             $styleTotal = 'pointer-events:auto;';
                                             $lblStyleTotal = 'display:none;';
 					    $commonFieldsIsRequired = '';
-					    $isRequiredTotal = ($fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
+					    $isRequiredTotal = 'isRequired';
                                         }
                                     ?>
                                         <tr>
