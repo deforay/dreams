@@ -219,9 +219,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                 if($value == 'yes'){
                     $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                     $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                    $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : 0,';
                 }
-                $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
+                $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
@@ -235,9 +235,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                }elseif($characteristicsName =='age_15_to_19'){
                                   if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  if($value == 'yes'){ $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
-                                  $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
+                                  $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
                             }
                         }
@@ -490,9 +490,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                 if($value == 'yes'){
                     $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                     $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
-                    $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : 0,';
                 }
-                $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : 0';
+                $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
@@ -506,9 +506,9 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                }elseif($characteristicsName =='age_15_to_19'){
                                   if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
-                                  if($value == 'yes'){ $colVal.= ' <span style="color:#8DD63E;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
-                                  $colVal.= ' <span style="color:#7cb5ec;"><strong>Total</strong></span> : '.$characteristicsValue;
+                                  $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
                             }
                         }
