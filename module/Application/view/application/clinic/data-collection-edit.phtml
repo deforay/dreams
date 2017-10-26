@@ -17,6 +17,15 @@ if(trim($countryId)!= ''){
     #ancFormTable thead tr th{
         text-align:center;
     }
+    .rowOne{
+        padding-top:20px;
+	padding-bottom:0px;
+    }
+    @media only screen and (max-width: 1024px){
+	.rowOne{
+	    padding-top:0px !important;
+	}
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -36,82 +45,84 @@ if(trim($countryId)!= ''){
 			    <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
 			    <div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" value="<?php echo ucfirst($row->reporting_month_year); ?>" readonly/></div>
 			</div>
-                        <table id="ancFormTable" class="responsive-table display">
-                            <thead>
-                                <tr>
-                                    <th>Characteristics</th>
-                                    <th>Age < 15</th>
-                                    <th>Age 15-19</th>
-                                    <th>Age 20-24</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                //set characteristics array data from josn data
-                                if(isset($row->characteristics_data) && $row->characteristics_data!= null && trim($row->characteristics_data)!= ''){
-                                  $fieldArray = array();
-                                  $fields = json_decode($row->characteristics_data,true);
-                                  foreach($fields as $fieldName=>$fieldValue){
-                                    foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
-                                        $fieldArray[$fieldName][$characteristicsName] = $characteristicsValue;
-                                    }
-                                  }
-                                }
-                                $r=1;
-                                foreach($ancFormFields as $key=>$value){
-                                    $fieldName = $key;
-                                    $tempLabel = ucwords(str_replace("_"," ",$key));
-				    $commonFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'readonly':'';
-                                    $mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
-                                    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
-                                    //set readonly fields based on age disaggregation
-                                    $commonFieldsStyle = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
-                                    $styleTotal = 'pointer-events:none;display:none;';
-				    $commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
-				    $isRequiredTotal = '';
-                                    $labelStyle = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
-                                    $lblStyleTotal = '';
-				    $totalFieldReadOnly = '';
-                                    if($value == 'no'){
-					$totalFieldReadOnly = ($row->status == 2)?'readonly':'';
-					$mandatoryicon = ' *';
+		        <div class="col l12 m12 s12">
+			    <table id="ancFormTable" class="responsive-table display">
+				<thead>
+				    <tr>
+					<th>Characteristics</th>
+					<th>Age < 15</th>
+					<th>Age 15-19</th>
+					<th>Age 20-24</th>
+					<th>Total</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    <?php
+				    //set characteristics array data from josn data
+				    if(isset($row->characteristics_data) && $row->characteristics_data!= null && trim($row->characteristics_data)!= ''){
+				      $fieldArray = array();
+				      $fields = json_decode($row->characteristics_data,true);
+				      foreach($fields as $fieldName=>$fieldValue){
+					foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
+					    $fieldArray[$fieldName][$characteristicsName] = $characteristicsValue;
+					}
+				      }
+				    }
+				    $r=1;
+				    foreach($ancFormFields as $key=>$value){
+					$fieldName = $key;
+					$tempLabel = ucwords(str_replace("_"," ",$key));
+					$commonFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'readonly':'';
+					$mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
 					$formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
-					$labelStyle = '';
-                                        $commonFieldsStyle = 'pointer-events:none;display:none;';
-                                        $styleTotal = ($row->status == 2)?'pointer-events:none;':'pointer-events:auto;';
-                                        $lblStyleTotal = 'display:none;';
-					$commonFieldsIsRequired = '';
-					$isRequiredTotal = 'isRequired';
-                                    }
-                                    //set characteristics value
-				    $ageLt15 = '';
-				    $age15To19 ='';
-				    $age20to24 = '';
-				    $total = '';
-                                    if(array_key_exists($key,$fieldArray)){
-                                        $ageLt15 = (isset($fieldArray[$key]['age_lt_15']) && $fieldArray[$key]['age_lt_15']!= '')?$fieldArray[$key]['age_lt_15']:'';
-                                        $age15To19 = (isset($fieldArray[$key]['age_15_to_19']) && $fieldArray[$key]['age_15_to_19']!= '')?$fieldArray[$key]['age_15_to_19']:'';
-                                        $age20to24 = (isset($fieldArray[$key]['age_20_to_24']) && $fieldArray[$key]['age_20_to_24']!= '')?$fieldArray[$key]['age_20_to_24']:'';
-                                        $total = (isset($fieldArray[$key]['total']) && $fieldArray[$key]['total']!= '')?$fieldArray[$key]['total']:'';
-                                    }
-                                ?>
-                                    <tr>
-                                      <td style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
-                                      <td <?php echo($value == 'no')?'colspan="4"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
-                                      <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
-                                      <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
-                                        <?php if($value!= 'no') { ?><td style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':'padding-bottom:0px;'; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" value="<?php echo $total; ?>" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>" <?php echo $totalFieldReadOnly; ?>/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $lblStyleTotal; ?>"><?php echo $total; ?></div></td>
-                                    </tr>
-                                <?php $r++; } ?>
-				<tr>
-				    <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
-				    <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
-					<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;"><?php echo $row->comments; ?></textarea>
-				    </td>
-				</tr>
-                            </tbody>
-                        </table>
+					//set readonly fields based on age disaggregation
+					$commonFieldsStyle = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
+					$styleTotal = 'pointer-events:none;display:none;';
+					$commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
+					$isRequiredTotal = '';
+					$labelStyle = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#7cb5ec;font-weight:bold;';
+					$lblStyleTotal = '';
+					$totalFieldReadOnly = '';
+					if($value == 'no'){
+					    $totalFieldReadOnly = ($row->status == 2)?'readonly':'';
+					    $mandatoryicon = ' *';
+					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
+					    $labelStyle = '';
+					    $commonFieldsStyle = 'pointer-events:none;display:none;';
+					    $styleTotal = ($row->status == 2)?'pointer-events:none;':'pointer-events:auto;';
+					    $lblStyleTotal = 'display:none;';
+					    $commonFieldsIsRequired = '';
+					    $isRequiredTotal = 'isRequired';
+					}
+					//set characteristics value
+					$ageLt15 = '';
+					$age15To19 ='';
+					$age20to24 = '';
+					$total = '';
+					if(array_key_exists($key,$fieldArray)){
+					    $ageLt15 = (isset($fieldArray[$key]['age_lt_15']) && $fieldArray[$key]['age_lt_15']!= '')?$fieldArray[$key]['age_lt_15']:'';
+					    $age15To19 = (isset($fieldArray[$key]['age_15_to_19']) && $fieldArray[$key]['age_15_to_19']!= '')?$fieldArray[$key]['age_15_to_19']:'';
+					    $age20to24 = (isset($fieldArray[$key]['age_20_to_24']) && $fieldArray[$key]['age_20_to_24']!= '')?$fieldArray[$key]['age_20_to_24']:'';
+					    $total = (isset($fieldArray[$key]['total']) && $fieldArray[$key]['total']!= '')?$fieldArray[$key]['total']:'';
+					}
+				    ?>
+					<tr>
+					  <td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
+					  <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="4"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
+					  <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
+					  <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
+					    <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" value="<?php echo $total; ?>" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>" <?php echo $totalFieldReadOnly; ?>/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $lblStyleTotal; ?>"><?php echo $total; ?></div></td>
+					</tr>
+				    <?php $r++; } ?>
+				    <tr>
+					<td style="padding-top:0px;padding-bottom:0px;">Comments</td>
+					<td colspan="4" style="padding-top:0px;padding-bottom:0px;">
+					    <textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;"><?php echo $row->comments; ?></textarea>
+					</td>
+				    </tr>
+				</tbody>
+			    </table>
+		        </div>
                     </div>
                 </div>
             </div>
