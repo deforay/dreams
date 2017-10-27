@@ -57,10 +57,10 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
         $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','test_status_name');
-        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
        }else{
         $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','test_status_name');
-        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
        }
 
        /*
@@ -327,10 +327,10 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         */
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
           $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','cl_da_c.comments');
-          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
        }else{
           $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
-          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
        }
 
        /*
