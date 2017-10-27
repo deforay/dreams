@@ -23,9 +23,6 @@ if(isset($date) && trim($date)!= ''){
     pre {
         max-height: 596px;
     }
-    table.dataTable tbody td {
-        padding: 8px 18px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -54,7 +51,15 @@ if(isset($date) && trim($date)!= ''){
         overflow: hidden;
     }
     table.dataTable tbody td{
-	padding:2px 4px 0px 4px;
+	padding:2px 4px 2px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
     }
     #box-1{
 	float:left;

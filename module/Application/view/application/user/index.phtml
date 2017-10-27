@@ -1,7 +1,7 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId) || $countryId ==''){
+if(!isset($countryId)){
     $countryId = '';
 }
 ?>
@@ -19,6 +19,14 @@ if(!isset($countryId) || $countryId ==''){
     }
     table.dataTable tbody td {
         padding: 8px 18px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td {
+	    padding: 6px 18px;
+	}
     }
     #search-items{
         display: inline-block;
@@ -66,7 +74,7 @@ if(!isset($countryId) || $countryId ==''){
 		<?php } ?>
                 </div>
                 <div class="card-content clearfix">
-                    <table id="userDataTable"  class="responsive-table display dataTable">
+                    <table id="userDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
                                 <th>Full Name</th>

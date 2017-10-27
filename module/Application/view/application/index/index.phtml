@@ -11,6 +11,12 @@
     table th,table td{
         text-align:center;
     }
+    tbody tr td {
+        border-top: 1px solid #ddd;
+    }
+    #dashboardTable_wrapper{
+	overflow-x:scroll;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -23,7 +29,7 @@
                     Lab Data Reporting/Completed Forms
                 </div>
                 <div class="card-content clearfix">
-                    <table class="responsive-table striped">
+                    <table id="dashboardTable" class="responsive-table display">
                         <thead>
                         <tr>
                             <th>Name of the Country</th>

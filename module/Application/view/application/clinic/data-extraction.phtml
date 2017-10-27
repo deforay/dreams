@@ -20,9 +20,6 @@ if(trim($countryId)!= ''){
     pre {
         max-height: 596px;
     }
-    table.dataTable tbody td {
-        padding: 8px 18px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -68,6 +65,14 @@ if(trim($countryId)!= ''){
     }
     table.dataTable tbody td{
 	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
     }
 </style>
 <div id="page-content">

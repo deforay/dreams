@@ -15,12 +15,6 @@ $loginContainer = new Container('user');
     table th,table td{
         text-align:center;
     }
-    .select-wrapper{
-	width:100%;
-    }
-    table.dataTable tbody td {
-        padding: 8px 18px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -44,12 +38,23 @@ $loginContainer = new Container('user');
     .select-wrapper{
 	width:100%;
     }
+    #studyFilesDataTable_wrapper{
+	overflow-x:auto;
+    }
     .dataTable_noWrap{
 	white-space: nowrap;
         overflow: hidden;
     }
     table.dataTable tbody td{
 	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
     }
 </style>
 <div id="page-content">
@@ -65,7 +70,7 @@ $loginContainer = new Container('user');
                   <?php } ?>
                 </div>
 		<div class="card-content clearfix">
-		    <table id="studyFilesDataTable" class="responsive-table striped">
+		    <table id="studyFilesDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
 			    <th>File Name</th>

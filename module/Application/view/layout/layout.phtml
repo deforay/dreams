@@ -151,6 +151,9 @@ if($loginContainer->roleCode== 'ANCSC'){
             padding-top:1px;
         }*/
         @media only screen and (max-width: 1024px){
+            .side-nav{
+                width:260px !important;
+            }
             .accordion{
                 min-height:999px;
                 overflow-y:auto;
@@ -704,7 +707,7 @@ if($loginContainer->roleCode== 'ANCSC'){
     
     $(document).ready(function () {
         $("body").on("contextmenu",function(e){
-          return false;
+          //return false;
         });
     });
     

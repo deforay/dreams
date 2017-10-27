@@ -12,7 +12,7 @@ $loginContainer = new Container('user');
 	font-family: 'Glyphicons Halflings';
 	src: url('../../assets/fonts/glyphicons-halflings-regular.eot');
 	src: url('../../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-      }
+    }
     .glyphicon {
       position: relative;
       top: 1px;
@@ -59,9 +59,6 @@ $loginContainer = new Container('user');
     pre {
         max-height: 596px;
     }
-    table.dataTable tbody td {
-        padding: 8px 18px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -93,7 +90,15 @@ $loginContainer = new Container('user');
         overflow: hidden;
     }
     table.dataTable tbody td{
-	padding:2px 4px 0px 4px;
+	padding:2px 4px 2px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
     }
 </style>
 <div id="page-content">

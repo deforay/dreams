@@ -8,7 +8,7 @@
 	font-family: 'Glyphicons Halflings';
 	src: url('../assets/fonts/glyphicons-halflings-regular.eot');
 	src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-      }
+    }
     .glyphicon {
       position: relative;
       top: 1px;
@@ -55,9 +55,6 @@
     pre {
         max-height: 596px;
     }
-    table.dataTable tbody td {
-        padding: 8px 18px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -90,6 +87,14 @@
     }
     table.dataTable tbody td{
 	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
     }
     .redTxt{
 	color:#F44336 !important;

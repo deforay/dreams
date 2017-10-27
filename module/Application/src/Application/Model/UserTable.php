@@ -353,7 +353,7 @@ class UserTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['status']);
 	    $row[] = $lastLogin;
 	    if($loginContainer->hasViewOnlyAccess!= 'yes') {
-	       $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
+	       $row[] = '<a href="/user/edit/'. base64_encode($aRow['user_id']).'/'. base64_encode($parameters['countryId']).'" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
 	    }
 	    $output['aaData'][] = $row;
 	}
