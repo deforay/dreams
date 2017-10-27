@@ -150,6 +150,15 @@ if($loginContainer->roleCode== 'ANCSC'){
         /*.card-header span{
             padding-top:1px;
         }*/
+        @media only screen and (max-width: 1024px){
+            .accordion{
+                min-height:999px;
+                overflow-y:auto;
+            }
+            .changePasswordMenu,.logoutMenu{
+                display:block !important;
+            }
+        }
     </style>
     <script src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -174,10 +183,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                         <li>
                             <a class="dropdown-button drop-down-profile relative-item" href="#" data-activates="dropdown3" data-beloworigin="true"><span class="profile-img-ribbon"></span>My Account <i class="zmdi zmdi-caret-down drop-down-icon"></i></a>
                             <ul id="dropdown3" class="create-dropdown dropdown-content" style="overflow-y:hidden;">
-                                <li><a href="<?php echo $this->url('change-password'); ?>"><i class="zmdi zmdi-more"></i> Change Password</a></li>
-                                <li><a href="<?php echo $this->url('log-out'); ?>"><i class="material-icons dp48">input</i>Logout</a></li>
+                                <li><a href="<?php echo $this->url('change-password'); ?>"><i class="zmdi zmdi-shield-security"></i> Change Password</a></li>
+                                <li><a href="<?php echo $this->url('log-out'); ?>"><i class="zmdi zmdi-lock-open"></i> Logout</a></li>
                             </ul>
-                            
                         </li>
                     </ul>
                 </div>
@@ -187,7 +195,7 @@ if($loginContainer->roleCode== 'ANCSC'){
     <aside class="sidebar-left">
         <ul class="side-nav fixed clearfix left" id="nav-mobile" style="transform: translateX(0%);">
             <li>
-                <ul class="collapsible" data-collapsible="accordion">
+                <ul class="collapsible accordion" data-collapsible="accordion">
                     <?php if($loginContainer->roleCode == 'CSC'){ ?>
                         <li class="dashboardMenu menuAll">
                             <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
@@ -329,15 +337,13 @@ if($loginContainer->roleCode== 'ANCSC'){
                             </div>
                         </li>
                     <?php } } ?>
+                    <li class="changePasswordMenu menuAll"><a class="collapsible-header changePasswordMenu menuAll" href="<?php echo $this->url('change-password'); ?>" style="display:none;"><i class="zmdi zmdi-shield-security"></i> Change Password</a></li>
+                    <li class="logoutMenu menuAll"><a class="collapsible-header logoutMenu menuAll" href="<?php echo $this->url('log-out'); ?>" style="display:none;"><i class="zmdi zmdi-lock-open"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>
     </aside>
-    <main id="content">
-    <?php
-      echo $this->content;
-    ?>
-    </main>
+    <main id="content"><?php echo $this->content; ?></main>
     <footer style="background-color:#ff69b4;">
         <div class="row margin">
             <div class="row">
@@ -689,6 +695,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".studyFilesMenu"+atob(splits)).addClass("active");
             $(".studyFilesMenu"+atob(splits)).css("color","#fff");
+        }else if(splitsUrl[1]=='change-password'){
+            $(".changePasswordMenu").addClass("active");
         }else{
             $(".dashboardMenu").addClass("active");
         }
