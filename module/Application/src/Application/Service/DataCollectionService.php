@@ -831,7 +831,13 @@ class DataCollectionService {
                     $a1 = ($params['countryId']== '')?5:4;
                     foreach($ancFormFields as $key=>$value){
                         $columnTitle = ucwords(str_replace("_"," ",$key));
-                        $columnTitle = str_replace("No","No.",$columnTitle);
+                        $columnTitle = str_replace("No","Number",$columnTitle);
+                        $columnTitle = str_replace("Of","of",$columnTitle);
+                        $columnTitle = str_replace("At ","at ",$columnTitle);
+                        $columnTitle = str_replace("With","with",$columnTitle);
+                        $columnTitle = str_replace("In ","in ",$columnTitle);
+                        $columnTitle = str_replace("For","for",$columnTitle);
+                        $columnTitle = str_replace("To ","to ",$columnTitle);
                         $cellName = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
                         $sheet->setCellValue($cellName.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if($value == 'yes'){

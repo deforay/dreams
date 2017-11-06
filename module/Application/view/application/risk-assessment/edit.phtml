@@ -71,7 +71,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord('barcodeid');">
+                            <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord();">
                             <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                         </div>
                     </div>
@@ -85,7 +85,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" value="<?php echo $row->anc_patient_id; ?>" onblur="checkPatientRecord('ancid');">
+                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" value="<?php echo $row->anc_patient_id; ?>">
                             <label for="ancPatientId" class="">ANC Patient ID *</label>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                        Has participant received DREAMS services ?<br><br>
+                        Has participant received DREAMS services ? (Optional)<br><br>
                         <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap" name="hasParticipantReceivedDreamsServices" title="Please select participant-dreams services received status" value="yes" type="radio" <?php echo ($row->has_participant_received_dreams_services == 'yes')?'checked="checked"':''; ?>>
                         <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp;&nbsp;
                         <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio" <?php echo ($row->has_participant_received_dreams_services == 'no')?'checked="checked"':''; ?>>
@@ -822,7 +822,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <label for="comment">Comments </label>
                 </div>
             </div>
-            <div class="col s12" style="margin-top:20px;">
+            <div class="col s12" style="margin-top:10px;">
                 <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
                 <input id="ancRapidRecencyId" name="ancRapidRecencyId" type="hidden" value="<?php echo (isset($row->anc_rapid_recency_id))?base64_encode($row->anc_rapid_recency_id):''; ?>"/>
                 <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
@@ -842,7 +842,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy',
-	    max: new Date('Today')
+	    max: new Date('Today'),
+            onSet: function(e){
+		$('.picker__close').click();
+	    }
         });
        manageCharacteristicFields();
     });
@@ -1153,43 +1156,17 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	if(parseInt(nooftimes) > 10000) { alert('No.of times range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
     });
     
-    function checkPatientRecord(type){
-	if(type == 'barcodeid'){
-	    checkPatientBarcodeId();
-	}else if(type == 'ancid'){
-	    checkANCPatientId();
-	}else{
-	    checkPatientBarcodeId();
-	    checkANCPatientId();
-	}
+    function checkPatientRecord(){
+	checkPatientBarcodeId();
     }
     
     function checkPatientBarcodeId(){
 	var patientBarcodeId = $('#patientBarcodeId').val();
 	var countryId = $('#chosenCountry').val();
 	if($.trim(patientBarcodeId)!= '' && $.trim(countryId)!= ''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {assessmentId:'<?php echo base64_encode($row->assessment_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'clinic',src:'barcodeid'},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {assessmentId:'<?php echo base64_encode($row->assessment_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'clinic'},
             function(data) {
                 if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
-            });
-        }
-    }
-    
-    function checkANCPatientId(){
-        var ancPatientId = $('#ancPatientId').val();
-	var countryId = $('#chosenCountry').val();
-        if($.trim(ancPatientId)!= '' && $.trim(countryId)!= ''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {assessmentId:'<?php echo base64_encode($row->assessment_id); ?>',ancPatientId: ancPatientId,countryId:countryId,type:'clinic',src:'ancid'},
-            function(data) {
-                if ($.trim(data)!= '') {
-		    var conf = confirm("The risk assessment form with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
-		    if(conf){
-		       $.blockUI();	
-		       document.location.href = data;
-		    }else{
-		      $('#ancPatientId').val('');
-		    }
-                }
             });
         }
     }

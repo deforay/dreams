@@ -30,7 +30,7 @@ if(trim($countryId)!= ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord('');">
+                                <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();generateSurveillanceID(this);checkPatientRecord();">
                                     <option value=""> -- Select -- </option>
                                     <?php
                                     foreach($countries as $country){
@@ -56,7 +56,7 @@ if(trim($countryId)!= ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord();">
                                 <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
@@ -70,7 +70,7 @@ if(trim($countryId)!= ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord('ancid');">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -84,7 +84,7 @@ if(trim($countryId)!= ''){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-			    Has participant received DREAMS services ? <br><br>	
+			    Has participant received DREAMS services ? (Optional)<br><br>	
 			    <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap" name="hasParticipantReceivedDreamsServices" title="Please select paricipant-dreams services received status" value="yes" type="radio">
 			    <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp;&nbsp;
 			    <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio">
@@ -109,7 +109,7 @@ if(trim($countryId)!= ''){
                         </div>
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord('barcodeid');">
+                                <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord();">
                                 <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
                             </div>
                         </div>
@@ -123,7 +123,7 @@ if(trim($countryId)!= ''){
                     <div class="row" style="margin-bottom:0;">
                         <div class="col s4">
                             <div class="input-field col m12 s12">
-                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord('ancid');">
+                                <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" onblur="checkPatientRecord();">
                                 <label for="ancPatientId" class="">ANC Patient ID *</label>
                             </div>
                         </div>
@@ -135,7 +135,7 @@ if(trim($countryId)!= ''){
                         </div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12">
-			    Has Participant received DREAMS services ?<br><br>
+			    Has Participant received DREAMS services ? (Optional)<br><br>
 			    <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap" name="hasParticipantReceivedDreamsServices" title="Please select participant-dreams services received status" value="yes" type="radio">
 			    <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp;&nbsp;
 			    <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio">
@@ -861,7 +861,7 @@ if(trim($countryId)!= ''){
                     <label for="comment">Comments </label>
                 </div>
             </div>
-            <div class="col s12" style="margin-top:20px;">
+            <div class="col s12" style="margin-top:10px;">
                 <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
                 <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
@@ -878,7 +878,10 @@ if(trim($countryId)!= ''){
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy',
-	    max: new Date('Today')
+	    max: new Date('Today'),
+	    onSet: function(e){
+		$('.picker__close').click();
+	    }
         });
     });
     
@@ -1188,15 +1191,8 @@ if(trim($countryId)!= ''){
 	if(parseInt(nooftimes) > 10000) { alert('No.of times range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
     });
     
-    function checkPatientRecord(type){
-	if(type == 'barcodeid'){
-	    checkPatientBarcodeId();
-	}else if(type == 'ancid'){
-	    checkANCPatientId();
-	}else{
-	    checkPatientBarcodeId();
-	    checkANCPatientId();
-	}
+    function checkPatientRecord(){
+	checkPatientBarcodeId();
     }
     
     function checkPatientBarcodeId(){
@@ -1204,29 +1200,9 @@ if(trim($countryId)!= ''){
 	var countryId = $('#chosenCountry').val();
         var optCountryId = ($('#country').length) ? $('#country').val():'';
 	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'clinic',src:'barcodeid'},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'clinic'},
             function(data) {
                 if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
-            });
-        }
-    }
-    
-    function checkANCPatientId(){
-        var ancPatientId = $('#ancPatientId').val();
-	var countryId = $('#chosenCountry').val();
-        var optCountryId = ($('#country').length) ? $('#country').val():'';
-        if($.trim(ancPatientId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {ancPatientId: ancPatientId,countryId:countryId,optCountryId:optCountryId,type:'clinic',src:'ancid'},
-            function(data) {
-                if ($.trim(data)!= '') {
-		    var conf = confirm("The risk assessment form with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
-		    if(conf){
-		       $.blockUI();	
-		       document.location.href = data;
-		    }else{
-		      $('#ancPatientId').val('');
-		    }
-                }
             });
         }
     }

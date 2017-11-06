@@ -74,7 +74,36 @@ if(trim($countryId)!= ''){
 					$tempLabel = ucwords(str_replace("_"," ",$key));
 					$commonFieldReadOnly = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'readonly':'';
 					$mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
-					$formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
+					$formLabel = str_replace("No","Number",$tempLabel);
+					$formLabel = str_replace("Of","of",$formLabel);
+					$formLabel = str_replace("At ","at ",$formLabel);
+					$formLabel = str_replace("With","with",$formLabel);
+					$formLabel = str_replace("In ","in ",$formLabel);
+					$formLabel = str_replace("For","for",$formLabel);
+					$formLabel = str_replace("To ","to ",$formLabel);
+					if($formLabel == 'Number of Clients Attending ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Attending ANC First Visit</span>';
+					}else if($formLabel == 'Number of Clients Previously Known HIV Positive at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Previously Known HIV Positive</span> at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Previously Known HIV Negative at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Previously Known HIV Negative</span> at ANC First Visit';
+					}else if($formLabel == 'Number of Clients with Unknown HIV Status at ANC First Visit'){
+					    $formLabel = 'Number of Clients with <span style="font-weight:bold;text-decoration:underline;">Unknown HIV Status</span> at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Tested for HIV with Rapid Diagnostic Test at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested for HIV</span> with Rapid Diagnostic Test at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Tested Newly Positive for HIV with RDT at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Positive for HIV</span> with RDT at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Tested Newly Negative for HIV with RDT at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Negative for HIV</span> with RDT at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Tested Newly Interminate for HIV with RDT at ANC First Visit'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Interminate for HIV</span> with RDT at ANC First Visit';
+					}else if($formLabel == 'Number of Clients Consented to Participate in Recency Study'){
+					    $formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Consented to Participate in Recency Study</span>';
+					}else if($formLabel == 'Number of Eligible Clients Who Refused to Participate in Recent Study'){
+					    $formLabel = 'Number of Eligible Clients Who <span style="font-weight:bold;text-decoration:underline;">Refused to Participate in Recent Study</span>';
+					}else if($formLabel == 'Number of Specimens Collected for Recency Testing'){
+					    $formLabel = 'Number of <span style="font-weight:bold;text-decoration:underline;">Specimens Collected for Recency Testing</span>';
+					}
 					//set readonly fields based on age disaggregation
 					$commonFieldsStyle = ($row->status == 2 && $fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'pointer-events:none;':'pointer-events:auto;';
 					$styleTotal = 'pointer-events:none;display:none;';
@@ -86,7 +115,6 @@ if(trim($countryId)!= ''){
 					if($value == 'no'){
 					    $totalFieldReadOnly = ($row->status == 2)?'readonly':'';
 					    $mandatoryicon = ' *';
-					    $formLabel = str_replace("No","No.",$tempLabel).$mandatoryicon;
 					    $labelStyle = '';
 					    $commonFieldsStyle = 'pointer-events:none;display:none;';
 					    $styleTotal = ($row->status == 2)?'pointer-events:none;':'pointer-events:auto;';
@@ -107,7 +135,7 @@ if(trim($countryId)!= ''){
 					}
 				    ?>
 					<tr>
-					  <td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel; ?></td>
+					  <td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel.$mandatoryicon; ?></td>
 					  <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="4"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $ageLt15; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
 					  <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age15To19; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
 					  <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" value="<?php echo $age20to24; ?>" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>" <?php echo $commonFieldReadOnly; ?>/><?php if($value!= 'no') { ?></td><?php } ?>
@@ -126,7 +154,7 @@ if(trim($countryId)!= ''){
                     </div>
                 </div>
             </div>
-            <div class="col s12" style="margin-top:20px;">
+            <div class="col s12" style="margin-top:5px;">
                 <input type="hidden" name="clinicDataCollectionId" id="clinicDataCollectionId" value="<?php echo base64_encode($row->cl_data_collection_id); ?>"/>
 		<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
 		<input type="hidden" name="status" id="status" value="<?php echo base64_encode($row->status); ?>"/>

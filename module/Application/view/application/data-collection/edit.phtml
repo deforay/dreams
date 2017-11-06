@@ -103,288 +103,292 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     </div>
     <div class="row dashboard-wrapper content-container">
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
-        <div class="card">
-            <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION <span id="serialNo"></span></legend>
-                <div class="row" style="margin-bottom:0;">
+	    <div class="card">
+		<fieldset style="border-color:#88C542;border-style: solid;">
+		   <legend>SURVEILLANCE INFORMATION <span id="serialNo"></span></legend>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord();">
+				<label for="patientBarcodeId" class="">Patient Barcode ID **</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker isRequired" title="Please enter specimen collected date" value="<?php echo $specimenCollectedDate; ?>">
+				<label for="specimenCollectedDate" class="">Date Specimen Collected **</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($ancSites as $ancSite){
+				    ?>
+				      <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>" <?php echo($row->anc_site == $ancSite['anc_site_id'])?'selected="selected"':''; ?>><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+				    <?php } ?>
+				</select>
+				<label for="ancSite">ANC site name **</label>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc" value="<?php echo $specimenPickedUpDateAtAnc; ?>">
+				<label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
+			    </div>
+			</div>
+		    </div>
+		</fieldset>
+		<fieldset style="border-color:#ff9800;border-style: solid;">
+		    <legend>PATIENT INFORMATION</legend>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
+				<label for="ancPatientId" class="">ANC Patient ID ** </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
+				<label for="artPatientId" class="">ART Number </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="encAncPatientId" name="encAncPatientId" type="hidden" value="<?php echo $row['enc_anc_patient_id']; ?>">
+				<label for="encAncPatientId" style="transform:translateY(-140%);">Encrypted ANC Patient ID </label>
+				<p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:10px;"><?php echo $row['enc_anc_patient_id']; ?></p>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getAge();">
+				<label for="dob" class="">DOB **</label>
+				</div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
+				<label for="age" class="">Age **</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age" value="<?php echo $row['gestational_age']; ?>">
+				<label for="gestationalAge" class="">Gestation Age (Weeks) </label>
+			    </div>
+			</div>
+		    </div>
+		</fieldset>
+		<fieldset style="border-color:#2196F3 ;border-style: solid;">
+		   <legend>LABORATORY INFORMATION</legend>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($facilities as $facility){
+				    ?>
+				      <option value="<?php echo base64_encode($facility['facility_id']); ?>" <?php echo($row->lab == $facility['facility_id'])?'selected="selected"':''; ?>><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
+				    <?php } ?>
+				</select>
+				<label for="lab">Lab site code/name **</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID" value="<?php echo $row->lab_specimen_id; ?>">
+				<label for="labSpecimenId" class="">Lab Specimen ID </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" onchange="emptyTestResultSection()">
+				    <option value=""> -- Select -- </option>
+				    <?php
+				    foreach($rejectionReasons as $rejection){
+				    ?>
+				      <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
+				    <?php } ?>
+				</select>
+				<label for="rejectionReason">Specimen Rejection Code </label>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
+				<input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at lab" value="<?php echo $receiptDateAtCentralLab; ?>">
+				<label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
+				<input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion" value="<?php echo $testCompletionDate; ?>">
+				<label for="dateOfTestCompletion" class="">Date of Test Completion </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
+				<input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic" value="<?php echo $resultDispatchedDateToClinic; ?>">
+				<label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			   <div class="input-field col m12 s12">
+			       <select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
+				    <option value=""> -- Select -- </option>
+				    <option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
+				    <option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
+				    <option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
+			       </select>
+			       <label for="specimenType">Specimen Type **</label>
+			   </div>
+			</div>
+		    </div>
+		</fieldset>
+		<fieldset id="resultSection" style="border-color:#F44336;border-style: solid;">
+		    <legend>TEST RESULT</legend>
+		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum testResultSection" title="Please enter LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
+				<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':''; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+				<label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel" style="font-size:13px;">Click here to view the algorithm for Lab Data Reporting</a>
+			</div>
+		    </div>
+		    <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
+			<div class="col s4">
+			    <div class="input-padding col m10 s10 prePopulateAvidity">
+			      <strong>LAg Avidity Result</strong> <br>
+			       <label for="lagAvidityResult" style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></label>
+			      <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'recent')?'checked="checked"':''; ?> value="recent" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
+			      <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'long term')?'checked="checked"':''; ?> value="long term" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-padding col m10 s10 prePopulateHIVRNA">
+			      <strong>HIV RNA > 1000 (copies/ml)</strong><br>
+			       <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></label>
+			      <input id="hivRnaGT1000Yes" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+			      <input id="hivRnaGT1000No" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
+			    </div>
+			</div>
+			<div class="col s4">
+			    <div class="input-padding col m12 s12 prePopulateRecentInfection">
+			      <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
+			      <label for="recentInfection" style="font-size:13px;color:#fff;"><?php echo ucwords($row->recent_infection); ?></label>
+			      <input id="recentInfectionYes" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+			      <input id="recentInfectionNo" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+			      <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
+			    </div>
+			</div>
+		    </div>
+		    <div class="row" style="margin-bottom:10px;">
+			<div class="col s6">
+			    <div class="input-padding col m12 s12 l12">
+			      Rapid Recency Assay (Eg. Asante)
+				<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
+				<br>
+			      <div id="box-1">
+				<input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Positive')?'checked="checked"':''; ?> value="HIV Positive"/>
+				<label for="asanteRapidRecencyAssayP">HIV Positive </label><br>
+				<input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'checked="checked"':''; ?> value="HIV Negative"/>
+				<label for="asanteRapidRecencyAssayN">HIV Negative </label><br>
+				<input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" onblur="getReaderValueRRDTLogVal();"/>
+				<input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
+				<input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
+				<br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
+				<div id="readerValueRRDTLogValText"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogValText; ?></div>
+			      </div>
+			      <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">&rArr;</div>
+			      <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">
+				<input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'recent')?'checked="checked"':''; ?> value="recent"/>
+				<label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label><br>
+				<input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'long term')?'checked="checked"':''; ?> value="long term"/>
+				<label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
+				<input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" onblur="getReaderValueRRRLogVal();"/>
+				<input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
+				<input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
+				<br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
+				<div id="readerValueRRRLogValText"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogValText; ?></div>
+			      </div>
+			    </div>
+			</div>
+			<div class="col s3">
+			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				<input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':''; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+				<label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
+			    </div>
+			</div>
+			<?php
+			if($row->final_lag_avidity_odn > 2 && (($asanteRapidRecencyAssayPn == 'HIV Positive' && $asanteRapidRecencyAssayRlt =='recent') || ($asanteRapidRecencyAssayPn == '' && $asanteRapidRecencyAssayRlt =='recent'))){ ?>
+			    <div class="col s3">
+				<span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
+			    </div>
+			<?php } ?>
+		    </div>
+		    <!--<div class="row" style="margin-bottom:0;">
+			<div class="col s3">
+			    <div class="input-field col m12 s12">
+				<select id="status" name="status" class="material-select" title="Please select status">
+				    < ?php
+				    foreach($allTestStatus as $testStatus){
+				    ?>
+				      <option value="< ?php echo base64_encode($testStatus['test_status_id']); ?>" < ?php echo($row->status == $testStatus['test_status_id'])?'selected="selected"':''; ?>>< ?php echo ucwords($testStatus['test_status_name']); ?></option>
+				    < ?php } ?>
+				</select>
+				<label for="status">Status </label>
+			    </div>
+			</div>
+		    </div>-->
+		</fieldset>
+		<div class="row">
 		    <div class="col s4">
 			<div class="input-field col m12 s12">
-			    <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord('barcodeid');">
-			    <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
+			    <textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
+			    <label for="comments">Comments</label>
 			</div>
 		    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker isRequired" title="Please enter specimen collected date" value="<?php echo $specimenCollectedDate; ?>">
-                            <label for="specimenCollectedDate" class="">Date Specimen Collected *</label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC site">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($ancSites as $ancSite){
-                                ?>
-                                  <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>" <?php echo($row->anc_site == $ancSite['anc_site_id'])?'selected="selected"':''; ?>><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
-                                <?php } ?>
-                            </select>
-                            <label for="ancSite">ANC site name *</label>
-                        </div>
-                    </div>
-                </div>
-		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc" value="<?php echo $specimenPickedUpDateAtAnc; ?>">
-                            <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
-                        </div>
-                    </div>
 		</div>
-            </fieldset>
-	    <fieldset style="border-color:#ff9800;border-style: solid;">
-                <legend>PATIENT INFORMATION</legend>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>" onblur="checkPatientRecord('ancid');">
-                            <label for="ancPatientId" class="">ANC Patient ID * </label>
-                        </div>
-                    </div>
-		    <div class="col s4">
-			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
-			    <label for="artPatientId" class="">ART Number </label>
-			</div>
-		    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="encAncPatientId" name="encAncPatientId" type="hidden" value="<?php echo $row['enc_anc_patient_id']; ?>">
-			    <label for="encAncPatientId" style="transform:translateY(-140%);">Encrypted ANC Patient ID </label>
-			    <p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:10px;"><?php echo $row['enc_anc_patient_id']; ?></p>
-                        </div>
-                    </div>
-                </div>
-		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="dob" name="dob" type="text" class="validate datepicker isRequired" title="Please enter DOB" value="<?php echo $patientDOB;?>" onchange="getAge();">
-			    <label for="dob" class="">DOB *</label>
-			    </div>
-		    </div>
-		    <div class="col s4">
-			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
-			    <label for="age" class="">Age *</label>
-			</div>
-		    </div>
-		    <div class="col s4">
-			<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-			    <input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age" value="<?php echo $row['gestational_age']; ?>">
-			    <label for="gestationalAge" class="">Gestation Age (Weeks) </label>
-			</div>
-	            </div>
+		<div class="col s6">
+		    <input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
+		    <input type="hidden" name="surveillanceId" id="surveillanceId" value="<?php echo $row->surveillance_id; ?>"/>
+		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($row->country); ?>"/>
+		    <input type="hidden" name="formStatus" id="formStatus" value="<?php echo $row->status; ?>"/>
+		    <input type="hidden" name="formCompletionDate" id="formCompletionDate" value="<?php echo $row->date_of_form_completion; ?>"/>
+		    <input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
+		    <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+		    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
 		</div>
-            </fieldset>
-            <fieldset style="border-color:#2196F3 ;border-style: solid;">
-               <legend>LABORATORY INFORMATION</legend>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select id="lab" name="lab" class="material-select isRequired" title="Please select lab site code/name">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($facilities as $facility){
-                                ?>
-                                  <option value="<?php echo base64_encode($facility['facility_id']); ?>" <?php echo($row->lab == $facility['facility_id'])?'selected="selected"':''; ?>><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
-                                <?php } ?>
-                            </select>
-                            <label for="lab">Lab site code/name *</label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate isRequired" title="Please enter lab specimen ID" value="<?php echo $row->lab_specimen_id; ?>">
-                            <label for="labSpecimenId" class="">Lab Specimen ID *</label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
-                            <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" onchange="emptyTestResultSection()">
-                                <option value=""> -- Select -- </option>
-                                <?php
-                                foreach($rejectionReasons as $rejection){
-                                ?>
-                                  <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
-                                <?php } ?>
-                            </select>
-                            <label for="rejectionReason">Specimen Rejection Code </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0;">
-                            <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at lab" value="<?php echo $receiptDateAtCentralLab; ?>">
-                            <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-			<div class="input-field col m12 s12" style="margin-top:0;">
-			    <input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion" value="<?php echo $testCompletionDate; ?>">
-			    <label for="dateOfTestCompletion" class="">Date of Test Completion </label>
-			</div>
-		    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0;">
-                            <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic" value="<?php echo $resultDispatchedDateToClinic; ?>">
-                            <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
-                        </div>
-                    </div>
-                </div>
-		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
-		       <div class="input-field col m12 s12">
-			   <select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
-				<option value=""> -- Select -- </option>
-				<option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
-				<option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
-				<option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
-			   </select>
-			   <label for="specimenType">Specimen Type *</label>
-		       </div>
-		    </div>
-	        </div>
-            </fieldset>
-            <fieldset id="resultSection" style="border-color:#F44336;border-style: solid;">
-                <legend>TEST RESULT</legend>
-                <div class="row" style="margin-bottom:0;">
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum isRequired testResultSection" title="Please enter LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
-                            <label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel" style="font-size:13px;">Click here to view the algorithm for Lab Data Reporting</a>
-                    </div>
-                </div>
-                <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
-                    <div class="col s4">
-                        <div class="input-padding col m10 s10 prePopulateAvidity">
-                          <strong>LAg Avidity Result</strong> <br>
-                           <label for="lagAvidityResult" style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></label>
-                          <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'recent')?'checked="checked"':''; ?> value="recent" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
-                          <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" <?php echo($row->lag_avidity_result == 'long term')?'checked="checked"':''; ?> value="long term" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-padding col m10 s10 prePopulateHIVRNA">
-                          <strong>HIV RNA > 1000 (copies/ml)</strong><br>
-                           <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></label>
-                          <input id="hivRnaGT1000Yes" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-                          <input id="hivRnaGT1000No" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" <?php echo($row->hiv_rna_gt_1000 == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-padding col m12 s12 prePopulateRecentInfection">
-                          <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
-                          <label for="recentInfection" style="font-size:13px;color:#fff;"><?php echo ucwords($row->recent_infection); ?></label>
-                          <input id="recentInfectionYes" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'yes')?'checked="checked"':''; ?> value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
-                          <input id="recentInfectionNo" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" <?php echo($row->recent_infection == 'no')?'checked="checked"':''; ?> value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
-                          <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" style="margin-bottom:10px;">
-		    <div class="col s6">
-			<div class="input-padding col m12 s12 l12">
-			  Rapid Recency Assay (Eg. Asante)
-			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
-			    <br>
-                          <div id="box-1">
-                            <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Positive')?'checked="checked"':''; ?> value="HIV Positive"/>
-                            <label for="asanteRapidRecencyAssayP">HIV Positive </label><br>
-                            <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'checked="checked"':''; ?> value="HIV Negative"/>
-                            <label for="asanteRapidRecencyAssayN">HIV Negative </label><br>
-			    <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" onblur="getReaderValueRRDTLogVal();"/>
-			    <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
-			    <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
-			    <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
-			    <div id="readerValueRRDTLogValText"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogValText; ?></div>
-                          </div>
-                          <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">&rArr;</div>
-                          <div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'HIV Negative')?'visibility:hidden;':''; ?>">
-                            <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'recent')?'checked="checked"':''; ?> value="recent"/>
-                            <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Recent </label><br>
-                            <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'long term')?'checked="checked"':''; ?> value="long term"/>
-                            <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Long Term </label><br>
-			    <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" onblur="getReaderValueRRRLogVal();"/>
-			    <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
-			    <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
-			    <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
-			    <div id="readerValueRRRLogValText"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogValText; ?></div>
-                          </div>
-                        </div>
-                    </div>
-		    <div class="col s3">
-                        <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-                            <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'isRequired'; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-                            <label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'recent')?'':'*'; ?></label>
-                        </div>
-		    </div>
-		    <?php
-		    if($row->final_lag_avidity_odn > 2 && (($asanteRapidRecencyAssayPn == 'HIV Positive' && $asanteRapidRecencyAssayRlt =='recent') || ($asanteRapidRecencyAssayPn == '' && $asanteRapidRecencyAssayRlt =='recent'))){ ?>
-			<div class="col s3">
-			    <span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
-			</div>
-		    <?php } ?>
-                </div>
-		<!--<div class="row" style="margin-bottom:0;">
-		    <div class="col s3">
-                        <div class="input-field col m12 s12">
-                            <select id="status" name="status" class="material-select" title="Please select status">
-                                < ?php
-                                foreach($allTestStatus as $testStatus){
-                                ?>
-                                  <option value="< ?php echo base64_encode($testStatus['test_status_id']); ?>" < ?php echo($row->status == $testStatus['test_status_id'])?'selected="selected"':''; ?>>< ?php echo ucwords($testStatus['test_status_name']); ?></option>
-                                < ?php } ?>
-                            </select>
-                            <label for="status">Status </label>
-                        </div>
-                    </div>
-		</div>-->
-            </fieldset>
-	    <div class="row">
-		<div class="col s4">
-		    <div class="input-field col m12 s12">
-			<textarea id="comments" name="comments" class="materialize-textarea"><?php echo $row->comments; ?></textarea>
-			<label for="comments">Comments</label>
-		    </div>
-                </div>
+		<div class="col s6" style="text-align:right;">
+		    ** required for Sample Registration<br>
+		    * required for Completion of Form
+		</div>
 	    </div>
-            <div class="col s12" style="margin-top:20px;">
-		<input id="dataCollectionId" name="dataCollectionId" type="hidden" value="<?php echo base64_encode($row->data_collection_id); ?>"/>
-		<input type="hidden" name="surveillanceId" id="surveillanceId" value="<?php echo $row->surveillance_id; ?>"/>
-                <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($row->country); ?>"/>
-		<input type="hidden" name="formStatus" id="formStatus" value="<?php echo $row->status; ?>"/>
-		<input type="hidden" name="formCompletionDate" id="formCompletionDate" value="<?php echo $row->date_of_form_completion; ?>"/>
-		<input type="hidden" name="redirectUrl" value="<?php echo $link; ?>"/>
-                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateDataReporting();">UPDATE</a>&nbsp;&nbsp;
-            </div>
-        </div>
         </form>
     </div>
 </div>
@@ -398,6 +402,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
             max: new Date('Today'),
             onSet: function(e){
 		validateDataReportingDates();
+		$('.picker__close').click();
 	    }
         });
        
@@ -440,7 +445,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     
     function populateResult(fromSource){
 	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
-	    $('#hivRna,#hivRnaNew').addClass('isRequired');
 	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 	    $('.prePopulateAvidity').css('visibility','hidden');
@@ -457,14 +461,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('label[for="recentInfection"]').html('');
 	}else{
 	    if(parseFloat($('#finalLagAvidityOdn').val()) >2){
-		$('#hivRna,#hivRnaNew').removeClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
                 $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
-		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 		if(parseInt($('#hivRna').val()) <= 1000){
@@ -481,7 +483,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    $('#lagAvidityResultRecent').prop('checked',true);
 		}
 	    }else{
-		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 		$('.prePopulateAvidity').css('visibility','hidden');
@@ -528,7 +529,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    
 	    //hiv rna mandatory
 	    if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
-		$('#hivRna,#hivRnaNew').addClass('isRequired');
 		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 	    }
@@ -670,7 +670,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     function emptyTestResultSection() {
 	if ($.trim($("#rejectionReason").val())!= '') {
 	    $('#resultSection').hide();
-	    $(".testResultSection").val('').removeClass('isRequired').attr('readonly',true);
+	    $(".testResultSection").val('').attr('readonly',true);
 	    $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
 	    $('#readerValueRRDTLogOld').val('');
@@ -681,7 +681,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLogValText').html('');
 	}else{
 	    $('#resultSection').show();
-	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").addClass('isRequired').attr('readonly',false);
+	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
 	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
 	    $(".testResultSectionRadio").attr('disabled',false);
 	}
@@ -694,46 +694,17 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	}
     });
     
-    function checkPatientRecord(type){
-	if(type == 'barcodeid'){
-	    checkPatientBarcodeId();
-	}else if(type == 'ancid'){
-	    checkANCPatientId();
-	}else{
-	    checkPatientBarcodeId();
-	    checkANCPatientId();
-	}
+    function checkPatientRecord(){
+	checkPatientBarcodeId();
     }
     
     function checkPatientBarcodeId(){
 	var patientBarcodeId = $('#patientBarcodeId').val();
 	var countryId = $('#chosenCountry').val();
 	if($.trim(patientBarcodeId)!= '' && $.trim(countryId)!= ''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {dataCollectionID:'<?php echo base64_encode($row->data_collection_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'lab',src:'barcodeid'},
+            $.post("<?php echo $this->url('check-patient-record'); ?>", {dataCollectionID:'<?php echo base64_encode($row->data_collection_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'lab'},
             function(data) {
                 if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
-            });
-        }
-    }
-    
-    function checkANCPatientId(){
-	var ancPatientId = $('#ancPatientId').val();
-        var countryId = $('#chosenCountry').val();
-	if($.trim(ancPatientId)!= '' && $.trim(countryId)!= ''){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {dataCollectionID:'<?php echo base64_encode($row->data_collection_id); ?>',ancPatientId: ancPatientId,countryId:countryId,type:'lab',src:'ancid'},
-            function(data) {
-                if ($.trim(data)!= '') {
-		    var conf = confirm("The lab data reporting with ANC Patient ID "+$('#ancPatientId').val()+" has already been submitted. Please click OK if you want to continue editing the same");
-		    if(conf){
-		       $.blockUI();	
-		       document.location.href = data;
-		    }else{
-		      $('.encAncPatientId').css('padding-top','30px');
-		      $('#ancPatientId').val('');
-		      $('.encAncPatientId').html('');
-		      $('#encAncPatientId').val('');
-		    }
-                }
             });
         }
     }
