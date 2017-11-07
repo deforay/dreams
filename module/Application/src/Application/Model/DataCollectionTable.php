@@ -1555,6 +1555,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	//facility query
 	$facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
 				     ->columns(array('facility_name','latitude','longitude'))
+				     ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))")),'left')
 				     ->where(array('f.country'=>$params['country']));
 	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
         $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

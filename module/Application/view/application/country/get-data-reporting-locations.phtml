@@ -39,9 +39,8 @@ if($location > 0) { ?>
                 {
                  lat: "<?php echo $facilities['latitude']; ?>",
                  lon: "<?php echo $facilities['longitude']; ?>",
-                 title: "<?php echo ucwords($facilities['facility_name']);?>",
                  icon : "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>",
-                 label : "<h5><?php echo ucwords($facilities['facility_name']);?></h5>"
+                 label : "<h6><?php echo ucwords($facilities['facility_name']);?></h6>"
                 },
                 <?php } } } ?>
                 //anc sites
@@ -53,9 +52,8 @@ if($location > 0) { ?>
                 {
                  lat: "<?php echo $anc['latitude']; ?>",
                  lon: "<?php echo $anc['longitude']; ?>",
-                 title: "<?php echo ucwords($anc['anc_site_name']);?>",
                  icon : "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>",
-                 label : "<h5><?php echo ucwords($anc['anc_site_name']);?></h5>"
+                 label : "<h6><?php echo ucwords($anc['anc_site_name']);?></h6>"
                 },
                 <?php } } } ?>
             ];
