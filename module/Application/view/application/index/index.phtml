@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
 <style>
     .card-header{
         background-color:#ff69b4;
@@ -17,10 +18,32 @@
     #dashboardTable_wrapper{
 	overflow-x:scroll;
     }
+    .ui-datepicker-calendar {
+       display: none;
+    }
+    .ui-datepicker-month,.ui-datepicker-year{
+       display:block;
+       display:inline-block;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
         <h4 class="page-title">Dashboard</h4>
+    </div>
+    <div class="row" style="max-width:1109px;">
+        <form id="dashboardFilter" action="#">
+            <div class="col l12 m12 s12">
+                <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> -- Select -- </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+                <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
+            </div>
+            <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchDashboardData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+            </div>
+        </form>
     </div>
     <div class="row">
         <div class="col s12">
@@ -43,31 +66,64 @@
                             <th>Month - Year</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <?php
-                        if(count($row) >0){
-                            foreach($row as $country){
-                        ?>
-                            <tr>
-                                <td><?php echo ucwords($country['country_name']); ?></td>
-                                <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-received&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
-                                <td><?php echo ($country['sampleTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-tested&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['sampleTested'].'</a>':0; ?></td>
-                                <td><?php echo ($country['sampleFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-finalized&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['sampleFinalized'].'</a>':0; ?></td>
-                                <td><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lag-rececnt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
-                                <td><?php echo ($country['noofRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-recency-assay-recent&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofRecencyAssayRecent'].'</a>':0; ?></td>
-                                <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=assessment&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
-                                <td><?php echo (isset($country['noofANCRecencyTest']) && $country['noofANCRecencyTest'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-anc-recency-test&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofANCRecencyTest'].'</a>':0; ?></td>
-                                <td><?php echo $country['month'].' - '.$country['year']; ?></td>
-                            </tr>
-                        <?php } } else { ?>
-                            <tr>
-                                <td colspan="9">No data available..</td>
-                            </tr>
-                        <?php } ?>
-                        </tbody>
+                        <tbody id="dashboardDetails"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+        $('#reportingMonthYear').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#reportingMonthYear').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#reportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#reportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+            }
+       });
+       searchDashboardData();
+    });
+    
+    function searchDashboardData(){
+        var country = $('#country').val();
+        var reportingMonthYear = $('#reportingMonthYear').val();
+        $.blockUI();
+        $.post("<?php echo $this->url('get-dashboard-details'); ?>", {country:country,reportingMonthYear: reportingMonthYear},
+        function(data) {
+            $.unblockUI();
+            $('#dashboardDetails').html(data);
+        });
+    }
+    
+    function clearSearchFields(){
+       $('#dashboardFilter')[0].reset();
+        searchDashboardData();
+    }
+    
+    function extractDashboardData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-dashboard-data'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+</script>

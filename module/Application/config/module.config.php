@@ -590,7 +590,25 @@ return array(
                         'action' => 'export-dashboard-data'
                     ),
                 ),
-            ),
+            ),'get-dashboard-details' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/get-dashboard-details',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'get-dashboard-details'
+                    ),
+                ),
+            ),'export-dashboard-data' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/export-dashboard-data',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'export-dashboard-data'
+                    ),
+                ),
+            )
         ),
     ),
     'service_manager' => array(

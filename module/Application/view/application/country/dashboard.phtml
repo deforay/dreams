@@ -114,15 +114,19 @@
     function searchDashboardData(){
         var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
+	$.blockUI();
         $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
         function(data) {
+	    $.unblockUI();
             $('#dashboardDetails').html(data);
         });
     }
     
     function getDataReportingLocations(){
+	$.blockUI();
         $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>'},
         function(data) {
+	    $.unblockUI();
             $('.map-container').html(data);
         });
     }

@@ -906,6 +906,7 @@ class DataCollectionTable extends AbstractTableGateway {
     
     public function fetchDashboardDetails($params){
 	$loginContainer = new Container('user');
+	$queryContainer = new Container('query');
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -928,7 +929,13 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->order('da_c.added_on desc');
 	if($loginContainer->roleCode == 'CC'){
             $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}if(trim($params['country'])!= ''){
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['country'])));
+	}if(trim($params['reportingMonthYear'])!= ''){
+	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
+	$queryContainer->dashboardQuery = $dataCollectionQuery;
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
       return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
