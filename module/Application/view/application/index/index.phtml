@@ -33,10 +33,13 @@
                         <thead>
                         <tr>
                             <th>Name of the Country</th>
-                            <th>No. of Lab Tests</th>
-                            <th>No. of Risk Questionnaires</th>
-                            <th>No. of Complete Forms</th>
-                            <th>ANC Recency Result</th>
+                            <th>Samples Received</th>
+                            <th>Samples Tested</th>
+                            <th>Samples Finalized</th>
+			    <th>No. of LAg Recent</th>
+			    <th>No. of Recency Assay Recent</th>
+			    <th>No. of Risk Questionnaires</th>
+			    <th>No. of ANC Recency Test</th>
                             <th>Month - Year</th>
                         </tr>
                         </thead>
@@ -47,15 +50,18 @@
                         ?>
                             <tr>
                                 <td><?php echo ucwords($country['country_name']); ?></td>
-                                <td><?php echo ($country['totalDataPoints'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalDataPoints'].'</a>':0; ?></td>
-                                <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-rq&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
-                                <td><?php echo ($country['dataPointFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-ltc&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['dataPointFinalized'].'</a>':0; ?></td>
-                                <td><?php echo (isset($country['recencyResultDone']) && $country['recencyResultDone'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=anc-rr&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['recencyResultDone'].'</a>':0; ?></td>
+                                <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-received&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
+                                <td><?php echo ($country['sampleTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-tested&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['sampleTested'].'</a>':0; ?></td>
+                                <td><?php echo ($country['sampleFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-finalized&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['sampleFinalized'].'</a>':0; ?></td>
+                                <td><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lag-rececnt&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
+                                <td><?php echo ($country['noofRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-recency-assay-recent&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofRecencyAssayRecent'].'</a>':0; ?></td>
+                                <td><?php echo (isset($country['assessments']) && $country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=assessment&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
+                                <td><?php echo (isset($country['noofANCRecencyTest']) && $country['noofANCRecencyTest'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-anc-recency-test&date='.$country['month'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofANCRecencyTest'].'</a>':0; ?></td>
                                 <td><?php echo $country['month'].' - '.$country['year']; ?></td>
                             </tr>
                         <?php } } else { ?>
                             <tr>
-                                <td colspan="6">No data available..</td>
+                                <td colspan="9">No data available..</td>
                             </tr>
                         <?php } ?>
                         </tbody>

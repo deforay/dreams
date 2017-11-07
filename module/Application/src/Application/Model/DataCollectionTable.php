@@ -254,8 +254,14 @@ class DataCollectionTable extends AbstractTableGateway {
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-ltc'){
+	} if(isset($parameters['type']) && trim($parameters['type'])== 's-tested'){
+	    $sQuery = $sQuery->where(array('da_c.status'=>1));
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 's-finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=>2));
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-lag-rececnt'){
+	    $sQuery = $sQuery->where(array('da_c.lag_avidity_result'=>'recent'));
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-recency-assay-recent'){
+	    $sQuery = $sQuery->where(array('da_c.recent_infection'=>'yes'));
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -906,12 +912,15 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
 						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
-						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
+						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'sampleTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1, 1,0))"),
+						   'sampleFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
 						))
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recencyResultDone' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -973,7 +982,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		}
 	    }
 	}else if($params['type'] == 'clinic'){
-	    $patientQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))->columns(array('assessment_id'))
+	    $patientQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))->columns(array('assessment_id','status'))
 				->where(array('r_a.patient_barcode_id'=>trim($params['patientBarcodeId'])));
 	    if(isset($params['assessmentId']) && trim($params['assessmentId'])!= ''){
                 $patientQuery = $patientQuery->where('r_a.assessment_id != "'.base64_decode($params['assessmentId']).'"');
@@ -1501,13 +1510,16 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
 						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
-						   'totalDataPoints' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'dataPointFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))")
+						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'sampleTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1, 1,0))"),
+						   'sampleFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('country'))
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recencyResultDone' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))

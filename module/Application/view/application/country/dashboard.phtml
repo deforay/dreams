@@ -1,7 +1,3 @@
-<?php
-use Zend\Session\Container;
-$loginContainer = new Container('user');
-?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
 <style>
     .card-header{
@@ -58,10 +54,13 @@ $loginContainer = new Container('user');
                         <thead>
                         <tr>
                             <th>Name of the Province</th>
-                            <th>No. of Lab Tests</th>
-                            <th>No. of Risk Questionnaires</th>
-                            <th>No. of Complete Forms</th>
-			    <th>ANC Recency Result</th>
+                            <th>Samples Received</th>
+                            <th>Samples Tested</th>
+                            <th>Samples Finalized</th>
+			    <th>No. of LAg Recent</th>
+			    <th>No. of Recency Assay Recent</th>
+			    <th>No. of Risk Questionnaires</th>
+			    <th>No. of ANC Recency Test</th>
                             <th>Month - Year</th>
                         </tr>
                         </thead>

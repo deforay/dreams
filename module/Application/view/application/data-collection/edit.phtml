@@ -174,7 +174,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>">
+				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>" onblur="checkAgeFields('age');">
 				<label for="age" class="">Age **</label>
 			    </div>
 			</div>
@@ -410,6 +410,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
        if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>
 	 emptyTestResultSection();
        <?php } ?>
+       checkAgeFields('load');
     });
     
     $('#hivRnaNew').on('keyup', function() {
@@ -757,5 +758,18 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
 	    $('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
 	}
+    }
+    
+    function checkAgeFields(src){
+	var age = $('#age').val();
+        var dob = $('#dob').val();
+        if($.trim(age)!= ''){
+	  $('label[for="dob"]').html('DOB');
+	  if(src == 'age') { $('#dob').val(''); }
+	  $('#dob').removeClass('isRequired');
+        }else{
+	  $('label[for="dob"]').html('DOB **');
+	  $('#dob').addClass('isRequired');
+        }
     }
 </script>

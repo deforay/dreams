@@ -58,7 +58,7 @@ class CountryController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $response=$countryService->getProvincesByCountry(base64_decode($params['country']));
+            $response = $countryService->getProvincesByCountry(base64_decode($params['country']));
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -71,7 +71,7 @@ class CountryController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $response=$countryService->getDistrictsByProvince(base64_decode($params['province']));
+            $response = $countryService->getDistrictsByProvince(base64_decode($params['province']));
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -99,7 +99,7 @@ class CountryController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->getCountryDashboardDetails($params);
+            $response = $dataCollectionService->getCountryDashboardDetails($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -112,7 +112,7 @@ class CountryController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->getDataReportingLocations($params);
+            $response = $dataCollectionService->getDataReportingLocations($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

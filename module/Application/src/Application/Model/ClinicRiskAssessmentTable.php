@@ -307,7 +307,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 'anc-rr'){
+	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-anc-recency-test'){
 	    $sQuery = $sQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>'done'));
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
