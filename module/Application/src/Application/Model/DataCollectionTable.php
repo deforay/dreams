@@ -1504,6 +1504,7 @@ class DataCollectionTable extends AbstractTableGateway {
     
     public function fetchCountryDashboardDetails($params){
 	$loginContainer = new Container('user');
+	$queryContainer = new Container('query');
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
@@ -1535,6 +1536,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
+	$queryContainer->countryDashboardQuery = $dataCollectionQuery;
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
       return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }

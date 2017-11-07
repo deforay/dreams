@@ -581,7 +581,16 @@ return array(
                         'action' => 'upload'
                     ),
                 ),
-            )
+            ),'export-country-dashboard-data' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/export-country-dashboard-data',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Country',
+                        'action' => 'export-dashboard-data'
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(

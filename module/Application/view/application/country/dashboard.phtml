@@ -28,7 +28,7 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Dashboard (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+        <h4 class="page-title">Dashboard (<?php echo ucwords($countryInfo->country_name); ?>)</h4>
     </div>
     <div class="row" style="max-width:1109px;">
         <form id="dashboardFilter" action="#">
@@ -39,7 +39,9 @@
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchLabReportingData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchDashboardData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
             </div>
         </form>
     </div>
@@ -105,11 +107,11 @@
                 $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
             }
        });
-       searchLabReportingData();
+       searchDashboardData();
        getDataReportingLocations();
     });
     
-    function searchLabReportingData(){
+    function searchDashboardData(){
         var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
         $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
@@ -127,7 +129,21 @@
     
     function clearSearchFields(){
        $('#dashboardFilter')[0].reset();
-        searchLabReportingData();
+        searchDashboardData();
         getDataReportingLocations();
+    }
+    
+    function extractDashboardData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-country-dashboard-data'); ?>", { countryname :'<?php echo $countryInfo->country_name; ?>'},
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
     }
 </script>
