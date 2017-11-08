@@ -131,6 +131,10 @@ if(count($labReportResult) >0){
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
+	    $rejectionCode = '';
+	    if(isset($row['rejection_code']) && trim($row['rejection_code'])!= '' && (int)$row['rejection_code'] > 1){
+		$rejectionCode = $row['rejection_code'];
+	    }
 	    $lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
 	    //$hIVRNAResult = '';
 	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
@@ -154,7 +158,7 @@ if(count($labReportResult) >0){
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name'])." - ".$row['facility_code'].'</td>';
               $html .='<td>'.$row['lab_specimen_id'].'</td>';
-              $html .='<td>'.ucwords($row['rejection_code']).'</td>';
+              $html .='<td>'.$rejectionCode.'</td>';
               $html .='<td>'.$receiptDateAtCentralLab.'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';

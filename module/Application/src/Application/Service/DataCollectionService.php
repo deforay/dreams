@@ -283,10 +283,6 @@ class DataCollectionService {
                         if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
                             $specimenPickedUpDateAtAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
                         }
-                        $rejectionCode = '';
-                        if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= '' && (int)$aRow['rejection_code'] > 1){
-                            $rejectionCode = $aRow['rejection_code'];
-                        }
                         $receiptDateAtCentralLab = '';
                         if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
                             $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
@@ -298,6 +294,10 @@ class DataCollectionService {
                         $resultDispatchedDateToClinic = '';
                         if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
                             $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+                        }
+                        $rejectionCode = '';
+                        if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= '' && (int)$aRow['rejection_code'] > 1){
+                            $rejectionCode = $aRow['rejection_code'];
                         }
                         $recencyInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         //$hIVRNAResult = '';

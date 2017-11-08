@@ -1491,7 +1491,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['lab_specimen_id'];
-	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
 	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
