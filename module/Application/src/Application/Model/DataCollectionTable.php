@@ -76,7 +76,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRRLog'])){
                 $params['readerValueRRRLog'] = '';
-            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'present' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
@@ -91,8 +91,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //status
 	    $status = 1;//complete
 	    $formCompletionDate = $common->getDateTime();
-	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+	    if($rejectionReason == NULL || $rejectionReason == 1){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		    $formCompletionDate = NULL;
 		}
@@ -485,7 +485,7 @@ class DataCollectionTable extends AbstractTableGateway {
                 $params['asanteRapidRecencyAssayRlt'] = '';
             }if(!isset($params['readerValueRRRLog'])){
                 $params['readerValueRRRLog'] = '';
-            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'HIV Positive' && $params['asanteRapidRecencyAssayRlt']== ''))){
+            }if(trim($params['specimenType'])!= '' && $params['specimenType']!= 3 && (($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt'] == '') || ($params['asanteRapidRecencyAssayPn'] == '' && $params['asanteRapidRecencyAssayRlt']!= '') || ($params['asanteRapidRecencyAssayPn'] == 'present' && $params['asanteRapidRecencyAssayRlt']== ''))){
                 $asanteValidate = false;
             }
 	    $readerValueRRDTLog = (trim($params['readerValueRRDTLog'])!= '')?$params['readerValueRRDTLog']:$params['readerValueRRDTLogOld'];
@@ -503,8 +503,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $status = 1;//complete
 	    $formCompletion = true;
 	    $formCompletionDate = $common->getDateTime();
-	    if($rejectionReason == NULL){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'recent' && trim($params['hivRna']) == '')){
+	    if($rejectionReason == NULL || $rejectionReason == 1){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
 		    $status = 4;//incomplete
 		    $formCompletionDate = NULL;
 		}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){

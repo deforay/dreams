@@ -741,3 +741,6 @@ UPDATE `anc_form` SET `age_disaggregation` = 'yes' WHERE `anc_form`.`field_id` =
 INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`) VALUES (NULL, 'no_eligible_but_refused_to_participate_in_study', 'yes', 'active');
 
 INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`) VALUES (NULL, 'no_of_pregnant_mothers_>=_25_years_attending_their_first_ANC_visit_for_current_pregnancy', 'no', 'active');
+
+--Pal 07/11/2017
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_attended_school` VARCHAR(45) NULL DEFAULT NULL AFTER `has_participant_received_dreams_services`;

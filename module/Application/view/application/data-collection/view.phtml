@@ -51,13 +51,13 @@ $readerValueRRRLogVal = '';
 $readerValueRRRLogValText = '';
 $asanteRapidRecencyAssy = ($row->asante_rapid_recency_assy!= null && trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
-    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
     $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
-    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'HIV Positive':'HIV Negative';
+    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'Positive Line Present':'Positive Line Absent';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
     $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
-    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term':'Recent';
+    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
 }
 ?>
 <style>
@@ -68,9 +68,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         margin-top:0;
         height:56px;
     }
-    #box-1{
+    .box-1,.box-2{
 	float:left;
 	width:44%;
+    }
+    #box-1,#box-2{
+	float:left;
+	width:100%;
 	border:2px dotted #333;
         margin-top:12px !important;
         min-height:60px !important;
@@ -80,16 +84,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	width:12%;
 	font-size:40px;
 	text-align:center;
-        padding-top:3vh;
+        padding-top:5vh;
     }
-    #box-2{
-	float:left;
-	width:44%;
-	border:2px dotted #333;
-        margin-top:12px !important;
-        min-height:60px !important;
-    }
-
     #readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
         text-align: center !important;
         font-size:1em;
@@ -110,7 +106,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     <div class="row dashboard-wrapper content-container">
         <div class="data-collection-view card">
             <fieldset style="border-color:#88C542;border-style: solid;">
-               <legend>SURVEILLANCE INFORMATION <span id="serialNo"></span></legend>
+               <legend>SURVEILLANCE/SAMPLE INFORMATION <span id="serialNo"></span></legend>
                 <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
@@ -136,6 +132,22 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                         <div class="input-field col m12 s12">
                             <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label><br>
                             <p><?php echo $specimenPickedUpDateAtAnc; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="specimenType" class="">Specimen Type </label><br>
+                            <p>
+                                <?php
+                                if($row->specimen_type == 1){
+                                    echo 'Venous';
+                                }if($row->specimen_type == 2){
+                                    echo 'Plasma';
+                                }if($row->specimen_type == 3){
+                                    echo 'DBS';
+                                }
+                                ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -195,24 +207,18 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="labSpecimenId" class="">Lab Specimen ID </label><br>
-                            <p><?php echo $row->lab_specimen_id; ?></p>
-                        </div>
-                    </div>
-                    <div class="col s4">
-                        <div class="input-field col m12 s12">
                             <label for="rejectionReason">Specimen Rejection Code </label><br>
                             <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label><br>
                             <p><?php echo $receiptDateAtCentralLab; ?></p>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="dateOfTestCompletion" class="">Date of Test Completion </label><br>
@@ -225,27 +231,15 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                             <p><?php echo $resultDispatchedDateToClinic; ?></p>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col s4">
                         <div class="input-field col m12 s12">
-                            <label for="specimenType" class="">Specimen Type </label><br>
-                            <p>
-                                <?php
-                                if($row->specimen_type == 1){
-                                    echo 'Venous';
-                                }if($row->specimen_type == 2){
-                                    echo 'Plasma';
-                                }if($row->specimen_type == 3){
-                                    echo 'DBS';
-                                }
-                                ?>
-                            </p>
+                            <label for="labSpecimenId" class="">Lab Specimen ID </label><br>
+                            <p><?php echo $row->lab_specimen_id; ?></p>
                         </div>
                     </div>
                 </div>
             </fieldset>
-            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>display:none;<?php } ?>">
+            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && (int)$row->rejection_reason > 1){ ?>display:none;<?php } ?>">
                <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">
@@ -290,9 +284,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                           Rapid Recency Assay (Eg. Asante)
                            <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
                            <br>
-                          <div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div>
-                          <div id="box-breaker" style="display:<?php echo ($asanteRapidRecencyAssayPn == 'HIV Negative')?'none':''; ?>">&rArr;</div>
-                          <div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'HIV Negative')?'none':''; ?>"><?php echo $asanteRapidRecencyAssayRlt; ?><br><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
+                          <div class="box-1">Positive Verification Line<div id="box-1" style="text-align:center;"><?php echo $asanteRapidRecencyAssayPn; ?><br><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div></div>
+                          <div id="box-breaker" style="display:<?php echo ($asanteRapidRecencyAssayPn == 'absent')?'none':''; ?>">&rArr;</div>
+                          <div class="box-2">Long Term Line<div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'absent')?'none':''; ?>"><?php echo $asanteRapidRecencyAssayRlt; ?><br><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
                         </div>
                     </div>
                     <div class="col s4">

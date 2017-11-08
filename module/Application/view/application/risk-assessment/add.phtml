@@ -184,7 +184,7 @@ if(trim($countryId)!= ''){
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    1. What kind of work/occupation do you do most of the time? *
+                    Q1. What kind of work/occupation do you do most of the time? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
@@ -203,26 +203,46 @@ if(trim($countryId)!= ''){
 		    <input id="occupationNew" name="occupationNew" type="text" class="validate" placeholder="Occupation" title="Please enter occupation" onblur="checkNameValidation('occupation_type', 'occupation', this, null,'The occupation that you entered already listed. Please enter different occupation');">
 		</div>
             </div>
-            <div class="row" style="margin-bottom:0;">
+	    <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    2. What was the highest level of school that you completed or are attending now? *
+                    Q2. Have you ever attended school? *
                 </div>
             </div>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col s4">
-                    <select id="degree" name="degree" class="material-select isRequired" title="Don't leave 2nd question">
+                <div class="col s8">
+                    <input id="hasPatientEverAttendedSchoolYes" class="with-gap isRequired" name="hasPatientEverAttendedSchool" title="Don't leave 2nd question" value="yes" type="radio">
+		    <label for="hasPatientEverAttendedSchoolYes" class="active">Yes </label>&nbsp;&nbsp;
+                    <input id="hasPatientEverAttendedSchoolNo" class="with-gap" name="hasPatientEverAttendedSchool" value="no" type="radio">
+		    <label for="hasPatientEverAttendedSchoolNo" class="active">No </label>&nbsp;&nbsp;
+		    <input id="hasPatientEverAttendedSchoolDK" class="with-gap" name="hasPatientEverAttendedSchool" value="dontknow" type="radio">
+		    <label for="hasPatientEverAttendedSchoolDK" class="active">Don't Know </label>&nbsp;&nbsp;
+                    <input id="hasPatientEverAttendedSchoolR" class="with-gap" name="hasPatientEverAttendedSchool" value="refused" type="radio">
+		    <label for="hasPatientEverAttendedSchoolR" class="active">Refused </label>&nbsp;&nbsp;
+		    <input id="hasPatientEverAttendedSchoolRNA" class="with-gap" name="hasPatientEverAttendedSchool" value="response not available" type="radio">
+		    <label for="hasPatientEverAttendedSchoolRNA" class="active">Response Not Available </label>
+                </div>
+            </div>
+            <div class="row degreeSection" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q2A. What was the highest level of education that you completed or are attending now?<span class="degreeSectionRequired">*</span>
+                </div>
+            </div>
+            <div class="row degreeSection" style="margin-bottom:10px;">
+                <div class="col s4 degree" style="padding-left:3%;">
+                    <select id="degree" name="degree" class="material-select isRequired" title="Don't leave 2nd question partially">
                         <option value=""> -- Select -- </option>
-                        <option value="noedu">No Education</option>
-                        <option value="primary">Primary/Post-Primary/Vocational</option>
-                        <option value="secondary">Secondary/Post-Secondary</option>
+                        <option value="primary">Primary/Vocational</option>
+                        <option value="secondary">Secondary</option>
                         <option value="university">University/College</option>
+			<option value="dontknow">Don't know</option>
+			<option value="refused">Refused</option>
 			<option value="response not available">Response Not Available</option>
                     </select>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married? * &nbsp;(If no, go to question 7)
+                    Q3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married? * &nbsp;(If no, go to question 7)
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">
@@ -1108,9 +1128,27 @@ if(trim($countryId)!= ''){
 	}
     });
     
+    //enable/disable Demographic Characteristics fields based on q.2
+    $('input:radio[name=hasPatientEverAttendedSchool]').change(function () {
+	if ($("input[name='hasPatientEverAttendedSchool']:checked").val()!= 'yes') {
+	    //css section
+	    $(".degreeSectionRequired").css("visibility","hidden");
+	    $(".degreeSection").css("color","rgba(0,0,0,0.26)");
+	    $(".degree").css("pointer-events","none");
+	    //validate/content section
+	    $("#degree").removeClass("isRequired");
+	}else{
+	    //css section
+	    $(".degreeSectionRequired").css("visibility","visible");
+	    $(".degreeSection").css("color","");
+	    $(".degree").css("pointer-events","auto");
+	    //validate/content section
+	    $("#degree").addClass("isRequired");
+	}
+    });
     //enable/disable Demographic Characteristics fields based on q.3
     $('input:radio[name=everBeenMarried]').change(function () {
-	if ($("input[name='everBeenMarried']:checked").val() == 'no') {
+	if ($("input[name='everBeenMarried']:checked").val() == 'no' || $("input[name='everBeenMarried']:checked").val() == 'response not available') {
 	    //css section
 	    $(".everBeenMarriedSectionRequired").css("visibility","hidden");
 	    $(".everBeenMarriedSection").css("color","rgba(0,0,0,0.26)");
