@@ -296,7 +296,7 @@ class DataCollectionService {
                             $resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
                         }
                         $rejectionCode = '';
-                        if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= '' && (int)$aRow['rejection_code'] > 1){
+                        if(isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1){
                             $rejectionCode = $aRow['rejection_code'];
                         }
                         $recencyInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';

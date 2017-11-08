@@ -132,7 +132,7 @@ if(count($labReportResult) >0){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
 	    $rejectionCode = '';
-	    if(isset($row['rejection_code']) && trim($row['rejection_code'])!= '' && (int)$row['rejection_code'] > 1){
+	    if(isset($row['rejection_code']) && (int)$row['rejection_code'] > 1){
 		$rejectionCode = $row['rejection_code'];
 	    }
 	    $lAgAvidityResult = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
