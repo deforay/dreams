@@ -343,7 +343,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
@@ -397,7 +397,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['lab_specimen_id'];
-	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
 	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
@@ -833,7 +833,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['lab_specimen_id'];
-	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
 	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
@@ -1227,7 +1227,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
@@ -1244,7 +1244,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    $row[] = $aRow['lab_specimen_id'];
-	    $row[] = ucwords($aRow['rejection_code']);
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
 	    $row[] = $aRow['final_lag_avidity_odn'];

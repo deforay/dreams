@@ -49,7 +49,7 @@ class ResultEmailController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $dataList=$dataCollectionService->getSearchableDataCollection($params);
+            $dataList = $dataCollectionService->getSearchableDataCollection($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataList' =>$dataList));
             $viewModel->setTerminal(true);
@@ -62,7 +62,7 @@ class ResultEmailController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $dataResult=$dataCollectionService->generateDataCollectionResultPdf($params);
+            $dataResult = $dataCollectionService->generateDataCollectionResultPdf($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataResult' =>$dataResult));
             $viewModel->setTerminal(true);

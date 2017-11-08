@@ -233,16 +233,16 @@ if(!isset($countryId)){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol17">Recent Infection (LAg Assay)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol18">HIV Verification Classification</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol18">Positive Verification Line</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">HIV Recency Classification</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Long Term Line</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol20">Comments</label> <br>
 	    </div>
 	    <?php
-	    if(trim($countryId)== ''){
+	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
 		<input type="hidden" id="countColumn" value="21"/>
@@ -282,8 +282,8 @@ if(!isset($countryId)){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection (LAg Assay)</th>
-                                <th>HIV Verification Classification</th>
-                                <th>HIV Recency Classification</th>
+                                <th>Positive Verification Line</th>
+                                <th>Long Term Line</th>
                                 <th>Comments</th>
 				<?php
                                 if(trim($countryId)== ''){
@@ -313,8 +313,8 @@ if(!isset($countryId)){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection (LAg Assay)</th>
-                                <th>HIV Verification Classification</th>
-                                <th>HIV Recency Classification</th>
+                                <th>Positive Verification Line</th>
+                                <th>Long Term Line</th>
                                 <th>Comments</th>
 				<?php
                                 if(trim($countryId)== ''){
@@ -372,7 +372,7 @@ if(!isset($countryId)){
 		<?php } ?>
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[18] =='HIV Negative' || (aData[14] > 2 && ((aData[18] == 'HIV Positive' && aData[19] == 'Recent') || aData[19] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[18] =='Absent' || (aData[14] > 2 && ((aData[18] == 'Present' && aData[19] == 'Absent') || aData[19] == 'Absent'))){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,

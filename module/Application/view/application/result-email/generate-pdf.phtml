@@ -106,6 +106,7 @@ $alertContainer->nbPages = count($dataResult);
 	    $dob = $data['age'];
 	    $dobLabel = 'Age (Years)';
 	}
+	$gestationalAgeinWeeks = ($data['gestational_age']!= null && trim($data['gestational_age'])!='' && (int)$data['gestational_age'] > 0)?(int)$data['gestational_age']:'';
 	$specimenCollectedDate = '';
 	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
 	    $specimenCollectedDate = $common->humanDateFormat($data['specimen_collected_date']);
@@ -132,7 +133,7 @@ $alertContainer->nbPages = count($dataResult);
 	$rejectionName = '';
 	//$lagAssayImage = '';
 	//$rejectedImage = '';
-	if($data['rejection_reason']!= null && trim($data['rejection_reason'])!= '' && $data['rejection_reason'] > 0){
+	if($data['rejection_reason']!= null && trim($data['rejection_reason'])!= '' && (int)$data['rejection_reason'] > 1){
 	    $rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
 	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
 	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
@@ -178,7 +179,7 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ANC Patient ID:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['anc_patient_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>ART Number:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['art_patient_id'].'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$dobLabel.':</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$dob.'</td></tr>';
-	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Gestation Age in (Weeks):</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$data['gestational_age'].'</td></tr>';
+	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Gestation Age in (Weeks):</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$gestationalAgeinWeeks.'</td></tr>';
 	    //laboratory info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Laboratory Information</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Lab/Facility:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucwords($data['facility_name']).'</td></tr>';
@@ -186,13 +187,15 @@ $alertContainer->nbPages = count($dataResult);
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sample Pickup Date:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$specimenPickedUpDateAtAnc.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sample Received at Recency/VL Lab:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$receiptDateAtCentralLab.'</td></tr>';
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Date of Test Completion:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$testCompletionDate.'</td></tr>';
-	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Specimen Rejection Code:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rejectionCode.'</td></tr>';
+	    if($data['rejection_reason'] == null && trim($data['rejection_reason']) == '' && (int)$data['rejection_reason'] > 1){
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Specimen Rejection Code:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rejectionCode.'</td></tr>';
+	    }
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Dispatch Date:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$resultDispatchedDateToClinic.'</td></tr>';
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;">Recency Test Result</td></tr>';
-	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || $data['rejection_reason'] == 0){
+	    if($data['rejection_reason'] == null || trim($data['rejection_reason']) == '' || (int)$data['rejection_reason'] == 0 || (int)$data['rejection_reason'] == 1){
 	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">'.$lblLAgAssay.'</td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td></tr>';
-	      //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
+	       //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
 	    }else {
 	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample Reject ('.$rejectionName.')</td></tr>';
 	    }

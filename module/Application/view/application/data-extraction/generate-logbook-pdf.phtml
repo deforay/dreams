@@ -174,9 +174,9 @@ if(count($logbookResult) >0){
 	    $html .='<th  style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
 	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Recent Infection (LAg Assay)</strong></th>';
 	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line Reader Value (log10)</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>HIV Verification Classification</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line</strong></th>';
 	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Long Term Line Reader Value (log10)</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>HIV Recency Classification</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Long Term Line</strong></th>';
 	   $html .='</tr>';
           $html .='</thead>';
           $html .='<tbody>';
@@ -197,6 +197,10 @@ if(count($logbookResult) >0){
 	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
 	    }
+	    $rejectionCode = '';
+	    if(isset($row['rejection_code']) && trim($row['rejection_code'])!= '' && (int)$row['rejection_code'] > 1){
+		$rejectionCode = $row['rejection_code'];
+	    }
 	    $recencyInfection = ($row['lag_avidity_result']!= null && trim($row['lag_avidity_result'])!= '')?ucwords($row['lag_avidity_result']):'';
 	    //$hIVRNAResult = '';
 	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
@@ -212,7 +216,7 @@ if(count($logbookResult) >0){
 	    if(trim($row['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
 		    $diagnosisReaderLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
@@ -220,7 +224,7 @@ if(count($logbookResult) >0){
 		}
 	    }
 	    $redTxt='';
-	    if($rapidRecencyAssay == 'HIV Negative' || ($row['final_lag_avidity_odn'] > 2 && (($rapidRecencyAssay == 'HIV Positive' && $rapidRecencyAssayDuration == 'Recent') || $rapidRecencyAssayDuration == 'Recent'))){
+	    if($rapidRecencyAssay == 'Absent' || ($row['final_lag_avidity_odn'] > 2 && (($rapidRecencyAssay == 'Present' && $rapidRecencyAssayDuration == 'Absent') || $rapidRecencyAssayDuration == 'Absent'))){
 		$redTxt = 'color:#F44336;';
 	    }
             $html .='<tr style="'.$redTxt.'">';
@@ -236,7 +240,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.ucwords($row['facility_name']).'</td>';
 	      $html .='<td>'.$row['facility_code'].'</td>';
               $html .='<td>'.$row['lab_specimen_id'].'</td>';
-              $html .='<td>'.ucwords($row['rejection_code']).'</td>';
+              $html .='<td>'.$rejectionCode.'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
 	      $html .='<td>'.$row['hiv_rna'].'</td>';

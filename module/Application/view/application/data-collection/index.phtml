@@ -100,11 +100,12 @@ if(isset($date) && trim($date)!= ''){
     }
     #readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
 	text-align: center !important;
-	font-size:1em;
+	font-size:14px;
     }
 
     #readerValueRRDTLogValText, #readerValueRRRLogValText{
 	font-weight:bold;
+	font-size:13px;
     }
 </style>
 <div id="page-content">
@@ -326,12 +327,12 @@ if(isset($date) && trim($date)!= ''){
 				    <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
 				</div>
 			    </div>
-			    <div class="col s4">
+			    <!--<div class="col s4">
 				<div class="input-field col m12 s12" style="margin-top:0;">
 				    <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID">
 				    <label for="labSpecimenId" class="">Lab Specimen ID </label>
 				</div>
-			    </div>
+			    </div>-->
 			</div>
 		    </fieldset>
 		    <fieldset id="resultSection" style="border-color:#F44336;border-style:solid;">
@@ -392,8 +393,8 @@ if(isset($date) && trim($date)!= ''){
 				  <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a>
 				  <br>
 				  <div class="box-1">
-				    Positive Verification Line
 				    <div id="box-1">
+				      <strong>Positive Verification Line</strong><br>	
 				      <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="present"/>
 				      <label for="asanteRapidRecencyAssayP">Present </label><br>
 				      <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="absent"/>
@@ -406,8 +407,8 @@ if(isset($date) && trim($date)!= ''){
 				  </div>
 				  <div id="box-breaker">&rArr;</div>
 				  <div class="box-2">
-				    Long Term Line
 				    <div id="box-2">
+				      <strong>Long Term Line</strong><br>	
 				      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="absent"/>
 				      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="present"/>
@@ -516,10 +517,10 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol18">Recent Infection</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">HIV Verification Classification</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Positive Verification Line</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">HIV Recency Classification</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol21">Added On</label> <br>
@@ -572,8 +573,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
-                                <th>HIV Verification Classification</th>
-				<th>HIV Recency Classification</th>
+                                <th>Positive Verification Line</th>
+				<th>Long Term Line</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
@@ -606,8 +607,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
-                                <th>HIV Verification Classification</th>
-				<th>HIV Recency Classification</th>
+                                <th>Positive Verification Line</th>
+				<th>Long Term Line</th>
                                 <th>Added On</th>
                                 <th>Added by</th>
 				<?php
@@ -672,7 +673,7 @@ if(isset($date) && trim($date)!= ''){
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[19] =='HIV Negative' || (aData[15] > 2 && ((aData[19] == 'HIV Positive' && aData[20] == 'Recent') || aData[20] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[19] =='Absent' || (aData[15] > 2 && ((aData[19] == 'Present' && aData[20] == 'Absent') || aData[20] == 'Absent'))){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[2, "desc"]],
             "bProcessing": true,
@@ -1161,7 +1162,7 @@ if(isset($date) && trim($date)!= ''){
 	var readerValueRRDT = $('#readerValueRRDT').val();
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
-	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Line Present':'Positive Line Absent';
+	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);

@@ -284,7 +284,7 @@ class DataCollectionService {
                             $specimenPickedUpDateAtAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
                         }
                         $rejectionCode = '';
-                        if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= ''){
+                        if(isset($aRow['rejection_code']) && trim($aRow['rejection_code'])!= '' && (int)$aRow['rejection_code'] > 1){
                             $rejectionCode = $aRow['rejection_code'];
                         }
                         $receiptDateAtCentralLab = '';
@@ -313,7 +313,7 @@ class DataCollectionService {
                         if(trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
-                                $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+                                $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
                                 $diagnosisReaderLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
                             }if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
@@ -475,9 +475,9 @@ class DataCollectionService {
                     //$sheet->setCellValue('R'.$headerRow, html_entity_decode('HIV RNA > 1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('R'.$headerRow, html_entity_decode('Recent Infection (LAg Assay)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('S'.$headerRow, html_entity_decode('Positive Verification Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T'.$headerRow, html_entity_decode('HIV Verification Classification', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T'.$headerRow, html_entity_decode('Positive Verification Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('U'.$headerRow, html_entity_decode('Long Term Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V'.$headerRow, html_entity_decode('HIV Recency Classification', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V'.$headerRow, html_entity_decode('Long Term Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('W'.$headerRow, html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
                         $sheet->setCellValue('X'.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -574,11 +574,11 @@ class DataCollectionService {
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?22:21){
                                 if($lstColumn == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22){
-                                   if($assay1 =='HIV Negative' || ($lag > 2 && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='Absent' || ($lag > 2 && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
                                     $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
-                                   if($assay1 =='HIV Negative' || ($lag > 2 && (($assay1 == 'HIV Positive' && $assay2 == 'Recent') || $assay2 == 'Recent'))){
+                                   if($assay1 =='Absent' || ($lag > 2 && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
                                     $sheet->getStyle('A'.$currentRow.':Y'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }

@@ -15,7 +15,7 @@ use Zend\View\Model\ViewModel;
 
 class ResultSmsController extends AbstractActionController{
     public function indexAction(){
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
             return new ViewModel();
         }else{
