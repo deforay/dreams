@@ -71,7 +71,7 @@ if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($
     if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
         $patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
     }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
-        $patientAbusedBy = 'Not Applicable';
+        $patientHurtByWithinLastYear = 'Not Applicable';
     }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
         $hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
         $hurtedGroup = array();

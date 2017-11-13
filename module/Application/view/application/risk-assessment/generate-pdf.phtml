@@ -72,6 +72,7 @@ $common = new \Application\Service\CommonService();
 	if(isset($data['interview_date']) && $data['interview_date']!= null && trim($data['interview_date'])!= '' && $data['interview_date']!= '0000-00-00'){
 	    $interviewDate = $common->viewDateFormat($data['interview_date']);
 	}
+	//recency test result
         $hasPatientHadRapidRecencyTest = '';
         if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test']!= null && trim($data['has_patient_had_rapid_recency_test'])!= ''){
             $hasPatientHadRapidRecencyTest = ucwords($data['has_patient_had_rapid_recency_test']);
@@ -93,341 +94,682 @@ $common = new \Application\Service\CommonService();
             }
         }
         //occupation
-        $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']):'';
-        //education
-        $education = '';
-        if($data['patient_degree']!= null && trim($data['patient_degree'])!= ''){
-            if($data['patient_degree']=='noedu'){
-                $education = "No Education";
-            }else if($data['patient_degree']=='primary'){
-                $education = "Primary/Post-Primary/Vocational";
-            }else if($data['patient_degree']=='secondary'){
-               $education = "Secondary/Post-Secondary";
-            }else if($data['patient_degree']=='university'){
-               $education = "University/College";
-            }else{
-	       $education = ucwords($data['patient_degree']);
+        $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']).' - '.$data['occupation_code']:'';
+	//patient schooling details
+	$hasPatientEverAttendedSchool = '';
+	if($data['has_patient_ever_attended_school']!= null && trim($data['has_patient_ever_attended_school'])!= ''){
+	    if($data['has_patient_ever_attended_school'] == 1){
+		$hasPatientEverAttendedSchool = "Yes - 1";
+	    }else if($data['has_patient_ever_attended_school'] == 2){
+		$hasPatientEverAttendedSchool = "No - 2";
+	    }else if($data['has_patient_ever_attended_school'] == 88){
+		$hasPatientEverAttendedSchool = "Don't Know - 88";
+	    }else if($data['has_patient_ever_attended_school'] == 99){
+		$hasPatientEverAttendedSchool = "Refused - 99";
+	    }else if($data['has_patient_ever_attended_school'] == 2222){
+		$hasPatientEverAttendedSchool = "Response Not Available - 2222";
 	    }
-        }
-        $agtAtFirstMarriage = '';
-        if($data['age_at_first_marriage']!= null && trim($data['age_at_first_marriage'])!= ''){
-            if((int)$data['age_at_first_marriage'] > 1){
-               $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Years";
-            }else if((int)$data['age_at_first_marriage'] == 1){
-                $agtAtFirstMarriage = (int)$data['age_at_first_marriage']." Year";
-            }else if($data['age_at_first_marriage'] == 'dontknow'){
-                $agtAtFirstMarriage = "Don't Know";
-            }else{
-		$agtAtFirstMarriage = ucwords($data['age_at_first_marriage']);
+	}
+	$degree = '';
+	if($data['patient_degree']!= null && trim($data['patient_degree'])!= ''){
+	    if($data['patient_degree'] == 1){
+		$degree = "Primary/Vocational - 1";
+	    }else if($data['patient_degree'] == 2){
+		$degree = "Secondary - 2";
+	    }else if($data['patient_degree'] == 3){
+		$degree = "University/College - 3";
+	    }else if($data['patient_degree'] == 88){
+		$degree = "Don't know - 88";
+	    }else if($data['patient_degree'] == 99){
+		$degree = "Refused - 99";
+	    }else if($data['patient_degree'] == 2222){
+		$degree = "Response Not Available - 2222";
+	    }else{
+		$degree = ucwords($data['patient_degree']);
 	    }
-        }
-        $haveYouEverBeenWidowed = '';
-        if($data['patient_ever_been_widowed']!= null && trim($data['patient_ever_been_widowed'])!= ''){
-            if($data['patient_ever_been_widowed']=='dontknow'){
-                $haveYouEverBeenWidowed = "Don't Know";
-            }else{
-               $haveYouEverBeenWidowed = ucwords($data['patient_ever_been_widowed']);
-            }
-        }
-        $patientCurrentMaritalStatus = '';
-        if($data['current_marital_status']!= null && trim($data['current_marital_status'])!= ''){
-            if($data['current_marital_status'] == 'married'){
-                $patientCurrentMaritalStatus = "Married/Cohabiting";
-            }else if($data['current_marital_status'] == 'nevermarried'){
-                $patientCurrentMaritalStatus = "Never Married/Cohabiting";
-            }else if($data['current_marital_status'] == 'dontknow'){
-                $patientCurrentMaritalStatus = "Don't Know";
-            }else{
-		$patientCurrentMaritalStatus = ucwords($data['current_marital_status']);
+	}
+	//patient marital status
+	$patientEverBeenMarried = '';
+	if($data['patient_ever_been_married']!= null && trim($data['patient_ever_been_married'])!= ''){
+	    if($data['patient_ever_been_married'] == 1){
+		$patientEverBeenMarried = "Yes - 1";
+	    }else if($data['patient_ever_been_married'] == 2){
+		$patientEverBeenMarried = "No - 2";
+	    }else if($$data['patient_ever_been_married'] == 88){
+		$patientEverBeenMarried = "Don't Know - 88";
+	    }else if($data['patient_ever_been_married'] == 99){
+		$patientEverBeenMarried = "Refused - 99";
+	    }else if($data['patient_ever_been_married'] == 2222){
+		$patientEverBeenMarried = "Response Not Available - 2222";
 	    }
-        }
-        $timeofLastHIVTest = '';
-        if($data['time_of_last_HIV_test']!= null && trim($data['time_of_last_HIV_test'])!= ''){
-            if($data['time_of_last_HIV_test'] == 'nevertested'){
-                $timeofLastHIVTest = "Never Tested";
-            }else if($data['time_of_last_HIV_test'] == 'lt3months'){
-                $timeofLastHIVTest = "< 3 Months Ago";
-            }else if($data['time_of_last_HIV_test'] == '3to6months'){
-                $timeofLastHIVTest = "3-6 Months Ago";
-            }else if($data['time_of_last_HIV_test'] == '7to12months'){
-                $timeofLastHIVTest = "7-12 Months Ago";
-            }else if($data['time_of_last_HIV_test'] == 'gt12months'){
-                $timeofLastHIVTest = "> 12 months";
-            }else if($data['time_of_last_HIV_test'] == 'dontknow'){
-                $timeofLastHIVTest = "Don't Know";
-            }else{
-                $timeofLastHIVTest = ucwords($data['time_of_last_HIV_test']);
-            }
-        }
-        $resultofLastHIVTest = '';
-        if($data['last_HIV_test_status']!= null && trim($data['last_HIV_test_status'])!= ''){
-            if($data['last_HIV_test_status'] == 'didnotreceive'){
-                $resultofLastHIVTest = "I Did Not Receive Result";
-            }else if($data['last_HIV_test_status'] == 'hivpos'){
-                $resultofLastHIVTest = "HIV+";
-            }else if($data['last_HIV_test_status'] == 'hivneg'){
-                $resultofLastHIVTest = "HIV-";
-            }else if($data['last_HIV_test_status'] == 'dontknow'){
-                $resultofLastHIVTest = "Don't Know";
-            }else{
-                $resultofLastHIVTest = ucwords($data['last_HIV_test_status']);
-            }
-        }
-        $partnerHIVTestStatus = '';
-        if($data['partner_HIV_test_status']!= null && trim($data['partner_HIV_test_status'])!= ''){
-            if($data['partner_HIV_test_status'] == 'hivpos'){
-                $partnerHIVTestStatus = "HIV+";
-            }else if($data['partner_HIV_test_status'] == 'hivneg'){
-                $partnerHIVTestStatus = "HIV-";
-            }else if($data['partner_HIV_test_status'] == 'idonotknow'){
-                $partnerHIVTestStatus = "I Do Not Know";
-            }else{
-                $partnerHIVTestStatus = ucwords($data['partner_HIV_test_status']);
-            }
-        }
-        $ageAtVeryFirstSex = '';
-        if($data['age_at_very_first_sex']!= null && trim($data['age_at_very_first_sex'])!= ''){
-            if((int)$data['age_at_very_first_sex'] > 1){
-                $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Years";    
-            }else if((int)$data['age_at_very_first_sex'] == 1){
-                $ageAtVeryFirstSex = (int)$data['age_at_very_first_sex']." Year";
-            }else{
-		$ageAtVeryFirstSex = ucwords($data['age_at_very_first_sex']);
+	}
+	$ageAtFirstMarriage = '';
+	if($data['age_at_first_marriage']!= null && trim($data['age_at_first_marriage'])!= ''){
+	    if($data['age_at_first_marriage'][0] == '@'){
+		$ageAtFirstMarriage = substr($data['age_at_first_marriage'],1).' Year(s)';
+	    }else if($data['age_at_first_marriage'] == 88){
+		$ageAtFirstMarriage = "Don't Know - 88";
+	    }else if($data['age_at_first_marriage'] == 99){
+		$ageAtFirstMarriage = "Refused - 99";
+	    }else if($data['age_at_first_marriage'] == 2222){
+		$ageAtFirstMarriage = "Response Not Available - 2222";
+	    }else{
+		$ageAtFirstMarriage = ucwords($data['age_at_first_marriage']);
 	    }
-        }
-        $reasonForVerFirstSex = '';
-        if($data['reason_for_very_first_sex']!= null && trim($data['reason_for_very_first_sex'])!= ''){
-            if($data['reason_for_very_first_sex'] == 'wantedto'){
-                $reasonForVerFirstSex = "Wanted To";
-            }else if($data['reason_for_very_first_sex'] == 'forcedto'){
-                $reasonForVerFirstSex = "Forced To";
-            }else if($data['reason_for_very_first_sex'] == 'dontknow'){
-                $reasonForVerFirstSex = "Don't Know";
-            }else{
-                $reasonForVerFirstSex = ucwords($data['reason_for_very_first_sex']);
-            }
-        }
-        $noofSexualPartners = '';
-        if($data['no_of_sexual_partners']!= null && trim($data['no_of_sexual_partners'])!= ''){
-            if((int)$data['no_of_sexual_partners'] > 1){
-                $noofSexualPartners = (int)$data['no_of_sexual_partners']." Persons";
-            }else if((int)$data['no_of_sexual_partners'] == 1){
-                $noofSexualPartners = (int)$data['no_of_sexual_partners']." Person";
-            }else if($data['no_of_sexual_partners']=='dontknow'){
-                $noofSexualPartners = "Don't Know";
-            }else{
-                $noofSexualPartners = ucwords($data['no_of_sexual_partners']);
-            }
-        }
-        $noofSexualPartnersinLastSixMonths = '';
-        if($data['no_of_sexual_partners_in_last_six_months']!= null && trim($data['no_of_sexual_partners_in_last_six_months'])!= ''){
-            if((int)$data['no_of_sexual_partners_in_last_six_months'] > 1){
-                $noofSexualPartnersinLastSixMonths = (int)$data['no_of_sexual_partners_in_last_six_months']." Persons";
-            }else if((int)$data['no_of_sexual_partners_in_last_six_months'] == 1){
-                $noofSexualPartnersinLastSixMonths = (int)$data['no_of_sexual_partners_in_last_six_months']." Person";
-            }else if($data['no_of_sexual_partners_in_last_six_months']=='dontknow'){
-                $noofSexualPartnersinLastSixMonths = "Don't Know";
-            }else{
-                $noofSexualPartnersinLastSixMonths = ucwords($data['no_of_sexual_partners_in_last_six_months']);
-            }
-        }
-        $ageofMainSexualPartneratLastBirthday = '';
-        if($data['age_of_main_sexual_partner_at_last_birthday']!= null && trim($data['age_of_main_sexual_partner_at_last_birthday'])!= ''){
-            if((int)$data['age_of_main_sexual_partner_at_last_birthday'] > 1){
-                $ageofMainSexualPartneratLastBirthday = (int)$data['age_of_main_sexual_partner_at_last_birthday']." Years";
-            }else if((int)$data['age_of_main_sexual_partner_at_last_birthday'] == 1){
-                $ageofMainSexualPartneratLastBirthday = (int)$data['age_of_main_sexual_partner_at_last_birthday']." Year";
-            }else if($data['age_of_main_sexual_partner_at_last_birthday']=='dontknow'){
-                $ageofMainSexualPartneratLastBirthday = "Don't Know";
-            }else{
-                $ageofMainSexualPartneratLastBirthday = ucwords($data['age_of_main_sexual_partner_at_last_birthday']);
-            }
-        }
-        $ageDiffofMainSexualPartner = '';
-        if($data['age_diff_of_main_sexual_partner']!= null && trim($data['age_diff_of_main_sexual_partner'])!= ''){
-            if($data['age_diff_of_main_sexual_partner']=='lt5yearolder'){
-                $ageDiffofMainSexualPartner = "< 5 Years Older";
-            }else if($data['age_diff_of_main_sexual_partner']=='5to10yearolder'){
-                $ageDiffofMainSexualPartner = "5-10 Years Older";
-            }else if($data['age_diff_of_main_sexual_partner']=='10yearsolder'){
-                $ageDiffofMainSexualPartner = ">10 Years Older";
-            }else if($data['age_diff_of_main_sexual_partner']=='sameage'){
-                $ageDiffofMainSexualPartner = "Same Age";
-            }else if($data['age_diff_of_main_sexual_partner']=='lt5yearyounger'){
-                $ageDiffofMainSexualPartner = "< 5 Years Younger";
-            }else if($data['age_diff_of_main_sexual_partner']=='5to10yearyounger'){
-                $ageDiffofMainSexualPartner = "5-10 Years Younger";
-            }else if($data['age_diff_of_main_sexual_partner']=='gt10yearyounger'){
-                $ageDiffofMainSexualPartner = ">10 Years Younger";
-            }else if($data['age_diff_of_main_sexual_partner']=='dontknow'){
-                $ageDiffofMainSexualPartner = "Don't Know";
-            }else{
-                $ageDiffofMainSexualPartner = ucwords($data['age_diff_of_main_sexual_partner']);
-            }
-        }
-        $ispartnerCircumcised = '';
-        if($data['is_partner_circumcised']!= null && trim($data['is_partner_circumcised'])!= ''){
-            if($data['is_partner_circumcised']=='dontknow'){
-                $ispartnerCircumcised = "Don't Know";
-            }else{
-                $ispartnerCircumcised = ucwords($data['is_partner_circumcised']);
-            }
-        }
-        $lastTimeofReceivingGiftForSex = '';
-        if($data['last_time_of_receiving_gift_for_sex']!= null && trim($data['last_time_of_receiving_gift_for_sex'])!= ''){
-            if($data['last_time_of_receiving_gift_for_sex']=='lt6months'){
-                $lastTimeofReceivingGiftForSex = "< 6 Months Ago";
-            }else if($data['last_time_of_receiving_gift_for_sex']=='6to12months'){
-                $lastTimeofReceivingGiftForSex = "6-12 Months Ago";
-            }else if($data['last_time_of_receiving_gift_for_sex']=='gt12months'){
-                $lastTimeofReceivingGiftForSex = "> 12 Months Ago";
-            }else if($data['last_time_of_receiving_gift_for_sex']=='dontknow'){
-                $lastTimeofReceivingGiftForSex = "Don't Know";
-            }else{
-                $lastTimeofReceivingGiftForSex = ucwords($data['last_time_of_receiving_gift_for_sex']);
-            }
-        }
-        $patientNoofTimesBeenPregnant = '';
-        if($data['no_of_times_been_pregnant']!= null && trim($data['no_of_times_been_pregnant'])!= ''){
-            if((int)$data['no_of_times_been_pregnant']>1){
-                $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Times";
-            }else if((int)$data['no_of_times_been_pregnant'] == 1){
-                $patientNoofTimesBeenPregnant = (int)$data['no_of_times_been_pregnant']." Time";
-            }else{
-		$patientNoofTimesBeenPregnant = ucwords($data['no_of_times_been_pregnant']);
+	}
+	$patientEverBeenWidowed = '';
+	if($data['patient_ever_been_widowed']!= null && trim($data['patient_ever_been_widowed'])!= ''){
+	    if($data['patient_ever_been_widowed'] == 1){
+		$patientEverBeenWidowed = "Yes - 1";
+	    }else if($data['patient_ever_been_widowed'] == 2){
+		$patientEverBeenWidowed = "No - 2";
+	    }else if($data['patient_ever_been_widowed'] == 88){
+		$patientEverBeenWidowed = "Don't Know - 88";
+	    }else if($data['patient_ever_been_widowed'] == 99){
+		$patientEverBeenWidowed = "Refused - 99";
+	    }else if($data['patient_ever_been_widowed'] == 2222){
+		$patientEverBeenWidowed = "Response Not Available - 2222";
+	    }else{
+		$patientEverBeenWidowed = ucwords($data['patient_ever_been_widowed']);
 	    }
-        }
+	}
+	$maritalStatus = '';
+	if($data['current_marital_status']!= null && trim($data['current_marital_status'])!= ''){
+	    if($data['current_marital_status'] == 1){
+		$maritalStatus = "Married/Cohabiting - 1";
+	    }else if($data['current_marital_status'] == 2){
+		$maritalStatus = "Never Married/Cohabiting - 2";
+	    }else if($data['current_marital_status'] == 3){
+		$maritalStatus = "Widowed - 3";
+	    }else if($data['current_marital_status'] == 4){
+		$maritalStatus = "Separated - 4";
+	    }else if($data['current_marital_status'] == 5){
+		$maritalStatus = "Divorced - 5";
+	    }else if($data['current_marital_status'] == 88){
+		$maritalStatus = "Don't Know - 88";
+	    }else if($data['current_marital_status'] == 99){
+		$maritalStatus = "Refused - 99";
+	    }else if($data['current_marital_status'] == 2222){
+		$maritalStatus = "Response Not Available - 2222";
+	    }else{
+		$maritalStatus = ucwords($data['current_marital_status']);
+	    }
+	}
+	//patient HIV test status
+	$hasPatientEverBeenTestedforHIV = '';
+	if($data['has_patient_ever_been_tested_for_HIV']!= null && trim($data['has_patient_ever_been_tested_for_HIV'])!= ''){
+	    if($data['has_patient_ever_been_tested_for_HIV'] == 1){
+		$hasPatientEverBeenTestedforHIV = "Yes - 1";
+	    }else if($data['has_patient_ever_been_tested_for_HIV'] == 2){
+		$hasPatientEverBeenTestedforHIV = "No - 2";
+	    }else if($data['has_patient_ever_been_tested_for_HIV'] == 88){
+		$hasPatientEverBeenTestedforHIV = "Don't Know - 88";
+	    }else if($data['has_patient_ever_been_tested_for_HIV'] == 99){
+		$hasPatientEverBeenTestedforHIV = "Refused - 99";
+	    }else if($data['has_patient_ever_been_tested_for_HIV'] == 2222){
+		$hasPatientEverBeenTestedforHIV = "Response Not Available - 2222";
+	    }
+	}
+	$timeofMostRecentHIVTest = '';
+	if($data['time_of_last_HIV_test']!= null && trim($data['time_of_last_HIV_test'])!= ''){
+	    if($data['time_of_last_HIV_test'] == 1){
+		$timeofMostRecentHIVTest = "< 3 Months Ago - 1";
+	    }else if($data['time_of_last_HIV_test'] == 2){
+		$timeofMostRecentHIVTest = "3-6 Months Ago - 2";
+	    }else if($data['time_of_last_HIV_test'] == 3){
+		$timeofMostRecentHIVTest = "7-12 Months Ago - 3";
+	    }else if($data['time_of_last_HIV_test'] == 4){
+		$timeofMostRecentHIVTest = "> 12 months - 4";
+	    }else if($data['time_of_last_HIV_test'] == 88){
+		$timeofMostRecentHIVTest = "Don't Know - 88";
+	    }else if($data['time_of_last_HIV_test'] == 99){
+		$timeofMostRecentHIVTest = "Refused - 99";
+	    }else if($data['time_of_last_HIV_test'] == 2222){
+		$timeofMostRecentHIVTest = "Response Not Available - 2222";
+	    }else{
+		$timeofMostRecentHIVTest = ucwords($data['time_of_last_HIV_test']);
+	    }
+	}
+	$resultofMostRecentHIVTest = '';
+	if($data['last_HIV_test_status']!= null && trim($data['last_HIV_test_status'])!= ''){
+	    if($data['last_HIV_test_status'] == 1){
+		$resultofMostRecentHIVTest = "I Did Not Receive Result - 1";
+	    }else if($data['last_HIV_test_status']== 2){
+		$resultofMostRecentHIVTest = "HIV Positive - 2";
+	    }else if($data['last_HIV_test_status'] == 3){
+		$resultofMostRecentHIVTest = "HIV Negative - 3";
+	    }else if($data['last_HIV_test_status'] == 4){
+		$resultofMostRecentHIVTest = "Indeterminate - 4";
+	    }else if($data['last_HIV_test_status'] == 88){
+		$resultofMostRecentHIVTest = "Don't Know - 88";
+	    }else if($data['last_HIV_test_status'] == 99){
+		$resultofMostRecentHIVTest = "Refused - 99";
+	    }else if($data['last_HIV_test_status'] == 2222){
+		$resultofMostRecentHIVTest = "Response Not Available - 2222";
+	    }else{
+		$resultofMostRecentHIVTest = ucwords($data['last_HIV_test_status']);
+	    }
+	}
+	//patient sexual activity/sexual transmitted infections
+	$ageAtFirstSex = '';
+	if($data['age_at_very_first_sex']!= null && trim($data['age_at_very_first_sex'])!= ''){
+	    if($data['age_at_very_first_sex'][0] == '@'){
+		$ageAtFirstSex = substr($data['age_at_very_first_sex'],1).' Year(s)';
+	    }else if($data['age_at_very_first_sex'] == 88){
+		$ageAtFirstSex = "Don't Know - 88";
+	    }else if($data['age_at_very_first_sex'] == 99){
+		$ageAtFirstSex = "Refused - 99";
+	    }else if($data['age_at_very_first_sex'] == 2222){
+		$ageAtFirstSex = "Response Not Available - 2222";
+	    }
+	}
+	$reasonforVeryFirstSex = '';
+	if($data['reason_for_very_first_sex']!= null && trim($data['reason_for_very_first_sex'])!= ''){
+	    if($data['reason_for_very_first_sex'] == 1){
+		$reasonforVeryFirstSex = "Wanted To - 1";
+	    }else if($data['reason_for_very_first_sex'] == 2){
+		$reasonforVeryFirstSex = "Forced To - 2";
+	    }else if($data['reason_for_very_first_sex'] == 88){
+		$reasonforVeryFirstSex = "Don't Know - 88";
+	    }else if($data['reason_for_very_first_sex'] == 99){
+		$reasonforVeryFirstSex = "Refused - 99";
+	    }else if($data['reason_for_very_first_sex'] == 2222){
+		$reasonforVeryFirstSex = "Response Not Available - 2222";
+	    }
+	}
+	$totalNoofSexualPartners = '';
+	if($data['no_of_sexual_partners']!= null && trim($data['no_of_sexual_partners'])!= ''){
+	    if($data['no_of_sexual_partners'][0] == '@'){
+		$totalNoofSexualPartners = substr($data['no_of_sexual_partners'],1).' Person(s)';
+	    }else if($data['no_of_sexual_partners'] == 88){
+		$totalNoofSexualPartners = "Don't Know - 88";
+	    }else if($data['no_of_sexual_partners'] == 99){
+		$totalNoofSexualPartners = "Refused - 99";
+	    }else if($data['no_of_sexual_partners'] == 2222){
+		$totalNoofSexualPartners = "Response Not Available - 2222";
+	    }
+	}
+	$noofSexualPartnersinLastSixMonths = '';
+	if($data['no_of_sexual_partners_in_last_six_months']!= null && trim($data['no_of_sexual_partners_in_last_six_months'])!= ''){
+	    if($data['no_of_sexual_partners_in_last_six_months'][0] == '@'){
+		$noofSexualPartnersinLastSixMonths = substr($data['no_of_sexual_partners_in_last_six_months'],1).' Person(s)';
+	    }else if($data['no_of_sexual_partners_in_last_six_months'] == 88){
+		$noofSexualPartnersinLastSixMonths = "Don't Know - 88";
+	    }else if($data['no_of_sexual_partners_in_last_six_months'] == 99){
+		$noofSexualPartnersinLastSixMonths = "Refused - 99";
+	    }else if($data['no_of_sexual_partners_in_last_six_months'] == 2222){
+		$noofSexualPartnersinLastSixMonths = "Response Not Available - 2222";
+	    }
+	}
+	$partnerHIVStatus = '';
+	if($data['partner_HIV_test_status']!= null && trim($data['partner_HIV_test_status'])!= ''){
+	    if($data['partner_HIV_test_status'] == 1){
+		$partnerHIVStatus = "HIV Positive - 1";
+	    }else if($data['partner_HIV_test_status'] == 2){
+		$partnerHIVStatus = "HIV Negative - 2";
+	    }else if($data['partner_HIV_test_status'] == 3){
+		$partnerHIVStatus = "No Main Sexual Partner - 3";
+	    }else if($data['partner_HIV_test_status'] == 88){
+		$partnerHIVStatus = "Don't Know - 88";
+	    }else if($data['partner_HIV_test_status'] == 99){
+		$partnerHIVStatus = "Refused - 99";
+	    }else if($data['partner_HIV_test_status'] == 2222){
+		$partnerHIVStatus = "Response Not Available - 2222";
+	    }
+	}
+	$ageofMainSexualpartneratLastBirthday = '';
+	if($data['age_of_main_sexual_partner_at_last_birthday']!= null && trim($data['age_of_main_sexual_partner_at_last_birthday'])!= ''){
+	    if($data['age_of_main_sexual_partner_at_last_birthday'][0] == '@'){
+		$ageofMainSexualpartneratLastBirthday = substr($data['age_of_main_sexual_partner_at_last_birthday'],1).' Year(s)';
+	    }else if($data['age_of_main_sexual_partner_at_last_birthday'] == 88){
+		$ageofMainSexualpartneratLastBirthday = "Don't Know - 88";
+	    }else if($data['age_of_main_sexual_partner_at_last_birthday'] == 99){
+		$ageofMainSexualpartneratLastBirthday = "Refused - 99";
+	    }else if($data['age_of_main_sexual_partner_at_last_birthday'] == 2222){
+		$ageofMainSexualpartneratLastBirthday = "Response Not Available - 2222";
+	    }else{
+		$ageofMainSexualpartneratLastBirthday = ucwords($data['age_of_main_sexual_partner_at_last_birthday']);
+	    }
+	}
+	$ageDiffofMainSexualPartner = '';
+	if($data['age_diff_of_main_sexual_partner']!= null && trim($data['age_diff_of_main_sexual_partner'])!= ''){
+	    if($data['age_diff_of_main_sexual_partner'] == 1){
+		$ageDiffofMainSexualPartner = "< 5 Years Older - 1";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 2){
+		$ageDiffofMainSexualPartner = "5-10 Years Older - 2";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 3){
+		$ageDiffofMainSexualPartner = ">10 Years Older - 3";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 4){
+		$ageDiffofMainSexualPartner = "Same Age - 4";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 5){
+		$ageDiffofMainSexualPartner = "< 5 Years Younger - 5";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 6){
+		$ageDiffofMainSexualPartner = "5-10 Years Younger - 6";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 7){
+		$ageDiffofMainSexualPartner = ">10 Years Younger - 7";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 88){
+		$ageDiffofMainSexualPartner = "Don't Know - 88";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 99){
+		$ageDiffofMainSexualPartner = "Refused - 99";
+	    }else if($data['age_diff_of_main_sexual_partner'] == 2222){
+		$ageDiffofMainSexualPartner = "Response Not Available - 2222";
+	    }else{
+		$ageDiffofMainSexualPartner = ucwords($data['age_diff_of_main_sexual_partner']);
+	    }
+	}
+	$isPartnerCircumcised = '';
+	if($data['is_partner_circumcised']!= null && trim($data['is_partner_circumcised'])!= ''){
+	    if($data['is_partner_circumcised'] == 1){
+		$isPartnerCircumcised = "Yes - 1";
+	    }else if($data['is_partner_circumcised'] == 2){
+		$isPartnerCircumcised = "No - 2";
+	    }else if($data['is_partner_circumcised'] == 88){
+		$isPartnerCircumcised = "Don't Know - 88";
+	    }else if($data['is_partner_circumcised'] == 99){
+		$isPartnerCircumcised = "Refused - 99";
+	    }else if($data['is_partner_circumcised'] == 2222){
+		$isPartnerCircumcised = "Response Not Available - 2222";
+	    }else{
+		$isPartnerCircumcised = ucwords($data['is_partner_circumcised']);
+	    }
+	}
+	$circumcision = '';
+	if($data['circumcision']!= null && trim($data['circumcision'])!= ''){
+	    if($data['circumcision'] == 1){
+		$circumcision = "Medical Circumcision - 1";
+	    }else if($data['circumcision'] == 2){
+		$circumcision = "Traditional Circumcision - 2";
+	    }else if($data['circumcision'] == 88){
+		$circumcision = "Don't Know - 88";
+	    }else if($data['circumcision'] == 99){
+		$circumcision = "Refused - 99";
+	    }else if($data['circumcision'] == 2222){
+		$circumcision = "Response Not Available - 2222";
+	    }else{
+		$circumcision = ucwords($data['circumcision']);
+	    }
+	}
+	$hasPatientEverReceivedGiftforSex = '';
+	if($data['has_patient_ever_received_gift_for_sex']!= null && trim($data['has_patient_ever_received_gift_for_sex'])!= ''){
+	    if($data['has_patient_ever_received_gift_for_sex'] == 1){
+		$hasPatientEverReceivedGiftforSex = "Yes - 1";
+	    }else if($data['has_patient_ever_received_gift_for_sex'] == 2){
+		$hasPatientEverReceivedGiftforSex = "No - 2";
+	    }else if($data['has_patient_ever_received_gift_for_sex'] == 88){
+		$hasPatientEverReceivedGiftforSex = "Don't Know - 88";
+	    }else if($data['has_patient_ever_received_gift_for_sex'] == 99){
+		$hasPatientEverReceivedGiftforSex = "Refused - 99";
+	    }else if($data['has_patient_ever_received_gift_for_sex'] == 2222){
+		$hasPatientEverReceivedGiftforSex = "Response Not Available - 2222";
+	    }else{
+		$hasPatientEverReceivedGiftforSex = ucwords($data['has_patient_ever_received_gift_for_sex']);
+	    }
+	}
+	$mostRecentTimeofReceivingGiftforSex = '';
+	if($data['last_time_of_receiving_gift_for_sex']!= null && trim($data['last_time_of_receiving_gift_for_sex'])!= ''){
+	    if($data['last_time_of_receiving_gift_for_sex'] == 1){
+		$mostRecentTimeofReceivingGiftforSex = "< 6 Months Ago - 1";
+	    }else if($data['last_time_of_receiving_gift_for_sex'] == 2){
+		$mostRecentTimeofReceivingGiftforSex = "6-12 Months Ago - 2";
+	    }else if($data['last_time_of_receiving_gift_for_sex'] == 3){
+		$mostRecentTimeofReceivingGiftforSex = "> 12 Months Ago - 3";
+	    }else if($data['last_time_of_receiving_gift_for_sex'] == 88){
+		$mostRecentTimeofReceivingGiftforSex = "Don't Know - 88";
+	    }else if($data['last_time_of_receiving_gift_for_sex'] == 99){
+		$mostRecentTimeofReceivingGiftforSex = "Refused - 99";
+	    }else if($data['last_time_of_receiving_gift_for_sex'] == 2222){
+		$mostRecentTimeofReceivingGiftforSex = "Response Not Available - 2222";
+	    }else{
+		$mostRecentTimeofReceivingGiftforSex = ucwords($data['last_time_of_receiving_gift_for_sex']);
+	    }
+	}
+	$noofTimesBeenPregnant = '';
+	if($data['no_of_times_been_pregnant']!= null && trim($data['no_of_times_been_pregnant'])!= ''){
+	    if($data['no_of_times_been_pregnant'][0] == '@'){
+		$noofTimesBeenPregnant = substr($data['no_of_times_been_pregnant'],1).' Time(s)';
+	    }else if($data['no_of_times_been_pregnant'] == 88){
+		$noofTimesBeenPregnant = "Don't Know - 88";
+	    }else if($data['no_of_times_been_pregnant'] == 99){
+		$noofTimesBeenPregnant = "Refused - 99";
+	    }else if($data['no_of_times_been_pregnant'] == 2222){
+		$noofTimesBeenPregnant = "Response Not Available - 2222";
+	    }else{
+		$noofTimesBeenPregnant = ucwords($data['no_of_times_been_pregnant']);
+	    }
+	}
 	$noofTimesCondomUsedBeforePregnancy = '';
 	if($data['no_of_times_condom_used_before_pregnancy']!= null && trim($data['no_of_times_condom_used_before_pregnancy'])!= ''){
-	    if($data['no_of_times_condom_used_before_pregnancy']=='dontknow'){
-		$noofTimesCondomUsedBeforePregnancy = "Don't Know";
+	    if($data['no_of_times_condom_used_before_pregnancy'] == 1){
+		$noofTimesCondomUsedBeforePregnancy = "Always - 1";
+	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 2){
+		$noofTimesCondomUsedBeforePregnancy = "Sometimes - 2";
+	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 3){
+		$noofTimesCondomUsedBeforePregnancy = "Never - 3";
+	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 88){
+		$noofTimesCondomUsedBeforePregnancy = "Don't Know - 88";
+	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 99){
+		$noofTimesCondomUsedBeforePregnancy = "Refused - 99";
+	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 2222){
+		$noofTimesCondomUsedBeforePregnancy = "Response Not Available - 2222";
 	    }else{
 		$noofTimesCondomUsedBeforePregnancy = ucwords($data['no_of_times_condom_used_before_pregnancy']);
 	    }
 	}
 	$noofTimesCondomUsedAfterPregnancy = '';
 	if($data['no_of_times_condom_used_after_pregnancy']!= null && trim($data['no_of_times_condom_used_after_pregnancy'])!= ''){
-	    if($data['no_of_times_condom_used_after_pregnancy']=='dontknow'){
-		$noofTimesCondomUsedAfterPregnancy = "Don't Know";
+	    if($data['no_of_times_condom_used_after_pregnancy'] == 1){
+		$noofTimesCondomUsedAfterPregnancy = "Always - 1";
+	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 2){
+		$noofTimesCondomUsedAfterPregnancy = "Sometimes - 2";
+	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 3){
+		$noofTimesCondomUsedAfterPregnancy = "Never - 3";
+	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 88){
+		$noofTimesCondomUsedAfterPregnancy = "Don't Know - 88";
+	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 99){
+		$noofTimesCondomUsedAfterPregnancy = "Refused - 99";
+	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 2222){
+		$noofTimesCondomUsedAfterPregnancy = "Response Not Available - 2222";
 	    }else{
 		$noofTimesCondomUsedAfterPregnancy = ucwords($data['no_of_times_condom_used_after_pregnancy']);
 	    }
 	}
 	$hasPatientHadPaininLowerAbdomen = '';
 	if($data['has_patient_had_pain_in_lower_abdomen']!= null && trim($data['has_patient_had_pain_in_lower_abdomen'])!= ''){
-	    if($data['has_patient_had_pain_in_lower_abdomen']=='dontknow'){
-		$hasPatientHadPaininLowerAbdomen = "Don't Know";
-	    }else{
-		$hasPatientHadPaininLowerAbdomen = ucwords($data['has_patient_had_pain_in_lower_abdomen']);
+	    if($data['has_patient_had_pain_in_lower_abdomen'] == 1){
+		$hasPatientHadPaininLowerAbdomen = "Yes - 1";
+	    }else if($data['has_patient_had_pain_in_lower_abdomen'] == 2){
+		$hasPatientHadPaininLowerAbdomen = "No - 2";
+	    }else if($data['has_patient_had_pain_in_lower_abdomen'] == 88){
+		$hasPatientHadPaininLowerAbdomen = "Don't Know - 88";
+	    }else if($data['has_patient_had_pain_in_lower_abdomen'] == 99){
+		$hasPatientHadPaininLowerAbdomen = "Refused - 99";
+	    }else if($data['has_patient_had_pain_in_lower_abdomen'] == 2222){
+		$hasPatientHadPaininLowerAbdomen = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientTreatedForLowerAbdomenPain = '';
+	$hasPatientBeenTreatedforLowerAbdomenPain = '';
 	if($data['has_patient_been_treated_for_lower_abdomen_pain']!= null && trim($data['has_patient_been_treated_for_lower_abdomen_pain'])!= ''){
-	    if($data['has_patient_been_treated_for_lower_abdomen_pain']=='dontknow'){
-		$hasPatientTreatedForLowerAbdomenPain = "Don't Know";
+	    if($data['has_patient_been_treated_for_lower_abdomen_pain'] == 1){
+		$hasPatientBeenTreatedforLowerAbdomenPain = "Yes - 1";
+	    }else if($data['has_patient_been_treated_for_lower_abdomen_pain'] == 2){
+		$hasPatientBeenTreatedforLowerAbdomenPain = "No - 2";
+	    }else if($data['has_patient_been_treated_for_lower_abdomen_pain'] == 88){
+		$hasPatientBeenTreatedforLowerAbdomenPain = "Don't Know - 88";
+	    }else if($data['has_patient_been_treated_for_lower_abdomen_pain'] == 99){
+		$hasPatientBeenTreatedforLowerAbdomenPain = "Refused - 99";
+	    }else if($data['has_patient_been_treated_for_lower_abdomen_pain'] == 2222){
+		$hasPatientBeenTreatedforLowerAbdomenPain = "Response Not Available - 2222";
 	    }else{
-		$hasPatientTreatedForLowerAbdomenPain = ucwords($data['has_patient_been_treated_for_lower_abdomen_pain']);
+		$hasPatientBeenTreatedforLowerAbdomenPain = ucwords($data['has_patient_been_treated_for_lower_abdomen_pain']);
 	    }
 	}
-	$haspatientEverBeenTreatedForSyphilis = '';
+	$hasPatientEverBeenTreatedforSyphilis = '';
 	if($data['has_patient_ever_been_treated_for_syphilis']!= null && trim($data['has_patient_ever_been_treated_for_syphilis'])!= ''){
-	    if($data['has_patient_ever_been_treated_for_syphilis']=='dontknow'){
-		$haspatientEverBeenTreatedForSyphilis = "Don't Know";
-	    }else{
-		$haspatientEverBeenTreatedForSyphilis = ucwords($data['has_patient_ever_been_treated_for_syphilis']);
+	    if($data['has_patient_ever_been_treated_for_syphilis'] == 1){
+		$hasPatientEverBeenTreatedforSyphilis = "Yes - 1";
+	    }else if($data['has_patient_ever_been_treated_for_syphilis'] == 2){
+		$hasPatientEverBeenTreatedforSyphilis = "No - 2";
+	    }else if($data['has_patient_ever_been_treated_for_syphilis'] == 88){
+		$hasPatientEverBeenTreatedforSyphilis = "Don't Know - 88";
+	    }else if($data['has_patient_ever_been_treated_for_syphilis'] == 99){
+		$hasPatientEverBeenTreatedforSyphilis = "Refused - 99";
+	    }else if($data['has_patient_ever_been_treated_for_syphilis'] == 2222){
+		$hasPatientEverBeenTreatedforSyphilis = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientEverReceivedVaccinetoPreventHPV = '';
-	if($data['has_patient_ever_received_vaccine_to_prevent_HPV']!= null && trim($data['has_patient_ever_received_vaccine_to_prevent_HPV'])!= ''){
-	    if($data['has_patient_ever_received_vaccine_to_prevent_HPV']=='dontknow'){
-		$hasPatientEverReceivedVaccinetoPreventHPV = "Don't Know";
-	    }else{
-		$hasPatientEverReceivedVaccinetoPreventHPV = ucwords($data['has_patient_ever_received_vaccine_to_prevent_HPV']);
+	$hasPatientEverReceivedVaccinetoPreventCervicalCancer = '';
+	if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer']!= null && trim($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'])!= ''){
+	    if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 1){
+		$hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Yes - 1";
+	    }else if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 2){
+		$hasPatientEverReceivedVaccinetoPreventCervicalCancer = "No - 2";
+	    }else if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 88){
+		$hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Don't Know - 88";
+	    }else if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 99){
+		$hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Refused - 99";
+	    }else if($data['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 2222){
+		$hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientHadDrinkWithAlcoholinLastSixMonths = '';
-	if($data['has_patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($data['has_patient_had_drink_with_alcohol_in_last_six_months'])!= ''){
-	    if((int)$data['has_patient_had_drink_with_alcohol_in_last_six_months'] > 1){
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = (int)$data['has_patient_had_drink_with_alcohol_in_last_six_months']." Days";
-	    }else if((int)$data['has_patient_had_drink_with_alcohol_in_last_six_months'] == 1){
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = (int)$data['has_patient_had_drink_with_alcohol_in_last_six_months']." Day";
-	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='havenotdrink'){
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Haven't Had a Drink";
-	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='dontknow'){
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Don't Know";
-	    }else if($data['has_patient_had_drink_with_alcohol_in_last_six_months']=='refusedtoanswer'){
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = "Refused To Answer";
-	    }else{
-		$hasPatientHadDrinkWithAlcoholinLastSixMonths = ucwords($data['has_patient_had_drink_with_alcohol_in_last_six_months']);
+	//alcohol and drug use
+	$patientHadDrinkwithAlcoholinLastSixMonths = '';
+	if($data['patient_had_drink_with_alcohol_in_last_six_months']!= null && trim($data['patient_had_drink_with_alcohol_in_last_six_months'])!= ''){
+	    if($data['patient_had_drink_with_alcohol_in_last_six_months'][0] == '@'){
+		$patientHadDrinkwithAlcoholinLastSixMonths = substr($data['patient_had_drink_with_alcohol_in_last_six_months'],1).' Day(s)';
+	    }else if($data['patient_had_drink_with_alcohol_in_last_six_months'] == 88){
+		$patientHadDrinkwithAlcoholinLastSixMonths = "Don't Know - 88";
+	    }else if($data['patient_had_drink_with_alcohol_in_last_six_months'] == 99){
+		$patientHadDrinkwithAlcoholinLastSixMonths = "Refused - 99";
+	    }else if($data['patient_had_drink_with_alcohol_in_last_six_months'] == 2222){
+		$patientHadDrinkwithAlcoholinLastSixMonths = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = '';
+	$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = '';
 	if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']!= null && trim($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'])!= ''){
-	    if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 'daily'){
-		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = "Daily or On Most Days of The Week";
-	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 'dontknow'){
-		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = "Don't Know";
-	    }else{
-		$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion = ucwords($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']);
+	    if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 1){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Never - 1";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 2){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Monthly - 2";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 3){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Weekly - 3";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 4){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Daily or On Most Days of The Week - 4";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 88){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Don't Know - 88";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 99){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Refused - 99";
+	    }else if($data['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 2222){
+		$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Response Not Available - 2222";
 	    }
 	}
 	$hasPatientEverTriedRecreationalDrugs = '';
 	if($data['has_patient_ever_tried_recreational_drugs']!= null && trim($data['has_patient_ever_tried_recreational_drugs'])!= ''){
-	    if($data['has_patient_ever_tried_recreational_drugs']=='dontknow'){
-		$hasPatientEverTriedRecreationalDrugs = "Don't Know";
-	    }else{
-		$hasPatientEverTriedRecreationalDrugs = ucwords($data['has_patient_ever_tried_recreational_drugs']);
+	    if($data['has_patient_ever_tried_recreational_drugs'] == 1){
+		$hasPatientEverTriedRecreationalDrugs = "Yes - 1";
+	    }else if($data['has_patient_ever_tried_recreational_drugs'] == 2){
+		$hasPatientEverTriedRecreationalDrugs = "No - 2";
+	    }else if($data['has_patient_ever_tried_recreational_drugs'] == 88){
+		$hasPatientEverTriedRecreationalDrugs = "Don't Know - 88";
+	    }else if($data['has_patient_ever_tried_recreational_drugs'] == 99){
+		$hasPatientEverTriedRecreationalDrugs = "Refused - 99";
+	    }else if($data['has_patient_ever_tried_recreational_drugs'] == 2222){
+		$hasPatientEverTriedRecreationalDrugs = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientHadRecreationalDrugsinLastSixMonths = '';
+	$hasPatientHadRecreationalDrugsInLastSixMonths = '';
 	if($data['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($data['has_patient_had_recreational_drugs_in_last_six_months'])!= ''){
-	    if($data['has_patient_had_recreational_drugs_in_last_six_months']=='yes'){
-		$hasPatientHadRecreationalDrugsinLastSixMonths = "Yes&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s):</span>&nbsp;".ucwords($data['recreational_drugs']);
-	    }else if($data['has_patient_had_recreational_drugs_in_last_six_months']=='dontknow'){
-		$hasPatientHadRecreationalDrugsinLastSixMonths = "Don't Know";
-	    }else{
-		$hasPatientHadRecreationalDrugsinLastSixMonths = ucwords($data['has_patient_had_recreational_drugs_in_last_six_months']);
+	    $recreationaldata = json_decode($data['has_patient_had_recreational_drugs_in_last_six_months'],true);
+	    $hasHadinLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
+	    $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
+	    if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 1){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s)</span> - ".ucwords($recreationalDrugs);
+	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 2){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "No - 2";
+	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 88){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "Don't Know - 88";
+	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 99){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "Refused - 99";
+	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 2222){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "Response Not Available - 2222";
+	    }else if(trim($hasHadinLastSixMonths)!= ''){
+		$hasPatientHadRecreationalDrugsInLastSixMonths = ucwords($hasHadinLastSixMonths);
 	    }
 	}
-	$hasPatientEverBeenAbusedbySomeone = '';
+	//abuse
+	$keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+	//set patient abused by
+	$hasPatientEverBeenAbusedBySomeone = '';
 	if($data['has_patient_ever_been_abused_by_someone']!= null && trim($data['has_patient_ever_been_abused_by_someone'])!= ''){
-	    if($data['has_patient_ever_been_abused_by_someone']=='dontknow'){
-		$hasPatientEverBeenAbusedbySomeone = "Don't Know";
-	    }else{
-		$hasPatientEverBeenAbusedbySomeone = ucwords($data['has_patient_ever_been_abused_by_someone']);
+	    $patientAbusedBydata = json_decode($data['has_patient_ever_been_abused_by_someone'],true);
+	    $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
+	    if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+		$patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
+	    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
+	       $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
+	    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 99){
+	       $patientAbusedByInNoofTimes = 'Refused - 99';
+	    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 2222){
+	       $patientAbusedByInNoofTimes = 'Response Not Available - 2222';
+	    }else if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= ''){
+	       $patientAbusedByInNoofTimes = ucwords($patientAbusedBydata['no_of_times']);
+	    }
+	    if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
+		$patientAbusedBy = substr($patientAbusedBydata['who_abused'],1);
+	    }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused']) == 'not applicable'){
+		$patientAbusedBy = 'Not Applicable';
+	    }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+		$abusedppl = explode(',',$patientAbusedBydata['who_abused']);
+		$abusedGroup = array();
+		for($i=0;$i<count($abusedppl);$i++){
+		    $abusedGroup[] = $keyArray[$abusedppl[$i]];
+		}
+		$patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
+	    }
+	    if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
+		$hasPatientEverBeenAbusedBySomeone = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Abused by</span> - ".$patientAbusedBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times abused</span> - ".$patientAbusedByInNoofTimes;
+	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
+		$hasPatientEverBeenAbusedBySomeone = "No - 2";
+	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
+		$hasPatientEverBeenAbusedBySomeone = "Don't Know - 88";
+	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 99){
+		$hasPatientEverBeenAbusedBySomeone = "Refused - 99";
+	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
+		$hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
 	    }
 	}
-	$hasPatientHurtBy = '';
-	$patientHurtBy = '';
-	$patientHurtByInNoofTimes = '';
+	//set patient hurt by
+	$hasPatientHurtByWithinLastYear = '';
+	$hasPatientEverBeenHurtBySomeone = '';
 	if($data['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($data['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
-	    $hasPatientEverBeenHurtBySomeoneWithinLastYear = json_decode($data['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
-	    $hasPatientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['has_patient_hurt_by']);
-	    $patientHurtBy = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneWithinLastYear['patient_hurt_by']):'';
-	    $patientHurtByInNoofTimes = (isset($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']) && trim($hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenHurtBySomeoneWithinLastYear['no_of_times']." times":'';
+	    $patientHurtBydata = json_decode($data['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
+	    $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
+	    if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+		$patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
+	    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
+	       $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
+	    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 99){
+	       $patientHurtByInNoofTimes = 'Refused - 99';
+	    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 2222){
+	       $patientHurtByInNoofTimes = 'Response Not Available - 2222';
+	    }else if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= ''){
+	       $patientHurtByInNoofTimes = ucwords($patientHurtBydata['no_of_times']);
+	    }
+	    if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
+		$patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
+	    }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
+		$patientHurtByWithinLastYear = 'Not Applicable';
+	    }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+		$hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
+		$hurtedGroup = array();
+		for($i=0;$i<count($hurtedppl);$i++){
+		    $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+		}
+		$patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
+	    }
+	    if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
+		$hasPatientEverBeenHurtBySomeone = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
+	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
+		$hasPatientEverBeenHurtBySomeone = "No - 2";
+	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
+		$hasPatientEverBeenHurtBySomeone = "Don't Know - 88";
+	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
+		$hasPatientEverBeenHurtBySomeone = "Refused - 99";
+	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
+		$hasPatientEverBeenHurtBySomeone = "Response Not Available - 2222";
+	    }
 	}
+	//set patient hurt by during pregnancy
 	$hasPatientHurtBySomeoneDuringPregnancy = '';
-	$patientHurtBySomeoneDuringPregnancy = '';
-	if($data['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
-	    $hasPatientEverBeenHurtBySomeoneDuringPregnancy = json_decode($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
-	    $hasPatientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['has_patient_hurt_by_someone_during_pregnancy']);
-	    $patientHurtBySomeoneDuringPregnancy = (isset($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']) && trim($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy'])!= '')?", ".ucwords($hasPatientEverBeenHurtBySomeoneDuringPregnancy['patient_hurt_by_someone_during_pregnancy']):'';
+	if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $data['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
+	    $patientHurtByDuringPregnancydata = json_decode($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
+	    $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
+	    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+		$patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
+	    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
+	       $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
+	    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 99){
+	       $patientHurtByDuringPregnancyInNoofTimes = 'Refused - 99';
+	    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 2222){
+	       $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available - 2222';
+	    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= ''){
+	       $patientHurtByDuringPregnancyInNoofTimes = ucwords($patientHurtByDuringPregnancydata['no_of_times']);
+	    }
+	    if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
+		$patientHurtByDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+	    }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt']) == 'not applicable'){
+		$patientHurtByDuringPregnancy = 'Not Applicable';
+	    }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+		$hurtedppl = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
+		$hurtedGroup = array();
+		for($i=0;$i<count($hurtedppl);$i++){
+		    $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+		}
+		$patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
+	    }
+	    if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
+		$hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
+	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
+		$hasPatientHurtBySomeoneDuringPregnancy = "No - 2";
+	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
+		$hasPatientHurtBySomeoneDuringPregnancy = "Don't Know - 88";
+	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 99){
+		$hasPatientHurtBySomeoneDuringPregnancy = "Refused - 99";
+	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2222){
+		$hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
+	    }
 	}
-	$hasPatientForcedForSex = '';
-	$patientForcedForSex = '';
-	$patientForcedForSexInNoofTimes = '';
+	//set patient forced for sex within last year
+	$hasPatientForcedforSexBySomeoneWithinLastYear = '';
 	if($data['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($data['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
-	    $hasPatientEverBeenForcedForSexWithinLastYear = json_decode($data['has_patient_ever_been_forced_for_sex_within_last_year'],true);
-	    $hasPatientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex'])== 'dontknow')?'Don\'t Know':ucwords($hasPatientEverBeenForcedForSexWithinLastYear['has_patient_forced_for_sex']);
-	    $patientForcedForSex = (isset($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by'])!= '')?", ".ucwords($hasPatientEverBeenForcedForSexWithinLastYear['patient_forced_by']):'';
-	    $patientForcedForSexInNoofTimes = (isset($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']) && trim($hasPatientEverBeenForcedForSexWithinLastYear['no_of_times'])!= '')?", ".$hasPatientEverBeenForcedForSexWithinLastYear['no_of_times']." times":'';
+	    $patientForcedforSexdata = json_decode($data['has_patient_ever_been_forced_for_sex_within_last_year'],true);
+	    $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
+	    if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+		$patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
+	    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
+	       $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
+	    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 99){
+	       $patientForcedforSexInNoofTimes = 'Refused - 99';
+	    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 2222){
+	       $patientForcedforSexInNoofTimes = 'Response Not Available - 2222';
+	    }else if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= ''){
+	       $patientForcedforSexInNoofTimes = ucwords($patientForcedforSexdata['no_of_times']);
+	    }
+	    if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
+		$patientForcedforSexBy = substr($patientForcedforSexdata['who_forced'],1);
+	    }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced']) == 'not applicable'){
+		$patientForcedforSexBy = 'Not Applicable';
+	    }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+		$forcedbyppl = explode(',',$patientForcedforSexdata['who_forced']);
+		$forcedbyGroup = array();
+		for($i=0;$i<count($forcedbyppl);$i++){
+		    $forcedbyGroup[] = $keyArray[$forcedbyppl[$i]];
+		}
+		$patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
+	    }
+	    if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Forced by</span> - ".$patientForcedforSexBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
+	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "No - 2";
+	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know - 88";
+	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 99){
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "Refused - 99";
+	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2222){
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available - 2222";
+	    }
 	}
-	$isPatientAfraidofAnyone = '';
+	$hasPatientAfraidofAnyone = '';
 	if($data['is_patient_afraid_of_anyone']!= null && trim($data['is_patient_afraid_of_anyone'])!= ''){
-	    if($data['is_patient_afraid_of_anyone']=='dontknow'){
-		$isPatientAfraidofAnyone = "Don't Know";
-	    }else{
-		$isPatientAfraidofAnyone = ucwords($data['is_patient_afraid_of_anyone']);
+	    if($data['is_patient_afraid_of_anyone'] == 1){
+		$hasPatientAfraidofAnyone = "Yes - 1";
+	    }else if($data['is_patient_afraid_of_anyone'] == 2){
+		$hasPatientAfraidofAnyone = "No - 2";
+	    }else if($data['is_patient_afraid_of_anyone'] == 88){
+		$hasPatientAfraidofAnyone = "Don't Know - 88";
+	    }else if($data['is_patient_afraid_of_anyone'] == 99){
+		$hasPatientAfraidofAnyone = "Refused - 99";
+	    }else if($data['is_patient_afraid_of_anyone'] == 2222){
+		$hasPatientAfraidofAnyone = "Response Not Available - 2222";
 	    }
 	}
 	//pdf content
@@ -447,8 +789,8 @@ $common = new \Application\Service\CommonService();
 	        $html .= '<table style="padding:2px;border:1px solid #ffcccc;">';
 		    $html .='<tr>';
 		      $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Rapid Recency Result </td>';
-		      if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">HIV Diagnostic Line </td>'; }
-		      if($recency) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Recency Line </td>'; }
+		      if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Positive Verification (Diagnostic) Line </td>'; }
+		      if($recency) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Long Term (Recency) Line </td>'; }
 		    $html .='</tr>';
 		    $html .='<tr>';
 			$html .='<td style="line-height:20px;font-size:11px;">'.$hasPatientHadRapidRecencyTest.'</td>';
@@ -458,76 +800,84 @@ $common = new \Application\Service\CommonService();
 	        $html .= '</table>';
 	    $html .='</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Demographic Characteristics</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">1. What kind of work/occupation do you do most of the time?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q1. What kind of work/occupation do you do most of the time?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$occupation.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">2. What was the highest level of school that you completed or are attending now?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$education.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">3. Have you <span style="text-decoration:underline;">ever</span> been married or lived with a partner in a union as if married? (If no, go to question 7) </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.ucwords($data['patient_ever_been_married']).'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">4. How old were you when you <span style="text-decoration:underline;">first</span> got married or lived with a partner in a union? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$agtAtFirstMarriage.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">5. Have you <span style="text-decoration:underline;">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$haveYouEverBeenWidowed.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">6. What is your marital status <span style="text-decoration:underline;">now</span>? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientCurrentMaritalStatus.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">HIV Testing History</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">7. When was the <span style="text-decoration:underline;">most recent</span> time you were tested for HIV? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$timeofLastHIVTest.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">8. What was the result of that HIV test? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$resultofLastHIVTest.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">9. What is your <span style="text-decoration:underline;">spouse/main</span> sexual partner\'s HIV status?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$partnerHIVTestStatus.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Sexual Activity and History of Sexually Transmitted Infections</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">10. How old were you when you had sexual intercourse for the very <span style="text-decoration:underline;">first</span> time?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageAtVeryFirstSex.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">11. The <span style="text-decoration:underline;">first</span> time you had sex, was it because you wanted to or because you were forced to?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$reasonForVerFirstSex.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">12. How many different people have you had sexual intercourse with <span style="text-decoration:underline;">in your entire life</span>?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofSexualPartners.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">13. How many different people have you had sex with in the last 6 months?</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q2. Have you ever attended school?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverAttendedSchool.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q2A. What was the highest level of education that you completed or are attending now?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$degree.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q3. Have you <span style="text-decoration:underline;">ever</span> been married or lived with a partner in a union as if married?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientEverBeenMarried.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q3A. How old were you when you <span style="text-decoration:underline;">first</span> got married or lived with a partner in a union?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$ageAtFirstMarriage.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q3B. Have you <span style="text-decoration:underline;">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$patientEverBeenWidowed.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q3C. What is your marital status <span style="text-decoration:underline;">now</span>?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$maritalStatus.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">HIV Testing History</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q4. Have you ever been tested for HIV?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenTestedforHIV.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q4A. When was the <span style="text-decoration:underline;">most recent</span> time you were tested for HIV?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$timeofMostRecentHIVTest.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q4B. What was the result of that HIV test?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$resultofMostRecentHIVTest.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Sexual Activity and History of Sexually Transmitted Infections</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q5. How old were you when you had sexual intercourse for the very <span style="text-decoration:underline;">first</span> time?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageAtFirstSex.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q6. The <span style="text-decoration:underline;">first</span> time you had sex, was it because you wanted to or because you were forced to?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$reasonforVeryFirstSex.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q7. How many different people have you had sexual intercourse with <span style="text-decoration:underline;">in your entire life</span>?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$totalNoofSexualPartners.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q8. How many different people have you had sex with in the last 6 months?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofSexualPartnersinLastSixMonths.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">14. How old was your <span style="text-decoration:underline;">main</span> sexual partner on his last birthday?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageofMainSexualPartneratLastBirthday.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">15. Is the age of your main sexual partner older, younger, or the same age as you?</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q9. What is the HIV status of your <span style="text-decoration:underline;">spouse/main</span> sexual partner\'s (person with whom you have sexual intercourse most frequently)?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$partnerHIVStatus.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q10. How old was your <span style="text-decoration:underline;">spouse/main</span> sexual partner on his last birthday?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageofMainSexualpartneratLastBirthday.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q11. Is the age of your <span style="text-decoration:underline;">spouse/main</span> sexual partner older, younger, or the same age as you?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageDiffofMainSexualPartner.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">16. Is your <span style="text-decoration:underline;">main</span> sexual partner circumcised? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ispartnerCircumcised.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">17. When did you last receive money/gifts in exchange for sex? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$lastTimeofReceivingGiftForSex.'</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">18. How many times have you been pregnant? (including this pregnancy) </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientNoofTimesBeenPregnant.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">19. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? </td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q12. Is your <span style="text-decoration:underline;">spouse/main</span> sexual partner circumcised?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$isPartnerCircumcised.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q12A. What type of circumcision?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$circumcision.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q13. Have you ever received money/gifts in exchange for sex?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverReceivedGiftforSex.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q13A. When did you last receive money/gifts in exchange for sex?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$mostRecentTimeofReceivingGiftforSex.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q14. How many times have you been pregnant?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesBeenPregnant.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedBeforePregnancy.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">20. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? </td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedAfterPregnancy.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">21. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? </td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q17. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadPaininLowerAbdomen.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">22. If yes, were you treated for these symptoms? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientTreatedForLowerAbdomenPain.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">23. Have you <span style="text-decoration:underline;">ever</span> been diagnosed or treated for syphilis? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$haspatientEverBeenTreatedForSyphilis.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">24. Have you ever received a vaccine to prevent human papillomavirus (HPV), a common virus that be passed through sexual contact? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverReceivedVaccinetoPreventHPV.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q17A. Were you treated for these symptoms?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientBeenTreatedforLowerAbdomenPain.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q18. Have you <span style="text-decoration:underline;">ever</span> been diagnosed or treated for syphilis?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenTreatedforSyphilis.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q19. Have you ever received a vaccine (HPV vaccine) to prevent cervical cancer, which is caused by a common virus that can be passed through sexual contact?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverReceivedVaccinetoPreventCervicalCancer.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Alcohol and drug use</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">25. During the past 6 months, on how many days did you have at least one drink containing alcohol? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadDrinkWithAlcoholinLastSixMonths.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">26. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours) </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientOftenHad4rmoreDrinksWithAlcoholonOneOccasion.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">27. Have you <span style="text-decoration:underline;">ever</span> tried recreational drugs? </td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q20. During the past 6 months, on how many days did you have at least one drink containing alcohol?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientHadDrinkwithAlcoholinLastSixMonths.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q21. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours)</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q22. Have you <span style="text-decoration:underline;">ever</span> tried recreational drugs?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverTriedRecreationalDrugs.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">28. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadRecreationalDrugsinLastSixMonths.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientHadRecreationalDrugsInLastSixMonths.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Abuse</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">29. Have you ever been emotionally or physically abused by your partner or someone important to you? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedbySomeone.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">30. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBy.$patientHurtBy.$patientHurtByInNoofTimes.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">31. Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBySomeoneDuringPregnancy.$patientHurtBySomeoneDuringPregnancy.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">32. Within the last year, has anyone forced you to have sexual activities? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientForcedForSex.$patientForcedForSex.$patientForcedForSexInNoofTimes.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">33. Are you afraid of your partner or anyone listed above? </td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$isPatientAfraidofAnyone.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q23. Have you ever been emotionally or physically abused by your partner or your loved one?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedBySomeone.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q24. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenHurtBySomeone.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q25. Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBySomeoneDuringPregnancy.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q26. Within the last year, has anyone forced you to have sexual activities?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientForcedforSexBySomeoneWithinLastYear.'</td></tr>';
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q27. Are you afraid of your partner or anyone listed above?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientAfraidofAnyone.'</td></tr>';
 	    if($data['comment']!= null && trim($data['comment'])!= ''){
 	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Comments</td></tr>';
                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;'.ucfirst($data['comment']).'</td></tr>';

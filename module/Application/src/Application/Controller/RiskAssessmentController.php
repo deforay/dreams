@@ -117,7 +117,7 @@ class RiskAssessmentController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response=$riskAssessmentService->exportRiskAssessmentInExcel($params);
+            $response = $riskAssessmentService->exportRiskAssessmentInExcel($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -130,7 +130,7 @@ class RiskAssessmentController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $dataResult=$riskAssessmentService->generateRiskAssessmentPdf($params);
+            $dataResult = $riskAssessmentService->generateRiskAssessmentPdf($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('dataResult' =>$dataResult));
             $viewModel->setTerminal(true);
