@@ -40,7 +40,7 @@
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
                 <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchDashboardData();getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchDashboardData('search');getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
             </div>
         </form>
@@ -107,17 +107,17 @@
                 $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
             }
        });
-       searchDashboardData();
+       searchDashboardData('load');
        getDataReportingLocations();
     });
     
-    function searchDashboardData(){
+    function searchDashboardData(frmSrc){
         var province = $('#province').val();
         var reportingMonthYear = $('#reportingMonthYear').val();
-	$.blockUI();
+	if(frmSrc!= 'load') { $.blockUI(); }
         $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',province:province,reportingMonthYear: reportingMonthYear},
         function(data) {
-	    $.unblockUI();
+	    if(frmSrc!= 'load') { $.unblockUI(); }
             $('#dashboardDetails').html(data);
         });
     }
@@ -131,7 +131,7 @@
     
     function clearSearchFields(){
        $('#dashboardFilter')[0].reset();
-        searchDashboardData();
+        searchDashboardData('reset');
         getDataReportingLocations();
     }
     

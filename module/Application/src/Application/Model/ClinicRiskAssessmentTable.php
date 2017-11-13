@@ -34,132 +34,283 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
             }
+	    //set patient occupation
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
-                if($params['occupation'] == 'other'){
-		    if(trim($params['occupationNew'])!= ''){
-                      $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
-                      $occupation = $occupationTypeDb->lastInsertValue;
-		    }
+                if($params['occupation'] == 1111 && trim($params['occupationNew'])!= ''){
+                    $occupationTypeDb->insert(array('occupation'=>$params['occupationNew'],'occupation_code'=>1111));
+                    $occupation = $occupationTypeDb->lastInsertValue;
                 }else{
                    $occupation = base64_decode($params['occupation']);
                 }
             }
-	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 'no'){
-	      $params['ageAtFirstMarriageInYears'] = '';
-	      $params['ageAtFirstMarriage'] = 'not applicable';
-	      $params['everBeenWidowed'] = 'not applicable';
-	      $params['currentMaritalStatus'] = 'not applicable';
+	    //set patient degree
+	    $hasPatientEverAttendedSchool = NULL;
+	    $degree = 'not applicable';
+	    if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool']) == 1){
+		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
+		$degree = (isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL;
+	    }else if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool'])!= ''){
+		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
 	    }
-            $ageAtFirstMarriage = NULL;
-            if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
-                $ageAtFirstMarriage = $params['ageAtFirstMarriageInYears'];
-            }else if(isset($params['ageAtFirstMarriage']) && trim($params['ageAtFirstMarriage'])!= ''){
-               $ageAtFirstMarriage = $params['ageAtFirstMarriage']; 
+	    //set marital status
+	    $patientEverBeenMarried = NULL;
+	    $ageAtFirstMarriage = 'not applicable';
+	    $patientEverBeenWidowed = 'not applicable';
+	    $currentMaritalStatus = 'not applicable';
+	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 1){
+		$patientEverBeenMarried = $params['everBeenMarried'];
+		$patientEverBeenWidowed = (isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL;
+		$currentMaritalStatus = (isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL;
+		if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
+		   $ageAtFirstMarriage = '@'.$params['ageAtFirstMarriageInYears'];
+		}else if(isset($params['ageAtFirstMarriage']) && trim($params['ageAtFirstMarriage'])!= ''){
+		   $ageAtFirstMarriage = $params['ageAtFirstMarriage'];
+		}
+	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
+		$patientEverBeenMarried = $params['everBeenMarried'];
+	    }
+	    //set patient HIV test result
+	    $hasPatientEverBeenTestedforHIV = NULL;
+	    $timeofMostRecentHIVTest = 'not applicable';
+	    $resultofMostRecentHIVTest = 'not applicable';
+	    if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV']) == 1){
+		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
+		$timeofMostRecentHIVTest = (isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL;
+		$resultofMostRecentHIVTest = (isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL;
+	    }else if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV'])!= ''){
+		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
+	    }
+	    //set age at very first sex
+	    $ageAtVeryFirstSex = NULL;
+            if(isset($params['ageAtVeryFirstSexInNumbers']) && trim($params['ageAtVeryFirstSexInNumbers'])!= ''){
+               $ageAtVeryFirstSex = '@'.$params['ageAtVeryFirstSexInNumbers'];
+            }else if(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= ''){
+               $ageAtVeryFirstSex = $params['ageAtVeryFirstSex'];
             }
-            $noOfSexualPartners = NULL;
+	    //set no.of sexual partners
+	    $noOfSexualPartners = NULL;
             if(isset($params['noOfSexualPartnersInNumbers']) && trim($params['noOfSexualPartnersInNumbers'])!= ''){
-                $noOfSexualPartners = $params['noOfSexualPartnersInNumbers'];
+                $noOfSexualPartners = '@'.$params['noOfSexualPartnersInNumbers'];
             }else if(isset($params['noOfSexualPartners']) && trim($params['noOfSexualPartners'])!= ''){
                $noOfSexualPartners = $params['noOfSexualPartners']; 
             }
-            $noOfSexualPartnersInLastSixMonths = NULL;
+	    //set no.of sexual partners in last six months
+	    $noOfSexualPartnersInLastSixMonths = NULL;
             if(isset($params['noOfSexualPartnersInLastSixMonthsInNumbers']) && trim($params['noOfSexualPartnersInLastSixMonthsInNumbers'])!= ''){
-                $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonthsInNumbers'];
+                $noOfSexualPartnersInLastSixMonths = '@'.$params['noOfSexualPartnersInLastSixMonthsInNumbers'];
             }else if(isset($params['noOfSexualPartnersInLastSixMonths']) && trim($params['noOfSexualPartnersInLastSixMonths'])!= ''){
-               $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths']; 
+               $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths'];
             }
-            $ageOfMainSexualPartnersInLastBirthday = NULL;
-            if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
-                $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthdayInYears'];
-            }else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
-               $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday']; 
-            }
-            $noOfDaysInLastSixMonths = NULL;
-            if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
-                $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'];
-            }else if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
-               $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonths']; 
-            }
-            $recreationalDrugs = NULL;
-            if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
-                $recreationalDrugs = $params['recreationalDrugs'];
-            }
-	    $patientHurtBy = NULL;
-	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
-		if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])== 'yes'){
-		    $patientHurtBy = array(
-					    'has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],
-					    'patient_hurt_by'=>(isset($params['patientHurtBySomeoneWithinLastYear']) && trim($params['patientHurtBySomeoneWithinLastYear'])!= '')?$params['patientHurtBySomeoneWithinLastYear']:'',
-					    'no_of_times'=>$params['patientHurtBySomeoneWithinLastYearInNoofTimes']
-					);
-		}else{
-		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
+	    //set sexual partner's/sexually transmitted infection details
+	    $partnerHIVTestStatus = NULL;
+	    $ageofMainSexualPartneratLastBirthday = 'not applicable';
+	    $ageDiffofMainSexualPartner = 'not applicable';
+	    $isPartnerCircumcised = 'not applicable';
+	    $circumcision = 'not applicable';
+	    $hasPatinetEverReceivedGiftforSex = 'not applicable';
+	    $lastTimeOfReceivingGiftforSex = 'not applicable';
+	    $noOfTimesBeenPregnant = 'not applicable';
+	    $noOfTimesCondomUsedBeforePregnancy = 'not applicable';
+	    $noOfTimesCondomUsedAfterPregnancy = 'not applicable';
+	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= 3){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
+		$ageofMainSexualPartneratLastBirthday = NULL;
+		if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
+		    $ageofMainSexualPartneratLastBirthday = '@'.$params['ageOfMainSexualPartnerAtLastBirthdayInYears'];
+		}else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
+		   $ageofMainSexualPartneratLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday'];
+		   $ageDiffofMainSexualPartner = (isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL;
 		}
-	    }
-	    $patientHurtBySomeoneDuringPregnancy = NULL;
-	    if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
-		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])== 'yes'){
-		    $patientHurtBySomeoneDuringPregnancy = array(
-					    'has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],
-					    'patient_hurt_by_someone_during_pregnancy'=>(isset($params['patientHurtBySomeoneDuringPregnancy']) && trim($params['patientHurtBySomeoneDuringPregnancy'])!= '')?$params['patientHurtBySomeoneDuringPregnancy']:''
-					);
-		}else{
-		    $patientHurtBySomeoneDuringPregnancy = array('has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],'patient_hurt_by_someone_during_pregnancy'=>'');
+		$isPartnerCircumcised = NULL;
+		if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised']) == 1){
+		    $isPartnerCircumcised = $params['isPartnerCircumcised'];
+		    $circumcision = (isset($params['circumcision']) && trim($params['circumcision'])!= '')?$params['circumcision']:NULL;
+		}else if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= ''){
+		   $isPartnerCircumcised = $params['isPartnerCircumcised']; 
 		}
-	    }
-	    $patientForcedForSex = NULL;
-	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
-		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
-		    $patientForcedForSex = array(
-					    'has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],
-					    'patient_forced_by'=>(isset($params['patientForcedForSexWithinLastYear']) && trim($params['patientForcedForSexWithinLastYear'])!= '')?$params['patientForcedForSexWithinLastYear']:'',
-					    'no_of_times'=>$params['patientForcedForSexWithinLastYearInNoofTimes']
-					);
-		}else{
-		    $patientForcedForSex = array('has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],'patient_forced_by'=>'','no_of_times'=>'');
+		$hasPatinetEverReceivedGiftforSex = NULL;
+		if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
+		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		    $lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
+		}else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
+		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
 		}
+		$noOfTimesBeenPregnant = NULL;
+		if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
+		    $noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
+		}else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
+		   $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
+		}
+		$noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
+	        $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
+	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
+	    //set patient disease symptoms/treatment details
+	    $hasPatientHadPainInLowerAbdomen = NULL;
+	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';
+	    if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen']) == 1){
+		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
+		$hasPatientBeenTreatedForLowerAbdomenPain = (isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL;
+	    }else if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= ''){
+		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
+	    }
+	    //set patient alcohol/drug use
+	    $patientHadDrinkWithAlcoholInLastSixMonths = NULL;
+	    if(isset($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
+                $patientHadDrinkWithAlcoholInLastSixMonths = '@'.$params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'];
+            }else if(isset($params['patientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
+               $patientHadDrinkWithAlcoholInLastSixMonths = $params['patientHadDrinkWithAlcoholInLastSixMonths'];
+            }
+	    $hasPatientEverTriedRecreationalDrugs = NULL;
+	    $hasPatientHadRecreationalDrugsInLastSixMonths = 'not applicable';
+	    $recreationalDrugs = 'not applicable';
+	    if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs']) == 1){
+		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+		$hasPatientHadRecreationalDrugsInLastSixMonths = '';
+		if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths']) == 1){
+		   $hasPatientHadRecreationalDrugsInLastSixMonths = $params['hasPatientHadRecreationalDrugsInLastSixMonths'];
+		   $recreationalDrugs = (isset($params['recreationalDrugs']) && trim($params['recreationalDrugs'])!= '')?$params['recreationalDrugs']:'';
+		}else if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= ''){
+		  $hasPatientHadRecreationalDrugsInLastSixMonths = $params['hasPatientHadRecreationalDrugsInLastSixMonths'];   
+		}
+	        $patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
+	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
+		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+	    }
+	    //set patient abused by
+	    $hasPatientEverBeenAbusedBySomeone = '';
+	    $whoAbused = 'not applicable';
+	    $patientAbusedByInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone']) == 1){
+		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$whoAbused = '';
+		if(isset($params['patientAbusedBy']) && count($params['patientAbusedBy']) >0){
+		    $whoAbused = implode(',',$params['patientAbusedBy']);
+		}else if(isset($params['patientAbusedByOther']) && trim($params['patientAbusedByOther'])!= ''){
+		    $whoAbused = '@'.$params['patientAbusedByOther'];
+		}
+		$patientAbusedByInNoofTimes = '';
+		if(isset($params['patientAbusedBySomeoneInNoofTimes']) && trim($params['patientAbusedBySomeoneInNoofTimes'])!= ''){
+		    $patientAbusedByInNoofTimes = '@'.$params['patientAbusedBySomeoneInNoofTimes'];
+		}else if(isset($params['patientAbusedByNoofTimes']) && trim($params['patientAbusedByNoofTimes'])!= ''){
+		    $patientAbusedByInNoofTimes = $params['patientAbusedByNoofTimes'];
+		}
+	    }else if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= ''){
+		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+	    }
+	    $patientAbusedBySomeone = array('ever_abused'=>$hasPatientEverBeenAbusedBySomeone,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
+	    //set patient hurt by someone within last year
+	    $hasPatientHurtBySomeoneWithinLastYear = '';
+	    $whoHurt = 'not applicable';
+	    $patientHurtByInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) == 1){
+		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$whoHurt = '';
+		if(isset($params['patientHurtBySomeoneWithinLastYear']) && count($params['patientHurtBySomeoneWithinLastYear']) >0){
+		    $whoHurt = implode(',',$params['patientHurtBySomeoneWithinLastYear']);
+		}else if(isset($params['patientHurtByOther']) && trim($params['patientHurtByOther'])!= ''){
+		    $whoHurt = '@'.$params['patientHurtByOther'];
+		}
+		$patientHurtByInNoofTimes = '';
+		if(isset($params['patientHurtBySomeoneInNoofTimes']) && trim($params['patientHurtBySomeoneInNoofTimes'])!= ''){
+		    $patientHurtByInNoofTimes = '@'.$params['patientHurtBySomeoneInNoofTimes'];
+		}else if(isset($params['patientHurtByNoofTimes']) && trim($params['patientHurtByNoofTimes'])!= ''){
+		    $patientHurtByInNoofTimes = $params['patientHurtByNoofTimes'];
+		}
+		//set patient hurt by someone during pregnancy
+		$hasPatientHurtBySomeoneDuringPregnancy = '';
+		$whoHurtDP = 'not applicable';
+		$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
+		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) == 1){
+		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $whoHurtDP = '';
+		    if(isset($params['patientHurtBySomeoneDuringPregnancy']) && count($params['patientHurtBySomeoneDuringPregnancy']) >0){
+			$whoHurtDP = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
+		    }else if(isset($params['patientHurtByOtherDuringPregnancy']) && trim($params['patientHurtByOtherDuringPregnancy'])!= ''){
+			$whoHurtDP = '@'.$params['patientHurtByOtherDuringPregnancy'];
+		    }
+		    $patientHurtByDuringPregnancyInNoofTimes = '';
+		    if(isset($params['patientHurtBySomeoneDuringPregnancyInNoofTimes']) && trim($params['patientHurtBySomeoneDuringPregnancyInNoofTimes'])!= ''){
+			$patientHurtByDuringPregnancyInNoofTimes = '@'.$params['patientHurtBySomeoneDuringPregnancyInNoofTimes'];
+		    }else if(isset($params['patientHurtByDuringPregnancyNoofTimes']) && trim($params['patientHurtByDuringPregnancyNoofTimes'])!= ''){
+			$patientHurtByDuringPregnancyInNoofTimes = $params['patientHurtByDuringPregnancyNoofTimes'];
+		    }
+		}else if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
+		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		}
+		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$hasPatientHurtBySomeoneDuringPregnancy,'who_hurt'=>$whoHurtDP,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
+	    }else if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
+		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'','who_hurt'=>'','no_of_times'=>'');
+	    }
+	    $patientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$hasPatientHurtBySomeoneWithinLastYear,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
+	    //set patient forced for sex within last year
+	    $hasPatientForcedforSexWithinLastYear = '';
+	    $whoForced = 'not applicable';
+	    $patientForcedforSexWithinLastYearInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear']) == 1){
+		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$whoForced = '';
+		if(isset($params['patientForcedForSexWithinLastYear']) && count($params['patientForcedForSexWithinLastYear']) >0){
+		    $whoForced = implode(',',$params['patientForcedForSexWithinLastYear']);
+		}else if(isset($params['patientForcedForSexByOtherWithinLastYear']) && trim($params['patientForcedForSexByOtherWithinLastYear'])!= ''){
+		    $whoForced = '@'.$params['patientForcedForSexByOtherWithinLastYear'];
+		}
+		$patientForcedforSexWithinLastYearInNoofTimes = '';
+		if(isset($params['patientForcedForSexInNoofTimes']) && trim($params['patientForcedForSexInNoofTimes'])!= ''){
+		    $patientForcedforSexWithinLastYearInNoofTimes = '@'.$params['patientForcedForSexInNoofTimes'];
+		}else if(isset($params['patientForcedForSexNoofTimes']) && trim($params['patientForcedForSexNoofTimes'])!= ''){
+		    $patientForcedforSexWithinLastYearInNoofTimes = $params['patientForcedForSexNoofTimes'];
+		}
+	    }else if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
+		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+	    }
+	    $patientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$hasPatientForcedforSexWithinLastYear,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
             $data = array(
                     'anc'=>base64_decode($params['ancSite']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
-		    'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
+		    //'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
                     'patient_occupation'=>$occupation,
-                    'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
-                    'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
-                    'age_at_first_marriage'=>$ageAtFirstMarriage,
-                    'patient_ever_been_widowed'=>(isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL,
-                    'current_marital_status'=>(isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL,
-                    'time_of_last_HIV_test'=>(isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL,
-                    'last_HIV_test_status'=>(isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL,
-                    'partner_HIV_test_status'=>(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= '')?$params['partnerHIVTestStatus']:NULL,
-                    'age_at_very_first_sex'=>(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= '')?$params['ageAtVeryFirstSex']:NULL,
-                    'reason_for_very_first_sex'=>(isset($params['reasonForVeryFirstSex']) && trim($params['reasonForVeryFirstSex'])!= '')?$params['reasonForVeryFirstSex']:NULL,
-                    'no_of_sexual_partners'=>$noOfSexualPartners,
-                    'no_of_sexual_partners_in_last_six_months'=>$noOfSexualPartnersInLastSixMonths,
-                    'age_of_main_sexual_partner_at_last_birthday'=>$ageOfMainSexualPartnersInLastBirthday,
-                    'age_diff_of_main_sexual_partner'=>(isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL,
-                    'is_partner_circumcised'=>(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= '')?$params['isPartnerCircumcised']:NULL,
-                    'last_time_of_receiving_gift_for_sex'=>(isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL,
-                    'no_of_times_been_pregnant'=>(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= '')?$params['noOfTimesBeenPregnant']:NULL,
-                    'no_of_times_condom_used_before_pregnancy'=>(isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL,
-                    'no_of_times_condom_used_after_pregnancy'=>(isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL,
-                    'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
-                    'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
-                    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
-		    'has_patient_ever_received_vaccine_to_prevent_HPV'=>(isset($params['hasPatientEverReceivedVaccineToPreventHPV']) && trim($params['hasPatientEverReceivedVaccineToPreventHPV'])!= '')?$params['hasPatientEverReceivedVaccineToPreventHPV']:NULL,
-                    'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
-                    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
-                    'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
-                    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
-                    'recreational_drugs'=>$recreationalDrugs,
-		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>($patientHurtBy !=NULL)?json_encode($patientHurtBy):'',
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
+                    'has_patient_ever_attended_school'=>$hasPatientEverAttendedSchool,
+		    'patient_degree'=>$degree,
+		    'patient_ever_been_married'=>$patientEverBeenMarried,
+		    'age_at_first_marriage'=>$ageAtFirstMarriage,
+		    'patient_ever_been_widowed'=>$patientEverBeenWidowed,
+		    'current_marital_status'=>$currentMaritalStatus,
+		    'has_patient_ever_been_tested_for_HIV'=>$hasPatientEverBeenTestedforHIV,
+		    'time_of_last_HIV_test'=>$timeofMostRecentHIVTest,
+		    'last_HIV_test_status'=>$resultofMostRecentHIVTest,
+		    'age_at_very_first_sex'=>$ageAtVeryFirstSex,
+		    'reason_for_very_first_sex'=>(isset($params['reasonForVeryFirstSex']) && trim($params['reasonForVeryFirstSex'])!= '')?$params['reasonForVeryFirstSex']:NULL,
+		    'no_of_sexual_partners'=>$noOfSexualPartners,
+		    'no_of_sexual_partners_in_last_six_months'=>$noOfSexualPartnersInLastSixMonths,
+		    'partner_HIV_test_status'=>$partnerHIVTestStatus,
+		    'age_of_main_sexual_partner_at_last_birthday'=>$ageofMainSexualPartneratLastBirthday,
+		    'age_diff_of_main_sexual_partner'=>$ageDiffofMainSexualPartner,
+		    'is_partner_circumcised'=>$isPartnerCircumcised,
+		    'circumcision'=>$circumcision,
+		    'has_patient_ever_received_gift_for_sex'=>$hasPatinetEverReceivedGiftforSex,
+		    'last_time_of_receiving_gift_for_sex'=>$lastTimeOfReceivingGiftforSex,
+		    'no_of_times_been_pregnant'=>$noOfTimesBeenPregnant,
+		    'no_of_times_condom_used_before_pregnancy'=>$noOfTimesCondomUsedBeforePregnancy,
+		    'no_of_times_condom_used_after_pregnancy'=>$noOfTimesCondomUsedAfterPregnancy,
+		    'has_patient_had_pain_in_lower_abdomen'=>$hasPatientHadPainInLowerAbdomen,
+		    'has_patient_been_treated_for_lower_abdomen_pain'=>$hasPatientBeenTreatedForLowerAbdomenPain,
+		    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+		    'has_patient_ever_received_vaccine_to_prevent_cervical_cancer'=>(isset($params['hasPatientEverReceivedVaccineToPreventCervicalCancer']) && trim($params['hasPatientEverReceivedVaccineToPreventCervicalCancer'])!= '')?$params['hasPatientEverReceivedVaccineToPreventCervicalCancer']:NULL,
+		    'patient_had_drink_with_alcohol_in_last_six_months'=>$patientHadDrinkWithAlcoholInLastSixMonths,
+		    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
+		    'has_patient_ever_tried_recreational_drugs'=>$hasPatientEverTriedRecreationalDrugs,
+		    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($patientHadRecreationalDrugsInLastSixMonths))?json_encode($patientHadRecreationalDrugsInLastSixMonths):'',
+		    'has_patient_ever_been_abused_by_someone'=>json_encode($patientAbusedBySomeone),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBySomeoneWithinLastYear),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($patientHurtBySomeoneDuringPregnancy),
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedforSexWithinLastYear),
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'comment'=>$params['comment'],
 		    'country'=>$country,
@@ -432,7 +583,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
-                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation'),'left')
+                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	   $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
@@ -451,92 +602,240 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
             }
+            //set patient occupation
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
-                if($params['occupation'] == 'other'){
-		    if(trim($params['occupationNew'])!= ''){
-                       $occupationTypeDb->insert(array('occupation'=>$params['occupationNew']));
-                       $occupation = $occupationTypeDb->lastInsertValue;
-		    }
+                if($params['occupation'] == 1111 && trim($params['occupationNew'])!= ''){
+                    $occupationTypeDb->insert(array('occupation'=>$params['occupationNew'],'occupation_code'=>1111));
+                    $occupation = $occupationTypeDb->lastInsertValue;
                 }else{
                    $occupation = base64_decode($params['occupation']);
                 }
             }
-	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 'no'){
-	      $params['ageAtFirstMarriageInYears'] = '';
-	      $params['ageAtFirstMarriage'] = 'not applicable';
-	      $params['everBeenWidowed'] = 'not applicable';
-	      $params['currentMaritalStatus'] = 'not applicable';
+	    //set patient degree
+	    $hasPatientEverAttendedSchool = NULL;
+	    $degree = 'not applicable';
+	    if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool']) == 1){
+		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
+		$degree = (isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL;
+	    }else if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool'])!= ''){
+		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
 	    }
-            $ageAtFirstMarriage = NULL;
-            if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
-                $ageAtFirstMarriage = $params['ageAtFirstMarriageInYears'];
-            }else if(isset($params['ageAtFirstMarriage']) && trim($params['ageAtFirstMarriage'])!= ''){
-               $ageAtFirstMarriage = $params['ageAtFirstMarriage']; 
+	    //set marital status
+	    $patientEverBeenMarried = NULL;
+	    $ageAtFirstMarriage = 'not applicable';
+	    $patientEverBeenWidowed = 'not applicable';
+	    $currentMaritalStatus = 'not applicable';
+	    if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 1){
+		$patientEverBeenMarried = $params['everBeenMarried'];
+		$patientEverBeenWidowed = (isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL;
+		$currentMaritalStatus = (isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL;
+		if(isset($params['ageAtFirstMarriageInYears']) && trim($params['ageAtFirstMarriageInYears'])!= ''){
+		   $ageAtFirstMarriage = '@'.$params['ageAtFirstMarriageInYears'];
+		}else if(isset($params['ageAtFirstMarriage']) && trim($params['ageAtFirstMarriage'])!= ''){
+		   $ageAtFirstMarriage = $params['ageAtFirstMarriage'];
+		}
+	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
+		$patientEverBeenMarried = $params['everBeenMarried'];
+	    }
+	    //set patient HIV test result
+	    $hasPatientEverBeenTestedforHIV = NULL;
+	    $timeofMostRecentHIVTest = 'not applicable';
+	    $resultofMostRecentHIVTest = 'not applicable';
+	    if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV']) == 1){
+		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
+		$timeofMostRecentHIVTest = (isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL;
+		$resultofMostRecentHIVTest = (isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL;
+	    }else if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV'])!= ''){
+		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
+	    }
+	    //set age at very first sex
+	    $ageAtVeryFirstSex = NULL;
+            if(isset($params['ageAtVeryFirstSexInNumbers']) && trim($params['ageAtVeryFirstSexInNumbers'])!= ''){
+               $ageAtVeryFirstSex = '@'.$params['ageAtVeryFirstSexInNumbers'];
+            }else if(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= ''){
+               $ageAtVeryFirstSex = $params['ageAtVeryFirstSex'];
             }
-            $noOfSexualPartners = NULL;
+	    //set no.of sexual partners
+	    $noOfSexualPartners = NULL;
             if(isset($params['noOfSexualPartnersInNumbers']) && trim($params['noOfSexualPartnersInNumbers'])!= ''){
-                $noOfSexualPartners = $params['noOfSexualPartnersInNumbers'];
+                $noOfSexualPartners = '@'.$params['noOfSexualPartnersInNumbers'];
             }else if(isset($params['noOfSexualPartners']) && trim($params['noOfSexualPartners'])!= ''){
                $noOfSexualPartners = $params['noOfSexualPartners']; 
             }
-            $noOfSexualPartnersInLastSixMonths = NULL;
+	    //set no.of sexual partners in last six months
+	    $noOfSexualPartnersInLastSixMonths = NULL;
             if(isset($params['noOfSexualPartnersInLastSixMonthsInNumbers']) && trim($params['noOfSexualPartnersInLastSixMonthsInNumbers'])!= ''){
-                $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonthsInNumbers'];
+                $noOfSexualPartnersInLastSixMonths = '@'.$params['noOfSexualPartnersInLastSixMonthsInNumbers'];
             }else if(isset($params['noOfSexualPartnersInLastSixMonths']) && trim($params['noOfSexualPartnersInLastSixMonths'])!= ''){
-               $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths']; 
+               $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths'];
             }
-            $ageOfMainSexualPartnersInLastBirthday = NULL;
-            if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
-                $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthdayInYears'];
-            }else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
-               $ageOfMainSexualPartnersInLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday']; 
-            }
-            $noOfDaysInLastSixMonths = NULL;
-            if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
-                $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonthsInDays'];
-            }else if(isset($params['hasPatientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['hasPatientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
-               $noOfDaysInLastSixMonths = $params['hasPatientHadDrinkWithAlcoholInLastSixMonths']; 
-            }
-            $recreationalDrugs = NULL;
-            if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])== 'yes'){
-                $recreationalDrugs = $params['recreationalDrugs'];
-            }
-	    $patientHurtBy = NULL;
-	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
-		if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])== 'yes'){
-		    $patientHurtBy = array(
-					    'has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],
-					    'patient_hurt_by'=>(isset($params['patientHurtBySomeoneWithinLastYear']) && trim($params['patientHurtBySomeoneWithinLastYear'])!= '')?$params['patientHurtBySomeoneWithinLastYear']:'',
-					    'no_of_times'=>$params['patientHurtBySomeoneWithinLastYearInNoofTimes']
-					);
-		}else{
-		    $patientHurtBy = array('has_patient_hurt_by'=>$params['hasPatientEverBeenHurtBySomeoneWithinLastYear'],'patient_hurt_by'=>'','no_of_times'=>'');
+	    //set sexual partner's/sexually transmitted infection details
+	    $partnerHIVTestStatus = NULL;
+	    $ageofMainSexualPartneratLastBirthday = 'not applicable';
+	    $ageDiffofMainSexualPartner = 'not applicable';
+	    $isPartnerCircumcised = 'not applicable';
+	    $circumcision = 'not applicable';
+	    $hasPatinetEverReceivedGiftforSex = 'not applicable';
+	    $lastTimeOfReceivingGiftforSex = 'not applicable';
+	    $noOfTimesBeenPregnant = 'not applicable';
+	    $noOfTimesCondomUsedBeforePregnancy = 'not applicable';
+	    $noOfTimesCondomUsedAfterPregnancy = 'not applicable';
+	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= 3){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
+		$ageofMainSexualPartneratLastBirthday = NULL;
+		if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
+		    $ageofMainSexualPartneratLastBirthday = '@'.$params['ageOfMainSexualPartnerAtLastBirthdayInYears'];
+		}else if(isset($params['ageOfMainSexualPartnerAtLastBirthday']) && trim($params['ageOfMainSexualPartnerAtLastBirthday'])!= ''){
+		   $ageofMainSexualPartneratLastBirthday = $params['ageOfMainSexualPartnerAtLastBirthday'];
+		   $ageDiffofMainSexualPartner = (isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL;
 		}
-	    }
-	    $patientHurtBySomeoneDuringPregnancy = NULL;
-	    if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
-		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])== 'yes'){
-		    $patientHurtBySomeoneDuringPregnancy = array(
-					    'has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],
-					    'patient_hurt_by_someone_during_pregnancy'=>(isset($params['patientHurtBySomeoneDuringPregnancy']) && trim($params['patientHurtBySomeoneDuringPregnancy'])!= '')?$params['patientHurtBySomeoneDuringPregnancy']:''
-					);
-		}else{
-		    $patientHurtBySomeoneDuringPregnancy = array('has_patient_hurt_by_someone_during_pregnancy'=>$params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'],'patient_hurt_by_someone_during_pregnancy'=>'');
+		$isPartnerCircumcised = NULL;
+		if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised']) == 1){
+		    $isPartnerCircumcised = $params['isPartnerCircumcised'];
+		    $circumcision = (isset($params['circumcision']) && trim($params['circumcision'])!= '')?$params['circumcision']:NULL;
+		}else if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= ''){
+		   $isPartnerCircumcised = $params['isPartnerCircumcised']; 
 		}
-	    }
-	    $patientForcedForSex = NULL;
-	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
-		if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])== 'yes'){
-		    $patientForcedForSex = array(
-					    'has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],
-					    'patient_forced_by'=>(isset($params['patientForcedForSexWithinLastYear']) && trim($params['patientForcedForSexWithinLastYear'])!= '')?$params['patientForcedForSexWithinLastYear']:'',
-					    'no_of_times'=>$params['patientForcedForSexWithinLastYearInNoofTimes']
-					);
-		}else{
-		    $patientForcedForSex = array('has_patient_forced_for_sex'=>$params['hasPatientEverBeenForcedForSexWithinLastYear'],'patient_forced_by'=>'','no_of_times'=>'');
+		$hasPatinetEverReceivedGiftforSex = NULL;
+		if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
+		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		    $lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
+		}else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
+		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
 		}
+		$noOfTimesBeenPregnant = NULL;
+		if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
+		    $noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
+		}else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
+		   $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
+		}
+		$noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
+	        $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
+	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
+	    //set patient disease symptoms/treatment details
+	    $hasPatientHadPainInLowerAbdomen = NULL;
+	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';
+	    if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen']) == 1){
+		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
+		$hasPatientBeenTreatedForLowerAbdomenPain = (isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL;
+	    }else if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= ''){
+		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
+	    }
+	    //set patient alcohol/drug use
+	    $patientHadDrinkWithAlcoholInLastSixMonths = NULL;
+	    if(isset($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
+                $patientHadDrinkWithAlcoholInLastSixMonths = '@'.$params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'];
+            }else if(isset($params['patientHadDrinkWithAlcoholInLastSixMonths']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonths'])!= ''){
+               $patientHadDrinkWithAlcoholInLastSixMonths = $params['patientHadDrinkWithAlcoholInLastSixMonths'];
+            }
+	    $hasPatientEverTriedRecreationalDrugs = NULL;
+	    $hasPatientHadRecreationalDrugsInLastSixMonths = 'not applicable';
+	    $recreationalDrugs = 'not applicable';
+	    if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs']) == 1){
+		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+		$hasPatientHadRecreationalDrugsInLastSixMonths = '';
+		if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths']) == 1){
+		   $hasPatientHadRecreationalDrugsInLastSixMonths = $params['hasPatientHadRecreationalDrugsInLastSixMonths'];
+		   $recreationalDrugs = (isset($params['recreationalDrugs']) && trim($params['recreationalDrugs'])!= '')?$params['recreationalDrugs']:'';
+		}else if(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= ''){
+		  $hasPatientHadRecreationalDrugsInLastSixMonths = $params['hasPatientHadRecreationalDrugsInLastSixMonths'];   
+		}
+	        $patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
+	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
+		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+	    }
+	    //set patient abused by
+	    $hasPatientEverBeenAbusedBySomeone = '';
+	    $whoAbused = 'not applicable';
+	    $patientAbusedByInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone']) == 1){
+		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$whoAbused = '';
+		if(isset($params['patientAbusedBy']) && count($params['patientAbusedBy']) >0){
+		    $whoAbused = implode(',',$params['patientAbusedBy']);
+		}else if(isset($params['patientAbusedByOther']) && trim($params['patientAbusedByOther'])!= ''){
+		    $whoAbused = '@'.$params['patientAbusedByOther'];
+		}
+		$patientAbusedByInNoofTimes = '';
+		if(isset($params['patientAbusedBySomeoneInNoofTimes']) && trim($params['patientAbusedBySomeoneInNoofTimes'])!= ''){
+		    $patientAbusedByInNoofTimes = '@'.$params['patientAbusedBySomeoneInNoofTimes'];
+		}else if(isset($params['patientAbusedByNoofTimes']) && trim($params['patientAbusedByNoofTimes'])!= ''){
+		    $patientAbusedByInNoofTimes = $params['patientAbusedByNoofTimes'];
+		}
+	    }else if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= ''){
+		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+	    }
+	    $patientAbusedBySomeone = array('ever_abused'=>$hasPatientEverBeenAbusedBySomeone,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
+	    //set patient hurt by someone within last year
+	    $hasPatientHurtBySomeoneWithinLastYear = '';
+	    $whoHurt = 'not applicable';
+	    $patientHurtByInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) == 1){
+		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$whoHurt = '';
+		if(isset($params['patientHurtBySomeoneWithinLastYear']) && count($params['patientHurtBySomeoneWithinLastYear']) >0){
+		    $whoHurt = implode(',',$params['patientHurtBySomeoneWithinLastYear']);
+		}else if(isset($params['patientHurtByOther']) && trim($params['patientHurtByOther'])!= ''){
+		    $whoHurt = '@'.$params['patientHurtByOther'];
+		}
+		$patientHurtByInNoofTimes = '';
+		if(isset($params['patientHurtBySomeoneInNoofTimes']) && trim($params['patientHurtBySomeoneInNoofTimes'])!= ''){
+		    $patientHurtByInNoofTimes = '@'.$params['patientHurtBySomeoneInNoofTimes'];
+		}else if(isset($params['patientHurtByNoofTimes']) && trim($params['patientHurtByNoofTimes'])!= ''){
+		    $patientHurtByInNoofTimes = $params['patientHurtByNoofTimes'];
+		}
+		//set patient hurt by someone during pregnancy
+		$hasPatientHurtBySomeoneDuringPregnancy = '';
+		$whoHurtDP = 'not applicable';
+		$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
+		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) == 1){
+		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $whoHurtDP = '';
+		    if(isset($params['patientHurtBySomeoneDuringPregnancy']) && count($params['patientHurtBySomeoneDuringPregnancy']) >0){
+			$whoHurtDP = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
+		    }else if(isset($params['patientHurtByOtherDuringPregnancy']) && trim($params['patientHurtByOtherDuringPregnancy'])!= ''){
+			$whoHurtDP = '@'.$params['patientHurtByOtherDuringPregnancy'];
+		    }
+		    $patientHurtByDuringPregnancyInNoofTimes = '';
+		    if(isset($params['patientHurtBySomeoneDuringPregnancyInNoofTimes']) && trim($params['patientHurtBySomeoneDuringPregnancyInNoofTimes'])!= ''){
+			$patientHurtByDuringPregnancyInNoofTimes = '@'.$params['patientHurtBySomeoneDuringPregnancyInNoofTimes'];
+		    }else if(isset($params['patientHurtByDuringPregnancyNoofTimes']) && trim($params['patientHurtByDuringPregnancyNoofTimes'])!= ''){
+			$patientHurtByDuringPregnancyInNoofTimes = $params['patientHurtByDuringPregnancyNoofTimes'];
+		    }
+		}else if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
+		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		}
+		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$hasPatientHurtBySomeoneDuringPregnancy,'who_hurt'=>$whoHurtDP,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
+	    }else if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
+		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'','who_hurt'=>'','no_of_times'=>'');
+	    }
+	    $patientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$hasPatientHurtBySomeoneWithinLastYear,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
+	    //set patient forced for sex within last year
+	    $hasPatientForcedforSexWithinLastYear = '';
+	    $whoForced = 'not applicable';
+	    $patientForcedforSexWithinLastYearInNoofTimes = 'not applicable';
+	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear']) == 1){
+		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$whoForced = '';
+		if(isset($params['patientForcedForSexWithinLastYear']) && count($params['patientForcedForSexWithinLastYear']) >0){
+		    $whoForced = implode(',',$params['patientForcedForSexWithinLastYear']);
+		}else if(isset($params['patientForcedForSexByOtherWithinLastYear']) && trim($params['patientForcedForSexByOtherWithinLastYear'])!= ''){
+		    $whoForced = '@'.$params['patientForcedForSexByOtherWithinLastYear'];
+		}
+		$patientForcedforSexWithinLastYearInNoofTimes = '';
+		if(isset($params['patientForcedForSexInNoofTimes']) && trim($params['patientForcedForSexInNoofTimes'])!= ''){
+		    $patientForcedforSexWithinLastYearInNoofTimes = '@'.$params['patientForcedForSexInNoofTimes'];
+		}else if(isset($params['patientForcedForSexNoofTimes']) && trim($params['patientForcedForSexNoofTimes'])!= ''){
+		    $patientForcedforSexWithinLastYearInNoofTimes = $params['patientForcedForSexNoofTimes'];
+		}
+	    }else if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
+		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+	    }
+	    $patientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$hasPatientForcedforSexWithinLastYear,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
 	    $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
                     'anc'=>base64_decode($params['ancSite']),
@@ -544,42 +843,45 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                     'interviewer_name'=>$params['interviewerName'],
                     'anc_patient_id'=>$params['ancPatientId'],
                     'interview_date'=>$interviewDate,
-		    'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
+		    //'has_participant_received_dreams_services'=>(isset($params['hasParticipantReceivedDreamsServices']) && trim($params['hasParticipantReceivedDreamsServices'])!= '')?$params['hasParticipantReceivedDreamsServices']:NULL,
                     'patient_occupation'=>$occupation,
-                    'patient_degree'=>(isset($params['degree']) && trim($params['degree'])!= '')?$params['degree']:NULL,
-                    'patient_ever_been_married'=>(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= '')?$params['everBeenMarried']:NULL,
-                    'age_at_first_marriage'=>$ageAtFirstMarriage,
-                    'patient_ever_been_widowed'=>(isset($params['everBeenWidowed']) && trim($params['everBeenWidowed'])!= '')?$params['everBeenWidowed']:NULL,
-                    'current_marital_status'=>(isset($params['currentMaritalStatus']) && trim($params['currentMaritalStatus'])!= '')?$params['currentMaritalStatus']:NULL,
-                    'time_of_last_HIV_test'=>(isset($params['timeOfLastHIVTest']) && trim($params['timeOfLastHIVTest'])!= '')?$params['timeOfLastHIVTest']:NULL,
-                    'last_HIV_test_status'=>(isset($params['lastHIVTestStatus']) && trim($params['lastHIVTestStatus'])!= '')?$params['lastHIVTestStatus']:NULL,
-                    'partner_HIV_test_status'=>(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= '')?$params['partnerHIVTestStatus']:NULL,
-                    'age_at_very_first_sex'=>(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= '')?$params['ageAtVeryFirstSex']:NULL,
-                    'reason_for_very_first_sex'=>(isset($params['reasonForVeryFirstSex']) && trim($params['reasonForVeryFirstSex'])!= '')?$params['reasonForVeryFirstSex']:NULL,
-                    'no_of_sexual_partners'=>$noOfSexualPartners,
-                    'no_of_sexual_partners_in_last_six_months'=>$noOfSexualPartnersInLastSixMonths,
-                    'age_of_main_sexual_partner_at_last_birthday'=>$ageOfMainSexualPartnersInLastBirthday,
-                    'age_diff_of_main_sexual_partner'=>(isset($params['ageDiffOfMainSexualPartner']) && trim($params['ageDiffOfMainSexualPartner'])!= '')?$params['ageDiffOfMainSexualPartner']:NULL,
-                    'is_partner_circumcised'=>(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= '')?$params['isPartnerCircumcised']:NULL,
-                    'last_time_of_receiving_gift_for_sex'=>(isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL,
-                    'no_of_times_been_pregnant'=>(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= '')?$params['noOfTimesBeenPregnant']:NULL,
-                    'no_of_times_condom_used_before_pregnancy'=>(isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL,
-                    'no_of_times_condom_used_after_pregnancy'=>(isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL,
-                    'has_patient_had_pain_in_lower_abdomen'=>(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= '')?$params['hasPatientHadPainInLowerAbdomen']:NULL,
-                    'has_patient_been_treated_for_lower_abdomen_pain'=>(isset($params['hasPatientBeenTreatedForLowerAbdomenPain']) && trim($params['hasPatientBeenTreatedForLowerAbdomenPain'])!= '')?$params['hasPatientBeenTreatedForLowerAbdomenPain']:NULL,
-                    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
-		    'has_patient_ever_received_vaccine_to_prevent_HPV'=>(isset($params['hasPatientEverReceivedVaccineToPreventHPV']) && trim($params['hasPatientEverReceivedVaccineToPreventHPV'])!= '')?$params['hasPatientEverReceivedVaccineToPreventHPV']:NULL,
-                    'has_patient_had_drink_with_alcohol_in_last_six_months'=>$noOfDaysInLastSixMonths,
-                    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
-                    'has_patient_ever_tried_recreational_drugs'=>(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= '')?$params['hasPatientEverTriedRecreationalDrugs']:NULL,
-                    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($params['hasPatientHadRecreationalDrugsInLastSixMonths']) && trim($params['hasPatientHadRecreationalDrugsInLastSixMonths'])!= '')?$params['hasPatientHadRecreationalDrugsInLastSixMonths']:NULL,
-                    'recreational_drugs'=>$recreationalDrugs,
-		    'has_patient_ever_been_abused_by_someone'=>(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= '')?$params['hasPatientEverBeenAbusedBySomeone']:NULL,
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>($patientHurtBy !=NULL)?json_encode($patientHurtBy):'',
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>($patientHurtBySomeoneDuringPregnancy !=NULL)?json_encode($patientHurtBySomeoneDuringPregnancy):'',
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>($patientForcedForSex !=NULL)?json_encode($patientForcedForSex):'',
+                    'has_patient_ever_attended_school'=>$hasPatientEverAttendedSchool,
+		    'patient_degree'=>$degree,
+		    'patient_ever_been_married'=>$patientEverBeenMarried,
+		    'age_at_first_marriage'=>$ageAtFirstMarriage,
+		    'patient_ever_been_widowed'=>$patientEverBeenWidowed,
+		    'current_marital_status'=>$currentMaritalStatus,
+		    'has_patient_ever_been_tested_for_HIV'=>$hasPatientEverBeenTestedforHIV,
+		    'time_of_last_HIV_test'=>$timeofMostRecentHIVTest,
+		    'last_HIV_test_status'=>$resultofMostRecentHIVTest,
+		    'age_at_very_first_sex'=>$ageAtVeryFirstSex,
+		    'reason_for_very_first_sex'=>(isset($params['reasonForVeryFirstSex']) && trim($params['reasonForVeryFirstSex'])!= '')?$params['reasonForVeryFirstSex']:NULL,
+		    'no_of_sexual_partners'=>$noOfSexualPartners,
+		    'no_of_sexual_partners_in_last_six_months'=>$noOfSexualPartnersInLastSixMonths,
+		    'partner_HIV_test_status'=>$partnerHIVTestStatus,
+		    'age_of_main_sexual_partner_at_last_birthday'=>$ageofMainSexualPartneratLastBirthday,
+		    'age_diff_of_main_sexual_partner'=>$ageDiffofMainSexualPartner,
+		    'is_partner_circumcised'=>$isPartnerCircumcised,
+		    'circumcision'=>$circumcision,
+		    'has_patient_ever_received_gift_for_sex'=>$hasPatinetEverReceivedGiftforSex,
+		    'last_time_of_receiving_gift_for_sex'=>$lastTimeOfReceivingGiftforSex,
+		    'no_of_times_been_pregnant'=>$noOfTimesBeenPregnant,
+		    'no_of_times_condom_used_before_pregnancy'=>$noOfTimesCondomUsedBeforePregnancy,
+		    'no_of_times_condom_used_after_pregnancy'=>$noOfTimesCondomUsedAfterPregnancy,
+		    'has_patient_had_pain_in_lower_abdomen'=>$hasPatientHadPainInLowerAbdomen,
+		    'has_patient_been_treated_for_lower_abdomen_pain'=>$hasPatientBeenTreatedForLowerAbdomenPain,
+		    'has_patient_ever_been_treated_for_syphilis'=>(isset($params['hasPatientEverBeenTreatedForSyphilis']) && trim($params['hasPatientEverBeenTreatedForSyphilis'])!= '')?$params['hasPatientEverBeenTreatedForSyphilis']:NULL,
+		    'has_patient_ever_received_vaccine_to_prevent_cervical_cancer'=>(isset($params['hasPatientEverReceivedVaccineToPreventCervicalCancer']) && trim($params['hasPatientEverReceivedVaccineToPreventCervicalCancer'])!= '')?$params['hasPatientEverReceivedVaccineToPreventCervicalCancer']:NULL,
+		    'patient_had_drink_with_alcohol_in_last_six_months'=>$patientHadDrinkWithAlcoholInLastSixMonths,
+		    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
+		    'has_patient_ever_tried_recreational_drugs'=>$hasPatientEverTriedRecreationalDrugs,
+		    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($patientHadRecreationalDrugsInLastSixMonths))?json_encode($patientHadRecreationalDrugsInLastSixMonths):'',
+		    'has_patient_ever_been_abused_by_someone'=>json_encode($patientAbusedBySomeone),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBySomeoneWithinLastYear),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($patientHurtBySomeoneDuringPregnancy),
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedforSexWithinLastYear),
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
-		    'comment'=>$params['comment'],
+                    'comment'=>$params['comment'],
 		    'status'=>$status,
                     'updated_on'=>$common->getDateTime(),
                     'updated_by'=>$loginContainer->userId

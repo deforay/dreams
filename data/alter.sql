@@ -744,3 +744,26 @@ INSERT INTO `anc_form` (`field_id`, `field_name`, `age_disaggregation`, `status`
 
 --Pal 07/11/2017
 ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_attended_school` VARCHAR(45) NULL DEFAULT NULL AFTER `has_participant_received_dreams_services`;
+
+ALTER TABLE `occupation_type` ADD `occupation_code` INT NULL DEFAULT NULL AFTER `occupation`;
+
+ALTER TABLE `clinic_risk_assessment` DROP `partner_HIV_test_status`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_been_tested_for_HIV` VARCHAR(45) NULL DEFAULT NULL AFTER `current_marital_status`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `partner_HIV_test_status` VARCHAR(45) NULL DEFAULT NULL AFTER `no_of_sexual_partners_in_last_six_months`;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_received_vaccine_to_prevent_HPV` `has_patient_ever_received_vaccine_to_prevent_cervical_cancer` VARCHAR(45) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` ADD `circumcision` VARCHAR(45) NULL DEFAULT NULL AFTER `is_partner_circumcised`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_received_gift_for_sex` VARCHAR(45) NULL DEFAULT NULL AFTER `circumcision`;
+
+--Pal 11/11/2017
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_had_drink_with_alcohol_in_last_six_months` `patient_had_drink_with_alcohol_in_last_six_months` VARCHAR(90) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` DROP `recreational_drugs`;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_abused_by_someone` `has_patient_ever_been_abused_by_someone` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_had_recreational_drugs_in_last_six_months` `has_patient_had_recreational_drugs_in_last_six_months` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
