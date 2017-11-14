@@ -92,13 +92,14 @@ class RiskAssessmentService {
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
+                    $keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $interviewDate = '';
                         if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
                             $interviewDate = $common->humanDateFormat($aRow['interview_date']);
                         }
-                        //occupation
+                        //patient occupation
                         $occupation = (isset($aRow['occupationName']))?ucwords($aRow['occupationName']).' - '.$aRow['occupation_code']:'';
                         //patient schooling details
                         $hasPatientEverAttendedSchool = '';
@@ -133,7 +134,7 @@ class RiskAssessmentService {
                                 $degree = ucwords($aRow['patient_degree']);
                             }
                         }
-                        //patient marital status
+                        //marital status
                         $patientEverBeenMarried = '';
                         if($aRow['patient_ever_been_married']!= null && trim($aRow['patient_ever_been_married'])!= ''){
                             if($aRow['patient_ever_been_married'] == 1){
@@ -200,7 +201,7 @@ class RiskAssessmentService {
                                 $maritalStatus = ucwords($aRow['current_marital_status']);
                             }
                         }
-                        //patient HIV test status
+                        //patient HIV test result
                         $hasPatientEverBeenTestedforHIV = '';
                         if($aRow['has_patient_ever_been_tested_for_HIV']!= null && trim($aRow['has_patient_ever_been_tested_for_HIV'])!= ''){
                             if($aRow['has_patient_ever_been_tested_for_HIV'] == 1){
@@ -601,8 +602,7 @@ class RiskAssessmentService {
                             }
                         }
                         //abuse
-                        $keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
-                        //set patient abused by
+                        //patient abused by
                         $hasPatientEverBeenAbusedBySomeone = '';
                         if($aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= ''){
                             $patientAbusedBydata = json_decode($aRow['has_patient_ever_been_abused_by_someone'],true);
@@ -642,8 +642,8 @@ class RiskAssessmentService {
                                 $hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
                             }
                         }
-                        //set patient hurt by
-                        $hasPatientEverBeenHurtBySomeone = '';
+                        //patient hurt by someone within last year
+                        $hasPatientHurtBySomeoneWithinLastYear = '';
                         if($aRow['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
                             $patientHurtBydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
                             $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
@@ -671,19 +671,19 @@ class RiskAssessmentService {
                                 $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
-                                $hasPatientEverBeenHurtBySomeone = "Yes - 1,&nbsp;&nbsp;Hurt by - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;No.of times hurted - ".$patientHurtByInNoofTimes;
+                                $hasPatientHurtBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;Hurt by - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;No.of times hurted - ".$patientHurtByInNoofTimes;
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
-                                $hasPatientEverBeenHurtBySomeone = "No - 2";
+                                $hasPatientHurtBySomeoneWithinLastYear = "No - 2";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
-                                $hasPatientEverBeenHurtBySomeone = "Don't Know - 88";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know - 88";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
-                                $hasPatientEverBeenHurtBySomeone = "Refused - 99";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Refused - 99";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
-                                $hasPatientEverBeenHurtBySomeone = "Response Not Available - 2222";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available - 2222";
                             }
                         }
-                        //set patient hurt by during pregnancy
-                        $hasPatientHurtBySomeoneDuringPregnancy = '';
+                        //patient hurt by someone during pregnancy
+                        $hasPatientHurtBySomeoneDuringPregnancy = 'Not Applicable';;
                         if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
                             $patientHurtByDuringPregnancydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
                             $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
@@ -722,7 +722,7 @@ class RiskAssessmentService {
                                 $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
                             }
                         }
-                        //set patient forced for sex within last year
+                        //patient forced for sex within last year
                         $hasPatientForcedforSexBySomeoneWithinLastYear = '';
                         if($aRow['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($aRow['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
                             $patientForcedforSexdata = json_decode($aRow['has_patient_ever_been_forced_for_sex_within_last_year'],true);
@@ -816,7 +816,7 @@ class RiskAssessmentService {
                         $row[] = $hasPatientEverTriedRecreationalDrugs;
                         $row[] = $hasPatientHadRecreationalDrugsInLastSixMonths;
                         $row[] = $hasPatientEverBeenAbusedBySomeone;
-                        $row[] = $hasPatientEverBeenHurtBySomeone;
+                        $row[] = $hasPatientHurtBySomeoneWithinLastYear;
                         $row[] = $hasPatientHurtBySomeoneDuringPregnancy;
                         $row[] = $hasPatientForcedforSexBySomeoneWithinLastYear;
                         $row[] = $hasPatientAfraidofAnyone;

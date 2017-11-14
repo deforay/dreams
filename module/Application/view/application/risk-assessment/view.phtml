@@ -4,13 +4,14 @@ $common = new CommonService();
 if(trim($countryId)!= ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
 }else{
-   $link = "/clinic/risk-assessment"; 
+   $link = "/clinic/risk-assessment";
 }
+$keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
 $interviewDate = '';
 if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
-//set recreational drugs
+//recreational drugs
 $hasPatientHadRecreationalDrugsInLastSixMonths = '';
 $recreationalDrugs = '';
 if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!= ''){
@@ -18,14 +19,13 @@ if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($r
     $hasPatientHadRecreationalDrugsInLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
     $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
 }
-$keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
-//set patient abused by
-$hasPatientAbusedBy = '';
+//patient abused by
+$everAbusedBy = '';
 $patientAbusedBy = '';
 $patientAbusedByInNoofTimes = '';
 if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patient_ever_been_abused_by_someone)!= ''){
     $patientAbusedBydata = json_decode($row->has_patient_ever_been_abused_by_someone,true);
-    $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
+    $everAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
     if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
         $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
@@ -50,13 +50,13 @@ if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patien
         $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
     }
 }
-//set patient hurt by
-$hasPatientHurtByWithinLastYear = '';
+//patient hurt by someone within last year
+$everHurtedBy = '';
 $patientHurtByWithinLastYear = '';
 $patientHurtByInNoofTimes = '';
 if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
     $patientHurtBydata = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
-    $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
+    $everHurtedBy = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
     if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
         $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
@@ -81,13 +81,13 @@ if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($
         $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
     }
 }
-//set patient hurt by during pregnancy
-$hasPatientHurtByDuringPregnancy = '';
-$patientHurtByDuringPregnancy = '';
-$patientHurtByDuringPregnancyInNoofTimes = '';
-if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+//patient hurt by someone during pregnancy
+$everHurtedBydp = 'not applicable';
+$patientHurtByDuringPregnancy = 'not applicable';
+$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
+if(trim($everHurtedBy) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
-    $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
+    $everHurtedBydp = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
     if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
         $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
@@ -112,13 +112,13 @@ if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYea
         $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
     }
 }
-//set patient forced for sex within last year
-$hasPatientForcedforSexWithinLastYear = '';
+//patient forced for sex within last year
+$everForcedforSex = '';
 $patientForcedforSexBy = '';
 $patientForcedforSexInNoofTimes = '';
 if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
     $patientForcedforSexdata = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
-    $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
+    $everForcedforSex = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
     if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
         $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
     }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
@@ -1121,15 +1121,15 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s12">
                     <p>
                         <?php
-                        if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
+                        if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 1){
                             echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Abused by</span> - ".$patientAbusedBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times abused</span> - ".$patientAbusedByInNoofTimes;
-                        }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 2){
                             echo "No - 2";
-                        }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 88){
                             echo "Don't Know - 88";
-                        }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 99){
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 99){
                             echo "Refused - 99";
-                        }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 2222){
                             echo "Response Not Available - 2222";
                         }
                         ?>
@@ -1145,15 +1145,15 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s12">
                     <p>
                         <?php
-                        if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
+                        if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 1){
                             echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
-                        }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 2){
                             echo "No - 2";
-                        }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 88){
                             echo "Don't Know - 88";
-                        }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 99){
                             echo "Refused - 99";
-                        }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 2222){
                             echo "Response Not Available - 2222";
                         }
                         ?>
@@ -1169,16 +1169,18 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s12">
                     <p>
                         <?php
-                        if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
+                        if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 1){
                             echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
-                        }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 2){
                             echo "No - 2";
-                        }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 88){
                             echo "Don't Know - 88";
-                        }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 99){
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 99){
                             echo "Refused - 99";
-                        }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2222){
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 2222){
                             echo "Response Not Available - 2222";
+                        }else{
+                            echo ucwords($everHurtedBydp);
                         }
                         ?>
                     </p>
@@ -1193,15 +1195,15 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s12">
                     <p>
                         <?php
-                        if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
+                        if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 1){
                             echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Forced by</span> - ".$patientForcedforSexBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
-                        }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 2){
                             echo "No - 2";
-                        }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 88){
                             echo "Don't Know - 88";
-                        }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 99){
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 99){
                             echo "Refused - 99";
-                        }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2222){
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 2222){
                             echo "Response Not Available - 2222";
                         }
                         ?>

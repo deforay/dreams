@@ -34,7 +34,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
             }
-	    //set patient occupation
+	    //patient occupation
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
                 if($params['occupation'] == 1111 && trim($params['occupationNew'])!= ''){
@@ -44,7 +44,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                    $occupation = base64_decode($params['occupation']);
                 }
             }
-	    //set patient degree
+	    //patient degree
 	    $hasPatientEverAttendedSchool = NULL;
 	    $degree = 'not applicable';
 	    if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool']) == 1){
@@ -53,7 +53,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool'])!= ''){
 		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
 	    }
-	    //set marital status
+	    //marital status
 	    $patientEverBeenMarried = NULL;
 	    $ageAtFirstMarriage = 'not applicable';
 	    $patientEverBeenWidowed = 'not applicable';
@@ -70,7 +70,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
 		$patientEverBeenMarried = $params['everBeenMarried'];
 	    }
-	    //set patient HIV test result
+	    //patient HIV test result
 	    $hasPatientEverBeenTestedforHIV = NULL;
 	    $timeofMostRecentHIVTest = 'not applicable';
 	    $resultofMostRecentHIVTest = 'not applicable';
@@ -81,28 +81,28 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV'])!= ''){
 		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
 	    }
-	    //set age at very first sex
+	    //age at very first sex
 	    $ageAtVeryFirstSex = NULL;
             if(isset($params['ageAtVeryFirstSexInNumbers']) && trim($params['ageAtVeryFirstSexInNumbers'])!= ''){
                $ageAtVeryFirstSex = '@'.$params['ageAtVeryFirstSexInNumbers'];
             }else if(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= ''){
                $ageAtVeryFirstSex = $params['ageAtVeryFirstSex'];
             }
-	    //set no.of sexual partners
+	    //no.of sexual partners
 	    $noOfSexualPartners = NULL;
             if(isset($params['noOfSexualPartnersInNumbers']) && trim($params['noOfSexualPartnersInNumbers'])!= ''){
                 $noOfSexualPartners = '@'.$params['noOfSexualPartnersInNumbers'];
             }else if(isset($params['noOfSexualPartners']) && trim($params['noOfSexualPartners'])!= ''){
                $noOfSexualPartners = $params['noOfSexualPartners']; 
             }
-	    //set no.of sexual partners in last six months
+	    //no.of sexual partners in last six months
 	    $noOfSexualPartnersInLastSixMonths = NULL;
             if(isset($params['noOfSexualPartnersInLastSixMonthsInNumbers']) && trim($params['noOfSexualPartnersInLastSixMonthsInNumbers'])!= ''){
                 $noOfSexualPartnersInLastSixMonths = '@'.$params['noOfSexualPartnersInLastSixMonthsInNumbers'];
             }else if(isset($params['noOfSexualPartnersInLastSixMonths']) && trim($params['noOfSexualPartnersInLastSixMonths'])!= ''){
                $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths'];
             }
-	    //set sexual partner's/sexually transmitted infection details
+	    //sexual partner's/sexually transmitted infection details
 	    $partnerHIVTestStatus = NULL;
 	    $ageofMainSexualPartneratLastBirthday = 'not applicable';
 	    $ageDiffofMainSexualPartner = 'not applicable';
@@ -147,7 +147,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
 		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
-	    //set patient disease symptoms/treatment details
+	    //patient disease symptoms/treatment details
 	    $hasPatientHadPainInLowerAbdomen = NULL;
 	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';
 	    if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen']) == 1){
@@ -156,7 +156,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= ''){
 		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
 	    }
-	    //set patient alcohol/drug use
+	    //patient alcohol/drug use
 	    $patientHadDrinkWithAlcoholInLastSixMonths = NULL;
 	    if(isset($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
                 $patientHadDrinkWithAlcoholInLastSixMonths = '@'.$params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'];
@@ -179,12 +179,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
 		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
 	    }
-	    //set patient abused by
-	    $hasPatientEverBeenAbusedBySomeone = '';
+	    //patient abused by
+	    $everAbused = NULL;
 	    $whoAbused = 'not applicable';
 	    $patientAbusedByInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone']) == 1){
-		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$everAbused = $params['hasPatientEverBeenAbusedBySomeone'];
 		$whoAbused = '';
 		if(isset($params['patientAbusedBy']) && count($params['patientAbusedBy']) >0){
 		    $whoAbused = implode(',',$params['patientAbusedBy']);
@@ -198,15 +198,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientAbusedByInNoofTimes = $params['patientAbusedByNoofTimes'];
 		}
 	    }else if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= ''){
-		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$everAbused = $params['hasPatientEverBeenAbusedBySomeone'];
 	    }
-	    $patientAbusedBySomeone = array('ever_abused'=>$hasPatientEverBeenAbusedBySomeone,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
-	    //set patient hurt by someone within last year
-	    $hasPatientHurtBySomeoneWithinLastYear = '';
+	    $hasPatientEverBeenAbusedBySomeone = array('ever_abused'=>$everAbused,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
+	    //patient hurt by someone within last year
+	    $everHurted = NULL;
 	    $whoHurt = 'not applicable';
 	    $patientHurtByInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) == 1){
-		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$everHurted = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
 		$whoHurt = '';
 		if(isset($params['patientHurtBySomeoneWithinLastYear']) && count($params['patientHurtBySomeoneWithinLastYear']) >0){
 		    $whoHurt = implode(',',$params['patientHurtBySomeoneWithinLastYear']);
@@ -219,17 +219,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}else if(isset($params['patientHurtByNoofTimes']) && trim($params['patientHurtByNoofTimes'])!= ''){
 		    $patientHurtByInNoofTimes = $params['patientHurtByNoofTimes'];
 		}
-		//set patient hurt by someone during pregnancy
-		$hasPatientHurtBySomeoneDuringPregnancy = '';
-		$whoHurtDP = 'not applicable';
+		//patient hurt by someone during pregnancy
+		$everHurteddp = NULL;
+		$whoHurtdp = 'not applicable';
 		$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
 		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) == 1){
-		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
-		    $whoHurtDP = '';
+		    $everHurteddp = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $whoHurtdp = '';
 		    if(isset($params['patientHurtBySomeoneDuringPregnancy']) && count($params['patientHurtBySomeoneDuringPregnancy']) >0){
-			$whoHurtDP = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
+			$whoHurtdp = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
 		    }else if(isset($params['patientHurtByOtherDuringPregnancy']) && trim($params['patientHurtByOtherDuringPregnancy'])!= ''){
-			$whoHurtDP = '@'.$params['patientHurtByOtherDuringPregnancy'];
+			$whoHurtdp = '@'.$params['patientHurtByOtherDuringPregnancy'];
 		    }
 		    $patientHurtByDuringPregnancyInNoofTimes = '';
 		    if(isset($params['patientHurtBySomeoneDuringPregnancyInNoofTimes']) && trim($params['patientHurtBySomeoneDuringPregnancyInNoofTimes'])!= ''){
@@ -238,20 +238,20 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 			$patientHurtByDuringPregnancyInNoofTimes = $params['patientHurtByDuringPregnancyNoofTimes'];
 		    }
 		}else if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
-		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $everHurteddp = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
 		}
-		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$hasPatientHurtBySomeoneDuringPregnancy,'who_hurt'=>$whoHurtDP,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
+		$hasPatientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$everHurteddp,'who_hurt'=>$whoHurtdp,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
 	    }else if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
-		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
-		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'','who_hurt'=>'','no_of_times'=>'');
+		$everHurted = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$hasPatientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'not applicable','who_hurt'=>'not applicable','no_of_times'=>'not applicable');
 	    }
-	    $patientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$hasPatientHurtBySomeoneWithinLastYear,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
-	    //set patient forced for sex within last year
-	    $hasPatientForcedforSexWithinLastYear = '';
+	    $hasPatientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$everHurted,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
+	    //patient forced for sex within last year
+	    $everForcedforSex = NULL;
 	    $whoForced = 'not applicable';
 	    $patientForcedforSexWithinLastYearInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear']) == 1){
-		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$everForcedforSex = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
 		$whoForced = '';
 		if(isset($params['patientForcedForSexWithinLastYear']) && count($params['patientForcedForSexWithinLastYear']) >0){
 		    $whoForced = implode(',',$params['patientForcedForSexWithinLastYear']);
@@ -265,9 +265,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientForcedforSexWithinLastYearInNoofTimes = $params['patientForcedForSexNoofTimes'];
 		}
 	    }else if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
-		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$everForcedforSex = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
 	    }
-	    $patientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$hasPatientForcedforSexWithinLastYear,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
+	    $hasPatientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$everForcedforSex,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
             $data = array(
                     'anc'=>base64_decode($params['ancSite']),
                     'patient_barcode_id'=>$params['patientBarcodeId'],
@@ -307,10 +307,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
 		    'has_patient_ever_tried_recreational_drugs'=>$hasPatientEverTriedRecreationalDrugs,
 		    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($patientHadRecreationalDrugsInLastSixMonths))?json_encode($patientHadRecreationalDrugsInLastSixMonths):'',
-		    'has_patient_ever_been_abused_by_someone'=>json_encode($patientAbusedBySomeone),
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBySomeoneWithinLastYear),
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($patientHurtBySomeoneDuringPregnancy),
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedforSexWithinLastYear),
+		    'has_patient_ever_been_abused_by_someone'=>json_encode($hasPatientEverBeenAbusedBySomeone),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($hasPatientHurtBySomeoneWithinLastYear),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($hasPatientHurtBySomeoneDuringPregnancy),
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($hasPatientForcedforSexWithinLastYear),
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'comment'=>$params['comment'],
 		    'country'=>$country,
@@ -602,7 +602,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             if(isset($params['interviewDate']) && trim($params['interviewDate'])!= ''){
                 $interviewDate = $common->dateFormat($params['interviewDate']);
             }
-            //set patient occupation
+            //patient occupation
             $occupation = NULL;
             if(isset($params['occupation']) && trim($params['occupation'])!= ''){
                 if($params['occupation'] == 1111 && trim($params['occupationNew'])!= ''){
@@ -612,7 +612,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                    $occupation = base64_decode($params['occupation']);
                 }
             }
-	    //set patient degree
+	    //patient degree
 	    $hasPatientEverAttendedSchool = NULL;
 	    $degree = 'not applicable';
 	    if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool']) == 1){
@@ -621,7 +621,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverAttendedSchool']) && trim($params['hasPatientEverAttendedSchool'])!= ''){
 		$hasPatientEverAttendedSchool = $params['hasPatientEverAttendedSchool'];
 	    }
-	    //set marital status
+	    //marital status
 	    $patientEverBeenMarried = NULL;
 	    $ageAtFirstMarriage = 'not applicable';
 	    $patientEverBeenWidowed = 'not applicable';
@@ -638,7 +638,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
 		$patientEverBeenMarried = $params['everBeenMarried'];
 	    }
-	    //set patient HIV test result
+	    //patient HIV test result
 	    $hasPatientEverBeenTestedforHIV = NULL;
 	    $timeofMostRecentHIVTest = 'not applicable';
 	    $resultofMostRecentHIVTest = 'not applicable';
@@ -649,28 +649,28 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverBeenTestedforHIV']) && trim($params['hasPatientEverBeenTestedforHIV'])!= ''){
 		$hasPatientEverBeenTestedforHIV = $params['hasPatientEverBeenTestedforHIV'];
 	    }
-	    //set age at very first sex
+	    //age at very first sex
 	    $ageAtVeryFirstSex = NULL;
             if(isset($params['ageAtVeryFirstSexInNumbers']) && trim($params['ageAtVeryFirstSexInNumbers'])!= ''){
                $ageAtVeryFirstSex = '@'.$params['ageAtVeryFirstSexInNumbers'];
             }else if(isset($params['ageAtVeryFirstSex']) && trim($params['ageAtVeryFirstSex'])!= ''){
                $ageAtVeryFirstSex = $params['ageAtVeryFirstSex'];
             }
-	    //set no.of sexual partners
+	    //no.of sexual partners
 	    $noOfSexualPartners = NULL;
             if(isset($params['noOfSexualPartnersInNumbers']) && trim($params['noOfSexualPartnersInNumbers'])!= ''){
                 $noOfSexualPartners = '@'.$params['noOfSexualPartnersInNumbers'];
             }else if(isset($params['noOfSexualPartners']) && trim($params['noOfSexualPartners'])!= ''){
                $noOfSexualPartners = $params['noOfSexualPartners']; 
             }
-	    //set no.of sexual partners in last six months
+	    //no.of sexual partners in last six months
 	    $noOfSexualPartnersInLastSixMonths = NULL;
             if(isset($params['noOfSexualPartnersInLastSixMonthsInNumbers']) && trim($params['noOfSexualPartnersInLastSixMonthsInNumbers'])!= ''){
                 $noOfSexualPartnersInLastSixMonths = '@'.$params['noOfSexualPartnersInLastSixMonthsInNumbers'];
             }else if(isset($params['noOfSexualPartnersInLastSixMonths']) && trim($params['noOfSexualPartnersInLastSixMonths'])!= ''){
                $noOfSexualPartnersInLastSixMonths = $params['noOfSexualPartnersInLastSixMonths'];
             }
-	    //set sexual partner's/sexually transmitted infection details
+	    //sexual partner's/sexually transmitted infection details
 	    $partnerHIVTestStatus = NULL;
 	    $ageofMainSexualPartneratLastBirthday = 'not applicable';
 	    $ageDiffofMainSexualPartner = 'not applicable';
@@ -715,7 +715,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
 		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
-	    //set patient disease symptoms/treatment details
+	    //patient disease symptoms/treatment details
 	    $hasPatientHadPainInLowerAbdomen = NULL;
 	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';
 	    if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen']) == 1){
@@ -724,7 +724,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientHadPainInLowerAbdomen']) && trim($params['hasPatientHadPainInLowerAbdomen'])!= ''){
 		$hasPatientHadPainInLowerAbdomen = $params['hasPatientHadPainInLowerAbdomen'];
 	    }
-	    //set patient alcohol/drug use
+	    //patient alcohol/drug use
 	    $patientHadDrinkWithAlcoholInLastSixMonths = NULL;
 	    if(isset($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays']) && trim($params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'])!= ''){
                 $patientHadDrinkWithAlcoholInLastSixMonths = '@'.$params['patientHadDrinkWithAlcoholInLastSixMonthsInDays'];
@@ -747,12 +747,12 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
 		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
 	    }
-	    //set patient abused by
-	    $hasPatientEverBeenAbusedBySomeone = '';
+	    //patient abused by
+	    $everAbused = NULL;
 	    $whoAbused = 'not applicable';
 	    $patientAbusedByInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone']) == 1){
-		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$everAbused = $params['hasPatientEverBeenAbusedBySomeone'];
 		$whoAbused = '';
 		if(isset($params['patientAbusedBy']) && count($params['patientAbusedBy']) >0){
 		    $whoAbused = implode(',',$params['patientAbusedBy']);
@@ -766,15 +766,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientAbusedByInNoofTimes = $params['patientAbusedByNoofTimes'];
 		}
 	    }else if(isset($params['hasPatientEverBeenAbusedBySomeone']) && trim($params['hasPatientEverBeenAbusedBySomeone'])!= ''){
-		$hasPatientEverBeenAbusedBySomeone = $params['hasPatientEverBeenAbusedBySomeone'];
+		$everAbused = $params['hasPatientEverBeenAbusedBySomeone'];
 	    }
-	    $patientAbusedBySomeone = array('ever_abused'=>$hasPatientEverBeenAbusedBySomeone,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
-	    //set patient hurt by someone within last year
-	    $hasPatientHurtBySomeoneWithinLastYear = '';
+	    $hasPatientEverBeenAbusedBySomeone = array('ever_abused'=>$everAbused,'who_abused'=>$whoAbused,'no_of_times'=>$patientAbusedByInNoofTimes);
+	    //patient hurt by someone within last year
+	    $everHurted = NULL;
 	    $whoHurt = 'not applicable';
 	    $patientHurtByInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) == 1){
-		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$everHurted = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
 		$whoHurt = '';
 		if(isset($params['patientHurtBySomeoneWithinLastYear']) && count($params['patientHurtBySomeoneWithinLastYear']) >0){
 		    $whoHurt = implode(',',$params['patientHurtBySomeoneWithinLastYear']);
@@ -787,17 +787,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}else if(isset($params['patientHurtByNoofTimes']) && trim($params['patientHurtByNoofTimes'])!= ''){
 		    $patientHurtByInNoofTimes = $params['patientHurtByNoofTimes'];
 		}
-		//set patient hurt by someone during pregnancy
-		$hasPatientHurtBySomeoneDuringPregnancy = '';
-		$whoHurtDP = 'not applicable';
+		//patient hurt by someone during pregnancy
+		$everHurteddp = NULL;
+		$whoHurtdp = 'not applicable';
 		$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
 		if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) == 1){
-		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
-		    $whoHurtDP = '';
+		    $everHurteddp = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $whoHurtdp = '';
 		    if(isset($params['patientHurtBySomeoneDuringPregnancy']) && count($params['patientHurtBySomeoneDuringPregnancy']) >0){
-			$whoHurtDP = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
+			$whoHurtdp = implode(',',$params['patientHurtBySomeoneDuringPregnancy']);
 		    }else if(isset($params['patientHurtByOtherDuringPregnancy']) && trim($params['patientHurtByOtherDuringPregnancy'])!= ''){
-			$whoHurtDP = '@'.$params['patientHurtByOtherDuringPregnancy'];
+			$whoHurtdp = '@'.$params['patientHurtByOtherDuringPregnancy'];
 		    }
 		    $patientHurtByDuringPregnancyInNoofTimes = '';
 		    if(isset($params['patientHurtBySomeoneDuringPregnancyInNoofTimes']) && trim($params['patientHurtBySomeoneDuringPregnancyInNoofTimes'])!= ''){
@@ -806,20 +806,20 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 			$patientHurtByDuringPregnancyInNoofTimes = $params['patientHurtByDuringPregnancyNoofTimes'];
 		    }
 		}else if(isset($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy']) && trim($params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'])!= ''){
-		    $hasPatientHurtBySomeoneDuringPregnancy = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
+		    $everHurteddp = $params['hasPatientEverBeenHurtBySomeoneDuringPregnancy'];
 		}
-		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$hasPatientHurtBySomeoneDuringPregnancy,'who_hurt'=>$whoHurtDP,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
+		$hasPatientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>$everHurteddp,'who_hurt'=>$whoHurtdp,'no_of_times'=>$patientHurtByDuringPregnancyInNoofTimes);
 	    }else if(isset($params['hasPatientEverBeenHurtBySomeoneWithinLastYear']) && trim($params['hasPatientEverBeenHurtBySomeoneWithinLastYear'])!= ''){
-		$hasPatientHurtBySomeoneWithinLastYear = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
-		$patientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'','who_hurt'=>'','no_of_times'=>'');
+		$everHurted = $params['hasPatientEverBeenHurtBySomeoneWithinLastYear'];
+		$hasPatientHurtBySomeoneDuringPregnancy = array('ever_hurt_by_during_pregnancy'=>'not applicable','who_hurt'=>'not applicable','no_of_times'=>'not applicable');
 	    }
-	    $patientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$hasPatientHurtBySomeoneWithinLastYear,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
-	    //set patient forced for sex within last year
-	    $hasPatientForcedforSexWithinLastYear = '';
+	    $hasPatientHurtBySomeoneWithinLastYear = array('ever_hurt'=>$everHurted,'who_hurt'=>$whoHurt,'no_of_times'=>$patientHurtByInNoofTimes);
+	    //patient forced for sex within last year
+	    $everForcedforSex = NULL;
 	    $whoForced = 'not applicable';
 	    $patientForcedforSexWithinLastYearInNoofTimes = 'not applicable';
 	    if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear']) == 1){
-		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$everForcedforSex = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
 		$whoForced = '';
 		if(isset($params['patientForcedForSexWithinLastYear']) && count($params['patientForcedForSexWithinLastYear']) >0){
 		    $whoForced = implode(',',$params['patientForcedForSexWithinLastYear']);
@@ -833,9 +833,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    $patientForcedforSexWithinLastYearInNoofTimes = $params['patientForcedForSexNoofTimes'];
 		}
 	    }else if(isset($params['hasPatientEverBeenForcedForSexWithinLastYear']) && trim($params['hasPatientEverBeenForcedForSexWithinLastYear'])!= ''){
-		$hasPatientForcedforSexWithinLastYear = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
+		$everForcedforSex = $params['hasPatientEverBeenForcedForSexWithinLastYear'];
 	    }
-	    $patientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$hasPatientForcedforSexWithinLastYear,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
+	    $hasPatientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$everForcedforSex,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
 	    $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
                     'anc'=>base64_decode($params['ancSite']),
@@ -876,10 +876,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'=>(isset($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']) && trim($params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion'])!= '')?$params['hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion']:NULL,
 		    'has_patient_ever_tried_recreational_drugs'=>$hasPatientEverTriedRecreationalDrugs,
 		    'has_patient_had_recreational_drugs_in_last_six_months'=>(isset($patientHadRecreationalDrugsInLastSixMonths))?json_encode($patientHadRecreationalDrugsInLastSixMonths):'',
-		    'has_patient_ever_been_abused_by_someone'=>json_encode($patientAbusedBySomeone),
-		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($patientHurtBySomeoneWithinLastYear),
-		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($patientHurtBySomeoneDuringPregnancy),
-		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($patientForcedforSexWithinLastYear),
+		    'has_patient_ever_been_abused_by_someone'=>json_encode($hasPatientEverBeenAbusedBySomeone),
+		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($hasPatientHurtBySomeoneWithinLastYear),
+		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($hasPatientHurtBySomeoneDuringPregnancy),
+		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($hasPatientForcedforSexWithinLastYear),
 		    'is_patient_afraid_of_anyone'=>(isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL,
                     'comment'=>$params['comment'],
 		    'status'=>$status,

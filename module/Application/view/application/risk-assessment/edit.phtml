@@ -10,7 +10,7 @@ $interviewDate = '';
 if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
     $interviewDate = $common->viewDateFormat($row->interview_date);
 }
-//set recreational drugs
+//recreational drugs
 $hasPatientHadRecreationalDrugsInLastSixMonths = '';
 $recreationalDrugs = '';
 if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!= ''){
@@ -18,7 +18,7 @@ if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($r
     $hasPatientHadRecreationalDrugsInLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
     $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
 }
-//set patient abused by
+//patient abused by
 $hasPatientAbusedBy = '';
 $patientAbusedBy = array();
 $patientAbusedByOther = '';
@@ -33,7 +33,7 @@ if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patien
         $patientAbusedBy = explode(',',$patientAbusedBydata['who_abused']);
     }
 }
-//set patient hurt by
+//patient hurt by someone within last year
 $hasPatientHurtByWithinLastYear = '';
 $patientHurtByWithinLastYear = array();
 $patientHurtByOtherWithinLastYear = '';
@@ -48,12 +48,12 @@ if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($
         $patientHurtByWithinLastYear = explode(',',$patientHurtBydata['who_hurt']);
     }
 }
-//set patient hurt by during pregnancy
+//patient hurt by someone during pregnancy
 $hasPatientHurtByDuringPregnancy = '';
 $patientHurtByDuringPregnancy = array();
 $patientHurtByOtherDuringPregnancy = '';
 $patientHurtByDuringPregnancyInNoofTimes = '';
-if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+if(trim($hasPatientHurtByWithinLastYear) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
     $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
     $patientHurtByDuringPregnancyInNoofTimes = (isset($patientHurtByDuringPregnancydata['no_of_times']))?$patientHurtByDuringPregnancydata['no_of_times']:'';
@@ -63,7 +63,7 @@ if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYea
         $patientHurtByDuringPregnancy = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
     }
 }
-//set patient forced for sex within last year
+//patient forced for sex within last year
 $hasPatientForcedforSexWithinLastYear = '';
 $patientForcedforSexBy = array();
 $patientForcedforSexByOther = '';

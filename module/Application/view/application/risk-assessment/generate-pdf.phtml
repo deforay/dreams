@@ -68,6 +68,7 @@ $common = new \Application\Service\CommonService();
 	$pdf->SetMargins(10, 26, 10, true);
 	$pdf->SetY(26,true,false);
 	
+	$keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
 	$interviewDate = '';
 	if(isset($data['interview_date']) && $data['interview_date']!= null && trim($data['interview_date'])!= '' && $data['interview_date']!= '0000-00-00'){
 	    $interviewDate = $common->viewDateFormat($data['interview_date']);
@@ -93,7 +94,7 @@ $common = new \Application\Service\CommonService();
                 $recencyVal = ucwords($data['recency_line']);
             }
         }
-        //occupation
+        //patient occupation
         $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']).' - '.$data['occupation_code']:'';
 	//patient schooling details
 	$hasPatientEverAttendedSchool = '';
@@ -128,7 +129,7 @@ $common = new \Application\Service\CommonService();
 		$degree = ucwords($data['patient_degree']);
 	    }
 	}
-	//patient marital status
+	//marital status
 	$patientEverBeenMarried = '';
 	if($data['patient_ever_been_married']!= null && trim($data['patient_ever_been_married'])!= ''){
 	    if($data['patient_ever_been_married'] == 1){
@@ -195,7 +196,7 @@ $common = new \Application\Service\CommonService();
 		$maritalStatus = ucwords($data['current_marital_status']);
 	    }
 	}
-	//patient HIV test status
+	//patient HIV test result
 	$hasPatientEverBeenTestedforHIV = '';
 	if($data['has_patient_ever_been_tested_for_HIV']!= null && trim($data['has_patient_ever_been_tested_for_HIV'])!= ''){
 	    if($data['has_patient_ever_been_tested_for_HIV'] == 1){
@@ -596,8 +597,7 @@ $common = new \Application\Service\CommonService();
 	    }
 	}
 	//abuse
-	$keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
-	//set patient abused by
+	//patient abused by
 	$hasPatientEverBeenAbusedBySomeone = '';
 	if($data['has_patient_ever_been_abused_by_someone']!= null && trim($data['has_patient_ever_been_abused_by_someone'])!= ''){
 	    $patientAbusedBydata = json_decode($data['has_patient_ever_been_abused_by_someone'],true);
@@ -637,9 +637,8 @@ $common = new \Application\Service\CommonService();
 		$hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
 	    }
 	}
-	//set patient hurt by
-	$hasPatientHurtByWithinLastYear = '';
-	$hasPatientEverBeenHurtBySomeone = '';
+	//patient hurt by someone within last year
+	$hasPatientEverBeenHurtBySomeoneWithinLastYear = '';
 	if($data['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($data['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
 	    $patientHurtBydata = json_decode($data['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
 	    $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
@@ -667,19 +666,19 @@ $common = new \Application\Service\CommonService();
 		$patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
 	    }
 	    if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
-		$hasPatientEverBeenHurtBySomeone = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
-		$hasPatientEverBeenHurtBySomeone = "No - 2";
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "No - 2";
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
-		$hasPatientEverBeenHurtBySomeone = "Don't Know - 88";
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Don't Know - 88";
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
-		$hasPatientEverBeenHurtBySomeone = "Refused - 99";
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Refused - 99";
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
-		$hasPatientEverBeenHurtBySomeone = "Response Not Available - 2222";
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Response Not Available - 2222";
 	    }
 	}
-	//set patient hurt by during pregnancy
-	$hasPatientHurtBySomeoneDuringPregnancy = '';
+	//patient hurt by someone during pregnancy
+	$hasPatientHurtBySomeoneDuringPregnancy = 'Not Applicable';
 	if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $data['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
 	    $patientHurtByDuringPregnancydata = json_decode($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
 	    $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
@@ -718,7 +717,7 @@ $common = new \Application\Service\CommonService();
 		$hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
 	    }
 	}
-	//set patient forced for sex within last year
+	//patient forced for sex within last year
 	$hasPatientForcedforSexBySomeoneWithinLastYear = '';
 	if($data['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($data['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
 	    $patientForcedforSexdata = json_decode($data['has_patient_ever_been_forced_for_sex_within_last_year'],true);
@@ -871,7 +870,7 @@ $common = new \Application\Service\CommonService();
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q23. Have you ever been emotionally or physically abused by your partner or your loved one?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedBySomeone.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q24. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenHurtBySomeone.'</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenHurtBySomeoneWithinLastYear.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q25. Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBySomeoneDuringPregnancy.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q26. Within the last year, has anyone forced you to have sexual activities?</td></tr>';
