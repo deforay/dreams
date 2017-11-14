@@ -711,6 +711,12 @@ if($loginContainer->roleCode== 'ANCSC'){
         });
     });
     
+    $(document).keydown(function(objEvent) {
+        if (objEvent.keyCode == 9) {  //tab pressed
+            objEvent.preventDefault(); // stops its action
+        }
+    });
+
     $(document).ready(function(){
         <?php
         if (isset($alertContainer->msg) && $alertContainer->msg != "") {

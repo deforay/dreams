@@ -271,7 +271,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s12">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate years checkNum <?php echo($row->age_at_first_marriage == null || $row->age_at_first_marriage == '')?'isRequired':''; ?>" title="Don't leave Q3A" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && $row->age_at_first_marriage[0] == '@')?substr($row->age_at_first_marriage,1):'';?>" style="width:10%;"> Years&nbsp;
-                    <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="88" type="radio" <?php echo ($row->age_at_first_marriage == 88)?'checked="checked"':''; ?>>
+                    <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="88" type="radio" title="Don't leave Q3A" <?php echo ($row->age_at_first_marriage == 88)?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="99" type="radio" <?php echo ($row->age_at_first_marriage == 99)?'checked="checked"':''; ?>>
 		    <label for="ageAtFirstMarriageR" class="active">Refused - 99</label>&nbsp;&nbsp;
@@ -1787,7 +1787,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    $("input[name='everBeenWidowed']").removeAttr("disabled");
 	    $(".currentMaritalStatus").css("pointer-events","auto");
 	    //validate/content section
-	    if($("#ageAtFirstMarriageInYears").val()!= '') { $("#ageAtFirstMarriageInYears").addClass("isRequired"); }
+	    if($.trim($("#ageAtFirstMarriageInYears").val()) == '') { $("#ageAtFirstMarriageDK").addClass("isRequired"); }
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	}

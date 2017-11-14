@@ -267,7 +267,7 @@ if(trim($countryId)!= ''){
             <div class="row everBeenMarriedSection" style="margin-bottom:10px;">
                 <div class="col s12">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate years checkNum isRequired" title="Don't leave Q3A" style="width:10%;"> Years&nbsp;
-                    <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="88" type="radio">
+                    <input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="88" title="Don't leave Q3A" type="radio">
 		    <label for="ageAtFirstMarriageDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
                     <input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="99" type="radio">
 		    <label for="ageAtFirstMarriageR" class="active">Refused - 99</label>&nbsp;&nbsp;
@@ -1742,7 +1742,7 @@ if(trim($countryId)!= ''){
 	    $("input[name='everBeenWidowed']").removeAttr("disabled");
 	    $(".currentMaritalStatus").css("pointer-events","auto");
 	    //validate/content section
-	    if($("#ageAtFirstMarriageInYears").val()!= '') { $("#ageAtFirstMarriageInYears").addClass("isRequired"); }
+	    if($.trim($("#ageAtFirstMarriageInYears").val()) == '') { $("#ageAtFirstMarriageDK").addClass("isRequired"); }
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	}
