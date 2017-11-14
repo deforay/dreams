@@ -224,13 +224,37 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
                            <label for="rrrHIVDiagnostic">Positive Verification (Diagnostic) Line </label><br>
-                           <p><?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line!= null && trim($row->HIV_diagnostic_line)!= '')?ucfirst($row->HIV_diagnostic_line):''; ?></p>
+                           <p>
+                           <?php
+                            if(isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line!= null && trim($row->HIV_diagnostic_line)!= ''){
+                               if($row->HIV_diagnostic_line == 'positive'){
+                                echo 'P (Positive)';
+                               }else if($row->HIV_diagnostic_line == 'negative'){
+                                echo 'N (Negative)';
+                               }else if($row->HIV_diagnostic_line == 'invalid'){
+                                echo 'Invalid';
+                               }
+                            }
+                            ?>
+                           </p>
 			</div>
 		    </div>
 		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
                             <label for="rrrRecency">Long Term (Recency) Line </label><br>
-                            <p><?php echo (isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= '')?ucwords($row->recency_line):''; ?></p>
+                            <p>
+                            <?php
+                            if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
+                               if($row->recency_line == 'recent'){
+                                echo 'R (Recent)';
+                               }else if($row->recency_line == 'long term'){
+                                echo 'LT (Long Term)';
+                               }else if($row->recency_line == 'invalid'){
+                                echo 'Invalid';
+                               }
+                            }
+                            ?>
+                            </p>
 			</div>
 		    </div>
 		</div>
@@ -1122,7 +1146,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <p>
                         <?php
                         if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 1){
-                            echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Abused by</span> - ".$patientAbusedBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times abused</span> - ".$patientAbusedByInNoofTimes;
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Abused by</span> - ".$patientAbusedBy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times abused</span> - ".$patientAbusedByInNoofTimes;
                         }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 2){
                             echo "No - 2";
                         }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 88){
@@ -1146,7 +1170,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <p>
                         <?php
                         if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 1){
-                            echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Hurt by</span> - ".$patientHurtByWithinLastYear."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times hurted</span> - ".$patientHurtByInNoofTimes;
                         }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 2){
                             echo "No - 2";
                         }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 88){
@@ -1170,7 +1194,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <p>
                         <?php
                         if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 1){
-                            echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Hurt by</span> - ".$patientHurtByDuringPregnancy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
                         }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 2){
                             echo "No - 2";
                         }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 88){
@@ -1196,7 +1220,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <p>
                         <?php
                         if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 1){
-                            echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Forced by</span> - ".$patientForcedforSexBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Forced by</span> - ".$patientForcedforSexBy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
                         }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 2){
                             echo "No - 2";
                         }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 88){

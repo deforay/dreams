@@ -68,7 +68,7 @@ $common = new \Application\Service\CommonService();
 	$pdf->SetMargins(10, 26, 10, true);
 	$pdf->SetY(26,true,false);
 	
-	$keyArray = array('1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+	$keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
 	$interviewDate = '';
 	if(isset($data['interview_date']) && $data['interview_date']!= null && trim($data['interview_date'])!= '' && $data['interview_date']!= '0000-00-00'){
 	    $interviewDate = $common->viewDateFormat($data['interview_date']);
@@ -82,17 +82,25 @@ $common = new \Application\Service\CommonService();
         $HIVDiagnostic = false;
         if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done'){
             $HIVDiagnostic = true;
-            if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line'])!= ''){
-              $HIVDiagnosticVal = ucfirst($data['HIV_diagnostic_line']);
-            }
+            if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'positive'){
+                $HIVDiagnosticVal = 'P (Positive)';
+            }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'negative'){
+		$HIVDiagnosticVal = 'N (Negative)';
+	    }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'invalid'){
+		$HIVDiagnosticVal = 'Invalid';
+	    }
         }
         $recencyVal = '';
         $recency = false;
         if((isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done') && ((!isset($data['HIV_diagnostic_line']) || (isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line'] !='negative')))){
             $recency = true;
-            if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line'])!= ''){
-                $recencyVal = ucwords($data['recency_line']);
-            }
+            if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'recent'){
+                $recencyVal = 'R (Recent)';
+            }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'long term'){
+		$recencyVal = 'LT (Long Term)';
+	    }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'invalid'){
+		$recencyVal = 'Invalid';
+	    }
         }
         //patient occupation
         $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']).' - '.$data['occupation_code']:'';
@@ -583,7 +591,7 @@ $common = new \Application\Service\CommonService();
 	    $hasHadinLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
 	    $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
 	    if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 1){
-		$hasPatientHadRecreationalDrugsInLastSixMonths = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s)</span> - ".ucwords($recreationalDrugs);
+		$hasPatientHadRecreationalDrugsInLastSixMonths = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<strong>Drug(s)</strong> - ".ucwords($recreationalDrugs);
 	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 2){
 		$hasPatientHadRecreationalDrugsInLastSixMonths = "No - 2";
 	    }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 88){
@@ -626,7 +634,7 @@ $common = new \Application\Service\CommonService();
 		$patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
 	    }
 	    if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
-		$hasPatientEverBeenAbusedBySomeone = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Abused by</span> - ".$patientAbusedBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times abused</span> - ".$patientAbusedByInNoofTimes;
+		$hasPatientEverBeenAbusedBySomeone = "Yes - 1&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Abused by</strong> - ".$patientAbusedBy."&nbsp;&nbsp;|&nbsp;&nbsp;<strong>No.of times abused</strong> - ".$patientAbusedByInNoofTimes;
 	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
 		$hasPatientEverBeenAbusedBySomeone = "No - 2";
 	    }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
@@ -666,7 +674,7 @@ $common = new \Application\Service\CommonService();
 		$patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
 	    }
 	    if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
-		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>Hurt by</span> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:bold;'>No.of times hurted</span> - ".$patientHurtByInNoofTimes;
+		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "Yes - 1&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Hurt by</strong> - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;|&nbsp;&nbsp;<strong>No.of times hurted</strong> - ".$patientHurtByInNoofTimes;
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
 		$hasPatientEverBeenHurtBySomeoneWithinLastYear = "No - 2";
 	    }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
@@ -706,7 +714,7 @@ $common = new \Application\Service\CommonService();
 		$patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
 	    }
 	    if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
-		$hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Hurt by</span> - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
+		$hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Hurt by</strong> - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;|&nbsp;&nbsp;<strong>No.of times hurted</strong> - ".$patientHurtByDuringPregnancyInNoofTimes;
 	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
 		$hasPatientHurtBySomeoneDuringPregnancy = "No - 2";
 	    }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
@@ -746,7 +754,7 @@ $common = new \Application\Service\CommonService();
 		$patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
 	    }
 	    if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
-		$hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Forced by</span> - ".$patientForcedforSexBy."&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
+		$hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1&nbsp;&nbsp;|&nbsp;&nbsp;<strong>Forced by</strong> - ".$patientForcedforSexBy."&nbsp;&nbsp;|&nbsp;&nbsp;<strong>No.of times forced</strong> - ".$patientForcedforSexInNoofTimes;
 	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
 		$hasPatientForcedforSexBySomeoneWithinLastYear = "No - 2";
 	    }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){

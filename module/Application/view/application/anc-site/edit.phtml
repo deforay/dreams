@@ -54,7 +54,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isRequired" placeholder="eg-user1@gmail.com,user2@gmail.com" title="Please enter email-id" value="<?php echo $row->email; ?>">
+                        <input id="email" name="email" type="text" class="validate isRequired" placeholder="eg-user1@gmail.com,user2@gmail.com" title="Please enter email-id" value="<?php echo $row->email; ?>" onblur="validateMultipleEmailsCommaSeparated(this);" keyup="validateMultipleEmailsCommaSeparated(this);">
                         <label for="email" class="">Email(s) *</label>
                     </div>
                 </div>
@@ -70,7 +70,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate checkNum isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('anc_site', 'phone_number', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The contact no. that you entered already exist. Please enter different contact no')">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isNumeric isRequired" title="Please enter contact number" value="<?php echo $row->phone_number; ?>" onblur="checkNameValidation('anc_site', 'phone_number', this, '<?php echo "anc_site_id##" .$row->anc_site_id; ?>','The contact no. that you entered already exist. Please enter different contact no')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
@@ -141,14 +141,14 @@ if(isset($countryId) && trim($countryId)!=''){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="latitude" name="latitude" type="text" class="validate checkNum" title="Please enter latitude" value="<?php echo $row->latitude; ?>">
+                        <input id="latitude" name="latitude" type="text" class="validate" title="Please enter latitude" value="<?php echo $row->latitude; ?>" onblur="validateLatitudeLongitude(this,'latitude');" keyup="validateLatitudeLongitude(this,'latitude');">
                         <label for="latitude" class="">Latitude </label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">navigation</i>
-                        <input id="longitude" name="longitude" type="text" class="validate checkNum" title="Please enter longitude" value="<?php echo $row->longitude; ?>">
+                        <input id="longitude" name="longitude" type="text" class="validate" title="Please enter longitude" value="<?php echo $row->longitude; ?>" onblur="validateLatitudeLongitude(this,'longitude');" keyup="validateLatitudeLongitude(this,'longitude');">
                         <label for="longitude" class="">Longitude </label>
                     </div>
                 </div>

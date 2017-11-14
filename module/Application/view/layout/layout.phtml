@@ -369,13 +369,12 @@ if($loginContainer->roleCode== 'ANCSC'){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/cookie.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.blockUI.js' ?>"></script>
 <script>
+    str = $(location).attr('pathname');
+    splitsUrl = str.split("/",5);
     $(function () {
         ol();
         $(".opensright").css("display","none");
         //set active link
-        str=$(location).attr('pathname');
-        splitsUrl=str.split("/",5);
-        //console.log(splitsUrl);
         $(".menuAll").removeClass("active");
         $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
@@ -705,11 +704,13 @@ if($loginContainer->roleCode== 'ANCSC'){
         }
     });
     
-    $(document).ready(function () {
-        $("body").on("contextmenu",function(e){
-          return false;
+    if(splitsUrl[1]!= 'user' && splitsUrl[1]!= 'facility' && splitsUrl[1]!= 'anc-site'){
+        $(document).ready(function () {
+            $("body").on("contextmenu",function(e){
+              return false;
+            });
         });
-    });
+    }
     
     $(document).keydown(function(objEvent) {
         if (objEvent.keyCode == 9) {  //tab pressed
@@ -760,6 +761,42 @@ if($loginContainer->roleCode== 'ANCSC'){
 	    }
         }
     });
+    
+    function validateEmail(field) {
+        var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
+        return (regex.test(field)) ? true : false;
+    }
+
+    function validateMultipleEmailsCommaSeparated(emailcntl){
+        var value = emailcntl.value;
+        if ($.trim(value) != '') {
+            var result = value.split(',');
+            for (var i = 0; i < result.length; i++) {
+                if ($.trim(result[i]) != '') {
+                    if (!validateEmail(result[i])) {
+                        alert('Please check, ' + result[i] + ' email addresses is not valid!');
+                        $(emailcntl).val('');
+                        emailcntl.focus();
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+    function validateLatitudeLongitude(latlngcntl,type){
+        if(type == 'latitude'){
+            var regex = /^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/;
+        }else{
+           var regex = /^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/; 
+        }
+        var value = latlngcntl.value;
+        if($.trim(value) != '' && !regex.test(value) ) {
+          alert('Please check, ' + value + ' '+type+' is not valid!');
+          $(latlngcntl).val('');
+          latlngcntl.focus();
+        }
+    }
 </script>
 <script>
     $('.button-collapse').sideNav({

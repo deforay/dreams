@@ -92,7 +92,7 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">email</i>
-                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email;?>">
+                        <input id="email" name="email" type="text" class="validate isEmail isRequired" title="Please enter email-id" value="<?php echo $row->email;?>" onblur="checkNameValidation('user', 'email', this, '<?php echo "user_id##" .$row->user_id; ?>','The email id that you entered already exist. Please enter different email id')">
                         <label for="email" class="">Email *</label>
                     </div>
                 </div>
@@ -101,14 +101,14 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isNumeric isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>" onblur="checkNameValidation('user', 'mobile', this, '<?php echo "user_id##" .$row->user_id; ?>','The mobile/phone no. that you entered already exist. Please enter different mobile/phone no.')">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="altContact" name="altContact" type="text" class="validate" title="Please enter contact number" value="<?php echo $row->alt_contact;?>">
+                        <input id="altContact" name="altContact" type="text" class="validate checkNum isNumeric" title="Please enter alternate contact number" value="<?php echo $row->alt_contact;?>">
                         <label for="altContact" class="">Alternate Contact</label>
                     </div>
                 </div>
