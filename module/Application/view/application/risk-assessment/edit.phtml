@@ -1173,8 +1173,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	if(fromSource == 'txt'){
 	    if($('#ageAtFirstMarriageInYears').val()!= ''){
 		$('input[name="ageAtFirstMarriage"]:radio').prop('checked',false);
-	    }
-	    $('#ageAtFirstMarriageInYears').addClass('isRequired');
+                $('#ageAtFirstMarriageDK').removeClass('isRequired');
+	    }else{
+	       $('#ageAtFirstMarriageDK').addClass('isRequired');
+            }
 	}else if(fromSource == 'rd'){
 	   $('#ageAtFirstMarriageInYears').val('');
 	   $('#ageAtFirstMarriageInYears').removeClass('isRequired');
