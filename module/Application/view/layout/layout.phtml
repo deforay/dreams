@@ -719,9 +719,7 @@ if($loginContainer->roleCode== 'ANCSC'){
     });
 
     $(document).ready(function(){
-        <?php
-        if (isset($alertContainer->msg) && $alertContainer->msg != "") {
-            ?>
+        <?php if (isset($alertContainer->msg) && $alertContainer->msg != "") { ?>
                alert("<?php echo $alertContainer->msg; ?>");
             <?php
             $alertContainer->msg = "";

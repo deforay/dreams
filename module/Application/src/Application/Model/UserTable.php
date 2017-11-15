@@ -105,7 +105,8 @@ class UserTable extends AbstractTableGateway {
 			$loginContainer->country = $userCountry;
 			$loginContainer->clinic = $userClinic;
 			$loginContainer->laboratory = $userLaboratory;
-		       return 'home';
+			$loginContainer->forcePasswordReset = $loginResult->force_password_reset;
+		       return ($loginContainer->forcePasswordReset == 1)?'change-password':'home';
 		    }else{
 		       $alertContainer->msg = 'Please check the country that you have choosen..!';
 		      return 'login';
@@ -123,7 +124,8 @@ class UserTable extends AbstractTableGateway {
 		    $loginContainer->country = $userCountry;
 		    $loginContainer->clinic = $userClinic;
 		    $loginContainer->laboratory = $userLaboratory;
-		   return 'home';
+		    $loginContainer->forcePasswordReset = $loginResult->force_password_reset;
+		   return ($loginContainer->forcePasswordReset == 1)?'change-password':'home';
 		}
             }else{
                 $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
@@ -428,6 +430,8 @@ class UserTable extends AbstractTableGateway {
 	$changedPassword = sha1($params['newPassword'] . $configResult["password"]["salt"]);
 	$hasUpdated = $this->update(array('password'=>$changedPassword),array('user_id'=>$loginContainer->userId));
 	if($hasUpdated >0){
+	    $this->update(array('force_password_reset'=>0),array('user_id'=>$loginContainer->userId));
+	    $loginContainer->forcePasswordReset = 0;
 	    $alertContainer->msg = 'Your have successfully updated your password.';
 	    return true;
 	}else{

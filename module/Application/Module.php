@@ -91,7 +91,22 @@ class Module{
                         return $response;
                     }
                 }else{
-                    if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1) == 'Clinic' || substr($tempName[1], 1)== 'RiskAssessment') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
+                    if($loginContainer->forcePasswordReset == 1 && $e->getRouteMatch()->getParam('action')!= 'change-password'){
+                        $response = $e->getResponse();
+			$response->getHeaders()->addHeaderLine('Location', '/change-password');
+			$response->setStatusCode(302);
+			$response->sendHeaders();
+
+			// To avoid additional processing
+			// we can attach a listener for Event Route with a high priority
+			$stopCallBack = function($event) use ($response) {
+								$event->stopPropagation();
+								return $response;
+							};
+			//Attach the "break" as a listener with a high priority
+			$e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
+		       return $response;
+                    }else if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1) == 'Clinic' || substr($tempName[1], 1)== 'RiskAssessment') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
                         if ($e->getRequest()->isXmlHttpRequest()) {
                             return;
                         }

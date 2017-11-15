@@ -767,3 +767,6 @@ ALTER TABLE `clinic_risk_assessment` DROP `recreational_drugs`;
 ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_ever_been_abused_by_someone` `has_patient_ever_been_abused_by_someone` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
 
 ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_had_recreational_drugs_in_last_six_months` `has_patient_had_recreational_drugs_in_last_six_months` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
+--Pal 15/11/2017
+ALTER TABLE `user` ADD `force_password_reset` INT(11) NOT NULL DEFAULT '1' AFTER `last_login`;
