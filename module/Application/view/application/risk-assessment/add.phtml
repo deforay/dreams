@@ -1742,7 +1742,7 @@ if(trim($countryId)!= ''){
 	    $("input[name='everBeenWidowed']").removeAttr("disabled");
 	    $(".currentMaritalStatus").css("pointer-events","auto");
 	    //validate/content section
-	    if($.trim($("#ageAtFirstMarriageInYears").val()) == '') { $("#ageAtFirstMarriageDK").addClass("isRequired"); }
+	    $("#ageAtFirstMarriageInYears").addClass("isRequired");
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	}
