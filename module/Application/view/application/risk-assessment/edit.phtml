@@ -1062,14 +1062,18 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
 <script>
     $(document).ready(function(){
-       $('.datepicker').pickadate({
+        $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
-            selectYears: 15, // Creates a dropdown of 15 years to control year
+            selectYears: 100, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy',
-	    max: new Date('Today'),
-            onSet: function(e){
-		$('.picker__close').click();
-	    }
+	    	max: new Date('Today'),
+			closeOnSelect: true,
+			closeOnClear: true,
+			onSet: function(e){
+				if(e.select != undefined && e.select != null){
+					$('.picker__close').click();
+				}
+			}
         });
        manageQ2();
        manageQ3();

@@ -813,15 +813,19 @@ if(isset($date) && trim($date)!= ''){
     }
     
     $(document).ready(function(){
-       $('.datepicker').pickadate({
+		$('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
-            selectYears: 15, // Creates a dropdown of 15 years to control year
+            selectYears: 100, // Creates a dropdown of 15 years to control year
             format: 'dd/mm/yyyy',
-	    max: new Date('Today'),
-	    onSet: function(e){
-		validateDataReportingDates();
-		$('.picker__close').click();
-	    }
+	    	max: new Date('Today'),
+			closeOnSelect: true,
+			closeOnClear: true,
+			onSet: function(e){
+				validateDataReportingDates();
+				if(e.select != undefined && e.select != null){
+					$('.picker__close').click();
+				}
+			}
         });
     });
     
@@ -999,35 +1003,35 @@ if(isset($date) && trim($date)!= ''){
 	//check specimen coll./specimen picked up date at mnc
 	if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
 	    if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
-		alert('Specimen picked up date at anc could not be earlier than specimen collection date!');
+		alert('Specimen picked up date at anc cannot be earlier than specimen collection date!');
 		$('#specimenPickedUpDateAtAnc').val('');
 	    }
 	}
 	//check patient dob/specimen coll. date
 	if($.trim(patientDOB)!= '' && $.trim(specimenCollectedDate)!= ''){
 	    if(moment(patientDOB).isAfter(specimenCollectedDate)) {
-		alert('Specimen collection date could not be earlier than patient\'s date of birth!');
+		alert('Specimen collection date cannot be earlier than patient\'s date of birth!');
 		$('#dob').val('');
 	    }
 	}
 	//check specimen picked up date at anc/receipt at lab
 	if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
 	    if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
-		alert('Date of receipt at lab could not be earlier than specimen picked up date!');
+		alert('Date of receipt at lab cannot be earlier than specimen picked up date!');
 		$('#dateOfReceiptAtCentralLab').val('');
 	    }
 	}
 	//check receipt at lab/test completion
 	if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
 	    if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
-		alert('Test completion date could not be earlier than date of receipt at lab!');
+		alert('Test completion date cannot be earlier than date of receipt at lab!');
 		$('#dateOfTestCompletion').val('');
 	    }
 	}
 	//check test completion/result dispatched to clinic
 	if($.trim(dateOfTestCompletion)!= '' && $.trim(dateOfResultDispatchedToClinic)!= ''){
 	    if(moment(dateOfTestCompletion).isAfter(dateOfResultDispatchedToClinic)) {
-		alert('Date of result dispatched to clinic could not be earlier than test completion date!');
+		alert('Date of result dispatched to clinic cannot be earlier than test completion date!');
 		$('#dateOfResultDispatchedToClinic').val('');
 	    }
 	}
