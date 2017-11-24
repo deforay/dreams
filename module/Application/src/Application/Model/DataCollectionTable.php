@@ -20,7 +20,7 @@ class DataCollectionTable extends AbstractTableGateway {
     public function addDataCollectionDetails($params){
         $loginContainer = new Container('user');
         $lastInsertedId = 0;
-        if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
+        if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
             $common = new CommonService();
 	    if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!=''){
 		$country = base64_decode($params['chosenCountry']);
@@ -435,7 +435,7 @@ class DataCollectionTable extends AbstractTableGateway {
     public function updateDataCollectionDetails($params){
 	$loginContainer = new Container('user');
         $dataCollectionId = 0;
-        if(isset($params['surveillanceId']) && trim($params['surveillanceId'])!= ''){
+        if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
             $common = new CommonService();
             $dataCollectionId = base64_decode($params['dataCollectionId']);
             $specimenCollectedDate = NULL;
