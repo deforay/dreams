@@ -1678,9 +1678,9 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'hiv_rna',
 						   'hiv_rna_gt_1000',
 						   'recent_infection',
-						   'asante_rapid_recency_assy',
-						   'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
+						   'asante_rapid_recency_assy'
 						))
+				   ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'))
 				   ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
@@ -1746,9 +1746,9 @@ class DataCollectionTable extends AbstractTableGateway {
 						'hiv_rna',
 						'hiv_rna_gt_1000',
 						'recent_infection',
-						'asante_rapid_recency_assy',
-						'labDataPresentComplete' => new \Zend\Db\Sql\Expression("IF(da_c.status = 1, 1,0)")
+						'asante_rapid_recency_assy'
 					     ))
+				->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'))
 				->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'))
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
@@ -1771,18 +1771,13 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $rapidRecencyAssay = '';
 	    $rapidRecencyAssayDuration = '';
 	    $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) .'" target="_blank" title="View data"> Incomplete</a>';
-	    if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 1){
-		$aRow['labDataPresentComplete'] = -1;
-	    }
 	    //specimen collected date
 	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
 	    }
 	    //status
-	    if($aRow['labDataPresentComplete'] == 1){
-	       $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> Complete</a>';
-	    }else if($aRow['labDataPresentComplete'] == -1){
-	      $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> Rejected</a>';
+	    if($aRow['test_status_name']!= 'incomplete'){
+	       $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> '.ucfirst($aRow['test_status_name']).'</a>';
 	    }
 	    //LAg assay
 	    $lagResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
