@@ -1771,7 +1771,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $rapidRecencyAssay = '';
 	    $rapidRecencyAssayDuration = '';
 	    $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) .'" target="_blank" title="View data"> Incomplete</a>';
-	    if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 0){
+	    if($aRow['rejection_reason']!= null && trim($aRow['rejection_reason'])!= '' && $aRow['rejection_reason']> 1){
 		$aRow['labDataPresentComplete'] = -1;
 	    }
 	    //specimen collected date
