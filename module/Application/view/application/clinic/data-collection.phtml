@@ -318,6 +318,9 @@ if(trim($countryId)!= ''){
                 $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
             }
        });
+        <?php if($loginContainer->hasViewOnlyAccess == 'yes') { ?>
+	   loadANCDataList();
+        <?php } ?>
     });
     
     var oTable = null;
