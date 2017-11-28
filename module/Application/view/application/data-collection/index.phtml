@@ -709,19 +709,18 @@ if(isset($date) && trim($date)!= ''){
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
+       $('#search-items').on('keyup', function(){
+            var oTable = $('.dataTable').dataTable();
+            oTable.fnFilter($(this).val());
+        });
     }									
 
     $(document).ready(function() {
 	<?php if(trim($type)!= '' || $loginContainer->hasViewOnlyAccess == 'yes') { ?>
 	  loadLabDataList();
 	<?php } ?>
+	
        $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
-       
-       $('#search-items').on('keyup', function(){
-            var oTable = $('.dataTable').dataTable();
-            oTable.fnFilter($(this).val());
-        });
-       
        <?php if(trim($countryId)!= ''){ ?>
 	    var latestCollId = $('#lDCId').val();
 	    var countryCode = $('#cCode').val();
