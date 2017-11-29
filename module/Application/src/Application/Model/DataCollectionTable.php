@@ -1514,7 +1514,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	$queryContainer = new Container('query');
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+	$countryDashboardQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
 						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
@@ -1534,17 +1534,19 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group('f.province')
 				   ->order('da_c.added_on desc');
 	if($loginContainer->roleCode== 'LS'){
-	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	    $countryDashboardQuery = $countryDashboardQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	}if(trim($params['province'])!= ''){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
-	}if(trim($params['reportingMonthYear'])!= ''){
+	    $countryDashboardQuery = $countryDashboardQuery->where(array('da_c.added_by'=>$loginContainer->userId));
+	} if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	    $countryDashboardQuery = $countryDashboardQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	} if(trim($params['province'])!= ''){
+	    $countryDashboardQuery = $countryDashboardQuery->where(array('f.province'=>base64_decode($params['province'])));
+	} if(trim($params['specimenType'])!= ''){
+	    $countryDashboardQuery = $countryDashboardQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
 	}
-	$queryContainer->countryDashboardQuery = $dataCollectionQuery;
-	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+	$queryContainer->countryDashboardQuery = $countryDashboardQuery;
+	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($countryDashboardQuery);
       return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     
@@ -1574,7 +1576,7 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('location_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
+	$aColumns = array('location_name','anc_site_code','da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test','recency_line');
 	$orderColumns = array('location_name','anc_site_code','da_c.patient_barcode_id','da_c.specimen_collected_date','da_c.status','r_a.assessment_id','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','has_patient_had_rapid_recency_test');
        /*
         * Paging
@@ -1608,6 +1610,8 @@ class DataCollectionTable extends AbstractTableGateway {
 
        $sWhere = "";
        if (isset($parameters['sSearch']) && $parameters['sSearch'] != "") {
+	   $absent = array('Absent','absent','Recent','recent','Long Term','long term','long term absent','Long Term Absent');
+	   $present = array('Present','present','Long Term','long term','long term present','Long Term Present');
            $searchArray = explode(" ", $parameters['sSearch']);
            $sWhereSub = "";
            foreach ($searchArray as $search) {
@@ -1617,12 +1621,28 @@ class DataCollectionTable extends AbstractTableGateway {
                    $sWhereSub .= " AND (";
                }
                $colSize = count($aColumns);
-
+               
                for ($i = 0; $i < $colSize; $i++) {
                    if ($i < $colSize - 1) {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
+			if($aColumns[$i] == 'recency_line' && in_array($search,$absent)){
+			   $search = 'recent';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+			}else if($aColumns[$i] == 'recency_line' && in_array($search,$present)){
+			    $search = 'long term';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+			}else{
+			    $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
+			}
                    } else {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+			if($aColumns[$i] == 'recency_line' && in_array($search,$absent)){
+			   $search = 'recent';
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+			}else if($aColumns[$i] == 'recency_line' && in_array($search,$present)){
+			   $search = 'long term';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+			}else{
+			    $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+			}
                    }
                }
                $sWhereSub .= ")";
@@ -1685,7 +1705,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','recency_line'),'left')
 				   ->where(array('da_c.country'=>$parameters['country']));
 	//custom filter start
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
@@ -1698,6 +1718,8 @@ class DataCollectionTable extends AbstractTableGateway {
             $sQuery = $sQuery->where(array("da_c.date_of_test_completion = '" . $s_t_start_date. "'"));
         } if(trim($parameters['province'])!= ''){
 	    $sQuery = $sQuery->where(array('f.province'=>base64_decode($parameters['province'])));
+	} if(trim($parameters['specimenType'])!= ''){
+	    $sQuery = $sQuery->where('da_c.specimen_type IN('.$parameters['specimenType'].')');
 	} if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
 	    $sQuery = $sQuery->where('da_c.final_lag_avidity_odn < 2');
 	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
@@ -1753,7 +1775,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array())
 				->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessment_id'),'left')
-				->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test'),'left')
+				->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','recency_line'),'left')
 				->where(array('da_c.country'=>$parameters['country']));
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
@@ -1791,10 +1813,23 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
 		if(isset($asanteRapidRecencyAssy['rrdt'])){
-		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
+		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
+	    }
+	    //ANC rapid recency result
+	    $ancRapidRecencyResult = '';
+	    if(isset($aRow['has_patient_had_rapid_recency_test']) && trim($aRow['has_patient_had_rapid_recency_test']) == 'done'){
+		if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+		    $ancRapidRecencyResult = 'Long Term Absent';
+		}else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+		    $ancRapidRecencyResult = 'Long Term Present';
+		}else {
+		    $ancRapidRecencyResult = 'Invalid';
+		}
+	    }else if(isset($aRow['has_patient_had_rapid_recency_test']) && trim($aRow['has_patient_had_rapid_recency_test']) == 'not done'){
+		$ancRapidRecencyResult = 'Not Done';
 	    }
 	    $row = array();
 	    $row[] = ucwords($aRow['location_name']);
@@ -1809,7 +1844,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = $rapidRecencyAssay;
 	    $row[] = $rapidRecencyAssayDuration;
-	    $row[] = (isset($aRow['has_patient_had_rapid_recency_test']))?ucwords($aRow['has_patient_had_rapid_recency_test']):'';
+	    $row[] = $ancRapidRecencyResult;
 	    $output['aaData'][] = $row;
 	}
       return $output;

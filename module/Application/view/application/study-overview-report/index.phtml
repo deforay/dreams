@@ -111,6 +111,9 @@ $loginContainer = new Container('user');
     .redTxt{
 	color:#F44336 !important;
     }
+    .yellowTxt{
+	background-color:#FFFF00 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -146,12 +149,22 @@ $loginContainer = new Container('user');
 	    <div class="row">
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
+			<select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type">
+			    <option value="1">Venous</option>
+			    <option value="2">Plasma</option>
+			    <option value="3">DBS</option>
+			</select>
+			<label for="specimenType">Sample Type </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
 			<select class="material-select" id="finalLagAvidityOdn" name="finalLagAvidityOdn" title="Please select LAg avidity odn">
 			    <option value=""> -- Select -- </option>
 			    <option value="lt2"> <2 </option>
 			    <option value="gt2"> >2 </option>
 			</select>
-			<label for="final">LAg Avidity ODn </label>
+			<label for="LAg">LAg Avidity ODn </label>
 		    </div>
 		</div>
 		<div class="col s4">
@@ -164,6 +177,8 @@ $loginContainer = new Container('user');
 			<label for="hivRna">Viral Load </label>
 		    </div>
 		</div>
+	    </div>
+	    <div class="row">
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="asanteRapidRecencyAssayRlt" name="asanteRapidRecencyAssayRlt">
@@ -204,7 +219,7 @@ $loginContainer = new Container('user');
 			    <th>Recent Infection</th>
 			    <th>HIV Verification Classification</th>
 			    <th>HIV Recency Classification</th>
-			    <th>Rapid Recency Result</th>
+			    <th>ANC Rapid Recency Result</th>
 			</tr>
 			</thead>
 			<tfoot>
@@ -221,7 +236,7 @@ $loginContainer = new Container('user');
 			    <th>Recent Infection</th>
 			    <th>HIV Verification Classification</th>
 			    <th>HIV Recency Classification</th>
-			    <th>Rapid Recency Result</th>
+			    <th>ANC Rapid Recency Result</th>
 			</tr>
 			</tfoot>
 			<tbody>
@@ -258,7 +273,11 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[9] =='HIV Negative' || (aData[6] == 'Long Term' && ((aData[9] =='HIV Positive' && aData[10] == 'Recent') || aData[10] == 'Recent'))){ $(nRow).addClass("redTxt"); }
+		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
+		    $(nRow).addClass("yellowTxt");
+		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && ((aData[9] =='Present' && aData[10] == 'Absent') || aData[10] == 'Absent'))){
+		    $(nRow).addClass("redTxt");
+		}
 	    },
             "aaSorting": [[5, "desc"]],
             "bProcessing": true,
@@ -269,6 +288,7 @@ $loginContainer = new Container('user');
 		aoData.push({"name": "sampleCollectedDate", "value": $('#specimenCollectedDate').val()});
 		aoData.push({"name": "sampleTestedDate", "value": $('#sampleTestedDate').val()});
 		aoData.push({"name": "province", "value": $('#province').val()});
+		aoData.push({"name": "specimenType", "value": $('#specimenType').val()});
 		aoData.push({"name": "finalLagAvidityOdn", "value": $('#finalLagAvidityOdn').val()});
 		aoData.push({"name": "hivRna", "value": $('#hivRna').val()});
 		aoData.push({"name": "asanteRapidRecencyAssayRlt", "value": $('#asanteRapidRecencyAssayRlt').val()});
@@ -350,6 +370,7 @@ $loginContainer = new Container('user');
     
     function clearSearchFields(){
        $('#overviewFilter')[0].reset();
+       $('#overviewFilter .select-dropdown').val('');
        searchStudyOverviewData();
     }
     

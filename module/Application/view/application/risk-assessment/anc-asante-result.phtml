@@ -59,6 +59,9 @@ $loginContainer = new Container('user');
 	    padding: 6px 4px 6px 4px;
 	}
     }
+    .textLeft_align{
+	text-align:left;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -66,7 +69,7 @@ $loginContainer = new Container('user');
     </div>
     <div class="row" style="max-width:1109px;">
 	<form id="asanteResultFilter" action="#">
-	    <div class="row">
+	    <div class="row" style="margin-bottom:0;">
                 <div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="anc" name="anc" title="Please select anc site">
@@ -89,6 +92,18 @@ $loginContainer = new Container('user');
 			<label for="district">Districts </label>
 		    </div>
 		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="hasPatientHadRapidRecencyTest" name="hasPatientHadRapidRecencyTest">
+			    <option value=""> -- Select -- </option>
+			    <option value="yes" selected="selected"> Yes </option>
+                            <option value="no"> No </option>
+			</select>
+			<label for="hasPatientHadRapidRecencyTest">ANC Asante Test Performed </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="row" style="margin-bottom:0;">
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="recencyLine" name="recencyLine">
@@ -152,7 +167,7 @@ $loginContainer = new Container('user');
 	    "iDisplayLength": 25,
             "aoColumns": [
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap textLeft_align"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"}
@@ -166,6 +181,7 @@ $loginContainer = new Container('user');
                 aoData.push({"name": "anc", "value": $('#anc').val()});
                 aoData.push({"name": "district", "value": $('#district').val()});
 		aoData.push({"name": "recencyLine", "value": $('#recencyLine').val()});
+		aoData.push({"name": "hasPatientHadRapidRecencyTest", "value": $('#hasPatientHadRapidRecencyTest').val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

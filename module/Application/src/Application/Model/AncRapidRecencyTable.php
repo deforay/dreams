@@ -106,6 +106,10 @@ class AncRapidRecencyTable extends AbstractTableGateway {
            $sQuery = $sQuery->where(array('l_d.location_id'=>base64_decode($parameters['district'])));
         } if(isset($parameters['recencyLine']) && trim($parameters['recencyLine'])!= ''){
            $sQuery = $sQuery->where(array('anc_r_r.recency_line'=>$parameters['recencyLine']));
+        } if(isset($parameters['hasPatientHadRapidRecencyTest']) && trim($parameters['hasPatientHadRapidRecencyTest']) == 'yes'){
+           $sQuery = $sQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>'done'));
+        }else if(isset($parameters['hasPatientHadRapidRecencyTest']) && trim($parameters['hasPatientHadRapidRecencyTest']) == 'no'){
+           $sQuery = $sQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>'not done')); 
         }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
