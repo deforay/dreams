@@ -912,16 +912,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
-						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTH(da_c.added_on)"),
+						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'sampleTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1, 1,0))"),
-						   'sampleFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
+						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2, 1,0))"),
+						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
 						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
 						))
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
@@ -937,7 +937,23 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	$queryContainer->dashboardQuery = $dataCollectionQuery;
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	if(isset($dataCollectionResult) && count($dataCollectionResult) >0){
+	    $i=0;
+	    foreach($dataCollectionResult as $dataCollection){
+		 $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+					    ->columns(array(
+							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
+							 ))
+					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
+					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+					    ->where('r_a.country = '.$dataCollection['country_id'].' AND MONTH(r_a.added_on) ="'.$dataCollection['month'].'" AND YEAR(r_a.added_on) ="'.$dataCollection['year'].'"');
+		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+                 $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	     $i++;
+	    }
+	}
+      return $dataCollectionResult;
     }
     
     public function fetchCountriesLabAncDetails($params){
