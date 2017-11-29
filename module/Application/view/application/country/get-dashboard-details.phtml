@@ -11,7 +11,7 @@ if(count($response) >0){
     <tr>
         <td><?php echo ucwords($country['location_name']); ?></td>
         <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=s-received&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
-        <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=s-received&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
+        <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=s-incomplete&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=s-tested&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesTested'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=s-finalized&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesFinalized'].'</a>':0; ?></td>
         <td><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=no-of-lag-rececnt&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>

@@ -254,8 +254,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 's-tested'){
-	    $sQuery = $sQuery->where(array('da_c.status'=>1));
+	} if(isset($parameters['type']) && trim($parameters['type'])== 's-incomplete'){
+	    $sQuery = $sQuery->where('da_c.status = 4');
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 's-tested'){
+	    $sQuery = $sQuery->where('da_c.status IN(1,2,3)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 's-finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=>2));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-lag-rececnt'){
@@ -916,7 +918,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
-						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
 						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
@@ -1537,7 +1539,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
-						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
 						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
