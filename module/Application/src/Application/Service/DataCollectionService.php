@@ -1217,6 +1217,19 @@ class DataCollectionService {
                 $sql = new Sql($dbAdapter);
                 $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->countryDashboardQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                $i=0;
+                foreach($sResult as $dataCollection){
+                     $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+                                                ->columns(array(
+                                                                'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
+                                                             ))
+                                                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
+                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+                                                ->where('r_a.country = '.$dataCollection['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.added_on) ="'.$dataCollection['month'].'" AND YEAR(r_a.added_on) ="'.$dataCollection['year'].'"');
+                     $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+                     $sResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                 $i++;
+                }
                 if(isset($sResult) && count($sResult)>0){
                     $excel = new PHPExcel();
                     $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
@@ -1226,16 +1239,23 @@ class DataCollectionService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $assessments = 0;
+                        $noofANCRecencyTest = 0;
+                        if(isset($aRow[$aRow['monthName'].' - '.$aRow['year']])){
+                          $assessments = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments:0;
+                          $noofANCRecencyTest = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest:0;
+                        }
                         $row = array();
                         $row[] = ucwords($aRow['location_name']);
                         $row[] = $aRow['totalSample'];
-                        $row[] = $aRow['sampleTested'];
-                        $row[] = $aRow['sampleFinalized'];
+                        $row[] = $aRow['samplesIncomplete'];
+                        $row[] = $aRow['samplesTested'];
+                        $row[] = $aRow['samplesFinalized'];
                         $row[] = $aRow['noofLAgRecent'];
                         $row[] = $aRow['noofRecencyAssayRecent'];
-                        $row[] = $aRow['assessments'];
-                        $row[] = $aRow['noofANCRecencyTest'];
-                        $row[] = $aRow['month'].' - '.$aRow['year'];
+                        $row[] = $assessments;
+                        $row[] = $noofANCRecencyTest;
+                        $row[] = $aRow['monthName'].' - '.$aRow['year'];
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1266,13 +1286,14 @@ class DataCollectionService {
                     
                     $sheet->setCellValue('A1', html_entity_decode('Name of the Province ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Samples Received ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Samples Finalized ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('No. of LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('No. of Recency Assay Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('No. of ANC Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Samples Finalized ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('No. of LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('No. of Recency Assay Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('No. of ANC Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1283,6 +1304,7 @@ class DataCollectionService {
                     $sheet->getStyle('G1')->applyFromArray($styleArray);
                     $sheet->getStyle('H1')->applyFromArray($styleArray);
                     $sheet->getStyle('I1')->applyFromArray($styleArray);
+                    $sheet->getStyle('J1')->applyFromArray($styleArray);
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -1291,7 +1313,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 8){
+                            if($colNo > 9){
                                 break;
                             }
                             if (is_numeric($value)) {

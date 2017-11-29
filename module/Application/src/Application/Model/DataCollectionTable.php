@@ -1514,40 +1514,56 @@ class DataCollectionTable extends AbstractTableGateway {
 	$queryContainer = new Container('query');
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-	$countryDashboardQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+	$dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"),
-						   'month' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
+						   'month' => new \Zend\Db\Sql\Expression("MONTH(da_c.added_on)"),
+						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
-						   'sampleTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1, 1,0))"),
-						   'sampleFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
+						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2, 1,0))"),
+						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
 						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('country'))
-				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('assessments' => new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_id','location_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
 				   ->group('f.province')
 				   ->order('da_c.added_on desc');
 	if($loginContainer->roleCode== 'LS'){
-	    $countryDashboardQuery = $countryDashboardQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
-	    $countryDashboardQuery = $countryDashboardQuery->where(array('da_c.added_by'=>$loginContainer->userId));
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	} if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $countryDashboardQuery = $countryDashboardQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	} if(trim($params['province'])!= ''){
-	    $countryDashboardQuery = $countryDashboardQuery->where(array('f.province'=>base64_decode($params['province'])));
+	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
 	} if(trim($params['specimenType'])!= ''){
-	    $countryDashboardQuery = $countryDashboardQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
 	}
-	$queryContainer->countryDashboardQuery = $countryDashboardQuery;
-	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($countryDashboardQuery);
-      return $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	$queryContainer->countryDashboardQuery = $dataCollectionQuery;
+	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
+        $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	if(isset($dataCollectionResult) && count($dataCollectionResult) >0){
+	    $i=0;
+	    foreach($dataCollectionResult as $dataCollection){
+		 $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+					    ->columns(array(
+							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
+							 ))
+					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
+					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
+					    ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.added_on) ="'.$dataCollection['month'].'" AND YEAR(r_a.added_on) ="'.$dataCollection['year'].'"');
+		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+                 $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	     $i++;
+	    }
+	}
+       return $dataCollectionResult;
     }
     
     public function fetchDataReportingLocations($params){
