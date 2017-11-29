@@ -273,7 +273,7 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Locked"){
+		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
 		    $("td:eq(5)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
 		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && ((aData[9] =='Present' && aData[10] == 'Absent') || aData[10] == 'Absent'))){
@@ -318,7 +318,7 @@ $loginContainer = new Container('user');
     });
     
     $('#studyOverviewDataTable th').click(function(e) {
-	$("#studyOverviewDataTable tbody tr .yellowTxt td .sorting_1").addClass("remove_sorting_1_style");
+	//$("#studyOverviewDataTable tbody .yellowTxt td .sorting_1").addClass("remove_sorting_1_style");
     });
     
     function selectSampleCollectionDate(){
