@@ -1573,14 +1573,21 @@ class DataCollectionTable extends AbstractTableGateway {
 	//facility query
 	$facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
 				     ->columns(array('facility_name','latitude','longitude'))
-				     ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))")),'left')
+				     ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array(),'left')
 				     ->where(array('f.country'=>$params['country']));
+	if(trim($params['specimenType'])!= ''){
+	    $facilityLocationQuery = $facilityLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	}
 	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
         $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	//anc query
 	$ancLocationQuery = $sql->select()->from(array('anc' => 'anc_site'))
 				->columns(array('anc_site_name','latitude','longitude'))
+				->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array(),'left')
 				->where(array('anc.country'=>$params['country']));
+	if(trim($params['specimenType'])!= ''){
+	    $ancLocationQuery = $ancLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	}
 	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
         $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
       return $location;
