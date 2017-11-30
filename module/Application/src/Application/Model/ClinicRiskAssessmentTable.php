@@ -460,9 +460,6 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-anc-recency-test'){
 	    $sQuery = $sQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>'done'));
-	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
-	   $splitReportingMonthYear = explode("/",$parameters['date']);
-	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	} if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
@@ -525,22 +522,20 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $dataUnlock = '';
 	    $pdfLink = '';
 	    $userUnlockedHistory = '';
-	    if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
+	    if($aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
 		$interviewDate = $common->humanDateFormat($aRow['interview_date']);
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    if($aRow['unlocked_on']!= null && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
 		$unlockedDate = explode(" ",$aRow['unlocked_on']);
-		$userQuery = $sql->select()->from(array('u' => 'user'))
-		                           ->columns(array('user_id','full_name'))
-				           ->where(array('u.user_id'=>$aRow['unlocked_by']));
+		$userQuery = $sql->select()->from(array('u' => 'user'))->columns(array('user_id','full_name'))->where(array('u.user_id'=>$aRow['unlocked_by']));
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 		$unlockedBy = 'System';
 		if(isset($userResult->user_id)){
 		    $unlockedBy = ($userResult->user_id == $loginContainer->userId)?'You':ucwords($userResult->full_name);
 		}
-	       $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
+	        $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
 	    }
 	    //data view
 	    $dataView = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-1" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';

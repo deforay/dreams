@@ -1,6 +1,13 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
+$interviewFilterDate = '';
+if(isset($date) && trim($date)!= ''){
+    $dateArray = explode("/",$date);
+    $month = date('M', strtotime($dateArray[0]));
+    $year = $dateArray[1];
+    $interviewFilterDate = '01-'.$month.'-'.$year.' to 31-'.$month.'-'.$year;
+}
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
 <style>
@@ -115,16 +122,16 @@ $loginContainer = new Container('user');
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
 		<div class="col l2 m2 s2 left-align"><h6><strong>Interview Date </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <input id="interviewDate" name="interviewDate" type="text" title="Please enter interview date" onclick="selectDate();" readonly>
+		    <input id="interviewDate" name="interviewDate" type="text" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
 		</div>
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
 		    <select id="anc" name="anc[]" class="material-select" title="Please select ANC Site" multiple="multiple" style="width:40% !important;">
 			<?php
-            foreach($ancSites as $anc){
-            ?>
-            <option value="<?php echo $anc['anc_site_id']; ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
-            <?php } ?>
+			foreach($ancSites as $anc){
+			?>
+			<option value="<?php echo $anc['anc_site_id']; ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+			<?php } ?>
 		    </select>
 		</div>
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
@@ -228,7 +235,6 @@ $loginContainer = new Container('user');
             "fnServerData": function(sSource, aoData, fnCallback) {
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
 		aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
-                aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
                 aoData.push({"name": "interviewDate", "value": $('#interviewDate').val()});
                 aoData.push({"name": "anc", "value": $('#anc').val()});
                 $.ajax({
