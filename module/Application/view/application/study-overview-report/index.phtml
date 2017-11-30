@@ -161,7 +161,7 @@ $loginContainer = new Container('user');
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="finalLagAvidityOdn" name="finalLagAvidityOdn" title="Please select LAg avidity odn">
 			    <option value=""> -- Select -- </option>
-			    <option value="lt2"> <2 </option>
+			    <option value="lt2"> <=2 </option>
 			    <option value="gt2"> >2 </option>
 			</select>
 			<label for="LAg">LAg Avidity ODn </label>
@@ -207,7 +207,7 @@ $loginContainer = new Container('user');
 		    <table id="studyOverviewDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
-			    <th>Province Name</th>
+			    <th>Lab Province/State</th>
 			    <th>ANC Facility ID</th>
 			    <th>Patient Barcode ID</th>
 			    <th>Specimen Collected Date</th>
@@ -224,7 +224,7 @@ $loginContainer = new Container('user');
 			</thead>
 			<tfoot>
 			<tr>
-			    <th>Province Name</th>
+			    <th>Lab Province/State</th>
 			    <th>ANC Facility ID</th>
 			    <th>Patient Barcode ID</th>
 			    <th>Specimen Collected Date</th>
@@ -263,7 +263,7 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
@@ -280,7 +280,7 @@ $loginContainer = new Container('user');
 		    $(nRow).addClass("redTxt");
 		}
 	    },
-            "aaSorting": [[5, "desc"]],
+            "aaSorting": [[3, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('study-overview-report'); ?>",

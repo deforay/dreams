@@ -101,7 +101,7 @@ if(count($row['userLaboratories'])>0){
                 <div class="col s6">
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">stay_primary_portrait</i>
-                        <input id="mobile" name="mobile" type="text" class="validate checkNum isNumeric isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>" onblur="checkNameValidation('user', 'mobile', this, '<?php echo "user_id##" .$row->user_id; ?>','The mobile/phone no. that you entered already exist. Please enter different mobile/phone no.')">
+                        <input id="mobile" name="mobile" type="text" class="validate checkNum isNumeric isRequired" title="Please enter contact number" value="<?php echo $row->mobile;?>">
                         <label for="mobile" class="">Contact Number *</label>
                     </div>
                 </div>

@@ -1022,30 +1022,35 @@ class DataCollectionService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $ancFacilityID = '';
+                        $patientBarcodeID = '';
                         $specimenCollectedDate = '';
-                        $recentInfection = '';
                         //$hIVRNAResult = '';
                         $rapidRecencyAssay = '';
                         $rapidRecencyAssayDuration = '';
-                        $status = 'Incomplete';
+                        $status = '';
+                        if(isset($aRow['anc_site_code']) && $aRow['anc_site_code']!= null && trim($aRow['anc_site_code'])!= ''){
+                            $ancFacilityID = $aRow['anc_site_code'];
+                        }else if(isset($aRow['r_anc_site_code']) && $aRow['r_anc_site_code']!= null && trim($aRow['r_anc_site_code'])!= ''){
+                            $ancFacilityID = $aRow['r_anc_site_code'];
+                        }
+                        if(isset($aRow['patient_barcode_id']) && $aRow['patient_barcode_id']!= null && trim($aRow['patient_barcode_id'])!= ''){
+                            $patientBarcodeID = $aRow['patient_barcode_id'];
+                        }else if(isset($aRow['r_patient_barcode_id']) && $aRow['r_patient_barcode_id']!= null && trim($aRow['r_patient_barcode_id'])!= ''){
+                            $patientBarcodeID = $aRow['r_patient_barcode_id'];
+                        }
                         //specimen collected date
-                        if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+                        if(isset($aRow['specimen_collected_date']) && $aRow['specimen_collected_date']!= null && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
                             $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
                         }
-                        //status
-                        if($aRow['test_status_name']!= 'incomplete'){
-                            $status = ucfirst($aRow['test_status_name']);
-                        }
-                        //recent infection
-                        $recentInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         //HIV rna values
-                        //if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-                        //    $hIVRNAResult = 'High Viral Load';
-                        //}else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-                        //    $hIVRNAResult = 'Low Viral Load';
-                        //}
+                    //    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+                    //	$hIVRNAResult = 'High Viral Load';
+                    //    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+                    //	$hIVRNAResult = 'Low Viral Load';
+                    //    }
                         //rapid assay
-                        if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+                        if(isset($aRow['asante_rapid_recency_assy']) && $aRow['asante_rapid_recency_assy']!= null && trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
@@ -1055,7 +1060,7 @@ class DataCollectionService {
                         }
                         //ANC rapid recency result
                         $ancRapidRecencyResult = '';
-                        if(isset($aRow['has_patient_had_rapid_recency_test']) && trim($aRow['has_patient_had_rapid_recency_test']) == 'done'){
+                        if(isset($aRow['has_patient_had_rapid_recency_test']) && $aRow['has_patient_had_rapid_recency_test']!= null && trim($aRow['has_patient_had_rapid_recency_test']) == 'done'){
                             if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
                                 $ancRapidRecencyResult = 'Long Term Absent';
                             }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
@@ -1063,19 +1068,23 @@ class DataCollectionService {
                             }else {
                                 $ancRapidRecencyResult = 'Invalid';
                             }
-                        }else if(isset($aRow['has_patient_had_rapid_recency_test']) && trim($aRow['has_patient_had_rapid_recency_test']) == 'not done'){
+                        }else if(isset($aRow['has_patient_had_rapid_recency_test']) && $aRow['has_patient_had_rapid_recency_test']!= null && trim($aRow['has_patient_had_rapid_recency_test']) == 'not done'){
                             $ancRapidRecencyResult = 'Not Done';
                         }
+                        //status
+                        if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
+                            $status = ucfirst($aRow['test_status_name']);
+                        }
                         $row = array();
-                        $row[] = ucwords($aRow['location_name']);
-                        $row[] = $aRow['anc_site_code'];
-                        $row[] = $aRow['patient_barcode_id'];
+                        $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
+                        $row[] = $ancFacilityID;
+                        $row[] = $patientBarcodeID;
                         $row[] = $specimenCollectedDate;
                         $row[] = $status;
-                        $row[] = (isset($aRow['assessment_id']))?'Yes':'No';
-                        $row[] = $aRow['hiv_rna'];
+                        $row[] = (isset($aRow['assessment_id']) && $aRow['assessment_id']!= null && trim($aRow['assessment_id'])!= '')?'Yes':'No';
+                        $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
                         //$row[] = $hIVRNAResult;
-                        $row[] = $recentInfection;
+                        $row[] = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         $row[] = $rapidRecencyAssay;
                         $row[] = $rapidRecencyAssayDuration;
                         $row[] = $ancRapidRecencyResult;
