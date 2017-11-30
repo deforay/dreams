@@ -114,6 +114,9 @@ $loginContainer = new Container('user');
     .yellowTxt,.remove_sorting_1_style{
 	background-color:#FFFF00 !important;
     }
+    table.dataTable.display tbody tr.yellowTxt > .sorting_1{
+	background-color:#FFFF00 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -274,7 +277,7 @@ $loginContainer = new Container('user');
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
-		    $("td:eq(5)", nRow).addClass("remove_sorting_1_style");
+		    $("td:eq(3)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
 		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && ((aData[9] =='Present' && aData[10] == 'Absent') || aData[10] == 'Absent'))){
 		    $(nRow).addClass("redTxt");
@@ -315,10 +318,6 @@ $loginContainer = new Container('user');
                 });
         selectSampleCollectionDate();
         selectSampleTestedDate();
-    });
-    
-    $('#studyOverviewDataTable th').click(function(e) {
-	//case
     });
     
     function selectSampleCollectionDate(){
