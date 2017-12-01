@@ -223,14 +223,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    </div>
 		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
-                           <label for="rrrHIVDiagnostic">Positive Verification (Diagnostic) Line </label><br>
+                           <label for="rrrHIVDiagnostic">Positive Verification Line </label><br>
                            <p>
                            <?php
                             if(isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line!= null && trim($row->HIV_diagnostic_line)!= ''){
                                if($row->HIV_diagnostic_line == 'positive'){
-                                echo 'P (Positive)';
+                                echo 'P(Positive - Present)';
                                }else if($row->HIV_diagnostic_line == 'negative'){
-                                echo 'N (Negative)';
+                                echo 'N(Negative - Absent)';
                                }else if($row->HIV_diagnostic_line == 'invalid'){
                                 echo 'Invalid';
                                }
@@ -246,9 +246,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                             <?php
                             if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
                                if($row->recency_line == 'recent'){
-                                echo 'R (Recent)';
+                                echo 'R(Recent- Absent)';
                                }else if($row->recency_line == 'long term'){
-                                echo 'LT (Long Term)';
+                                echo 'LT(Long Term - Present)';
                                }else if($row->recency_line == 'invalid'){
                                 echo 'Invalid';
                                }

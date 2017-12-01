@@ -163,24 +163,24 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    </div>
 		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
 			<div class="input-field col m12 s12">
-			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select" title="Please select HIV diagnostic line">
+			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'isRequired':''; ?>" title="Please select positive verfication line">
                             <option value=""> -- Select -- </option>
-			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>P (Positive)</option>
-			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>N (Negative)</option>
+			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>P(Positive - Present)</option>
+			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>N(Negative - Absent)</option>
 			    <option value="invalid" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
                         </select>
-                        <label for="rrrHIVDiagnostic">Positive Verification (Diagnostic) Line </label>
+                        <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
 			</div>
 		    </div>
-		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>">
+		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none;'; ?>">
 			<div class="input-field col m12 s12">
-			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
+			<select id="rrrRecency" name="rrrRecency" class="material-select <?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'isRequired':''; ?>" title="Please select long term (recency) line">
                             <option value=""> -- Select -- </option>
-			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>R (Recent)</option>
-			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>LT (Long Term)</option>
+			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>R(Recent- Absent)</option>
+			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>LT(Long Term - Present)</option>
 			    <option value="invalid" <?php echo (isset($row->recency_line) && $row->recency_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
                         </select>
-                        <label for="rrrRecency">Long Term (Recency) Line </label>
+                        <label for="rrrRecency">Long Term (Recency) Line *</label>
 			</div>
 		    </div>
 		</div>
@@ -1733,11 +1733,13 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
 	    $('#rtrSection').css('height','auto');
 	    $('.rrrSection').show();
+            $('#rrrHIVDiagnostic,#rrrRecency').addClass('isRequired');
 	}else{
 	   $('#rtrSection').css('height','90px');
 	   $('.rrrSection').hide();
 	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
 	   //$('#rrrRecency option:first').prop('selected', true);
+           $('#rrrHIVDiagnostic,#rrrRecency').removeClass('isRequired');
 	}
     });
     
@@ -1745,8 +1747,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
     $('#rrrHIVDiagnostic').on('change',function () {
 	if ($('#rrrHIVDiagnostic').val() == 'negative') {
 	    $('.rrrRecency').hide();
+            $('#rrrRecency').removeClass('isRequired');
 	}else{
 	    $('.rrrRecency').show();
+            $('#rrrRecency').addClass('isRequired');
 	}
     });
     

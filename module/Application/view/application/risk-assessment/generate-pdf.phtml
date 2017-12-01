@@ -83,9 +83,9 @@ $common = new \Application\Service\CommonService();
         if(isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done'){
             $HIVDiagnostic = true;
             if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'positive'){
-                $HIVDiagnosticVal = 'P (Positive)';
+                $HIVDiagnosticVal = 'P(Positive - Present)';
             }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'negative'){
-		$HIVDiagnosticVal = 'N (Negative)';
+		$HIVDiagnosticVal = 'N(Negative - Absent)';
 	    }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'invalid'){
 		$HIVDiagnosticVal = 'Invalid';
 	    }
@@ -95,9 +95,9 @@ $common = new \Application\Service\CommonService();
         if((isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done') && ((!isset($data['HIV_diagnostic_line']) || (isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line'] !='negative')))){
             $recency = true;
             if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'recent'){
-                $recencyVal = 'R (Recent)';
+                $recencyVal = 'R(Recent- Absent)';
             }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'long term'){
-		$recencyVal = 'LT (Long Term)';
+		$recencyVal = 'LT(Long Term - Present)';
 	    }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'invalid'){
 		$recencyVal = 'Invalid';
 	    }
@@ -796,7 +796,7 @@ $common = new \Application\Service\CommonService();
 	        $html .= '<table style="padding:2px;border:1px solid #ffcccc;">';
 		    $html .='<tr>';
 		      $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Rapid Recency Result </td>';
-		      if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Positive Verification (Diagnostic) Line </td>'; }
+		      if($HIVDiagnostic) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Positive Verification Line </td>'; }
 		      if($recency) { $html .='<td style="line-height:20px;font-size:11px;font-weight:bold;">Long Term (Recency) Line </td>'; }
 		    $html .='</tr>';
 		    $html .='<tr>';

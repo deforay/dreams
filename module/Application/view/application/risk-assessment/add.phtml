@@ -159,24 +159,24 @@ if(trim($countryId)!= ''){
 		    </div>
 		    <div class="col s4 rrrSection" style="display:none;">
 			<div class="input-field col m12 s12">
-			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select" title="Please select HIV diagnostic line">
+			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select" title="Please select positive verfication line">
                             <option value=""> -- Select -- </option>
-			    <option value="positive">P (Positive)</option>
-			    <option value="negative">N (Negative)</option>
+			    <option value="positive">P(Positive - Present)</option>
+			    <option value="negative">N(Negative - Absent)</option>
 			    <option value="invalid">Invalid</option>
                         </select>
-                        <label for="rrrHIVDiagnostic">Positive Verification (Diagnostic) Line </label>
+                        <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
 			</div>
 		    </div>
 		    <div class="col s4 rrrRecency rrrSection" style="display:none;">
 			<div class="input-field col m12 s12">
-			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select recency line">
+			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select long term (recency) line">
                             <option value=""> -- Select -- </option>
-			    <option value="recent">R (Recent)</option>
-			    <option value="long term">LT (Long Term)</option>
+			    <option value="recent">R(Recent- Absent)</option>
+			    <option value="long term">LT(Long Term - Present)</option>
 			    <option value="invalid">Invalid</option>
                         </select>
-                        <label for="rrrRecency">Long Term (Recency) Line </label>
+                        <label for="rrrRecency">Long Term (Recency) Line *</label>
 			</div>
 		    </div>
 		</div>
@@ -1685,11 +1685,13 @@ if(trim($countryId)!= ''){
 	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
 	    $('#rtrSection').css('height','auto');
 	    $('.rrrSection').show();
+	    $('#rrrHIVDiagnostic,#rrrRecency').addClass('isRequired');
 	}else{
 	   $('#rtrSection').css('height','90px');
 	   $('.rrrSection').hide();
 	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
 	   //$('#rrrRecency option:first').prop('selected', true);
+	   $('#rrrHIVDiagnostic,#rrrRecency').removeClass('isRequired');
 	}
     });
     
@@ -1697,8 +1699,10 @@ if(trim($countryId)!= ''){
     $('#rrrHIVDiagnostic').on('change',function () {
 	if ($('#rrrHIVDiagnostic').val() == 'negative') {
 	    $('.rrrRecency').hide();
+	    $('#rrrRecency').removeClass('isRequired');
 	}else{
 	    $('.rrrRecency').show();
+	    $('#rrrRecency').addClass('isRequired');
 	}
     });
     
