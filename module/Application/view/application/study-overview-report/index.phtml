@@ -279,10 +279,25 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		var LAgAssay = aData[6];
+		var labHIVVerificationClassification = aData[9];
+		var labHIVRecencyClassification = aData[10];
+		var ancHIVVerificationClassification = aData[11].replace("-", "");
+		var ancHIVRecencyClassification = aData[12].replace("-", "");
+		recencyMismatch = false;
+		if($.trim(LAgAssay)!= '' && $.trim(labHIVRecencyClassification)!= '' && $.trim(ancHIVRecencyClassification)!= ''){
+		    if((LAgAssay == 'Recent' && labHIVRecencyClassification == 'Absent') && (labHIVRecencyClassification == ancHIVRecencyClassification)){
+			recencyMismatch = false;
+		    }else if((LAgAssay == 'Long Term' && labHIVRecencyClassification == 'Present') && (labHIVRecencyClassification == ancHIVRecencyClassification)){
+		       recencyMismatch = false;
+		    }else{
+			recencyMismatch = true;
+		    }
+		}
 		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
 		    $("td:eq(3)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
-		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && ((aData[9] =='Present' && aData[10] == 'Absent') || aData[10] == 'Absent'))){
+		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && aData[10] == 'Absent') || (aData[6] == 'Recent' && aData[10] == 'Present') || recencyMismatch === true){
 		    $(nRow).addClass("redTxt");
 		}
 	    },

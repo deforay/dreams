@@ -1164,8 +1164,10 @@ class DataCollectionService {
                     foreach ($output as $rowData) {
                         $status = '';
                         $lag = '';
-                        $assay1 = '';
-                        $assay2 = '';
+                        $labHIVV = '';
+                        $labHIVR = '';
+                        $ancHIVV = '';
+                        $ancHIVR = '';
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
@@ -1181,14 +1183,26 @@ class DataCollectionService {
                             }
                             if($colNo == 4){ $status = $value; }
                             if($colNo == 7){ $lag = $value; }
-                            if($colNo == 8){ $assay1 = $value; }
-                            if($colNo == 9){ $assay2 = $value; }
+                            if($colNo == 8){ $labHIVV = $value; }
+                            if($colNo == 9){ $labHIVR = $value; }
+                            if($colNo == 10){ $ancHIVV = str_replace("-","",$value); }
+                            if($colNo == 11){ $ancHIVR = str_replace("-","",$value); }
+                            $recencyMismatch = false;
+                            if(trim($lag)!= '' && trim($labHIVR)!= '' && trim($ancHIVR)!= ''){
+                                if(($lag == 'Recent' && $labHIVR == 'Absent') && ($labHIVR == $ancHIVR)){
+                                    $recencyMismatch = false;
+                                }else if(($lag == 'Long Term' && $labHIVR == 'Present') && ($labHIVR == $ancHIVR)){
+                                   $recencyMismatch = false;
+                                }else{
+                                    $recencyMismatch = true;
+                                }
+                            }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > 10){
                                 if($status == 'Incomplete'){
                                   $sheet->getStyle('A'.$currentRow.':L'.$currentRow)->applyFromArray($yellowTxtArray); 
-                                }else if($assay1 =='Absent' || ($lag == 'Long Term' && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
+                                }else if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present' || $recencyMismatch === true)){
                                   $sheet->getStyle('A'.$currentRow.':L'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
