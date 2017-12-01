@@ -1740,47 +1740,47 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $select1 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'left')
-				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('r_has_patient_had_rapid_recency_test'=>'has_patient_had_rapid_recency_test','r_HIV_diagnostic_line'=>'HIV_diagnostic_line','r_recency_line'=>'recency_line'),'left')
+				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'),'left')
-				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('r_test_status_name'=>'test_status_name'),'left')
-				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('r_province'=>'province'),'left')
-				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('r_location_name'=>'location_name'),'left')
+				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
+				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'),'left')
+				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
-				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('r_has_patient_had_rapid_recency_test'=>'has_patient_had_rapid_recency_test','r_HIV_diagnostic_line'=>'HIV_diagnostic_line','r_recency_line'=>'recency_line'),'right')
-				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'right')
+				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'),'left')
-				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('r_test_status_name'=>'test_status_name'),'left')
-				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('r_province'=>'province'),'left')
-				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('r_location_name'=>'location_name'),'left')
+				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
+				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'),'left')
+				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select1->combine($select2);
 	$sQuery = $sql->select()->from(array('result' => $select1));
 	//custom filter start
 	if(trim($s_c_start_date) != "" && trim($s_c_start_date)!= trim($s_c_end_date)) {
-           $sQuery = $sQuery->where(array("da_c.specimen_collected_date >='" . $s_c_start_date ."'", "da_c.specimen_collected_date <='" . $s_c_end_date."'"));
+           $sQuery = $sQuery->where(array("specimen_collected_date >='" . $s_c_start_date ."'", "specimen_collected_date <='" . $s_c_end_date."'"));
         }else if (trim($s_c_start_date) != "") {
-            $sQuery = $sQuery->where(array("da_c.specimen_collected_date = '" . $s_c_start_date. "'"));
+            $sQuery = $sQuery->where(array("specimen_collected_date = '" . $s_c_start_date. "'"));
         } if(trim($s_t_start_date) != "" && trim($s_t_start_date)!= trim($s_t_end_date)) {
-           $sQuery = $sQuery->where(array("da_c.date_of_test_completion >='" . $s_t_start_date ."'", "da_c.date_of_test_completion <='" . $s_t_end_date."'"));
+           $sQuery = $sQuery->where(array("date_of_test_completion >='" . $s_t_start_date ."'", "date_of_test_completion <='" . $s_t_end_date."'"));
         }else if (trim($s_t_start_date) != "") {
-            $sQuery = $sQuery->where(array("da_c.date_of_test_completion = '" . $s_t_start_date. "'"));
+            $sQuery = $sQuery->where(array("date_of_test_completion = '" . $s_t_start_date. "'"));
         } if(trim($parameters['province'])!= ''){
-	    $sQuery = $sQuery->where(array('f.province'=>base64_decode($parameters['province'])));
+	    $sQuery = $sQuery->where(array('province'=>base64_decode($parameters['province'])));
 	} if(trim($parameters['specimenType'])!= ''){
-	    $sQuery = $sQuery->where('da_c.specimen_type IN('.$parameters['specimenType'].')');
+	    $sQuery = $sQuery->where('specimen_type IN('.$parameters['specimenType'].')');
 	} if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
-	    $sQuery = $sQuery->where('da_c.final_lag_avidity_odn <= 2');
+	    $sQuery = $sQuery->where('final_lag_avidity_odn <= 2');
 	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
-	    $sQuery = $sQuery->where('da_c.final_lag_avidity_odn > 2');
+	    $sQuery = $sQuery->where('final_lag_avidity_odn > 2');
 	} if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
-	    $sQuery = $sQuery->where('da_c.hiv_rna <= 1000');
+	    $sQuery = $sQuery->where('hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
-	    $sQuery = $sQuery->where('da_c.hiv_rna > 1000');
+	    $sQuery = $sQuery->where('hiv_rna > 1000');
 	} if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
-	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
+	    $sQuery = $sQuery->where('asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
 	}
 	//custom filter end
        if (isset($sWhere) && $sWhere != "") {
@@ -1810,21 +1810,21 @@ class DataCollectionTable extends AbstractTableGateway {
        /* Total data set length */
 	$select1 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'left')
-				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('r_has_patient_had_rapid_recency_test'=>'has_patient_had_rapid_recency_test','r_HIV_diagnostic_line'=>'HIV_diagnostic_line','r_recency_line'=>'recency_line'),'left')
+				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'),'left')
-				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('r_test_status_name'=>'test_status_name'),'left')
-				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('r_province'=>'province'),'left')
-				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('r_location_name'=>'location_name'),'left')
+				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
+				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'),'left')
+				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
-				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('r_has_patient_had_rapid_recency_test'=>'has_patient_had_rapid_recency_test','r_HIV_diagnostic_line'=>'HIV_diagnostic_line','r_recency_line'=>'recency_line'),'right')
-				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'right')
+				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code'),'left')
-				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('r_test_status_name'=>'test_status_name'),'left')
-				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('r_province'=>'province'),'left')
-				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('r_location_name'=>'location_name'),'left')
+				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
+				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('province'),'left')
+				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select1->combine($select2);
 	$tQuery = $sql->select()->from(array('result' => $select1));
@@ -1861,8 +1861,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
 	    }
 	    //status
-	    if(isset($aRow['r_test_status_name']) && $aRow['r_test_status_name']!= null && trim($aRow['r_test_status_name'])!= ''){
-	       $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> '.ucfirst($aRow['r_test_status_name']).'</a>';
+	    if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
+	       $status = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '"target="_blank" title="View data"> '.ucfirst($aRow['test_status_name']).'</a>';
 	    }
 	    //LAg assay
 	    $lagResult = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
@@ -1884,24 +1884,24 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //ANC rapid recency result
 	    $ancHIVVerificationClassification = '-';
 	    $ancRecencyVerificationClassification = '-';
-	    if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'positive'){
+	    if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
 		$ancHIVVerificationClassification = 'Present';
-	    }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'negative'){
+	    }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
 		$ancHIVVerificationClassification = 'Absent';
-	    }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'invalid') {
+	    }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
 		$ancHIVVerificationClassification = 'Invalid';
 	    }
-	    //if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line'])!= 'negative'){
-	    if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'recent'){
-		$ancRecencyVerificationClassification = 'Absent';
-	    }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'long term'){
-		$ancRecencyVerificationClassification = 'Present';
-	    }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'invalid') {
-		$ancRecencyVerificationClassification = 'Invalid';
-	    }
+	    //if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
+		if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+		    $ancRecencyVerificationClassification = 'Absent';
+		}else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+		    $ancRecencyVerificationClassification = 'Present';
+		}else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+		    $ancRecencyVerificationClassification = 'Invalid';
+		}
 	    //}
 	    $row = array();
-	    $row[] = (isset($aRow['r_location_name']) && $aRow['r_location_name']!= null && trim($aRow['r_location_name'])!= '')?ucwords($aRow['r_location_name']):'';
+	    $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
 	    $row[] = $ancFacilityID;
 	    $row[] = $patientBarcodeID;
 	    $row[] = $specimenCollectedDate;

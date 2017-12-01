@@ -198,13 +198,13 @@ class AncRapidRecencyTable extends AbstractTableGateway {
                 $ancHIVVerificationClassification = 'Invalid';
             }
             //if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
-            if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
-                $ancRecencyVerificationClassification = 'Absent';
-            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
-                $ancRecencyVerificationClassification = 'Present';
-            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
-                $ancRecencyVerificationClassification = 'Invalid';
-            }
+                if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                    $ancRecencyVerificationClassification = 'Absent';
+                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                    $ancRecencyVerificationClassification = 'Present';
+                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                    $ancRecencyVerificationClassification = 'Invalid';
+                }
             //}
 	    $row = array();
 	    $row[] = $aRow['patient_barcode_id'];

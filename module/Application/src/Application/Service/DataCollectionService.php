@@ -1061,28 +1061,28 @@ class DataCollectionService {
                         //ANC rapid recency result
                         $ancHIVVerificationClassification = '-';
                         $ancRecencyVerificationClassification = '-';
-                        if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'positive'){
+                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
                             $ancHIVVerificationClassification = 'Present';
-                        }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'negative'){
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
                             $ancHIVVerificationClassification = 'Absent';
-                        }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'invalid') {
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
                             $ancHIVVerificationClassification = 'Invalid';
                         }
-                        //if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line'])!= 'negative'){
-                        if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'recent'){
-                            $ancRecencyVerificationClassification = 'Absent';
-                        }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'long term'){
-                            $ancRecencyVerificationClassification = 'Present';
-                        }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'invalid') {
-                            $ancRecencyVerificationClassification = 'Invalid';
-                        }
+                        //if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
+                            if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                                $ancRecencyVerificationClassification = 'Absent';
+                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                                $ancRecencyVerificationClassification = 'Present';
+                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                                $ancRecencyVerificationClassification = 'Invalid';
+                            }
                         //}
                         //status
-                        if(isset($aRow['r_test_status_name']) && $aRow['r_test_status_name']!= null && trim($aRow['r_test_status_name'])!= ''){
-                            $status = ucfirst($aRow['r_test_status_name']);
+                        if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
+                            $status = ucfirst($aRow['test_status_name']);
                         }
                         $row = array();
-                        $row[] = (isset($aRow['r_location_name']) && $aRow['r_location_name']!= null && trim($aRow['r_location_name'])!= '')?ucwords($aRow['r_location_name']):'';
+                        $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
                         $row[] = $ancFacilityID;
                         $row[] = $patientBarcodeID;
                         $row[] = $specimenCollectedDate;
