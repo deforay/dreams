@@ -1059,13 +1059,12 @@ class DataCollectionService {
                             }
                         }
                         //ANC rapid recency result
-                        $ancHIVVerificationClassification = 'Not Done';
-                        $ancRecencyVerificationClassification = 'Not Done';
+                        $ancHIVVerificationClassification = '-';
+                        $ancRecencyVerificationClassification = '-';
                         if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'positive'){
                             $ancHIVVerificationClassification = 'Present';
                         }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'negative'){
                             $ancHIVVerificationClassification = 'Absent';
-                            $ancRecencyVerificationClassification = '';
                         }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'invalid') {
                             $ancHIVVerificationClassification = 'Invalid';
                         }
