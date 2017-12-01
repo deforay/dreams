@@ -1059,17 +1059,24 @@ class DataCollectionService {
                             }
                         }
                         //ANC rapid recency result
-                        $ancRapidRecencyResult = '';
-                        if(isset($aRow['has_patient_had_rapid_recency_test']) && $aRow['has_patient_had_rapid_recency_test']!= null && trim($aRow['has_patient_had_rapid_recency_test']) == 'done'){
+                        $ancHIVVerificationClassification = 'Not Done';
+                        $ancRecencyVerificationClassification = 'Not Done';
+                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
+                            $ancHIVVerificationClassification = 'Present';
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
+                            $ancHIVVerificationClassification = 'Absent';
+                            $ancRecencyVerificationClassification = '';
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
+                            $ancHIVVerificationClassification = 'Invalid';
+                        }
+                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
                             if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
-                                $ancRapidRecencyResult = 'Long Term Absent';
+                                $ancRecencyVerificationClassification = 'Absent';
                             }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
-                                $ancRapidRecencyResult = 'Long Term Present';
-                            }else {
-                                $ancRapidRecencyResult = 'Invalid';
+                                $ancRecencyVerificationClassification = 'Present';
+                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                                $ancRecencyVerificationClassification = 'Invalid';
                             }
-                        }else if(isset($aRow['has_patient_had_rapid_recency_test']) && $aRow['has_patient_had_rapid_recency_test']!= null && trim($aRow['has_patient_had_rapid_recency_test']) == 'not done'){
-                            $ancRapidRecencyResult = 'Not Done';
                         }
                         //status
                         if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
@@ -1087,7 +1094,8 @@ class DataCollectionService {
                         $row[] = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         $row[] = $rapidRecencyAssay;
                         $row[] = $rapidRecencyAssayDuration;
-                        $row[] = $ancRapidRecencyResult;
+                        $row[] = $ancHIVVerificationClassification;
+                        $row[] = $ancRecencyVerificationClassification;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1135,9 +1143,10 @@ class DataCollectionService {
                     $sheet->setCellValue('G1', html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     //$sheet->setCellValue('H1', html_entity_decode('HIV RNA > 1000 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('HIV Verification Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('HIV Recency Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K1', html_entity_decode('ANC Rapid Recency Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Lab HIV Verification Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Lab HIV Recency Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K1', html_entity_decode('ANC HIV Verification Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L1', html_entity_decode('ANC HIV Recency Classification ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1150,6 +1159,7 @@ class DataCollectionService {
                     $sheet->getStyle('I1')->applyFromArray($styleArray);
                     $sheet->getStyle('J1')->applyFromArray($styleArray);
                     $sheet->getStyle('K1')->applyFromArray($styleArray);
+                    $sheet->getStyle('L1')->applyFromArray($styleArray);
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -1162,7 +1172,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 10){
+                            if($colNo > 11){
                                 break;
                             }
                             if (is_numeric($value)) {
@@ -1176,11 +1186,11 @@ class DataCollectionService {
                             if($colNo == 9){ $assay2 = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > 9){
+                            if($colNo > 10){
                                 if($status == 'Incomplete'){
-                                  $sheet->getStyle('A'.$currentRow.':K'.$currentRow)->applyFromArray($yellowTxtArray); 
+                                  $sheet->getStyle('A'.$currentRow.':L'.$currentRow)->applyFromArray($yellowTxtArray); 
                                 }else if($assay1 =='Absent' || ($lag == 'Long Term' && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
-                                  $sheet->getStyle('A'.$currentRow.':K'.$currentRow)->applyFromArray($redTxtArray);
+                                  $sheet->getStyle('A'.$currentRow.':L'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);

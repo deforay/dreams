@@ -55,6 +55,9 @@ class AncRapidRecencyTable extends AbstractTableGateway {
 
        $sWhere = "";
        if (isset($parameters['sSearch']) && $parameters['sSearch'] != "") {
+           $absent = 'Absent absent Negative negative Recent recent';
+	   $present = 'Present present Positive positive Long Term long term';
+           $notDone = 'Not Done not done';
            $searchArray = explode(" ", $parameters['sSearch']);
            $sWhereSub = "";
            foreach ($searchArray as $search) {
@@ -67,9 +70,41 @@ class AncRapidRecencyTable extends AbstractTableGateway {
 
                for ($i = 0; $i < $colSize; $i++) {
                    if ($i < $colSize - 1) {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
+                        if($aColumns[$i] == 'HIV_diagnostic_line' && strpos($absent,$search) !== false){
+                           $search = 'negative';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+                        }else if($aColumns[$i] == 'HIV_diagnostic_line' && strpos($present,$search) !== false){
+                           $search = 'positive';
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+                        }else if($aColumns[$i] == 'recency_line' && strpos($absent,$search) !== false){
+                           $search = 'recent';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+                        }else if($aColumns[$i] == 'recency_line' && strpos($present,$search) !== false){
+                           $search = 'long term';
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' OR ";
+                        }else if(($aColumns[$i] == 'HIV_diagnostic_line' || $aColumns[$i] == 'recency_line') && strpos($notDone,$search) !== false){	
+			   $sWhereSub .= $aColumns[$i] . " = '' OR ".$aColumns[$i] . " IS NULL OR ";
+			}else{
+                           $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR "; 
+                        }
                    } else {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+                        if($aColumns[$i] == 'HIV_diagnostic_line' && strpos($absent,$search) !== false){
+                           $search = 'negative';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+                        }else if($aColumns[$i] == 'HIV_diagnostic_line' && strpos($present,$search) !== false){
+                           $search = 'positive';
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+                        }else if($aColumns[$i] == 'recency_line' && strpos($absent,$search) !== false){
+                           $search = 'recent';	
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+                        }else if($aColumns[$i] == 'recency_line' && strpos($present,$search) !== false){
+                           $search = 'long term';
+			   $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search) . "%' ";
+                        }else if(($aColumns[$i] == 'HIV_diagnostic_line' || $aColumns[$i] == 'recency_line') && strpos($notDone,$search) !== false){	
+			   $sWhereSub .= $aColumns[$i] . " = '' OR ".$aColumns[$i] . " IS NULL ";
+			}else{
+                           $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+                        }
                    }
                }
                $sWhereSub .= ")";
@@ -153,12 +188,31 @@ class AncRapidRecencyTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
+            $ancHIVVerificationClassification = 'Not Done';
+            $ancRecencyVerificationClassification = 'Not Done';
+            if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
+                $ancHIVVerificationClassification = 'Present';
+            }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
+                $ancHIVVerificationClassification = 'Absent';
+                $ancRecencyVerificationClassification = '';
+            }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
+                $ancHIVVerificationClassification = 'Invalid';
+            }
+            if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
+                if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                    $ancRecencyVerificationClassification = 'Absent';
+                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                    $ancRecencyVerificationClassification = 'Present';
+                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                    $ancRecencyVerificationClassification = 'Invalid';
+                }
+            }
 	    $row = array();
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = ucwords($aRow['anc_site_name']);
 	    $row[] = (isset($aRow['location_name']))?ucwords($aRow['location_name']):'';
-            $row[] = ucwords($aRow['HIV_diagnostic_line']);
-            $row[] = ucwords($aRow['recency_line']);
+            $row[] = $ancHIVVerificationClassification;
+            $row[] = $ancRecencyVerificationClassification;
 	    $output['aaData'][] = $row;
 	}
       return $output;

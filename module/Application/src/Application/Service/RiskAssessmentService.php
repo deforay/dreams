@@ -1061,12 +1061,31 @@ class RiskAssessmentService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $ancHIVVerificationClassification = 'Not Done';
+                        $ancRecencyVerificationClassification = 'Not Done';
+                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
+                            $ancHIVVerificationClassification = 'Present';
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
+                            $ancHIVVerificationClassification = 'Absent';
+                            $ancRecencyVerificationClassification = '';
+                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
+                            $ancHIVVerificationClassification = 'Invalid';
+                        }
+                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
+                            if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                                $ancRecencyVerificationClassification = 'Absent';
+                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                                $ancRecencyVerificationClassification = 'Present';
+                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                                $ancRecencyVerificationClassification = 'Invalid';
+                            }
+                        }
                         $row = array();
                         $row[] = $aRow['patient_barcode_id'];
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = (isset($aRow['location_name']))?ucwords($aRow['location_name']):'';
-                        $row[] = ucwords($aRow['HIV_diagnostic_line']);
-                        $row[] = ucwords($aRow['recency_line']);
+                        $row[] = $ancHIVVerificationClassification;
+                        $row[] = $ancRecencyVerificationClassification;
                         $output[] = $row;
                     }
                     
@@ -1123,7 +1142,6 @@ class RiskAssessmentService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                           
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
