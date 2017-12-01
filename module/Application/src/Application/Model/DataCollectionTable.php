@@ -1891,15 +1891,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'invalid') {
 		$ancHIVVerificationClassification = 'Invalid';
 	    }
-	    if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line'])!= 'negative'){
-		if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'recent'){
-		    $ancRecencyVerificationClassification = 'Absent';
-		}else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'long term'){
-		    $ancRecencyVerificationClassification = 'Present';
-		}else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'invalid') {
-		    $ancRecencyVerificationClassification = 'Invalid';
-		}
+	    //if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line'])!= 'negative'){
+	    if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'recent'){
+		$ancRecencyVerificationClassification = 'Absent';
+	    }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'long term'){
+		$ancRecencyVerificationClassification = 'Present';
+	    }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'invalid') {
+		$ancRecencyVerificationClassification = 'Invalid';
 	    }
+	    //}
 	    $row = array();
 	    $row[] = (isset($aRow['r_location_name']) && $aRow['r_location_name']!= null && trim($aRow['r_location_name'])!= '')?ucwords($aRow['r_location_name']):'';
 	    $row[] = $ancFacilityID;

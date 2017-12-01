@@ -188,25 +188,24 @@ class AncRapidRecencyTable extends AbstractTableGateway {
 		   "aaData" => array()
 	);
 	foreach ($rResult as $aRow) {
-            $ancHIVVerificationClassification = 'Not Done';
-            $ancRecencyVerificationClassification = 'Not Done';
+            $ancHIVVerificationClassification = '-';
+            $ancRecencyVerificationClassification = '-';
             if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
                 $ancHIVVerificationClassification = 'Present';
             }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
                 $ancHIVVerificationClassification = 'Absent';
-                $ancRecencyVerificationClassification = '';
             }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
                 $ancHIVVerificationClassification = 'Invalid';
             }
-            if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
-                if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
-                    $ancRecencyVerificationClassification = 'Absent';
-                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
-                    $ancRecencyVerificationClassification = 'Present';
-                }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
-                    $ancRecencyVerificationClassification = 'Invalid';
-                }
+            //if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
+            if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                $ancRecencyVerificationClassification = 'Absent';
+            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                $ancRecencyVerificationClassification = 'Present';
+            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                $ancRecencyVerificationClassification = 'Invalid';
             }
+            //}
 	    $row = array();
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = ucwords($aRow['anc_site_name']);
