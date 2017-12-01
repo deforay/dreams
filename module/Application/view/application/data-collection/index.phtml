@@ -317,6 +317,12 @@ if(isset($date) && trim($date)!= ''){
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
 				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="labTechName" name="labTechName" type="text" class="validate isRequired" title="Please enter lab tech name/ID">
+				    <label for="labTechName" class="">Lab Tech. Name/ID **</label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
 				    <input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion">
 				    <label for="dateOfTestCompletion" class="">Date of Test Completion </label>
 				</div>
@@ -496,47 +502,50 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol13">Date of Test Completion</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol13">Lab Tech. Name/ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol14">Result Dispatched Date to Clinic</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol14">Date of Test Completion</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol15">LAg Avidity ODn</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity Result</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity ODn</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol17">HIV RNA (cp/ml)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol17">LAg Avidity Result</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol18">HIV RNA (cp/ml)</label> <br>
 	    </div>
 	    <!--<div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol18">HIV RNA > 1000 <br>
 	    </div>-->
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol18">Recent Infection</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Recent Infection</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Positive Verification Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Positive Verification Line</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol21">Long Term Line</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol21">Added On</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol22">Added On</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol22">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol23">Added by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId)== ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="23"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol23">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="24"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol24">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="22"/>
+	      <input type="hidden" id="countColumn" value="23"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -566,6 +575,7 @@ if(isset($date) && trim($date)!= ''){
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>
+				<th>Lab Tech. Name/ID</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -600,6 +610,7 @@ if(isset($date) && trim($date)!= ''){
                                 <th>Lab Specimen ID</th>
 				<th>Rejection Code</th>
 				<th>Receipt Date at Lab</th>
+				<th>Lab Tech. Name/ID</th>
 				<th>Date of Test Completion</th>
 				<th>Result Dispatched Date to Clinic</th>
 				<th>LAg Avidity</th>
@@ -665,15 +676,16 @@ if(isset($date) && trim($date)!= ''){
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		<?php
-		if(trim($countryId)== ''){
+		if(trim($countryId) == ''){
 		?>
 		  {"sClass":"dataTable_noWrap"},
 		<?php } ?>
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[19] =='Absent' || (aData[15] > 2 && ((aData[19] == 'Present' && aData[20] == 'Absent') || aData[20] == 'Absent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[20] =='Absent' || (aData[16] > 2 && ((aData[20] == 'Present' && aData[21] == 'Absent') || aData[21] == 'Absent'))){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[2, "desc"]],
             "bProcessing": true,

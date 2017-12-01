@@ -770,3 +770,8 @@ ALTER TABLE `clinic_risk_assessment` CHANGE `has_patient_had_recreational_drugs_
 
 --Pal 15/11/2017
 ALTER TABLE `user` ADD `force_password_reset` INT(11) NOT NULL DEFAULT '1' AFTER `last_login`;
+
+--Pal 01/12/2017
+ALTER TABLE `data_collection` ADD `lab_tech_name` VARCHAR(500) NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
+
+ALTER TABLE `data_collection_event_log` ADD `lab_tech_name` VARCHAR(500) NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;

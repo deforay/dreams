@@ -1061,34 +1061,34 @@ class DataCollectionService {
                         //ANC rapid recency result
                         $ancHIVVerificationClassification = 'Not Done';
                         $ancRecencyVerificationClassification = 'Not Done';
-                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
+                        if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'positive'){
                             $ancHIVVerificationClassification = 'Present';
-                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'negative'){
+                        }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'negative'){
                             $ancHIVVerificationClassification = 'Absent';
                             $ancRecencyVerificationClassification = '';
-                        }else if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'invalid') {
+                        }else if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line']) == 'invalid') {
                             $ancHIVVerificationClassification = 'Invalid';
                         }
-                        if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line'])!= 'negative'){
-                            if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'recent'){
+                        if(isset($aRow['r_HIV_diagnostic_line']) && trim($aRow['r_HIV_diagnostic_line'])!= 'negative'){
+                            if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'recent'){
                                 $ancRecencyVerificationClassification = 'Absent';
-                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'long term'){
+                            }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'long term'){
                                 $ancRecencyVerificationClassification = 'Present';
-                            }else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
+                            }else if(isset($aRow['r_recency_line']) && trim($aRow['r_recency_line']) == 'invalid') {
                                 $ancRecencyVerificationClassification = 'Invalid';
                             }
                         }
                         //status
-                        if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
-                            $status = ucfirst($aRow['test_status_name']);
+                        if(isset($aRow['r_test_status_name']) && $aRow['r_test_status_name']!= null && trim($aRow['r_test_status_name'])!= ''){
+                            $status = ucfirst($aRow['r_test_status_name']);
                         }
                         $row = array();
-                        $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
+                        $row[] = (isset($aRow['r_location_name']) && $aRow['r_location_name']!= null && trim($aRow['r_location_name'])!= '')?ucwords($aRow['r_location_name']):'';
                         $row[] = $ancFacilityID;
                         $row[] = $patientBarcodeID;
                         $row[] = $specimenCollectedDate;
                         $row[] = $status;
-                        $row[] = (isset($aRow['assessment_id']) && $aRow['assessment_id']!= null && trim($aRow['assessment_id'])!= '')?'Yes':'No';
+                        $row[] = (isset($aRow['r_assessment_id']) && $aRow['r_assessment_id']!= null && trim($aRow['r_assessment_id'])!= '')?'Yes':'No';
                         $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
                         //$row[] = $hIVRNAResult;
                         $row[] = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';

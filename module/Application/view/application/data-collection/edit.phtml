@@ -157,21 +157,21 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row['anc_patient_id']; ?>">
+				<input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter ANC patient ID" value="<?php echo $row->anc_patient_id; ?>">
 				<label for="ancPatientId" class="">ANC Patient ID ** </label>
 			    </div>
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row['art_patient_id'];?>">
+				<input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number" value="<?php echo $row->art_patient_id; ?>">
 				<label for="artPatientId" class="">ART Number </label>
 			    </div>
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="encAncPatientId" name="encAncPatientId" type="hidden" value="<?php echo $row['enc_anc_patient_id']; ?>">
+				<input id="encAncPatientId" name="encAncPatientId" type="hidden" value="<?php echo $row->enc_anc_patient_id; ?>">
 				<label for="encAncPatientId" style="transform:translateY(-140%);">Encrypted ANC Patient ID </label>
-				<p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:10px;"><?php echo $row['enc_anc_patient_id']; ?></p>
+				<p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:10px;"><?php echo $row->enc_anc_patient_id; ?></p>
 			    </div>
 			</div>
 		    </div>
@@ -184,13 +184,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row['age']; ?>" onblur="checkAgeFields('age');">
+				<input id="age" name="age" type="text" class="validate checkNum isRequired" title="Please enter patient age" value="<?php echo $row->age; ?>" onblur="checkAgeFields('age');">
 				<label for="age" class="">Age **</label>
 			    </div>
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age" value="<?php echo $row['gestational_age']; ?>">
+				<input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age" value="<?php echo $row->gestational_age; ?>">
 				<label for="gestationalAge" class="">Gestation Age (Weeks) </label>
 			    </div>
 			</div>
@@ -232,6 +232,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 		    </div>
 		    <div class="row" style="margin-bottom:0;">
+			<div class="col s4">
+			    <div class="input-field col m12 s12" style="margin-top:0;">
+				<input id="labTechName" name="labTechName" type="text" class="validate isRequired" title="Please enter lab tech name/ID" value="<?php echo $row->lab_tech_name; ?>">
+				<label for="labTechName" class="">Lab Tech. Name/ID **</label>
+			    </div>
+			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0;">
 				<input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion" value="<?php echo $testCompletionDate; ?>">
