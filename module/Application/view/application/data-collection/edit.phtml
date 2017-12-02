@@ -322,7 +322,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <label for="asanteRapidRecencyAssayP">Present </label><br>
 				  <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'absent')?'checked="checked"':''; ?> value="absent"/>
 				  <label for="asanteRapidRecencyAssayN">Absent </label><br>
-				  <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value" onblur="getReaderValueRRDTLogVal();"/>
+				  <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log" onblur="getReaderValueRRDTLogVal();"/>
 				  <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
 				  <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
 				  <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
@@ -337,7 +337,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				  <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'present')?'checked="checked"':''; ?> value="present"/>
 				  <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label><br>
-				  <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value" onblur="getReaderValueRRRLogVal();"/>
+				  <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log" onblur="getReaderValueRRRLogVal();"/>
 				  <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
 				  <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
 				  <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
@@ -726,7 +726,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     function getReaderValueRRDTLogVal(){
 	var readerValueRRDT = $('#readerValueRRDT').val();
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
-	   var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
+	   //var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
+	   var readerValueRRDTLogVal = readerValueRRDT;
 	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
@@ -742,7 +743,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     function getReaderValueRRRLogVal(){
 	var readerValueRRR = $('#readerValueRRR').val();
 	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
-	   var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
+	   //var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
+	   var readerValueRRRLogVal = readerValueRRR;
 	   var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
 	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
 	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
