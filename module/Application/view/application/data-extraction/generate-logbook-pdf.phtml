@@ -224,7 +224,7 @@ if(count($logbookResult) >0){
 		}
 	    }
 	    $redTxt='';
-	    if($rapidRecencyAssay == 'Absent' || ($row['final_lag_avidity_odn'] > 2 && (($rapidRecencyAssay == 'Present' && $rapidRecencyAssayDuration == 'Absent') || $rapidRecencyAssayDuration == 'Absent'))){
+	    if($rapidRecencyAssay == 'Absent' || ($recencyInfection == 'Long Term' && $rapidRecencyAssayDuration == 'Absent') || ($recencyInfection == 'Recent' && $rapidRecencyAssayDuration == 'Present')){
 		$redTxt = 'color:#F44336;';
 	    }
             $html .='<tr style="'.$redTxt.'">';

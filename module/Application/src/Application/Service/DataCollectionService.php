@@ -543,10 +543,10 @@ class DataCollectionService {
                     $currentRow = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?5:2;
                     foreach ($output as $rowData) {
                         $lag = '';
-                        $assay1 = '';
-                        $assay2 = '';
+                        $labHIVV = '';
+                        $labHIVR = '';
                         $colNo = 0;
-                        $lstColumn = (count($rowData)-1);
+                        $lastCol = (count($rowData)-1);
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
@@ -567,18 +567,18 @@ class DataCollectionService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                            if($colNo == 16){ $lag = $value; }
-                            if($colNo == 19){ $assay1 = $value; }
-                            if($colNo == 21){ $assay2 = $value; }
+                            if($colNo == 17){ $lag = $value; }
+                            if($colNo == 19){ $labHIVV = $value; }
+                            if($colNo == 21){ $labHIVR = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?22:21){
-                                if($lstColumn == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22){
-                                   if($assay1 =='Absent' || ($lag > 2 && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
+                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22){
+                                   if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
                                     $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
-                                   if($assay1 =='Absent' || ($lag > 2 && (($assay1 == 'Present' && $assay2 == 'Absent') || $assay2 == 'Absent'))){
+                                   if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
                                     $sheet->getStyle('A'.$currentRow.':Y'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }

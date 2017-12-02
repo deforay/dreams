@@ -701,7 +701,7 @@ if(isset($date) && trim($date)!= ''){
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[20] =='Absent' || (aData[16] > 2 && ((aData[20] == 'Present' && aData[21] == 'Absent') || aData[21] == 'Absent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[20] =='Absent' || (aData[17] == 'Long Term' && aData[21] == 'Absent') || (aData[17] == 'Recent' && aData[21] == 'Present')){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[2, "desc"]],
             "bProcessing": true,

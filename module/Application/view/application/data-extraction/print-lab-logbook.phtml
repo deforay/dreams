@@ -339,7 +339,7 @@
 		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[18] =='Absent' || (aData[14] > 2 && ((aData[18] == 'Present' && aData[19] == 'Absent') || aData[19] == 'Absent'))){ $(nRow).addClass("redTxt"); }
+		if(aData[18] =='Absent' || (aData[15] == 'Long Term' && aData[19] == 'Absent') || (aData[15] == 'Recent' && aData[19] == 'Present')){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,
