@@ -117,6 +117,43 @@ $loginContainer = new Container('user');
     table.dataTable.display tbody tr.yellowTxt > .sorting_1{
 	background-color:#FFFF00 !important;
     }
+
+
+	table.dataTable thead th, table.dataTable thead td,
+	table.dataTable tfoot th, table.dataTable tfoot td{
+		text-align:center;
+	}
+
+	table.dataTable thead th, table.dataTable thead td,
+	table.dataTable tfoot th, table.dataTable tfoot td,
+	table.dataTable.row-border tbody th, 
+	table.dataTable.row-border tbody td, 
+	table.dataTable.display tbody th, 
+	table.dataTable.display tbody td{
+		border: 1px solid #eeeeef;
+	}
+
+
+    .labBorder-left{
+        
+        border-left:1px solid #888 !important;
+    }
+    
+    .labBorder-right{
+        
+        border-right:1px solid #888 !important;
+    }
+    
+    .labBorder-top{
+        
+        border-top:1px solid #888 !important;
+    }
+
+    .labBorder-bottom{
+        
+        border-bottom:1px solid #888 !important;
+    }
+
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -209,38 +246,43 @@ $loginContainer = new Container('user');
 		<div class="card-content clearfix">
 		    <table id="studyOverviewDataTable" class="responsive-table display dataTable">
 			<thead>
+            <tr>
+                    <th colspan="6" style="border-top:none;border-left:none;"></th>
+                    <th colspan="5" style="background:#ffffee;" class="labBorder-top labBorder-right labBorder-left">LAB RESULTS</th>
+                    <th colspan="2" style="background:#ffffee;">ANC RESULTS</th>
+            </tr>
 			<tr>
-            <th>Lab<br>Province/State</th>
-            <th>ANC<br>Facility ID</th>
-            <th>Patient<br>Barcode ID</th>
-            <th>Specimen<br>Collection Date</th>
-            <th>Lab Data</th>
-            <th>Behaviour<br>Data</th>
-            <th>LAg Recency<br>Assay</th>
-            <th>HIV RNA<br>(cp/ml)</th>
-            <!--<th>HIV RNA > 1000</th>-->
-            <th>Recent<br>Infection</th>
-            <th>Lab Positive<br>Verification Line</th>
-            <th>Lab Long<br>Term Line</th>
-            <th>ANC Positive<br>Verification Line</th>
-            <th>ANC Long<br>Term Line</th>
+                <th>Lab<br>Province/<br>State</th>
+                <th>ANC<br>Facility<br>ID</th>
+                <th>Patient<br>Barcode<br>ID</th>
+                <th>Specimen<br>Collection<br>Date</th>
+                <th>Lab<br>Data<br>Status</th>
+                <th>Behaviour<br>Data<br>Recorded</th>
+                <th>LAg<br>Recency<br>Assay</th>
+                <th>HIV RNA<br>(cp/ml)</th>
+                <!--<th>HIV RNA > 1000</th>-->
+                <th>Recent<br>Infection</th>
+                <th>Lab Positive<br>Verification<br>Line</th>
+                <th>Lab Long<br>Term Line</th>
+                <th>ANC Positive<br>Verification<br>Line</th>
+                <th>ANC Long<br>Term Line</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
-			    <th>Lab<br>Province/State</th>
-			    <th>ANC<br>Facility ID</th>
-			    <th>Patient<br>Barcode ID</th>
-			    <th>Specimen<br>Collection Date</th>
-			    <th>Lab Data</th>
-			    <th>Behaviour<br>Data</th>
-			    <th>LAg Recency<br>Assay</th>
-			    <th>HIV RNA<br>(cp/ml)</th>
-			    <!--<th>HIV RNA > 1000</th>-->
-			    <th>Recent<br>Infection</th>
-			    <th>Lab Positive<br>Verification Line</th>
-			    <th>Lab Long<br>Term Line</th>
-			    <th>ANC Positive<br>Verification Line</th>
+                <th>Lab<br>Province/<br>State</th>
+                <th>ANC<br>Facility<br>ID</th>
+                <th>Patient<br>Barcode<br>ID</th>
+                <th>Specimen<br>Collection<br>Date</th>
+                <th>Lab<br>Data<br>Status</th>
+                <th>Behaviour<br>Data<br>Recorded</th>
+			    <th class="labBorder-bottom">LAg<br>Recency<br>Assay</th>
+			    <th class="labBorder-bottom">HIV RNA<br>(cp/ml)</th>
+			    <!--<th class="labBorder-bottom">HIV RNA > 1000</th>-->
+			    <th class="labBorder-bottom">Recent<br>Infection</th>
+			    <th class="labBorder-bottom">Lab Positive<br>Verification<br>Line</th>
+			    <th class="labBorder-bottom">Lab Long<br>Term Line</th>
+			    <th>ANC Positive<br>Verification<br>Line</th>
 			    <th>ANC Long<br>Term Line</th>
 			</tr>
 			</tfoot>
@@ -270,11 +312,11 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"labBorder-left dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"labBorder-right dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"}
             ],

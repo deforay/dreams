@@ -107,6 +107,22 @@ if(isset($date) && trim($date)!= ''){
 	font-weight:bold;
 	font-size:13px;
     }
+
+
+	table.dataTable thead th, table.dataTable thead td,
+	table.dataTable tfoot th, table.dataTable tfoot td{
+		text-align:center;
+	}
+
+	table.dataTable thead th, table.dataTable thead td,
+	table.dataTable tfoot th, table.dataTable tfoot td,
+	table.dataTable.row-border tbody th, 
+	table.dataTable.row-border tbody td, 
+	table.dataTable.display tbody th, 
+	table.dataTable.display tbody td{
+		border: 1px solid #eeeeef;
+	}
+
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -562,14 +578,14 @@ if(isset($date) && trim($date)!= ''){
                     <table id="dataReportingDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-								<th>Patient<br>Barcode ID</th>
+								<th>Patient<br>Barcode<br>ID</th>
 								<th>Status</th>
-								<th>Specimen<br>Collected Date</th>
+								<th>Specimen<br>Collection<br>Date</th>
 								<th>ANC Site</th>
 								<th>ANC<br>Site Code</th>
 								<th>ANC<br>Patient ID</th>
 								<th>Age</th>
-								<th>Specimen Pick Up<br>Date at ANC</th>
+								<th>Specimen<br>Pick Up<br>Date at ANC</th>
 								<th>Lab/Facility</th>
 								<th>Lab/Facility<br>Code</th>
 								<th>Lab<br>Specimen ID</th>
@@ -577,14 +593,14 @@ if(isset($date) && trim($date)!= ''){
 								<th>Receipt Date<br>at Lab</th>
 								<th>Lab Tech.<br>Name/ID</th>
 								<th>Date of Test<br>Completion</th>
-								<th>Result Dispatched<br>Date to Clinic</th>
+								<th>Result<br>Dispatched<br>Date to Clinic</th>
 								<th>LAg Avidity</th>
 								<th>LAg Avidity<br>Result</th>
 								<th>HIV RNA<br>(cp/ml)</th>
 								<!--<th>HIV RNA > 1000</th>-->
 								<th>Recent<br>Infection</th>
-								<th>Positive<br>Verification Line</th>
-								<th>Long<br>Term Line</th>
+								<th>Positive<br>Verification<br>Line</th>
+								<th>Long<br>Term<br>Line</th>
 								<th>Added On</th>
 								<th>Added by</th>
 								<?php
@@ -597,14 +613,14 @@ if(isset($date) && trim($date)!= ''){
 								</thead>
 								<tfoot>
 								<tr>
-								<th>Patient<br>Barcode ID</th>
+								<th>Patient<br>Barcode<br>ID</th>
 								<th>Status</th>
-								<th>Specimen<br>Collected Date</th>
+								<th>Specimen<br>Collection<br>Date</th>
 								<th>ANC Site</th>
 								<th>ANC Site<br>Code</th>
 								<th>ANC<br>Patient ID</th>
 								<th>Age</th>
-								<th>Specimen Pick Up<br>Date at ANC</th>
+								<th>Specimen<br>Pick Up<br>Date at ANC</th>
 								<th>Lab/Facility</th>
 								<th>Lab/Facility<br>Code</th>
 								<th>Lab<br>Specimen ID</th>
@@ -612,14 +628,14 @@ if(isset($date) && trim($date)!= ''){
 								<th>Receipt Date<br>at Lab</th>
 								<th>Lab Tech.<br>Name/ID</th>
 								<th>Date of Test<br>Completion</th>
-								<th>Result Dispatched<br>Date to Clinic</th>
+								<th>Result<br>Dispatched<br>Date to Clinic</th>
 								<th>LAg Avidity</th>
 								<th>LAg Avidity<br>Result</th>
 								<th>HIV RNA<br>(cp/ml)</th>
 								<!--<th>HIV RNA > 1000</th>-->
 								<th>Recent<br>Infection</th>
-								<th>Positive<br>Verification Line</th>
-								<th>Long<br>Term Line</th>
+								<th>Positive<br>Verification<br>Line</th>
+								<th>Long<br>Term<br>Line</th>
 								<th>Added On</th>
 								<th>Added by</th>
 								<?php
