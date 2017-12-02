@@ -136,11 +136,11 @@
 		<div class="col l2 m2 s2 left-align"><h6><strong>Lab/Facility </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
 		    <select class="material-select" id="lab" name="lab" title="Please select lab/facility" style="width:40% !important;">
-			<option value="">All</option>
+			<option data-lab-name="" value="">All</option>
 			<?php
 			foreach($facilities as $lab){
 			    ?>
-			    <option value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+			    <option data-lab-name="<?php echo ucwords($lab['facility_name']); ?>" value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
 			    <?php
 			}
 			?>
@@ -424,7 +424,7 @@
     
     function exportLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),anc:$("#anc").val(),lab:$("#lab").val(),status:$("#status").val() },
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name') },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate logbook pdf.');
@@ -438,7 +438,7 @@
     
     function extractLabLogbookData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),anc:$("#anc").val(),lab:$("#lab").val(),status:$("#status").val(),frmSrc:'log'},
+	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name'),frmSrc:'log'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate excel.');

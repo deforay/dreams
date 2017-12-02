@@ -200,7 +200,6 @@ class DataCollectionService {
     public function exportDataCollectionInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
-        $ancSiteDb = $this->sm->get('AncSiteTable');
         $facilityDb = $this->sm->get('FacilityTable');
         $name = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'LAB-LOGBOOK--':'LAB-DATA-REPORT--';
         $sQuery = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$queryContainer->logbookQuery:$queryContainer->dataCollectionQuery;
@@ -211,50 +210,24 @@ class DataCollectionService {
                 $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
-                    $selectedANC = '';
-                    $displayANC = '';
-                    $allANCs = array();
-                    $displayAllANCs = '';
-                    $selectedLab = '';
-                    $displayLab = '';
-                    $allLabs = array();
-                    $displayAllLabs = '';
+                    $labs = '';
                     $receiptDateatLab = '';
                     $resultReported = 'Completed Tests, Pending Tests';
                     $headerRow = 1;
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                         $headerRow = 4;
-                        $ancSites = $ancSiteDb->fetchActiveAncSites('extract-excel',$params['countryId']);
-                        $facilities = $facilityDb->fetchActivefacilities('extract-excel',$params['countryId']);
                         //filter content
-                        //set ancs
-                        if(trim($params['anc'])!= ''){
-                            $selectedANC = base64_decode($params['anc']);
-                        }
-                        if(isset($ancSites) && count($ancSites) > 0){
-                            foreach($ancSites as $anc){
-                                $allANCs[] = ' '.ucwords($anc['anc_site_name']);
-                                if(trim($selectedANC)!= '' && $selectedANC == $anc['anc_site_id']){
-                                    $displayANC = ucwords($anc['anc_site_name']); break;
-                                }
-                            }
-                           $displayAllANCs = implode(',',$allANCs);
-                        }
-                        $ancs = (trim($displayANC)!= '')?$displayANC:$displayAllANCs;
                         //set labs
-                        if(trim($params['lab'])!= ''){
-                            $selectedLab = base64_decode($params['lab']);
-                        }
-                        if(isset($facilities) && count($facilities) > 0){
+                        $facilities = $facilityDb->fetchActivefacilities('extract-excel',$params['countryId']);
+                        if(isset($params['labName']) && trim($params['labName'])!= ''){
+                            $labs = $params['labName'];
+                        }else if(isset($facilities) && count($facilities) > 0){
+                            $allLabs = array();
                             foreach($facilities as $facility){
                                 $allLabs[] = ' '.ucwords($facility['facility_name']);
-                                if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
-                                    $displayLab = ucwords($facility['facility_name']); break;
-                                }
                             }
-                           $displayAllLabs = implode(',',$allLabs);
+                            $labs = implode(',',$allLabs);
                         }
-                        $labs = (trim($displayLab)!= '')?$displayLab:$displayAllLabs;
                         //set receipt date at lab
                         if(trim($params['date'])!= ''){
                             $receiptDateatLab = $params['date'];
@@ -444,10 +417,8 @@ class DataCollectionService {
                       $sheet->mergeCells('S3:V3');
                       
                       $sheet->setCellValue('A1', html_entity_decode('Logbook for Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('A2', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('B2', html_entity_decode($ancs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('C2', html_entity_decode('Lab Site/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('D2', html_entity_decode($labs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('A2', html_entity_decode('Lab Site/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('B2', html_entity_decode($labs, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('A3', html_entity_decode('Receipt Date at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('B3', html_entity_decode($receiptDateatLab, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('C3', html_entity_decode('Result Reported ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -498,7 +469,6 @@ class DataCollectionService {
                       
                       $sheet->getStyle('A1')->applyFromArray($titleTxtArray);
                       $sheet->getStyle('A2')->applyFromArray($labelArray);
-                      $sheet->getStyle('C2')->applyFromArray($labelArray);
                       //$sheet->getStyle('B2')->applyFromArray($wrapTxtArray);
                       //$sheet->getStyle('D2')->applyFromArray($wrapTxtArray);
                       $sheet->getStyle('A3')->applyFromArray($labelArray);

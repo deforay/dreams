@@ -83,11 +83,10 @@ class DataExtractionController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $ancSiteList = $ancSiteService->getActiveAncSites('generate-logbook-pdf',$params['countryId']);
             $facilityList = $facilityService->getActivefacilities('generate-logbook-pdf',$params['countryId']);
-            $logbookResult=$dataCollectionService->getLogbookResult($params);
+            $logbookResult = $dataCollectionService->getLogbookResult($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('params'=>$params,'ancSites'=>$ancSiteList,'facilities'=>$facilityList,'logbookResult' =>$logbookResult));
+            $viewModel->setVariables(array('params'=>$params,'facilities'=>$facilityList,'logbookResult' =>$logbookResult));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

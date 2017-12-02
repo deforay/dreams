@@ -4,47 +4,19 @@ $alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
 $alertContainer->headerSize = 46;
 if(count($logbookResult) >0){
-    $selectedANC = '';
-    $displayANC = '';
-    $allANCs = array();
-    $displayAllANCs = '';
-    $selectedLab = '';
-    $displayLab = '';
-    $allLabs = array();
-    $displayAllLabs = '';
+    $labs = '';
     $receiptDateatLab = '';
     $resultReported = 'Completed Tests, Pending Tests';
-    //set ancs
-    if(trim($params['anc'])!= ''){
-	$selectedANC = base64_decode($params['anc']);
-    }
-    if(isset($ancSites) && count($ancSites) > 0){
-	foreach($ancSites as $anc){
-	    $allANCs[] = ' '.ucwords($anc['anc_site_name']);
-	    if(trim($selectedANC)!= '' && $selectedANC == $anc['anc_site_id']){
-		$displayANC = ucwords($anc['anc_site_name']); break;
-	    }
-	}
-       $displayAllANCs = implode(',',$allANCs);
-    }
-    $ancs = (trim($displayANC)!= '')?$displayANC:$displayAllANCs;
-    $noofbreaks = round((int)strlen($ancs)/54)/2;
-    $breaks = '';
-    if($noofbreaks > 1){ for($b=0;$b< $noofbreaks;$b++){ $breaks .='<br>'; } }
     //set labs
-    if(trim($params['lab'])!= ''){
-	$selectedLab = base64_decode($params['lab']);
-    }
-    if(isset($facilities) && count($facilities) > 0){
+    if(isset($params['labName']) && trim($params['labName'])!= ''){
+	$labs = $params['labName'];
+    }else if(isset($facilities) && count($facilities) > 0){
+	$allLabs = array();
 	foreach($facilities as $facility){
 	    $allLabs[] = ' '.ucwords($facility['facility_name']);
-	    if(trim($selectedLab)!= '' && $selectedLab == $facility['facility_id']){
-		$displayLab = ucwords($facility['facility_name']); break;
-	    }
 	}
-       $displayAllLabs = implode(',',$allLabs);
+        $labs = implode(',',$allLabs);
     }
-    $labs = (trim($displayLab)!= '')?$displayLab:$displayAllLabs;
     //set receipt date at lab
     if(trim($params['date'])!= ''){
 	$receiptDateatLab = $params['date'];
@@ -58,7 +30,7 @@ if(count($logbookResult) >0){
     $filterContent = '';
     $filterContent .='<table>';
     $filterContent .='<tr><td colspan="4" style="line-height:30px;"></td></tr>';
-    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">'.$breaks.'Lab Site/Facility</td><td colspan="3" style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$breaks.$labs.'</td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;"><br><br>Lab Site/Facility</td><td colspan="3" style="width:35%;font-size:14px;font-weight:normal;text-align:left;"><br><br>'.$labs.'</td></tr>';
     $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
     $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">Receipt Date at Lab</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$receiptDateatLab.'</td><td style="width:15%;font-size:14px;text-align:left;">Result Reported</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$resultReported.'</td></tr>';
     $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
