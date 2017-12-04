@@ -350,10 +350,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','test_status_name');
 	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','test_status_name');
 	}else{
-	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y %H:%i:%s')",'u.user_name','c.country_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','c.country_name','test_status_name');
 	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
 	}
 
@@ -561,7 +561,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['interviewer_name']);
 	    $row[] = $aRow['anc_patient_id'];
 	    $row[] = $interviewDate;
-	    $row[] = $common->humanDateFormat($addedDate[0])." ".$addedDate[1];
+	    $row[] = $common->humanDateFormat($addedDate[0]);
 	    $row[] = ucwords($aRow['user_name']);
 	    if(trim($parameters['countryId']) == ''){
 	       $row[] = ucwords($aRow['country_name']);

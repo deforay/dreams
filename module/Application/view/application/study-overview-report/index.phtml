@@ -93,7 +93,7 @@ $loginContainer = new Container('user');
     .glyphicon-arrow-down:before {
       content: "\e094";
     }
-    * {
+    *{
       -webkit-box-sizing: border-box;
          -moz-box-sizing: border-box;
               box-sizing: border-box;
@@ -237,7 +237,7 @@ $loginContainer = new Container('user');
 			<thead>
 			<tr>
 			    <th colspan="6" style="border-top:none;border-left:none;"></th>
-			    <th colspan="5" style="background:#ffffee;" class="labBorder-top labBorder-right labBorder-left">LAB RESULTS</th>
+			    <th colspan="6" style="background:#ffffee;" class="labBorder-top labBorder-right labBorder-left">LAB RESULTS</th>
 			    <th colspan="2" style="background:#ffffee;">ANC RESULTS</th>
 			</tr>
 			<tr>
@@ -247,6 +247,7 @@ $loginContainer = new Container('user');
 			    <th>Specimen<br>Collection<br>Date</th>
 			    <th>Lab<br>Data<br>Status</th>
 			    <th>Behaviour<br>Data<br>Recorded</th>
+			    <th>Date of <br>Test <br>Completion</th>
 			    <th>LAg<br>Recency<br>Assay</th>
 			    <th>HIV RNA<br>(cp/ml)</th>
 			    <!--<th>HIV RNA > 1000</th>-->
@@ -265,6 +266,7 @@ $loginContainer = new Container('user');
 			    <th>Specimen<br>Collection<br>Date</th>
 			    <th>Lab<br>Data<br>Status</th>
 			    <th>Behaviour<br>Data<br>Recorded</th>
+			    <th class="labBorder-bottom">Date of <br>Test <br>Completion</th>
 			    <th class="labBorder-bottom">LAg<br>Recency<br>Assay</th>
 			    <th class="labBorder-bottom">HIV RNA<br>(cp/ml)</th>
 			    <!--<th class="labBorder-bottom">HIV RNA > 1000</th>-->
@@ -305,16 +307,17 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"labBorder-right dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		var LAgAssay = aData[6];
-		var labHIVVerificationClassification = aData[9];
-		var labHIVRecencyClassification = aData[10];
-		var ancHIVVerificationClassification = aData[11].replace("-", "");
-		var ancHIVRecencyClassification = aData[12].replace("-", "");
+		var LAgAssay = aData[7];
+		var labHIVVerificationClassification = aData[10];
+		var labHIVRecencyClassification = aData[11];
+		var ancHIVVerificationClassification = aData[12].replace("-", "");
+		var ancHIVRecencyClassification = aData[13].replace("-", "");
 		recencyMismatch = false;
 		if($.trim(LAgAssay)!= '' && $.trim(labHIVRecencyClassification)!= '' && $.trim(ancHIVRecencyClassification)!= ''){
 		    if((LAgAssay == 'Recent' && labHIVRecencyClassification == 'Absent') && (labHIVRecencyClassification == ancHIVRecencyClassification)){
@@ -328,7 +331,7 @@ $loginContainer = new Container('user');
 		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
 		    $("td:eq(3)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
-		}else if(aData[9] =='Absent' || (aData[6] == 'Long Term' && aData[10] == 'Absent') || (aData[6] == 'Recent' && aData[10] == 'Present') || recencyMismatch === true){
+		}else if(aData[10] =='Absent' || (aData[7] == 'Long Term' && aData[11] == 'Absent') || (aData[7] == 'Recent' && aData[11] == 'Present') || recencyMismatch === true){
 		    $(nRow).addClass("redTxt");
 		}
 	    },
