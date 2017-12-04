@@ -459,7 +459,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-anc-recency-test'){
-	    $sQuery = $sQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>'done'));
+	    $sQuery = $sQuery->where(array('anc_r_r.recency_line'=>'recent'));
 	} if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
