@@ -313,11 +313,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante) &nbsp;&nbsp;<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a></span>
 		    </div>
 		    <div class="row" style="margin-bottom:10px;">
-			<div class="col s6">
+			<div class="col s8">
 			    <div class="input-padding col m12 s12 l12">
 			      <div class="box-1">
 				<div id="box-1">
-				  <strong>Positive Verification Line</strong><br>
+				  <strong>Positive Verification Line (Visual)</strong><br>
 				  <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'present')?'checked="checked"':''; ?> value="present"/>
 				  <label for="asanteRapidRecencyAssayP">Present </label><br>
 				  <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'absent')?'checked="checked"':''; ?> value="absent"/>
@@ -332,7 +332,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			      <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">&rArr;</div>
 			      <div class="box-2">
 				<div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">
-				 <strong>Long Term Line</strong><br>
+				 <strong>Long Term Line (Visual)</strong><br>
 				  <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'absent')?'checked="checked"':''; ?> value="absent"/>
 				  <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				  <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'present')?'checked="checked"':''; ?> value="present"/>

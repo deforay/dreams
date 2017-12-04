@@ -412,11 +412,11 @@ if(isset($date) && trim($date)!= ''){
 			    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante) &nbsp;&nbsp;<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a></span>
 			</div>
 			<div class="row" style="margin-bottom:0;">
-			    <div class="col s6">
+			    <div class="col s8">
 			       <div class="input-padding col m12 s12 l12">
 				  <div class="box-1">
 				    <div id="box-1">
-				      <strong>Positive Verification Line</strong><br>	
+				      <strong>Positive Verification Line (Visual)</strong><br>	
 				      <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="present"/>
 				      <label for="asanteRapidRecencyAssayP">Present </label><br>
 				      <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="absent"/>
@@ -430,7 +430,7 @@ if(isset($date) && trim($date)!= ''){
 				  <div id="box-breaker">&rArr;</div>
 				  <div class="box-2">
 				    <div id="box-2">
-				      <strong>Long Term Line</strong><br>	
+				      <strong>Long Term Line (Visual)</strong><br>	
 				      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="absent"/>
 				      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="present"/>
@@ -542,10 +542,10 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Recent Infection</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Positive Verification Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Positive Verification Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol21">Long Term Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol21">Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol22">Added On</label> <br>
@@ -599,8 +599,8 @@ if(isset($date) && trim($date)!= ''){
 								<th>HIV RNA<br>(cp/ml)</th>
 								<!--<th>HIV RNA > 1000</th>-->
 								<th>Recent<br>Infection</th>
-								<th>Positive<br>Verification<br>Line</th>
-								<th>Long<br>Term<br>Line</th>
+								<th>Positive<br>Verification<br>Line<br>(Visual)</th>
+								<th>Long<br>Term<br>Line<br>(Visual)</th>
 								<th>Added On</th>
 								<th>Added by</th>
 								<?php
@@ -634,8 +634,8 @@ if(isset($date) && trim($date)!= ''){
 								<th>HIV RNA<br>(cp/ml)</th>
 								<!--<th>HIV RNA > 1000</th>-->
 								<th>Recent<br>Infection</th>
-								<th>Positive<br>Verification<br>Line</th>
-								<th>Long<br>Term<br>Line</th>
+								<th>Positive<br>Verification<br>Line<br>(Visual)</th>
+								<th>Long<br>Term<br>Line<br>(Visual)</th>
 								<th>Added On</th>
 								<th>Added by</th>
 								<?php
