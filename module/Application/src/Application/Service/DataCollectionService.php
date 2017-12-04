@@ -307,6 +307,7 @@ class DataCollectionService {
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$aRow['facility_code']:$aRow['lab_specimen_id'];
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$aRow['lab_specimen_id']:$rejectionCode;
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$rejectionCode:$receiptDateAtCentralLab;
+                        $row[] = ucwords($aRow['lab_tech_name']);
                         $row[] = $testCompletionDate;
                         $row[] = $resultDispatchedDateToClinic;
                         $row[] = $aRow['hiv_rna'];
@@ -413,8 +414,8 @@ class DataCollectionService {
                         )
                     );
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                      $sheet->mergeCells('Q3:R3');
-                      $sheet->mergeCells('S3:V3');
+                      $sheet->mergeCells('R3:S3');
+                      $sheet->mergeCells('T3:W3');
                       
                       $sheet->setCellValue('A1', html_entity_decode('Logbook for Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('A2', html_entity_decode('Lab Site/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -423,8 +424,8 @@ class DataCollectionService {
                       $sheet->setCellValue('B3', html_entity_decode($receiptDateatLab, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('C3', html_entity_decode('Result Reported ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                       $sheet->setCellValue('D3', html_entity_decode($resultReported, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('Q3', html_entity_decode('LAg Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                      $sheet->setCellValue('S3', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('R3', html_entity_decode('LAg Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                      $sheet->setCellValue('T3', html_entity_decode('Rapid Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'B'.$headerRow:'A'.$headerRow, html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'C'.$headerRow:'B'.$headerRow, html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -439,25 +440,26 @@ class DataCollectionService {
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'L'.$headerRow:'K'.$headerRow, html_entity_decode('Lab Specimen ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'M'.$headerRow:'L'.$headerRow, html_entity_decode('Rejection Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'A'.$headerRow:'M'.$headerRow, html_entity_decode('Receipt Date at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N'.$headerRow, html_entity_decode('Date of Test Completion', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O'.$headerRow, html_entity_decode('Result Dispatched Date to Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P'.$headerRow, html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q'.$headerRow, html_entity_decode('LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N'.$headerRow, html_entity_decode('Lab Tech. Name/ID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O'.$headerRow, html_entity_decode('Date of Test Completion', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P'.$headerRow, html_entity_decode('Result Dispatched Date to Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q'.$headerRow, html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R'.$headerRow, html_entity_decode('LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     //$sheet->setCellValue('R'.$headerRow, html_entity_decode('HIV RNA > 1000', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R'.$headerRow, html_entity_decode('Recent Infection (LAg Assay)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S'.$headerRow, html_entity_decode('Positive Verification Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T'.$headerRow, html_entity_decode('Positive Verification Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('U'.$headerRow, html_entity_decode('Long Term Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V'.$headerRow, html_entity_decode('Long Term Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('W'.$headerRow, html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S'.$headerRow, html_entity_decode('Recent Infection (LAg Assay)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T'.$headerRow, html_entity_decode('Positive Verification Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U'.$headerRow, html_entity_decode('Positive Verification Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V'.$headerRow, html_entity_decode('Long Term Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W'.$headerRow, html_entity_decode('Long Term Line', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X'.$headerRow, html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                        $sheet->setCellValue('X'.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('Y'.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->setCellValue('Y'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $sheet->setCellValue('Z'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->setCellValue('X'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $sheet->setCellValue('Y'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
                     }
                     
@@ -473,8 +475,8 @@ class DataCollectionService {
                       //$sheet->getStyle('D2')->applyFromArray($wrapTxtArray);
                       $sheet->getStyle('A3')->applyFromArray($labelArray);
                       $sheet->getStyle('C3')->applyFromArray($labelArray);
-                      $sheet->getStyle('Q3:R3')->applyFromArray($lagAssayArray);
-                      $sheet->getStyle('S3:V3')->applyFromArray($rapidRecencyAssayArray);
+                      $sheet->getStyle('R3:S3')->applyFromArray($lagAssayArray);
+                      $sheet->getStyle('T3:W3')->applyFromArray($rapidRecencyAssayArray);
                     }
                     $sheet->getStyle('A'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$headerRow)->applyFromArray($styleArray);
@@ -499,14 +501,15 @@ class DataCollectionService {
                     $sheet->getStyle('U'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('V'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('W'.$headerRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('X'.$headerRow)->applyFromArray($styleArray);
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                        $sheet->getStyle('X'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('Y'.$headerRow)->applyFromArray($styleArray);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                         $sheet->getStyle('Y'.$headerRow)->applyFromArray($styleArray);
+                         $sheet->getStyle('Z'.$headerRow)->applyFromArray($styleArray);
                         }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                         $sheet->getStyle('X'.$headerRow)->applyFromArray($styleArray);
+                         $sheet->getStyle('Y'.$headerRow)->applyFromArray($styleArray);
                         }
                     }
                     
@@ -522,12 +525,12 @@ class DataCollectionService {
                                 $value = "";
                             }
                             if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?24:23;
+                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:24;
                                 if($colNo > $keyCol){
                                     break;
                                 }
                             }else{
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22;
+                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?24:23;
                                 if($colNo > $keyCol){
                                     break;
                                 }
@@ -537,19 +540,19 @@ class DataCollectionService {
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                            if($colNo == 17){ $lag = $value; }
-                            if($colNo == 19){ $labHIVV = $value; }
-                            if($colNo == 21){ $labHIVR = $value; }
+                            if($colNo == 18){ $lag = $value; }
+                            if($colNo == 20){ $labHIVV = $value; }
+                            if($colNo == 22){ $labHIVR = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?22:21){
-                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22){
+                            if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?23:22){
+                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?24:23){
                                    if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
-                                    $sheet->getStyle('A'.$currentRow.':X'.$currentRow)->applyFromArray($redTxtArray);
+                                    $sheet->getStyle('A'.$currentRow.':Y'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }else{
                                    if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
-                                    $sheet->getStyle('A'.$currentRow.':Y'.$currentRow)->applyFromArray($redTxtArray);
+                                    $sheet->getStyle('A'.$currentRow.':Z'.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }
                             }

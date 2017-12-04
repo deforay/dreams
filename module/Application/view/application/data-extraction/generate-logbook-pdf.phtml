@@ -134,6 +134,7 @@ if(count($logbookResult) >0){
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility Code</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Specimen ID</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Rejection Code</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Tech. Name/ID</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Date of Test Completion</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Result Dispatched Date to Clinic</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>HIV RNA (cp/ml)</strong></th>';
@@ -143,7 +144,7 @@ if(count($logbookResult) >0){
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Manager\'s Approval</strong></th>';
            $html .='</tr>';
 	   $html .='<tr>';
-	    $html .='<th  style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
 	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Recent Infection (LAg Assay)</strong></th>';
 	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line Reader Value (log10)</strong></th>';
             $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line</strong></th>';
@@ -213,6 +214,7 @@ if(count($logbookResult) >0){
 	      $html .='<td>'.$row['facility_code'].'</td>';
               $html .='<td>'.$row['lab_specimen_id'].'</td>';
               $html .='<td>'.$rejectionCode.'</td>';
+	      $html .='<td>'.ucwords($row['lab_tech_name']).'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
               $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
 	      $html .='<td>'.$row['hiv_rna'].'</td>';
