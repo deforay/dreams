@@ -385,7 +385,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	    //for individual result pdf
-	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+	    if($aRow['test_status_name']== 'locked'){
 	       $pdfLink = '<a href="javascript:void(0);" onclick="printDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-1" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
 	    }
 	    $addedDate = explode(" ",$aRow['added_on']);
