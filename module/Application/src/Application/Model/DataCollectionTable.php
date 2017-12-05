@@ -1927,4 +1927,64 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
       return $output;
     }
+    
+    public function fecthSummaryDetails(){
+	$dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+	$select1 = $sql->select()->from(array('da_c' => 'data_collection'))
+				   ->columns(array(
+						   'labTestCompleted' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
+						   'labTestIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4 AND DATE(specimen_collected_date) = CURDATE(), 1,0))"),
+						))
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>null,'bdIncompletebyToday' => null),'left')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTest'=>null),'left');
+	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
+				   ->columns(array(
+						   'labTestCompleted' =>null,
+						   'labTestIncompletebyToday' =>null,
+						))
+				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>new \Zend\Db\Sql\Expression("COUNT(*)"),'bdIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 4 AND DATE(interview_date) = CURDATE(), 1,0))")),'right')
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTest'=>new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left');
+	$select1->combine($select2);
+	$collectionQuery = $sql->select()->from(array('result' => $select1));
+	$collectionQueryStr = $sql->getSqlStringForSqlObject($collectionQuery);
+      return $dbAdapter->query($collectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
+    public function fetchWeeklyDataReportingDetails($params){
+	$dbAdapter = $this->adapter;
+	$sql = new Sql($dbAdapter);
+	$result = array();
+	$start = strtotime(date("Y", strtotime("-1 year")).'-'.date('m', strtotime('+1 month', strtotime('-1 year'))));
+	$end = strtotime(date('Y').'-'.date('m'));
+	$j=0;
+	$d =0;
+	while($start <= $end){
+	    $month = date('m', $start);$year = date('Y', $start);$monthYearFormat = date("M-Y", $start);
+            $query = $sql->select()->from(array('da_c'=>'data_collection'))
+                          ->columns(
+                                  array(
+                                        'total'=>new \Zend\Db\Sql\Expression("COUNT(*)"),
+					'startdayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(specimen_collected_date, INTERVAL(1-DAYOFWEEK(specimen_collected_date)) DAY)"),
+					'enddayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(specimen_collected_date, INTERVAL(7-DAYOFWEEK(specimen_collected_date)) DAY)")
+                                        )
+                                  )
+			  ->where("Month(specimen_collected_date)='".$month."' AND Year(specimen_collected_date)='".$year."'")
+			  ->group('startdayofweek');
+	    $queryStr = $sql->getSqlStringForSqlObject($query);
+	    $rows = $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	    if(isset($rows) && count($rows) > 0){
+		foreach($rows as $row){
+		    if(isset($row['startdayofweek']) && $row['startdayofweek']!= null && trim($row['startdayofweek'])!= ''){
+		      $result['week'][$d] = $row['startdayofweek'].' to '.$row['enddayofweek'];
+		      $result['total'][$d] = $row['total'];
+		      $d++;
+		    }
+		}
+	    }
+	 $start = strtotime("+1 month", $start);
+         $j++;
+	}
+      return $result;
+    }
 }

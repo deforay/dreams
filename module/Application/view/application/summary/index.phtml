@@ -1,0 +1,78 @@
+<div id="page-content">
+    <div class="row section-header">
+        <h4 class="page-title">Summary</h4>
+    </div>
+    <div class="row content-container general" style="padding:0;">
+        <div class="row">
+            <div class="col l3 m6 s12">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(136, 197, 66, 0.8);">
+                    <div class="col l12 m12 s12 sct">
+                        <small>Lab Test Completed</small>
+                        <h2><?php echo (isset($summaries[0]['labTestCompleted']))?$summaries[0]['labTestCompleted']:0; ?></h2>
+                    </div>
+                 </div>
+             </div>
+             <div class="col l3 m6 s12">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(54, 122, 189, 0.8);">
+                     <div class="col l12 m12 s12 sct">
+                        <small>Behaviour Data</small>
+                        <h2><?php echo (isset($summaries[1]['totalBD']))?$summaries[1]['totalBD']:0; ?></h2>
+                     </div>
+                 </div>
+             </div>
+             <div class="col l3 m6 s12">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(176, 46, 103, 0.8);">
+                     <div class="col l12 m12 s12 sct">
+                        <small>ANC Recency Test</small>
+                        <h2><?php echo (isset($summaries[1]['totalANCRecencyTest']))?$summaries[1]['totalANCRecencyTest']:0; ?></h2>
+                     </div>
+                 </div>
+             </div>
+             <div class="col l3 m6 s12">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(243, 165, 48, 0.8);">
+                     <div class="col l12 m12 s12 sct">
+                        <small>Lab Test Pending by Today</small>
+                        <h2><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></h2>
+                     </div>
+                 </div>
+             </div>
+        </div>
+        <div class="row">
+            <div class="col l3 m6 s12">
+                <div class="card small-chart margin" id="" style="background-color:rgba(243, 165, 48, 0.8);">
+                    <div class="col l12 m12 s12 sct">
+                       <small>Bahaviour Data Test Pending by Today</small>
+                       <h2><?php echo (isset($summaries[1]['bdIncompletebyToday']))?$summaries[1]['bdIncompletebyToday']:0; ?></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                <div class="card charts">
+                    <div class="card-content">
+                        <h5>Weekly Lab Test</h5>
+                    </div>
+                    <div class="card-action">
+                        <div class="weekly-data-reporting-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        getWeeklyDataReporting();
+    });
+    
+    fromDate = '';
+    toDate = '';
+    function getWeeklyDataReporting(){
+        $.post("<?php echo $this->url('summary', array('action' => 'get-data-reporting-weekly-bar-chart')); ?>",{fromDate:fromDate,toDate:toDate},
+        function (data) {
+            $(".weekly-data-reporting-container").html(data);
+        });
+    }
+</script>

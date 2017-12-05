@@ -608,6 +608,15 @@ return array(
                         'action' => 'export-dashboard-data'
                     ),
                 ),
+            ),'summary' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/summary[/:action][/][:id]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Summary',
+                        'action' => 'index'
+                    ),
+                ),
             )
         ),
     ),
@@ -647,7 +656,8 @@ return array(
             'Application\Controller\Clinic' => 'Application\Controller\ClinicController',
             'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController',
             'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController',
-            'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController'
+            'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController',
+            'Application\Controller\Summary' => 'Application\Controller\SummaryController'
         ),
     ),
     'controller_plugins' => array(

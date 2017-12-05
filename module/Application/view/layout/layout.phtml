@@ -203,6 +203,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                         <li class="dashboardMenu menuAll">
                             <a href="<?php echo $this->url('home'); ?>" class="collapsible-header dashboardMenu menuAll"><i class="zmdi zmdi-palette zmdi-hc-fw"></i> Dashboard</a>
                         </li>
+                        <li class="summaryMenu menuAll">
+                            <a href="<?php echo $this->url('summary'); ?>" class="collapsible-header summaryMenu menuAll"><i class="zmdi zmdi-chart zmdi-hc-fw"></i> Summary</a>
+                        </li>
                         <li class="cscMenu menuAll">
                             <div class="collapsible-header waves-effect cscMenu menuAll"><i class="zmdi zmdi-accounts-list-alt"></i> Chief Coordinator <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body collapsibleAll collapsibleCSCMenu">
@@ -363,6 +366,8 @@ if($loginContainer->roleCode== 'ANCSC'){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.dataTables.min.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/mara.min.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/prism.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/highcharts.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/exporting.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/deforayValidation.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/base64_decode.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.crypt.js' ?>"></script>
@@ -699,6 +704,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".studyFilesMenu"+atob(splits)).css("color","#fff");
         }else if(splitsUrl[1]=='change-password'){
             $(".changePasswordMenu").addClass("active");
+        }else if(splitsUrl[1]=='summary'){
+            $(".summaryMenu").addClass("active");
         }else{
             $(".dashboardMenu").addClass("active");
         }

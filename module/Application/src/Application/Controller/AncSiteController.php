@@ -65,13 +65,13 @@ class AncSiteController extends AbstractActionController{
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         $countryService = $this->getServiceLocator()->get('CountryService');
         $facilityTypeService = $this->getServiceLocator()->get('FacilityTypeService');
-        $ancSiteId=base64_decode($this->params()->fromRoute('id'));
+        $ancSiteId = base64_decode($this->params()->fromRoute('id'));
         $result=$ancSiteService->getAncSite($ancSiteId);
         if(isset($result->anc_site_id)){
-            $countryList=$countryService->getActiveCountries('anc',$countryId);
-            $provinceList=$countryService->getProvincesByCountry($countryId);
-            $districtList=$countryService->getDistrictsByProvince(((int)($result->province) >0)?(int)$result->province:0);
-            $facilityTypeList=$facilityTypeService->getActiveFacilityTypes();
+            $countryList = $countryService->getActiveCountries('anc',$countryId);
+            $provinceList = $countryService->getProvincesByCountry($countryId);
+            $districtList = $countryService->getDistrictsByProvince(((int)($result->province) >0)?(int)$result->province:0);
+            $facilityTypeList = $facilityTypeService->getActiveFacilityTypes();
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'provinces'=>$provinceList,

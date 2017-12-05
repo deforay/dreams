@@ -1498,4 +1498,14 @@ class DataCollectionService {
             return "";
         }
     }
+    
+    public function getSummaryDetails(){
+       $dataCollectionDb = $this->sm->get('DataCollectionTable');
+      return $dataCollectionDb->fecthSummaryDetails(); 
+    }
+    
+    public function getWeeklyDataReportingDetails($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+      return $dataCollectionDb->fetchWeeklyDataReportingDetails($params);
+    }
 }

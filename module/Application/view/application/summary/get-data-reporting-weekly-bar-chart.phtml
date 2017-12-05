@@ -1,0 +1,70 @@
+<div id="weekly-data-reporting-container" style="width:100%;height: 400px; margin: 0 auto"></div>
+<script>
+  Highcharts.chart('weekly-data-reporting-container', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: ''
+    },
+    subtitle: {
+        text: ''
+    },
+    exporting:{
+        chartOptions:{
+            subtitle: {
+                text:'Weekly Lab Test',
+            }
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'No. of Test'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'No. of Test : <b>{point.y}</b>'
+    },
+    series: [{
+        name: 'No. of Test',
+        data: [
+            <?php
+            if(isset($response['week']) && count($response['week']) > 0){
+                for($i=0;$i<count($response['week']);$i++){
+                    if(isset($response['week'][$i])){
+            ?>
+            ['<?php echo $response['week'][$i]; ?>', <?php echo $response['total'][$i]; ?>],
+            <?php } } } ?>
+        ],
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y}', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+ });
+</script>
