@@ -52,12 +52,14 @@ $readerValueRRRLogValText = '';
 $asanteRapidRecencyAssy = ($row->asante_rapid_recency_assy!= null && trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
+    $readerValueRRDTLog = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
     $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
-    $readerValueRRDTLogValText = (trim($readerValueRRDTLogVal)!= '' && (float)$readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+    $readerValueRRDTLogValText = (trim($readerValueRRDTLog)!= '' && (float)$readerValueRRDTLog >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+    $readerValueRRRLog = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
     $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
-    $readerValueRRRLogValText = (trim($readerValueRRRLogVal)!= '' && (int)$readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+    $readerValueRRRLogValText = (trim($readerValueRRRLog)!= '' && (int)$readerValueRRRLog >= 3)?'Long Term Line Present':'Long Term Line Absent';
 }
 ?>
 <style>
@@ -289,11 +291,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante) &nbsp;&nbsp;<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a></span>
                 </div>
                 <div class="row">
-                    <div class="col s6">
+                    <div class="col s8">
                         <div class="input-padding col m12 s12 l12">
-                          <div class="box-1"><div id="box-1" style="text-align:center;"><strong>Positive Verification Line</strong><br><?php echo $asanteRapidRecencyAssayPn; ?><br><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div></div>
+                          <div class="box-1"><div id="box-1" style="text-align:center;"><strong>Positive Verification Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayPn; ?><br><hr><div id="readerValueRRDTLogVal" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == '<br>log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogVal; ?></div><div id="readerValueRRDTLogValText" style="display:<?php echo (trim($readerValueRRDTLogVal) == '' || $readerValueRRDTLogVal == 'log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRDTLogValText; ?></div></div></div>
                           <div id="box-breaker" style="display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>">&rArr;</div>
-                          <div class="box-2"><div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>"><strong>Long Term Line</strong><br><?php echo $asanteRapidRecencyAssayRlt; ?><br><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
+                          <div class="box-2"><div id="box-2" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>"><strong>Long Term Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayRlt; ?><br><hr><div id="readerValueRRRLogVal" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogVal; ?></div><div id="readerValueRRRLogValText" style="display:<?php echo (trim($readerValueRRRLogVal) == '' || $readerValueRRRLogVal =='log<sub>10</sub> : ')?'none;':''; ?>"><?php echo $readerValueRRRLogValText; ?></div></div>
                         </div>
                     </div>
                     <div class="col s4">

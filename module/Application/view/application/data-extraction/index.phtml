@@ -236,10 +236,10 @@ if(!isset($countryId)){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol18">Recent Infection (LAg Assay)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Positive Verification Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Positive Verification Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol21">Comments</label> <br>
@@ -286,8 +286,8 @@ if(!isset($countryId)){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection (LAg Assay)</th>
-                                <th>Positive Verification Line</th>
-                                <th>Long Term Line</th>
+                                <th>Positive Verification Line (Visual)</th>
+                                <th>Long Term Line (Visual)</th>
                                 <th>Comments</th>
 				<?php
                                 if(trim($countryId)== ''){
@@ -318,8 +318,8 @@ if(!isset($countryId)){
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection (LAg Assay)</th>
-                                <th>Positive Verification Line</th>
-                                <th>Long Term Line</th>
+                                <th>Positive Verification Line (Visual)</th>
+                                <th>Long Term Line (Visual)</th>
                                 <th>Comments</th>
 				<?php
                                 if(trim($countryId)== ''){
@@ -349,27 +349,27 @@ if(!isset($countryId)){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
