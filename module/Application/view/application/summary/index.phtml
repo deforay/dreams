@@ -90,11 +90,10 @@
                 </div>
                 <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
                     <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0);" onclick="getWeeklyDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                    <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
                 </div>
             </form>
         </div>
-        
         <div class="row">
             <div class="col l12 m12 s12">
                 <div class="card charts">
@@ -103,6 +102,19 @@
                     </div>
                     <div class="card-action">
                         <div class="weekly-data-reporting-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l12 m12 s12">
+                <div class="card charts">
+                    <div class="card-content">
+                        <h5>Weekly Behaviour Data</h5>
+                    </div>
+                    <div class="card-action">
+                        <div class="weekly-behaviour-data-container">
                         </div>
                     </div>
                 </div>
@@ -151,16 +163,23 @@
                 $('#endmonth').datepicker('setDate', new Date(year, month, 1));
             }
         });
-        getWeeklyDataReporting('load');
+        searchDataReporting('load');
     });
     
-    function getWeeklyDataReporting(frmSrc){
+    function searchDataReporting(frmSrc){
         var fromDate = $('#startmonth').val();
         var toDate = $('#endmonth').val();
         if(frmSrc == 'search' && ($.trim(fromDate) == '' || $.trim(toDate) == '')){
             alert('Please choose month range');
             return false;
         }
+        getWeeklyDataReporting(frmSrc);
+        getWeeklyBehaviourData(frmSrc);
+    }
+    
+    function getWeeklyDataReporting(frmSrc){
+        var fromDate = $('#startmonth').val();
+        var toDate = $('#endmonth').val();
         if(frmSrc!= 'load') { $.blockUI(); }
         $.post("<?php echo $this->url('summary', array('action' => 'get-data-reporting-weekly-bar-chart')); ?>",{fromDate:fromDate,toDate:toDate},
         function (data) {
@@ -169,8 +188,19 @@
         });
     }
     
+    function getWeeklyBehaviourData(frmSrc){
+        var fromDate = $('#startmonth').val();
+        var toDate = $('#endmonth').val();
+        if(frmSrc!= 'load') { $.blockUI(); }
+        $.post("<?php echo $this->url('summary', array('action' => 'get-behaviour-data-reporting-weekly-bar-chart')); ?>",{fromDate:fromDate,toDate:toDate},
+        function (data) {
+            if(frmSrc!= 'load') { $.unblockUI(); }
+            $(".weekly-behaviour-data-container").html(data);
+        });
+    }
+    
     function clearSearchFields(){
        $('#summaryFilter')[0].reset();
-        getWeeklyDataReporting('reset');
+        searchDataReporting('reset');
     }
 </script>

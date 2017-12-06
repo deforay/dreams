@@ -33,4 +33,17 @@ class SummaryController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function getBehaviourDataReportingWeeklyBarChartAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response = $riskAssessmentService->getBehaviourDataReportingWeeklyDetails($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

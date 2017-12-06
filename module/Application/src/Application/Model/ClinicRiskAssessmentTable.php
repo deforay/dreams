@@ -4,6 +4,7 @@ namespace Application\Model;
 use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Application\Service\CommonService;
 
@@ -931,5 +932,50 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    'unlocked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
       return $this->update($data,array('assessment_id'=>base64_decode($params['assessment'])));
+    }
+    
+    public function fetchBehaviourDataReportingWeeklyDetails($params){
+	$common = new CommonService();
+	$dbAdapter = $this->adapter;
+	$sql = new Sql($dbAdapter);
+	$result = array();
+	if((isset($params['fromDate']) && trim($params['fromDate'])!= '') && (isset($params['toDate']) && trim($params['toDate'])!= '')){
+	    $fromDateArray = explode("/",$params['fromDate']);
+	    $toDateArray = explode("/",$params['toDate']);
+	    $start = strtotime($fromDateArray[1].'-'.date('m', strtotime($fromDateArray[0])));
+	    $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
+	}else{
+	    $start = strtotime(date("Y", strtotime("-1 year")).'-'.date('m', strtotime('+1 month', strtotime('-1 year'))));
+	    $end = strtotime(date('Y').'-'.date('m'));
+	}
+	$j=0;
+	$d =0;
+	while($start <= $end){
+	    $month = date('m', $start);$year = date('Y', $start);$monthYearFormat = date("M-Y", $start);
+            $query = $sql->select()->from(array('r_a'=>'clinic_risk_assessment'))
+                          ->columns(
+                                  array(
+                                        'total'=>new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 1 OR r_a.status = 2 OR r_a.status = 3, 1,0))"),
+					'startdayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(interview_date, INTERVAL(1-DAYOFWEEK(interview_date)) DAY)"),
+					'enddayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(interview_date, INTERVAL(7-DAYOFWEEK(interview_date)) DAY)")
+                                        )
+                                  )
+			  ->where("Month(interview_date)='".$month."' AND Year(interview_date)='".$year."'")
+			  ->group('startdayofweek');
+	    $queryStr = $sql->getSqlStringForSqlObject($query);
+	    $rows = $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	    if(isset($rows) && count($rows) > 0){
+		foreach($rows as $row){
+		    if(isset($row['startdayofweek']) && $row['startdayofweek']!= null && trim($row['startdayofweek'])!= ''){
+		      $result['week'][$d] = $common->humanDateFormat($row['startdayofweek']).' to '.$common->humanDateFormat($row['enddayofweek']);
+		      $result['total'][$d] = $row['total'];
+		      $d++;
+		    }
+		}
+	    }
+	 $start = strtotime("+1 month", $start);
+         $j++;
+	}
+      return $result;
     }
 }

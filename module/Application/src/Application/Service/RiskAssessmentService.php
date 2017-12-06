@@ -1166,4 +1166,9 @@ class RiskAssessmentService {
             return "";
         }
     }
+    
+    public function getBehaviourDataReportingWeeklyDetails($params){
+        $clinicRiskAssessmentDb = $this->sm->get('ClinicRiskAssessmentTable');
+      return $clinicRiskAssessmentDb->fetchBehaviourDataReportingWeeklyDetails($params);
+    }
 }
