@@ -1956,6 +1956,7 @@ class DataCollectionTable extends AbstractTableGateway {
     }
     
     public function fetchWeeklyDataReportingDetails($params){
+	$common = new CommonService();
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$result = array();
@@ -1987,7 +1988,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    if(isset($rows) && count($rows) > 0){
 		foreach($rows as $row){
 		    if(isset($row['startdayofweek']) && $row['startdayofweek']!= null && trim($row['startdayofweek'])!= ''){
-		      $result['week'][$d] = $row['startdayofweek'].' to '.$row['enddayofweek'];
+		      $result['week'][$d] = $common->humanDateFormat($row['startdayofweek']).' to '.$common->humanDateFormat($row['enddayofweek']);
 		      $result['total'][$d] = $row['total'];
 		      $d++;
 		    }
