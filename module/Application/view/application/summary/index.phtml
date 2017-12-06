@@ -1,3 +1,17 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
+<style>
+    .ui-datepicker-calendar {
+       display: none;
+    }
+    .ui-datepicker-month,.ui-datepicker-year{
+       display:block;
+       display:inline-block;
+    }
+    .ui-datepicker-title select{
+	padding:0;
+	height:1.5rem;
+    }
+</style>
 <div id="page-content">
     <div class="row section-header">
         <h4 class="page-title">Summary</h4>
@@ -47,6 +61,25 @@
                 </div>
             </div>
         </div>
+        <div class="row" style="max-width:1109px;">
+            <form id="summaryFilter" action="#" style="margin-top:30px;">
+                <div class="col l12 m12 s12" style="text-align:center;">
+                    <strong>Choose Month Range</strong>
+                </div>
+                <div class="col l12 m12 s12" style="margin-top:30px;">
+                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
+                    <div class="col l1 m1 s1"><strong>From</strong></div>
+                    <div class="col l4 m4 s4"><input type="text" id="startmonth" name="startmonth" readonly="readonly" style="color:#000;"/></div>
+                    <div class="col l1 m1 s1"><strong>to</strong></div>
+                    <div class="col l4 m4 s4"><input type="text" id="endmonth" name="endmonth" readonly="readonly" style="color:#000;"/></div>
+                    <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
+                </div>
+                <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="getWeeklyDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                </div>
+            </form>
+        </div>
         <div class="row">
             <div class="col l12 m12 s12">
                 <div class="card charts">
@@ -62,17 +95,67 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script>
     $(document).ready(function(){
-        getWeeklyDataReporting();
+        $("#startmonth").datepicker({ 
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',        
+            beforeShow : function(input, inst) {
+                tmp = $('#startmonth').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#startmonth').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#startmonth').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#startmonth').datepicker('setDate', new Date(year, month, 1));
+                $('#endmonth').datepicker('option','minDate',new Date(year, month, 1));
+                $('#endmonth').datepicker('setDate', new Date(year, month, 1));
+            }
+        });
+        $("#endmonth").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',     
+            beforeShow : function(input, inst) {
+                tmp = $('#endmonth').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#endmonth').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#endmonth').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#endmonth').datepicker('setDate', new Date(year, month, 1));
+            }
+        });
+        getWeeklyDataReporting('load');
     });
     
-    fromDate = '';
-    toDate = '';
-    function getWeeklyDataReporting(){
+    function getWeeklyDataReporting(frmSrc){
+        var fromDate = $('#startmonth').val();
+        var toDate = $('#endmonth').val();
+        if(frmSrc == 'search' && ($.trim(fromDate) == '' || $.trim(toDate) == '')){
+            alert('Please choose month range');
+            return false;
+        }
+        if(frmSrc!= 'load') { $.blockUI(); }
         $.post("<?php echo $this->url('summary', array('action' => 'get-data-reporting-weekly-bar-chart')); ?>",{fromDate:fromDate,toDate:toDate},
         function (data) {
+            if(frmSrc!= 'load') { $.unblockUI(); }
             $(".weekly-data-reporting-container").html(data);
         });
+    }
+    
+    function clearSearchFields(){
+       $('#summaryFilter')[0].reset();
+        getWeeklyDataReporting('reset');
     }
 </script>

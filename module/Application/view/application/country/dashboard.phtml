@@ -25,6 +25,10 @@
        display:block;
        display:inline-block;
     }
+    .ui-datepicker-title select{
+	padding:0;
+	height:1.5rem;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -33,7 +37,7 @@
     <div class="row" style="max-width:1109px;">
         <form id="dashboardFilter" action="#">
             <div class="col l12 m12 s12">
-                <div class="col l4 m4 s4" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select Month and Year" title="Please select month and year" readonly/></div>
+                <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly/></div>
 		<div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
 		<div class="col l4 m4 s4" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type"><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
             </div>

@@ -939,9 +939,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->order('da_c.added_on desc');
 	if($loginContainer->roleCode == 'CC'){
             $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	}if(trim($params['country'])!= ''){
+	} if(trim($params['country'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['country'])));
-	}if(trim($params['reportingMonthYear'])!= ''){
+	} if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
@@ -1959,8 +1959,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
 	$result = array();
-	$start = strtotime(date("Y", strtotime("-1 year")).'-'.date('m', strtotime('+1 month', strtotime('-1 year'))));
-	$end = strtotime(date('Y').'-'.date('m'));
+	if((isset($params['fromDate']) && trim($params['fromDate'])!= '') && (isset($params['toDate']) && trim($params['toDate'])!= '')){
+	    $fromDateArray = explode("/",$params['fromDate']);
+	    $toDateArray = explode("/",$params['toDate']);
+	    $start = strtotime($fromDateArray[1].'-'.date('m', strtotime($fromDateArray[0])));
+	    $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
+	}else{
+	    $start = strtotime(date("Y", strtotime("-1 year")).'-'.date('m', strtotime('+1 month', strtotime('-1 year'))));
+	    $end = strtotime(date('Y').'-'.date('m'));
+	}
 	$j=0;
 	$d =0;
 	while($start <= $end){
