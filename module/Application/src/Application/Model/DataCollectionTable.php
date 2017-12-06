@@ -1975,7 +1975,7 @@ class DataCollectionTable extends AbstractTableGateway {
             $query = $sql->select()->from(array('da_c'=>'data_collection'))
                           ->columns(
                                   array(
-                                        'total'=>new \Zend\Db\Sql\Expression("COUNT(*)"),
+                                        'total'=>new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 					'startdayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(specimen_collected_date, INTERVAL(1-DAYOFWEEK(specimen_collected_date)) DAY)"),
 					'enddayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(specimen_collected_date, INTERVAL(7-DAYOFWEEK(specimen_collected_date)) DAY)")
                                         )
