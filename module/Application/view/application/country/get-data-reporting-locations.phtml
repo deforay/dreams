@@ -33,14 +33,21 @@ if($location > 0) { ?>
                 //facilities
                 <?php
                 if(isset($response['facilities']) && count($response['facilities']) > 0){
+                    $asanteRecencyArray = array();
                     foreach($response['facilities'] as $facilities){
                         if(trim($facilities['latitude'])!= '' && trim($facilities['longitude'])!= ''){
+                            if(isset($facilities['[asante_rapid_recency_assy']) && $facilities['[asante_rapid_recency_assy']!= null && trim($facilities['[asante_rapid_recency_assy'])!= ''){
+                                $asanteRecencyArray = json_decode($facilities['[asante_rapid_recency_assy'], true);
+                            }
                 ?>
                 {
                  lat: "<?php echo $facilities['latitude']; ?>",
                  lon: "<?php echo $facilities['longitude']; ?>",
-                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>",
-                 label : "<h6><?php echo ucwords($facilities['facility_name']);?></h6>"
+                 icon: "<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>",
+                 label: "<h6><?php echo ucwords($facilities['facility_name']);?></h6>",
+                 LAgRecency: "<?php echo (isset($facilities['lag_avidity_result']) && $facilities['lag_avidity_result']!= null && trim($facilities['lag_avidity_result'])!= '')?$facilities['lag_avidity_result']:''; ?>",
+                 asanteRecency: "<?php echo (isset($asanteRecencyArray['rrr']['assay']) && $asanteRecencyArray['rrr']['assay']!= null && trim($asanteRecencyArray['rrr']['assay'])!= '')?$asanteRecencyArray['rrr']['assay']:''; ?>",
+                 ancRecency: ""
                 },
                 <?php } } } ?>
                 //anc sites
@@ -52,8 +59,11 @@ if($location > 0) { ?>
                 {
                  lat: "<?php echo $anc['latitude']; ?>",
                  lon: "<?php echo $anc['longitude']; ?>",
-                 icon : "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>",
-                 label : "<h6><?php echo ucwords($anc['anc_site_name']);?></h6>"
+                 icon: "<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>",
+                 label: "<h6><?php echo ucwords($anc['anc_site_name']);?></h6>",
+                 LAgRecency:"",
+                 asanteRecency:"",
+                 ancRecency: "<?php echo (isset($anc['recency_line']) && $anc['recency_line']!= null && trim($anc['recency_line'])!= '')?$anc['recency_line']:''; ?>"
                 },
                 <?php } } } ?>
             ];
@@ -62,26 +72,41 @@ if($location > 0) { ?>
             for( i = 0; i < markers.length; i++ ) {
                 var position = new google.maps.LatLng(markers[i]['lat'], markers[i]['lon']);
                 bounds.extend(position);
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    //title: markers[i]['title'],
-                    icon : markers[i]['icon'],
-                });
-                marker['infowindow'] = new google.maps.InfoWindow({
-                    content: markers[i]['label']    
-                });
-                google.maps.event.addListener(marker, 'mouseover', function() {
-                    if( prev_infowindow ) {
-                       prev_infowindow.close();
-                    }
-            
-                    prev_infowindow = this['infowindow'];
-                    prev_infowindow.open(map, this);
-                    setTimeout(function() { prev_infowindow.close(); }, 3000);
-                });
-                // Automatically center the map fitting all markers on the screen
-                map.fitBounds(bounds);
+                var color = '';
+                if(markers[i]['LAgRecency'] == 'recent'){
+                    color = '#33b8ff';
+                }else if(markers[i]['asanteRecency'] == 'absent'){
+                    color = '#33ff86';
+                }else if(markers[i]['ancRecency'] == 'recent'){
+                    color = '#FF0000';
+                }
+                if($.trim(color)!= ''){
+                    var cityCircle = new google.maps.Circle({
+                        strokeColor: ($.trim(color)!= '')?color:'',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: ($.trim(color)!= '')?color:'',
+                        fillOpacity: 0.35,
+                        map: map,
+                        center: position,
+                        radius: 44 * 100
+                    });
+    
+                    cityCircle['infowindow'] = new google.maps.InfoWindow({
+                        content: markers[i]['label']    
+                    });
+                    google.maps.event.addListener(cityCircle, 'mouseover', function() {
+                        if( prev_infowindow ) {
+                           prev_infowindow.close();
+                        }
+                
+                        prev_infowindow = this['infowindow'];
+                        prev_infowindow.open(map, this);
+                        setTimeout(function() { prev_infowindow.close(); }, 3000);
+                    });
+                    // Automatically center the map fitting all markers on the screen
+                    map.fitBounds(bounds);
+                }
             }
             // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
             var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {

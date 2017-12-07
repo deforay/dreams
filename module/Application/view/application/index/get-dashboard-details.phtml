@@ -1,5 +1,13 @@
 <?php
 if(count($response) >0){
+    $samplesReceivedArray = array();
+    $samplesIncompleteArray = array();
+    $samplesTestedArray = array();
+    $samplesFinalizedArray = array();
+    $noofLAgRecentArray = array();
+    $noofRecencyAssayRecentArray = array();
+    $assessmentsArray = array();
+    $noofANCRecencyTestArray = array();
     foreach($response as $country){
         $assessments = 0;
         $noofANCRecencyTest = 0;
@@ -7,8 +15,17 @@ if(count($response) >0){
           $assessments = (isset($country[$country['monthName'].' - '.$country['year']]->assessments))?$country[$country['monthName'].' - '.$country['year']]->assessments:0;
           $noofANCRecencyTest = (isset($country[$country['monthName'].' - '.$country['year']]->noofANCRecencyTest))?$country[$country['monthName'].' - '.$country['year']]->noofANCRecencyTest:0;
         }
+        $samplesReceivedArray[] = $country['totalSample'];
+        $samplesIncompleteArray[] = $country['samplesIncomplete'];
+        $samplesTestedArray[] = $country['samplesTested'];
+        $samplesFinalizedArray[] = $country['samplesFinalized'];
+        $noofLAgRecentArray[] = $country['noofLAgRecent'];
+        $noofRecencyAssayRecentArray[] = $country['noofRecencyAssayRecent'];
+        $assessmentsArray[] = $assessments;
+        $noofANCRecencyTestArray[] = $noofANCRecencyTest;
 ?>
     <tr>
+        <td><?php echo $country['monthName'].' - '.$country['year']; ?></td>
         <td><?php echo ucwords($country['country_name']); ?></td>
         <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-received&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-incomplete&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
@@ -18,9 +35,20 @@ if(count($response) >0){
         <td><?php echo ($country['noofRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-recency-assay-recent&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofRecencyAssayRecent'].'</a>':0; ?></td>
         <td><?php echo ($assessments >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=assessment&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$assessments.'</a>':0; ?></td>
         <td><?php echo ($noofANCRecencyTest >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-anc-recency-test&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$noofANCRecencyTest.'</a>':0; ?></td>
-        <td><?php echo $country['monthName'].' - '.$country['year']; ?></td>
     </tr>
-<?php } } else { ?>
+<?php } ?>
+    <tr>
+        <td colspan="2" class="total_row">Total</td>
+        <td class="total_row"><?php echo array_sum($samplesReceivedArray); ?></td>
+        <td class="total_row"><?php echo array_sum($samplesIncompleteArray); ?></td>
+        <td class="total_row"><?php echo array_sum($samplesTestedArray); ?></td>
+        <td class="total_row"><?php echo array_sum($samplesFinalizedArray); ?></td>
+        <td class="total_row"><?php echo array_sum($noofLAgRecentArray); ?></td>
+        <td class="total_row"><?php echo array_sum($noofRecencyAssayRecentArray); ?></td>
+        <td class="total_row"><?php echo array_sum($assessmentsArray); ?></td>
+        <td class="total_row"><?php echo array_sum($noofANCRecencyTestArray); ?></td>
+    </tr>
+<?php } else { ?>
     <tr>
         <td colspan="10">No data available..</td>
     </tr>

@@ -114,7 +114,7 @@ class CountryController extends AbstractActionController{
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response = $dataCollectionService->getDataReportingLocations($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setVariables(array('params'=>$params,'response' =>$response));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

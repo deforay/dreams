@@ -266,8 +266,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-lag-rececnt'){
 	    $sQuery = $sQuery->where(array('da_c.lag_avidity_result'=>'recent'));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-recency-assay-recent'){
-		$sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'');
-		
+	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'');
 	}
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);
@@ -1599,26 +1598,64 @@ class DataCollectionTable extends AbstractTableGateway {
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
 	$location = array();
-	//facility query
-	$facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
-				     ->columns(array('facility_name','latitude','longitude'))
-				     ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array(),'left')
-				     ->where(array('f.country'=>$params['country']));
-	if(trim($params['specimenType'])!= ''){
-	    $facilityLocationQuery = $facilityLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	$facilityLocation = true;
+	$ancLocation = true;
+	$sitehavingRecentInfectionbyArray = array();
+	if(trim($params['sitehavingRecentInfectionby'])!= ''){
+	    $facilityLocation = false;
+	    $ancLocation = false;
+	   $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
+	   if(in_array('lab-LAg',$sitehavingRecentInfectionbyArray) || in_array('lab-asante',$sitehavingRecentInfectionbyArray)){
+	    $facilityLocation = true;
+	   } if(in_array('anc',$sitehavingRecentInfectionbyArray)){
+	    $ancLocation = true;
+	   }
 	}
-	$facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
-        $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	//anc query
-	$ancLocationQuery = $sql->select()->from(array('anc' => 'anc_site'))
-				->columns(array('anc_site_name','latitude','longitude'))
-				->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array(),'left')
-				->where(array('anc.country'=>$params['country']));
-	if(trim($params['specimenType'])!= ''){
-	    $ancLocationQuery = $ancLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	if($facilityLocation){
+	    //facility query
+	    $facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
+					 ->columns(array('facility_name','latitude','longitude'))
+					 ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array('lag_avidity_result','asante_rapid_recency_assy'),'left')
+					 ->where(array('f.country'=>$params['country']));
+	    if(trim($params['specimenType'])!= ''){
+		$facilityLocationQuery = $facilityLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	    } if(trim($params['sitehavingRecentInfectionby'])!= ''){
+		$mapWhere = '';
+		$mapOR = ' OR ';
+		for($i=0;$i<count(array_filter($sitehavingRecentInfectionbyArray));$i++){
+		    if($sitehavingRecentInfectionbyArray[$i] == 'lab-LAg'){
+			if($i == 1){ $mapWhere.= $mapOR; }
+			$mapWhere.= 'da_c.lag_avidity_result = "recent"';
+		    }else if($sitehavingRecentInfectionbyArray[$i] == 'lab-asante'){
+		       if($i == 1){ $mapWhere.= $mapOR; }
+		       $mapWhere.= 'da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'';
+		    }
+		}
+		if(trim($mapWhere)!= ''){
+		  $facilityLocationQuery = $facilityLocationQuery->where('('.$mapWhere.')');
+		}
+	    }
+	    $facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
+	    $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	}
-	$ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
-        $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	if($ancLocation){
+	    //anc query
+	    $ancLocationQuery = $sql->select()->from(array('anc' => 'anc_site'))
+				    ->columns(array('anc_site_name','latitude','longitude'))
+				    ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.anc=anc.anc_site_id',array(),'left')
+				    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recency_line'),'left')
+				    ->where(array('anc.country'=>$params['country']));
+	    if(trim($params['hasPatientHadRapidRecencyTest'])!= ''){
+		$ancLocationQuery = $ancLocationQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasPatientHadRapidRecencyTest']));
+	    } if(trim($params['sitehavingRecentInfectionby'])!= ''){
+		if(in_array('anc',$sitehavingRecentInfectionbyArray)){
+		    $ancLocationQuery = $ancLocationQuery->where(array('anc_r_r.recency_line'=>'recent'));
+		}
+	    }
+	    $ancLocationQueryStr = $sql->getSqlStringForSqlObject($ancLocationQuery);
+	    //echo $ancLocationQueryStr;die;
+	    $location['anc'] = $dbAdapter->query($ancLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	}
       return $location;
     }
     

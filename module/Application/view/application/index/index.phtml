@@ -29,6 +29,10 @@
 	padding:0;
 	height:1.5rem;
     }
+    .total_row{
+	font-size:15px !important;
+	font-weight:800 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -38,8 +42,8 @@
         <form id="dashboardFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> -- Select -- </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
                 <div class="col l5 m5 s5" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly/></div>
+		<div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> -- Select -- </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
@@ -59,16 +63,16 @@
                     <table id="dashboardTable" class="responsive-table display">
                         <thead>
                         <tr>
+			    <th>Month - Year</th>
                             <th>Name of the Country</th>
                             <th>Samples Received</th>
 			    <th>Samples Incomplete</th>
                             <th>Samples Tested</th>
-                            <th>Samples Finalized</th>
+                            <th>Samples Locked for Editing</th>
                             <th>Lab LAg Recent</th>
                             <th>Lab Asante Recent</th>
                             <th>No. of Risk Questionnaires</th>
                             <th>ANC Asante Recent</th>
-                            <th>Month - Year</th>
                         </tr>
                         </thead>
                         <tbody id="dashboardDetails"></tbody>
