@@ -39,15 +39,15 @@
         <h4 class="page-title">Dashboard (<?php echo ucwords($countryInfo->country_name); ?>)</h4>
     </div>
     <div class="row" style="max-width:1109px;">
-        <form id="dashboardFilter" action="#">
+        <form id="countryDashboardFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly/></div>
 		<div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
-		<div class="col l4 m4 s4" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type"><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
+		<div class="col l4 m4 s4 specimenType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type"><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
                 <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchDashboardData('search');getDataReportingLocations();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchDashboardData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
             </div>
         </form>
@@ -80,8 +80,16 @@
             </div>
         </div>
     </div>
+    <br>
+    <hr style="border:1px solid #e0dddd;">
+    <br>
     <div class="row" style="max-width:1109px;">
         <form id="mapFilter" action="#">
+	    <div class="col l12 m12 s12">
+                <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="mapReportingMonthYear" name="mapReportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly/></div>
+		<div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="mapProvince" name="mapProvince" title="Please select province"><option value=""> -- Select -- </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
+		<div class="col l4 m4 s4 mapSampleType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="mapSpecimenType" name="mapSpecimenType[]" multiple="multiple" title="Please select speciment type"><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
+            </div>
             <div class="col l12 m12 s12">
 		<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>
 		<div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="labLAgRecency">Lab LAg Test</option><option value="labAsanteRecency">Lab Recency Test</option><option value="ancRapidRecency">ANC Recency Test</option></select></div>
@@ -96,8 +104,25 @@
         <div class="col s12">
             <div class="card card-default">
 		<div class="col l12 m12 s12" style="margin-top:3vh;">
-		    <div class="col l2 m2 s2"><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Site</strong></div>
-		    <div class="col l2 m2 s2"><img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Lab/Facility</strong></div>
+		    <div class="col l3 m3 s3"><img src="<?php echo $this->basePath('assets/images/map-points/lab-red.png'); ?>"> <strong>ANC Site</strong>&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $this->basePath('assets/images/map-points/lab-green.png'); ?>"> <strong>Lab/Facility</strong></div>
+		    <div class="col l3 m3 s3">
+			<svg height="20" width="40" style="float:left;">
+			   <circle cx="20" cy="10" r="8" stroke="#33b8ff" stroke-width="2" fill="#33b8ff" />
+			</svg>
+			<div style="float:left;"><strong>Lab LAg Test</strong></div>
+		    </div>
+		    <div class="col l3 m3 s3">
+			<svg height="20" width="40" style="float:left;">
+			   <circle cx="20" cy="10" r="8" stroke="#33ff86" stroke-width="2" fill="#33ff86" />
+			</svg>
+			<div style="float:left;"><strong>Lab Recency Test</strong></div>
+		    </div>
+		    <div class="col l3 m3 s3">
+			<svg height="20" width="40" style="float:left;">
+			   <circle cx="20" cy="10" r="8" stroke="#FF0000" stroke-width="2" fill="#FF0000" />
+			</svg>
+			<div style="float:left;"><strong>ANC Recency Test</strong></div>
+		    </div>
 		</div>
                 <div class="card-content map-container clearfix" style="padding-top:20px;">
                 </div>
@@ -127,6 +152,24 @@
                 $('#reportingMonthYear').datepicker('setDate', new Date(year, month, 1));
             }
        });
+	$('#mapReportingMonthYear').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M/yy',
+            maxDate: 'Today',
+            beforeShow : function(input, inst) {
+                tmp = $('#mapReportingMonthYear').val().split('/');
+                var dat = new Date('1 ' + tmp[0] + ' 1969');
+                $('#mapReportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#mapReportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+            },
+            onClose: function(dateText, inst) {
+                var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $('#mapReportingMonthYear').datepicker('setDate', new Date(year, month, 1));
+            }
+       });
        searchDashboardData('load');
        getDataReportingLocations();
     });
@@ -144,24 +187,26 @@
     }
     
     function getDataReportingLocations(){
-	var specimenType = ($('#specimenType').val()!= null)?$('#specimenType').val().join(','):'';
+	var reportingMonthYear = $('#mapReportingMonthYear').val();
+	var province = $('#mapProvince').val();
+	var specimenType = ($('#mapSpecimenType').val()!= null)?$('#mapSpecimenType').val().join(','):'';
 	var hasSitePerformedRapidRecencyTest = $('#hasSitePerformedRapidRecencyTest').val();
 	var sitehavingRecentInfectionby = ($('#sitehavingRecentInfectionby').val()!= null)?$('#sitehavingRecentInfectionby').val().join(','):'';
-        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',specimenType:specimenType,hasSitePerformedRapidRecencyTest:hasSitePerformedRapidRecencyTest,sitehavingRecentInfectionby:sitehavingRecentInfectionby},
+        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType,hasSitePerformedRapidRecencyTest:hasSitePerformedRapidRecencyTest,sitehavingRecentInfectionby:sitehavingRecentInfectionby},
         function(data) {
             $('.map-container').html(data);
         });
     }
     
     function clearSearchFields(){
-        $('#dashboardFilter')[0].reset();
-        $('#dashboardFilter .select-dropdown').val('');
+        $('#countryDashboardFilter')[0].reset();
+        $('#countryDashboardFilter .specimenType .select-dropdown').val('');
         searchDashboardData('reset');
-        getDataReportingLocations();
     }
     
     function clearMapSearchFields(){
 	$('#mapFilter')[0].reset();
+	$('#mapFilter .mapSampleType .select-dropdown').val('');
         $('#mapFilter .sitehavingRecentInfectionby .select-dropdown').val('');
         getDataReportingLocations();
     }

@@ -1611,13 +1611,18 @@ class DataCollectionTable extends AbstractTableGateway {
 		$showANCLocation = true;
 	    }
 	}
-	//facility query
+	//lab site location query
 	if($showFacilityLocation){
 	    $facilityLocationQuery = $sql->select()->from(array('f' => 'facility'))
 					 ->columns(array('facility_name','latitude','longitude'))
 					 ->join(array('da_c'=>'data_collection'),'da_c.lab=f.facility_id',array('lag_avidity_result','asante_rapid_recency_assy'),'left')
 					 ->where(array('f.country'=>$params['country']));
-	    if(trim($params['specimenType'])!= ''){
+	    if(trim($params['reportingMonthYear'])!= ''){
+		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+		$facilityLocationQuery = $facilityLocationQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	    } if(trim($params['province'])!= ''){
+		$facilityLocationQuery = $facilityLocationQuery->where(array('f.province'=>base64_decode($params['province'])));
+	    } if(trim($params['specimenType'])!= ''){
 		$facilityLocationQuery = $facilityLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
 	    } if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
 		$mapWhere = '';
@@ -1638,14 +1643,22 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $facilityLocationQueryStr = $sql->getSqlStringForSqlObject($facilityLocationQuery);
 	    $location['facilities'] = $dbAdapter->query($facilityLocationQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	}
-	//anc query
+	//ANC site location query
 	if($showANCLocation){
 	    $ancLocationQuery = $sql->select()->from(array('anc' => 'anc_site'))
 				    ->columns(array('anc_site_name','latitude','longitude'))
+				    ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array(),'left')
 				    ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.anc=anc.anc_site_id',array(),'left')
 				    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('recency_line'),'left')
 				    ->where(array('anc.country'=>$params['country']));
-	    if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
+	    if(trim($params['reportingMonthYear'])!= ''){
+		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+		$ancLocationQuery = $ancLocationQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(r_a.interview_date) ="'.$splitReportingMonthYear[1].'"');
+	    } if(trim($params['province'])!= ''){
+		$ancLocationQuery = $ancLocationQuery->where(array('anc.province'=>base64_decode($params['province'])));
+	    } if(trim($params['specimenType'])!= ''){
+		$ancLocationQuery = $ancLocationQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	    } if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
 		$ancLocationQuery = $ancLocationQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
 	    } if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
 		$ancLocationQuery = $ancLocationQuery->where(array('anc_r_r.recency_line'=>'recent'));
