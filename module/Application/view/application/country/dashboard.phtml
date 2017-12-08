@@ -83,8 +83,8 @@
     <div class="row" style="max-width:1109px;">
         <form id="mapFilter" action="#">
             <div class="col l12 m12 s12">
-		<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasPatientHadRapidRecencyTest" name="hasPatientHadRapidRecencyTest" title="Please select anyone"><option value=""> -- Select -- </option><option value="done">Yes</option><option value="not done" selected="selected">No</option></select></div>
-		<div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select anyone"><option value="lab-LAg">Lab LAg Test</option><option value="lab-asante">Lab Recency Test</option><option value="anc">ANC Recency Test</option></select></div>
+		<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>
+		<div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="labLAgRecency">Lab LAg Test</option><option value="labAsanteRecency">Lab Recency Test</option><option value="ancRapidRecency">ANC Recency Test</option></select></div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
                 <a href="javascript:void(0);" onclick="clearMapSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -145,9 +145,9 @@
     
     function getDataReportingLocations(){
 	var specimenType = ($('#specimenType').val()!= null)?$('#specimenType').val().join(','):'';
-	var hasPatientHadRapidRecencyTest = $('#hasPatientHadRapidRecencyTest').val();
+	var hasSitePerformedRapidRecencyTest = $('#hasSitePerformedRapidRecencyTest').val();
 	var sitehavingRecentInfectionby = ($('#sitehavingRecentInfectionby').val()!= null)?$('#sitehavingRecentInfectionby').val().join(','):'';
-        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',specimenType:specimenType,hasPatientHadRapidRecencyTest:hasPatientHadRapidRecencyTest,sitehavingRecentInfectionby:sitehavingRecentInfectionby},
+        $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',specimenType:specimenType,hasSitePerformedRapidRecencyTest:hasSitePerformedRapidRecencyTest,sitehavingRecentInfectionby:sitehavingRecentInfectionby},
         function(data) {
             $('.map-container').html(data);
         });
@@ -157,6 +157,12 @@
         $('#dashboardFilter')[0].reset();
         $('#dashboardFilter .select-dropdown').val('');
         searchDashboardData('reset');
+        getDataReportingLocations();
+    }
+    
+    function clearMapSearchFields(){
+	$('#mapFilter')[0].reset();
+        $('#mapFilter .sitehavingRecentInfectionby .select-dropdown').val('');
         getDataReportingLocations();
     }
     
