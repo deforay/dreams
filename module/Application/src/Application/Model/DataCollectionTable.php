@@ -927,26 +927,23 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
-						   //'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))")
 						   'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
 				   ->where(array('c.country_status'=>'active'))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(da_c.added_on)"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"))
-				   ->group('da_c.country')
-				   ->order('da_c.added_on desc');
-	if($loginContainer->roleCode == 'CC'){
-            $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(trim($params['country'])!= ''){
+				   ->group('da_c.country');
+	if(trim($params['country'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['country'])));
+	}else if($loginContainer->roleCode == 'CC'){
+	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	} if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	}
 	$queryContainer->dashboardQuery = $dataCollectionQuery;
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
-	
         $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	if(isset($dataCollectionResult) && count($dataCollectionResult) >0){
 	    $i=0;
@@ -955,8 +952,7 @@ class DataCollectionTable extends AbstractTableGateway {
 					    ->columns(array(
 							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
 							 ))
-					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
+					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
 					    ->where('r_a.country = '.$dataCollection['country_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
 		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                  $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -1584,7 +1580,7 @@ class DataCollectionTable extends AbstractTableGateway {
 							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
 							 ))
 					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
+					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
 					    ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
 		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                  $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();

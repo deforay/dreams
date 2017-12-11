@@ -1236,9 +1236,8 @@ class DataCollectionService {
                                                 ->columns(array(
                                                                 'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
                                                              ))
-                                                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
-                                                ->where('r_a.country = '.$dataCollection['country_id'].' AND MONTH(r_a.added_on) ="'.$dataCollection['month'].'" AND YEAR(r_a.added_on) ="'.$dataCollection['year'].'"');
+                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
+                                                ->where('r_a.country = '.$dataCollection['country_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
                      $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                      $sResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
                  $i++;
@@ -1258,13 +1257,13 @@ class DataCollectionService {
                     $noofLAgRecentArray = array();
                     $noofRecencyAssayRecentArray = array();
                     $assessmentsArray = array();
-                    $noofANCRecencyTestArray = array();
+                    $noofANCRecencyTestRecentArray = array();
                     foreach ($sResult as $aRow) {
                         $assessments = 0;
-                        $noofANCRecencyTest = 0;
+                        $noofANCRecencyTestRecent = 0;
                         if(isset($aRow[$aRow['monthName'].' - '.$aRow['year']])){
                           $assessments = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments:0;
-                          $noofANCRecencyTest = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest:0;
+                          $noofANCRecencyTestRecent = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent:0;
                         }
                         $samplesReceivedArray[] = $aRow['totalSample'];
                         $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
@@ -1273,7 +1272,7 @@ class DataCollectionService {
                         $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
                         $noofRecencyAssayRecentArray[] = $aRow['noofRecencyAssayRecent'];
                         $assessmentsArray[] = $assessments;
-                        $noofANCRecencyTestArray[] = $noofANCRecencyTest;
+                        $noofANCRecencyTestRecentArray[] = $noofANCRecencyTestRecent;
                         $row = array();
                         $row[] = $aRow['monthName'].' - '.$aRow['year'];
                         $row[] = ucwords($aRow['country_name']);
@@ -1284,7 +1283,7 @@ class DataCollectionService {
                         $row[] = $aRow['noofLAgRecent'];
                         $row[] = $aRow['noofRecencyAssayRecent'];
                         $row[] = $assessments;
-                        $row[] = $noofANCRecencyTest;
+                        $row[] = $noofANCRecencyTestRecent;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1352,7 +1351,7 @@ class DataCollectionService {
                     $sheet->setCellValue('G1', html_entity_decode('No. of LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H1', html_entity_decode('No. of Recency Assay Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Test Recent', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1410,7 +1409,7 @@ class DataCollectionService {
                     $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
                     $filename = 'DASHBOARD-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
@@ -1444,8 +1443,8 @@ class DataCollectionService {
                                                                 'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
                                                              ))
                                                 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTest' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left')
-                                                ->where('r_a.country = '.$dataCollection['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.added_on) ="'.$dataCollection['month'].'" AND YEAR(r_a.added_on) ="'.$dataCollection['year'].'"');
+                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
+                                                ->where('r_a.country = '.$dataCollection['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
                      $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                      $sResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
                  $i++;
@@ -1465,13 +1464,13 @@ class DataCollectionService {
                     $noofLAgRecentArray = array();
                     $noofRecencyAssayRecentArray = array();
                     $assessmentsArray = array();
-                    $noofANCRecencyTestArray = array();
+                    $noofANCRecencyTestRecentArray = array();
                     foreach ($sResult as $aRow) {
                         $assessments = 0;
-                        $noofANCRecencyTest = 0;
+                        $noofANCRecencyTestRecent = 0;
                         if(isset($aRow[$aRow['monthName'].' - '.$aRow['year']])){
                           $assessments = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments:0;
-                          $noofANCRecencyTest = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTest:0;
+                          $noofANCRecencyTestRecent = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent:0;
                         }
                         $samplesReceivedArray[] = $aRow['totalSample'];
                         $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
@@ -1480,7 +1479,7 @@ class DataCollectionService {
                         $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
                         $noofRecencyAssayRecentArray[] = $aRow['noofRecencyAssayRecent'];
                         $assessmentsArray[] = $assessments;
-                        $noofANCRecencyTestArray[] = $noofANCRecencyTest;
+                        $noofANCRecencyTestRecentArray[] = $noofANCRecencyTestRecent;
                         $row = array();
                         $row[] = $aRow['monthName'].' - '.$aRow['year'];
                         $row[] = ucwords($aRow['location_name']);
@@ -1491,7 +1490,7 @@ class DataCollectionService {
                         $row[] = $aRow['noofLAgRecent'];
                         $row[] = $aRow['noofRecencyAssayRecent'];
                         $row[] = $assessments;
-                        $row[] = $noofANCRecencyTest;
+                        $row[] = $noofANCRecencyTestRecent;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1559,7 +1558,7 @@ class DataCollectionService {
                     $sheet->setCellValue('G1', html_entity_decode('No. of LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H1', html_entity_decode('No. of Recency Assay Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Test ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Test Recent', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1617,7 +1616,7 @@ class DataCollectionService {
                     $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
                     $filename = strtoupper($params['countryname']).'-DASHBOARD-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
