@@ -125,6 +125,19 @@ class RiskAssessmentController extends AbstractActionController{
         }
     }
     
+    public function exportIpvReportAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response = $riskAssessmentService->exportIPVReportInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
     public function generatePdfAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {

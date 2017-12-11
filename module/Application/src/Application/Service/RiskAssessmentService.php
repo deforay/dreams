@@ -1171,4 +1171,325 @@ class RiskAssessmentService {
         $clinicRiskAssessmentDb = $this->sm->get('ClinicRiskAssessmentTable');
       return $clinicRiskAssessmentDb->fetchBehaviourDataReportingWeeklyDetails($params);
     }
+    
+    public function exportIPVReportInExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->riskAssessmentQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQuery = $queryContainer->riskAssessmentQuery;
+                $sQuery = $sQuery->where('(r_a.has_patient_ever_been_abused_by_someone like \'{"ever_abused":"1"%\' OR r_a.has_patient_ever_been_hurt_by_someone_within_last_year like \'{"ever_hurt":"1"%\' OR r_a.has_patient_ever_been_hurt_by_someone_during_pregnancy like \'{"ever_hurt_by_during_pregnancy":"1"%\' OR r_a.has_patient_ever_been_forced_for_sex_within_last_year like \'{"ever_forced_for_sex":"1"%\' OR r_a.is_patient_afraid_of_anyone = 1)');
+                $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    $keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                        $interviewDate = '';
+                        if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
+                            $interviewDate = $common->humanDateFormat($aRow['interview_date']);
+                        }
+                        //abuse
+                        //patient abused by
+                        $hasPatientEverBeenAbusedBySomeone = '';
+                        if($aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= ''){
+                            $patientAbusedBydata = json_decode($aRow['has_patient_ever_been_abused_by_someone'],true);
+                            $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
+                            if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+                                $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
+                            }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
+                               $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
+                            }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 99){
+                               $patientAbusedByInNoofTimes = 'Refused - 99';
+                            }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 2222){
+                               $patientAbusedByInNoofTimes = 'Response Not Available - 2222';
+                            }else if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= ''){
+                               $patientAbusedByInNoofTimes = ucwords($patientAbusedBydata['no_of_times']);
+                            }
+                            if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
+                                $patientAbusedBy = substr($patientAbusedBydata['who_abused'],1);
+                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused']) == 'not applicable'){
+                                $patientAbusedBy = 'Not Applicable';
+                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+                                $abusedppl = explode(',',$patientAbusedBydata['who_abused']);
+                                $abusedGroup = array();
+                                for($i=0;$i<count($abusedppl);$i++){
+                                    $abusedGroup[] = $keyArray[$abusedppl[$i]];
+                                }
+                                $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
+                            }
+                            if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
+                                $hasPatientEverBeenAbusedBySomeone = "Yes - 1,&nbsp;&nbsp;Abused by - ".$patientAbusedBy."&nbsp;&nbsp;No.of times abused - ".$patientAbusedByInNoofTimes;
+                            }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
+                                $hasPatientEverBeenAbusedBySomeone = "No - 2";
+                            }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
+                                $hasPatientEverBeenAbusedBySomeone = "Don't Know - 88";
+                            }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 99){
+                                $hasPatientEverBeenAbusedBySomeone = "Refused - 99";
+                            }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
+                                $hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
+                            }
+                        }
+                        //patient hurt by someone within last year
+                        $hasPatientHurtBySomeoneWithinLastYear = '';
+                        if($aRow['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
+                            $patientHurtBydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
+                            $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
+                            if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+                                $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
+                            }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
+                               $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
+                            }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 99){
+                               $patientHurtByInNoofTimes = 'Refused - 99';
+                            }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 2222){
+                               $patientHurtByInNoofTimes = 'Response Not Available - 2222';
+                            }else if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= ''){
+                               $patientHurtByInNoofTimes = ucwords($patientHurtBydata['no_of_times']);
+                            }
+                            if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
+                                $patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
+                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
+                                $patientHurtByWithinLastYear = 'Not Applicable';
+                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+                                $hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
+                                $hurtedGroup = array();
+                                for($i=0;$i<count($hurtedppl);$i++){
+                                    $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+                                }
+                                $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
+                            }
+                            if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
+                                $hasPatientHurtBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;Hurt by - ".$patientHurtByWithinLastYear."&nbsp;&nbsp;No.of times hurted - ".$patientHurtByInNoofTimes;
+                            }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
+                                $hasPatientHurtBySomeoneWithinLastYear = "No - 2";
+                            }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
+                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know - 88";
+                            }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
+                                $hasPatientHurtBySomeoneWithinLastYear = "Refused - 99";
+                            }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
+                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available - 2222";
+                            }
+                        }
+                        //patient hurt by someone during pregnancy
+                        $hasPatientHurtBySomeoneDuringPregnancy = 'Not Applicable';;
+                        if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
+                            $patientHurtByDuringPregnancydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
+                            $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
+                            if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+                                $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
+                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
+                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 99){
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Refused - 99';
+                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 2222){
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available - 2222';
+                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= ''){
+                               $patientHurtByDuringPregnancyInNoofTimes = ucwords($patientHurtByDuringPregnancydata['no_of_times']);
+                            }
+                            if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
+                                $patientHurtByDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt']) == 'not applicable'){
+                                $patientHurtByDuringPregnancy = 'Not Applicable';
+                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+                                $hurtedppl = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
+                                $hurtedGroup = array();
+                                for($i=0;$i<count($hurtedppl);$i++){
+                                    $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+                                }
+                                $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
+                            }
+                            if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1,&nbsp;&nbsp;Hurt by - ".$patientHurtByDuringPregnancy."&nbsp;&nbsp;No.of times hurted - ".$patientHurtByDuringPregnancyInNoofTimes;
+                            }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
+                                $hasPatientHurtBySomeoneDuringPregnancy = "No - 2";
+                            }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Don't Know - 88";
+                            }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 99){
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Refused - 99";
+                            }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2222){
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
+                            }
+                        }
+                        //patient forced for sex within last year
+                        $hasPatientForcedforSexBySomeoneWithinLastYear = '';
+                        if($aRow['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($aRow['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
+                            $patientForcedforSexdata = json_decode($aRow['has_patient_ever_been_forced_for_sex_within_last_year'],true);
+                            $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
+                            if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+                                $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
+                            }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
+                               $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
+                            }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 99){
+                               $patientForcedforSexInNoofTimes = 'Refused - 99';
+                            }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 2222){
+                               $patientForcedforSexInNoofTimes = 'Response Not Available - 2222';
+                            }else if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= ''){
+                               $patientForcedforSexInNoofTimes = ucwords($patientForcedforSexdata['no_of_times']);
+                            }
+                            if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
+                                $patientForcedforSexBy = substr($patientForcedforSexdata['who_forced'],1);
+                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced']) == 'not applicable'){
+                                $patientForcedforSexBy = 'Not Applicable';
+                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+                                $forcedbyppl = explode(',',$patientForcedforSexdata['who_forced']);
+                                $forcedbyGroup = array();
+                                for($i=0;$i<count($forcedbyppl);$i++){
+                                    $forcedbyGroup[] = $keyArray[$forcedbyppl[$i]];
+                                }
+                                $patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
+                            }
+                            if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1,&nbsp;&nbsp;Forced by - ".$patientForcedforSexBy."&nbsp;&nbsp;No.of times forced - ".$patientForcedforSexInNoofTimes;
+                            }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "No - 2";
+                            }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know - 88";
+                            }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 99){
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Refused - 99";
+                            }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2222){
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available - 2222";
+                            }
+                        }
+                        $hasPatientAfraidofAnyone = '';
+                        if($aRow['is_patient_afraid_of_anyone']!= null && trim($aRow['is_patient_afraid_of_anyone'])!= ''){
+                            if($aRow['is_patient_afraid_of_anyone'] == 1){
+                                $hasPatientAfraidofAnyone = "Yes - 1";
+                            }else if($aRow['is_patient_afraid_of_anyone'] == 2){
+                                $hasPatientAfraidofAnyone = "No - 2";
+                            }else if($aRow['is_patient_afraid_of_anyone'] == 88){
+                                $hasPatientAfraidofAnyone = "Don't Know - 88";
+                            }else if($aRow['is_patient_afraid_of_anyone'] == 99){
+                                $hasPatientAfraidofAnyone = "Refused - 99";
+                            }else if($aRow['is_patient_afraid_of_anyone'] == 2222){
+                                $hasPatientAfraidofAnyone = "Response Not Available - 2222";
+                            }
+                        }
+                        $row = array();
+                        $row[] = $aRow['anc_site_code'].'-'.ucwords($aRow['anc_site_name']);
+                        $row[] = $aRow['patient_barcode_id'];
+                        $row[] = ucwords($aRow['interviewer_name']);
+                        $row[] = $aRow['anc_patient_id'];
+                        $row[] = $interviewDate;
+                        $row[] = $hasPatientEverBeenAbusedBySomeone;
+                        $row[] = $hasPatientHurtBySomeoneWithinLastYear;
+                        $row[] = $hasPatientHurtBySomeoneDuringPregnancy;
+                        $row[] = $hasPatientForcedforSexBySomeoneWithinLastYear;
+                        $row[] = $hasPatientAfraidofAnyone;
+                        $row[] = ucfirst($aRow['comment']);
+                        $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $sheet->mergeCells('A1:A2');
+                    $sheet->mergeCells('B1:B2');
+                    $sheet->mergeCells('C1:C2');
+                    $sheet->mergeCells('D1:D2');
+                    $sheet->mergeCells('E1:E2');
+                    
+                    $sheet->mergeCells('F1:J1');
+                    
+                    $sheet->mergeCells('K1:K2');
+                    
+                    $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Interviewer Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Interview Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('F1', html_entity_decode('Abuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F2', html_entity_decode('Have you ever been emotionally or physically abused by your partner or your loved one? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('K1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
+                    $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('F1:J1')->applyFromArray($styleArray);
+                    $sheet->getStyle('F2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G2')->applyFromArray($styleArray);
+                    $sheet->getStyle('H2')->applyFromArray($styleArray);
+                    $sheet->getStyle('I2')->applyFromArray($styleArray);
+                    $sheet->getStyle('J2')->applyFromArray($styleArray);
+                    $sheet->getStyle('K1:K2')->applyFromArray($styleArray);
+                    
+                    $currentRow = 3;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }
+                            
+                            if($colNo > 11){
+                                break;
+                            }
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'IPV-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "";
+                }
+            }catch (Exception $exc) {
+                error_log("IPV-REPORT--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            } 
+        }else{
+            return "";
+        }
+    }
 }

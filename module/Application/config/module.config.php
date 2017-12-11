@@ -617,6 +617,15 @@ return array(
                         'action' => 'index'
                     ),
                 ),
+            ),'export-ipv-report' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/export-ipv-report',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'export-ipv-report'
+                    ),
+                ),
             )
         ),
     ),

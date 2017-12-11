@@ -139,7 +139,8 @@ if(isset($date) && trim($date)!= ''){
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchRiskAssessmentData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<a href="javascript:void(0);" onclick="exportRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportIPVReport();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export IPV Report</a>
 	    </div>
 	</form>
     </div>
@@ -292,9 +293,23 @@ if(isset($date) && trim($date)!= ''){
         searchRiskAssessmentData();
     }
     
-    function extractRiskAssessmentData(){
+    function exportRiskAssessmentData(){
 	$.blockUI();
 	$.post("<?php echo $this->url('export-risk-assessment-excel'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('OOPS..Unable to generate excel.');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+    
+    function exportIPVReport(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-ipv-report'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('OOPS..Unable to generate excel.');
