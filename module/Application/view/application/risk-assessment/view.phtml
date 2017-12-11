@@ -233,6 +233,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                                 echo 'N(Negative - Absent)';
                                }else if($row->HIV_diagnostic_line == 'invalid'){
                                 echo 'Invalid';
+                               }else if($row->HIV_diagnostic_line == 'result-not-available'){
+                                echo 'Result not available';
                                }
                             }
                             ?>
@@ -245,12 +247,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                             <p>
                             <?php
                             if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
-                               if($row->recency_line == 'recent'){
-                                echo 'R(Recent- Absent)';
-                               }else if($row->recency_line == 'long term'){
+                               if($row->recency_line == 'long term'){
                                 echo 'LT(Long Term - Present)';
+                               }else if($row->recency_line == 'recent'){
+                                echo 'R(Recent- Absent)';
                                }else if($row->recency_line == 'invalid'){
                                 echo 'Invalid';
+                               }else if($row->recency_line == 'result-not-available'){
+                                echo 'Result not available';
                                }
                             }
                             ?>

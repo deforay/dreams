@@ -164,6 +164,7 @@ if(trim($countryId)!= ''){
 			    <option value="positive">P(Positive - Present)</option>
 			    <option value="negative">N(Negative - Absent)</option>
 			    <option value="invalid">Invalid</option>
+			    <option value="result-not-available">Result not available</option>
                         </select>
                         <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
 			</div>
@@ -172,9 +173,10 @@ if(trim($countryId)!= ''){
 			<div class="input-field col m12 s12">
 			<select id="rrrRecency" name="rrrRecency" class="material-select" title="Please select long term (recency) line">
                             <option value=""> -- Select -- </option>
-			    <option value="recent">R(Recent- Absent)</option>
 			    <option value="long term">LT(Long Term - Present)</option>
+			    <option value="recent">R(Recent- Absent)</option>
 			    <option value="invalid">Invalid</option>
+			    <option value="result-not-available">Result not available</option>
                         </select>
                         <label for="rrrRecency">Long Term (Recency) Line *</label>
 			</div>

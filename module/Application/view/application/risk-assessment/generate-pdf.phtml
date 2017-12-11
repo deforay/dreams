@@ -88,18 +88,22 @@ $common = new \Application\Service\CommonService();
 		$HIVDiagnosticVal = 'N(Negative - Absent)';
 	    }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'invalid'){
 		$HIVDiagnosticVal = 'Invalid';
+	    }else if(isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line']!= null && trim($data['HIV_diagnostic_line']) == 'result-not-available'){
+		$HIVDiagnosticVal = 'Result not available';
 	    }
         }
         $recencyVal = '';
         $recency = false;
         if((isset($data['has_patient_had_rapid_recency_test']) && $data['has_patient_had_rapid_recency_test'] == 'done') && ((!isset($data['HIV_diagnostic_line']) || (isset($data['HIV_diagnostic_line']) && $data['HIV_diagnostic_line'] !='negative')))){
             $recency = true;
-            if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'recent'){
-                $recencyVal = 'R(Recent- Absent)';
-            }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'long term'){
+            if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'long term'){
 		$recencyVal = 'LT(Long Term - Present)';
-	    }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'invalid'){
+	    }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'recent'){
+                $recencyVal = 'R(Recent- Absent)';
+            }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'invalid'){
 		$recencyVal = 'Invalid';
+	    }else if(isset($data['recency_line']) && $data['recency_line']!= null && trim($data['recency_line']) == 'result-not-available'){
+		$recencyVal = 'Result not available';
 	    }
         }
         //patient occupation
@@ -872,8 +876,10 @@ $common = new \Application\Service\CommonService();
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q22. Have you <span style="text-decoration:underline;">ever</span> tried recreational drugs?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverTriedRecreationalDrugs.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientHadRecreationalDrugsInLastSixMonths.'</td></tr>';
+	    if((int)$data['has_patient_ever_tried_recreational_drugs'] == 1){
+	        $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientHadRecreationalDrugsInLastSixMonths.'</td></tr>';
+	    }
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Abuse</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q23. Have you ever been emotionally or physically abused by your partner or your loved one?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedBySomeone.'</td></tr>';

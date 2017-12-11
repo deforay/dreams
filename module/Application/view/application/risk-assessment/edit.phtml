@@ -168,6 +168,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>P(Positive - Present)</option>
 			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>N(Negative - Absent)</option>
 			    <option value="invalid" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
                         </select>
                         <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
 			</div>
@@ -176,9 +177,10 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			<div class="input-field col m12 s12">
 			<select id="rrrRecency" name="rrrRecency" class="material-select <?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'isRequired':''; ?>" title="Please select long term (recency) line">
                             <option value=""> -- Select -- </option>
-			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>R(Recent- Absent)</option>
 			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>LT(Long Term - Present)</option>
+			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>R(Recent- Absent)</option>
 			    <option value="invalid" <?php echo (isset($row->recency_line) && $row->recency_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->recency_line) && $row->recency_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
                         </select>
                         <label for="rrrRecency">Long Term (Recency) Line *</label>
 			</div>
