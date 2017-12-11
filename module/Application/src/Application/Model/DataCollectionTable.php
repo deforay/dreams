@@ -1579,9 +1579,8 @@ class DataCollectionTable extends AbstractTableGateway {
 					    ->columns(array(
 							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
 							 ))
-					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
 					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
-					    ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
+					    ->where('r_a.country = '.$params['country'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
 		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                  $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	     $i++;
