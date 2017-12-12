@@ -124,6 +124,7 @@ if(isset($countryId) && trim($countryId)!=''){
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
                             <select class="material-select countryMulti" id="countryMulti" name="countryMulti[]" multiple="multiple" title="Please select country">
+                                <option value="" disabled selected> -- Select -- </option>
                                 <?php
                                 foreach($allCountries as $allCountry){
                                     ?>
@@ -169,6 +170,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
                         <select class="material-select" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
+                            <option value="" disabled selected> -- Select -- </option>
                             <?php
                             foreach($ancSites as $anc){
                                 ?>
@@ -184,6 +186,7 @@ if(isset($countryId) && trim($countryId)!=''){
                     <div class="input-field col m10 s10">
                         <i class="material-icons prefix">done</i>
                         <select class="material-select" id="lab" name="lab[]" multiple title="Please select lab site name">
+                            <option value="" disabled selected> -- Select -- </option>
                             <?php
                             foreach($facilities as $facility){
                                 ?>

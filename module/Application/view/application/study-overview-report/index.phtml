@@ -179,6 +179,7 @@ $loginContainer = new Container('user');
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type">
+			    <option value="" disabled selected> All Sample Types </option>
 			    <option value="1">Venous</option>
 			    <option value="2">Plasma</option>
 			    <option value="3">DBS</option>
@@ -426,7 +427,6 @@ $loginContainer = new Container('user');
     
     function clearSearchFields(){
        $('#overviewFilter')[0].reset();
-       $('#overviewFilter .select-dropdown').val('');
        searchStudyOverviewData();
     }
     

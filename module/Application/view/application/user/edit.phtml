@@ -144,6 +144,7 @@ if(count($row['userLaboratories'])>0){
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">room</i>
                             <select class="material-select countryMulti" id="countryMulti" name="countryMulti[]" multiple="multiple" title="Please select country" >
+                                <option value="" disabled <?php echo($userCountryList > 0)?'':'selected'; ?>> -- Select -- </option>
                                 <?php
                                 foreach($allCountries as $allCountry){
                                     ?>
@@ -181,6 +182,7 @@ if(count($row['userLaboratories'])>0){
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
                             <select class="material-select <?php echo($row->role == 5)?'isRequired':''; ?>" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
+                                <option value="" disabled <?php echo($ancList > 0)?'':'selected'; ?>> -- Select -- </option>
                                 <?php
                                 foreach($ancSites as $anc){
                                     ?>
@@ -196,6 +198,7 @@ if(count($row['userLaboratories'])>0){
                         <div class="input-field col m10 s10">
                             <i class="material-icons prefix">done</i>
                             <select class="material-select <?php echo($row->role == 3 || $row->role == 4)?'isRequired':''; ?>" id="lab" name="lab[]" multiple title="Please select lab site name">
+                                <option value="" disabled <?php echo($laboratoryList > 0)?'':'selected'; ?>> -- Select -- </option>
                                 <?php
                                 foreach($facilities as $facility){
                                     ?>
@@ -277,9 +280,9 @@ if(count($row['userLaboratories'])>0){
                 if($('#country').length  >0 || $('#countryMulti').length >0){
                     var role = $('#role').val();
                     if(base64_decode(role) == 3 || base64_decode(role) == 4 || base64_decode(role) == 5){
-                       country = $("#country").val(); 
+                       var country = $("#country").val(); 
                     }else if(base64_decode(role) == 2) {
-                       country = $("#countryMulti").val();
+                       var country = $("#countryMulti").val();
                     }
                     if((country == null || $.trim(country) == '')){
                         alert("Please choose country");
@@ -317,7 +320,7 @@ if(count($row['userLaboratories'])>0){
             $("#countrySingle").hide();
             $("#countryMultiple").show();
         }else{
-            //$("#countryMulti").val('');
+           //$("#countryMulti").val('');
             $("#countryMultiple").hide();
             $("#countrySingle").show();
         }
@@ -329,13 +332,11 @@ if(count($row['userLaboratories'])>0){
           $('.clinicanSection').hide();
           $('#ancSite').removeClass('isRequired');
           $('.supervisorDeoSection').show();
-          if($('#lab').val() == null || $('#lab').val() == ''){ $('#editUserForm .supervisorDeoSection .select-dropdown').val(''); }
           $('#lab').addClass('isRequired');
        }else if(base64_decode(role)== 5){
           $('.supervisorDeoSection').hide();
           $('#lab').removeClass('isRequired');
           $('.clinicanSection').show();
-          if($('#ancSite').val() == null || $('#ancSite').val() == ''){ $('#editUserForm .clinicanSection .select-dropdown').val(''); }
           $('#ancSite').addClass('isRequired');
        }else{
          $('.clinicanSection').hide();

@@ -122,11 +122,12 @@ if(isset($date) && trim($date)!= ''){
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
 		<div class="col l2 m2 s2 left-align"><h6><strong>Interview Date </strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
-		    <input id="interviewDate" name="interviewDate" type="text" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
+		    <input type="text" id="interviewDate" name="interviewDate" plcaeholder="Interview date" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
 		</div>
 		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
 		<div class="col l3 m3 s3 left-align">
 		    <select id="anc" name="anc[]" class="material-select" title="Please select ANC Site" multiple="multiple" style="width:40% !important;">
+			<option value="" disabled selected> All ANCs </option>
 			<?php
 			foreach($ancSites as $anc){
 			?>
@@ -289,7 +290,6 @@ if(isset($date) && trim($date)!= ''){
     
     function clearSearchFields(){
         $('#rASearchFilterForm')[0].reset();
-	$('#rASearchFilterForm .select-dropdown').val('');
         searchRiskAssessmentData();
     }
     
