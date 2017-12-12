@@ -33,6 +33,18 @@
 	font-size:15px !important;
 	font-weight:800 !important;
     }
+    .labBorder-left{
+        border-left:1px solid #888 !important;
+    }
+    .labBorder-right{
+        border-right:1px solid #888 !important;
+    }
+    .labBorder-top{
+        border-top:1px solid #888 !important;
+    }
+    .labBorder-bottom{
+        border-bottom:1px solid #888 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -42,15 +54,14 @@
         <form id="dashboardFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" value="<?php //echo date('M/Y'); ?>" readonly/></div>
-		<div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> -- Select -- </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:90%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
+		<div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> All Countries </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                
 		<a href="javascript:void(0);" onclick="searchDashboardData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>
             </div>
         </form>
     </div>
@@ -67,11 +78,11 @@
 			    <th>Month - Year</th>
                             <th>Country</th>
                             <th>Samples Received</th>
-			                <th>Samples Incomplete</th>
+			    <th>Samples Incomplete</th>
                             <th>Samples Tested</th>
                             <th>Samples Locked for Editing</th>
-                            <th>No. of Lab LAg Recent</th>
-                            <th>No. of Lab Recency Assay Recent (Visual)</th>
+                            <th class="labBorder-left labBorder-top">No. of Lab LAg Recent</th>
+                            <th class="labBorder-right labBorder-top">No. of Lab Recency Assay Recent (Visual)</th>
                             <th>No. of Risk Questionnaires</th>
                             <th>No. of ANC Asante Assay Recent (Visual)</th>
                         </tr>
@@ -121,6 +132,13 @@
     function clearSearchFields(){
        $('#dashboardFilter')[0].reset();
         searchDashboardData('reset');
+    }
+    
+    function clearReportingDate(){
+	if($('#reportingMonthYear').val()!= ''){
+	   $('#reportingMonthYear').val('');
+	   searchDashboardData('reset');
+	}
     }
     
     function extractDashboardData(){

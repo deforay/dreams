@@ -31,8 +31,8 @@ if(count($response) >0){
         <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-incomplete&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-tested&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesTested'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=s-finalized&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesFinalized'].'</a>':0; ?></td>
-        <td><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lag-rececnt&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
-        <td><?php echo ($country['noofRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-recency-assay-recent&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofRecencyAssayRecent'].'</a>':0; ?></td>
+        <td class="labBorder-left"><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-lag-rececnt&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
+        <td class="labBorder-right"><?php echo ($country['noofRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=no-of-recency-assay-recent&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofRecencyAssayRecent'].'</a>':0; ?></td>
         <td><?php echo ($assessments >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=assessment&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$assessments.'</a>':0; ?></td>
         <td><?php echo ($noofANCRecencyTestRecent >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=no-of-anc-recency-test&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$noofANCRecencyTestRecent.'</a>':0; ?></td>
     </tr>
@@ -43,8 +43,8 @@ if(count($response) >0){
         <td class="total_row"><?php echo array_sum($samplesIncompleteArray); ?></td>
         <td class="total_row"><?php echo array_sum($samplesTestedArray); ?></td>
         <td class="total_row"><?php echo array_sum($samplesFinalizedArray); ?></td>
-        <td class="total_row"><?php echo array_sum($noofLAgRecentArray); ?></td>
-        <td class="total_row"><?php echo array_sum($noofRecencyAssayRecentArray); ?></td>
+        <td class="total_row labBorder-left labBorder-bottom"><?php echo array_sum($noofLAgRecentArray); ?></td>
+        <td class="total_row labBorder-right labBorder-bottom"><?php echo array_sum($noofRecencyAssayRecentArray); ?></td>
         <td class="total_row"><?php echo array_sum($assessmentsArray); ?></td>
         <td class="total_row"><?php echo array_sum($noofANCRecencyTestRecentArray); ?></td>
     </tr>
