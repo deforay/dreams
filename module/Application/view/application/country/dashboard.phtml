@@ -104,7 +104,7 @@
 		    <div class="col l4 m4 s4 mapSampleType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="mapSpecimenType" name="mapSpecimenType[]" multiple="multiple" title="Please select speciment type"><option value="" disabled selected> All Sample Types </option><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
 		</div>
 		<div class="col l12 m12 s12">
-		   <div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>
+		   <!--<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>-->
 		   <div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="" disabled selected> All Types </option><option value="labLAgRecency">Lab LAg Test</option><option value="labAsanteRecency">Lab Recency Test</option><option value="ancRapidRecency">ANC Recency Test</option></select></div>
 		</div>
 		<div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
@@ -200,10 +200,10 @@
         var reportingMonthYear = $('#mapReportingMonthYear').val();
         var province = $('#mapProvince').val();
         var specimenType = ($('#mapSpecimenType').val()!= null)?$('#mapSpecimenType').val().join(','):'';
-        var hasSitePerformedRapidRecencyTest = $('#hasSitePerformedRapidRecencyTest').val();
+        //var hasSitePerformedRapidRecencyTest = $('#hasSitePerformedRapidRecencyTest').val();
         var sitehavingRecentInfectionby = ($('#sitehavingRecentInfectionby').val()!= null)?$('#sitehavingRecentInfectionby').val().join(','):'';
         if(frmSrc!= 'load') { $.blockUI(); }
-            $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType,hasSitePerformedRapidRecencyTest:hasSitePerformedRapidRecencyTest,sitehavingRecentInfectionby:sitehavingRecentInfectionby},
+            $.post("<?php echo $this->url('country',array('action'=>'get-data-reporting-locations')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType,/*hasSitePerformedRapidRecencyTest:hasSitePerformedRapidRecencyTest,*/sitehavingRecentInfectionby:sitehavingRecentInfectionby},
             function(data) {
             if(frmSrc!= 'load') { $.unblockUI(); }
                 $('.map-container').html(data);

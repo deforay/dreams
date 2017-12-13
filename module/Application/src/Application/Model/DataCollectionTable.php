@@ -1606,7 +1606,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		$showANCRecent = true;
 	    }
 	}
-	//Show lab recent points
+	//Show lab LAg/asante recent points
 	if($showLabRecent){
 	    $labRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
 				  ->columns(array('anc_site_name','latitude','longitude'))
@@ -1655,9 +1655,9 @@ class DataCollectionTable extends AbstractTableGateway {
 		$ancRecentQuery = $ancRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	    } if(trim($params['specimenType'])!= ''){
 		$ancRecentQuery = $ancRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
-	    } if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
+	    } /*if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
 		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
-	    } if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
+	    }*/ if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
 		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.recency_line'=>'recent'));
 	    }
 	    $ancRecentQueryStr = $sql->getSqlStringForSqlObject($ancRecentQuery);
