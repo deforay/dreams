@@ -109,12 +109,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $ageDiffofMainSexualPartner = 'not applicable';
 	    $isPartnerCircumcised = 'not applicable';
 	    $circumcision = 'not applicable';
-	    $hasPatinetEverReceivedGiftforSex = 'not applicable';
-	    $lastTimeOfReceivingGiftforSex = 'not applicable';
-	    $noOfTimesBeenPregnant = 'not applicable';
-	    $noOfTimesCondomUsedBeforePregnancy = 'not applicable';
-	    $noOfTimesCondomUsedAfterPregnancy = 'not applicable';
-	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= 3){
+	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus']) == 3){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
+	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
 		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 		$ageofMainSexualPartneratLastBirthday = NULL;
 		if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
@@ -130,24 +127,27 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}else if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= ''){
 		   $isPartnerCircumcised = $params['isPartnerCircumcised']; 
 		}
-		$hasPatinetEverReceivedGiftforSex = NULL;
-		if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
-		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
-		    $lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
-		}else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
-		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
-		}
-		$noOfTimesBeenPregnant = NULL;
-		if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
-		    $noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
-		}else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
-		   $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
-		}
-		$noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
-	        $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
-	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
-		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
+	    $hasPatinetEverReceivedGiftforSex = NULL;
+	    $lastTimeOfReceivingGiftforSex = NULL;
+	    $noOfTimesBeenPregnant = NULL;
+	    $noOfTimesCondomUsedBeforePregnancy = NULL;
+	    $noOfTimesCondomUsedAfterPregnancy = NULL;
+	    if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
+		$hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		$lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
+	    }else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
+		$hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		$lastTimeOfReceivingGiftforSex = 'not applicable';
+	    }
+	    $noOfTimesBeenPregnant = NULL;
+	    if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
+		$noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
+	    }else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
+	       $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
+	    }
+	    $noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
+	    $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
 	    //patient disease symptoms/treatment details
 	    $hasPatientHadPainInLowerAbdomen = NULL;
 	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';
@@ -672,12 +672,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $ageDiffofMainSexualPartner = 'not applicable';
 	    $isPartnerCircumcised = 'not applicable';
 	    $circumcision = 'not applicable';
-	    $hasPatinetEverReceivedGiftforSex = 'not applicable';
-	    $lastTimeOfReceivingGiftforSex = 'not applicable';
-	    $noOfTimesBeenPregnant = 'not applicable';
-	    $noOfTimesCondomUsedBeforePregnancy = 'not applicable';
-	    $noOfTimesCondomUsedAfterPregnancy = 'not applicable';
-	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= 3){
+	    if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus']) == 3){
+		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
+	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
 		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 		$ageofMainSexualPartneratLastBirthday = NULL;
 		if(isset($params['ageOfMainSexualPartnerAtLastBirthdayInYears']) && trim($params['ageOfMainSexualPartnerAtLastBirthdayInYears'])!= ''){
@@ -693,24 +690,27 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}else if(isset($params['isPartnerCircumcised']) && trim($params['isPartnerCircumcised'])!= ''){
 		   $isPartnerCircumcised = $params['isPartnerCircumcised']; 
 		}
-		$hasPatinetEverReceivedGiftforSex = NULL;
-		if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
-		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
-		    $lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
-		}else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
-		    $hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
-		}
-		$noOfTimesBeenPregnant = NULL;
-		if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
-		    $noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
-		}else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
-		   $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
-		}
-		$noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
-	        $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
-	    }else if(isset($params['partnerHIVTestStatus']) && trim($params['partnerHIVTestStatus'])!= ''){
-		$partnerHIVTestStatus = $params['partnerHIVTestStatus'];
 	    }
+	    $hasPatinetEverReceivedGiftforSex = NULL;
+	    $lastTimeOfReceivingGiftforSex = NULL;
+	    $noOfTimesBeenPregnant = NULL;
+	    $noOfTimesCondomUsedBeforePregnancy = NULL;
+	    $noOfTimesCondomUsedAfterPregnancy = NULL;
+	    if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex']) == 1){
+		$hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		$lastTimeOfReceivingGiftforSex = (isset($params['lastTimeOfReceivingGiftForSex']) && trim($params['lastTimeOfReceivingGiftForSex'])!= '')?$params['lastTimeOfReceivingGiftForSex']:NULL;
+	    }else if(isset($params['hasPatinetEverReceivedGiftForSex']) && trim($params['hasPatinetEverReceivedGiftForSex'])!= ''){
+		$hasPatinetEverReceivedGiftforSex = $params['hasPatinetEverReceivedGiftForSex'];
+		$lastTimeOfReceivingGiftforSex = 'not applicable';
+	    }
+	    $noOfTimesBeenPregnant = NULL;
+	    if(isset($params['noOfTimesBeenPregnantInNumbers']) && trim($params['noOfTimesBeenPregnantInNumbers'])!= ''){
+		$noOfTimesBeenPregnant = '@'.$params['noOfTimesBeenPregnantInNumbers'];
+	    }else if(isset($params['noOfTimesBeenPregnant']) && trim($params['noOfTimesBeenPregnant'])!= ''){
+	       $noOfTimesBeenPregnant = $params['noOfTimesBeenPregnant'];
+	    }
+	    $noOfTimesCondomUsedBeforePregnancy = (isset($params['noOfTimesCondomUsedBeforePregnancy']) && trim($params['noOfTimesCondomUsedBeforePregnancy'])!= '')?$params['noOfTimesCondomUsedBeforePregnancy']:NULL;
+	    $noOfTimesCondomUsedAfterPregnancy = (isset($params['noOfTimesCondomUsedAfterPregnancy']) && trim($params['noOfTimesCondomUsedAfterPregnancy'])!= '')?$params['noOfTimesCondomUsedAfterPregnancy']:NULL;
 	    //patient disease symptoms/treatment details
 	    $hasPatientHadPainInLowerAbdomen = NULL;
 	    $hasPatientBeenTreatedForLowerAbdomenPain = 'not applicable';

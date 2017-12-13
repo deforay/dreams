@@ -464,12 +464,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </select>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row partnerHIVTestStatus" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q10. How old was your <span class="highlightedTxt">spouse/main</span> sexual partner on his last birthday? <span class="mainSexualPartnerSectionRequired">*</span>
+                    Q10. How old was your <span class="highlightedTxt">spouse/main</span> sexual partner on his last birthday? <span class="partnerHIVTestStatusRequired">*</span>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:10px;">
+            <div class="row partnerHIVTestStatus" style="margin-bottom:10px;">
                 <div class="col s12">
                     <input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate years checkNum <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == null || trim($row->age_of_main_sexual_partner_at_last_birthday) == '')?'isRequired':''; ?>" title="Don't leave Q10" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && $row->age_of_main_sexual_partner_at_last_birthday[0] == '@')?substr($row->age_of_main_sexual_partner_at_last_birthday,1):'';?>" onchange="manageQ10('txt');" style="width:13%;"> Years&nbsp;
                     <input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="88" type="radio" onchange="manageQ10('rd');" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 88)?'checked="checked"':''; ?>>
@@ -480,12 +480,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="ageOfMainSexualPartnerAtLastBirthdayRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection mainSexualPartnerAgeSection" style="margin-bottom:0;">
+            <div class="row partnerHIVTestStatus mainSexualPartnerAgeSection" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q11. Is the age of your <span class="highlightedTxt">spouse/main</span> sexual partner older, younger, or the same age as you? <span class="mainSexualPartnerSectionRequired mainSexualPartnerAgeSectionRequired">*</span>
+                    Q11. Is the age of your <span class="highlightedTxt">spouse/main</span> sexual partner older, younger, or the same age as you? <span class="partnerHIVTestStatusRequired mainSexualPartnerAgeSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection mainSexualPartnerAgeSection" style="margin-bottom:10px;">
+            <div class="row partnerHIVTestStatus mainSexualPartnerAgeSection" style="margin-bottom:10px;">
                 <div class="col s4">
                     <select id="ageDiffOfMainSexualPartner" name="ageDiffOfMainSexualPartner" class="material-select isRequired" title="Don't leave Q11">
                         <option value=""> -- Select -- </option>
@@ -502,12 +502,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </select>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row partnerHIVTestStatus" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q12. Is your <span class="highlightedTxt">spouse/main</span> sexual partner circumcised? <span class="mainSexualPartnerSectionRequired">*</span>
+                    Q12. Is your <span class="highlightedTxt">spouse/main</span> sexual partner circumcised? <span class="partnerHIVTestStatusRequired">*</span>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row partnerHIVTestStatus" style="margin-bottom:0;">
                 <div class="col s12">
                     <input id="isPartnerCircumcisedYes" class="with-gap isRequired" name="isPartnerCircumcised" title="Don't leave Q12" value="1" type="radio" onchange="manageQ12();" <?php echo ($row->is_partner_circumcised == 1)?'checked="checked"':''; ?>>
 		    <label for="isPartnerCircumcisedYes" class="active">Yes - 1</label>&nbsp;&nbsp;
@@ -521,12 +521,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="isPartnerCircumcisedRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
-	    <div class="row mainSexualPartnerSection circumcisionSection" style="margin-bottom:0;margin-top:16px;">
+	    <div class="row partnerHIVTestStatus circumcisionSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q12A. What type of circumcision? <span class="mainSexualPartnerSectionRequired circumcisionSectionRequired">*</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q12A. What type of circumcision? <span class="partnerHIVTestStatusRequired circumcisionSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection circumcisionSection" style="margin-bottom:10px;">
+            <div class="row partnerHIVTestStatus circumcisionSection" style="margin-bottom:10px;">
                 <div class="col s4" style="padding-left:3%;">
                     <select id="circumcision" name="circumcision" class="material-select isRequired" title="Don't leave Q12A">
                         <option value=""> -- Select -- </option>
@@ -538,12 +538,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </select>
                 </div>
             </div>
-	    <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+	    <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q13. Have you ever received money/gifts in exchange for sex? <span class="mainSexualPartnerSectionRequired">*</span>
+                    Q13. Have you ever received money/gifts in exchange for sex? *
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <input id="hasPatinetEverReceivedGiftForSexYes" class="with-gap isRequired" name="hasPatinetEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio" onchange="manageQ13();" <?php echo ($row->has_patient_ever_received_gift_for_sex == 1)?'checked="checked"':''; ?>>
 		    <label for="hasPatinetEverReceivedGiftForSexYes" class="active">Yes - 1</label>&nbsp;&nbsp;
@@ -557,12 +557,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="hasPatinetEverReceivedGiftForSexRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection patinetReceivedGiftForSexSection" style="margin-bottom:0;margin-top:16px;">
+            <div class="row patinetReceivedGiftForSexSection" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q13A. When did you last receive money/gifts in exchange for sex? <span class="mainSexualPartnerSectionRequired patinetReceivedGiftForSexSectionRequired">*</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q13A. When did you last receive money/gifts in exchange for sex? <span class="patinetReceivedGiftForSexSectionRequired">*</span>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection patinetReceivedGiftForSexSection" style="margin-bottom:10px;">
+            <div class="row patinetReceivedGiftForSexSection" style="margin-bottom:10px;">
                 <div class="col s4" style="padding-left:3%;">
                     <select id="lastTimeOfReceivingGiftForSex" name="lastTimeOfReceivingGiftForSex" class="material-select isRequired" title="Don't leave Q13A">
                         <option value=""> -- Select -- </option>
@@ -575,14 +575,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </select>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q14. How many times have you been pregnant? <span class="mainSexualPartnerSectionRequired">*</span> (including this pregnancy)
+                    Q14. How many times have you been pregnant? * (including this pregnancy)
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:10px;">
+            <div class="row" style="margin-bottom:10px;">
                 <div class="col s12">
-                    <input id="noOfTimesBeenPregnantInNumbers" name="noOfTimesBeenPregnantInNumbers" type="text" class="validate times checkNum <?php echo ($row->no_of_times_been_pregnant == null || trim($row->no_of_times_been_pregnant) == '')?'isRequired':''; ?>" title="Don't leave Q14" value="<?php echo($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= '' && $row->no_of_times_been_pregnant[0] == '@')?substr($row->no_of_times_been_pregnant,1):'';?>" style="width:20%;"> Times &nbsp;&nbsp;
+                    <input id="noOfTimesBeenPregnantInNumbers" name="noOfTimesBeenPregnantInNumbers" type="text" class="validate times checkNum <?php echo ($row->no_of_times_been_pregnant == null || trim($row->no_of_times_been_pregnant) == '' || $row->no_of_times_been_pregnant == 'not applicable')?'isRequired':''; ?>" title="Don't leave Q14" value="<?php echo($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= '' && $row->no_of_times_been_pregnant[0] == '@')?substr($row->no_of_times_been_pregnant,1):'';?>" style="width:20%;"> Times &nbsp;&nbsp;
 		    <input id="noOfTimesBeenPregnantDK" class="with-gap" name="noOfTimesBeenPregnant" value="88" type="radio" <?php echo ($row->no_of_times_been_pregnant == 88)?'checked="checked"':''; ?>>
 		    <label for="noOfTimesBeenPregnantDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
                     <input id="noOfTimesBeenPregnantR" class="with-gap" name="noOfTimesBeenPregnant" value="99" type="radio" <?php echo ($row->no_of_times_been_pregnant == 99)?'checked="checked"':''; ?>>
@@ -591,12 +591,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="noOfTimesBeenPregnantRNA" class="active">Response Not Available </label>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? <span class="mainSexualPartnerSectionRequired">*</span>
+                    Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? *
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap isRequired" name="noOfTimesCondomUsedBeforePregnancy" title="Don't leave Q15" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 1)?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedBeforePregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
@@ -612,12 +612,12 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    <label for="noOfTimesCondomUsedBeforePregnancyRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;margin-top:16px;">
+            <div class="row" style="margin-bottom:0;margin-top:16px;">
                 <div class="col s12">
-                    Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? <span class="mainSexualPartnerSectionRequired">*</span>
+                    Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? *
                 </div>
             </div>
-            <div class="row mainSexualPartnerSection" style="margin-bottom:0;">
+            <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
                     <input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap isRequired" name="noOfTimesCondomUsedAfterPregnancy" title="Don't leave Q16" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 1)?'checked="checked"':''; ?>>
 		    <label for="noOfTimesCondomUsedAfterPregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
@@ -1091,8 +1091,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
         ?>
          manageQ10('<?php echo $fromSrc; ?>');
          manageQ12();
-         manageQ13();
        <?php } ?>
+        manageQ13();
         manageQ17();
         manageQ22();
         manageQ23();
@@ -1830,22 +1830,18 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
     //partner HIV status
     function manageQ9(){
 	if($.trim($('#partnerHIVTestStatus').val()) == 3){
-	    $(".mainSexualPartnerSectionRequired").css("visibility","hidden");
-	    $(".mainSexualPartnerSection").css("color","rgba(0,0,0,0.26)");
-	    $(".mainSexualPartnerSection").css("pointer-events","none");
-	    $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#noOfTimesBeenPregnantInNumbers').val("");
+	    $(".partnerHIVTestStatusRequired").css("visibility","hidden");
+	    $(".partnerHIVTestStatus").css("color","rgba(0,0,0,0.26)");
+	    $(".partnerHIVTestStatus").css("pointer-events","none");
+	    $('#ageOfMainSexualPartnerAtLastBirthdayInYears').val("");
 	    $('input[name="ageOfMainSexualPartnerAtLastBirthday"]:radio').prop('checked',false);
 	    $('input[name="isPartnerCircumcised"]:radio').prop('checked',false);
-	    $('input[name="hasPatinetEverReceivedGiftForSex"]:radio').prop('checked',false);
-	    $('input[name="noOfTimesBeenPregnant"]:radio').prop('checked',false);
-	    $('input[name="noOfTimesCondomUsedBeforePregnancy"]:radio').prop('checked',false);
-	    $('input[name="noOfTimesCondomUsedAfterPregnancy"]:radio').prop('checked',false);
-	    $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision,#hasPatinetEverReceivedGiftForSexYes,#lastTimeOfReceivingGiftForSex,#noOfTimesBeenPregnantInNumbers,#noOfTimesCondomUsedBeforePregnancyA,#noOfTimesCondomUsedAfterPregnancyA').removeClass("isRequired");
+	    $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').removeClass("isRequired");
 	}else{
-	   $(".mainSexualPartnerSectionRequired").css("visibility","visible");
-	   $(".mainSexualPartnerSection").css("color","");
-	   $(".mainSexualPartnerSection").css("pointer-events","auto");
-	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision,#hasPatinetEverReceivedGiftForSexYes,#lastTimeOfReceivingGiftForSex,#noOfTimesBeenPregnantInNumbers,#noOfTimesCondomUsedBeforePregnancyA,#noOfTimesCondomUsedAfterPregnancyA').addClass("isRequired");
+	   $(".partnerHIVTestStatusRequired").css("visibility","visible");
+	   $(".partnerHIVTestStatus").css("color","");
+	   $(".partnerHIVTestStatus").css("pointer-events","auto");
+	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').addClass("isRequired");
 	}
     }
     

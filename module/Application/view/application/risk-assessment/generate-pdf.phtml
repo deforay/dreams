@@ -403,7 +403,7 @@ $common = new \Application\Service\CommonService();
 	    }
 	}
 	$hasPatientEverReceivedGiftforSex = '';
-	if($data['has_patient_ever_received_gift_for_sex']!= null && trim($data['has_patient_ever_received_gift_for_sex'])!= ''){
+	if($data['has_patient_ever_received_gift_for_sex']!= null && trim($data['has_patient_ever_received_gift_for_sex'])!= '' && $data['has_patient_ever_received_gift_for_sex']!= 'not applicable'){
 	    if($data['has_patient_ever_received_gift_for_sex'] == 1){
 		$hasPatientEverReceivedGiftforSex = "Yes - 1";
 	    }else if($data['has_patient_ever_received_gift_for_sex'] == 2){
@@ -437,7 +437,7 @@ $common = new \Application\Service\CommonService();
 	    }
 	}
 	$noofTimesBeenPregnant = '';
-	if($data['no_of_times_been_pregnant']!= null && trim($data['no_of_times_been_pregnant'])!= ''){
+	if($data['no_of_times_been_pregnant']!= null && trim($data['no_of_times_been_pregnant'])!= '' && $data['no_of_times_been_pregnant']!= 'not applicable'){
 	    if($data['no_of_times_been_pregnant'][0] == '@'){
 		$noofTimesBeenPregnant = substr($data['no_of_times_been_pregnant'],1).' Time(s)';
 	    }else if($data['no_of_times_been_pregnant'] == 88){
@@ -451,7 +451,7 @@ $common = new \Application\Service\CommonService();
 	    }
 	}
 	$noofTimesCondomUsedBeforePregnancy = '';
-	if($data['no_of_times_condom_used_before_pregnancy']!= null && trim($data['no_of_times_condom_used_before_pregnancy'])!= ''){
+	if($data['no_of_times_condom_used_before_pregnancy']!= null && trim($data['no_of_times_condom_used_before_pregnancy'])!= '' && $data['no_of_times_condom_used_before_pregnancy']!= 'not applicable'){
 	    if($data['no_of_times_condom_used_before_pregnancy'] == 1){
 		$noofTimesCondomUsedBeforePregnancy = "Always - 1";
 	    }else if($data['no_of_times_condom_used_before_pregnancy'] == 2){
@@ -469,7 +469,7 @@ $common = new \Application\Service\CommonService();
 	    }
 	}
 	$noofTimesCondomUsedAfterPregnancy = '';
-	if($data['no_of_times_condom_used_after_pregnancy']!= null && trim($data['no_of_times_condom_used_after_pregnancy'])!= ''){
+	if($data['no_of_times_condom_used_after_pregnancy']!= null && trim($data['no_of_times_condom_used_after_pregnancy'])!= '' && $data['no_of_times_condom_used_after_pregnancy']!= 'not applicable'){
 	    if($data['no_of_times_condom_used_after_pregnancy'] == 1){
 		$noofTimesCondomUsedAfterPregnancy = "Always - 1";
 	    }else if($data['no_of_times_condom_used_after_pregnancy'] == 2){

@@ -396,7 +396,7 @@ class RiskAssessmentService {
                             }
                         }
                         $hasPatientEverReceivedGiftforSex = '';
-                        if($aRow['has_patient_ever_received_gift_for_sex']!= null && trim($aRow['has_patient_ever_received_gift_for_sex'])!= ''){
+                        if($aRow['has_patient_ever_received_gift_for_sex']!= null && trim($aRow['has_patient_ever_received_gift_for_sex'])!= '' && $aRow['has_patient_ever_received_gift_for_sex']!= 'not applicable'){
                             if($aRow['has_patient_ever_received_gift_for_sex'] == 1){
                                 $hasPatientEverReceivedGiftforSex = "Yes - 1";
                             }else if($aRow['has_patient_ever_received_gift_for_sex'] == 2){
@@ -430,7 +430,7 @@ class RiskAssessmentService {
                             }
                         }
                         $noofTimesBeenPregnant = '';
-                        if($aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= ''){
+                        if($aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && $aRow['no_of_times_been_pregnant']!= 'not applicable'){
                             if($aRow['no_of_times_been_pregnant'][0] == '@'){
                                 $noofTimesBeenPregnant = substr($aRow['no_of_times_been_pregnant'],1).' Time(s)';
                             }else if($aRow['no_of_times_been_pregnant'] == 88){
@@ -444,7 +444,7 @@ class RiskAssessmentService {
                             }
                         }
                         $noofTimesCondomUsedBeforePregnancy = '';
-                        if($aRow['no_of_times_condom_used_before_pregnancy']!= null && trim($aRow['no_of_times_condom_used_before_pregnancy'])!= ''){
+                        if($aRow['no_of_times_condom_used_before_pregnancy']!= null && trim($aRow['no_of_times_condom_used_before_pregnancy'])!= '' && $aRow['no_of_times_condom_used_before_pregnancy']!= 'not applicable'){
                             if($aRow['no_of_times_condom_used_before_pregnancy'] == 1){
                                 $noofTimesCondomUsedBeforePregnancy = "Always - 1";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 2){
@@ -462,7 +462,7 @@ class RiskAssessmentService {
                             }
                         }
                         $noofTimesCondomUsedAfterPregnancy = '';
-                        if($aRow['no_of_times_condom_used_after_pregnancy']!= null && trim($aRow['no_of_times_condom_used_after_pregnancy'])!= ''){
+                        if($aRow['no_of_times_condom_used_after_pregnancy']!= null && trim($aRow['no_of_times_condom_used_after_pregnancy'])!= '' && $aRow['no_of_times_condom_used_after_pregnancy']!= 'not applicable'){
                             if($aRow['no_of_times_condom_used_after_pregnancy'] == 1){
                                 $noofTimesCondomUsedAfterPregnancy = "Always - 1";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 2){

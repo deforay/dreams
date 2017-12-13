@@ -791,7 +791,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s4">
                     <p>
                         <?php
-                        if($row->has_patient_ever_received_gift_for_sex!= null && trim($row->has_patient_ever_received_gift_for_sex)!= ''){
+                        if($row->has_patient_ever_received_gift_for_sex!= null && trim($row->has_patient_ever_received_gift_for_sex)!= '' && $row->has_patient_ever_received_gift_for_sex!= 'not applicable'){
                             if($row->has_patient_ever_received_gift_for_sex == 1){
                                 echo "Yes - 1";
                             }else if($row->has_patient_ever_received_gift_for_sex == 2){
@@ -849,7 +849,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s4">
                     <p>
                         <?php
-                        if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= ''){
+                        if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= '' && $row->no_of_times_been_pregnant!= 'not applicable'){
                             if($row->no_of_times_been_pregnant[0] == '@'){
                                 echo substr($row->no_of_times_been_pregnant,1).' Time(s)';
                             }else if($row->no_of_times_been_pregnant == 88){
@@ -875,7 +875,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s4">
                     <p>
                         <?php
-                        if($row->no_of_times_condom_used_before_pregnancy!= null && trim($row->no_of_times_condom_used_before_pregnancy)!= ''){
+                        if($row->no_of_times_condom_used_before_pregnancy!= null && trim($row->no_of_times_condom_used_before_pregnancy)!= '' && $row->no_of_times_condom_used_before_pregnancy!= 'not applicable'){
                             if($row->no_of_times_condom_used_before_pregnancy == 1){
                                 echo "Always - 1";
                             }else if($row->no_of_times_condom_used_before_pregnancy == 2){
@@ -905,7 +905,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 <div class="col s4">
                     <p>
                         <?php
-                        if($row->no_of_times_condom_used_after_pregnancy!= null && trim($row->no_of_times_condom_used_after_pregnancy)!= ''){
+                        if($row->no_of_times_condom_used_after_pregnancy!= null && trim($row->no_of_times_condom_used_after_pregnancy)!= '' && $row->no_of_times_condom_used_after_pregnancy!= 'not applicable'){
                             if($row->no_of_times_condom_used_after_pregnancy == 1){
                                 echo "Always - 1";
                             }else if($row->no_of_times_condom_used_after_pregnancy == 2){
@@ -1113,32 +1113,34 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     </p>
                 </div>
             </div>
-            <div class="row" style="margin-bottom:0;">
-                <div class="col s12">
-                   &nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs?
+            <?php if($row->has_patient_ever_tried_recreational_drugs == 1){ ?>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                       &nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs?
+                    </div>
                 </div>
-            </div>
-            <div class="row" style="margin-bottom:0;">
-                <div class="col s12">
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <?php
-                        if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 1){
-                            echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s)</span> - ".ucwords($recreationalDrugs);
-                        }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2){
-                            echo "No - 2";
-                        }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 88){
-                            echo "Don't Know - 88";
-                        }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 99){
-                            echo "Refused - 99";
-                        }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2222){
-                            echo "Response Not Available - 2222";
-                        }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= ''){
-                            echo ucwords($hasPatientHadRecreationalDrugsInLastSixMonths);
-                        }
-                        ?>
-                    </p>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s12">
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <?php
+                            if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 1){
+                                echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s)</span> - ".ucwords($recreationalDrugs);
+                            }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2){
+                                echo "No - 2";
+                            }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 88){
+                                echo "Don't Know - 88";
+                            }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 99){
+                                echo "Refused - 99";
+                            }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2222){
+                                echo "Response Not Available - 2222";
+                            }else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= ''){
+                                echo ucwords($hasPatientHadRecreationalDrugsInLastSixMonths);
+                            }
+                            ?>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            <?php } ?>
             <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
