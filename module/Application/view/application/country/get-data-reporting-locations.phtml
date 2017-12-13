@@ -1,29 +1,49 @@
 <?php
 $location = 0;
-if(isset($response['ancs']) && count($response['ancs']) > 0){
-    foreach($response['ancs'] as $anc){
-        if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
-           $location+= 1;
-        }
-    }
-}else{
+$sitehavingRecentInfectionbyArray = array();
+if(trim($params['sitehavingRecentInfectionby'])!= ''){
+    $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
+    $ancArray = array();
     if(isset($response['labRecent']) && count($response['labRecent']) > 0){
         foreach($response['labRecent'] as $labRecentPoint){
             if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= ''){
                 $location+= 1;
+                if(!in_array($labRecentPoint['anc_site_name'],$ancArray)){
+                    $ancArray[] = $labRecentPoint['anc_site_name'];
+                    $ancArray[$labRecentPoint['anc_site_name']]['lat'] = $labRecentPoint['latitude'];
+                    $ancArray[$labRecentPoint['anc_site_name']]['lon'] = $labRecentPoint['longitude'];
+                }
+                if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) && (int)$labRecentPoint['noofLAgRecent'] > 0){
+                   $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'blue';
+                   $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
+                }  if(in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray) && (int)$labRecentPoint['noofRecencyAssayRecent'] > 0){
+                   $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'green';
+                   $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
+                }
             }
         }
     } if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
         foreach($response['ancRecent'] as $ancRecentPoint){
             if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= ''){
                 $location+= 1;
+                if(!in_array($ancRecentPoint['anc_site_name'],$ancArray)){
+                    $ancArray[] = $ancRecentPoint['anc_site_name'];
+                    $ancArray[$ancRecentPoint['anc_site_name']]['lat'] = $ancRecentPoint['latitude'];
+                    $ancArray[$ancRecentPoint['anc_site_name']]['lon'] = $ancRecentPoint['longitude'];
+                }
+                $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'purple';
+                $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
             }
         }
     }
-}
-$sitehavingRecentInfectionbyArray = array();
-if(trim($params['sitehavingRecentInfectionby'])!= ''){
-    $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
+}else{
+    if(isset($response['ancs']) && count($response['ancs']) > 0){
+        foreach($response['ancs'] as $anc){
+            if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
+               $location+= 1;
+            }
+        }
+    }
 }
 if($location > 0) { ?>
     <div class="gmap" id="gmap" style="min-height: 500px;width:100%;"></div>
@@ -46,51 +66,30 @@ if($location > 0) { ?>
                         if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
                 ?>
                 {
-                 lat: "<?php echo $anc['latitude']; ?>",
-                 lon: "<?php echo $anc['longitude']; ?>",
-                 icon : "anc-red",
-                 label : "<h6><?php echo ucwords($anc['anc_site_name']);?></h6>"
+                 lat:"<?php echo $anc['latitude']; ?>",
+                 lon:"<?php echo $anc['longitude']; ?>",
+                 icon:"red",
+                 recents:"",
+                 label:"<h6><?php echo ucwords($anc['anc_site_name']);?></h6>"
                 },
                 <?php } } } ?>
-                //lab recent points
+                //lab and ANC recent points
                 <?php
-                if(isset($response['labRecent']) && count($response['labRecent']) > 0){
-                    foreach($response['labRecent'] as $labRecentPoint){
-                        if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= ''){
-                            $colorArray = array();
-                            if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) && trim($labRecentPoint['lag_avidity_result']) == 'recent'){
-                                $colorArray[] = 'anc-blue';
-                            } if(in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray) && $labRecentPoint['asante_rapid_recency_assy']!= null && trim($labRecentPoint['asante_rapid_recency_assy'])!= ''){
-                                $labAsanteRecencyArray = json_decode($labRecentPoint['asante_rapid_recency_assy'],true);
-                                if(isset($labAsanteRecencyArray['rrr']['assay']) && trim($labAsanteRecencyArray['rrr']['assay']) == 'absent'){
-                                   $colorArray[] = 'anc-green';
-                                }
-                            }
+                if(isset($ancArray) && count($ancArray) > 0){
+                    for($i=0;$i< count($ancArray);$i++){
+                        if(isset($ancArray[$i])) {
+                    ?>
+                    {
+                        lat:"<?php echo $ancArray[$ancArray[$i]]['lat']; ?>",
+                        lon:"<?php echo $ancArray[$ancArray[$i]]['lon']; ?>",
+                        icon:"<?php echo implode(',',$ancArray[$ancArray[$i]]['color']); ?>",
+                        recents:"<?php echo implode(',',$ancArray[$ancArray[$i]]['recents']); ?>",
+                        label:"<h6><?php echo ucwords($ancArray[$i]);?></h6>"
+                    },
+                    <?php }
+                    }
+                }
                 ?>
-                {
-                 lat: "<?php echo $labRecentPoint['latitude']; ?>",
-                 lon: "<?php echo $labRecentPoint['longitude']; ?>",
-                 icon : "<?php echo implode(',',$colorArray); ?>",
-                 label : "<h6><?php echo ucwords($labRecentPoint['anc_site_name']);?></h6>"
-                },
-                <?php } } } ?>
-                //anc recent sites
-                <?php
-                if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
-                    foreach($response['ancRecent'] as $ancRecentPoint){
-                        if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= ''){
-                            $colorArray = array();
-                            if(isset($ancRecentPoint['recency_line'])&& $ancRecentPoint['recency_line']!= null && trim($ancRecentPoint['recency_line']) == 'recent' && in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
-                                $colorArray[] = 'anc-purple';
-                            }
-                ?>
-                {
-                 lat: "<?php echo $ancRecentPoint['latitude']; ?>",
-                 lon: "<?php echo $ancRecentPoint['longitude']; ?>",
-                 icon: "<?php echo implode(',',$colorArray); ?>",
-                 label: "<h6><?php echo ucwords($ancRecentPoint['anc_site_name']);?></h6>"
-                },
-                <?php } } } ?>
             ];
             
             // Loop through our array of markers & place each one on the map
@@ -98,23 +97,31 @@ if($location > 0) { ?>
                 var position = new google.maps.LatLng(markers[i]['lat'], markers[i]['lon']);
                 bounds.extend(position);
                 var iconArray = markers[i]['icon'].split(",");
+                var recentsArray = markers[i]['recents'].split(",");
+                var contentString = markers[i]['label'];
                 for( j = 0; j < iconArray.length; j++ ) {
-                    if(iconArray[j] == 'anc-red'){
-                        var iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
-                    }else if(iconArray[j] == 'anc-blue'){
-                        var iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
-                    }else if(iconArray[j] == 'anc-green'){
-                        var iconImg = '<?php echo $this->basePath('assets/images/map-points/green.png'); ?>';
-                    }else if(iconArray[j] == 'anc-purple'){
-                        var iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
+                    if(iconArray[j] == 'blue'){
+                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
+                       contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'green'){
+                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/green.png'); ?>';
+                       contentString+= '<span style="color:green;">Lab Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'purple'){
+                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
+                       contentString+= '<span style="color:purple;">ANC Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else{
+                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>'; 
                     }
+                    
                     marker = new google.maps.Marker({
                         position: position,
                         map: map,
                         icon : iconImg
                     });
+                    
                     marker['infowindow'] = new google.maps.InfoWindow({
-                        content: markers[i]['label']    
+                        content:contentString,
+                        //maxWidth: 400
                     });
                     google.maps.event.addListener(marker, 'mouseover', function() {
                         current_infowindow = this['infowindow'];

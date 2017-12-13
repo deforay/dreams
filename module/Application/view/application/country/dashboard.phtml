@@ -53,7 +53,7 @@
     <div class="row" style="max-width:1109px;">
         <form id="countryDashboardFilter" action="#">
             <div class="col l12 m12 s12">
-                <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:80%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
+                <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
 		<div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="province" name="province" title="Please select province"><option value=""> All Provinces </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
 		<div class="col l4 m4 s4 specimenType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="specimenType" name="specimenType[]" multiple="multiple" title="Please select speciment type"> <option value="" disabled selected> All Sample Types </option><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
             </div>
@@ -94,12 +94,12 @@
     </div>
     <br>
     <hr style="border:1px solid #e0dddd;">
-   <!-- <h5 style="text-align:center;padding-top:40px;padding-bottom:40px;">Map report coming soon</h5>-->
-    <div id="mappy"><br>
+    <br>
+    <div id="mappy">
         <div class="row" style="max-width:1109px;">
             <form id="mapFilter" action="#">
 		<div class="col l12 m12 s12">
-		    <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="mapReportingMonthYear" name="mapReportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:80%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearMapReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
+		    <div class="col l4 m4 s4" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="mapReportingMonthYear" name="mapReportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearMapReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
 		    <div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="mapProvince" name="mapProvince" title="Please select province"><option value=""> All Provinces </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
 		    <div class="col l4 m4 s4 mapSampleType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="mapSpecimenType" name="mapSpecimenType[]" multiple="multiple" title="Please select speciment type"><option value="" disabled selected> All Sample Types </option><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
 		</div>
@@ -117,7 +117,7 @@
             <div class="col s12">
                 <div class="card card-default">
 		    <div class="col l12 m12 s12" style="margin-top:3vh;">
-			<div class="col l4 m3 s3" style="float:right;">&nbsp;&nbsp;<img src="<?php echo $this->basePath('assets/images/map-points/red.png'); ?>"> <strong>ANC Site</strong></div>
+			<div class="col l3 m3 s3" style="float:right;">&nbsp;&nbsp;<img src="<?php echo $this->basePath('assets/images/map-points/red.png'); ?>"> <strong>ANC Site</strong></div>
 		    </div>
 		    <div class="col l12 m12 s12" style="margin-top:3vh;">
 			<div class="col l4 m3 s3">
@@ -138,9 +138,7 @@
 	        </div>
             </div>
         </div>
-
     </div>
-
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhZa4hDifE6p2sbaxJehS7gcrZOJScIqM"></script>

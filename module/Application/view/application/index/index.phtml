@@ -54,7 +54,7 @@
         <form id="dashboardFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:90%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Choose Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month and Year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:20px;color:red;"><i class="zmdi zmdi-close"></i></a></div>
 		<div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> All Countries </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
                 <div class="col l1 m1 s1" style="visibility:hidden;">--COLUMN END--</div>
             </div>
