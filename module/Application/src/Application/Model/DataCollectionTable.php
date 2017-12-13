@@ -1593,9 +1593,12 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
 	$location = array();
 	$sitehavingRecentInfectionbyArray = array();
-	$showLabRecent = false;
-	$showANCRecent = false;
+	//by default to show all recent points
+	$showLabRecent = true;
+	$showANCRecent = true;
 	if(trim($params['sitehavingRecentInfectionby'])!= ''){
+	    $showLabRecent = false;
+	    $showANCRecent = false;
 	    $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
 	    if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
 		$showLabRecent = true;
@@ -1603,87 +1606,62 @@ class DataCollectionTable extends AbstractTableGateway {
 		$showANCRecent = true;
 	    }
 	}
-	if($showLabRecent || $showANCRecent){
-	    //Show lab recent points
-	    if($showLabRecent){
-		$labRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
-				      ->columns(array('anc_site_name','latitude','longitude'))
-				      ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')))
-				      ->where(array('anc.country'=>$params['country']))
-				      ->group('anc.anc_site_id');
-		if(trim($params['reportingMonthYear'])!= ''){
-		    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-		    $labRecentQuery = $labRecentQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-		} if(trim($params['province'])!= ''){
-		    $labRecentQuery = $labRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
-		} if(trim($params['specimenType'])!= ''){
-		    $labRecentQuery = $labRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
-		} if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
-		    $mapWhere = '';
-		    $mapOR = ' OR ';
-		    for($i=0;$i<count($sitehavingRecentInfectionbyArray);$i++){
-			if($sitehavingRecentInfectionbyArray[$i] == 'labLAgRecency'){
-			    if($i == 1){ $mapWhere.= $mapOR; }
-			    $mapWhere.= 'da_c.lag_avidity_result = "recent"';
-			}else if($sitehavingRecentInfectionbyArray[$i] == 'labAsanteRecency'){
-			   if($i == 1){ $mapWhere.= $mapOR; }
-			   $mapWhere.= 'da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'';
-			}
-		    }
-		    if(trim($mapWhere)!= ''){
-		      $labRecentQuery = $labRecentQuery->where('('.$mapWhere.')');
-		    }
-		}
-		$labRecentQueryStr = $sql->getSqlStringForSqlObject($labRecentQuery);
-		$location['labRecent'] = $dbAdapter->query($labRecentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	    }
-	    //Show ANC recent points
-	    if($showANCRecent){
-		$ancRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
-				      ->columns(array('anc_site_name','latitude','longitude'))
-				      ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.anc=anc.anc_site_id',array(),'left')
-				      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
-				      ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=r_a.patient_barcode_id',array(),'left')
-				      ->where(array('anc.country'=>$params['country']))
-				      ->group('anc.anc_site_id');
-		if(trim($params['reportingMonthYear'])!= ''){
-		    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-		    $ancRecentQuery = $ancRecentQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(r_a.interview_date) ="'.$splitReportingMonthYear[1].'"');
-		} if(trim($params['province'])!= ''){
-		    $ancRecentQuery = $ancRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
-		} if(trim($params['specimenType'])!= ''){
-		    $ancRecentQuery = $ancRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
-		} if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
-		    $ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
-		} if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
-		    $ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.recency_line'=>'recent'));
-		}
-		$ancRecentQueryStr = $sql->getSqlStringForSqlObject($ancRecentQuery);
-		$location['ancRecent'] = $dbAdapter->query($ancRecentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-	    }
-	}else{
-	    //Show all ANCs
-	    $ancQuery = $sql->select()->from(array('anc' => 'anc_site'))
-				      ->columns(array('anc_site_name','latitude','longitude'))
-				      ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.anc=anc.anc_site_id',array(),'left')
-				      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left')
-				      ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=r_a.patient_barcode_id',array(),'left')
-				      ->where(array('anc.country'=>$params['country']))
-				      ->group('anc.anc_site_id');
+	//Show lab recent points
+	if($showLabRecent){
+	    $labRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
+				  ->columns(array('anc_site_name','latitude','longitude'))
+				  ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),'noofRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')),'left')
+				  ->where(array('anc.country'=>$params['country']))
+				  ->group('anc.anc_site_id');
 	    if(trim($params['reportingMonthYear'])!= ''){
 		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-		$ancQuery = $ancQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(r_a.interview_date) ="'.$splitReportingMonthYear[1].'"');
+		$labRecentQuery = $labRecentQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
 	    } if(trim($params['province'])!= ''){
-		$ancQuery = $ancQuery->where(array('anc.province'=>base64_decode($params['province'])));
+		$labRecentQuery = $labRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	    } if(trim($params['specimenType'])!= ''){
-		$ancQuery = $ancQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
-	    } if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
-		$ancQuery = $ancQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
-	    } if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
-		$ancQuery = $ancQuery->where(array('anc_r_r.recency_line'=>'recent'));
+		$labRecentQuery = $labRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	    } if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
+		$mapWhere = '';
+		$mapOR = ' OR ';
+		for($i=0;$i<count($sitehavingRecentInfectionbyArray);$i++){
+		    if($sitehavingRecentInfectionbyArray[$i] == 'labLAgRecency'){
+			if($i == 1){ $mapWhere.= $mapOR; }
+			$mapWhere.= 'da_c.lag_avidity_result = "recent"';
+		    }else if($sitehavingRecentInfectionbyArray[$i] == 'labAsanteRecency'){
+		       if($i == 1){ $mapWhere.= $mapOR; }
+		       $mapWhere.= 'da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'';
+		    }
+		}
+		if(trim($mapWhere)!= ''){
+		  $labRecentQuery = $labRecentQuery->where('('.$mapWhere.')');
+		}
 	    }
-	    $ancQueryStr = $sql->getSqlStringForSqlObject($ancQuery);
-	    $location['ancs'] = $dbAdapter->query($ancQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	    $labRecentQueryStr = $sql->getSqlStringForSqlObject($labRecentQuery);
+	    $location['labRecent'] = $dbAdapter->query($labRecentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	}
+	//Show ANC recent points
+	if($showANCRecent){
+	    $ancRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
+				  ->columns(array('anc_site_name','latitude','longitude'))
+				  ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.anc=anc.anc_site_id',array(),'left')
+				  ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
+				  ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=r_a.patient_barcode_id',array(),'left')
+				  ->where(array('anc.country'=>$params['country']))
+				  ->group('anc.anc_site_id');
+	    if(trim($params['reportingMonthYear'])!= ''){
+		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
+		$ancRecentQuery = $ancRecentQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(r_a.interview_date) ="'.$splitReportingMonthYear[1].'"');
+	    } if(trim($params['province'])!= ''){
+		$ancRecentQuery = $ancRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
+	    } if(trim($params['specimenType'])!= ''){
+		$ancRecentQuery = $ancRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
+	    } if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
+		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
+	    } if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
+		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.recency_line'=>'recent'));
+	    }
+	    $ancRecentQueryStr = $sql->getSqlStringForSqlObject($ancRecentQuery);
+	    $location['ancRecent'] = $dbAdapter->query($ancRecentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	}
       return $location;
     }

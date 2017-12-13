@@ -1,47 +1,39 @@
 <?php
 $location = 0;
+$ancArray = array();
 $sitehavingRecentInfectionbyArray = array();
 if(trim($params['sitehavingRecentInfectionby'])!= ''){
     $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
-    $ancArray = array();
-    if(isset($response['labRecent']) && count($response['labRecent']) > 0){
-        foreach($response['labRecent'] as $labRecentPoint){
-            if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= ''){
-                $location+= 1;
-                if(!in_array($labRecentPoint['anc_site_name'],$ancArray)){
-                    $ancArray[] = $labRecentPoint['anc_site_name'];
-                    $ancArray[$labRecentPoint['anc_site_name']]['lat'] = $labRecentPoint['latitude'];
-                    $ancArray[$labRecentPoint['anc_site_name']]['lon'] = $labRecentPoint['longitude'];
-                }
-                if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) && (int)$labRecentPoint['noofLAgRecent'] > 0){
-                   $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'blue';
-                   $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
-                }  if(in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray) && (int)$labRecentPoint['noofRecencyAssayRecent'] > 0){
-                   $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'green';
-                   $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
-                }
+}
+if(isset($response['labRecent']) && count($response['labRecent']) > 0){
+    foreach($response['labRecent'] as $labRecentPoint){
+        if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= ''){
+            $location+= 1;
+            if(!in_array($labRecentPoint['anc_site_name'],$ancArray)){
+                $ancArray[] = $labRecentPoint['anc_site_name'];
+                $ancArray[$labRecentPoint['anc_site_name']]['lat'] = $labRecentPoint['latitude'];
+                $ancArray[$labRecentPoint['anc_site_name']]['lon'] = $labRecentPoint['longitude'];
             }
-        }
-    } if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
-        foreach($response['ancRecent'] as $ancRecentPoint){
-            if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= ''){
-                $location+= 1;
-                if(!in_array($ancRecentPoint['anc_site_name'],$ancArray)){
-                    $ancArray[] = $ancRecentPoint['anc_site_name'];
-                    $ancArray[$ancRecentPoint['anc_site_name']]['lat'] = $ancRecentPoint['latitude'];
-                    $ancArray[$ancRecentPoint['anc_site_name']]['lon'] = $ancRecentPoint['longitude'];
-                }
-                $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'purple';
-                $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
-            }
+            
+            $ancArray[$labRecentPoint['anc_site_name']]['color'][] = (in_array('labLAgRecency',$sitehavingRecentInfectionbyArray))?'blue':'default-blue';
+            $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
+            
+            $ancArray[$labRecentPoint['anc_site_name']]['color'][] = (in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray))?'green':'default-green';
+            $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
+            
         }
     }
-}else{
-    if(isset($response['ancs']) && count($response['ancs']) > 0){
-        foreach($response['ancs'] as $anc){
-            if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
-               $location+= 1;
+} if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
+    foreach($response['ancRecent'] as $ancRecentPoint){
+        if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= ''){
+            $location+= 1;
+            if(!in_array($ancRecentPoint['anc_site_name'],$ancArray)){
+                $ancArray[] = $ancRecentPoint['anc_site_name'];
+                $ancArray[$ancRecentPoint['anc_site_name']]['lat'] = $ancRecentPoint['latitude'];
+                $ancArray[$ancRecentPoint['anc_site_name']]['lon'] = $ancRecentPoint['longitude'];
             }
+            $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = (in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray))?'purple':'default-purple';
+            $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
         }
     }
 }
@@ -59,21 +51,6 @@ if($location > 0) { ?>
            map = new google.maps.Map(document.getElementById("gmap"),mapOptions);
             // Multiple Markers
             var markers = [
-                //ancs
-                <?php
-                if(isset($response['ancs']) && count($response['ancs']) > 0){
-                    foreach($response['ancs'] as $anc){
-                        if(trim($anc['latitude'])!= '' && trim($anc['longitude'])!= ''){
-                ?>
-                {
-                 lat:"<?php echo $anc['latitude']; ?>",
-                 lon:"<?php echo $anc['longitude']; ?>",
-                 icon:"red",
-                 recents:"",
-                 label:"<h6><?php echo ucwords($anc['anc_site_name']);?></h6>"
-                },
-                <?php } } } ?>
-                //lab and ANC recent points
                 <?php
                 if(isset($ancArray) && count($ancArray) > 0){
                     for($i=0;$i< count($ancArray);$i++){
@@ -100,23 +77,29 @@ if($location > 0) { ?>
                 var recentsArray = markers[i]['recents'].split(",");
                 var contentString = markers[i]['label'];
                 for( j = 0; j < iconArray.length; j++ ) {
-                    if(iconArray[j] == 'blue'){
-                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
+                    var iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
+                    if(iconArray[j] == 'blue' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
                        contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'green'){
-                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/green.png'); ?>';
+                    }else if(iconArray[j] == 'green' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/green.png'); ?>';
                        contentString+= '<span style="color:green;">Lab Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'purple'){
-                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
+                    }else if(iconArray[j] == 'purple' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else{
-                       var iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>'; 
+                    }else if(iconArray[j] == 'default-blue' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'default-green' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:green;">Lab Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'default-purple' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:purple;">ANC Recency Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }
                     
                     marker = new google.maps.Marker({
                         position: position,
                         map: map,
-                        icon : iconImg
+                        icon: iconImg,
+                        zIndex:0.4
                     });
                     
                     marker['infowindow'] = new google.maps.InfoWindow({
