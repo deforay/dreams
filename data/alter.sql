@@ -775,3 +775,50 @@ ALTER TABLE `user` ADD `force_password_reset` INT(11) NOT NULL DEFAULT '1' AFTER
 ALTER TABLE `data_collection` ADD `lab_tech_name` VARCHAR(500) NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
 
 ALTER TABLE `data_collection_event_log` ADD `lab_tech_name` VARCHAR(500) NULL DEFAULT NULL AFTER `receipt_date_at_central_lab`;
+
+--Pal 14/12/2017
+UPDATE `anc_form` SET `field_name` = 'no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY' WHERE `anc_form`.`field_id` = 9;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY' WHERE `anc_form`.`field_id` = 10;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_ATTENDING_ANC_FIRST_VISIT' WHERE `anc_form`.`field_id` = 1;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_PREVIOUSLY_KNOWN_HIV_ POSITIVE_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 2;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_PREVIOUSLY_KNOWN_HIV_NEGATIVE _at_ANC_first_visit' WHERE `anc_form`.`field_id` = 3;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_with_UNKNOWN_HIV_ STATUS_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 4;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_FOR_ HIV_with_rapid_diagnostic_test_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 5;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 6;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_NEWLY_NEGATIVE_FOR_HIV _with_RDT_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 7;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_INDETERMINATE_FOR_HIV_with_RDT_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 8;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_SPECIMENS_COLLECTED_FOR_RECENCY_TESTING' WHERE `anc_form`.`field_id` = 11;
+
+UPDATE `anc_form` SET `field_name` = 'total_no_of_clients_of_ALL_AGES_ATTENDING_ANC_FIRST_ VISIT' WHERE `anc_form`.`field_id` = 12;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_with_UNKNOWN_HIV_ STATUS("ND")_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 4;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_PREVIOUSLY_KNOWN_HIV_POSITIVE_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 2;
+
+UPDATE `anc_form` SET `field_name` = 'total_no_of_clients_of_ALL_AGES_ATTENDING_ANC_FIRST_VISIT' WHERE `anc_form`.`field_id` = 12;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_NEWLY_NEGATIVE_FOR_HIV_with_RDT_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 7;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_FOR_HIV_with_rapid_diagnostic_test_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 5;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_with_UNKNOWN_HIV_STATUS("ND")_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 4;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_PREVIOUSLY_KNOWN_HIV_NEGATIVE_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 3;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_FOR_HIV_with_rapid_diagnostic_test(RDT)_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 5;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 4;
+
+UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_FOR_HIV_with_rapid_diagnostic_test_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 5;
+
+ALTER TABLE `clinic_data_collection` ADD `date_of_support_visit` DATE NULL DEFAULT NULL AFTER `reporting_month_year`; 

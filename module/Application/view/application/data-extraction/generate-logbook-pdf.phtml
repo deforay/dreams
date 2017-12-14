@@ -207,7 +207,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
 	      $html .='<td>'.$row['anc_site_code'].'</td>';
 	      $html .='<td>'.$row['enc_anc_patient_id'].'</td>';
-              $html .='<td></td>';//set empty value
+              $html .='<td></td>';//empty value
               $html .='<td style="text-align:center;">'.$row['age'].'</td>';
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name']).'</td>';
@@ -225,7 +225,7 @@ if(count($logbookResult) >0){
 	      $html .='<td style="text-align:center;">'.$recencyReaderLogVal.'</td>';
               $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
-	      $html .='<td></td>';//set empty value
+	      $html .='<td></td>';//empty value
             $html .='</tr>';
           }
           $html .='</tbody>';

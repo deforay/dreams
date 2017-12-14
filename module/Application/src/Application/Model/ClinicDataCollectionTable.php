@@ -36,6 +36,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $data = array(
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
+                        'date_of_support_visit'=>(isset($params['dateofSupportVisit']) && trim($params['dateofSupportVisit'])!= '')?$common->dateFormat($params['dateofSupportVisit']):NULL,
                         'characteristics_data'=>$characteristicsVal,
                         'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
@@ -201,32 +202,33 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $reportingMonth = '';
             $reportingYear = '';
             if($aRow['reporting_month_year']!= null && trim($aRow['reporting_month_year'])!= ''){
-                $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
-                $reportingMonth = $xplodReportingMonthYear[0];
-                $reportingYear = $xplodReportingMonthYear[1];
+                $reportingMonthYearArray = explode('/',$aRow['reporting_month_year']);
+                $reportingMonth = $reportingMonthYearArray[0];
+                $reportingYear = $reportingMonthYearArray[1];
             }
             $row = array();
             $row[] = ucwords($aRow['anc_site_name']);
             $row[] = $aRow['anc_site_code'];
             $row[] = ucfirst($reportingMonth);
             $row[] = $reportingYear;
-            if($parameters['countryId']== ''){
+            if($parameters['countryId'] == ''){
               $row[] = ucwords($aRow['country_name']);
             }
             foreach($ancFormFieldList as $key=>$value){
-                //for non-existing fields
+                //for new fields
                 $colVal = '';
                 if($value == 'yes'){
                     $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                     $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
                     $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#333333;"><strong>Age Unknown</strong></span> : 0,';
                 }
                 $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
-                            //re-intialize to show existing fields
+                            //for existing fields
                             $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
@@ -236,6 +238,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                   if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
                                   if($value == 'yes'){ $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
+                               }elseif($characteristicsName =='age_unknown'){
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#333333;"><strong>Age Unknown</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
                                   $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }
@@ -264,11 +268,12 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 	    $dataUnlock = '';
             //for edit
             $dataEdit = '<a href="/clinic/data-collection/edit/' . base64_encode($aRow['cl_data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
+            //for data lock
             if($aRow['test_status_name']== 'completed'){
                 $dataLock = '<a href="javascript:void(0);" onclick="lockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-1" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
             }
-            //for csc/cc
-            if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $aRow['test_status_name']== 'locked'){
+            //for data unlock(csc/cc)
+            if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $aRow['test_status_name'] == 'locked'){
                 $dataUnlock = '<a href="javascript:void(0);" onclick="unlockClinicDataCollection(\''.base64_encode($aRow['cl_data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
             }
             $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
@@ -307,6 +312,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $data = array(
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
+                        'date_of_support_visit'=>(isset($params['dateofSupportVisit']) && trim($params['dateofSupportVisit'])!= '')?$common->dateFormat($params['dateofSupportVisit']):NULL,
                         'characteristics_data'=>$characteristicsVal,
                         'comments'=>$params['comments'],
                         'country'=>base64_decode($params['chosenCountry']),
@@ -472,32 +478,33 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
            $reportingMonth = '';
            $reportingYear = '';
            if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
-               $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
-               $reportingMonth = $xplodReportingMonthYear[0];
-               $reportingYear = $xplodReportingMonthYear[1];
+               $reportingMonthYearArray = explode('/',$aRow['reporting_month_year']);
+               $reportingMonth = $reportingMonthYearArray[0];
+               $reportingYear = $reportingMonthYearArray[1];
            }
            $row = array();
            $row[] = ucwords($aRow['anc_site_name']);
            $row[] = $aRow['anc_site_code'];
            $row[] = ucfirst($reportingMonth);
            $row[] = $reportingYear;
-           if($parameters['countryId']== ''){
+           if($parameters['countryId'] == ''){
               $row[] = ucwords($aRow['country_name']);
            }
            foreach($ancFormFieldList as $key=>$value){
-                //for non-existing fields
+                //for new fields
                 $colVal = '';
                 if($value == 'yes'){
                     $colVal.= '<span style="color:red;"><strong>Age < 15</strong></span> : 0,';
                     $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : 0,';
                     $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : 0,';
+                    $colVal.= ' <span style="color:#333333;"><strong>Age Unknown</strong></span> : 0,';
                 }
                 $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : 0';
                 if(isset($aRow['characteristics_data']) && trim($aRow['characteristics_data'])!= ''){
                     $fields = json_decode($aRow['characteristics_data'],true);
                     foreach($fields as $fieldName=>$fieldValue){
                         if($key == $fieldName){
-                            //re-intialize to show existing fields
+                            //for existing fields
                             $colVal = '';
                             foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                 $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
@@ -507,6 +514,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                                   if($value == 'yes'){ $colVal.= ' <span style="color:orange;"><strong>Age 15-19</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='age_20_to_24'){
                                   if($value == 'yes'){ $colVal.= ' <span style="color:#62922F;"><strong>Age 20-24</strong></span> : '.$characteristicsValue.','; }
+                               }elseif($characteristicsName =='age_unknown'){
+                                  if($value == 'yes'){ $colVal.= ' <span style="color:#333333;"><strong>Age Unknown</strong></span> : '.$characteristicsValue.','; }
                                }elseif($characteristicsName =='total'){
                                   $colVal.= ' <span style="color:#056dd2;"><strong>Total</strong></span> : '.$characteristicsValue;
                                }

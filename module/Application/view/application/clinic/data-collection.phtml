@@ -102,8 +102,9 @@ if(trim($countryId)!= ''){
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
 			    <div class="col l12 m12 s12" style="margin-bottom:1vh;">
-				<div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-				<div class="col l6 m6 s6" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Month/Year" title="Please select month and year" readonly/></div>
+				<div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
+				<div class="col l4 m4 s4" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
+				<div class="col l3 m3 s3" style="text-align:center;"><strong>Date of Support Visit </strong> <input type="text" id="dateofSupportVisit" name="dateofSupportVisit" placeholder="Select support visit date" title="Please select support visit date" readonly/></div>
 			    </div>
 			    <div class="col l12 m12 s12">
 				<table id="ancFormTable" class="responsive-table display">
@@ -113,6 +114,7 @@ if(trim($countryId)!= ''){
 					    <th>Age < 15</th>
 					    <th>Age 15-19</th>
 					    <th>Age 20-24</th>
+					    <th>Age Unknown</th>
 					    <th>Total</th>
 					</tr>
 				    </thead>
@@ -121,43 +123,39 @@ if(trim($countryId)!= ''){
 					$r=1;
 					foreach($ancFormFields as $key=>$value){
 					    $fieldName = $key;
-					    $tempLabel = ucwords(str_replace("_"," ",$key));
+					    $tempLabel = ucfirst(str_replace("_"," ",$key));
 					    $mandatoryicon = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?' *':'';
-					    $formLabel = str_replace("No","Number",$tempLabel);
-					    $formLabel = str_replace("Of","of",$formLabel);
-					    $formLabel = str_replace("At ","at ",$formLabel);
-					    $formLabel = str_replace("With","with",$formLabel);
-					    $formLabel = str_replace("In ","in ",$formLabel);
-					    $formLabel = str_replace("For","for",$formLabel);
-					    $formLabel = str_replace("To ","to ",$formLabel);
-					    if($formLabel == 'Number of Clients Attending ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Attending ANC First Visit</span>';
-					    }else if($formLabel == 'Number of Clients Previously Known HIV Positive at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Previously Known HIV Positive</span> at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Previously Known HIV Negative at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Previously Known HIV Negative</span> at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients with Unknown HIV Status at ANC First Visit'){
-						$formLabel = 'Number of Clients with <span style="font-weight:bold;text-decoration:underline;">Unknown HIV Status</span> at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Tested for HIV with Rapid Diagnostic Test at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested for HIV</span> with Rapid Diagnostic Test at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Tested Newly Positive for HIV with RDT at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Positive for HIV</span> with RDT at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Tested Newly Negative for HIV with RDT at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Negative for HIV</span> with RDT at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Tested Newly Interminate for HIV with RDT at ANC First Visit'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Tested Newly Interminate for HIV</span> with RDT at ANC First Visit';
-					    }else if($formLabel == 'Number of Clients Consented to Participate in Recency Study'){
-						$formLabel = 'Number of Clients <span style="font-weight:bold;text-decoration:underline;">Consented to Participate in Recency Study</span>';
-					    }else if($formLabel == 'Number of Eligible Clients Who Refused to Participate in Recent Study'){
-						$formLabel = 'Number of Eligible Clients Who <span style="font-weight:bold;text-decoration:underline;">Refused to Participate in Recent Study</span>';
-					    }else if($formLabel == 'Number of Specimens Collected for Recency Testing'){
-						$formLabel = 'Number of <span style="font-weight:bold;text-decoration:underline;">Specimens Collected for Recency Testing</span>';
+					    $formLabel = str_replace("No","No.",$tempLabel);
+					    if($fieldName == 'no_of_clients_ATTENDING_ANC_FIRST_VISIT'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">ATTENDING ANC FIRST VISIT</span>';
+					    }else if($fieldName == 'no_of_clients_PREVIOUSLY_KNOWN_HIV_POSITIVE_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">PREVIOUSLY KNOWN HIV POSITIVE</span> at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_PREVIOUSLY_KNOWN_HIV_NEGATIVE_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">PREVIOUSLY KNOWN HIV NEGATIVE</span> at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'){
+						$formLabel = 'No. of clients with <span style="font-weight:600;text-decoration:underline;">UNKNOWN HIV STATUS("ND")</span> at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_TESTED_FOR_HIV_with_rapid_diagnostic_test_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">TESTED FOR HIV</span> with rapid diagnostic test(RDT) at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">TESTED NEWLY POSITIVE FOR HIV</span> with RDT at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_TESTED_NEWLY_NEGATIVE_FOR_HIV_with_RDT_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">TESTED NEWLY NEGATIVE FOR HIV</span> with RDT at ANC first visit';
+					    }else if($fieldName == 'no_of_clients_TESTED_INDETERMINATE_FOR_HIV_with_RDT_at_ANC_first_visit'){
+						$formLabel = 'No. of clients <span style="font-weight:600;text-decoration:underline;">TESTED INDETERMINATE FOR HIV</span> with RDT at ANC first visit';
+					    }else if($fieldName == 'no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'){
+						$formLabel = 'No. of eligible clients <span style="font-weight:600;text-decoration:underline;">ENROLLED IN RECENT STUDY</span>';
+					    }else if($fieldName == 'no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'){
+						$formLabel = 'No. of eligible clients <span style="font-weight:600;text-decoration:underline;">NOT ENROLLED IN RECENT STUDY</span>';
+					    }else if($fieldName == 'no_of_SPECIMENS_COLLECTED_FOR_RECENCY_TESTING'){
+						$formLabel = 'No. of <span style="font-weight:600;text-decoration:underline;">SPECIMENS COLLECTED FOR RECENCY TESTING</span>';
+					    }else if($fieldName == 'total_no_of_clients_of_ALL_AGES_ATTENDING_ANC_FIRST_VISIT'){
+						$formLabel = 'Total no. of clients of <span style="font-weight:600;text-decoration:underline;">ALL AGES ATTENDING ANC FIRST VISIT</span>';
 					    }
 					    //set readonly fields based on age disaggregation
 					    $commonFieldsStyle = 'pointer-events:auto;';
 					    $styleTotal = 'pointer-events:none;display:none;';
 					    $labelStyle = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'':'color:#056dd2;font-weight:bold;';
-					    $lblStyleTotal = '';
+					    $labelStyleTotal = '';
 					    $commonFieldsIsRequired = ($fieldName!= 'no_of_recency_result' && $fieldName!= 'no_of_clients_who_received_recency_result')?'isRequired':'';
 					    $isRequiredTotal = '';
 					    if($value == 'no'){
@@ -165,22 +163,23 @@ if(trim($countryId)!= ''){
 						$labelStyle = '';
 						$commonFieldsStyle = 'pointer-events:none;display:none;';
 						$styleTotal = 'pointer-events:auto;';
-						$lblStyleTotal = 'display:none;';
+						$labelStyleTotal = 'display:none;';
 						$commonFieldsIsRequired = '';
 						$isRequiredTotal = 'isRequired';
 					    }
 					?>
 					    <tr>
 					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel.$mandatoryicon; ?></td>
-					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="4"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="5"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
 					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
 					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>"/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $lblStyleTotal; ?>">0</div></td>
+					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_unknown" name="<?php echo $fieldName; ?>[age_unknown]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>"/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $labelStyleTotal; ?>">0</div></td>
 					    </tr>
 					<?php $r++; } ?>
 					<tr>
 					    <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
-					    <td colspan="4" style="padding-top:0px;padding-bottom:0px;">
+					    <td colspan="5" style="padding-top:0px;padding-bottom:0px;">
 						<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;"></textarea>
 					    </td>
 					</tr>
@@ -206,8 +205,8 @@ if(trim($countryId)!= ''){
 	<form id="dataCollectionFilter" action="#">
             <div class="col l12 m12 s12">
                 <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value="">All</option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYearFilter" name="reportingMonthYearFilter" placeholder="Month/Year" title="Please select month and year" readonly/></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value="">All ANCs</option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
+                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="filterReportingMonthYear" name="filterReportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
                 <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
@@ -232,7 +231,7 @@ if(trim($countryId)!= ''){
                                  <th>Country</th>
                                 <?php }
 				foreach($ancFormFields as $key=>$value){
-                                    $formLabel = ucwords(str_replace("_"," ",$key));
+                                    $formLabel = ucfirst(str_replace("_"," ",$key));
                                     $formLabel = str_replace("No","No.",$formLabel);
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
@@ -256,7 +255,7 @@ if(trim($countryId)!= ''){
                                  <th>Country</th>
                                 <?php }
                                 foreach($ancFormFields as $key=>$value){
-                                    $formLabel = ucwords(str_replace("_"," ",$key));
+                                    $formLabel = ucfirst(str_replace("_"," ",$key));
                                     $formLabel = str_replace("No","No.",$formLabel);
                                 ?>
                                   <th><?php echo $formLabel; ?></th>
@@ -304,22 +303,37 @@ if(trim($countryId)!= ''){
             }
        });
        
-       $('#reportingMonthYearFilter').datepicker({
+       $('#dateofSupportVisit').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 100, // Creates a dropdown of 100 years to control year
+            format: 'dd/mm/yyyy',
+	    	max: new Date('Today'),
+			closeOnSelect: true,
+			closeOnClear: true,
+			onSet: function(e){
+				validateDataReportingDates();
+				if(e.select != undefined && e.select != null){
+					$('.picker__close').click();
+				}
+			}
+        });
+       
+       $('#filterReportingMonthYear').datepicker({
             changeMonth: true,
             changeYear: true,
             showButtonPanel: true,
             dateFormat: 'M/yy',
             maxDate: 'Today',
             beforeShow : function(input, inst) {
-                tmp = $('#reportingMonthYearFilter').val().split('/');
+                tmp = $('#filterReportingMonthYear').val().split('/');
                 var dat = new Date('1 ' + tmp[0] + ' 1969');
-                $('#reportingMonthYearFilter').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
-                $('#reportingMonthYearFilter').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
+                $('#filterReportingMonthYear').datepicker('option','defaultDate',new Date(tmp[1],parseInt(dat.getMonth()-1)+parseInt(1),1));
+                $('#filterReportingMonthYear').datepicker('setDate', new Date(tmp[1], parseInt(dat.getMonth()-1)+parseInt(1), 1));
             },
             onClose: function(dateText, inst) {
                 var month=$("#ui-datepicker-div .ui-datepicker-month :selected").val();
                 var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                $('#reportingMonthYearFilter').datepicker('setDate', new Date(year, month, 1));
+                $('#filterReportingMonthYear').datepicker('setDate', new Date(year, month, 1));
             }
        });
         <?php if($loginContainer->hasViewOnlyAccess == 'yes') { ?>
@@ -363,7 +377,7 @@ if(trim($countryId)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 aoData.push({"name": "anc", "value": $('#ancFilter').val()});
-                aoData.push({"name": "reportingMonthYear", "value": $('#reportingMonthYearFilter').val()});
+                aoData.push({"name": "reportingMonthYear", "value": $('#filterReportingMonthYear').val()});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",

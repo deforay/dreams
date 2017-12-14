@@ -96,12 +96,12 @@ class DataCollectionService {
            $global[$globalConfigResult[$i]['name']] = $globalConfigResult[$i]['value'];
         }
         //lab data start
-        $lockHour = '+72 hours';//default lab data lock-hour
-        //set lab data's lock-hour
+        $lockHour = '+72 hours';//default lock-hour
+        //set lock-hour
         if(isset($global['locking_data_after_login']) && (int)$global['locking_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_data_after_login'].' hours';
         }
-        //To lock completed lab datas
+        //To lock completed data
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
                                    ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=> 1));
@@ -120,12 +120,12 @@ class DataCollectionService {
         }
         //lab data end
         //clinic data start
-        $lockHour = '+48 hours';//default clinic data lock-hour
+        $lockHour = '+48 hours';//default lock-hour
         //set clinic data's lock-hour
         if(isset($global['locking_clinic_data_after_login']) && (int)$global['locking_clinic_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_clinic_data_after_login'].' hours';
         }
-        //To lock completed clinic datas
+        //To lock completed data
         $clinicDataCollectionQuery = $sql->select()->from(array('cl_da_c' => 'clinic_data_collection'))
                                    ->columns(array('cl_data_collection_id','added_on'))
                                    ->where(array('cl_da_c.added_by'=>$loginContainer->userId,'cl_da_c.status'=>1));
@@ -144,12 +144,12 @@ class DataCollectionService {
         }
         //clinic data end
         //clinic risk assessment data start
-        $lockHour = '+48 hours';//default clinic risk assessment data lock-hour
-        //set clinic risk assessment data's lock-hour
+        $lockHour = '+48 hours';//default data lock-hour
+        //set lock-hour
         if(isset($global['locking_risk_assessment_data_after_login']) && (int)$global['locking_risk_assessment_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_risk_assessment_data_after_login'].' hours';
         }
-        //To lock completed clinic risk assessment datas
+        //To lock completed data
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->columns(array('assessment_id','added_on'))
                                    ->where(array('r_a.added_by'=>$loginContainer->userId,'r_a.status'=>1));
@@ -320,8 +320,8 @@ class DataCollectionService {
                         $row[] = ucfirst($aRow['comments']);
                         if(!isset($params['countryId']) || trim($params['countryId'])== ''){
                             $row[] = ucfirst($aRow['country_name']);
-                        }if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $row[] = '';//set empty value
+                        } if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
+                            $row[] = '';//empty value
                         }
                         $output[] = $row;
                     }
@@ -699,19 +699,20 @@ class DataCollectionService {
                         $reportingMonth = '';
                         $reportingYear = '';
                         if(isset($aRow['reporting_month_year']) && trim($aRow['reporting_month_year'])!= ''){
-                            $xplodReportingMonthYear = explode('/',$aRow['reporting_month_year']);
-                            $reportingMonth = $xplodReportingMonthYear[0];
-                            $reportingYear = $xplodReportingMonthYear[1];
+                            $reportingMonthYearArray = explode('/',$aRow['reporting_month_year']);
+                            $reportingMonth = $reportingMonthYearArray[0];
+                            $reportingYear = $reportingMonthYearArray[1];
                         }
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['anc_site_code'];
                         $row[] = ucfirst($reportingMonth);
                         $row[] = $reportingYear;
-                        if($params['countryId']== ''){
+                        if($params['countryId'] == ''){
                           $row[] = ucwords($aRow['country_name']);
                         }
                         foreach($ancFormFields as $key=>$value){
-                            //for non-existing fields
+                            //for new fields
+                            $col0Val = '0';
                             $col1Val = '0';
                             $col2Val = '0';
                             $col3Val = '0';
@@ -720,14 +721,16 @@ class DataCollectionService {
                                 $fields = json_decode($aRow['characteristics_data'],true);
                                 foreach($fields as $fieldName=>$fieldValue){
                                     if($key == $fieldName){
-                                        //re-intialize to show existing fields
+                                        //for existing fields
                                         foreach($fieldValue[0] as $characteristicsName=>$characteristicsValue){
                                             $characteristicsValue = ($characteristicsValue!= '')?$characteristicsValue:0;
                                            if($characteristicsName =='age_lt_15'){
-                                              $col1Val = $characteristicsValue;
+                                              $col0Val = $characteristicsValue;
                                            }elseif($characteristicsName =='age_15_to_19'){
-                                              $col2Val = $characteristicsValue;
+                                              $col1Val = $characteristicsValue;
                                            }elseif($characteristicsName =='age_20_to_24'){
+                                              $col2Val = $characteristicsValue;
+                                           }elseif($characteristicsName =='age_unknown'){
                                               $col3Val = $characteristicsValue;
                                            }elseif($characteristicsName =='total'){
                                               $col4Val = $characteristicsValue;
@@ -737,6 +740,7 @@ class DataCollectionService {
                                 }
                             }
                           if($value == 'yes'){
+                            $row[] = $col0Val;
                             $row[] = $col1Val;
                             $row[] = $col2Val;
                             $row[] = $col3Val;
@@ -780,9 +784,9 @@ class DataCollectionService {
                       $sheet->mergeCells('E1:E2');
                     }
                      
-                    $e1 = ($params['countryId']== '')?5:4;
+                    $e1 = ($params['countryId'] == '')?5:4;
                     foreach($ancFormFields as $key=>$value){
-                        $e2 = ($value == 'yes')?$e1+3:$e1;
+                        $e2 = ($value == 'yes')?$e1+4:$e1;
                         if($value == 'yes'){
                             $startCell = $sheet->getCellByColumnAndRow($e1, 1)->getColumn();
                             $endCell = $sheet->getCellByColumnAndRow($e2, 1)->getColumn();
@@ -801,16 +805,10 @@ class DataCollectionService {
                     if($params['countryId']== ''){
                        $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
-                    $a1 = ($params['countryId']== '')?5:4;
+                    $a1 = ($params['countryId'] == '')?5:4;
                     foreach($ancFormFields as $key=>$value){
-                        $columnTitle = ucwords(str_replace("_"," ",$key));
-                        $columnTitle = str_replace("No","Number",$columnTitle);
-                        $columnTitle = str_replace("Of","of",$columnTitle);
-                        $columnTitle = str_replace("At ","at ",$columnTitle);
-                        $columnTitle = str_replace("With","with",$columnTitle);
-                        $columnTitle = str_replace("In ","in ",$columnTitle);
-                        $columnTitle = str_replace("For","for",$columnTitle);
-                        $columnTitle = str_replace("To ","to ",$columnTitle);
+                        $columnTitle = ucfirst(str_replace("_"," ",$key));
+                        $columnTitle = str_replace("No","No.",$columnTitle);
                         $cellName = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
                         $sheet->setCellValue($cellName.'1', html_entity_decode($columnTitle, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if($value == 'yes'){
@@ -818,15 +816,17 @@ class DataCollectionService {
                             $subCellTwo = $sheet->getCellByColumnAndRow($a1+1, 2)->getColumn();
                             $subCellThree = $sheet->getCellByColumnAndRow($a1+2, 2)->getColumn();
                             $subCellFour = $sheet->getCellByColumnAndRow($a1+3, 2)->getColumn();
+                            $subCellFive = $sheet->getCellByColumnAndRow($a1+4, 2)->getColumn();
                             $sheet->setCellValue($subCellOne.'2', html_entity_decode('Age < 15', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             $sheet->setCellValue($subCellTwo.'2', html_entity_decode('Age 15-19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             $sheet->setCellValue($subCellThree.'2', html_entity_decode('Age 20-24', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                            $sheet->setCellValue($subCellFour.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue($subCellFour.'2', html_entity_decode('Age Unknown', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue($subCellFive.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }else{
                             $subCellOne = $sheet->getCellByColumnAndRow($a1, 2)->getColumn();
                             $sheet->setCellValue($subCellOne.'2', html_entity_decode('Total', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
-                      if($value == 'yes'){ $a1+=3; }
+                      if($value == 'yes'){ $a1+=4; }
                       $a1++;
                     }
                     $cellName = $sheet->getCellByColumnAndRow($a1, 1)->getColumn();
@@ -837,9 +837,9 @@ class DataCollectionService {
                     $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
                     $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
                     $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
-                    $f1 = ($params['countryId']== '')?5:4;
+                    $f1 = ($params['countryId'] == '')?5:4;
                     foreach($ancFormFields as $key=>$value){
-                        $f2 = ($value == 'yes')?$f1+3:$f1;
+                        $f2 = ($value == 'yes')?$f1+4:$f1;
                         if($value == 'yes'){
                             $startCell = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
                             $endCell = $sheet->getCellByColumnAndRow($f2, 1)->getColumn();
@@ -847,12 +847,14 @@ class DataCollectionService {
                             $subCellTwo = $sheet->getCellByColumnAndRow($f1+1, 2)->getColumn();
                             $subCellThree = $sheet->getCellByColumnAndRow($f1+2, 2)->getColumn();
                             $subCellFour = $sheet->getCellByColumnAndRow($f1+3, 2)->getColumn();
+                            $subCellFive = $sheet->getCellByColumnAndRow($f1+4, 2)->getColumn();
                             
                             $sheet->getStyle($startCell.'1:'.$endCell.'1')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellone.'2')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellTwo.'2')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellThree.'2')->applyFromArray($styleArray);
                             $sheet->getStyle($subCellFour.'2')->applyFromArray($styleArray);
+                            $sheet->getStyle($subCellFive.'2')->applyFromArray($styleArray);
                         }else{
                            $startCell = $sheet->getCellByColumnAndRow($f1, 1)->getColumn();
                            $sheet->getStyle($startCell.'1')->applyFromArray($styleArray);

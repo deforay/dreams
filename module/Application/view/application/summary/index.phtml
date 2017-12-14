@@ -29,7 +29,7 @@
     <div class="row content-container general" style="padding:0;">
         <div class="row">
             <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" id="" style="background-color:rgba(136, 197, 66, 0.8);">
+                 <div class="card small-chart margin" id="" style="background-color:#8eb18e;box-shadow:none;">
                     <div class="col l12 m12 s12 sct">
                         <small>Lab Tests Completed</small>
                         <h2><?php echo (isset($summaries[0]['labTestCompleted']))?$summaries[0]['labTestCompleted']:0; ?></h2>
@@ -37,7 +37,7 @@
                  </div>
              </div>
              <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" id="" style="background-color:rgba(54, 122, 189, 0.8);">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(99, 142, 185, 0.71);box-shadow:none;">
                      <div class="col l12 m12 s12 sct">
                         <small>Behaviour Data</small>
                         <h2><?php echo (isset($summaries[1]['totalBD']))?$summaries[1]['totalBD']:0; ?></h2>
@@ -45,7 +45,7 @@
                  </div>
              </div>
              <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" id="" style="background-color:rgba(176, 46, 103, 0.8);">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(216, 146, 177, 0.82);box-shadow:none;">
                      <div class="col l12 m12 s12 sct">
                         <small>ANC Recency Tests</small>
                         <h2><?php echo (isset($summaries[1]['totalANCRecencyTest']))?$summaries[1]['totalANCRecencyTest']:0; ?></h2>
@@ -56,7 +56,7 @@
         </div>
         <div class="row">
             <div class="col l6 m6 s12">
-                <div class="card small-chart margin" id="" style="background-color:rgba(249, 64, 61,0.8);">
+                <div class="card small-chart margin" id="" style="background-color:rgba(243, 77, 74, 0.76);box-shadow:none;">
                     <div class="col l12 m12 s12 sct">
                        <small>Bahaviour Data Pending as on Today</small>
                        <h2><?php echo (isset($summaries[1]['bdIncompletebyToday']))?$summaries[1]['bdIncompletebyToday']:0; ?></h2>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="col l6 m6 s12">
-                 <div class="card small-chart margin" id="" style="background-color:rgba(249, 64, 61,0.8);">
+                 <div class="card small-chart margin" id="" style="background-color:rgba(243, 77, 74, 0.76);box-shadow:none;">
                      <div class="col l12 m12 s12 sct">
                         <small>Lab Tests Pending as on Today</small>
                         <h2><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></h2>
@@ -84,9 +84,9 @@
                 <div class="col l12 m12 s12" style="margin-top:30px;">
                     <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
                     <div class="col l1 m1 s1"><strong>FROM</strong></div>
-                    <div class="col l4 m4 s4"><input type="text" id="startmonth" name="startmonth" readonly="readonly" style="color:#000;"/></div>
+                    <div class="col l4 m4 s4"><input type="text" id="startmonth" name="startmonth" placeholder="Select month/year" readonly="readonly" style="color:#000;"/></div>
                     <div class="col l1 m1 s1"><strong>TO</strong></div>
-                    <div class="col l4 m4 s4"><input type="text" id="endmonth" name="endmonth" readonly="readonly" style="color:#000;"/></div>
+                    <div class="col l4 m4 s4"><input type="text" id="endmonth" name="endmonth" placeholder="Select month/year" readonly="readonly" style="color:#000;"/></div>
                     <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
                 </div>
                 <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
