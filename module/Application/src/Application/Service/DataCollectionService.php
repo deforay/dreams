@@ -318,7 +318,7 @@ class DataCollectionService {
                         $row[] = $recencyReaderLogVal;
                         $row[] = $rapidRecencyAssayDuration;
                         $row[] = ucfirst($aRow['comments']);
-                        if(!isset($params['countryId']) || trim($params['countryId'])== ''){
+                        if(!isset($params['countryId']) || trim($params['countryId']) == ''){
                             $row[] = ucfirst($aRow['country_name']);
                         } if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                             $row[] = '';//empty value
@@ -703,10 +703,15 @@ class DataCollectionService {
                             $reportingMonth = $reportingMonthYearArray[0];
                             $reportingYear = $reportingMonthYearArray[1];
                         }
+                        $dateofSupportVisit = '';
+                        if($aRow['date_of_support_visit']!= null && trim($aRow['date_of_support_visit'])!= '' && $aRow['date_of_support_visit']!= '0000-00-00'){
+                            $dateofSupportVisit = $common->humanDateFormat($aRow['date_of_support_visit']);
+                        }
                         $row[] = ucwords($aRow['anc_site_name']);
                         $row[] = $aRow['anc_site_code'];
                         $row[] = ucfirst($reportingMonth);
                         $row[] = $reportingYear;
+                        $row[] = $dateofSupportVisit;
                         if($params['countryId'] == ''){
                           $row[] = ucwords($aRow['country_name']);
                         }
@@ -780,11 +785,12 @@ class DataCollectionService {
                     $sheet->mergeCells('B1:B2');
                     $sheet->mergeCells('C1:C2');
                     $sheet->mergeCells('D1:D2');
-                    if($params['countryId']== ''){
-                      $sheet->mergeCells('E1:E2');
+                    $sheet->mergeCells('E1:E2');
+                    if($params['countryId'] == ''){
+                      $sheet->mergeCells('F1:F2');
                     }
                      
-                    $e1 = ($params['countryId'] == '')?5:4;
+                    $e1 = ($params['countryId'] == '')?6:5;
                     foreach($ancFormFields as $key=>$value){
                         $e2 = ($value == 'yes')?$e1+4:$e1;
                         if($value == 'yes'){
@@ -802,10 +808,11 @@ class DataCollectionService {
                     $sheet->setCellValue('B1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C1', html_entity_decode('Month ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    if($params['countryId']== ''){
-                       $sheet->setCellValue('E1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Support Visit Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if($params['countryId'] == ''){
+                       $sheet->setCellValue('F1', html_entity_decode('Country ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
-                    $a1 = ($params['countryId'] == '')?5:4;
+                    $a1 = ($params['countryId'] == '')?6:5;
                     foreach($ancFormFields as $key=>$value){
                         $columnTitle = ucfirst(str_replace("_"," ",$key));
                         $columnTitle = str_replace("No","No.",$columnTitle);
@@ -837,7 +844,10 @@ class DataCollectionService {
                     $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
                     $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
                     $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
-                    $f1 = ($params['countryId'] == '')?5:4;
+                    if($params['countryId'] == ''){
+                       $sheet->getStyle('F1:F2')->applyFromArray($styleArray);
+                    }
+                    $f1 = ($params['countryId'] == '')?6:5;
                     foreach($ancFormFields as $key=>$value){
                         $f2 = ($value == 'yes')?$f1+4:$f1;
                         if($value == 'yes'){

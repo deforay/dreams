@@ -102,8 +102,8 @@ if(trim($countryId)!= ''){
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
 			    <div class="col l12 m12 s12" style="margin-bottom:1vh;">
-				<div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-				<div class="col l4 m4 s4" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
+				<div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
+				<div class="col l3 m3 s3" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
 				<div class="col l3 m3 s3" style="text-align:center;"><strong>Date of Support Visit </strong> <input type="text" id="dateofSupportVisit" name="dateofSupportVisit" placeholder="Select support visit date" title="Please select support visit date" readonly/></div>
 			    </div>
 			    <div class="col l12 m12 s12">
@@ -226,6 +226,7 @@ if(trim($countryId)!= ''){
                                 <th>Clinic ID</th>
 				<th>Month</th>
 				<th>Year</th>
+				<th>Support Visit Date</th>
 				<?php
                                 if(trim($countryId)== ''){ ?>
                                  <th>Country</th>
@@ -240,7 +241,7 @@ if(trim($countryId)!= ''){
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
-                                  <th style="width:80px !important;text-align:center;">Action</th>
+                                  <th style="text-align:center;">Action</th>
                                 <?php } ?>
                             </tr>
                         </thead>
@@ -250,6 +251,7 @@ if(trim($countryId)!= ''){
                                 <th>Clinic ID</th>
 				<th>Month</th>
 				<th>Year</th>
+				<th>Support Visit Date</th>
 				<?php
                                 if(trim($countryId)== ''){ ?>
                                  <th>Country</th>
@@ -264,7 +266,7 @@ if(trim($countryId)!= ''){
                                 <?php
                                 if($loginContainer->hasViewOnlyAccess!= 'yes') {
                                 ?>
-                                  <th style="text-align:center;">Action</th>
+                                  <th style="width:80px !important;text-align:center;">Action</th>
                                 <?php } ?>
                             </tr>
                         </tfoot>
@@ -308,14 +310,14 @@ if(trim($countryId)!= ''){
             selectYears: 100, // Creates a dropdown of 100 years to control year
             format: 'dd/mm/yyyy',
 	    	max: new Date('Today'),
-			closeOnSelect: true,
-			closeOnClear: true,
-			onSet: function(e){
-				validateDataReportingDates();
-				if(e.select != undefined && e.select != null){
-					$('.picker__close').click();
-				}
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			validateDataReportingDates();
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
 			}
+		    }
         });
        
        $('#filterReportingMonthYear').datepicker({
@@ -356,8 +358,9 @@ if(trim($countryId)!= ''){
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		<?php
-                if(trim($countryId)== ''){ ?>
+                if(trim($countryId) == ''){ ?>
 		{"sClass":"dataTable_noWrap"},
                 <?php }
                 foreach($ancFormFields as $key=>$value){ ?>

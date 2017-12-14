@@ -57,11 +57,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','test_status_name');
-        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year',"DATE_FORMAT(date_of_support_visit,'%d-%b-%Y')",'characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','date_of_support_visit','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
        }else{
-        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','test_status_name');
-        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
+        $aColumns = array('anc_site_name','anc_site_code','reporting_month_year',"DATE_FORMAT(date_of_support_visit,'%d-%b-%Y')",'country_name','characteristics_data','test_status_name');
+        $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','date_of_support_visit','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','test_status_name');
        }
 
        /*
@@ -206,11 +206,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                 $reportingMonth = $reportingMonthYearArray[0];
                 $reportingYear = $reportingMonthYearArray[1];
             }
+            $dateofSupportVisit = '';
+            if($aRow['date_of_support_visit']!= null && trim($aRow['date_of_support_visit'])!= '' && $aRow['date_of_support_visit']!= '0000-00-00'){
+                $dateofSupportVisit = $common->humanDateFormat($aRow['date_of_support_visit']);
+            }
             $row = array();
             $row[] = ucwords($aRow['anc_site_name']);
             $row[] = $aRow['anc_site_code'];
             $row[] = ucfirst($reportingMonth);
             $row[] = $reportingYear;
+            $row[] = $dateofSupportVisit;
             if($parameters['countryId'] == ''){
               $row[] = ucwords($aRow['country_name']);
             }
@@ -328,15 +333,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
     public function fetchAllClinicalDataExtractions($parameters){
         $loginContainer = new Container('user');
         $queryContainer = new Container('query');
+        $common = new CommonService();
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','characteristics_data','cl_da_c.comments');
-          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year',"DATE_FORMAT(date_of_support_visit,'%d-%b-%Y')",'characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','date_of_support_visit','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
        }else{
-          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year','country_name','characteristics_data','cl_da_c.comments');
-          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
+          $aColumns = array('anc_site_name','anc_site_code','reporting_month_year',"DATE_FORMAT(date_of_support_visit,'%d-%b-%Y')",'country_name','characteristics_data','cl_da_c.comments');
+          $orderColumns = array('anc_site_name','anc_site_code','reporting_month_year','reporting_month_year','date_of_support_visit','country_name','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','characteristics_data','cl_da_c.comments');
        }
 
        /*
@@ -482,11 +488,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                $reportingMonth = $reportingMonthYearArray[0];
                $reportingYear = $reportingMonthYearArray[1];
            }
+           $dateofSupportVisit = '';
+           if($aRow['date_of_support_visit']!= null && trim($aRow['date_of_support_visit'])!= '' && $aRow['date_of_support_visit']!= '0000-00-00'){
+               $dateofSupportVisit = $common->humanDateFormat($aRow['date_of_support_visit']);
+           }
            $row = array();
            $row[] = ucwords($aRow['anc_site_name']);
            $row[] = $aRow['anc_site_code'];
            $row[] = ucfirst($reportingMonth);
            $row[] = $reportingYear;
+           $row[] = $dateofSupportVisit;
            if($parameters['countryId'] == ''){
               $row[] = ucwords($aRow['country_name']);
            }
