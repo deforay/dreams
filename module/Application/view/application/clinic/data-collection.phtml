@@ -98,15 +98,15 @@ if(trim($countryId)!= ''){
         <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
 	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;">Hide this form</a>
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
-                <div class="col l12 m12 s12" style="padding:0 !important;">
+                <div class="col l12 m12 s12" style="padding:0;">
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
-			    <div class="col l12 m12 s12" style="margin-bottom:1vh;">
+			    <div class="col l12 m12 s12" style="margin-bottom:1vh;padding:0;">
 				<div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
 				<div class="col l3 m3 s3" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
 				<div class="col l3 m3 s3" style="text-align:center;"><strong>Date of Support Visit </strong> <input type="text" id="dateofSupportVisit" name="dateofSupportVisit" placeholder="Select support visit date" title="Please select support visit date" readonly/></div>
 			    </div>
-			    <div class="col l12 m12 s12">
+			    <div class="col l12 m12 s12" style="padding:0;">
 				<table id="ancFormTable" class="responsive-table display">
 				    <thead>
 					<tr>

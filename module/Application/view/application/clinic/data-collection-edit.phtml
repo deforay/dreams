@@ -48,15 +48,15 @@ if(isset($row->date_of_support_visit) && trim($row->date_of_support_visit)!= '' 
     </div>
     <div class="row dashboard-wrapper content-container" style="margin-bottom:14px;">
         <form id="editClinicDataReportingForm" name="editClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-edit'); ?>">
-            <div class="col l12 m12 s12" style="padding:0 !important;">
+            <div class="col l12 m12 s12" style="padding:0;">
                 <div class="card card-default table-height">
                     <div class="card-content clearfix">
-			<div class="col l12 m12 s12" style="margin-bottom:1vh;pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;">
+			<div class="col l12 m12 s12" style="margin-bottom:1vh;padding:0;pointer-events:<?php echo ($row->status == 2)?'none':'auto'; ?>;">
 			    <div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo($row->anc == $anc['anc_site_id'])?'selected="selected"':''; ?>><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
 			    <div class="col l3 m3 s3" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" value="<?php echo ucfirst($row->reporting_month_year); ?>" readonly/></div>
 			    <div class="col l3 m3 s3" style="text-align:center;"><strong>Date of Support Visit </strong> <input type="text" id="dateofSupportVisit" name="dateofSupportVisit" placeholder="Select support visit date" title="Please select support visit date" value="<?php echo $dateofSupportVisit; ?>" readonly/></div>
 			</div>
-		        <div class="col l12 m12 s12">
+		        <div class="col l12 m12 s12" style="padding:0;">
 			    <table id="ancFormTable" class="responsive-table display">
 				<thead>
 				    <tr>
