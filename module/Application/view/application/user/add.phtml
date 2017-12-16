@@ -241,7 +241,7 @@ if(isset($countryId) && trim($countryId)!=''){
                 } if(base64_decode(role) == 3 || base64_decode(role) == 4){
                    var lab = $('#lab').val();
                    if(lab.length == 0){ alert("Please select lab site name"); return false; }
-                } if(base64_decode(role) == 5){
+                }else if(base64_decode(role) == 5){
                    var anc = $('#ancSite').val();
                    if(anc.length == 0){ alert("Please select ANC site"); return false; }
                 }
