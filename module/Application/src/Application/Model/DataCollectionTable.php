@@ -1398,16 +1398,28 @@ class DataCollectionTable extends AbstractTableGateway {
        foreach($uMapResult as $anc){
 	   $mappedANC[] = $anc['clinic_id'];
        }
+       $mappedLab = array();
+       $uMapQuery = $sql->select()->from(array('l_map' => 'user_laboratory_map'))
+                                  ->where(array('l_map.user_id'=>$loginContainer->userId));
+       $uMapQueryStr = $sql->getSqlStringForSqlObject($uMapQuery);
+       $uMapResult = $dbAdapter->query($uMapQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+       //Get all mapped lab
+       foreach($uMapResult as $lab){
+	   $mappedLab[] = $lab['laboratory_id'];
+       }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
+		     ->join(array('l_d' => 'location_details'), "l_d.location_id=f.district",array('location_name'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
-	if($loginContainer->roleCode == 'ANCSC'){
-	    if(trim($parameters['anc']) ==''){
-                $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
-	    }
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	if($loginContainer->roleCode == 'ANCSC' && trim($parameters['anc']) == ''){
+            $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
+        }else if($loginContainer->roleCode== 'LS' && trim($parameters['lab']) == ''){
+	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO' && trim($parameters['lab']) == ''){
+	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
+	} if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
@@ -1452,10 +1464,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
+				->join(array('l_d' => 'location_details'), "l_d.location_id=f.district",array('location_name'),'left')
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }else if($loginContainer->roleCode== 'LS'){
+	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
+	}else if($loginContainer->roleCode== 'LDEO'){
+	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
+	} if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
 	}else if($loginContainer->roleCode== 'CC'){
 	    $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
@@ -1499,10 +1516,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		$status = 'Results Awaited';
 	    }
 	    //for individual result pdf
-	    $pdfLink = '';
-	    if($loginContainer->hasViewOnlyAccess!='yes'){
-	       $pdfLink = '<a href="javascript:void(0);" onclick="printLabResult(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-1" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
-	    }
+	    $pdfLink = '<a href="javascript:void(0);" onclick="printLabResult(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-1" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    $row = array();
 	    $row[] = $specimenCollectedDate;
 	    $row[] = $status;
@@ -1524,9 +1538,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //$row[] = $hIVRNAResult;
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = ucfirst($aRow['comments']);
-	    if($loginContainer->hasViewOnlyAccess!='yes'){
-	       $row[] = $pdfLink;
-	    }
+	    $row[] = $pdfLink;
 	   $output['aaData'][] = $row;
 	}
        return $output;

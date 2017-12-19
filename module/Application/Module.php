@@ -91,7 +91,7 @@ class Module{
                         return $response;
                     }
                 }else{
-                    if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1) == 'Clinic' || substr($tempName[1], 1)== 'RiskAssessment') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
+                    if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1)== 'RiskAssessment') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
                         if ($e->getRequest()->isXmlHttpRequest()) {
                             return;
                         }

@@ -33,11 +33,11 @@ if(count($labReportResult) >0){
     // create new PDF document
     $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
     $pdf->setPageOrientation('L');
-    $pdf->setSchemeName('DREAMS Lab Results','dreams-small-logo.png');
+    $pdf->setSchemeName('Recency Lab Results','dreams-small-logo.png');
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     //$pdf->SetAuthor('Dream');
-    $pdf->SetTitle('DREAMS Lab Results');
+    $pdf->SetTitle('Recency Lab Results');
     //$pdf->SetSubject('TCPDF Tutorial');
     //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
     
@@ -177,10 +177,10 @@ if(count($labReportResult) >0){
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);
-    $filename = 'ANC-LAB-REPORT--'.date('d-M-Y-H-i-s').'.pdf';
+    $filename = 'Recency-Lab-Results--'.date('d-M-Y-H-i-s').'.pdf';
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{
-    echo null;
+    echo '';
 }
 ?>

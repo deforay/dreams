@@ -125,8 +125,8 @@ class ClinicController extends AbstractActionController{
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
-                $facilityList=$facilityService->getActivefacilities('anc-lab-report',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
+                $facilityList = $facilityService->getActivefacilities('anc-lab-report',$countryId);
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,
                     'facilities'=>$facilityList,

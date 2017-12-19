@@ -2,18 +2,15 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $loginContainer = new Container('user');
-//set country main menu access based on roles
+//set country main-menu access based on roles
 $adminMenuAccess = 'hide';
 $labMenuAccess = 'hide';
-$ancSiteMenuAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $adminMenuAccess = 'show';
 }if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
     $labMenuAccess = 'show';
-}if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'ANCSC'){
-   $ancSiteMenuAccess = 'show';
 }
-//set country lab submenu access
+//set country lab sub-menu access
 $countryLabDataReportingAccess = 'hide';
 $countryLabDataExtractionAccess = 'hide';
 $countryLabResultEmailAccess = 'hide';
@@ -34,14 +31,14 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $countryLabDataReportingAccess = 'show';
     $countryLabDataExtractionAccess = 'show';
 }
-//set anc site sub menu access by config values
-$DRAccess = 'show';
-$PRAccess = 'show';
+//set anc site sub-menu access by config values
+$DRAccess = 'hide';
+$PRAccess = 'hide';
 if($loginContainer->roleCode== 'ANCSC'){
-    if($loginContainer->hasDRAccess == 'no'){
-        $DRAccess = 'hide';
-    }if($loginContainer->hasPRAccess == 'no'){
-        $PRAccess = 'hide';
+    if($loginContainer->hasDRAccess!= 'yes'){
+        $DRAccess = 'show';
+    }if($loginContainer->hasPRAccess!= 'yes'){
+        $PRAccess = 'show';
     }
 }
 ?>
@@ -308,24 +305,25 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                 </li>
                                             <?php } ?>
                                             
-                                            <?php if($ancSiteMenuAccess =='show'){ ?>
+                                            <?php if($DRAccess =='show' || $PRAccess == 'show' || $labMenuAccess == 'show'){ ?>
                                                 <li class="countryClinicMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <div class="collapsible-header waves-effect countryClinicMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-hospital"></i> ANC Site <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                     <div class="collapsible-body collapsibleAll collapsibleCountryClinicMenu<?php echo $country['country_id']; ?>">
                                                         <ul>
                                                            <?php
-                                                            if($DRAccess == 'show'){ ?>
+                                                            if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/data-collection/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-comment-edit"></i> ANC Monthly Reporting</a>
                                                                 </li>
-                                                            <?php } if($PRAccess == 'show') { ?>
+                                                            <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
                                                                 </li>
+                                                            <?php } if($labMenuAccess == 'show' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> DREAMS Lab Result</a>
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Recency Lab Results</a>
                                                                 </li>
-                                                            <?php }  if($DRAccess == 'show'){ ?>
+                                                            <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/risk-assessment/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment Form</a>
                                                                 </li>
