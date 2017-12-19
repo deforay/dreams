@@ -73,7 +73,7 @@ class Module{
             if(substr($tempName[0], 0, -1) == 'Application'){
                 $loginContainer = new Container('user');
                 if (!isset($loginContainer->userId)) {
-                    if( ! $e->getRequest()->isXmlHttpRequest()) {
+                    if(! $e->getRequest()->isXmlHttpRequest()) {
                         $url = $e->getRouter()->assemble(array(), array('name' => 'login'));
                         $response = $e->getResponse();
                         $response->getHeaders()->addHeaderLine('Location', $url);
@@ -109,7 +109,7 @@ class Module{
 			//Attach the "break" as a listener with a high priority
 			$e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
 		       return $response;
-                    }else if(substr($tempName[1], 1)!= 'Clinic' && substr($tempName[1], 1)!= 'RiskAssessment' && $e->getRouteMatch()->getParam('action')!= 'change-password' && $loginContainer->roleCode == 'ANCSC'){
+                    }else if(substr($tempName[1], 1)!= 'Clinic' && substr($tempName[1], 1)!= 'RiskAssessment' && substr($tempName[1], 1)!= 'StudyFiles' && $e->getRouteMatch()->getParam('action')!= 'change-password' && $loginContainer->roleCode == 'ANCSC'){
                         if ($e->getRequest()->isXmlHttpRequest()) {
                             return;
                         }
