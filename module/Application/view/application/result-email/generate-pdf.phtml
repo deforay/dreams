@@ -4,6 +4,7 @@ $alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
 $alertContainer->aliasPage = 1;
 $alertContainer->nbPages = count($dataResult);
+$alertContainer->rVal = $common->generateRandomString(6);
     class MYPDF extends TCPDF {
 	public function setSchemeName($heading,$logo) {
 	    $this->heading = $heading;
@@ -58,6 +59,10 @@ $alertContainer->nbPages = count($dataResult);
     //$pdf->SetY(20,true,false);
     $page = 1;
     $pages = array();
+    if (!file_exists(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $alertContainer->rVal) && !is_dir(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $alertContainer->rVal)) {
+      mkdir(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $alertContainer->rVal);
+    }
+    $pathFront = TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR . $alertContainer->rVal;
     foreach($dataResult as $data){
 	$alertContainer->aliasPage = $page;
 	// create new PDF document
@@ -98,15 +103,19 @@ $alertContainer->nbPages = count($dataResult);
 	$pdf->SetY(30,true,false);
 	
 	$districtName = (isset($data['location_name']))?ucwords($data['location_name']):'';
+	
 	$dob = '';
 	$dobLabel = 'Date of Birth';
 	if(isset($data['patient_dob']) && $data['patient_dob']!= null && trim($data['patient_dob'])!= '' && $data['patient_dob']!= '0000-00-00'){
+	    $dobLabel = 'Date of Birth';
 	    $dob = $common->humanDateFormat($data['patient_dob']);
 	}else if(isset($data['age']) && $data['age']!= null && trim($data['age'])!= '' && $data['age'] >0){
-	    $dob = $data['age'];
 	    $dobLabel = 'Age (Years)';
+	    $dob = $data['age'];
 	}
+	
 	$gestationalAgeinWeeks = ($data['gestational_age']!= null && trim($data['gestational_age'])!='' && (int)$data['gestational_age'] > 0)?(int)$data['gestational_age']:'';
+	
 	$specimenCollectedDate = '';
 	if(isset($data['specimen_collected_date']) && $data['specimen_collected_date']!= null && trim($data['specimen_collected_date'])!= '' && $data['specimen_collected_date']!= '0000-00-00'){
 	    $specimenCollectedDate = $common->humanDateFormat($data['specimen_collected_date']);
@@ -127,7 +136,9 @@ $alertContainer->nbPages = count($dataResult);
 	if(isset($data['result_dispatched_date_to_clinic']) && $data['result_dispatched_date_to_clinic']!= null && trim($data['result_dispatched_date_to_clinic'])!= '' && $data['result_dispatched_date_to_clinic']!= '0000-00-00'){
 	    $resultDispatchedDateToClinic = $common->humanDateFormat($data['result_dispatched_date_to_clinic']);
 	}
+	
 	$rejectionCode = (isset($data['rejection_code']) && (int)$data['rejection_code'] > 1)?$data['rejection_code']:'';
+	
 	$lblLAgAssay = '';
 	$lagAssay = '';
 	$rejectionName = '';
@@ -207,7 +218,7 @@ $alertContainer->nbPages = count($dataResult);
 	$html .='</table>';
 	$pdf->writeHTML($html);
 	$pdf->lastPage();
-	$filename = TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .'p'.$page. '.pdf';
+	$filename = $pathFront. DIRECTORY_SEPARATOR .'p'.$page. '.pdf';
 	$pdf->Output($filename,"F");
 	$pages[] = $filename;
        $page++;
@@ -219,7 +230,10 @@ $alertContainer->nbPages = count($dataResult);
 	$resultPdf->setPrintHeader(false);
         $resultPdf->setPrintFooter(false);
 	$resultPdf->concat();
-	$resultFilename = 'Lab-HIV-Recency-Test-Result-'.$data['patient_barcode_id'].'-'.date('d-M-Y-H-i-s').'.pdf';
+	$barcodeTxt = (!isset($params['frmSrc']))?$data['patient_barcode_id']:'';
+	$resultFilename = 'Lab-HIV-Recency-Test-Result-'.$barcodeTxt.'-'.date('d-M-Y-H-i-s').'.pdf';
 	$resultPdf->Output(TEMP_UPLOAD_PATH. DIRECTORY_SEPARATOR .$resultFilename, "F");
+	$common->removeDirectory($pathFront);
+	$alertContainer->rVal = '';
 	echo $resultFilename;
     }

@@ -64,7 +64,7 @@ class ResultEmailController extends AbstractActionController{
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $dataResult = $dataCollectionService->generateDataCollectionResultPdf($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('dataResult' =>$dataResult));
+            $viewModel->setVariables(array('params'=>$params,'dataResult' =>$dataResult));
             $viewModel->setTerminal(true);
            return $viewModel;
         }
