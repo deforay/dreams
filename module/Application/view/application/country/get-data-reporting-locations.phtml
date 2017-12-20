@@ -16,18 +16,18 @@ if(isset($response['labRecent']) && count($response['labRecent']) > 0){
             }
             
             if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray)){
-                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'blue';
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'red';
                 $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
             }
             if(in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
-                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'green';
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'yellow';
                 $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
             }
             if(trim($params['sitehavingRecentInfectionby']) == ''){
-               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-blue';
+               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-red';
                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
                
-               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-green';
+               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-yellow';
                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
             }
         }
@@ -95,23 +95,23 @@ if($location > 0) { ?>
                 var iconImg;
                 var contentString = markers[i]['label'];
                 for( j = 0; j < iconArray.length; j++ ) {
-                    if(iconArray[j] == 'blue' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
-                       contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'green' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/green.png'); ?>';
-                       contentString+= '<span style="color:green;">Lab Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    if(iconArray[j] == 'red' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
+                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'yellow' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>';
+                       contentString+= '<span style="color:#f39c12;">Lab Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'purple' && recentsArray[j] > 0){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'default-blue' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
-                       contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'default-green' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
-                       contentString+= '<span style="color:green;">Lab Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'default-red' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
+                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                    }else if(iconArray[j] == 'default-yellow' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
+                       contentString+= '<span style="color:#f39c12;">Lab Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'default-purple' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }
                     

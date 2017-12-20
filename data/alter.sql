@@ -821,4 +821,9 @@ UPDATE `anc_form` SET `field_name` = 'no_of_clients_with_UNKNOWN_HIV_STATUS_at_A
 
 UPDATE `anc_form` SET `field_name` = 'no_of_clients_TESTED_FOR_HIV_with_rapid_diagnostic_test_at_ANC_first_visit' WHERE `anc_form`.`field_id` = 5;
 
-ALTER TABLE `clinic_data_collection` ADD `date_of_support_visit` DATE NULL DEFAULT NULL AFTER `reporting_month_year`; 
+ALTER TABLE `clinic_data_collection` ADD `date_of_support_visit` DATE NULL DEFAULT NULL AFTER `reporting_month_year`;
+
+--Pal 20/12/2017
+ALTER TABLE `data_collection` ADD `result_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `result_mail_sent`;
+
+ALTER TABLE `data_collection_event_log` ADD `result_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `result_mail_sent`;

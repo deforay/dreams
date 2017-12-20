@@ -1572,12 +1572,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	} if(trim($params['reportingMonthYear'])!= ''){
+	}
+	if(trim($params['reportingMonthYear'])!= ''){
 	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
 	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(trim($params['province'])!= ''){
+	}
+	if(trim($params['province'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('anc.province'=>base64_decode($params['province'])));
-	} if(trim($params['specimenType'])!= ''){
+	}
+	if(trim($params['specimenType'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
 	}
 	$queryContainer->countryDashboardQuery = $dataCollectionQuery;
@@ -1590,8 +1593,9 @@ class DataCollectionTable extends AbstractTableGateway {
 					    ->columns(array(
 							    'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
 							 ))
+					    ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
 					    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
-					    ->where('r_a.country = '.$params['country'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
+					    ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
 		 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                  $dataCollectionResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
 	     $i++;
@@ -1997,14 +2001,14 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'labTestIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4 AND DATE(specimen_collected_date) = CURDATE(), 1,0))"),
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>null,'bdIncompletebyToday' => null),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTest'=>null),'left');
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=>null),'left');
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'labTestCompleted' =>null,
 						   'labTestIncompletebyToday' =>null,
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>new \Zend\Db\Sql\Expression("COUNT(*)"),'bdIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 4 AND DATE(interview_date) = CURDATE(), 1,0))")),'right')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTest'=>new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left');
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=>new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left');
 	$select1->combine($select2);
 	$collectionQuery = $sql->select()->from(array('result' => $select1));
 	$collectionQueryStr = $sql->getSqlStringForSqlObject($collectionQuery);
@@ -2054,5 +2058,20 @@ class DataCollectionTable extends AbstractTableGateway {
          $j++;
 	}
       return $result;
+    }
+    
+    public function updateResultPrintStatus($dataCollectionID){
+	$dbAdapter = $this->adapter;
+	$sql = new Sql($dbAdapter);
+	$dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
+                                           ->where(array('da_c_e.data_collection_id'=>$dataCollectionID))
+				           ->order('da_c_e.data_collection_event_log_id desc');
+	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
+	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+	if(isset($result->data_collection_event_log_id)){
+	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+	    $dataCollectionEventLogDb->update(array('result_print_status'=>1),array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+	}
+      return $this->update(array('result_print_status'=>1),array('data_collection_id'=>$dataCollectionID));
     }
 }

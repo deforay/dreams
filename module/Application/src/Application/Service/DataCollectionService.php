@@ -177,6 +177,7 @@ class DataCollectionService {
     
     public function generateDataCollectionResultPdf($params){
         $queryContainer = new Container('query');
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         if(isset($params['dataCollection']) && count($params['dataCollection']) > 0){
@@ -195,7 +196,13 @@ class DataCollectionService {
             $dQuery = $queryContainer->labReportQuery;
         }
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
-      return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        if(isset($dResult) && count($dResult) >0){
+            foreach($dResult as $row){
+                $dataCollectionDb->updateResultPrintStatus($row['data_collection_id']);
+            }
+        }
+      return $dResult;
     }
     
     public function exportDataCollectionInExcel($params){
@@ -211,10 +218,10 @@ class DataCollectionService {
                 $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
+                    $headerRow = 1;
                     $labs = '';
                     $receiptDateatLab = '';
                     $resultReported = 'Completed Tests, Pending Tests';
-                    $headerRow = 1;
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                         $headerRow = 4;
                         //filter content
@@ -1362,9 +1369,9 @@ class DataCollectionService {
                     $sheet->setCellValue('E1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1455,8 +1462,9 @@ class DataCollectionService {
                                                 ->columns(array(
                                                                 'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
                                                              ))
+                                                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
                                                 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
-                                                ->where('r_a.country = '.$dataCollection['country'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
+                                                ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
                      $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
                      $sResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
                  $i++;
@@ -1568,9 +1576,9 @@ class DataCollectionService {
                     $sheet->setCellValue('E1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);

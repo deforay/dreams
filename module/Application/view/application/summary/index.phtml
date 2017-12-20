@@ -47,23 +47,21 @@
              <div class="col l4 m6 s12">
                  <div class="card small-chart margin" id="" style="background-color:rgba(245, 116, 173, 0.8);">
                      <div class="col l12 m12 s12 sct">
-                        <small>ANC Recency Tests</small>
-                        <h2><?php echo (isset($summaries[1]['totalANCRecencyTest']))?$summaries[1]['totalANCRecencyTest']:0; ?></h2>
+                        <small>ANC Rapid Recency Assay Recent <span style="text-transform:none;font-size:13px;">(Visual)</span></small>
+                        <h2><?php echo (isset($summaries[1]['totalANCRecencyTestRecent']))?$summaries[1]['totalANCRecencyTestRecent']:0; ?></h2>
                      </div>
                  </div>
              </div>
-             
         </div>
         <div class="row">
             <div class="col l6 m6 s12">
                 <div class="card small-chart margin" id="" style="background-color:rgba(225, 69, 66, 0.8);">
                     <div class="col l12 m12 s12 sct">
-                       <small>Bahaviour Data Pending as on Today</small>
+                       <small>Behaviour Data Pending as on Today</small>
                        <h2><?php echo (isset($summaries[1]['bdIncompletebyToday']))?$summaries[1]['bdIncompletebyToday']:0; ?></h2>
                     </div>
                 </div>
             </div>
-
             <div class="col l6 m6 s12">
                  <div class="card small-chart margin" id="" style="background-color:rgba(225, 69, 66, 0.8);">
                      <div class="col l12 m12 s12 sct">
