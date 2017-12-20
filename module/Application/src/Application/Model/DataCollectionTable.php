@@ -1612,9 +1612,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $showLabRecent = false;
 	    $showANCRecent = false;
 	    $sitehavingRecentInfectionbyArray = explode(",",$params['sitehavingRecentInfectionby']);
-	    if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
+	    if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
 		$showLabRecent = true;
-	    } if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
+	    } if(in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray)){
 		$showANCRecent = true;
 	    }
 	}
@@ -1632,14 +1632,14 @@ class DataCollectionTable extends AbstractTableGateway {
 		$labRecentQuery = $labRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	    } if(trim($params['specimenType'])!= ''){
 		$labRecentQuery = $labRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
-	    } if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray)){
+	    } if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
 		$mapWhere = '';
 		$mapOR = ' OR ';
 		for($i=0;$i<count($sitehavingRecentInfectionbyArray);$i++){
 		    if($sitehavingRecentInfectionbyArray[$i] == 'labLAgRecency'){
 			if($i == 1){ $mapWhere.= $mapOR; }
 			$mapWhere.= 'da_c.lag_avidity_result = "recent"';
-		    }else if($sitehavingRecentInfectionbyArray[$i] == 'labAsanteRecency'){
+		    }else if($sitehavingRecentInfectionbyArray[$i] == 'labRecencyAssay'){
 		       if($i == 1){ $mapWhere.= $mapOR; }
 		       $mapWhere.= 'da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'';
 		    }
@@ -1669,7 +1669,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		$ancRecentQuery = $ancRecentQuery->where('da_c.specimen_type IN('.$params['specimenType'].')');
 	    } /*if(trim($params['hasSitePerformedRapidRecencyTest'])!= ''){
 		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.has_patient_had_rapid_recency_test'=>$params['hasSitePerformedRapidRecencyTest']));
-	    }*/ if(in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray)){
+	    }*/ if(in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray)){
 		$ancRecentQuery = $ancRecentQuery->where(array('anc_r_r.recency_line'=>'recent'));
 	    }
 	    $ancRecentQueryStr = $sql->getSqlStringForSqlObject($ancRecentQuery);

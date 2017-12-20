@@ -5,11 +5,9 @@ $loginContainer = new Container('user');
 //set country main-menu access based on roles
 $adminMenuAccess = 'hide';
 $labMenuAccess = 'hide';
-$ancMenuAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $adminMenuAccess = 'show';
     $labMenuAccess = 'show';
-    $ancMenuAccess = 'show';
 }else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
     $labMenuAccess = 'show';
 }

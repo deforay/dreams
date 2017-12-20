@@ -7,7 +7,7 @@ if(trim($params['sitehavingRecentInfectionby'])!= ''){
 }
 if(isset($response['labRecent']) && count($response['labRecent']) > 0){
     foreach($response['labRecent'] as $labRecentPoint){
-        if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= ''){
+        if(trim($labRecentPoint['latitude'])!= '' && trim($labRecentPoint['longitude'])!= '' && (trim($params['sitehavingRecentInfectionby']) == '' || in_array('labLAgRecency',$sitehavingRecentInfectionbyArray) || in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray))){
             $location+= 1;
             if(!in_array($labRecentPoint['anc_site_name'],$ancArray)){
                 $ancArray[] = $labRecentPoint['anc_site_name'];
@@ -15,25 +15,42 @@ if(isset($response['labRecent']) && count($response['labRecent']) > 0){
                 $ancArray[$labRecentPoint['anc_site_name']]['lon'] = $labRecentPoint['longitude'];
             }
             
-            $ancArray[$labRecentPoint['anc_site_name']]['color'][] = (in_array('labLAgRecency',$sitehavingRecentInfectionbyArray))?'blue':'default-blue';
-            $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (trim($params['sitehavingRecentInfectionby']) == '' || in_array('labLAgRecency',$sitehavingRecentInfectionbyArray))?(int)$labRecentPoint['noofLAgRecent']:0;
-            
-            $ancArray[$labRecentPoint['anc_site_name']]['color'][] = (in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray))?'green':'default-green';
-            $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (trim($params['sitehavingRecentInfectionby']) == '' || in_array('labAsanteRecency',$sitehavingRecentInfectionbyArray))?(int)$labRecentPoint['noofRecencyAssayRecent']:0;
-            
+            if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray)){
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'blue';
+                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
+            }
+            if(in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'green';
+                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
+            }
+            if(trim($params['sitehavingRecentInfectionby']) == ''){
+               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-blue';
+               $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
+               
+               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-green';
+               $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofRecencyAssayRecent'];
+            }
         }
     }
-} if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
+}
+if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
     foreach($response['ancRecent'] as $ancRecentPoint){
-        if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= ''){
+        if(trim($ancRecentPoint['latitude'])!= '' && trim($ancRecentPoint['longitude'])!= '' && (trim($params['sitehavingRecentInfectionby']) == '' || in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray))){
             $location+= 1;
             if(!in_array($ancRecentPoint['anc_site_name'],$ancArray)){
                 $ancArray[] = $ancRecentPoint['anc_site_name'];
                 $ancArray[$ancRecentPoint['anc_site_name']]['lat'] = $ancRecentPoint['latitude'];
                 $ancArray[$ancRecentPoint['anc_site_name']]['lon'] = $ancRecentPoint['longitude'];
             }
-            $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = (in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray))?'purple':'default-purple';
-            $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (trim($params['sitehavingRecentInfectionby']) == '' || in_array('ancRapidRecency',$sitehavingRecentInfectionbyArray))?(int)$ancRecentPoint['noofANCRecencyTestRecent']:0;
+            
+            if(in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray)){
+                $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'purple';
+                $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
+            }
+            if(trim($params['sitehavingRecentInfectionby']) == ''){
+                $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'default-purple';
+                $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
+            }
         }
     }
 }
@@ -75,7 +92,7 @@ if($location > 0) { ?>
                 bounds.extend(position);
                 var iconArray = markers[i]['icon'].split(",");
                 var recentsArray = markers[i]['recents'].split(",");
-                var iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
+                var iconImg;
                 var contentString = markers[i]['label'];
                 for( j = 0; j < iconArray.length; j++ ) {
                     if(iconArray[j] == 'blue' && recentsArray[j] > 0){
@@ -88,10 +105,13 @@ if($location > 0) { ?>
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'default-blue' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
                        contentString+= '<span style="color:blue;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'default-green' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
                        contentString+= '<span style="color:green;">Lab Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'default-purple' && recentsArray[j] > 0){
+                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Recency Test - Recent (Visual) (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }
                     
