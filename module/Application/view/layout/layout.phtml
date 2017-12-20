@@ -5,9 +5,12 @@ $loginContainer = new Container('user');
 //set country main-menu access based on roles
 $adminMenuAccess = 'hide';
 $labMenuAccess = 'hide';
+$ancMenuAccess = 'hide';
 if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
     $adminMenuAccess = 'show';
-}if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+    $labMenuAccess = 'show';
+    $ancMenuAccess = 'show';
+}else if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
     $labMenuAccess = 'show';
 }
 //set country lab sub-menu access
@@ -287,7 +290,11 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download</a>
                                                                 </li>
-                                                            <?php } if($countryLabResultEmailAccess == 'show') { ?>
+                                                            <?php } ?>
+                                                                <li class="countryLabResultMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
+                                                                </li>
+                                                            <?php if($countryLabResultEmailAccess == 'show') { ?>
                                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-email"></i> Email Lab Results</a>
                                                                 </li>
@@ -305,7 +312,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                 </li>
                                             <?php } ?>
                                             
-                                            <?php if($DRAccess =='show' || $PRAccess == 'show' || $labMenuAccess == 'show'){ ?>
+                                            <?php if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess =='show' || $PRAccess == 'show'){ ?>
                                                 <li class="countryClinicMenu<?php echo $country['country_id']; ?> menuAll">
                                                     <div class="collapsible-header waves-effect countryClinicMenuSecond<?php echo $country['country_id']; ?> menuAll" style="padding-left:14%;color:#444;"><i class="zmdi zmdi-hospital"></i> ANC Site <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                                                     <div class="collapsible-body collapsibleAll collapsibleCountryClinicMenu<?php echo $country['country_id']; ?>">
@@ -319,9 +326,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
                                                                 </li>
-                                                            <?php } if($labMenuAccess == 'show' || $PRAccess == 'show') { ?>
+                                                            <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
@@ -372,8 +379,8 @@ if($loginContainer->roleCode== 'ANCSC'){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/cookie.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.blockUI.js' ?>"></script>
 <script>
-    str = $(location).attr('pathname');
-    splitsUrl = str.split("/",5);
+    var str = $(location).attr('pathname');
+    var splitsUrl = str.split("/",5);
     $(function () {
         ol();
         $(".opensright").css("display","none");
@@ -392,7 +399,7 @@ if($loginContainer->roleCode== 'ANCSC'){
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
         }else if(splitsUrl[1]=='dashboard'){
-          splits=str.substr(str.lastIndexOf('/') + 1);  
+          var splits=str.substr(str.lastIndexOf('/') + 1);  
           $(".countryMenu"+atob(splits)).addClass("active");
           $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
           $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -405,7 +412,7 @@ if($loginContainer->roleCode== 'ANCSC'){
           $(".countryFacilityMenu"+atob(splits)).css("color","#444");
           $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
         }else if(splitsUrl[1]=='user'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -454,7 +461,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".cscUserMenu").css("color","#fff");
             }
         }else if(splitsUrl[1]=='facility'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -493,7 +500,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
             }
         }else if(splitsUrl[1]=='anc-site'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -532,7 +539,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
             }
         }else if(splitsUrl[1]=='data-collection'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!='view' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -579,7 +586,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".cscDataCollectionMenu").addClass("active");
             }
         }else if(splitsUrl[1]=='data-extraction'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -596,7 +603,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".cscDataExtractionMenu").addClass("active");
             }
         }else if(splitsUrl[1]=='print-lab-logbook'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryLogbookMenu"+atob(splits)).addClass("active");
@@ -607,7 +614,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='result-email'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultEmailMenu"+atob(splits)).addClass("active");
@@ -618,7 +625,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='result-sms'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultSmsMenu"+atob(splits)).addClass("active");
@@ -629,7 +636,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='data-collection'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryClinicDataCollectionMenu"+atob(splits)).addClass("active");
@@ -640,7 +647,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='data-extraction'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryClinicDataExtractionMenu"+atob(splits)).addClass("active");
@@ -651,18 +658,19 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='lab-report'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
+            var menuSrc = (location.search.substring(1) == 'frmSrc=anc')?'Clinic':'Lab';
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
-            $(".countryClinicResultMenu"+atob(splits)).addClass("active");
-            $(".countryClinicResultMenu"+atob(splits)).css("color","#fff");
-            $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
-            $(".countryClinicMenu"+atob(splits)).addClass("active");
-            $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
-            $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
-            $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
+            $(".country"+menuSrc+"ResultMenu"+atob(splits)).addClass("active");
+            $(".country"+menuSrc+"ResultMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountry"+menuSrc+"Menu"+atob(splits)).css("display","block");
+            $(".country"+menuSrc+"Menu"+atob(splits)).addClass("active");
+            $(".country"+menuSrc+"MenuSecond"+atob(splits)).addClass("active");
+            $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='risk-assessment'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryRiskAssessmentMenu"+atob(splits)).addClass("active");
@@ -673,7 +681,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(splitsUrl[1]=='study-overview'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -684,7 +692,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
             $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
         }else if(splitsUrl[1]=='anc-asante-result'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -695,7 +703,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
             $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
         }else if(splitsUrl[1]=='study-files'){
-            splits=str.substr(str.lastIndexOf('/') + 1);
+            var splits=str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".studyFilesMenu"+atob(splits)).addClass("active");
