@@ -468,10 +468,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	if(isset($parameters['dashProvince']) && trim($parameters['dashProvince'])!= ''){
 	    $sQuery = $sQuery->where(array('anc.province'=>$parameters['dashProvince']));
 	}
-	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
-	   $reportingMonthYearArray = explode("/",$parameters['date']);
-	   $sQuery = $sQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR(r_a.interview_date) ="'.$reportingMonthYearArray[1].'"');
-	}else if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
            $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
@@ -550,7 +547,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }
 	    //data view
 	    $dataView = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-1" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';
-	    //for edit
+	    //data edit
 	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']!= 'locked'){
 		$dataEdit = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp';
 	    } if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'completed'){
@@ -561,7 +558,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockRiskAssessment(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
 	    }
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
-	    //for individual assessment pdf
+	    //individual assessment pdf
 	    if($aRow['test_status_name']== 'locked'){
 	       $pdfLink = '<a href="javascript:void(0);" onclick="printAssessmentForm(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-1" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>&nbsp;&nbsp;';
 	    }

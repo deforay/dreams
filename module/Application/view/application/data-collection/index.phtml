@@ -65,7 +65,7 @@ if(isset($date) && trim($date)!= ''){
 	float:left;
 	width:44%;
     }
-    #box-1,#box-2{
+    .box-11,.box-21{
 	float:left;
 	width:100%;
 	border:2px dotted #333;
@@ -76,7 +76,7 @@ if(isset($date) && trim($date)!= ''){
 	width:12%;
 	font-size:40px;
 	text-align:center;
-	padding-top:8vh;
+	padding-top:6vh;
     }
     @media (max-width: 460px) {
 	.hideDataTable{
@@ -98,31 +98,26 @@ if(isset($date) && trim($date)!= ''){
     .redTxt{
 	color:#F44336 !important;
     }
-    #readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
-	text-align: center !important;
-	font-size:14px;
+    #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
+        text-align: center !important;
+        font-size:14px;
     }
-
-    #readerValueRRDTLogValText, #readerValueRRRLogValText{
-	font-weight:bold;
-	font-size:13px;
+    #readerValueRRDTLogValText/*, #readerValueRRRLogValText*/{
+        font-weight:bold;
+        font-size:13px;
     }
-
-
-	table.dataTable thead th, table.dataTable thead td,
-	table.dataTable tfoot th, table.dataTable tfoot td{
-		text-align:center;
-	}
-
-	table.dataTable thead th, table.dataTable thead td,
-	table.dataTable tfoot th, table.dataTable tfoot td,
-	table.dataTable.row-border tbody th, 
-	table.dataTable.row-border tbody td, 
-	table.dataTable.display tbody th, 
-	table.dataTable.display tbody td{
-		border: 1px solid #eeeeef;
-	}
-
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td{
+	text-align:center;
+    }
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td,
+    table.dataTable.row-border tbody th, 
+    table.dataTable.row-border tbody td, 
+    table.dataTable.display tbody th, 
+    table.dataTable.display tbody td{
+	border: 1px solid #eeeeef;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -415,38 +410,55 @@ if(isset($date) && trim($date)!= ''){
 			    <div class="col s8">
 			       <div class="input-padding col m12 s12 l12">
 				  <div class="box-1">
-				    <div id="box-1">
+				    <div class="box-11">
 				      <strong>Positive Verification Line (Visual)</strong><br>	
 				      <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="present"/>
 				      <label for="asanteRapidRecencyAssayP">Present </label><br>
 				      <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="absent"/>
 				      <label for="asanteRapidRecencyAssayN">Absent </label><br>
 				      <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log"/>
-				      <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
-				      <br><div id="readerValueRRDTLogVal"></div>
-				      <div id="readerValueRRDTLogValText"></div>
 				    </div>
 				  </div>
 				  <div id="box-breaker">&rArr;</div>
 				  <div class="box-2">
-				    <div id="box-2">
+				    <div class="box-21">
 				      <strong>Long Term Line (Visual)</strong><br>	
 				      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="absent"/>
 				      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="present"/>
 				      <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label><br>
 				      <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log"/>
-				      <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
-				      <br><div id="readerValueRRRLogVal"></div>
-				      <div id="readerValueRRRLogValText"></div>
 				    </div>
 				  </div>
 				</div>
 			    </div>
-			    <div class="col s3">
+			    <div class="col s4">
 				<div class="input-field col m12 s12">
 				    <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA">
 				    <label for="hivRnaNew">HIV RNA (copies/ml) *</label>
+				</div>
+			    </div>
+			</div>
+			<div class="row readerValueLogSection" style="margin-bottom:0;display:none;">
+			    <div class="col s8">
+			       <div class="input-padding col m12 s12 l12">
+				  <div class="box-1 readerValueRRDTLog" style="display:none;">
+				    <div class="box-11">
+				      <strong>Positive Verification Line (Visual) Reader Value</strong>
+				      <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
+				      <br><div id="readerValueRRDTLogVal"></div>
+				      <!--<br><div id="readerValueRRDTLogValText"></div>-->
+				    </div>
+				  </div>
+				  <div id="box-breaker"></div>
+				  <div class="box-2 readerValueRRRLog" style="display:none;">
+				    <div class="box-21">
+				      <strong>Long Term Line (Visual) Reader Value</strong>
+				      <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
+				      <br><div id="readerValueRRRLogVal"></div>
+				      <!--<br><div id="readerValueRRRLogValText"></div>-->
+				    </div>
+				  </div>
 				</div>
 			    </div>
 			</div>
@@ -669,7 +681,7 @@ if(isset($date) && trim($date)!= ''){
 	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
 	    "iDisplayLength": 25,
             "aoColumns": [
-        {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
@@ -984,7 +996,7 @@ if(isset($date) && trim($date)!= ''){
     function getCountriesLabAnc(){
 	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
             function(data) {
-		splitData = data.split('divider');
+		var splitData = data.split('divider');
 		$('.ancSiteSection').html(splitData[0]);
 		$('#ancSite').material_select();
 		$('.labSection').html(splitData[1]);
@@ -997,11 +1009,12 @@ if(isset($date) && trim($date)!= ''){
 	    $('.box-2,#box-breaker').css('visibility','visible');
 	}else if(this.value == 'absent'){
 	    $('.box-2,#box-breaker').css('visibility','hidden');
+	    ('.readerValueRRRLog').hide();
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	    $('#readerValueRRR').val('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
 	}
 	populateResult('');
     });
@@ -1017,12 +1030,12 @@ if(isset($date) && trim($date)!= ''){
 	var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
 	var dateOfTestCompletion = $('#dateOfTestCompletion').val();
 	var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
-	splitSpecimenCollectedDate = specimenCollectedDate.split('/');
-	splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
-	splitPatientDOB = patientDOB.split('/');
-	splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
-	splitTestCompletionDate = dateOfTestCompletion.split('/');
-	splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
+	var splitSpecimenCollectedDate = specimenCollectedDate.split('/');
+	var splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
+	var splitPatientDOB = patientDOB.split('/');
+	var splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
+	var splitTestCompletionDate = dateOfTestCompletion.split('/');
+	var splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
 	specimenCollectedDate = splitSpecimenCollectedDate[2]+'-'+splitSpecimenCollectedDate[1]+'-'+splitSpecimenCollectedDate[0];
 	specimenPickedUpDateAtAnc = splitSpecimenPickedUpDateAtAnc[2]+'-'+splitSpecimenPickedUpDateAtAnc[1]+'-'+splitSpecimenPickedUpDateAtAnc[0];
 	patientDOB = splitPatientDOB[2]+'-'+splitPatientDOB[1]+'-'+splitPatientDOB[0];
@@ -1173,9 +1186,10 @@ if(isset($date) && trim($date)!= ''){
             $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
 	    $('#readerValueRRDTLogVal').html('');
-	    $('#readerValueRRDTLogValText').html('');
+	    //$('#readerValueRRDTLogValText').html('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
+	    $('.readerValueLogSection,.readerValueRRDTLog,.readerValueRRRLog').hide();
         }else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
@@ -1196,14 +1210,18 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   //var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
 	   var readerValueRRDTLogVal = readerValueRRDT;
-	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+	   //var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+	   $('.readerValueLogSection,.readerValueRRDTLog').show();
+	   $('.readerValueRRDTLog').css('visibility','visible');
 	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
-	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
+	   //$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{
 	   $('#readerValueRRDTLog').val('');
 	   $('#readerValueRRDTLogVal').html('');
-	   $('#readerValueRRDTLogValText').html('');
+	   //$('#readerValueRRDTLogValText').html('');
+	   $('.readerValueRRDTLog').hide();
+	   if($('#readerValueRRR').val() == ''){ $('.readerValueLogSection').hide(); }else { $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}
     });
     
@@ -1212,14 +1230,18 @@ if(isset($date) && trim($date)!= ''){
 	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
 	   //var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
 	   var readerValueRRRLogVal = readerValueRRR;
-	   var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+	   //var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+	   $('.readerValueLogSection,.readerValueRRRLog').show();
 	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
 	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
-	   $('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+	   //$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+	   if($('#readerValueRRDT').val() == ''){ $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}else{
 	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
+	    $('.readerValueRRRLog').hide();
+	    if($('#readerValueRRDT').val() == ''){ $('.readerValueLogSection').hide(); }
 	}
     });
     

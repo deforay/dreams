@@ -46,22 +46,22 @@ if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
 $asanteRapidRecencyAssayPn = '';
 $readerValueRRDTLog = '';
 $readerValueRRDTLogVal = '';
-$readerValueRRDTLogValText = '';
+//$readerValueRRDTLogValText = '';
 $asanteRapidRecencyAssayRlt = '';
 $readerValueRRRLog = '';
 $readerValueRRRLogVal = '';
-$readerValueRRRLogValText = '';
+//$readerValueRRRLogValText = '';
 $asanteRapidRecencyAssy = (trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
 if(isset($asanteRapidRecencyAssy['rrdt'])){
     $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?$asanteRapidRecencyAssy['rrdt']['assay']:'';
     $readerValueRRDTLog = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
     $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
-    $readerValueRRDTLogValText = (trim($readerValueRRDTLog)!= '' && (float)$readerValueRRDTLog >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+    //$readerValueRRDTLogValText = (trim($readerValueRRDTLog)!= '' && (float)$readerValueRRDTLog >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 }if(isset($asanteRapidRecencyAssy['rrr'])){
     $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?$asanteRapidRecencyAssy['rrr']['assay']:'';
     $readerValueRRRLog = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
     $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
-    $readerValueRRRLogValText = (trim($readerValueRRRLog)!= '' && (float)$readerValueRRRLog >= 3)?'Long Term Line Present':'Long Term Line Absent';
+    //$readerValueRRRLogValText = (trim($readerValueRRRLog)!= '' && (float)$readerValueRRRLog >= 3)?'Long Term Line Present':'Long Term Line Absent';
 }
 ?>
 <style>
@@ -69,7 +69,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	float:left;
 	width:44%;
     }
-    #box-1,#box-2{
+    .box-11,.box-21{
 	float:left;
 	width:100%;
 	border:2px dotted #333;
@@ -80,16 +80,16 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	width:12%;
 	font-size:40px;
 	text-align:center;
-	padding-top:8vh;
+	padding-top:6vh;
     }
-    #readerValueRRDTLogVal, #readerValueRRDTLogValText, #readerValueRRRLogVal, #readerValueRRRLogValText{
-	text-align: center !important;
-	font-size:14px;
+    #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
+        text-align: center !important;
+        font-size:14px;
     }
-    #readerValueRRDTLogValText, #readerValueRRRLogValText{
-	font-weight:bold;
-	font-size:13px;
-    }	
+    #readerValueRRDTLogValText/*, #readerValueRRRLogValText*/{
+        font-weight:bold;
+        font-size:13px;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -274,7 +274,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    </div>
 			</div>
 			<div class="col s4">
-			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel" style="font-size:13px;">Click here to view the algorithm for Lab Data Reporting</a>
+			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
 			</div>
 		    </div>
 		    <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
@@ -316,7 +316,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			<div class="col s8">
 			    <div class="input-padding col m12 s12 l12">
 			      <div class="box-1">
-				<div id="box-1">
+				<div class="box-11">
 				  <strong>Positive Verification Line (Visual)</strong><br>
 				  <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'present')?'checked="checked"':''; ?> value="present"/>
 				  <label for="asanteRapidRecencyAssayP">Present </label><br>
@@ -324,14 +324,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <label for="asanteRapidRecencyAssayN">Absent </label><br>
 				  <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log" onblur="getReaderValueRRDTLogVal();"/>
 				  <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
-				  <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
-				  <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
-				  <div id="readerValueRRDTLogValText"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogValText; ?></div>
 				</div>
 			      </div>
 			      <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">&rArr;</div>
 			      <div class="box-2">
-				<div id="box-2" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">
+				<div class="box-21" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">
 				 <strong>Long Term Line (Visual)</strong><br>
 				  <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'absent')?'checked="checked"':''; ?> value="absent"/>
 				  <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
@@ -339,25 +336,42 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label><br>
 				  <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log" onblur="getReaderValueRRRLogVal();"/>
 				  <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
-				  <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
-				  <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
-				  <div id="readerValueRRRLogValText"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogValText; ?></div>
 				</div>
 			       </div>
 			    </div>
 			</div>
-			<div class="col s3">
+			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
 				<input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':''; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
 				<label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':'*'; ?></label>
 			    </div>
-			</div>
-			<?php
-			if($asanteRapidRecencyAssayPn == 'absent' || ($row->lag_avidity_result == 'long term' && $asanteRapidRecencyAssayRlt == 'absent') || ($row->lag_avidity_result == 'recent' && $asanteRapidRecencyAssayRlt == 'present')){ ?>
-			    <div class="col s3">
+			    <?php if($asanteRapidRecencyAssayPn == 'absent' || ($row->lag_avidity_result == 'long term' && $asanteRapidRecencyAssayRlt == 'absent') || ($row->lag_avidity_result == 'recent' && $asanteRapidRecencyAssayRlt == 'present')){ ?>
 				<span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
+			    <?php } ?>
+			</div>
+		    </div>
+		    <div class="row readerValueLogSection" style="margin-bottom:0;<?php echo(trim($readerValueRRDTLog) == '' && trim($readerValueRRRLog) == '')?'display:none;':''; ?>">
+			<div class="col s8">
+			   <div class="input-padding col m12 s12 l12">
+			      <div class="box-1 readerValueRRDTLog" style="<?php echo(trim($readerValueRRDTLog) == '')?'display:none;':''; ?>">
+				<div class="box-11">
+				  <strong>Positive Verification Line (Visual) Reader Value</strong>
+				  <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
+				  <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
+				  <!--<br><div id="readerValueRRDTLogValText"></div>-->
+				</div>
+			      </div>
+			      <div id="box-breaker"></div>
+			      <div class="box-2 readerValueRRRLog" style="<?php echo(trim($readerValueRRRLog) == '')?'display:none;':''; ?>">
+				<div class="box-21">
+				  <strong>Long Term Line (Visual) Reader Value</strong>
+				  <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
+				  <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
+				  <!--<br><div id="readerValueRRRLogValText"></div>-->
+				</div>
+			      </div>
 			    </div>
-			<?php } ?>
+			</div>
 		    </div>
 		    <!--<div class="row" style="margin-bottom:0;">
 			<div class="col s3">
@@ -403,19 +417,19 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
 <script>
     $(document).ready(function(){
-		$('.datepicker').pickadate({
+	$('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 100, // Creates a dropdown of 100 years to control year
             format: 'dd/mm/yyyy',
 	    	max: new Date('Today'),
-			closeOnSelect: true,
-			closeOnClear: true,
-			onSet: function(e){
-				validateDataReportingDates();
-				if(e.select != undefined && e.select != null){
-					$('.picker__close').click();
-				}
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			validateDataReportingDates();
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
 			}
+		    }
         });
        
        <?php
@@ -423,6 +437,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	 emptyTestResultSection();
        <?php } ?>
        checkAgeFields('load');
+       getReaderValueRRDTLogVal();
+       getReaderValueRRRLogVal();
     });
     
     $('#hivRnaNew').on('keyup', function() {
@@ -553,11 +569,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('.box-2,#box-breaker').css('visibility','visible');
 	}else if(this.value == 'absent'){
 	    $('.box-2,#box-breaker').css('visibility','hidden');
+	    ('.readerValueRRRLog').hide();
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	    $('#readerValueRRR').val('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
 	}
 	populateResult('');
     });
@@ -573,12 +590,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
 	var dateOfTestCompletion = $('#dateOfTestCompletion').val();
 	var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
-	splitSpecimenCollectedDate = specimenCollectedDate.split('/');
-	splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
-	splitPatientDOB = patientDOB.split('/');
-	splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
-	splitTestCompletionDate = dateOfTestCompletion.split('/');
-	splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
+	var splitSpecimenCollectedDate = specimenCollectedDate.split('/');
+	var splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
+	var splitPatientDOB = patientDOB.split('/');
+	var splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
+	var splitTestCompletionDate = dateOfTestCompletion.split('/');
+	var splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
 	specimenCollectedDate = splitSpecimenCollectedDate[2]+'-'+splitSpecimenCollectedDate[1]+'-'+splitSpecimenCollectedDate[0];
 	specimenPickedUpDateAtAnc = splitSpecimenPickedUpDateAtAnc[2]+'-'+splitSpecimenPickedUpDateAtAnc[1]+'-'+splitSpecimenPickedUpDateAtAnc[0];
 	patientDOB = splitPatientDOB[2]+'-'+splitPatientDOB[1]+'-'+splitPatientDOB[0];
@@ -633,7 +650,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     }
     
     function checkNameValidation(tableName, fieldName, obj, fnct, msg){
-        checkValue = document.getElementById(obj.id).value;
+        var checkValue = document.getElementById(obj.id).value;
         if($.trim(checkValue)!=''){
             $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
             function(data) {
@@ -673,7 +690,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         return false;
       }
       //calculate age
-      splitDob = dob.split("/");
+      var splitDob = dob.split("/");
       dob = splitDob[2]+'-'+splitDob[1]+'-'+splitDob[0];
       var years = moment().diff(dob, 'years',false);
       $('label[for="age"]').css("transform", "translateY(-140%)"); 
@@ -689,10 +706,11 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
 	    $('#readerValueRRDTLogOld').val('');
 	    $('#readerValueRRDTLogVal').html('');
-	    $('#readerValueRRDTLogValText').html('');
+	    //$('#readerValueRRDTLogValText').html('');
 	    $('#readerValueRRRLogOld').val('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
+	    $('.readerValueLogSection,.readerValueRRDTLog,.readerValueRRRLog').hide();
 	}else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
@@ -728,14 +746,16 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
 	   //var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
 	   var readerValueRRDTLogVal = readerValueRRDT;
-	   var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+	   //var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+	   $('.readerValueLogSection,.readerValueRRDTLog').show();
+	   $('.readerValueRRDTLog').css('visibility','visible');
 	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
-	   $('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
+	   //$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
 	}else{
 	   $('#readerValueRRDTLog').val(''); 
 	   $('#readerValueRRDTLogVal').html('');
-	   $('#readerValueRRDTLogValText').html('');
+	   //$('#readerValueRRDTLogValText').html('');
 	   populateOldRRDTLogVal();//populate the old rrdt log val
 	}
     }
@@ -745,14 +765,16 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
 	   //var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
 	   var readerValueRRRLogVal = readerValueRRR;
-	   var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+	   //var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+	   $('.readerValueLogSection,.readerValueRRRLog').show();
 	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
 	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
-	   $('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+	   //$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+	   if($('#readerValueRRDT').val() == '' && $('#readerValueRRDTLogOld').val() == ''){ $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}else{
 	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
-	    $('#readerValueRRRLogValText').html('');
+	    //$('#readerValueRRRLogValText').html('');
 	    populateOldRRRLogVal();//populate the old rrr log val
 	}
     }
@@ -760,18 +782,24 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     function populateOldRRDTLogVal(){
 	var readerValueRRDTLogOldVal = $('#readerValueRRDTLogOld').val();
 	if($.trim(readerValueRRDTLogOldVal)!= '' && !isNaN(readerValueRRDTLogOldVal)){
-	    var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+	    //var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 	    $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogOldVal);
-	    $('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
+	    //$('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
+	}else {
+	    $('.readerValueRRDTLog').hide();
+	    if($('#readerValueRRR').val() == '' && $('#readerValueRRRLogOld').val() == ''){ $('.readerValueLogSection').hide(); }else { $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}
     }
     
     function populateOldRRRLogVal(){
 	var readerValueRRRLogOldVal = $('#readerValueRRRLogOld').val();
 	if($.trim(readerValueRRRLogOldVal)!= '' && !isNaN(readerValueRRRLogOldVal)){
-	    var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+	    //var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
 	    $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
-	    $('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
+	    //$('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
+	}else{
+	    $('.readerValueRRRLog').hide();
+	    if($('#readerValueRRDT').val() == '' && $('#readerValueRRDTLogOld').val() == ''){ $('.readerValueLogSection').hide(); }
 	}
     }
     
