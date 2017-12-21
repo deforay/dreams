@@ -5,6 +5,7 @@ use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 use PHPExcel;
+use PHPExcel_Worksheet;
 
 
 class DataCollectionService {
@@ -982,9 +983,14 @@ class DataCollectionService {
         return $dataCollectionDb->rot47($params);
     }
     
-    public function getCountryDashboardDetails($params){
+    public function getCountryLabDataReportingDetails($params){
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
-        return $dataCollectionDb->fetchCountryDashboardDetails($params);
+        return $dataCollectionDb->fetchCountryLabDataReportingDetails($params);
+    }
+    
+    public function getCountryClinicDataReportingDetails($params){
+        $dataCollectionDb = $this->sm->get('DataCollectionTable');
+        return $dataCollectionDb->fetchCountryClinicDataReportingDetails($params);
     }
     
     public function getDataReportingLocations($params){
@@ -1450,200 +1456,235 @@ class DataCollectionService {
     public function exportCountryDashboardInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
-        if(isset($queryContainer->countryDashboardQuery)){
+        if(isset($queryContainer->countryLabDataReportingQuery) && isset($queryContainer->countryClinicDataReportingQuery)){
             try{
+                $excel = new PHPExcel();
+                $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                $cacheSettings = array('memoryCacheSize' => '80MB');
+                \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                $styleArray = array(
+                    'font' => array(
+                        'size' => 12,
+                        'bold' => true,
+                    ),
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                        ),
+                    )
+                );
+                $contentAlignmentArray = array(
+                    'font' => array(
+                        'size' => 12,
+                    
+                    ),
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                        ),
+                    )
+                );
+                $totalArray = array(
+                    'font' => array(
+                        'size' => 15,
+                        'bold' => true,
+                    ),
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                        ),
+                    )
+                );
+                $borderStyle = array(
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                        ),
+                    )
+                );
+                
                 $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
                 $sql = new Sql($dbAdapter);
-                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->countryDashboardQuery);
-                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
-                $i=0;
-                foreach($sResult as $dataCollection){
-                     $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                                                ->columns(array(
-                                                                'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
-                                                             ))
-                                                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-                                                ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
-                                                ->where('r_a.country = '.$params['country'].' AND anc.province = '.$dataCollection['location_id'].' AND MONTH(r_a.interview_date) ="'.$dataCollection['month'].'" AND YEAR(r_a.interview_date) ="'.$dataCollection['year'].'"');
-                     $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
-                     $sResult[$i][$dataCollection['monthName'].' - '.$dataCollection['year']] = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-                 $i++;
+                //Lab data reporting
+                $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($queryContainer->countryLabDataReportingQuery);
+                $dataCollectionResult = $dbAdapter->query($dataCollectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                $output = array();
+                $samplesReceivedArray = array();
+                $samplesIncompleteArray = array();
+                $samplesTestedArray = array();
+                $samplesFinalizedArray = array();
+                $noofLAgRecentArray = array();
+                $noofLabRecencyAssayRecentArray = array();
+                foreach($dataCollectionResult as $aRow) {
+                    $samplesReceivedArray[] = $aRow['totalSample'];
+                    $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
+                    $samplesTestedArray[] = $aRow['samplesTested'];
+                    $samplesFinalizedArray[] = $aRow['samplesFinalized'];
+                    $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
+                    $noofLabRecencyAssayRecentArray[] = $aRow['noofLabRecencyAssayRecent'];
+                    $row = array();
+                    $row[] = $aRow['monthName'].' - '.$aRow['year'];
+                    $row[] = (isset($aRow['location_name']))?ucwords($aRow['location_name']):'';
+                    $row[] = ucwords($aRow['facility_name']);
+                    $row[] = $aRow['totalSample'];
+                    $row[] = $aRow['samplesIncomplete'];
+                    $row[] = $aRow['samplesTested'];
+                    $row[] = $aRow['samplesFinalized'];
+                    $row[] = $aRow['noofLAgRecent'];
+                    $row[] = $aRow['noofLabRecencyAssayRecent'];
+                    $output[] = $row;
                 }
-                if(isset($sResult) && count($sResult)>0){
-                    $excel = new PHPExcel();
-                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-                    $cacheSettings = array('memoryCacheSize' => '80MB');
-                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-                    $sheet = $excel->getActiveSheet();
-                    $sheet->getSheetView()->setZoomScale(80);
-                    $output = array();
-                    $samplesReceivedArray = array();
-                    $samplesIncompleteArray = array();
-                    $samplesTestedArray = array();
-                    $samplesFinalizedArray = array();
-                    $noofLAgRecentArray = array();
-                    $noofRecencyAssayRecentArray = array();
-                    $assessmentsArray = array();
-                    $noofANCRecencyTestRecentArray = array();
-                    foreach ($sResult as $aRow) {
-                        $assessments = 0;
-                        $noofANCRecencyTestRecent = 0;
-                        if(isset($aRow[$aRow['monthName'].' - '.$aRow['year']])){
-                          $assessments = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->assessments:0;
-                          $noofANCRecencyTestRecent = (isset($aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent))?$aRow[$aRow['monthName'].' - '.$aRow['year']]->noofANCRecencyTestRecent:0;
+                
+                $sheet = new PHPExcel_Worksheet($excel, '');
+                $sheet->getSheetView()->setZoomScale(80);
+                $excel->addSheet($sheet, 0);
+                $sheet->setTitle('Lab Data Reporting');
+                $sheet->setCellValue('A1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('B1', html_entity_decode('Province Name', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('C1', html_entity_decode('Lab Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('D1', html_entity_decode('Samples Received ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('E1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('F1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('G1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+               
+                $sheet->getStyle('A1')->applyFromArray($styleArray);
+                $sheet->getStyle('B1')->applyFromArray($styleArray);
+                $sheet->getStyle('C1')->applyFromArray($styleArray);
+                $sheet->getStyle('D1')->applyFromArray($styleArray);
+                $sheet->getStyle('E1')->applyFromArray($styleArray);
+                $sheet->getStyle('F1')->applyFromArray($styleArray);
+                $sheet->getStyle('G1')->applyFromArray($styleArray);
+                $sheet->getStyle('H1')->applyFromArray($styleArray);
+                $sheet->getStyle('I1')->applyFromArray($styleArray);
+                
+                $currentRow = 2;
+                foreach ($output as $rowData) {
+                    $colNo = 0;
+                    foreach ($rowData as $field => $value) {
+                        if (!isset($value)) {
+                            $value = "";
                         }
-                        $samplesReceivedArray[] = $aRow['totalSample'];
-                        $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
-                        $samplesTestedArray[] = $aRow['samplesTested'];
-                        $samplesFinalizedArray[] = $aRow['samplesFinalized'];
-                        $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
-                        $noofRecencyAssayRecentArray[] = $aRow['noofRecencyAssayRecent'];
-                        $assessmentsArray[] = $assessments;
-                        $noofANCRecencyTestRecentArray[] = $noofANCRecencyTestRecent;
-                        $row = array();
-                        $row[] = $aRow['monthName'].' - '.$aRow['year'];
-                        $row[] = ucwords($aRow['location_name']);
-                        $row[] = $aRow['totalSample'];
-                        $row[] = $aRow['samplesIncomplete'];
-                        $row[] = $aRow['samplesTested'];
-                        $row[] = $aRow['samplesFinalized'];
-                        $row[] = $aRow['noofLAgRecent'];
-                        $row[] = $aRow['noofRecencyAssayRecent'];
-                        $row[] = $assessments;
-                        $row[] = $noofANCRecencyTestRecent;
-                        $output[] = $row;
-                    }
-                    $styleArray = array(
-                        'font' => array(
-                            'size' => 12,
-                            'bold' => true,
-                        ),
-                        'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                        ),
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
-                            ),
-                        )
-                    );
-                    $contentAlignmentArray = array(
-                        'font' => array(
-                            'size' => 12,
-                        
-                        ),
-                        'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                        ),
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
-                            ),
-                        )
-                    );
-                    $totalArray = array(
-                        'font' => array(
-                            'size' => 15,
-                            'bold' => true,
-                        ),
-                        'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                        ),
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
-                            ),
-                        )
-                    );
-                    $borderStyle = array(
-                        'alignment' => array(
-                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                        ),
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
-                            ),
-                        )
-                    );
-                    
-                    $sheet->setCellValue('A1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Name of the Province ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Samples Received ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                   
-                    $sheet->getStyle('A1')->applyFromArray($styleArray);
-                    $sheet->getStyle('B1')->applyFromArray($styleArray);
-                    $sheet->getStyle('C1')->applyFromArray($styleArray);
-                    $sheet->getStyle('D1')->applyFromArray($styleArray);
-                    $sheet->getStyle('E1')->applyFromArray($styleArray);
-                    $sheet->getStyle('F1')->applyFromArray($styleArray);
-                    $sheet->getStyle('G1')->applyFromArray($styleArray);
-                    $sheet->getStyle('H1')->applyFromArray($styleArray);
-                    $sheet->getStyle('I1')->applyFromArray($styleArray);
-                    $sheet->getStyle('J1')->applyFromArray($styleArray);
-                    
-                    $currentRow = 2;
-                    foreach ($output as $rowData) {
-                        $colNo = 0;
-                        foreach ($rowData as $field => $value) {
-                            if (!isset($value)) {
-                                $value = "";
-                            }
-                            if($colNo > 9){
-                                break;
-                            }
-                            if (is_numeric($value)) {
-                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
-                            }else{
-                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                            }
-                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
-                            $sheet->getStyle($cellName . $currentRow)->applyFromArray(($colNo <= 1)?$borderStyle:$contentAlignmentArray);
-                            $sheet->getDefaultRowDimension()->setRowHeight(20);
-                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
-                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
-                            $colNo++;
+                        if($colNo > 8){
+                            break;
                         }
-                      $currentRow++;
+                        if (is_numeric($value)) {
+                            $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                        }else{
+                            $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }
+                        $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                        $sheet->getStyle($cellName . $currentRow)->applyFromArray(($colNo <= 2)?$borderStyle:$contentAlignmentArray);
+                        $sheet->getDefaultRowDimension()->setRowHeight(20);
+                        $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                        $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                        $colNo++;
                     }
-                    //total row
-                    $sheet->mergeCells('A'.$currentRow.':B'.$currentRow);
-                    
-                    $sheet->getStyle('A'.$currentRow.':B'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('C'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('D'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('E'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('F'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('G'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('H'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('I'.$currentRow)->applyFromArray($totalArray);
-                    $sheet->getStyle('J'.$currentRow)->applyFromArray($totalArray);
-                    
-                    $sheet->setCellValue('A'.$currentRow, html_entity_decode('Total' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C'.$currentRow, html_entity_decode(array_sum($samplesReceivedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D'.$currentRow, html_entity_decode(array_sum($samplesIncompleteArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E'.$currentRow, html_entity_decode(array_sum($samplesTestedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F'.$currentRow, html_entity_decode(array_sum($samplesFinalizedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = strtoupper($params['countryname']).'-DASHBOARD-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
-                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
-                    return $filename;
-                }else{
-                    return "";
+                  $currentRow++;
                 }
+                //total row
+                $sheet->mergeCells('A'.$currentRow.':C'.$currentRow);
+                
+                $sheet->getStyle('A'.$currentRow.':C'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('D'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('E'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('F'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('G'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('H'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('I'.$currentRow)->applyFromArray($totalArray);
+                
+                $sheet->setCellValue('A'.$currentRow, html_entity_decode('Total' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('D'.$currentRow, html_entity_decode(array_sum($samplesReceivedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('E'.$currentRow, html_entity_decode(array_sum($samplesIncompleteArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('F'.$currentRow, html_entity_decode(array_sum($samplesTestedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($samplesFinalizedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                //ANC data reporting
+                $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($queryContainer->countryClinicDataReportingQuery);
+                $riskAssessmentResult = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                $output = array();
+                $assessmentArray = array();
+                $noofANCRecencyAssayRecentArray = array();
+                foreach($riskAssessmentResult as $aRow) {
+                    $assessmentArray[] = $aRow['assessments'];
+                    $noofANCRecencyAssayRecentArray[] = $aRow['noofANCRecencyTestRecent'];
+                    $row = array();
+                    $row[] = $aRow['monthName'].' - '.$aRow['year'];
+                    $row[] = (isset($aRow['location_name']))?ucwords($aRow['location_name']):'';
+                    $row[] = $aRow['assessments'];
+                    $row[] = $aRow['noofANCRecencyTestRecent'];
+                    $output[] = $row;
+                }
+                $sheet = new PHPExcel_Worksheet($excel, '');
+                $sheet->getSheetView()->setZoomScale(80);
+                $excel->addSheet($sheet,1);
+                $sheet->setTitle('ANC Data Reporting');
+                
+                $sheet->setCellValue('A1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('B1', html_entity_decode('Province Name', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('C1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('D1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                
+                $sheet->getStyle('A1')->applyFromArray($styleArray);
+                $sheet->getStyle('B1')->applyFromArray($styleArray);
+                $sheet->getStyle('C1')->applyFromArray($styleArray);
+                $sheet->getStyle('D1')->applyFromArray($styleArray);
+                $currentRow = 2;
+                foreach ($output as $rowData) {
+                    $colNo = 0;
+                    foreach ($rowData as $field => $value) {
+                        if (!isset($value)) {
+                            $value = "";
+                        }
+                        if($colNo > 3){
+                            break;
+                        }
+                        if (is_numeric($value)) {
+                            $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                        }else{
+                            $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }
+                        $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                        $sheet->getStyle($cellName . $currentRow)->applyFromArray(($colNo <= 1)?$borderStyle:$contentAlignmentArray);
+                        $sheet->getDefaultRowDimension()->setRowHeight(20);
+                        $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                        $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                        $colNo++;
+                    }
+                  $currentRow++;
+                }
+                //total row
+                $sheet->mergeCells('A'.$currentRow.':B'.$currentRow);
+                
+                $sheet->getStyle('A'.$currentRow.':B'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('C'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('D'.$currentRow)->applyFromArray($totalArray);
+                
+                $sheet->setCellValue('A'.$currentRow, html_entity_decode('Total' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('C'.$currentRow, html_entity_decode(array_sum($assessmentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('D'.$currentRow, html_entity_decode(array_sum($noofANCRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $excel->setActiveSheetIndex(0);
+                $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                $filename = strtoupper($params['countryname']).'-DASHBOARD-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
+                $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                return $filename;
             }catch (Exception $exc) {
                 error_log(strtoupper($params['countryname'])."-DASHBOARD-REPORT--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());

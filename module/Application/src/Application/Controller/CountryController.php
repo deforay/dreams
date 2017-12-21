@@ -94,12 +94,25 @@ class CountryController extends AbstractActionController{
         }
     }
     
-    public function getDashboardDetailsAction(){
+    public function getLabDataReportingDetailsAction(){
         $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response = $dataCollectionService->getCountryDashboardDetails($params);
+            $response = $dataCollectionService->getCountryLabDataReportingDetails($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function getClinicDataReportingDetailsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response = $dataCollectionService->getCountryClinicDataReportingDetails($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

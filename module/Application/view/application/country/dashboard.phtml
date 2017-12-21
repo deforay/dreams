@@ -15,7 +15,7 @@
     tbody tr td {
         border-top: 1px solid #ddd;
     }
-    #countryDashboardTable_wrapper{
+    #countryLabDataReportingTable_wrapper,#countryClinicDataReportingTable_wrapper{
 	overflow-x:scroll;
     }
     .ui-datepicker-calendar {
@@ -33,18 +33,6 @@
 	font-size:15px !important;
 	font-weight:800 !important;
     }
-    .labBorder-left{
-        border-left:1px solid #888 !important;
-    }
-    .labBorder-right{
-        border-right:1px solid #888 !important;
-    }
-    .labBorder-top{
-        border-top:1px solid #888 !important;
-    }
-    .labBorder-bottom{
-        border-bottom:1px solid #888 !important;
-    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -59,34 +47,67 @@
             </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
 		<a href="javascript:void(0);" onclick="searchDashboardData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters </a>
             </div>
         </form>
     </div>
     <div class="row">
+	<div class="col l12 m12 s12">
+	    <input class="with-gap" name="labDataReportingDate" id="labDataAddedOn" value="added_on" type="radio" checked="checked" onchange="searchCountryLabDataReportingDeatils('change');"/>
+	    <label for="labDataAddedOn" style="padding-left:25px;">Data Entry Date </label>&nbsp;&nbsp;&nbsp;&nbsp;
+	    <input class="with-gap" name="labDataReportingDate" id="sampleCollectionOn" value="specimen_collected_date" type="radio" onchange="searchCountryLabDataReportingDeatils('change');"/>
+	    <label for="sampleCollectionOn" style="padding-left:25px;">Sample Collection Date </label>
+	</div>
         <div class="col s12">
             <div class="card card-default">
                 <div class="card-header white-text">
-                    Lab Data Reporting/Completed Forms
+                    Lab Data Reporting
                 </div>
                 <div class="card-content clearfix">
-                    <table id="countryDashboardTable" class="responsive-table display">
+                    <table id="countryLabDataReportingTable" class="responsive-table display">
                         <thead>
                         <tr>
 			    <th>Month - Year</th>
-                            <th>Name of the Province</th>
+			    <th>Province Name</th>
+                            <th>Lab Name</th>
                             <th>Samples Received</th>
 			    <th>Samples Incomplete</th>
                             <th>Samples Tested</th>
                             <th>Samples Locked for Editing</th>
-                            <th class="labBorder-left labBorder-top">No. of Lab LAg Recent</th>
-                            <th class="labBorder-right labBorder-top">No. of Lab Rapid Assay Recent (Visual)</th>
-                            <th>No. of Risk Questionnaires</th>
-                            <th>No. of ANC Rapid Recency Assay Recent (Visual)</th>
+                            <th>No. of Lab LAg Recent</th>
+                            <th>No. of Lab Rapid Assay Recent (Visual)</th>
                         </tr>
                         </thead>
-                        <tbody id="dashboardDetails"></tbody>
+                        <tbody id="countryLabDataReportingDetails"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+	<div class="col l12 m12 s12">
+	    <input class="with-gap" name="clinicDataReportingDate" id="clinicDataAddedOn" value="added_on" type="radio" checked="checked" onchange="searchCountryANCDataReportingDeatils('change');"/>
+	    <label for="clinicDataAddedOn" style="padding-left:25px;">Data Entry Date </label>&nbsp;&nbsp;&nbsp;&nbsp;
+	    <input class="with-gap" name="clinicDataReportingDate" id="interviewOn" value="interview_date" type="radio" onchange="searchCountryANCDataReportingDeatils('change');"/>
+	    <label for="interviewOn" style="padding-left:25px;">Interview Date </label>
+	</div>
+        <div class="col s12">
+            <div class="card card-default">
+                <div class="card-header white-text">
+                    ANC Data Reporting
+                </div>
+                <div class="card-content clearfix">
+                    <table id="countryClinicDataReportingTable" class="responsive-table display">
+                        <thead>
+                        <tr>
+			    <th>Month - Year</th>
+			    <th>Province Name</th>
+                            <th>No. of Risk Questionnaires</th>
+			    <th>No. of ANC Rapid Recency Assay Recent (Visual)</th>
+                        </tr>
+                        </thead>
+                        <tbody id="countryClinicDataReportingDetails"></tbody>
                     </table>
                 </div>
             </div>
@@ -95,49 +116,47 @@
     <br>
     <hr style="border:1px solid #e0dddd;">
     <br>
-    <div id="mappy">
-        <div class="row" style="max-width:1109px;">
-            <form id="mapFilter" action="#">
-		<div class="col l12 m12 s12">
-		    <div class="col l4 m4 s4" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="mapReportingMonthYear" name="mapReportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearMapReportingDate();" style="font-size:16px;color:#333333;"><i class="zmdi zmdi-close"></i></a></div>
-		    <div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="mapProvince" name="mapProvince" title="Please select province"><option value=""> All Provinces </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
-		    <div class="col l4 m4 s4 mapSampleType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="mapSpecimenType" name="mapSpecimenType[]" multiple="multiple" title="Please select specimen type"><option value="" disabled selected> All Sample Types </option><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
+    <div class="row" style="max-width:1109px;">
+	<form id="mapFilter" action="#">
+	    <div class="col l12 m12 s12">
+		<div class="col l4 m4 s4" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="mapReportingMonthYear" name="mapReportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearMapReportingDate();" style="font-size:16px;color:#333333;"><i class="zmdi zmdi-close"></i></a></div>
+		<div class="col l4 m4 s4" style="text-align:center;"><strong>Provinces </strong> <select class="material-select" id="mapProvince" name="mapProvince" title="Please select province"><option value=""> All Provinces </option><?php foreach($provinces as $province) { ?><option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option><?php } ?></select></div>
+		<div class="col l4 m4 s4 mapSampleType" style="text-align:center;"><strong>Sample Type </strong> <select class="material-select" id="mapSpecimenType" name="mapSpecimenType[]" multiple="multiple" title="Please select specimen type"><option value="" disabled selected> All Sample Types </option><option value="1">Venous</option><option value="2">Plasma</option><option value="3">DBS</option></select></div>
+	    </div>
+	    <div class="col l12 m12 s12">
+	       <!--<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>-->
+	       <div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="" disabled selected> All Types </option><option value="labLAgRecency">Lab LAg Test</option><option value="labRecencyAssay">Lab Recency Test (Visual)</option><option value="ancRecencyAssay">ANC Recency Test (Visual)</option></select></div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
+		<a href="javascript:void(0);" onclick="clearMapSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="getDataReportingLocations('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row">
+	<div class="col s12">
+	    <div class="card card-default">
+		<div class="col l12 m12 s12" style="margin-top:3vh;">
+		    <div class="col l3 m3 s3" style="float:right;">&nbsp;&nbsp;<img src="<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>"> <strong>ANC Site</strong></div>
 		</div>
-		<div class="col l12 m12 s12">
-		   <!--<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>-->
-		   <div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="" disabled selected> All Types </option><option value="labLAgRecency">Lab LAg Test</option><option value="labRecencyAssay">Lab Recency Test (Visual)</option><option value="ancRecencyAssay">ANC Recency Test (Visual)</option></select></div>
+		<div class="col l12 m12 s12" style="margin-top:3vh;">
+		    <div class="col l4 m3 s3">
+		       <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/red.png'); ?>">
+		       <div style="float:left;">&nbsp;&nbsp;<strong>Lab LAg Test - Recent</strong></div>
+		    </div>
+		    <div class="col l4 m3 s3">
+		       <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>">
+		       <div style="float:left;">&nbsp;&nbsp;<strong>Lab Recency Test - Recent (Visual)</strong></div>
+		    </div>
+		    <div class="col l4 m3 s3">
+		       <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>">
+		       <div style="float:left;">&nbsp;&nbsp;<strong>ANC Recency Test - Recent (Visual)</strong></div>
+		    </div>
 		</div>
-		<div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-		    <a href="javascript:void(0);" onclick="clearMapSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		    <a href="javascript:void(0);" onclick="getDataReportingLocations('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+		<div class="card-content map-container clearfix" style="padding-top:20px;">
 		</div>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col s12">
-                <div class="card card-default">
-		    <div class="col l12 m12 s12" style="margin-top:3vh;">
-			<div class="col l3 m3 s3" style="float:right;">&nbsp;&nbsp;<img src="<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>"> <strong>ANC Site</strong></div>
-		    </div>
-		    <div class="col l12 m12 s12" style="margin-top:3vh;">
-			<div class="col l4 m3 s3">
-			   <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/red.png'); ?>">
-			   <div style="float:left;">&nbsp;&nbsp;<strong>Lab LAg Test - Recent</strong></div>
-			</div>
-			<div class="col l4 m3 s3">
-			   <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>">
-			   <div style="float:left;">&nbsp;&nbsp;<strong>Lab Recency Test - Recent (Visual)</strong></div>
-			</div>
-			<div class="col l4 m3 s3">
-			   <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>">
-			   <div style="float:left;">&nbsp;&nbsp;<strong>ANC Recency Test - Recent (Visual)</strong></div>
-			</div>
-		    </div>
-		    <div class="card-content map-container clearfix" style="padding-top:20px;">
-		    </div>
-	        </div>
-            </div>
-        </div>
+	    </div>
+	</div>
     </div>
 </div>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
@@ -181,18 +200,37 @@
             }
        });
        searchDashboardData('load');
-       getDataReportingLocations('load');
+       //getDataReportingLocations('load');
     });
     
     function searchDashboardData(frmSrc){
+	searchCountryLabDataReportingDeatils(frmSrc);
+	searchCountryANCDataReportingDeatils(frmSrc);
+    }
+    
+    function searchCountryLabDataReportingDeatils(frmSrc){
         var reportingMonthYear = $('#reportingMonthYear').val();
         var province = $('#province').val();
         var specimenType = ($('#specimenType').val()!= null)?$('#specimenType').val().join(','):'';
-        if(frmSrc!= 'load') { $.blockUI(); }
-            $.post("<?php echo $this->url('country',array('action'=>'get-dashboard-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType},
+	var labDataReportingDate = $("input:radio[name=labDataReportingDate]:checked").val();
+        if(frmSrc!= 'load' && frmSrc!= 'change') { $.blockUI(); }
+            $.post("<?php echo $this->url('country',array('action'=>'get-lab-data-reporting-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType,labDataReportingDate:labDataReportingDate},
             function(data) {
-            if(frmSrc!= 'load') { $.unblockUI(); }
-                $('#dashboardDetails').html(data);
+            if(frmSrc!= 'load' && frmSrc!= 'change') { $.unblockUI(); }
+                $('#countryLabDataReportingDetails').html(data);
+            });
+    }
+    
+    function searchCountryANCDataReportingDeatils(frmSrc){
+	var reportingMonthYear = $('#reportingMonthYear').val();
+        var province = $('#province').val();
+        var specimenType = ($('#specimenType').val()!= null)?$('#specimenType').val().join(','):'';
+	var clinicDataReportingDate = $("input:radio[name=clinicDataReportingDate]:checked").val();
+        if(frmSrc!= 'load' && frmSrc!= 'change') { $.blockUI(); }
+            $.post("<?php echo $this->url('country',array('action'=>'get-clinic-data-reporting-details')); ?>", {country:'<?php echo $countryInfo->country_id; ?>',reportingMonthYear: reportingMonthYear,province:province,specimenType:specimenType,clinicDataReportingDate:clinicDataReportingDate},
+            function(data) {
+            if(frmSrc!= 'load' && frmSrc!= 'change') { $.unblockUI(); }
+                $('#countryClinicDataReportingDetails').html(data);
             });
     }
     
@@ -234,7 +272,7 @@
 	}
     }
     
-    function extractDashboardData(){
+    function exportDashboardData(){
 	$.blockUI();
 	$.post("<?php echo $this->url('export-country-dashboard-data'); ?>", { countryname :'<?php echo $countryInfo->country_name; ?>'},
 	function(data){
