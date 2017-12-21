@@ -75,8 +75,8 @@
 			    <th>Samples Incomplete</th>
                             <th>Samples Tested</th>
                             <th>Samples Locked for Editing</th>
-                            <th>No. of Lab LAg Recent</th>
-                            <th>No. of Lab Rapid Assay Recent (Visual)</th>
+                            <th>Lab LAg Recent</th>
+                            <th>Lab Rapid Recency Assay Recent (Visual)</th>
                         </tr>
                         </thead>
                         <tbody id="countryLabDataReportingDetails"></tbody>
@@ -103,8 +103,8 @@
                         <tr>
 			    <th>Month - Year</th>
 			    <th>Province Name</th>
-                            <th>No. of Risk Questionnaires</th>
-			    <th>No. of ANC Rapid Recency Assay Recent (Visual)</th>
+                            <th>Risk Questionnaires</th>
+			    <th>ANC Rapid Recency Assay Recent (Visual)</th>
                         </tr>
                         </thead>
                         <tbody id="countryClinicDataReportingDetails"></tbody>
@@ -125,7 +125,7 @@
 	    </div>
 	    <div class="col l12 m12 s12">
 	       <!--<div class="col l6 m6 s6" style="text-align:center;"><strong>Show only ANC sites performing Recency Test </strong> <select class="material-select" id="hasSitePerformedRapidRecencyTest" name="hasSitePerformedRapidRecencyTest" title="Please select any option"><option value="done">Yes</option><option value="" selected="selected">No</option></select></div>-->
-	       <div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="" disabled selected> All Types </option><option value="labLAgRecency">Lab LAg Test</option><option value="labRecencyAssay">Lab Recency Test (Visual)</option><option value="ancRecencyAssay">ANC Recency Test (Visual)</option></select></div>
+	       <div class="col l6 m6 s6 sitehavingRecentInfectionby" style="text-align:center;"><strong>Site having Recent HIV Infection by </strong> <select class="material-select" id="sitehavingRecentInfectionby" name="sitehavingRecentInfectionby[]" multiple title="Please select any option"><option value="" disabled selected> All Types </option><option value="labLAgRecency">Lab LAg Test - Recent</option><option value="labRecencyAssay">Lab Rapid Recency Assay Test (Visual) - Recent </option><option value="ancRecencyAssay">ANC Rapid Recency Assay Test (Visual) - Recent </option></select></div>
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
 		<a href="javascript:void(0);" onclick="clearMapSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -146,11 +146,11 @@
 		    </div>
 		    <div class="col l4 m3 s3">
 		       <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>">
-		       <div style="float:left;">&nbsp;&nbsp;<strong>Lab Recency Test - Recent (Visual)</strong></div>
+		       <div style="float:left;">&nbsp;&nbsp;<strong>Lab Rapid Recency Assay Test (Visual) - Recent </strong></div>
 		    </div>
 		    <div class="col l4 m3 s3">
 		       <img style="float:left;padding-top:3px;" src="<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>">
-		       <div style="float:left;">&nbsp;&nbsp;<strong>ANC Recency Test - Recent (Visual)</strong></div>
+		       <div style="float:left;">&nbsp;&nbsp;<strong>ANC Rapid Recency Assay Test (Visual) - Recent </strong></div>
 		    </div>
 		</div>
 		<div class="card-content map-container clearfix" style="padding-top:20px;">

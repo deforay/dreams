@@ -1281,7 +1281,7 @@ class DataCollectionService {
                     $samplesTestedArray = array();
                     $samplesFinalizedArray = array();
                     $noofLAgRecentArray = array();
-                    $noofRecencyAssayRecentArray = array();
+                    $noofLabRecencyAssayRecentArray = array();
                     $assessmentsArray = array();
                     $noofANCRecencyTestRecentArray = array();
                     foreach ($sResult as $aRow) {
@@ -1296,7 +1296,7 @@ class DataCollectionService {
                         $samplesTestedArray[] = $aRow['samplesTested'];
                         $samplesFinalizedArray[] = $aRow['samplesFinalized'];
                         $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
-                        $noofRecencyAssayRecentArray[] = $aRow['noofRecencyAssayRecent'];
+                        $noofLabRecencyAssayRecentArray[] = $aRow['noofLabRecencyAssayRecent'];
                         $assessmentsArray[] = $assessments;
                         $noofANCRecencyTestRecentArray[] = $noofANCRecencyTestRecent;
                         $row = array();
@@ -1307,7 +1307,7 @@ class DataCollectionService {
                         $row[] = $aRow['samplesTested'];
                         $row[] = $aRow['samplesFinalized'];
                         $row[] = $aRow['noofLAgRecent'];
-                        $row[] = $aRow['noofRecencyAssayRecent'];
+                        $row[] = $aRow['noofLabRecencyAssayRecent'];
                         $row[] = $assessments;
                         $row[] = $noofANCRecencyTestRecent;
                         $output[] = $row;
@@ -1374,10 +1374,10 @@ class DataCollectionService {
                     $sheet->setCellValue('D1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1433,7 +1433,7 @@ class DataCollectionService {
                     $sheet->setCellValue('E'.$currentRow, html_entity_decode(array_sum($samplesTestedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F'.$currentRow, html_entity_decode(array_sum($samplesFinalizedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
@@ -1561,8 +1561,8 @@ class DataCollectionService {
                 $sheet->setCellValue('E1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('F1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('G1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('H1', html_entity_decode('No. of Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('I1', html_entity_decode('No. of Lab Rapid Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H1', html_entity_decode('Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                
                 $sheet->getStyle('A1')->applyFromArray($styleArray);
                 $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1639,8 +1639,8 @@ class DataCollectionService {
                 
                 $sheet->setCellValue('A1', html_entity_decode('Month - Year ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('B1', html_entity_decode('Province Name', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('C1', html_entity_decode('No. of Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('D1', html_entity_decode('No. of ANC Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('C1', html_entity_decode('Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('D1', html_entity_decode('ANC Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 
                 $sheet->getStyle('A1')->applyFromArray($styleArray);
                 $sheet->getStyle('B1')->applyFromArray($styleArray);
