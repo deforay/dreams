@@ -17,20 +17,26 @@ class RiskAssessmentController extends AbstractActionController{
         }
         $countryId = '';
         $type = '';
+        $dashCountryId = '';
         $date = '';
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $dashProvince = '';
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
-            $type=$this->params()->fromQuery('type');
-            $date=$this->params()->fromQuery('date');
-            $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
+            $type = $this->params()->fromQuery('type');
+            $dashCountryId = base64_decode($this->params()->fromQuery('country'));
+            $date = $this->params()->fromQuery('date');
+            $dashProvince = base64_decode($this->params()->fromQuery('province'));
+            $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId);
             return new ViewModel(array(
                 'ancSites'=>$ancSiteList,
                 'type'=>$type,
+                'dashCountryId'=>$dashCountryId,
                 'date'=>$date,
+                'dashProvince'=>$dashProvince,
                 'countryId'=>$countryId
             ));
         }else{
-           return $this->redirect()->toRoute('home'); 
+           return $this->redirect()->toRoute('home');
         }
     }
     

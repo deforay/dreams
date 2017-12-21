@@ -444,7 +444,6 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
         $sQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array(),'left')
                       ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name','anc_site_code'))
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
@@ -455,13 +454,24 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	   $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $ancs) . '")');
         }else if($loginContainer->roleCode == 'ANCSC'){
 	   $sQuery = $sQuery->where(array('r_a.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
+	}else if(isset($parameters['dashCountryId']) && trim($parameters['dashCountryId'])!= ''){
+	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['dashCountryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
-	    $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-anc-recency-test'){
+	   $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	}
+	if(isset($parameters['type']) && trim($parameters['type'])== 'anc-rr-recent'){
 	    $sQuery = $sQuery->where(array('anc_r_r.recency_line'=>'recent'));
-	} if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+	}
+	if(isset($parameters['dashProvince']) && trim($parameters['dashProvince'])!= ''){
+	    $sQuery = $sQuery->where(array('anc.province'=>$parameters['dashProvince']));
+	}
+	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $reportingMonthYearArray = explode("/",$parameters['date']);
+	   $sQuery = $sQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR(r_a.interview_date) ="'.$reportingMonthYearArray[1].'"');
+	}else if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
            $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
@@ -492,7 +502,6 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
-                      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array(),'left')
                       ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name','anc_site_code'))
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('user_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
@@ -501,7 +510,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left');
 	if($loginContainer->roleCode == 'ANCSC'){
 	   $tQuery = $tQuery->where(array('r_a.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $tQuery = $tQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	   $tQuery = $tQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');

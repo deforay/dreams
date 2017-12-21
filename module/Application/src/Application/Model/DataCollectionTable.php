@@ -246,26 +246,33 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
-	if($loginContainer->roleCode== 'LS'){
+	if(isset($parameters['dashLab']) && trim($parameters['dashLab'])!= ''){
+	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
+	}else if($loginContainer->roleCode== 'LS'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	} if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	}
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
+	}else if(isset($parameters['dashCountryId']) && trim($parameters['dashCountryId'])!= ''){
+	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['dashCountryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	}
+	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
 	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
-	} if(isset($parameters['type']) && trim($parameters['type'])== 's-incomplete'){
+	}
+	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
-	}else if(isset($parameters['type']) && trim($parameters['type'])== 's-tested'){
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'tested'){
 	    $sQuery = $sQuery->where('da_c.status IN(1,2,3)');
-	}else if(isset($parameters['type']) && trim($parameters['type'])== 's-finalized'){
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=>2));
-	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-lag-rececnt'){
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececnt'){
 	    $sQuery = $sQuery->where(array('da_c.lag_avidity_result'=>'recent'));
-	}else if(isset($parameters['type']) && trim($parameters['type'])== 'no-of-recency-assay-recent'){
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'lab-rr-recent'){
 	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'');
 	}
        if (isset($sWhere) && $sWhere != "") {
@@ -304,7 +311,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	} if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+	}
+	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
@@ -1562,7 +1570,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
-				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name'))
+				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_id','facility_name'))
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(".$params['labDataReportingDate'].")"))
@@ -1603,7 +1611,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
 						 ))
 				   ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
-				   ->join(array('l_d'=>'location_details'),'l_d.location_id=anc.province',array('location_name'))
+				   ->join(array('l_d'=>'location_details'),'l_d.location_id=anc.province',array('location_id','location_name'))
 				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('noofANCRecencyTestRecent' => new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left')
 				   ->where(array('r_a.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(".$params['clinicDataReportingDate'].")"))

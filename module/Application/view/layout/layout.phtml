@@ -288,11 +288,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download</a>
                                                                 </li>
-                                                            <?php } ?>
-                                                                <li class="countryLabResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
-                                                                </li>
-                                                            <?php if($countryLabResultEmailAccess == 'show') { ?>
+                                                            <?php } if($countryLabResultEmailAccess == 'show') { ?>
                                                                 <li class="countryResultEmailMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/result-email/<?php echo base64_encode($country['country_id']); ?>" class="countryResultEmailMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-email"></i> Email Lab Results</a>
                                                                 </li>
@@ -300,7 +296,11 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryResultSmsMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/result-sms/<?php echo base64_encode($country['country_id']); ?>" class="countryResultSmsMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-smartphone-android"></i> SMS Lab Results</a>
                                                                 </li>
-                                                            <?php } if($countryPrintLabLogbookAccess == 'show') { ?>
+                                                            <?php } ?>
+                                                                <li class="countryLabResultMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
+                                                                </li>
+                                                            <?php if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/print-lab-logbook/<?php echo base64_encode($country['country_id']); ?>" class="countryLogbookMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Print Lab Logbook</a>
                                                                 </li>

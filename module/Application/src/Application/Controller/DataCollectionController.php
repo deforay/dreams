@@ -25,25 +25,31 @@ class DataCollectionController extends AbstractActionController{
         }else{
             $countryId = '';
             $type = '';
+            $dashCountryId = '';
             $date = '';
+            $dashLab = '';
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $type = $this->params()->fromQuery('type');
+            $dashCountryId = base64_decode($this->params()->fromQuery('country'));
             $date = $this->params()->fromQuery('date');
+            $dashLab = base64_decode($this->params()->fromQuery('lab'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $countryList=$countryService->getActiveCountries('data-collection','');
-            $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$countryId);
-            $rejectionReasonList=$commonService->getActiveRejectionReasons();
-            $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
-            $choosedCountryInfo=$countryService->getChoosedCountryInfo($countryId);
+            $countryList = $countryService->getActiveCountries('data-collection','');
+            $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId);
+            $rejectionReasonList = $commonService->getActiveRejectionReasons();
+            $facilityList = $facilityService->getActivefacilities('data-collection',$countryId);
+            $choosedCountryInfo = $countryService->getChoosedCountryInfo($countryId);
             $latestDataCollectionInfo = $dataCollectionService->getLatestDataCollectionInfo();
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
                 'type'=>$type,
+                'dashCountryId'=>$dashCountryId,
                 'date'=>$date,
+                'dashLab'=>$dashLab,
                 'ancSites'=>$ancSiteList,
                 'rejectionReasons'=>$rejectionReasonList,
                 'facilities'=>$facilityList,

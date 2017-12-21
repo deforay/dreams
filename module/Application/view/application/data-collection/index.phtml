@@ -710,7 +710,9 @@ if(isset($date) && trim($date)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
+		aoData.push({"name": "dashCountryId", "value": '<?php echo $dashCountryId; ?>'});
                 aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
+		aoData.push({"name": "dashLab", "value": '<?php echo $dashLab; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
