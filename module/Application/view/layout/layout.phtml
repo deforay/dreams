@@ -36,9 +36,9 @@ if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){
 $DRAccess = 'hide';
 $PRAccess = 'hide';
 if($loginContainer->roleCode== 'ANCSC'){
-    if($loginContainer->hasDRAccess!= 'yes'){
+    if($loginContainer->hasDRAccess == 'yes'){
         $DRAccess = 'show';
-    }if($loginContainer->hasPRAccess!= 'yes'){
+    }if($loginContainer->hasPRAccess == 'yes'){
         $PRAccess = 'show';
     }
 }
