@@ -1318,7 +1318,7 @@ class DataCollectionTable extends AbstractTableGateway {
       return str_rot47($str);
     }	
     
-    public function fetchAllAncLabReportDatas($parameters){
+    public function fetchAllLabRecencyResult($parameters){
 	$loginContainer = new Container('user');
 	$queryContainer = new Container('query');
 	$common = new CommonService();
@@ -1326,8 +1326,8 @@ class DataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	
-	$aColumns = array("DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments');
-	$orderColumns = array('da_c.specimen_collected_date','da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments');
+	$aColumns = array("DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','da_c.result_print_status');
+	$orderColumns = array('da_c.specimen_collected_date','da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','da_c.result_print_status');
 
        /*
         * Paging
@@ -1361,6 +1361,7 @@ class DataCollectionTable extends AbstractTableGateway {
 
        $sWhere = "";
        if (isset($parameters['sSearch']) && $parameters['sSearch'] != "") {
+	   $printed = 'Printed printed';
            $searchArray = explode(" ", $parameters['sSearch']);
            $sWhereSub = "";
            foreach ($searchArray as $search) {
@@ -1373,9 +1374,17 @@ class DataCollectionTable extends AbstractTableGateway {
 
                for ($i = 0; $i < $colSize; $i++) {
                    if ($i < $colSize - 1) {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
+		       if($aColumns[$i] == 'da_c.result_print_status' && strpos($printed,$search) !== false){
+		          $sWhereSub .= $aColumns[$i] . " = 1 OR ";
+		       }else{
+                          $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
+		       }
                    } else {
-                       $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+		       if($aColumns[$i] == 'da_c.result_print_status' && strpos($printed,$search) !== false){
+		          $sWhereSub .= $aColumns[$i] . " = 1 ";
+		       }else{
+                          $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
+		       }
                    }
                }
                $sWhereSub .= ")";
@@ -1564,6 +1573,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //$row[] = $hIVRNAResult;
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = ucfirst($aRow['comments']);
+	    $row[] = ((int)$aRow['result_print_status'] == 1)?'Printed':'';
 	    $row[] = $pdfLink;
 	   $output['aaData'][] = $row;
 	}

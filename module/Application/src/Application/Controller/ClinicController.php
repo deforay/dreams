@@ -118,7 +118,7 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()){
             $parameters = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $result = $dataCollectionService->getAllAncLabReportDatas($parameters);
+            $result = $dataCollectionService->getAllLabRecencyResult($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));

@@ -930,9 +930,9 @@ class DataCollectionService {
         }
     }
     
-    public function getAllAncLabReportDatas($parameters){
+    public function getAllLabRecencyResult($parameters){
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
-        return $dataCollectionDb->fetchAllAncLabReportDatas($parameters);
+        return $dataCollectionDb->fetchAllLabRecencyResult($parameters);
     }
     
     public function getLabReportResult(){

@@ -152,8 +152,8 @@ $loginContainer = new Container('user');
 		<div class="col l3 m3 s3 left-align">
 		    <select class="material-select" id="reportType" name="reportType" title="Please select report type" style="width:40% !important;">
 			<option value="">Both</option>
-			<option value="vl">Viral Load Report</option>
-			<option value="in">Infection Report</option>
+			<option value="vl-report">Viral Load Report</option>
+			<option value="inf-report">Infection Report</option>
 		    </select>
 		</div>
 		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
@@ -230,7 +230,10 @@ $loginContainer = new Container('user');
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value,'manage');" value="19" id="iCol19" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol19">Comments</label> <br>
-                <input type="hidden" id="countColumn" value="19"/>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value,'manage');" value="20" id="iCol20" data-showhide="result_print_status" class="showhideCheckBox" /> <label for="iCol20">Result Print Status</label> <br>
+                <input type="hidden" id="countColumn" value="20"/>
 	    </div>
 	</div>
     </div>
@@ -265,6 +268,7 @@ $loginContainer = new Container('user');
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
 				<th>Comments</th>
+				<th>Result Print Status</th>
 				<th>Action</th>
                             </tr>
                         </thead>
@@ -291,6 +295,7 @@ $loginContainer = new Container('user');
                                 <!--<th>HIV RNA > 1000</th>-->
 				<th>Recent Infection</th>
 				<th>Comments</th>
+				<th>Result Print Status</th>
 				<th>Action</th>
                             </tr>
                         </tfoot>
@@ -317,6 +322,7 @@ $loginContainer = new Container('user');
             "aoColumns": [
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
@@ -381,26 +387,26 @@ $loginContainer = new Container('user');
     
     function fnShowHide(iCol,type){
 	if(type == 'filter'){
-	    iColSplit = iCol.split('/');
-	    if(iColSplit.length == 3){
-	       oTable.fnSetColumnVis(14, true);
+	    var iColArray = iCol.split('/');
+	    if(iColArray.length == 3){
 	       oTable.fnSetColumnVis(15, true);
-	       oTable.fnSetColumnVis(17, true); 
-	       oTable.fnSetColumnVis(16, false);
-	    }else if(iColSplit.length == 1){
 	       oTable.fnSetColumnVis(16, true);
-	       oTable.fnSetColumnVis(14, false);
-	       oTable.fnSetColumnVis(15, false);
+	       oTable.fnSetColumnVis(18, true); 
 	       oTable.fnSetColumnVis(17, false);
-	    }else if(iColSplit.length == 4){
-	       oTable.fnSetColumnVis(14, true);
-	       oTable.fnSetColumnVis(15, true);
+	    }else if(iColArray.length == 1){
 	       oTable.fnSetColumnVis(17, true);
+	       oTable.fnSetColumnVis(15, false);
+	       oTable.fnSetColumnVis(16, false);
+	       oTable.fnSetColumnVis(18, false);
+	    }else if(iColArray.length == 4){
+	       oTable.fnSetColumnVis(15, true);
 	       oTable.fnSetColumnVis(16, true);
+	       oTable.fnSetColumnVis(17, true);
+	       oTable.fnSetColumnVis(18, true);
 	    }
 	}else{
            var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
-           oTable.fnSetColumnVis(iCol, bVis ? false : true); 
+           oTable.fnSetColumnVis(iCol, bVis ? false : true);
         }
     }
     
@@ -429,12 +435,12 @@ $loginContainer = new Container('user');
     }
     
     $('#reportType').change(function(e){
-        if(this.value == 'vl'){
-            cols = '16';
-        }else if(this.value == 'in'){
-	    cols = '14/15/17';
+        if(this.value == 'vl-report'){
+            cols = '17';
+        }else if(this.value == 'inf-report'){
+	    cols = '15/16/18';
         }else{
-          cols = '14/15/17/16'; 
+          cols = '15/16/17/18';
         }
         fnShowHide(cols,'filter');
     });
