@@ -80,9 +80,9 @@ if(count($labReportResult) >0){
     
     $vlReportType = 'show';
     $infectionType = 'show';
-    if(isset($params['reportType']) && trim($params['reportType'])== 'vl'){
+    if(isset($params['reportType']) && trim($params['reportType'])== 'vl-report'){
         $infectionType = 'hide';
-    }else if(isset($params['reportType']) && trim($params['reportType'])== 'in'){
+    }else if(isset($params['reportType']) && trim($params['reportType'])== 'inf-report'){
         $vlReportType = 'hide';
     }
     $html = '';
@@ -104,10 +104,12 @@ if(count($labReportResult) >0){
            if($infectionType =='show'){
               $html .='<th><strong>LAg Avidity</strong></th>';
               $html .='<th><strong>LAg Avidity Result</strong></th>';
-           }if($vlReportType =='show'){
+           }
+	   if($vlReportType =='show'){
               $html .='<th><strong>HIV RNA</strong></th>';
               //$html .='<th><strong>HIV RNA > 1000</strong></th>';
-           }if($infectionType =='show'){
+           }
+	   if($infectionType =='show'){
               $html .='<th><strong>Recent Infection</strong></th>';
            }
 	   $html .='<th><strong>Comments</strong></th>';
@@ -165,10 +167,12 @@ if(count($labReportResult) >0){
               if($infectionType =='show'){
                   $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
                   $html .='<td>'.$lAgAvidityResult.'</td>';
-              }if($vlReportType =='show'){
+              }
+	      if($vlReportType =='show'){
                   $html .='<td>'.$row['hiv_rna'].'</td>';
                   //$html .='<td>'.$hIVRNAResult.'</td>';
-              }if($infectionType =='show'){
+              }
+	      if($infectionType =='show'){
                 $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
               }
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
