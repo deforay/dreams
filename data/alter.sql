@@ -827,3 +827,6 @@ ALTER TABLE `clinic_data_collection` ADD `date_of_support_visit` DATE NULL DEFAU
 ALTER TABLE `data_collection` ADD `result_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `result_mail_sent`;
 
 ALTER TABLE `data_collection_event_log` ADD `result_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `result_mail_sent`;
+
+--Pal 23/12/2017
+ALTER TABLE `anc_rapid_recency` ADD `control_line` VARCHAR(45) NULL AFTER `has_patient_had_rapid_recency_test` 

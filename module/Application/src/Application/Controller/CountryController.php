@@ -145,4 +145,30 @@ class CountryController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function getMultipleProvinceDistrictsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $response = $countryService->getDistrictsByProvinces($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function getDistrictsAncsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+            $response = $ancSiteService->getActiveAncSites('country',$params['countryId'],$params['provinces'],$params['districts']);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

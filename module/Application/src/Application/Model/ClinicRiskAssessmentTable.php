@@ -323,9 +323,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             $lastInsertedId = $this->lastInsertValue;
 	    if($lastInsertedId >0){
 		$ancRapidRecencyDb = new AncRapidRecencyTable($dbAdapter);
+		$controlVal = '';
 		$HIVDiagnosticVal = '';
 		$recencyVal = '';
 		if(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])== 'done'){
+		    $controlVal = (isset($params['rrrControl']) && trim($params['rrrControl'])!= '')?$params['rrrControl']:NULL;
 		    $HIVDiagnosticVal = (isset($params['rrrHIVDiagnostic']) && trim($params['rrrHIVDiagnostic'])!= '')?$params['rrrHIVDiagnostic']:NULL;
 		    if($HIVDiagnosticVal!= 'negative'){
 		       $recencyVal = (isset($params['rrrRecency']) && trim($params['rrrRecency'])!= '')?$params['rrrRecency']:NULL;
@@ -333,6 +335,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}
 		$rrData = array(
 			    'assessment_id'=>$lastInsertedId,
+			    'control_line'=>$controlVal,
 			    'has_patient_had_rapid_recency_test'=>(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])!= '')?$params['hasPatientHadRapidRecencyTest']:NULL,
 			    'HIV_diagnostic_line'=>$HIVDiagnosticVal,
 			    'recency_line'=>$recencyVal
@@ -437,9 +440,29 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	     $end_date = $common->dateRangeFormat(trim($interview_date[1]));
 	   }
 	}
+	$provinces = array();
+	if(isset($parameters['province']) && trim($parameters['province'])!= ''){
+	    $provinceArray = explode(',',$parameters['province']);
+            $provinces = array();
+            for($i=0;$i<count($provinceArray);$i++){
+                $provinces[] = base64_decode($provinceArray[$i]);
+            }
+	}
+	$districts = array();
+	if(isset($parameters['district']) && trim($parameters['district'])!= ''){
+	    $districtArray = explode(',',$parameters['district']);
+            $districts = array();
+            for($i=0;$i<count($districtArray);$i++){
+                $districts[] = base64_decode($districtArray[$i]);
+            }
+	}
 	$ancs = array();
 	if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
-	    $ancs = explode(',',$parameters['anc']);
+	    $ancArray = explode(',',$parameters['anc']);
+            $ancs = array();
+            for($i=0;$i<count($ancArray);$i++){
+                $ancs[] = base64_decode($ancArray[$i]);
+            }
 	}
 	$dbAdapter = $this->adapter;
 	$sql = new Sql($dbAdapter);
@@ -458,16 +481,17 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         }
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['countryId'])));
-	}else if(isset($parameters['dashCountryId']) && trim($parameters['dashCountryId'])!= ''){
-	   $sQuery = $sQuery->where(array('r_a.country'=>trim($parameters['dashCountryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	   $sQuery = $sQuery->where('r_a.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	if(isset($parameters['type']) && trim($parameters['type'])== 'anc-rr-recent'){
 	    $sQuery = $sQuery->where(array('anc_r_r.recency_line'=>'recent'));
 	}
-	if(isset($parameters['dashProvince']) && trim($parameters['dashProvince'])!= ''){
-	    $sQuery = $sQuery->where(array('anc.province'=>$parameters['dashProvince']));
+	if(count($provinces) > 0){
+	    $sQuery = $sQuery->where('anc.province IN ("' . implode('", "', $provinces) . '")');
+	}
+	if(count($districts) > 0){
+	    $sQuery = $sQuery->where('anc.district IN ("' . implode('", "', $districts) . '")');
 	}
 	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
            $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
@@ -590,7 +614,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
                                    ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'))
-				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
+				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','control_line','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
 	   $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -895,9 +919,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
             $this->update($data,array('assessment_id'=>$assessmentId));
 	    //rapid recency result section
 	    $ancRapidRecencyDb = new AncRapidRecencyTable($dbAdapter);
+	    $controlVal = '';
 	    $HIVDiagnosticVal = '';
 	    $recencyVal = '';
 	    if(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])== 'done'){
+		$controlVal = (isset($params['rrrControl']) && trim($params['rrrControl'])!= '')?$params['rrrControl']:NULL;
 		$HIVDiagnosticVal = (isset($params['rrrHIVDiagnostic']) && trim($params['rrrHIVDiagnostic'])!= '')?$params['rrrHIVDiagnostic']:NULL;
 		if($HIVDiagnosticVal!= 'negative'){
 		   $recencyVal = (isset($params['rrrRecency']) && trim($params['rrrRecency'])!= '')?$params['rrrRecency']:NULL;
@@ -906,6 +932,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $rrData = array(
 		        'assessment_id'=>$assessmentId,
 			'has_patient_had_rapid_recency_test'=>(isset($params['hasPatientHadRapidRecencyTest']) && trim($params['hasPatientHadRapidRecencyTest'])!= '')?$params['hasPatientHadRapidRecencyTest']:NULL,
+			'control_line'=>$controlVal,
 			'HIV_diagnostic_line'=>$HIVDiagnosticVal,
 			'recency_line'=>$recencyVal
 		    );

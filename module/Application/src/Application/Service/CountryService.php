@@ -111,4 +111,22 @@ class CountryService {
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
       return $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
+    
+    public function getDistrictsByProvinces($params){
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $pQuery = $sql->select()->from(array('l_d' => 'location_details'));
+        if(isset($params['provinces']) && trim($params['provinces'])!= ''){
+            $provinceArray = explode(',',$params['provinces']);
+            $provinces = array();
+            for($i=0;$i<count($provinceArray);$i++){
+                $provinces[] = base64_decode($provinceArray[$i]);
+            }
+            $pQuery = $pQuery->where('l_d.parent_location IN('.implode(',',$provinces).')');
+        }else{
+           $pQuery = $pQuery->where('l_d.parent_location != 0');
+        }
+        $pQueryStr = $sql->getSqlStringForSqlObject($pQuery);
+      return $dbAdapter->query($pQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
 }

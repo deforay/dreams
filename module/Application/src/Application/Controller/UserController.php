@@ -48,7 +48,7 @@ class UserController extends AbstractActionController{
             $result = $roleService->getActiveRoles($countryId);
             $countryList = $countryService->getActiveCountries('user',$countryId);
             $allCountryList = $countryService->getActiveCountries('login',$countryId);
-            $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId,$province ='',$district ='');
             $facilityList = $facilityService->getActivefacilities('user',$countryId);
             return new ViewModel(array(
                 'roleData'=>$result,
@@ -79,7 +79,7 @@ class UserController extends AbstractActionController{
                 $roleResult = $roleService->getActiveRoles($countryId);
                 $countryList = $countryService->getActiveCountries('user',$countryId);
                 $allCountryList = $countryService->getActiveCountries('login',$countryId);
-                $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('user',$countryId,$province ='',$district ='');
                 $facilityList = $facilityService->getActivefacilities('user',$countryId);
                 return new ViewModel(array(
                     'row'=>$result,

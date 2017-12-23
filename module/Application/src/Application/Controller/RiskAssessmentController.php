@@ -7,6 +7,7 @@ use Zend\Json\Json;
 
 class RiskAssessmentController extends AbstractActionController{
     public function indexAction(){
+        $countryService = $this->getServiceLocator()->get('CountryService');
         $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
         $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
         $request = $this->getRequest();
@@ -17,20 +18,21 @@ class RiskAssessmentController extends AbstractActionController{
         }
         $countryId = '';
         $type = '';
-        $dashCountryId = '';
         $date = '';
         $dashProvince = '';
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
             $type = $this->params()->fromQuery('type');
-            $dashCountryId = base64_decode($this->params()->fromQuery('country'));
             $date = $this->params()->fromQuery('date');
             $dashProvince = base64_decode($this->params()->fromQuery('province'));
-            $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId);
+            $provinces = $countryService->getProvincesByCountry($countryId);
+            $districts = $countryService->getDistrictsByProvinces($params = array());
+            $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
             return new ViewModel(array(
+                'provinces'=>$provinces,
+                'districts'=>$districts,
                 'ancSites'=>$ancSiteList,
                 'type'=>$type,
-                'dashCountryId'=>$dashCountryId,
                 'date'=>$date,
                 'dashProvince'=>$dashProvince,
                 'countryId'=>$countryId
@@ -53,7 +55,7 @@ class RiskAssessmentController extends AbstractActionController{
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $countryList = $countryService->getActiveCountries('risk-assessment','');
-            $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
+            $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
             $occupationTypeList = $riskAssessmentService->getOccupationTypes();
             return new ViewModel(array(
                     'countries'=>$countryList,
@@ -83,8 +85,8 @@ class RiskAssessmentController extends AbstractActionController{
                 $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
                 if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); }
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('risk-assessment',$countryId);
-                $occupationTypeList=$riskAssessmentService->getOccupationTypes();
+                $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
+                $occupationTypeList = $riskAssessmentService->getOccupationTypes();
                 return new ViewModel(array(
                         'ancSites'=>$ancSiteList,
                         'occupationTypes'=>$occupationTypeList,
@@ -196,7 +198,7 @@ class RiskAssessmentController extends AbstractActionController{
             $countryInfo = $countryService->getCountry($countryId);
             if($countryInfo){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
                 $districts = $countryService->getDistrictsByCountry($countryId);
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,

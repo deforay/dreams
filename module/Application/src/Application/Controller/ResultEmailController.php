@@ -21,7 +21,7 @@ class ResultEmailController extends AbstractActionController{
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityList = $facilityService->getActivefacilities('result-email',$countryId);
-            $ancList = $ancSiteService->getActiveAncSites('result-email',$countryId);
+            $ancList = $ancSiteService->getActiveAncSites('result-email',$countryId,$province ='',$district ='');
             $testStatusList = $commonService->getAllTestStatus();
             return new ViewModel(array(
             'facilityList'=>$facilityList,

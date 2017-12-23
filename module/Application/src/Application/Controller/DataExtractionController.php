@@ -22,13 +22,13 @@ class DataExtractionController extends AbstractActionController{
             $result = $dataCollectionService->getAllDataExtractions($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $countryList=$countryService->getActiveCountries('data-extraction',$countryId);
-            $ancSiteList=$ancSiteService->getActiveAncSites('data-extraction',$countryId);
-            $facilityList=$facilityService->getActivefacilities('data-extraction',$countryId);
+            $countryList = $countryService->getActiveCountries('data-extraction',$countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('data-extraction',$countryId,$province ='',$district ='');
+            $facilityList = $facilityService->getActivefacilities('data-extraction',$countryId);
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'ancSites'=>$ancSiteList,
@@ -63,7 +63,7 @@ class DataExtractionController extends AbstractActionController{
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
-                $ancSiteList = $ancSiteService->getActiveAncSites('lab-logbook',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('lab-logbook',$countryId,$province ='',$district ='');
                 $facilityList = $facilityService->getActivefacilities('lab-logbook',$countryId);
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,

@@ -152,7 +152,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Recency Test Result</strong></h6>
             <fieldset id="rtrSection" style="height:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'auto':'90px'; ?>;border-color:#F44336;border-style:solid;">
 		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
+		    <div class="col s3">
 			<div class="input-field col m12 s12">
 			Rapid Recency Result *<br><br>
 			<input id="hasPatientHadRapidRecencyTestYes" class="with-gap isRequired" name="hasPatientHadRapidRecencyTest" title="Please select patient rapid recency test status" value="done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'checked="checked"':''; ?>>
@@ -161,24 +161,36 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 			<label for="hasPatientHadRapidRecencyTestNo" class="active">Not Done </label>&nbsp;&nbsp;
 			</div>
 		    </div>
-		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
+		    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
+			<div class="input-field col m12 s12">
+			<select id="rrrControl" name="rrrControl" class="material-select <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'isRequired':''; ?>" title="Please select control line">
+                            <option value=""> -- Select -- </option>
+			    <option value="positive" <?php echo (isset($row->control_line) && $row->control_line == 'positive')?'selected="selected"':''; ?>>Present (Positive/P)</option>
+			    <option value="negative" <?php echo (isset($row->control_line) && $row->control_line == 'negative')?'selected="selected"':''; ?>>Absent (Negative/N)</option>
+			    <option value="invalid" <?php echo (isset($row->control_line) && $row->control_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->control_line) && $row->control_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
+                        </select>
+                        <label for="rrrControl">Control Line *</label>
+			</div>
+		    </div>
+		    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
 			<div class="input-field col m12 s12">
 			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'isRequired':''; ?>" title="Please select positive verfication line">
                             <option value=""> -- Select -- </option>
-			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>P(Positive - Present)</option>
-			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>N(Negative - Absent)</option>
+			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>Present (Positive/P)</option>
+			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>Absent (Negative/N)</option>
 			    <option value="invalid" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
 			    <option value="result-not-available" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
                         </select>
                         <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
 			</div>
 		    </div>
-		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none;'; ?>">
+		    <div class="col s3 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none;'; ?>">
 			<div class="input-field col m12 s12">
 			<select id="rrrRecency" name="rrrRecency" class="material-select <?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'isRequired':''; ?>" title="Please select long term (recency) line">
                             <option value=""> -- Select -- </option>
-			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>LT(Long Term - Present)</option>
-			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>R(Recent- Absent)</option>
+			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>Present(Long Term/LT)</option>
+			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>Absent (Recent/R)</option>
 			    <option value="invalid" <?php echo (isset($row->recency_line) && $row->recency_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
 			    <option value="result-not-available" <?php echo (isset($row->recency_line) && $row->recency_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
                         </select>
@@ -1069,13 +1081,13 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             selectYears: 100, // Creates a dropdown of 100 years to control year
             format: 'dd/mm/yyyy',
 	    	max: new Date('Today'),
-			closeOnSelect: true,
-			closeOnClear: true,
-			onSet: function(e){
-				if(e.select != undefined && e.select != null){
-					$('.picker__close').click();
-				}
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
 			}
+		    }
         });
        manageQ2();
        manageQ3();
@@ -1735,13 +1747,13 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
 	    $('#rtrSection').css('height','auto');
 	    $('.rrrSection').show();
-            $('#rrrHIVDiagnostic,#rrrRecency').addClass('isRequired');
+            $('#rrrControl,#rrrHIVDiagnostic,#rrrRecency').addClass('isRequired');
 	}else{
 	   $('#rtrSection').css('height','90px');
 	   $('.rrrSection').hide();
 	   //$('#rrrHIVDiagnostic option:first').prop('selected', true);
 	   //$('#rrrRecency option:first').prop('selected', true);
-           $('#rrrHIVDiagnostic,#rrrRecency').removeClass('isRequired');
+           $('#rrrControl,#rrrHIVDiagnostic,#rrrRecency').removeClass('isRequired');
 	}
     });
     

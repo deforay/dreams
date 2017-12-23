@@ -80,6 +80,9 @@ class DataCollectionTable extends AbstractTableGateway {
                 $asanteValidate = false;
             }if(!isset($params['labTechName'])){
 		$params['labTechName'] = NULL;
+	    }if($params['asanteRapidRecencyAssayPn'] == 'absent'){
+		$params['asanteRapidRecencyAssayRlt'] = '';
+		$params['readerValueRRRLog'] = '';
 	    }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
@@ -505,6 +508,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $readerValueRRDTLog = (trim($params['readerValueRRDTLog'])!= '')?$params['readerValueRRDTLog']:$params['readerValueRRDTLogOld'];
 	    $readerValueRRRLog = (trim($params['readerValueRRRLog'])!= '')?$params['readerValueRRRLog']:$params['readerValueRRRLogOld'];
+	    
+	    if($params['asanteRapidRecencyAssayPn'] == 'absent'){
+		$params['asanteRapidRecencyAssayRlt'] = '';
+		$readerValueRRRLog = '';
+	    }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
 						'reader'=>$readerValueRRDTLog

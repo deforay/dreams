@@ -72,7 +72,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     }
     .box-1,.box-2{
 	float:left;
-	width:44%;
+	width:<?php echo($asanteRapidRecencyAssayPn == 'Absent')?'74%;':'44%;'; ?>
     }
     .box-11,.box-21{
 	float:left;
@@ -271,7 +271,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                           <p style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></p>
                         </div>
                     </div>
-                    <div class="col s4">
+                    <div class="col s4" style="<?php echo(trim($hIVRNAResult) == '')?'display:none;':''; ?>">
                         <div class="input-field col m12 s12">
                           <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA > 1000 (copies/ml)</strong> </label><br>
                           <p style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
@@ -288,11 +288,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante)</span>
                 </div>
                 <div class="row">
-                    <div class="col s8">
+                    <div class="col <?php echo(trim($asanteRapidRecencyAssayPn) == 'Absent')?'s6':'s8'; ?>">
                         <div class="input-padding col m12 s12 l12">
                           <div class="box-1"><div class="box-11" style="text-align:center;"><strong>Positive Verification Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayPn; ?><br></div></div>
-                          <div id="box-breaker" style="display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>">&rArr;</div>
-                          <div class="box-2"><div class="box-21" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>"><strong>Long Term Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayRlt; ?><br></div></div>
+			  <?php if($asanteRapidRecencyAssayPn !='Absent'){ ?>
+                            <div id="box-breaker">&rArr;</div>
+                            <div class="box-2"><div class="box-21"><strong>Long Term Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayRlt; ?><br></div></div>
+		          <?php } ?>
                         </div>
                     </div>
                     <div class="col s4">
@@ -303,11 +305,13 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>
                 </div>
 		<div class="row" style="<?php echo(trim($readerValueRRDTLog) == '' && trim($readerValueRRRLog) == '')?'display:none;':''; ?>">
-                    <div class="col s8">
+                    <div class="col <?php echo(trim($asanteRapidRecencyAssayPn) == 'Absent')?'s6':'s8'; ?>">
                         <div class="input-padding col m12 s12 l12">
                           <div class="box-1 readerValueRRDTLog" style="<?php echo(trim($readerValueRRDTLog) == '')?'visibility:hidden;':''; ?>"><div class="box-11" style="text-align:center;"><strong>Positive Verification Line (Visual) Reader Value</strong><br><div id="readerValueRRDTLogVal"><?php echo $readerValueRRDTLogVal; ?></div></div></div>
-                          <div id="box-breaker"></div>
-                          <div class="box-2 readerValueRRRLog" style="<?php echo(trim($readerValueRRRLog) == '')?'visibility:hidden;':''; ?>"><div class="box-21" style="text-align:center;display:<?php echo ($asanteRapidRecencyAssayPn == 'Absent')?'none':''; ?>"><strong>Long Term Line (Visual) Reader Value</strong><br><div id="readerValueRRRLogVal"><?php echo $readerValueRRRLogVal; ?></div></div></div>
+			 <?php if($asanteRapidRecencyAssayPn !='Absent'){ ?>
+                            <div id="box-breaker"></div>
+                            <div class="box-2 readerValueRRRLog" style="<?php echo(trim($readerValueRRRLog) == '')?'visibility:hidden;':''; ?>"><div class="box-21" style="text-align:center;"><strong>Long Term Line (Visual) Reader Value</strong><br><div id="readerValueRRRLogVal"><?php echo $readerValueRRRLogVal; ?></div></div></div>
+			  <?php } ?>
                         </div>
                     </div>
 		</div>

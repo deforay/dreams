@@ -22,7 +22,7 @@ class ClinicController extends AbstractActionController{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId);
+                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
                 $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,
@@ -59,7 +59,7 @@ class ClinicController extends AbstractActionController{
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
                 if($result){
-                    $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId);
+                    $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId,$province ='',$district ='');
                     $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
                     return new ViewModel(array(
                         'row'=>$result,
@@ -87,7 +87,7 @@ class ClinicController extends AbstractActionController{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId);
+                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId,$province ='',$district ='');
                 $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
                 return new ViewModel(array(
                         'ancSites'=>$ancSiteList,
@@ -125,7 +125,7 @@ class ClinicController extends AbstractActionController{
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
-                $ancSiteList = $ancSiteService->getActiveAncSites('anc-lab-report',$countryId);
+                $ancSiteList = $ancSiteService->getActiveAncSites('anc-lab-report',$countryId,$province ='',$district ='');
                 $facilityList = $facilityService->getActivefacilities('anc-lab-report',$countryId);
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,

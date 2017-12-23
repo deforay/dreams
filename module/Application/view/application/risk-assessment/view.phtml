@@ -209,7 +209,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Recency Test Result</strong></h6>
 	    <fieldset id="rtrSection" style="height:90px;border-color:#F44336;border-style:solid;">
 		<div class="row" style="margin-bottom:0;">
-		    <div class="col s4">
+		    <div class="col s3">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
 			   <label for="hasPatientHadRapidRecencyTest" class="">Rapid Recency Result</label> <br>
 			   <p>
@@ -221,16 +221,36 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                            </p>
 			</div>
 		    </div>
-		    <div class="col s4 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
+                    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
+			<div class="input-field col m12 s12" style="margin-top:6px;">
+                           <label for="rrrControl">Control Line </label><br>
+                           <p>
+                           <?php
+                            if(isset($row->control_line) && $row->control_line!= null && trim($row->control_line)!= ''){
+                               if($row->control_line == 'positive'){
+                                echo 'Present (Positive/P)';
+                               }else if($row->control_line == 'negative'){
+                                echo 'Absent (Negative/N)';
+                               }else if($row->control_line == 'invalid'){
+                                echo 'Invalid';
+                               }else if($row->control_line == 'result-not-available'){
+                                echo 'Result not available';
+                               }
+                            }
+                            ?>
+                           </p>
+			</div>
+		    </div>
+		    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
                            <label for="rrrHIVDiagnostic">Positive Verification Line </label><br>
                            <p>
                            <?php
                             if(isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line!= null && trim($row->HIV_diagnostic_line)!= ''){
                                if($row->HIV_diagnostic_line == 'positive'){
-                                echo 'P(Positive - Present)';
+                                echo 'Present (Positive/P)';
                                }else if($row->HIV_diagnostic_line == 'negative'){
-                                echo 'N(Negative - Absent)';
+                                echo 'Absent (Negative/N)';
                                }else if($row->HIV_diagnostic_line == 'invalid'){
                                 echo 'Invalid';
                                }else if($row->HIV_diagnostic_line == 'result-not-available'){
@@ -241,16 +261,16 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                            </p>
 			</div>
 		    </div>
-		    <div class="col s4 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>;">
+		    <div class="col s3 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>;">
 			<div class="input-field col m12 s12" style="margin-top:6px;">
                             <label for="rrrRecency">Long Term (Recency) Line </label><br>
                             <p>
                             <?php
                             if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
                                if($row->recency_line == 'long term'){
-                                echo 'LT(Long Term - Present)';
+                                echo 'Present (Long Term/LT)';
                                }else if($row->recency_line == 'recent'){
-                                echo 'R(Recent- Absent)';
+                                echo 'Absent (Recent/R)';
                                }else if($row->recency_line == 'invalid'){
                                 echo 'Invalid';
                                }else if($row->recency_line == 'result-not-available'){

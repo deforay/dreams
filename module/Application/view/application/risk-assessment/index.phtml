@@ -118,24 +118,50 @@ if(isset($date) && trim($date)!= ''){
     </div>
     <div class="row" style="max-width:1109px;">
 	<form id="rASearchFilterForm" action="#">
-	    <div class="col l12 m12 s12">
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l2 m2 s2 left-align"><h6><strong>Interview Date </strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <input type="text" id="interviewDate" name="interviewDate" plcaeholder="Interview date" placeholder="Select date" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
+	    <div class="row">
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<input type="text" id="interviewDate" name="interviewDate" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
+			<label for="interviewDate">Interview Date </label>
+		    </div>
 		</div>
-		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site</strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <select id="anc" name="anc[]" class="material-select" title="Please select ANC Site" multiple="multiple" style="width:40% !important;">
-			<option value="" disabled selected> All ANCs </option>
-			<?php
-			foreach($ancSites as $anc){
-			?>
-			<option value="<?php echo $anc['anc_site_id']; ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
-			<?php } ?>
-		    </select>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="province" name="province[]" multiple="multiple" title="Please select province" onchange="getProvinceDistricts();getDistrictsANCs();">
+			    <option value="" disabled selected> All Province </option>
+			    <?php foreach($provinces as $province) { ?>
+			       <option value="<?php echo base64_encode($province['location_id']); ?>" <?php echo (trim($dashProvince)!= '' && $dashProvince == $province['location_id'])?'selected="selected"':''; ?>><?php echo ucwords($province['location_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="province">Province </label>
+		    </div>
 		</div>
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12 district">
+			<select class="material-select" id="district" name="district[]" multiple="multiple" title="Please select district" onchange="getDistrictsANCs();">
+			    <option value="" disabled selected> All District </option>
+			    <?php foreach($districts as $district) { ?>
+			       <option value="<?php echo base64_encode($district['location_id']); ?>"><?php echo ucwords($district['location_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="district">District </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col s4">
+		    <div class="input-field col m12 s12 anc">
+			<select class="material-select" id="anc" name="anc[]" multiple="multiple" title="Please select ANC Site">
+			    <option value="" disabled selected> All ANC </option>
+			    <?php
+			    foreach($ancSites as $anc){
+			    ?>
+			       <option value="<?php echo $anc['anc_site_id']; ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+			    <?php } ?>
+			</select>
+			<label for="anc">ANC Site </label>
+		    </div>
+		</div>
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -145,7 +171,7 @@ if(isset($date) && trim($date)!= ''){
 	    </div>
 	</form>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Risk Assessment List
@@ -208,6 +234,8 @@ if(isset($date) && trim($date)!= ''){
 <script>
     $(document).ready(function() {
 	selectDate();
+	getProvinceDistricts();
+	getDistrictsANCs();
 	oTable = $('#riskAssessmentDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {
@@ -238,9 +266,9 @@ if(isset($date) && trim($date)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
 		aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
-		aoData.push({"name": "dashCountryId", "value": '<?php echo $dashCountryId; ?>'});
-		aoData.push({"name": "dashProvince", "value": '<?php echo $dashProvince; ?>'});
                 aoData.push({"name": "interviewDate", "value": $('#interviewDate').val()});
+		aoData.push({"name": "province", "value": $('#province').val()});
+		aoData.push({"name": "district", "value": $('#district').val()});
                 aoData.push({"name": "anc", "value": $('#anc').val()});
                 $.ajax({
                     "dataType": 'json',
@@ -287,6 +315,25 @@ if(isset($date) && trim($date)!= ''){
         });
         $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
         $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function getProvinceDistricts(){
+	var provinces = $('#province').val();
+	$.post("<?php echo $this->url('country',array('action'=>'get-multiple-province-districts')); ?>", { provinces:provinces.join(',') },
+	function(data){
+	    $('.district').html(data);
+	    $('#district').material_select();
+	});
+    }
+    
+    function getDistrictsANCs(){
+	var provinces = $('#province').val();
+	var districts = $('#district').val();
+	$.post("<?php echo $this->url('country',array('action'=>'get-districts-ancs')); ?>", { provinces:provinces.join(','),districts:districts.join(','), countryId:'<?php echo $countryId; ?>' },
+	function(data){
+	    $('.anc').html(data);
+	    $('#anc').material_select();
+	});
     }
     
     function searchRiskAssessmentData(){

@@ -38,7 +38,7 @@ class DataCollectionController extends AbstractActionController{
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $countryList = $countryService->getActiveCountries('data-collection','');
-            $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId,$province ='',$district ='');
             $rejectionReasonList = $commonService->getActiveRejectionReasons();
             $facilityList = $facilityService->getActivefacilities('data-collection',$countryId);
             $choosedCountryInfo = $countryService->getChoosedCountryInfo($countryId);
@@ -77,20 +77,20 @@ class DataCollectionController extends AbstractActionController{
             $dataCollectionService->updateDataCollection($params);
            return $this->redirect()->toUrl($params['redirectUrl']);
         }
-        $countryId=base64_decode($this->params()->fromRoute('countryId'));
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
         $encodedCountryId = $this->params()->fromRoute('countryId');
-        $dataCollectionId=base64_decode($this->params()->fromRoute('id'));
-        $result=$dataCollectionService->getDataCollection($dataCollectionId);
+        $dataCollectionId = base64_decode($this->params()->fromRoute('id'));
+        $result = $dataCollectionService->getDataCollection($dataCollectionId);
         if($result){
             $preventUrl = (trim($countryId)!= '')?'/data-collection/'.$encodedCountryId:'/data-collection';
             if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');
             $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList=$ancSiteService->getActiveAncSites('data-collection',$countryId);
-            $rejectionReasonList=$commonService->getActiveRejectionReasons();
-            $testStatusList=$commonService->getAllTestStatus();
-            $facilityList=$facilityService->getActivefacilities('data-collection',$countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId,$province ='',$district ='');
+            $rejectionReasonList = $commonService->getActiveRejectionReasons();
+            $testStatusList = $commonService->getAllTestStatus();
+            $facilityList = $facilityService->getActivefacilities('data-collection',$countryId);
             return new ViewModel(array(
                 'row'=>$result,
                 'ancSites'=>$ancSiteList,

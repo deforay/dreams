@@ -313,7 +313,7 @@ class AncSiteTable extends AbstractTableGateway {
        return $ancSiteId;
     }
 	
-    public function fetchActiveAncSites($from,$countryId){
+    public function fetchActiveAncSites($from,$countryId,$province,$district){
 	$loginContainer = new Container('user');
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
@@ -330,8 +330,24 @@ class AncSiteTable extends AbstractTableGateway {
                              ->where(array('anc.status'=>'active'));
 	if(trim($countryId)!= '' && $countryId > 0){
 	    $ancSitesQuery = $ancSitesQuery->where(array('anc.country'=>$countryId));
-        } if($loginContainer->roleCode == 'ANCSC'){
+        }
+	if($loginContainer->roleCode == 'ANCSC'){
             $ancSitesQuery = $ancSitesQuery->where('anc.anc_site_id IN ("' . implode('", "', $mappedANC) . '")');
+        }
+	if(isset($district) && trim($district)!= ''){
+            $districtArray = explode(',',$district);
+            $districts = array();
+            for($i=0;$i<count($districtArray);$i++){
+                $districts[] = base64_decode($districtArray[$i]);
+            }
+            $ancSitesQuery = $ancSitesQuery->where('anc.district IN('.implode(',',$districts).')');
+        }else if(isset($province) && trim($province)!= ''){
+            $provinceArray = explode(',',$province);
+            $provinces = array();
+            for($i=0;$i<count($provinceArray);$i++){
+                $provinces[] = base64_decode($provinceArray[$i]);
+            }
+            $ancSitesQuery = $ancSitesQuery->where('anc.province IN('.implode(',',$provinces).')');
         }
         $ancSitesQueryStr = $sql->getSqlStringForSqlObject($ancSitesQuery);
        return $dbAdapter->query($ancSitesQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
