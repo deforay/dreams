@@ -1600,6 +1600,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'month' => new \Zend\Db\Sql\Expression("MONTH(".$params['labDataReportingDate'].")"),
 						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(".$params['labDataReportingDate'].")"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'noofANCSites' => new \Zend\Db\Sql\Expression("COUNT(DISTINCT(da_c.anc_site))"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
@@ -1607,12 +1608,11 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_id','facility_name'))
-				   ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'))
 				   ->where(array('da_c.country'=>$params['country']))
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(".$params['labDataReportingDate'].")"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(".$params['labDataReportingDate'].")"))
 				   ->group('da_c.lab')
-				   ->order($params['labDataReportingDate'].' desc');
+				   ->order($params['labDataReportingDate'].' asc');
 	if($loginContainer->roleCode== 'LS'){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
@@ -1644,7 +1644,8 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'year' => new \Zend\Db\Sql\Expression("YEAR(".$params['clinicDataReportingDate'].")"),
 						   'month' => new \Zend\Db\Sql\Expression("MONTH(".$params['clinicDataReportingDate'].")"),
 						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(".$params['clinicDataReportingDate'].")"),
-						   'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)")
+						   'assessments' => new \Zend\Db\Sql\Expression("COUNT(*)"),
+						   'noofANCSites' => new \Zend\Db\Sql\Expression("COUNT(DISTINCT(r_a.anc))")
 						 ))
 				   ->join(array('anc'=>'anc_site'),'anc.anc_site_id=r_a.anc',array())
 				   ->join(array('l_d'=>'location_details'),'l_d.location_id=anc.province',array('location_id','location_name'))
@@ -1653,7 +1654,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group(new \Zend\Db\Sql\Expression("YEAR(".$params['clinicDataReportingDate'].")"))
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(".$params['clinicDataReportingDate'].")"))
 				   ->group('anc.province')
-				   ->order($params['clinicDataReportingDate'].' desc');
+				   ->order($params['clinicDataReportingDate'].' asc');
 	if($loginContainer->roleCode== 'ANCSC'){
 	    $riskAssessmentQuery = $riskAssessmentQuery->where(array('r_a.added_by'=>$loginContainer->userId));
 	}
