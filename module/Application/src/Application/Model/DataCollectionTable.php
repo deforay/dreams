@@ -264,8 +264,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
+	   $data_Column = ($parameters['dateSrc'] == 'collected')?'da_c.specimen_collected_date':'da_c.added_on';
 	   $splitReportingMonthYear = explode("/",$parameters['date']);
-	   $sQuery = $sQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR('.$data_Column.') ="'.$splitReportingMonthYear[1].'"');
 	}
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');

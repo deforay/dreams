@@ -26,11 +26,13 @@ class DataCollectionController extends AbstractActionController{
             $countryId = '';
             $type = '';
             $dashCountryId = '';
+            $dateSrc = '';
             $date = '';
             $dashLab = '';
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $type = $this->params()->fromQuery('type');
             $dashCountryId = base64_decode($this->params()->fromQuery('country'));
+            $dateSrc = $this->params()->fromQuery('dSrc');
             $date = $this->params()->fromQuery('date');
             $dashLab = base64_decode($this->params()->fromQuery('lab'));
             $countryService = $this->getServiceLocator()->get('CountryService');
@@ -48,6 +50,7 @@ class DataCollectionController extends AbstractActionController{
                 'countryId'=>$countryId,
                 'type'=>$type,
                 'dashCountryId'=>$dashCountryId,
+                'dateSrc'=>$dateSrc,
                 'date'=>$date,
                 'dashLab'=>$dashLab,
                 'ancSites'=>$ancSiteList,

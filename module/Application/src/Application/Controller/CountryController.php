@@ -101,7 +101,7 @@ class CountryController extends AbstractActionController{
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response = $dataCollectionService->getCountryLabDataReportingDetails($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setVariables(array('params'=>$params,'response' =>$response));
             $viewModel->setTerminal(true);
             return $viewModel;
         }
@@ -114,7 +114,7 @@ class CountryController extends AbstractActionController{
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response = $dataCollectionService->getCountryClinicDataReportingDetails($params);
             $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setVariables(array('params'=>$params,'response' =>$response));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

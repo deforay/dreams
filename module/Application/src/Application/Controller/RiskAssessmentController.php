@@ -18,11 +18,13 @@ class RiskAssessmentController extends AbstractActionController{
         }
         $countryId = '';
         $type = '';
+        $dateSrc = '';
         $date = '';
         $dashProvince = '';
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(trim($countryId)!= ''){
             $type = $this->params()->fromQuery('type');
+            $dateSrc = $this->params()->fromQuery('dSrc');
             $date = $this->params()->fromQuery('date');
             $dashProvince = base64_decode($this->params()->fromQuery('province'));
             $provinces = $countryService->getProvincesByCountry($countryId);
@@ -33,6 +35,7 @@ class RiskAssessmentController extends AbstractActionController{
                 'districts'=>$districts,
                 'ancSites'=>$ancSiteList,
                 'type'=>$type,
+                'dateSrc'=>$dateSrc,
                 'date'=>$date,
                 'dashProvince'=>$dashProvince,
                 'countryId'=>$countryId

@@ -433,11 +433,14 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
        $start_date = '';
        $end_date = '';
        if(isset($parameters['interviewDate']) && trim($parameters['interviewDate'])!= ''){
-	   $interview_date = explode("to", $parameters['interviewDate']);
-	   if(isset($interview_date[0]) && trim($interview_date[0]) != "") {
-	     $start_date = $common->dateRangeFormat(trim($interview_date[0]));
-	   }if(isset($interview_date[1]) && trim($interview_date[1]) != "") {
-	     $end_date = $common->dateRangeFormat(trim($interview_date[1]));
+	  $parameters['filterDate'] = $parameters['interviewDate'];
+       }
+       if(isset($parameters['filterDate']) && trim($parameters['filterDate'])!= ''){
+	   $filter_date = explode("to", $parameters['filterDate']);
+	   if(isset($filter_date[0]) && trim($filter_date[0]) != "") {
+	     $start_date = $common->dateRangeFormat(trim($filter_date[0]));
+	   }if(isset($filter_date[1]) && trim($filter_date[1]) != "") {
+	     $end_date = $common->dateRangeFormat(trim($filter_date[1]));
 	   }
 	}
 	$provinces = array();
@@ -493,10 +496,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	if(count($districts) > 0){
 	    $sQuery = $sQuery->where('anc.district IN ("' . implode('", "', $districts) . '")');
 	}
+	$data_Column = ($parameters['dateSrc'] == 'interview' || trim($parameters['interviewDate'])!= '')?'r_a.interview_date':'r_a.added_on';
 	if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-           $sQuery = $sQuery->where(array("r_a.interview_date >='" . $start_date ."'", "r_a.interview_date <='" . $end_date."'"));
+           $sQuery = $sQuery->where(array("$data_Column >='" . $start_date ."'", "$data_Column <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
-           $sQuery = $sQuery->where(array("r_a.interview_date = '" . $start_date. "'"));
+           $sQuery = $sQuery->where(array("$data_Column = '" . $start_date. "'"));
         }
        if (isset($sWhere) && $sWhere != "") {
            $sQuery->where($sWhere);

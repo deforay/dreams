@@ -1,12 +1,14 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-$interviewFilterDate = '';
+$filterDate = '';
+$interviewDate = '';
 if(isset($date) && trim($date)!= ''){
     $dateArray = explode("/",$date);
     $month = date('M', strtotime($dateArray[0]));
     $year = $dateArray[1];
-    $interviewFilterDate = '01-'.$month.'-'.$year.' to 31-'.$month.'-'.$year;
+    $filterDate = '01-'.$month.'-'.$year.' to 31-'.$month.'-'.$year;
+    if(trim($dateSrc) == 'interview'){ $interviewDate = $filterDate; }
 }
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
@@ -121,7 +123,7 @@ if(isset($date) && trim($date)!= ''){
 	    <div class="row">
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
-			<input type="text" id="interviewDate" name="interviewDate" title="Please enter interview date" value="<?php echo $interviewFilterDate; ?>" onclick="selectDate();" readonly>
+			<input type="text" id="interviewDate" name="interviewDate" title="Please enter interview date" value="<?php echo $interviewDate; ?>" onclick="selectDate();" readonly>
 			<label for="interviewDate">Interview Date </label>
 		    </div>
 		</div>
@@ -266,7 +268,9 @@ if(isset($date) && trim($date)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
 		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
 		aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
-                aoData.push({"name": "interviewDate", "value": $('#interviewDate').val()});
+		aoData.push({"name": "dateSrc", "value": '<?php echo $dateSrc; ?>'});
+                aoData.push({"name": "filterDate", "value": '<?php echo $filterDate; ?>'});
+		aoData.push({"name": "interviewDate", "value": $('#interviewDate').val()});
 		aoData.push({"name": "province", "value": $('#province').val()});
 		aoData.push({"name": "district", "value": $('#district').val()});
                 aoData.push({"name": "anc", "value": $('#anc').val()});
