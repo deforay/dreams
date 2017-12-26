@@ -5,10 +5,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class CommonController extends AbstractActionController
-{
-    public function indexAction()
-    {
+class CommonController extends AbstractActionController{
+    public function indexAction(){
         $result = "";
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -22,5 +20,17 @@ class CommonController extends AbstractActionController
         return $viewModel;
     }
 
+    public function manageColumnsAction(){
+       $request = $this->getRequest();
+        if($request->isPost()) {
+            $params = $request->getPost();
+            $commonService = $this->getServiceLocator()->get('CommonService');
+            $response = $commonService->manageTblColumns($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }  
+    }
 }
 

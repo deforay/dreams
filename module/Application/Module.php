@@ -36,6 +36,7 @@ use Application\Model\ProvinceTable;
 use Application\Model\AncRapidRecencyTable;
 use Application\Model\LocationDetailsTable;
 use Application\Model\StudyFilesTable;
+use Application\Model\ManageColumnsTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -306,6 +307,10 @@ class Module{
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new StudyFilesTable($dbAdapter);
                     return $table;
+                },'ManageColumnsTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new ManageColumnsTable($dbAdapter);
+                    return $table;
                 }
             ),
         );
@@ -318,7 +323,8 @@ class Module{
     public function getViewHelperConfig(){
         return array(
            'invokables' => array(
-              'GetActiveCountries' => 'Application\View\Helper\GetActiveCountries'
+              'GetActiveCountries' => 'Application\View\Helper\GetActiveCountries',
+	      'GetManageColumns' => 'Application\View\Helper\GetManageColumns'
             )
         );
     }

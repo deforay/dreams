@@ -361,6 +361,31 @@ class CommonService {
         $studyFilesDb = $this->sm->get('StudyFilesTable');
        return $studyFilesDb->fetchStudyFiles($parameters);
     }
+    
+    public function manageTblColumns($params){
+        $loginContainer = new Container('user');
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $manageColumnsDb = $this->sm->get('ManageColumnsTable');
+        $tblCols = '';
+        if(isset($params['tblColumns']) && count($params['tblColumns']) >0){
+           $tblCols = json_encode($params['tblColumns']); 
+        }
+        $column_data = array(
+                      'user_id'=>$loginContainer->userId,
+                      $params['frmSrc']=>$tblCols
+                    );
+        $mCQuery = $sql->select()->from(array('m_c' => 'manage_columns'))
+                       ->columns(array('user_id'))
+                       ->where(array('user_id'=>$loginContainer->userId));
+        $mCQueryStr = $sql->getSqlStringForSqlObject($mCQuery);
+        $mCQueryResult = $dbAdapter->query($mCQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        if(isset($mCQueryResult) && count($mCQueryResult) > 0){
+            return $manageColumnsDb->update($column_data,array('user_id'=>$loginContainer->userId));
+        }else{
+          return $manageColumnsDb->insert($column_data);  
+        }
+    }
 }
 
 ?>

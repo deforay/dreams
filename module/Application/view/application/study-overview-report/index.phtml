@@ -1,6 +1,11 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
+$manage_columns = $this->GetManageColumns();
+$SOR_Columns = array();
+if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($manage_columns->study_overview)!= ''){
+    $SOR_Columns = json_decode($manage_columns->study_overview,true);
+}
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
 <style>
@@ -140,16 +145,103 @@ $loginContainer = new Container('user');
     .labBorder-bottom{
         border-bottom:1px solid #888 !important;
     }
-    #double-scroll{
+    /*#double-scroll{
 	width: 100%;
     }
     .suwala-doubleScroll-scroll-wrapper{
 	padding-left:10% !important;
+    }*/
+    #studyOverviewDataTable_wrapper{
+	overflow-x:scroll;
     }
 </style>
 <div id="page-content">
     <div class="row section-header">
         <h4 class="page-title">Study Overview Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+    </div>
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:auto;background:#e0e0e0;">
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="location_name" class="showhideCheckBox" /> <label for="iCol0">Lab Province/<br>State</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol1">Patient <br>Barcode ID</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox" /> <label for="iCol2">Specimen <br>Collection Date</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox" /> <label for="iCol3">ANC Site</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol4">Specimen <br>Pick Up Date <br>at ANC</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="specimen_type" class="showhideCheckBox" /> <label for="iCol5">Specimen Type</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="anc_patient_id" class="showhideCheckBox" /> <label for="iCol6">ANC <br>Patient ID</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="art_patient_id" class="showhideCheckBox" /> <label for="iCol7">ART Number</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="patient_dob" class="showhideCheckBox" /> <label for="iCol8">DOB</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="age" class="showhideCheckBox" /> <label for="iCol9">Age</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="gestational_age" class="showhideCheckBox" /> <label for="iCol10">Gestation <br>Age (Weeks)</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol11">Lab/Facility</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="rejection_reason" class="showhideCheckBox" /> <label for="iCol12">Rejection Reason</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol13">Receipt Date <br>at Lab</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol14">Lab Tech. <br>Name/ID</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol15">Date of Test <br>Completion</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol16">Result <br>Dispatched Date <br>to Clinic</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol17">LAg Avidity</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol18">LAg Recency <br>Assay</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol19">HIV RNA(cp/ml)</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol20">Recent Infection</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol21">Lab Positive <br>Verification <br>Line(Visual)</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol22">Lab Long Term<br>Line(Visual)</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="HIV_diagnostic_line" class="showhideCheckBox" /> <label for="iCol23">ANC Positive <br>Verification <br>Line(Visual)</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="recency_line" class="showhideCheckBox" /> <label for="iCol24">ANC Long Term <br>Line</label>
+	</div>
+	<div class="col m3">
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol25">Lab Data <br>Status</label>
+	</div>
+	<div class="col m3">
+	    <input type="hidden" id="countColumn" value="26"/>
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="assessment_id" class="showhideCheckBox" /> <label for="iCol26">Behaviour Data <br>Recorded</label>
+	</div>
     </div>
     <div class="row" style="max-width:1109px;">
 	<form id="overviewFilter" action="#">
@@ -233,25 +325,37 @@ $loginContainer = new Container('user');
     <div class="row">
 	<div class="col l12 m12 s12">
 	    <div class="card card-default">
-		<div class="card-header white-text">
-		    <i class="zmdi zmdi-filter-list"></i> Study Overview
+		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Study Overview
+		    <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
-		<div id="double-scroll" class="card-content clearfix">
+		<div id="" class="card-content clearfix">
 		    <table id="studyOverviewDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
-			    <th colspan="6" style="border-top:none;border-left:none;"></th>
-			    <th colspan="6" style="background:#ffffee;" class="labBorder-top labBorder-right labBorder-left">LAB RESULTS</th>
+			    <th colspan="15" style="border-top:none;border-left:none;"></th>
+			    <th colspan="8" style="background:#ffffee;" class="labBorder-top labBorder-right labBorder-left">LAB RESULTS</th>
 			    <th colspan="2" style="background:#ffffee;">ANC RESULTS</th>
+			    <th colspan="2" style="border-top:none;border-left:none;"></th>
 			</tr>
 			<tr>
 			    <th>Lab<br>Province/<br>State</th>
-			    <th>ANC<br>Facility<br>ID</th>
 			    <th>Patient<br>Barcode<br>ID</th>
 			    <th>Specimen<br>Collection<br>Date</th>
-			    <th>Lab<br>Data<br>Status</th>
-			    <th>Behaviour<br>Data<br>Recorded</th>
+			    <th>ANC Site</th>
+			    <th>Specimen <br>Pick Up Date <br>at ANC</th>
+			    <th>Specimen Type</th>
+			    <th>ANC <br>Patient ID</th>
+			    <th>ART Number</th>
+			    <th>DOB</th>
+			    <th>Age</th>
+			    <th>Gestation <br>Age (Weeks)</th>
+			    <th>Lab/Facility</th>
+			    <th>Rejection<br>Reason</th>
+			    <th>Receipt Date <br>at Lab</th>
+			    <th>Lab Tech.<br>Name/ID</th>
 			    <th>Date of <br>Test <br>Completion</th>
+			    <th>Result <br>Dispatched<br>Date to Clinic</th>
+			    <th>LAg Avidity</th>
 			    <th>LAg<br>Recency<br>Assay</th>
 			    <th>HIV RNA<br>(cp/ml)</th>
 			    <!--<th>HIV RNA > 1000</th>-->
@@ -260,17 +364,30 @@ $loginContainer = new Container('user');
 			    <th>Lab Long<br>Term Line<br>(Visual)</th>
 			    <th>ANC Positive<br>Verification<br>Line</th>
 			    <th>ANC Long<br>Term Line</th>
+			    <th>Lab<br>Data<br>Status</th>
+			    <th>Behaviour<br>Data<br>Recorded</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
 			    <th>Lab<br>Province/<br>State</th>
-			    <th>ANC<br>Facility<br>ID</th>
 			    <th>Patient<br>Barcode<br>ID</th>
 			    <th>Specimen<br>Collection<br>Date</th>
-			    <th>Lab<br>Data<br>Status</th>
-			    <th>Behaviour<br>Data<br>Recorded</th>
+			    <th>ANC Site</th>
+			    <th>Specimen <br>Pick Up Date <br>at ANC</th>
+			    <th>Specimen Type</th>
+			    <th>ANC <br>Patient ID</th>
+			    <th>ART Number</th>
+			    <th>DOB</th>
+			    <th>Age</th>
+			    <th>Gestation <br>Age (Weeks)</th>
+			    <th>Lab/Facility</th>
+			    <th>Rejection<br>Reason</th>
+			    <th>Receipt Date <br>at Lab</th>
+			    <th>Lab Tech.<br>Name/ID</th>
 			    <th class="labBorder-bottom">Date of <br>Test <br>Completion</th>
+			    <th class="labBorder-bottom">Result <br>Dispatched<br>Date to Clinic</th>
+			    <th class="labBorder-bottom">LAg Avidity</th>
 			    <th class="labBorder-bottom">LAg<br>Recency<br>Assay</th>
 			    <th class="labBorder-bottom">HIV RNA<br>(cp/ml)</th>
 			    <!--<th class="labBorder-bottom">HIV RNA > 1000</th>-->
@@ -279,6 +396,8 @@ $loginContainer = new Container('user');
 			    <th class="labBorder-bottom">Lab Long<br>Term Line<br>(Visual)</th>
 			    <th>ANC Positive<br>Verification<br>Line</th>
 			    <th>ANC Long<br>Term Line</th>
+			    <th>Lab<br>Data<br>Status</th>
+			    <th>Behaviour<br>Data<br>Recorded</th>
 			</tr>
 			</tfoot>
 			<tbody>
@@ -293,8 +412,13 @@ $loginContainer = new Container('user');
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.doubleScroll.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script>
+    var manageColumns = [];
     $(document).ready(function(){
-       $('#double-scroll').doubleScroll();
+	<?php if(count($SOR_Columns) > 0){
+	for($col=0;$col<count($SOR_Columns);$col++){ ?>
+	   manageColumns.push('<?php echo $SOR_Columns[$col]; ?>');
+        <?php } } ?>
+       //$('#double-scroll').doubleScroll();
        $('.suwala-doubleScroll-scroll-wrapper').css('width','');
        oTable = $('#studyOverviewDataTable').dataTable({
 	    "autoWidth": false,
@@ -309,22 +433,35 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"labBorder-left dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"labBorder-right dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"}
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		var LAgAssay = aData[7];
-		var labHIVVerificationClassification = aData[10];
-		var labHIVRecencyClassification = aData[11];
-		var ancHIVVerificationClassification = aData[12].replace("-", "");
-		var ancHIVRecencyClassification = aData[13].replace("-", "");
+		var LAgAssay = aData[18];
+		var labHIVVerificationClassification = aData[21];
+		var labHIVRecencyClassification = aData[22];
+		var ancHIVVerificationClassification = aData[23].replace("-", "");
+		var ancHIVRecencyClassification = aData[24].replace("-", "");
 		recencyMismatch = false;
 		if($.trim(LAgAssay)!= '' && $.trim(labHIVRecencyClassification)!= '' && $.trim(ancHIVRecencyClassification)!= ''){
 		    if((LAgAssay == 'Recent' && labHIVRecencyClassification == 'Absent') && (labHIVRecencyClassification == ancHIVRecencyClassification)){
@@ -335,14 +472,14 @@ $loginContainer = new Container('user');
 			recencyMismatch = true;
 		    }
 		}
-		if($.trim(aData[4].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
+		if($.trim(aData[25].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
 		    $("td:eq(3)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
-		}else if(aData[10] =='Absent' || (aData[7] == 'Long Term' && aData[11] == 'Absent') || (aData[7] == 'Recent' && aData[11] == 'Present') || recencyMismatch === true){
+		}else if(aData[21] =='Absent' || (aData[18] == 'Long Term' && aData[22] == 'Absent') || (aData[18] == 'Recent' && aData[22] == 'Present') || recencyMismatch === true){
 		    $(nRow).addClass("redTxt");
 		}
 	    },
-            "aaSorting": [[3, "desc"]],
+            "aaSorting": [[2, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('study-overview-report'); ?>",
@@ -364,6 +501,24 @@ $loginContainer = new Container('user');
                 });
             }
         });
+       
+        $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+       <?php if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($manage_columns->study_overview)!= ''){  ?>
+	    for(colNo = 0;colNo <= $("#countColumn").val();colNo++){
+		if(manageColumns.includes($("#iCol"+colNo).attr('data-showhide'))){
+		    $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+		}else{
+		  var bVis = oTable.fnSettings().aoColumns[colNo].bVisible;
+		  oTable.fnSetColumnVis( colNo, bVis ? false : true );
+		}
+            }
+	<?php } else { ?>
+            for(colNo=0;colNo <=$("#countColumn").val();colNo++){
+		$("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+		manageColumns.push($("#iCol"+colNo).attr('data-showhide'));
+	    }
+	<?php } ?>
+	//console.log(manageColumns);
         $('.dataTables_filter').empty(); // clears the content generated
         $('.dataTables_filter').append(
                 "<div class='input-field col s6 search-div right' style='width: 250px'>" +
@@ -434,6 +589,25 @@ $loginContainer = new Container('user');
     function clearSearchFields(){
        $('#overviewFilter')[0].reset();
        searchStudyOverviewData();
+    }
+    
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+	if($("#iCol"+iCol).is(':checked')){
+	    manageColumns.push($("#iCol"+iCol).attr('data-showhide'));
+	}else{
+	   var col_index = manageColumns.indexOf($("#iCol"+iCol).attr('data-showhide'));
+           manageColumns.splice(col_index, 1);
+	}
+	manageSORColumns();
+    }
+    
+    function manageSORColumns(){
+	$.post("<?php echo $this->url('common',array('action'=>'manage-columns')); ?>", {tblColumns:manageColumns,frmSrc:'study_overview'},
+	function(data){
+	    
+	});
     }
     
     function extractOverviewData(){

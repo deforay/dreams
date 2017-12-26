@@ -829,4 +829,14 @@ ALTER TABLE `data_collection` ADD `result_print_status` INT(11) NOT NULL DEFAULT
 ALTER TABLE `data_collection_event_log` ADD `result_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `result_mail_sent`;
 
 --Pal 23/12/2017
-ALTER TABLE `anc_rapid_recency` ADD `control_line` VARCHAR(45) NULL AFTER `has_patient_had_rapid_recency_test` 
+ALTER TABLE `anc_rapid_recency` ADD `control_line` VARCHAR(45) NULL AFTER `has_patient_had_rapid_recency_test`
+
+--Pal 26/12/2017
+CREATE TABLE `manage_columns` (
+  `user_id` int(11) NOT NULL,
+  `study_overview` text,
+  `lab_data_collection` text
+)
+
+ALTER TABLE `manage_columns`
+  ADD PRIMARY KEY (`user_id`);
