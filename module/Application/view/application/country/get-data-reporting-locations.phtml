@@ -60,6 +60,7 @@ if($location > 0) { ?>
         $(document).ready(function(){
             var map;
             var bounds = new google.maps.LatLngBounds();
+            var prev_infowindow = false;
             var mapOptions = {
                 mapTypeId: 'roadmap',
                 scrollwheel: false
@@ -94,9 +95,10 @@ if($location > 0) { ?>
                 var recentsArray = markers[i]['recents'].split(",");
                 var iconImg;
                 var contentString = markers[i]['label'];
+                var infowindow = new google.maps.InfoWindow({});
                 for( j = 0; j < iconArray.length; j++ ) {
                     if(iconArray[j] == 'red' && recentsArray[j] > 0){
-                       iconImg = '<?php echo $this->basePath('assets/images/map-points/red.png'); ?>';
+                       iconImg = 'redCircle';
                        contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }else if(iconArray[j] == 'yellow' && recentsArray[j] > 0){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>';
@@ -114,24 +116,50 @@ if($location > 0) { ?>
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
                        contentString+= '<span style="color:purple;">ANC Rapid Recency Assay Test (Visual) - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
                     }
-                    
-                    marker = new google.maps.Marker({
+                    if(iconImg == 'redCircle'){
+                       var cityCircle = new google.maps.Circle({
+                            strokeColor: '#FF0000',
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: '#FF0000',
+                            fillOpacity: 0.35,
+                            map: map,
+                            center: position,
+                            label: contentString,
+                            radius: 44 * 100
+                       });
+                       
+                        var marker = new google.maps.Marker({
+                            map: map
+                        });
+                        google.maps.event.addListener(cityCircle, 'mouseover', function() {
+                            marker.setPosition(this.getCenter());
+                            infowindow.setContent(this.label); // set content
+                            infowindow.open(map, marker); // open at marker's location
+                            marker.setVisible(false); // hide the marker
+                        });
+                        google.maps.event.addListener(cityCircle, 'mouseout', function () {
+                            infowindow.close();
+                        });
+                    }else{
+                       marker = new google.maps.Marker({
                         position: position,
                         map: map,
                         icon: iconImg
-                    });
-                    
-                    marker['infowindow'] = new google.maps.InfoWindow({
-                        content:contentString,
-                        //maxWidth: 400
-                    });
-                    google.maps.event.addListener(marker, 'mouseover', function() {
-                        current_infowindow = this['infowindow'];
-                        current_infowindow.open(map, this);
-                    });
-                    google.maps.event.addListener(marker, 'mouseout', function () {
-                        current_infowindow.close();
-                    });
+                        });
+                        
+                        marker['infowindow'] = new google.maps.InfoWindow({
+                            content:contentString,
+                            //maxWidth: 400
+                        });
+                        google.maps.event.addListener(marker, 'mouseover', function() {
+                            current_infowindow = this['infowindow'];
+                            current_infowindow.open(map, this);
+                        });
+                        google.maps.event.addListener(marker, 'mouseout', function () {
+                            current_infowindow.close();
+                        });
+                    }
                 }
                 // Automatically center the map fitting all markers on the screen
                 map.fitBounds(bounds);
