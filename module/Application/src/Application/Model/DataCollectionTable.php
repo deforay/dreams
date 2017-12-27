@@ -2187,14 +2187,14 @@ class DataCollectionTable extends AbstractTableGateway {
 	if($printSrc == 'anc'){
 	    $data = array(
 		'anc_print_status'=>1,
-		'last_printed_by_anc'=>$common->getDateTime(),
-		'last_printed_on_anc'=>$loginContainer->userId
+		'last_printed_by_anc'=>$loginContainer->userId,
+		'last_printed_on_anc'=>$common->getDateTime()
 	    );
 	}else{
 	   $data = array(
 		'lab_print_status'=>1,
-		'last_printed_by_lab'=>$common->getDateTime(),
-		'last_printed_on_lab'=>$loginContainer->userId
+		'last_printed_by_lab'=>$loginContainer->userId,
+		'last_printed_on_lab'=>$common->getDateTime()
 	    ); 
 	}
       return $this->update($data,array('data_collection_id'=>$dataCollectionID));
