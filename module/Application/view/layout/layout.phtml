@@ -298,7 +298,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } ?>
                                                                 <li class="countryLabResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
                                                             <?php if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
@@ -326,7 +326,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Recency Lab Results</a>
+                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
