@@ -121,7 +121,10 @@ class ClinicController extends AbstractActionController{
             $result = $dataCollectionService->getAllLabRecencyResult($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = '';
+            $printSrc = '';
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            $printSrc = $this->params()->fromQuery('frmSrc');
             if(trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
@@ -130,7 +133,8 @@ class ClinicController extends AbstractActionController{
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,
                     'facilities'=>$facilityList,
-                    'countryId'=>$countryId
+                    'countryId'=>$countryId,
+                    'printSrc'=>$printSrc
                 ));
             }else{
                 return $this->redirect()->toRoute('home');

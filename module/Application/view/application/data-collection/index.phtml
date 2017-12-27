@@ -1171,7 +1171,7 @@ if(isset($date) && trim($date)!= ''){
     function printDataCollection(ID){
 	dcid.push(ID);
 	$.blockUI();
-	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid},
+	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid,printSrc:'lab'},
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    dcid = [];

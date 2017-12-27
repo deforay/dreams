@@ -199,8 +199,11 @@ class DataCollectionService {
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
         $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
         if(isset($dResult) && count($dResult) >0){
+            if(!isset($params['printSrc'])){
+                $params['printSrc'] = '';
+            }
             foreach($dResult as $row){
-                $dataCollectionDb->updateResultPrintStatus($row['data_collection_id']);
+                $dataCollectionDb->updateResultPrintStatus($row['data_collection_id'],$params['printSrc']);
             }
         }
       return $dResult;

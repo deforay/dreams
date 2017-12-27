@@ -352,6 +352,7 @@ $loginContainer = new Container('user');
 		aoData.push({"name": "specimenCollectedDate", "value": $("#specimenCollectedDate").val() });
 		aoData.push({"name": "anc", "value": $("#anc").val() });
 		aoData.push({"name": "lab", "value": $("#lab").val() });
+		aoData.push({"name": "printSrc", "value": '<?php echo $printSrc; ?>' });
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -362,14 +363,9 @@ $loginContainer = new Container('user');
             }
         });
        
-       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+        $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
         for(colNo=0;colNo <=$("#countColumn").val();colNo++){
             $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
-            if(oTable.fnSettings().aoColumns[colNo].bVisible){
-                $("#iCol"+colNo+"-sort").show();    
-            }else{
-                $("#iCol"+colNo+"-sort").hide();    
-            }
         }
        
        $('.dataTables_filter').empty(); // clears the content generated
@@ -458,7 +454,7 @@ $loginContainer = new Container('user');
     function printLabResult(ID){
 	dcid.push(ID);
 	$.blockUI();
-	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid},
+	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid,frmSrc:'r_l_r',printSrc:'<?php echo $printSrc; ?>'},
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    dcid = [];
@@ -474,7 +470,7 @@ $loginContainer = new Container('user');
     
     function printDataCollection(){
 	$.blockUI();
-	$.post("<?php echo $this->url('result-email-pdf'); ?>", {frmSrc:'r_l_r'},
+	$.post("<?php echo $this->url('result-email-pdf'); ?>", {frmSrc:'r_l_r',printSrc:'<?php echo $printSrc; ?>'},
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    alert('OOPS..');

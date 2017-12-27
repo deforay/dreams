@@ -840,3 +840,18 @@ CREATE TABLE `manage_columns` (
 
 ALTER TABLE `manage_columns`
   ADD PRIMARY KEY (`user_id`);
+
+--Pal 27/12/2017
+ALTER TABLE `data_collection` CHANGE `result_print_status` `lab_print_status` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `data_collection` ADD `anc_print_status` INT(11) NOT NULL DEFAULT '0' AFTER `lab_print_status`;
+
+ALTER TABLE `data_collection_event_log` CHANGE `result_print_status` `lab_print_status` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `data_collection_event_log` ADD `anc_print_status` INT NOT NULL DEFAULT '0' AFTER `lab_print_status`;
+
+ALTER TABLE `data_collection` ADD `last_printed_by_lab` INT(11) NULL DEFAULT NULL AFTER `lab_print_status`, ADD `last_printed_on_lab` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_lab`
+
+ALTER TABLE `data_collection` ADD `last_printed_by_anc` INT(11) NULL DEFAULT NULL AFTER `anc_print_status`, ADD `last_printed_on_anc` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_anc`;
+
+ALTER TABLE `data_collection_event_log` ADD `last_printed_by_lab` INT(11) NULL DEFAULT NULL AFTER `lab_print_status`, ADD `last_printed_on_lab` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_lab`;
+
+ALTER TABLE `data_collection_event_log` ADD `last_printed_by_anc` INT(11) NULL DEFAULT NULL AFTER `anc_print_status`, ADD `last_printed_on_anc` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_anc`;

@@ -1334,9 +1334,13 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	
-	$aColumns = array("DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','da_c.result_print_status');
-	$orderColumns = array('da_c.specimen_collected_date','da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','da_c.result_print_status');
+	if($parameters['printSrc'] == 'anc'){
+	    $aColumns = array("DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','anc_print_status');
+	    $orderColumns = array('da_c.specimen_collected_date','da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','anc_print_status');
+	}else{
+	    $aColumns = array("DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')","DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','lab_print_status');
+	    $orderColumns = array('da_c.specimen_collected_date','da_c.status','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code','da_c.lab_specimen_id','r_r.rejection_code','da_c.receipt_date_at_central_lab','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.comments','lab_print_status');
+	}
 
        /*
         * Paging
@@ -1383,13 +1387,13 @@ class DataCollectionTable extends AbstractTableGateway {
 
                for ($i = 0; $i < $colSize; $i++) {
                    if ($i < $colSize - 1) {
-		       if($aColumns[$i] == 'da_c.result_print_status' && strpos($printed,$search) !== false){
+		       if($aColumns[$i] == 'lab_print_status' && strpos($printed,$search) !== false){
 		          $sWhereSub .= $aColumns[$i] . " = 1 OR ";
 		       }else{
                           $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
 		       }
                    } else {
-		       if($aColumns[$i] == 'da_c.result_print_status' && strpos($printed,$search) !== false){
+		       if($aColumns[$i] == 'lab_print_status' && strpos($printed,$search) !== false){
 		          $sWhereSub .= $aColumns[$i] . " = 1 ";
 		       }else{
                           $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' ";
@@ -1582,7 +1586,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //$row[] = $hIVRNAResult;
 	    $row[] = ucfirst($aRow['recent_infection']);
 	    $row[] = ucfirst($aRow['comments']);
-	    $row[] = ((int)$aRow['result_print_status'] == 1)?'Printed':'';
+	    if($parameters['printSrc'] == 'anc'){
+	       $row[] = ((int)$aRow['anc_print_status'] == 1)?'Printed':'';
+	    }else{
+	       $row[] = ((int)$aRow['lab_print_status'] == 1)?'Printed':'';
+	    }
 	    $row[] = $pdfLink;
 	   $output['aaData'][] = $row;
 	}
@@ -2173,18 +2181,22 @@ class DataCollectionTable extends AbstractTableGateway {
       return $result;
     }
     
-    public function updateResultPrintStatus($dataCollectionID){
-	$dbAdapter = $this->adapter;
-	$sql = new Sql($dbAdapter);
-	$dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
-                                           ->where(array('da_c_e.data_collection_id'=>$dataCollectionID))
-				           ->order('da_c_e.data_collection_event_log_id desc');
-	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
-	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-	if(isset($result->data_collection_event_log_id)){
-	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-	    $dataCollectionEventLogDb->update(array('result_print_status'=>1),array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+    public function updateResultPrintStatus($dataCollectionID,$printSrc){
+	$loginContainer = new Container('user');
+	$common = new CommonService();
+	if($printSrc == 'anc'){
+	    $data = array(
+		'anc_print_status'=>1,
+		'last_printed_by_anc'=>$common->getDateTime(),
+		'last_printed_on_anc'=>$loginContainer->userId
+	    );
+	}else{
+	   $data = array(
+		'lab_print_status'=>1,
+		'last_printed_by_lab'=>$common->getDateTime(),
+		'last_printed_on_lab'=>$loginContainer->userId
+	    ); 
 	}
-      return $this->update(array('result_print_status'=>1),array('data_collection_id'=>$dataCollectionID));
+      return $this->update($data,array('data_collection_id'=>$dataCollectionID));
     }
 }
