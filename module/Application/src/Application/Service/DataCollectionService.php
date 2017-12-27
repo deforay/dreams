@@ -1016,6 +1016,17 @@ class DataCollectionService {
                 $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->overviewQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
+                    $manageColumnsDb = $this->sm->get('ManageColumnsTable');
+                    $manage_columns = $manageColumnsDb->fetchUserManageColumns();
+                    $sor_Columns = array();
+                    if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($manage_columns->study_overview)!= ''){
+                        $manage_Columns = json_decode($manage_columns->study_overview,true);
+                        for($i=0;$i<count($manage_Columns);$i++){
+                            if($manage_Columns[$i]['data_Visible'] == '1'){
+                                $sor_Columns[] = $manage_Columns[$i]['data_Column'];
+                            }
+                        }
+                    }
                     $excel = new PHPExcel();
                     $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
                     $cacheSettings = array('memoryCacheSize' => '80MB');
@@ -1023,19 +1034,25 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
-                    foreach ($sResult as $aRow) {
-                        $ancFacilityID = '';
+                    foreach ($sResult as $key=>$aRow) {
+                        $ancSiteName = '';
                         $patientBarcodeID = '';
+                        $sampleType = '';
                         $specimenCollectedDate = '';
+                        $specimenPickedupDateatANC = '';
+                        $dob = '';
+                        $receiptDateatLab = '';
+                        $resultDispatchedDatetoClinic = '';
                         $dateofTestCompletion = '';
+                        $lagResult = '';
                         //$hIVRNAResult = '';
                         $rapidRecencyAssay = '';
                         $rapidRecencyAssayDuration = '';
                         $status = '';
-                        if(isset($aRow['anc_site_code']) && $aRow['anc_site_code']!= null && trim($aRow['anc_site_code'])!= ''){
-                            $ancFacilityID = $aRow['anc_site_code'];
-                        }else if(isset($aRow['r_anc_site_code']) && $aRow['r_anc_site_code']!= null && trim($aRow['r_anc_site_code'])!= ''){
-                            $ancFacilityID = $aRow['r_anc_site_code'];
+                        if(isset($aRow['anc_site_name']) && $aRow['anc_site_name']!= null && trim($aRow['anc_site_name'])!= ''){
+                            $ancSiteName = ucwords($aRow['anc_site_name']);
+                        }else if(isset($aRow['r_anc_site_name']) && $aRow['r_anc_site_name']!= null && trim($aRow['r_anc_site_name'])!= ''){
+                            $ancSiteName = ucwords($aRow['r_anc_site_name']);
                         }
                         if(isset($aRow['patient_barcode_id']) && $aRow['patient_barcode_id']!= null && trim($aRow['patient_barcode_id'])!= ''){
                             $patientBarcodeID = $aRow['patient_barcode_id'];
@@ -1046,10 +1063,40 @@ class DataCollectionService {
                         if(isset($aRow['specimen_collected_date']) && $aRow['specimen_collected_date']!= null && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
                             $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
                         }
+                        //sample type
+                         if(isset($aRow['specimen_type']) && $aRow['specimen_type']!= null && trim($aRow['specimen_type'])!= '' && (int)$aRow['specimen_type'] == 1){
+                            $sampleType = 'Venous';
+                         }else if(isset($aRow['specimen_type']) && $aRow['specimen_type']!= null && trim($aRow['specimen_type'])!= '' && (int)$aRow['specimen_type'] == 2){
+                            $sampleType = 'Plasma';
+                         }else if(isset($aRow['specimen_type']) && $aRow['specimen_type']!= null && trim($aRow['specimen_type'])!= '' && (int)$aRow['specimen_type'] == 3){
+                            $sampleType = 'DBS';
+                         }
+                        //specimen picked up date at ANC
+                        if(isset($aRow['specimen_picked_up_date_at_anc']) && $aRow['specimen_picked_up_date_at_anc']!= null && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+                            $specimenPickedupDateatANC = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
+                        }
+                        //dob
+                        if(isset($aRow['patient_dob']) && $aRow['patient_dob']!= null && trim($aRow['patient_dob'])!= '' && $aRow['patient_dob']!= '0000-00-00'){
+                            $dob = $common->humanDateFormat($aRow['patient_dob']);
+                        }
+                        //receipt date at lab
+                        if(isset($aRow['receipt_date_at_central_lab']) && $aRow['receipt_date_at_central_lab']!= null && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+                            $receiptDateatLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+                        }
+                        //result dispatched date to clinic
+                        if(isset($aRow['result_dispatched_date_to_clinic']) && $aRow['result_dispatched_date_to_clinic']!= null && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+                            $resultDispatchedDatetoClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+                        }
                         //date of test completion
                         if(isset($aRow['date_of_test_completion']) && $aRow['date_of_test_completion']!= null && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
                             $dateofTestCompletion = $common->humanDateFormat($aRow['date_of_test_completion']);
                         }
+                        //status
+                        if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
+                           $status = ucfirst($aRow['test_status_name']);
+                        }
+                        //LAg assay
+                        $lagResult = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
                         //HIV rna values
                     //    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
                     //	$hIVRNAResult = 'High Viral Load';
@@ -1084,26 +1131,89 @@ class DataCollectionService {
                                 $ancRecencyVerificationClassification = 'Invalid';
                             }
                         //}
-                        //status
-                        if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
-                            $status = ucfirst($aRow['test_status_name']);
-                        }
                         $row = array();
-                        $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
-                        $row[] = $ancFacilityID;
-                        $row[] = $patientBarcodeID;
-                        $row[] = $specimenCollectedDate;
-                        $row[] = $status;
-                        $row[] = (isset($aRow['r_assessment_id']) && $aRow['r_assessment_id']!= null && trim($aRow['r_assessment_id'])!= '')?'Yes':'No';
-                        $row[] = $dateofTestCompletion;
-                        $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
-                        //$row[] = $hIVRNAResult;
-                        $row[] = (isset($aRow['lag_avidity_result']) && $aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
-                        $row[] = $rapidRecencyAssay;
-                        $row[] = $rapidRecencyAssayDuration;
-                        $row[] = $ancHIVVerificationClassification;
-                        $row[] = $ancRecencyVerificationClassification;
-                        $output[] = $row;
+                        if(count($sor_Columns) == 0 || in_array('location_name',$sor_Columns)){
+                          $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('patient_barcode_id',$sor_Columns)){
+                           $row[] = $patientBarcodeID;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('specimen_collected_date',$sor_Columns)){
+                           $row[] = $specimenCollectedDate;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('anc_site_name',$sor_Columns)){
+                          $row[] = $ancSiteName;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('specimen_picked_up_date_at_anc',$sor_Columns)){
+                           $row[] = $specimenPickedupDateatANC;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('specimen_type',$sor_Columns)){
+                           $row[] = $sampleType;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('anc_patient_id',$sor_Columns)){
+                           $row[] = (isset($aRow['anc_patient_id']))?$aRow['anc_patient_id']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('art_patient_id',$sor_Columns)){
+                           $row[] = (isset($aRow['art_patient_id']))?$aRow['art_patient_id']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('patient_dob',$sor_Columns)){
+                           $row[] = $dob;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('age',$sor_Columns)){
+                           $row[] = (isset($aRow['age']))?$aRow['age']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('gestational_age',$sor_Columns)){
+                           $row[] = (isset($aRow['gestational_age']))?$aRow['gestational_age']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('facility_name',$sor_Columns)){
+                           $row[] = (isset($aRow['facility_name']))?ucwords($aRow['facility_name']):'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('rejection_reason',$sor_Columns)){
+                           $row[] = (isset($aRow['rejection_code']) && $aRow['rejection_code'] > 1)?ucwords($aRow['rejectionReasonName']):'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('receipt_date_at_central_lab',$sor_Columns)){
+                           $row[] = $receiptDateatLab;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('lab_tech_name',$sor_Columns)){
+                           $row[] = (isset($aRow['lab_tech_name']))?ucwords($aRow['lab_tech_name']):'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('date_of_test_completion',$sor_Columns)){
+                            $row[] = $dateofTestCompletion;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('result_dispatched_date_to_clinic',$sor_Columns)){
+                           $row[] = $resultDispatchedDatetoClinic;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('final_lag_avidity_odn',$sor_Columns)){
+                           $row[] = (isset($aRow['final_lag_avidity_odn']))?$aRow['final_lag_avidity_odn']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('lag_avidity_result',$sor_Columns)){
+                           $row[] = $lagResult;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('hiv_rna',$sor_Columns)){
+                           $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('recent_infection',$sor_Columns)){
+                           $row[] = (isset($aRow['recent_infection']) && $aRow['recent_infection']!= null && trim($aRow['recent_infection'])!= '')?ucfirst($aRow['recent_infection']):'';
+                        }
+                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy',$sor_Columns)){
+                            $row[] = $rapidRecencyAssay;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy',$sor_Columns)){
+                           $row[] = $rapidRecencyAssayDuration;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('HIV_diagnostic_line',$sor_Columns)){
+                           $row[] = $ancHIVVerificationClassification;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('recency_line',$sor_Columns)){
+                           $row[] = $ancRecencyVerificationClassification;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('test_status_name',$sor_Columns)){
+                           $row[] = $status;
+                        }
+                        if(count($sor_Columns) == 0 || in_array('assessment_id',$sor_Columns)){
+                           $row[] = (isset($aRow['r_assessment_id']) && $aRow['r_assessment_id']!= null && trim($aRow['r_assessment_id'])!= '')?'Yes':'No';
+                        }
+                      $output[] = $row;
                     }
                     $styleArray = array(
                         'font' => array(
@@ -1141,35 +1251,83 @@ class DataCollectionService {
                             'color' => array('rgb' => 'F44336')
                         )
                     );
-                    $sheet->setCellValue('A1', html_entity_decode('Lab Province/State ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('ANC Facility ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E1', html_entity_decode('Lab Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F1', html_entity_decode('Behaviour Data ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('Date of Test Completion ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('HIV RNA (cp/ml)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    //$sheet->setCellValue('H1', html_entity_decode('HIV RNA > 1000 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('Lab Positive Verification Line (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K1', html_entity_decode('Lab Long Term Line  (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L1', html_entity_decode('ANC Positive Verification Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M1', html_entity_decode('ANC Long Term Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                   
-                    $sheet->getStyle('A1')->applyFromArray($styleArray);
-                    $sheet->getStyle('B1')->applyFromArray($styleArray);
-                    $sheet->getStyle('C1')->applyFromArray($styleArray);
-                    $sheet->getStyle('D1')->applyFromArray($styleArray);
-                    $sheet->getStyle('E1')->applyFromArray($styleArray);
-                    $sheet->getStyle('F1')->applyFromArray($styleArray);
-                    $sheet->getStyle('G1')->applyFromArray($styleArray);
-                    $sheet->getStyle('H1')->applyFromArray($styleArray);
-                    $sheet->getStyle('I1')->applyFromArray($styleArray);
-                    $sheet->getStyle('J1')->applyFromArray($styleArray);
-                    $sheet->getStyle('K1')->applyFromArray($styleArray);
-                    $sheet->getStyle('L1')->applyFromArray($styleArray);
-                    $sheet->getStyle('M1')->applyFromArray($styleArray);
                     
+                    if(count($sor_Columns) == 0){
+                        $sheet->setCellValue('A1', html_entity_decode('Lab Province/State ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('C1', html_entity_decode('Specimen Collected Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('D1', html_entity_decode('ANC Site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('E1', html_entity_decode('Specimen Pick Up Date at ANC ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('F1', html_entity_decode('Specimen Type ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('G1', html_entity_decode('ANC Patient ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('H1', html_entity_decode('ART Number ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('I1', html_entity_decode('DOB ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('J1', html_entity_decode('Age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('K1', html_entity_decode('Gestation Age (Weeks) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('L1', html_entity_decode('Lab/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('M1', html_entity_decode('Rejection Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('N1', html_entity_decode('Receipt Date at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('O1', html_entity_decode('Lab Tech. Name/ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('P1', html_entity_decode('Date of Test Completion ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('Q1', html_entity_decode('Result Dispatched Date to Clinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('R1', html_entity_decode('LAg Avidity ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('S1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('T1', html_entity_decode('HIV RNA (cp/ml) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('U1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('V1', html_entity_decode('Lab Positive Verification Line (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('W1', html_entity_decode('Lab Long Term Line (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('X1', html_entity_decode('ANC Positive Verification Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('Y1', html_entity_decode('ANC Long Term Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('Z1', html_entity_decode('Lab Data Status ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AA1', html_entity_decode('Behaviour Data Recorded ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        
+                        $sheet->getStyle('A1')->applyFromArray($styleArray);
+                        $sheet->getStyle('B1')->applyFromArray($styleArray);
+                        $sheet->getStyle('C1')->applyFromArray($styleArray);
+                        $sheet->getStyle('D1')->applyFromArray($styleArray);
+                        $sheet->getStyle('E1')->applyFromArray($styleArray);
+                        $sheet->getStyle('F1')->applyFromArray($styleArray);
+                        $sheet->getStyle('G1')->applyFromArray($styleArray);
+                        $sheet->getStyle('H1')->applyFromArray($styleArray);
+                        $sheet->getStyle('I1')->applyFromArray($styleArray);
+                        $sheet->getStyle('J1')->applyFromArray($styleArray);
+                        $sheet->getStyle('K1')->applyFromArray($styleArray);
+                        $sheet->getStyle('L1')->applyFromArray($styleArray);
+                        $sheet->getStyle('M1')->applyFromArray($styleArray);
+                        $sheet->getStyle('N1')->applyFromArray($styleArray);
+                        $sheet->getStyle('O1')->applyFromArray($styleArray);
+                        $sheet->getStyle('P1')->applyFromArray($styleArray);
+                        $sheet->getStyle('Q1')->applyFromArray($styleArray);
+                        $sheet->getStyle('R1')->applyFromArray($styleArray);
+                        $sheet->getStyle('S1')->applyFromArray($styleArray);
+                        $sheet->getStyle('T1')->applyFromArray($styleArray);
+                        $sheet->getStyle('U1')->applyFromArray($styleArray);
+                        $sheet->getStyle('V1')->applyFromArray($styleArray);
+                        $sheet->getStyle('W1')->applyFromArray($styleArray);
+                        $sheet->getStyle('X1')->applyFromArray($styleArray);
+                        $sheet->getStyle('Y1')->applyFromArray($styleArray);
+                        $sheet->getStyle('Z1')->applyFromArray($styleArray);
+                        $sheet->getStyle('AA1')->applyFromArray($styleArray);
+                    }else{
+                        $j=0;
+                        for($col=0;$col < count($manage_Columns);$col++){
+                            if(isset($manage_Columns[$col]) && isset($manage_Columns[$col]['data_Visible']) && $manage_Columns[$col]['data_Visible'] == '1'){
+                                $sheet->getCellByColumnAndRow($j, 1)->setValueExplicit(html_entity_decode($manage_Columns[$col]['data_Label'], ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                                
+                                $cellName = $sheet->getCellByColumnAndRow($j, 1)->getColumn();
+                                $sheet->getStyle($cellName . '1')->applyFromArray($styleArray);
+                              $j++;
+                            }
+                        }
+                    }
+                    
+                    
+                    $status_Col = array_search('test_status_name', $sor_Columns);
+                    $lag_Col = array_search('lag_avidity_result', $sor_Columns);
+                    $labHIVV_Col = array_search('asante_rapid_recency_assy', $sor_Columns);
+                    $labHIVR_Col = array_search('asante_rapid_recency_assy', $sor_Columns);
+                    $ancHIVV_Col = array_search('HIV_diagnostic_line', $sor_Columns);
+                    $ancHIVR_Col = array_search('recency_line', $sor_Columns);
                     $currentRow = 2;
                     foreach ($output as $rowData) {
                         $status = '';
@@ -1179,24 +1337,24 @@ class DataCollectionService {
                         $ancHIVV = '';
                         $ancHIVR = '';
                         $colNo = 0;
-                        foreach ($rowData as $field => $value) {
+                        $lastCol = (count($sor_Columns) == 0)?26:count($sor_Columns)-1;
+                        foreach ($rowData as $key=>$value) {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 12){
-                                break;
-                            }
+                        
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                            if($colNo == 4){ $status = $value; }
-                            if($colNo == 8){ $lag = $value; }
-                            if($colNo == 9){ $labHIVV = $value; }
-                            if($colNo == 10){ $labHIVR = $value; }
-                            if($colNo == 11){ $ancHIVV = str_replace("-","",$value); }
-                            if($colNo == 12){ $ancHIVR = str_replace("-","",$value); }
+                            
+                            if((count($sor_Columns) == 0 && $colNo == 25) || $key == $status_Col){ $status = $value; }
+                            if((count($sor_Columns) == 0 && $colNo == 18) || $key == $lag_Col){ $lag = $value; }
+                            if((count($sor_Columns) == 0 && $colNo == 21) || $key == $labHIVV_Col){ $labHIVV = $value; }
+                            if((count($sor_Columns) == 0 && $colNo == 22) || $key == $labHIVR_Col){ $labHIVR = $value; }
+                            if((count($sor_Columns) == 0 && $colNo == 23) || $key == $ancHIVV_Col){ $ancHIVV = str_replace("-","",$value); }
+                            if((count($sor_Columns) == 0 && $colNo == 24) || $key == $ancHIVR_Col){ $ancHIVR = str_replace("-","",$value); }
                             $recencyMismatch = false;
                             if(trim($lag)!= '' && trim($labHIVR)!= '' && trim($ancHIVR)!= ''){
                                 if(($lag == 'Recent' && $labHIVR == 'Absent') && ($labHIVR == $ancHIVR)){
@@ -1209,11 +1367,11 @@ class DataCollectionService {
                             }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > 11){
+                            if($colNo == $lastCol){
                                 if($status == 'Incomplete'){
-                                  $sheet->getStyle('A'.$currentRow.':M'.$currentRow)->applyFromArray($yellowTxtArray); 
+                                  $sheet->getStyle('A'.$currentRow.':U'.$currentRow)->applyFromArray($yellowTxtArray); 
                                 }else if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present' || $recencyMismatch === true)){
-                                  $sheet->getStyle('A'.$currentRow.':M'.$currentRow)->applyFromArray($redTxtArray);
+                                  $sheet->getStyle('A'.$currentRow.':U'.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
