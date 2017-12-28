@@ -106,7 +106,7 @@ $loginContainer = new Container('user');
 	padding-left:58% !important;
     }
     .suwala-doubleScroll-scroll{
-	width:3012px;
+	width:2812px;
     }
     .selectedSamples{
 	font-size:13px;
@@ -253,8 +253,7 @@ $loginContainer = new Container('user');
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="printDataCollection();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export Result PDF</a>
+		<a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
 	    </div>
 	</form>
     </div>
@@ -487,11 +486,10 @@ $loginContainer = new Container('user');
         searchLabReportData();
     }
     
-    var my_elem = document.getElementById('labRecencyResultDataTable');
-    var span = document.createElement('span');
-	span.innerHTML = '0  Row(s) Selected';
-	span.className = 'selectedSamples';
-    my_elem.parentNode.insertBefore(span, my_elem);
+    var count_elem = document.getElementById('labRecencyResultDataTable');
+    var div = document.createElement('div');
+        div.innerHTML = '<span class="selectedSamples">0  Row(s) Selected</span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="printDataCollection();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange" style="padding:0 4px;font-size:11px;height:24px;line-height:22px;"><i class="zmdi zmdi-collection-pdf"></i> Export Result PDF</a>';
+    count_elem.parentNode.insertBefore(div, count_elem);
     
     function doMultipleDataSelect(obj){
 	var rowId = $(obj).attr('id');
