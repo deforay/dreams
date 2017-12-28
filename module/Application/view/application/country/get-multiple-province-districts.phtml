@@ -1,7 +1,7 @@
 <?php
 $districts = '';
 $districts.='<select class="material-select" id="district" name="district[]" multiple="multiple" title="Please select district" onchange="getDistrictsANCs();">';
-$districts.='<option value="" disabled selected> All District </option>';
+$districts.='<option value="" disabled selected> All Districts </option>';
         foreach($response as $district){
           $districts.='<option value="'.base64_encode($district['location_id']).'">'.ucwords($district['location_name']).'</option>';
         }

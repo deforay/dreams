@@ -48,16 +48,14 @@ $loginContainer = new Container('user');
 	 -moz-box-sizing: border-box;
 	      box-sizing: border-box;
     }
+    .card-header{
+        background-color:#ff69b4;
+    }
     .card-default {
         border: 1px solid #eaeaea;
     }
     .card-default .card-header {
-        background-color: #eaeaea;
-        border-bottom: 1px solid #ccc;
         padding: 10px 20px;
-    }
-    pre {
-        max-height: 596px;
     }
     #search-items{
         display: inline-block;
@@ -80,10 +78,6 @@ $loginContainer = new Container('user');
         left: -184px;
 
     }
-    #clinicResultDataTable_wrapper{
-	overflow-x:scroll;
-	padding-top:3vh;
-    }
     .select-wrapper{
 	width:100%;
     }
@@ -101,6 +95,18 @@ $loginContainer = new Container('user');
 	table.dataTable tbody td{
 	    padding: 6px 4px 6px 4px;
 	}
+    }
+    #labRecencyResultDataTable_wrapper{
+	padding-top:3vh;
+    }
+    #double-scroll{
+	width: 100%;
+    }
+    .suwala-doubleScroll-scroll-wrapper{
+	padding-left:58% !important;
+    }
+    .suwala-doubleScroll-scroll{
+	width:3012px;
     }
     .selectedSamples{
 	font-size:13px;
@@ -254,12 +260,12 @@ $loginContainer = new Container('user');
     </div>
     <div class="row">
         <div class="col l12 m12 s12">
-            <div class="card card-default table-height">
-                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Recency Lab Results
+            <div class="card card-default">
+                <div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Recency Lab Results
 		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
-                <div class="card-content clearfix">
-                    <table id="clinicResultDataTable" class="responsive-table display dataTable">
+                <div id="double-scroll" class="card-content clearfix">
+                    <table id="labRecencyResultDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
 				<th>#</th>
@@ -325,12 +331,17 @@ $loginContainer = new Container('user');
         </div>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.doubleScroll.js' ?>"></script>
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script>
     dataCollectionRow = [];
+    var oTable = null;
     $(document).ready(function() {
+	$('#double-scroll').doubleScroll();
+	$('.suwala-doubleScroll-scroll-wrapper,.suwala-doubleScroll-scroll').css('width','');
 	selectDate();
-	oTable = $('#clinicResultDataTable').dataTable({
+	oTable = $('#labRecencyResultDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
@@ -341,6 +352,14 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap align_Center","bSortable":false},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap align_Center"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap align_Center"},
+		{"sClass":"dataTable_noWrap align_Center"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap align_Center"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
@@ -349,17 +368,9 @@ $loginContainer = new Container('user');
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap align_Center"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap align_Center"},
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnDrawCallback": function( oSettings ) {
@@ -476,7 +487,7 @@ $loginContainer = new Container('user');
         searchLabReportData();
     }
     
-    var my_elem = document.getElementById('clinicResultDataTable');
+    var my_elem = document.getElementById('labRecencyResultDataTable');
     var span = document.createElement('span');
 	span.innerHTML = '0  Row(s) Selected';
 	span.className = 'selectedSamples';

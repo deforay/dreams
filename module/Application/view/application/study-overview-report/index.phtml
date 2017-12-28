@@ -9,6 +9,54 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
 <style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    @font-face {
+        font-family: 'Glyphicons Halflings';
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot');
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    *{
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    /*.left{float: right !important;}*/
+    #ms-dataCollection{
+        width:100%;
+    }
     .card-header{
         background-color:#ff69b4;
     }
@@ -62,54 +110,6 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 	    padding: 6px 4px 6px 4px;
 	}
     }
-    .ranges{display: none;}
-    .daterangepicker .ranges{
-        width: 190px;
-    }
-    @font-face {
-        font-family: 'Glyphicons Halflings';
-        src: url('../assets/fonts/glyphicons-halflings-regular.eot');
-        src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-    }
-    .glyphicon {
-      position: relative;
-      top: 1px;
-      display: inline-block;
-      font-family: 'Glyphicons Halflings';
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1;
-    
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    .glyphicon-arrow-left:before {
-      content: "\e091";
-    }
-    .glyphicon-arrow-right:before {
-      content: "\e092";
-    }
-    .glyphicon-arrow-up:before {
-      content: "\e093";
-    }
-    .glyphicon-arrow-down:before {
-      content: "\e094";
-    }
-    *{
-      -webkit-box-sizing: border-box;
-         -moz-box-sizing: border-box;
-              box-sizing: border-box;
-    }
-    *:before,
-    *:after {
-      -webkit-box-sizing: border-box;
-         -moz-box-sizing: border-box;
-              box-sizing: border-box;
-    }
-    /*.left{float: right !important;}*/
-    #ms-dataCollection{
-        width:100%;
-    }
     .redTxt{
 	color:#F44336 !important;
     }
@@ -145,19 +145,20 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
     .labBorder-bottom{
         border-bottom:1px solid #888 !important;
     }
-    /*#double-scroll{
+    #double-scroll{
 	width: 100%;
     }
     .suwala-doubleScroll-scroll-wrapper{
-	padding-left:10% !important;
-    }*/
-    #studyOverviewDataTable_wrapper{
-	overflow-x:scroll;
+	padding-left:58% !important;
     }
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Study Overview Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</h4>
+	<div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Study Overview Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Study Overview Report</a>
+       </div>
     </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:auto;background:#e0e0e0;">
 	<div class="col m3">
@@ -328,7 +329,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Study Overview
 		    <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
 		</div>
-		<div id="" class="card-content clearfix">
+		<div id="double-scroll" class="card-content clearfix">
 		    <table id="studyOverviewDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
@@ -414,7 +415,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 <script>
     var manageColumns = [];
     $(document).ready(function(){
-       //$('#double-scroll').doubleScroll();
+       $('#double-scroll').doubleScroll();
        $('.suwala-doubleScroll-scroll-wrapper').css('width','');
        oTable = $('#studyOverviewDataTable').dataTable({
 	    "autoWidth": false,
