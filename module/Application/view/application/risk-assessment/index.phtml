@@ -130,7 +130,7 @@ if(isset($date) && trim($date)!= ''){
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="province" name="province[]" multiple="multiple" title="Please select province" onchange="getProvinceDistricts();getDistrictsANCs();">
-			    <option value="" disabled selected> All Province </option>
+			    <option value="" disabled selected> All Provinces </option>
 			    <?php foreach($provinces as $province) { ?>
 			       <option value="<?php echo base64_encode($province['location_id']); ?>" <?php echo (trim($dashProvince)!= '' && $dashProvince == $province['location_id'])?'selected="selected"':''; ?>><?php echo ucwords($province['location_name']); ?></option>
 			    <?php } ?>
@@ -141,7 +141,7 @@ if(isset($date) && trim($date)!= ''){
 		<div class="col s4">
 		    <div class="input-field col m12 s12 district">
 			<select class="material-select" id="district" name="district[]" multiple="multiple" title="Please select district" onchange="getDistrictsANCs();">
-			    <option value="" disabled selected> All District </option>
+			    <option value="" disabled selected> All Districts </option>
 			    <?php foreach($districts as $district) { ?>
 			       <option value="<?php echo base64_encode($district['location_id']); ?>"><?php echo ucwords($district['location_name']); ?></option>
 			    <?php } ?>
@@ -154,7 +154,7 @@ if(isset($date) && trim($date)!= ''){
 		<div class="col s4">
 		    <div class="input-field col m12 s12 anc">
 			<select class="material-select" id="anc" name="anc[]" multiple="multiple" title="Please select ANC Site">
-			    <option value="" disabled selected> All ANC </option>
+			    <option value="" disabled selected> All ANCs </option>
 			    <?php
 			    foreach($ancSites as $anc){
 			    ?>

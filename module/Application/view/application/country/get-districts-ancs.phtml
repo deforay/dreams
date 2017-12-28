@@ -1,7 +1,7 @@
 <?php
 $ancs = '';
 $ancs.='<select class="material-select" id="anc" name="anc[]" multiple="multiple" title="Please select ANC Site">';
-$ancs.='<option value="" disabled selected> All ANC </option>';
+$ancs.='<option value="" disabled selected> All ANCs </option>';
     foreach($response as $anc){
       $ancs.='<option value="'.base64_encode($anc['anc_site_id']).'">'.ucwords($anc['anc_site_name']).'</option>';
     }

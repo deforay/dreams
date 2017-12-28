@@ -193,8 +193,10 @@ class DataCollectionService {
                 $dataCollectionArray[] = base64_decode($params['dataCollection'][$i]);
             }
             $dQuery = $dQuery->where('da_c.data_collection_id IN ("' . implode('", "', $dataCollectionArray) . '")');
-        }else if(isset($params['frmSrc']) && $params['frmSrc'] == 'r_l_r'){
-            $dQuery = $queryContainer->labReportQuery;
+        }else if($params['frmSrc'] == 'l_l_r_r'){
+            $dQuery = $queryContainer->labRecencyResultQuery;
+        }else{
+           return array(); 
         }
         $dQueryStr = $sql->getSqlStringForSqlObject($dQuery);
         $dResult = $dbAdapter->query($dQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
@@ -942,7 +944,7 @@ class DataCollectionService {
         $queryContainer = new Container('query');
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
-        $rQueryStr = $sql->getSqlStringForSqlObject($queryContainer->labReportQuery);
+        $rQueryStr = $sql->getSqlStringForSqlObject($queryContainer->labRecencyResultQuery);
       return $dbAdapter->query($rQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
     

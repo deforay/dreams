@@ -261,7 +261,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 		<div class="col s4">
 		    <div class="input-field col m12 s12">
 			<select class="material-select" id="province" name="province" title="Please select province">
-			    <option value=""> -- Select -- </option>
+			    <option value=""> All Provinces </option>
 			    <?php foreach($provinces as $province) { ?>
 			       <option value="<?php echo base64_encode($province['location_id']); ?>"><?php echo ucwords($province['location_name']); ?></option>
 			    <?php } ?>
@@ -502,15 +502,12 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
        <?php if(count($sor_Columns) >0){
 	    for($col=0;$col<count($sor_Columns);$col++){ ?>
 	      var colNo = '<?php echo $col; ?>';
-	      var data_Col = '<?php echo $sor_Columns[$col]['data_Column']; ?>';
-	      var data_Lbl = '<?php echo $sor_Columns[$col]['data_Label']; ?>';
-	      var data_Vsbl = '<?php echo $sor_Columns[$col]['data_Visible']; ?>';
 	      var data_All = {
-		  'data_Column':data_Col,
-		  'data_Label':data_Lbl,
-		  'data_Visible':data_Vsbl
+		  'data_Column':'<?php echo $sor_Columns[$col]['data_Column']; ?>',
+		  'data_Label':'<?php echo $sor_Columns[$col]['data_Label']; ?>',
+		  'data_Visible':'<?php echo $sor_Columns[$col]['data_Visible']; ?>'
 		  };
-	      
+
 	      if(data_All.data_Visible == '1'){
 		  $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
 	      }else{
@@ -521,11 +518,9 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 	<?php } } else { ?>
             for(colNo=0;colNo <= $("#countColumn").val();colNo++){
 		$("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
-		var data_Col = $("#iCol"+colNo).attr('data-showhide');
-		var data_Lbl = $("#iCol"+colNo).attr('data-label');
 		var data_All = {
-		    'data_Column':data_Col,
-		    'data_Label':data_Lbl,
+		    'data_Column':$("#iCol"+colNo).attr('data-showhide'),
+		    'data_Label':$("#iCol"+colNo).attr('data-label'),
 		    'data_Visible':1
 		    };
 		manageColumns.push(data_All);
