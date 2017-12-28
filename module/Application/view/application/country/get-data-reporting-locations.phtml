@@ -15,20 +15,21 @@ if(isset($response['labRecent']) && count($response['labRecent']) > 0){
                 $ancArray[$labRecentPoint['anc_site_name']]['lon'] = $labRecentPoint['longitude'];
             }
             
-            if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray)){
-                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'red';
+            if(trim($params['sitehavingRecentInfectionby'])!= ''){
+                if(in_array('labLAgRecency',$sitehavingRecentInfectionbyArray)){
+                    $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'red';
+                    $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
+                }
+                if(in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
+                    $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'yellow';
+                    $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLabRecencyAssayRecent'];
+                }
+            }else{
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-red';
                 $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
-            }
-            if(in_array('labRecencyAssay',$sitehavingRecentInfectionbyArray)){
-                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'yellow';
-                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLabRecencyAssayRecent'];
-            }
-            if(trim($params['sitehavingRecentInfectionby']) == ''){
-               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-red';
-               $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLAgRecent'];
                
-               $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-yellow';
-               $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLabRecencyAssayRecent'];
+                $ancArray[$labRecentPoint['anc_site_name']]['color'][] = 'default-yellow';
+                $ancArray[$labRecentPoint['anc_site_name']]['recents'][] = (int)$labRecentPoint['noofLabRecencyAssayRecent'];
             }
         }
     }
@@ -43,11 +44,12 @@ if(isset($response['ancRecent']) && count($response['ancRecent']) > 0){
                 $ancArray[$ancRecentPoint['anc_site_name']]['lon'] = $ancRecentPoint['longitude'];
             }
             
-            if(in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray)){
-                $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'purple';
-                $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
-            }
-            if(trim($params['sitehavingRecentInfectionby']) == ''){
+            if(trim($params['sitehavingRecentInfectionby'])!= ''){
+                if(in_array('ancRecencyAssay',$sitehavingRecentInfectionbyArray)){
+                    $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'purple';
+                    $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
+                }
+            }else{
                 $ancArray[$ancRecentPoint['anc_site_name']]['color'][] = 'default-purple';
                 $ancArray[$ancRecentPoint['anc_site_name']]['recents'][] = (int)$ancRecentPoint['noofANCRecencyTestRecent'];
             }
@@ -96,32 +98,35 @@ if($location > 0) { ?>
                 var iconImg;
                 var contentString = markers[i]['label'];
                 var infowindow = new google.maps.InfoWindow({});
-                for( j = 0; j < iconArray.length; j++ ) {
-                    if(iconArray[j] == 'red' && recentsArray[j] > 0){
-                       iconImg = 'redCircle';
-                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'yellow' && recentsArray[j] > 0){
+                var redCircle = false;
+                for( t = 0; t < iconArray.length; t++ ) {
+                    if(iconArray[t] == 'red' && recentsArray[t] > 0){
+                       redCircle = true;
+                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
+                    }else if(iconArray[t] == 'yellow' && recentsArray[t] > 0){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/yellow.png'); ?>';
-                       contentString+= '<span style="color:#f39c12;">Lab Rapid Recency Assay Test (Visual) - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'purple' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:#f39c12;">Lab Rapid Recency Assay Test (Visual) - Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
+                    }else if(iconArray[t] == 'purple' && recentsArray[t] > 0){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/purple.png'); ?>';
-                       contentString+= '<span style="color:purple;">ANC Rapid Recency Assay Test (Visual)- Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'default-red' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:purple;">ANC Rapid Recency Assay Test (Visual)- Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
+                    }else if(iconArray[t] == 'default-red'){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
-                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'default-yellow' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:red;">Lab LAg Test - Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
+                    }else if(iconArray[t] == 'default-yellow'){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
-                       contentString+= '<span style="color:#f39c12;">Lab Rapid Recency Assay Test (Visual)- Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
-                    }else if(iconArray[j] == 'default-purple' && recentsArray[j] > 0){
+                       contentString+= '<span style="color:#f39c12;">Lab Rapid Recency Assay Test (Visual)- Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
+                    }else if(iconArray[t] == 'default-purple'){
                        iconImg = '<?php echo $this->basePath('assets/images/map-points/blue.png'); ?>';
-                       contentString+= '<span style="color:purple;">ANC Rapid Recency Assay Test (Visual) - Recent (<strong>'+recentsArray[j]+'</strong>)</span><br>';
+                       contentString+= '<span style="color:purple;">ANC Rapid Recency Assay Test (Visual) - Recent (<strong>'+recentsArray[t]+'</strong>)</span><br>';
                     }
-                    if(iconImg == 'redCircle'){
+                }
+                for( j = 0; j < iconArray.length; j++ ) {
+                    if(redCircle){
                        var cityCircle = new google.maps.Circle({
                             strokeColor: '#FF0000',
                             strokeOpacity: 0.8,
                             strokeWeight: 2,
-                            fillColor: '#FF0000',
+                            fillColor: '#F79D9A',
                             fillOpacity: 0.35,
                             map: map,
                             center: position,
@@ -141,6 +146,7 @@ if($location > 0) { ?>
                         google.maps.event.addListener(cityCircle, 'mouseout', function () {
                             infowindow.close();
                         });
+                        break;
                     }else{
                        marker = new google.maps.Marker({
                         position: position,

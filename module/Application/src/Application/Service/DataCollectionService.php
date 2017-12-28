@@ -1198,10 +1198,10 @@ class DataCollectionService {
                         if(count($sor_Columns) == 0 || in_array('recent_infection',$sor_Columns)){
                            $row[] = (isset($aRow['recent_infection']) && $aRow['recent_infection']!= null && trim($aRow['recent_infection'])!= '')?ucfirst($aRow['recent_infection']):'';
                         }
-                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy',$sor_Columns)){
+                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy_rrdt',$sor_Columns)){
                             $row[] = $rapidRecencyAssay;
                         }
-                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy',$sor_Columns)){
+                        if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy_rrr',$sor_Columns)){
                            $row[] = $rapidRecencyAssayDuration;
                         }
                         if(count($sor_Columns) == 0 || in_array('HIV_diagnostic_line',$sor_Columns)){
@@ -1327,8 +1327,8 @@ class DataCollectionService {
                     
                     $status_Col = array_search('test_status_name', $sor_Columns);
                     $lag_Col = array_search('lag_avidity_result', $sor_Columns);
-                    $labHIVV_Col = array_search('asante_rapid_recency_assy', $sor_Columns);
-                    $labHIVR_Col = array_search('asante_rapid_recency_assy', $sor_Columns);
+                    $labHIVV_Col = array_search('asante_rapid_recency_assy_rrdt', $sor_Columns);
+                    $labHIVR_Col = array_search('asante_rapid_recency_assy_rrr', $sor_Columns);
                     $ancHIVV_Col = array_search('HIV_diagnostic_line', $sor_Columns);
                     $ancHIVR_Col = array_search('recency_line', $sor_Columns);
                     $currentRow = 2;
@@ -1372,9 +1372,9 @@ class DataCollectionService {
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo == $lastCol){
                                 if($status == 'Incomplete'){
-                                  $sheet->getStyle('A'.$currentRow.':U'.$currentRow)->applyFromArray($yellowTxtArray); 
+                                  $sheet->getStyle('A'.$currentRow.':'.$cellName.''.$currentRow)->applyFromArray($yellowTxtArray); 
                                 }else if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present' || $recencyMismatch === true)){
-                                  $sheet->getStyle('A'.$currentRow.':U'.$currentRow)->applyFromArray($redTxtArray);
+                                  $sheet->getStyle('A'.$currentRow.':'.$cellName.''.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
