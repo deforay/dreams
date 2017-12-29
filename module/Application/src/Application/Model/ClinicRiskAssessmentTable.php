@@ -354,11 +354,11 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')",'da_c.age',"DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','test_status_name');
-	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','da_c.age','r_a.added_on','u.user_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','da_c.age','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','test_status_name');
+	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','da_c.age','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','test_status_name');
 	}else{
-	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')",'da_c.age',"DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','c.country_name','test_status_name');
-	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','da_c.age','r_a.added_on','u.user_name','c.country_name','test_status_name');
+	    $aColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','da_c.age','r_a.interviewer_name','r_a.anc_patient_id',"DATE_FORMAT(r_a.interview_date,'%d-%b-%Y')","DATE_FORMAT(r_a.added_on,'%d-%b-%Y')",'u.user_name','c.country_name','test_status_name');
+	    $orderColumns = array('anc_site_name','anc_site_code','r_a.patient_barcode_id','da_c.age','r_a.interviewer_name','r_a.anc_patient_id','r_a.interview_date','r_a.added_on','u.user_name','c.country_name','test_status_name');
 	}
 
        /*
@@ -596,10 +596,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['anc_site_name']);
 	    $row[] = $aRow['anc_site_code'];
 	    $row[] = $aRow['patient_barcode_id'];
+	    $row[] = (isset($aRow['age']) && (int)$aRow['age'] > 0)?$aRow['age']:'';
 	    $row[] = ucwords($aRow['interviewer_name']);
 	    $row[] = $aRow['anc_patient_id'];
 	    $row[] = $interviewDate;
-	    $row[] = (isset($aRow['age']) && (int)$aRow['age'] > 0)?$aRow['age']:'';
 	    $row[] = $common->humanDateFormat($addedDate[0]);
 	    $row[] = ucwords($aRow['user_name']);
 	    if(trim($parameters['countryId']) == ''){
