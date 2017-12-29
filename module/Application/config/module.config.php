@@ -611,10 +611,28 @@ return array(
             ),'summary' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/summary[/:action][/][:id]',
+                    'route' => '/summary[/][:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Summary',
                         'action' => 'index'
+                    ),
+                ),
+            ),'get-data-reporting-weekly-bar-chart' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/summary/get-data-reporting-weekly-bar-chart',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Summary',
+                        'action' => 'get-data-reporting-weekly-bar-chart'
+                    ),
+                ),
+            ),'get-behaviour-data-reporting-weekly-bar-chart' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/summary/get-behaviour-data-reporting-weekly-bar-chart',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Summary',
+                        'action' => 'get-behaviour-data-reporting-weekly-bar-chart'
                     ),
                 ),
             ),'export-ipv-report' => array(

@@ -14,11 +14,17 @@ use Zend\View\Model\ViewModel;
 
 class SummaryController extends AbstractActionController{
     public function indexAction(){
-       $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-       $summaries = $dataCollectionService->getSummaryDetails();
-            return new ViewModel(array(
-                'summaries'=>$summaries
-            ));
+       $countryId = base64_decode($this->params()->fromRoute('countryId'));
+       if(isset($countryId) && trim($countryId)!= ''){
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $summaries = $dataCollectionService->getSummaryDetails();
+                 return new ViewModel(array(
+                    'summaries'=>$summaries,
+                    'countryId'=>$countryId
+                 ));
+       }else{
+          return $this->redirect()->toRoute('home');
+       }
     }
     
     public function getDataReportingWeeklyBarChartAction(){

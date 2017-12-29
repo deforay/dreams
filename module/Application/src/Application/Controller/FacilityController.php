@@ -22,9 +22,9 @@ class FacilityController extends AbstractActionController{
             $result = $facilityService->getAllFacilites($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList=$countryService->getActiveCountries('facility','');
+            $countryList = $countryService->getActiveCountries('facility','');
             return new ViewModel(array(
                 'countries'=>$countryList,
                 'countryId'=>$countryId

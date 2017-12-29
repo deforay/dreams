@@ -994,15 +994,15 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	while($start <= $end){
 	    $month = date('m', $start);$year = date('Y', $start);$monthYearFormat = date("M-Y", $start);
             $query = $sql->select()->from(array('r_a'=>'clinic_risk_assessment'))
-                          ->columns(
+                         ->columns(
                                   array(
                                         'total'=>new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 1 OR r_a.status = 2 OR r_a.status = 3, 1,0))"),
 					'startdayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(interview_date, INTERVAL(1-DAYOFWEEK(interview_date)) DAY)"),
 					'enddayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(interview_date, INTERVAL(7-DAYOFWEEK(interview_date)) DAY)")
                                         )
                                   )
-			  ->where("Month(interview_date)='".$month."' AND Year(interview_date)='".$year."'")
-			  ->group('startdayofweek');
+			 ->where("r_a.country = '".$params['countryId']."' AND Month(interview_date)='".$month."' AND Year(interview_date)='".$year."'")
+			 ->group('startdayofweek');
 	    $queryStr = $sql->getSqlStringForSqlObject($query);
 	    $rows = $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	    if(isset($rows) && count($rows) > 0){

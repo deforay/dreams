@@ -2165,7 +2165,7 @@ class DataCollectionTable extends AbstractTableGateway {
 					'enddayofweek'=>new \Zend\Db\Sql\Expression("DATE_ADD(specimen_collected_date, INTERVAL(7-DAYOFWEEK(specimen_collected_date)) DAY)")
                                         )
                                   )
-			  ->where("Month(specimen_collected_date)='".$month."' AND Year(specimen_collected_date)='".$year."'")
+			  ->where("da_c.country = '".$params['countryId']."' AND Month(specimen_collected_date)='".$month."' AND Year(specimen_collected_date)='".$year."'")
 			  ->group('startdayofweek');
 	    $queryStr = $sql->getSqlStringForSqlObject($query);
 	    $rows = $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
