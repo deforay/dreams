@@ -32,18 +32,19 @@
     },
     yAxis: {
         min: 0,
+        allowDecimals: false,
         title: {
-            text: 'No. of Test'
+            text: 'No. of lab data'
         }
     },
     legend: {
         enabled: false
     },
     tooltip: {
-        pointFormat: 'No. of Test : <b>{point.y}</b>'
+        pointFormat: 'No. of data : <b>{point.y}</b>'
     },
     series: [{
-        name: 'No. of Test',
+        name: 'No. of lab data',
         data: [
             <?php
             if(isset($response['week']) && count($response['week']) > 0){

@@ -86,14 +86,22 @@
         <br>
         <div class="row" style="max-width:1109px;">
             <form id="summaryFilter" action="#" style="margin-top:30px;">
-                <div class="col l12 m12 s12" style="text-align:center;font-size:16px;text-transform:uppercase;">Choose Month Range</div>
-                <div class="col l12 m12 s12" style="margin-top:30px;">
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-                    <div class="col l1 m1 s1" style="font-size:14px;text-transform:uppercase;">From</div>
-                    <div class="col l4 m4 s4"><input type="text" id="startmonth" name="startmonth" placeholder="Select month/year" readonly="readonly" style="color:#000;"/></div>
-                    <div class="col l1 m1 s1" style="font-size:14px;text-transform:uppercase;">To</div>
-                    <div class="col l4 m4 s4"><input type="text" id="endmonth" name="endmonth" placeholder="Select month/year" readonly="readonly" style="color:#000;"/></div>
-                    <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
+                <div class="col l12 m12 s12" style="text-align:center;text-transform:uppercase;">Choose Month Range</div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col s2" style="visibility:hidden;">--FILTER START--</div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="startmonth" name="startmonth" type="text" class="" title="Select month/year" readonly>
+                            <label for="startmonth">From </label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="endmonth" name="endmonth" type="text" class="" title="Select month/year" readonly>
+                            <label for="endmonth">To </label>
+                        </div>
+                    </div>
+                    <div class="col s2" style="visibility:hidden;">--FILTER END--</div>
                 </div>
                 <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
                     <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -150,6 +158,7 @@
                 $('#startmonth').datepicker('setDate', new Date(year, month, 1));
                 $('#endmonth').datepicker('option','minDate',new Date(year, month, 1));
                 $('#endmonth').datepicker('setDate', new Date(year, month, 1));
+                $('label[for="endmonth"]').css("transform", "translateY(-140%)");
             }
         });
         $("#endmonth").datepicker({
@@ -202,6 +211,6 @@
     
     function clearSearchFields(){
        $('#summaryFilter')[0].reset();
-        searchDataReporting('reset');
+       searchDataReporting('reset');
     }
 </script>

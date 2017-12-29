@@ -32,18 +32,20 @@
     },
     yAxis: {
         min: 0,
+        allowDecimals: false,
         title: {
-            text: 'No. of Behaviour Data'
+            text: 'No. of behaviour data'
         }
     },
     legend: {
         enabled: false
     },
     tooltip: {
-        pointFormat: 'No. of Behaviour Data : <b>{point.y}</b>'
+        pointFormat: 'No. of data : <b>{point.y}</b>'
     },
     series: [{
-        name: 'No. of Behaviour Data',
+        name: 'No. of behaviour data',
+        color: "#C6C6C7",
         data: [
             <?php
             if(isset($response['week']) && count($response['week']) > 0){

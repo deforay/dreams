@@ -2155,6 +2155,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	$j=0;
 	$d =0;
+	$weekArray = array();
 	while($start <= $end){
 	    $month = date('m', $start);$year = date('Y', $start);$monthYearFormat = date("M-Y", $start);
             $query = $sql->select()->from(array('da_c'=>'data_collection'))
@@ -2171,9 +2172,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $rows = $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
 	    if(isset($rows) && count($rows) > 0){
 		foreach($rows as $row){
-		    if(isset($row['startdayofweek']) && $row['startdayofweek']!= null && trim($row['startdayofweek'])!= ''){
+		    if(isset($row['startdayofweek']) && $row['startdayofweek']!= null && trim($row['startdayofweek'])!= '' && !in_array($row['startdayofweek'],$weekArray)){
 		      $result['week'][$d] = $common->humanDateFormat($row['startdayofweek']).' to '.$common->humanDateFormat($row['enddayofweek']);
 		      $result['total'][$d] = $row['total'];
+		      $weekArray[] = $row['startdayofweek'];
 		      $d++;
 		    }
 		}
