@@ -17,9 +17,6 @@ if(trim($countryId)!= ''){
         border-bottom: 1px solid #ccc;
         padding: 10px 20px;
     }
-    pre {
-        max-height: 596px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -94,17 +91,41 @@ if(trim($countryId)!= ''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Monthly Reporting</a>
        </div>
     </div>
-    <?php if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-        <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+    <?php if($loginContainer->hasViewOnlyAccess != 'yes') { ?>
+        <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
 	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;">Hide this form</a>
             <form id="addClinicDataReportingForm" name="addClinicDataReportingForm" method="post" action="<?php echo $this->url('clinic-data-collection-add'); ?>">
                 <div class="col l12 m12 s12" style="padding:0;">
                     <div class="card card-default table-height">
                         <div class="card-content clearfix">
-			    <div class="col l12 m12 s12" style="margin-bottom:1vh;padding:0;">
-				<div class="col l6 m6 s6" style="text-align:center;"><strong>Anc site name/code *</strong> <select class="material-select isRequired" id="anc" name="anc" title="Please select anc site" onchange="checkDublicateDataReporting();"><option value=""> -- Select -- </option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).' - '.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-				<div class="col l3 m3 s3" style="text-align:center;"><strong>Month/Year *</strong> <input type="text" class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
-				<div class="col l3 m3 s3" style="text-align:center;"><strong>Date of Support Visit </strong> <input type="text" id="dateofSupportVisit" name="dateofSupportVisit" placeholder="Select support visit date" title="Please select support visit date" readonly/></div>
+			    <div class="row">
+				<div class="col s5">
+				    <div class="input-field col m12 s12">
+				       <select class="material-select isRequired" id="anc" name="anc" title="Please select anc" onchange="checkDublicateDataReporting();">
+					   <option value=""> -- Select -- </option>
+					   <?php
+					   foreach($ancSites as $anc){
+					       ?>
+					       <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+					       <?php
+					   }
+					   ?>
+				       </select>
+				       <label for="anc">Anc site name/code * </label>
+				    </div>
+			       </div>
+				<div class="col s4">
+				     <div class="input-field col m12 s12">
+					<input class="monthYear isRequired" id="reportingMonthYear" name="reportingMonthYear" type="text" title="Please select month and year" readonly>
+					<label for="reportingMonthYear">Month/Year * </label>
+				     </div>
+				</div>
+				<div class="col s3">
+				     <div class="input-field col m12 s12">
+					<input id="dateofSupportVisit" name="dateofSupportVisit" type="text" title="Please select support visit date" readonly>
+					<label for="dateofSupportVisit">Date of Support Visit </label>
+				     </div>
+				</div>
 			    </div>
 			    <div class="col l12 m12 s12" style="padding:0;">
 				<table id="ancFormTable" class="responsive-table display">
@@ -180,7 +201,7 @@ if(trim($countryId)!= ''){
 					<tr>
 					    <td style="padding-top:0px;padding-bottom:0px;">Comments</td>
 					    <td colspan="5" style="padding-top:0px;padding-bottom:0px;">
-						<textarea id="comments" name="comments" class="materialize-textarea" style="height:2rem;"></textarea>
+						<textarea id="comments" name="comments" class="materialize-textarea" placeholder="Comments" style="height:2rem;"></textarea>
 					    </td>
 					</tr>
 				    </tbody>
@@ -198,23 +219,42 @@ if(trim($countryId)!= ''){
             </form>
         </div>
     <?php } ?>
-    <div id="showListButton" class="row dashboard-wrapper content-container" style="margin-bottom: 10px;">
+    <div id="showListButton" class="row content-container" style="margin-bottom: 10px;padding: 0 20px;">
        <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadANCDataList();">Show ANC Data List</a>
     </div>
     <div class="row ancDataList" style="max-width:1109px;display:none;">
 	<form id="dataCollectionFilter" action="#">
-            <div class="col l12 m12 s12">
-                <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value="">All ANCs</option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="filterReportingMonthYear" name="filterReportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly/></div>
-                <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
-            </div>
+	    <div class="row">
+		<div class="col s1" style="visibility:hidden;">--FILTER START--</div>
+		<div class="col s5">
+		    <div class="input-field col m12 s12">
+		       <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc">
+			   <option value=""> All ANCs </option>
+			   <?php
+			   foreach($ancSites as $anc){
+			       ?>
+			       <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+			       <?php
+			   }
+			   ?>
+		       </select>
+		       <label for="ancFilter">Anc site name/code </label>
+		    </div>
+	        </div>
+		<div class="col s5">
+		     <div class="input-field col m12 s12">
+			<input class="monthYear" id="filterReportingMonthYear" name="filterReportingMonthYear" type="text" title="Please select month and year" readonly>
+			<label for="filterReportingMonthYear">Month/Year </label>
+		     </div>
+		</div>
+		<div class="col s1" style="visibility:hidden;">--FILTER END--</div>
+	    </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+                <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="searchDataCollectionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
             </div>
         </form>
     </div>
-    <div class="row dashboard-wrapper content-container ancDataList" style="display:none;">
+    <div class="row content-container ancDataList" style="padding: 0 20px;display:none;">
         <div class="col l12 m12 s12" style="padding:0 !important;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Data Reporting List</div>
@@ -313,7 +353,6 @@ if(trim($countryId)!= ''){
 		    closeOnSelect: true,
 		    closeOnClear: true,
 		    onSet: function(e){
-			validateDataReportingDates();
 			if(e.select != undefined && e.select != null){
 			    $('.picker__close').click();
 			}
@@ -356,9 +395,9 @@ if(trim($countryId)!= ''){
             "aoColumns": [
                 {"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap center_align"},
+		{"sClass":"dataTable_noWrap center_align"},
+		{"sClass":"dataTable_noWrap center_align"},
 		<?php
                 if(trim($countryId) == ''){ ?>
 		{"sClass":"dataTable_noWrap"},
@@ -392,16 +431,16 @@ if(trim($countryId)!= ''){
         });
         
 	$('.dataTables_filter').empty(); // clears the content generated
-       $('.dataTables_filter').append(
+        $('.dataTables_filter').append(
                 "<div class='input-field col s6 search-div right' style='width: 250px'>" +
                 "    <i class='material-icons search-icon'>search</i> "+
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
-       $('#search-items').on('keyup', function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+        $('#search-items').on('keyup', function(){
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+	});
     }
     
     $("a.formHide").click(function(){
@@ -454,8 +493,8 @@ if(trim($countryId)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('lock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }
@@ -468,8 +507,8 @@ if(trim($countryId)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }

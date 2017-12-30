@@ -20,7 +20,7 @@ class ClinicController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId=base64_decode($this->params()->fromRoute('countryId'));
-            if(trim($countryId)!= ''){
+            if(isset($countryId) && trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
                 $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
@@ -54,7 +54,7 @@ class ClinicController extends AbstractActionController{
             return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            if(trim($countryId)!= ''){
+            if(isset($countryId) && trim($countryId)!= ''){
                 $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
@@ -85,7 +85,7 @@ class ClinicController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            if(trim($countryId)!= ''){
+            if(isset($countryId) && trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId,$province ='',$district ='');
                 $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();

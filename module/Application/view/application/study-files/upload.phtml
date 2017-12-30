@@ -3,10 +3,11 @@
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Study File Upload</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="/study-files/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Study Files</a>
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Study File Upload</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 22px;">
         <form id="studyFileUpload" name="studyFileUpload" method="post" enctype="multipart/form-data" action="<?php echo $this->url('upload-study-files'); ?>">
             <div class="card">
                 <div class="row" style="margin-bottom:10px;">

@@ -35,7 +35,7 @@ class RiskAssessmentService {
             $adapter->commit();
               $alertContainer->msg = 'Risk Assessment form submitted successfully';
            }else{
-              $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
         }
         catch (Exception $exc) {
@@ -66,7 +66,7 @@ class RiskAssessmentService {
             $adapter->commit();
               $alertContainer->msg = 'Risk Assessment form updated successfully';
            }else{
-              $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
         }
         catch (Exception $exc) {

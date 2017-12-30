@@ -58,7 +58,7 @@
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Email Lab Results</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 20px;">
         <form id="resultMail" name="resultMail" method="post" action="<?php echo $this->url('result-email-send'); ?>">
             <div class="card">
                 <div class="row" style="padding-top:10px;">
@@ -71,7 +71,7 @@
                    <div class="col s6">
                         <div class="input-field col m12 s12">
                            <select id="facility" name="facility" class="material-select" title="Please select lab/facility">
-                                <option value="">All</option>
+                                <option value=""> All Labs/Facilities</option>
                                <?php
                                foreach($facilityList as $facility){
                                ?>
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="col s12" style="text-align:center;margin-bottom:20px;">
-                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
                 </div>
                 <div class="row" style="margin-bottom:0;">
@@ -117,7 +117,7 @@
                                  <option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
                                <?php } ?>
                             </select>
-                            <label for="anc">ANC Site (To)*</label>
+                            <label for="anc">ANC Site (To address)*</label>
                         </div>
                     </div>
                 </div>
@@ -149,8 +149,8 @@
                     <div class="col s12 dataCollectionSection"></div>
                 </div>
                 <div class="col s12">
-                    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
                     <input type="hidden" name="pdfFile" id="pdfFile" />
+                    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
                     <a href="/result-email/<?php echo base64_encode($countryId); ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
                     <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="validateNow();">SEND </a>&nbsp;&nbsp;
                 </div>
@@ -164,8 +164,8 @@
 <script>
     $(document).ready(function(){
        $('.searchable').multiSelect({
-            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial No'>",
-            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial No'>",
+            selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial Number'>",
+            selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Serial Number'>",
             afterInit: function(ms){
               var that = this,
                   $selectableSearch = that.$selectableUl.prev(),
@@ -259,7 +259,7 @@
         function(data){
             $.unblockUI();
             if(data === "" || data === null || data === undefined){
-                alert('OOPS..');
+                alert('Error-Oops, Unable to generate excel');
             }else{
                 $.blockUI();
                 $("#pdfFile").val(data);

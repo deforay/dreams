@@ -1,7 +1,7 @@
 <?php
 use Application\Service\CommonService;
 $common = new CommonService();
-if(isset($countryId) && trim($countryId)!=''){
+if(isset($countryId) && trim($countryId)!= ''){
     $link = "/data-collection/".base64_encode($countryId);
 }else{
     $link = "/data-collection";
@@ -100,7 +100,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Lab Data Reporting</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 20px;">
         <form id="editDataReportingForm" name="editDataReportingForm" method="post" action="<?php echo $this->url('edit-data-collection'); ?>">
 	    <div class="card">
 		<fieldset style="border-color:#88C542;border-style: solid;">

@@ -17,9 +17,6 @@ if(trim($countryId)!= ''){
         border-bottom: 1px solid #ccc;
         padding: 10px 20px;
     }
-    pre {
-        max-height: 596px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -89,20 +86,39 @@ if(trim($countryId)!= ''){
     </div>
     <div class="row" style="max-width:1109px;">
 	<form id="dataExtractionFilter" action="#">
-	    <div class="col l12 m12 s12">
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l5 m5 s5" style="text-align:center;"><strong>Anc site name/code </strong> <select class="material-select" id="ancFilter" name="ancFilter" title="Please select anc site"><option value="">All ANCs</option><?php foreach($ancSites as $anc) { ?><option value="<?php echo base64_encode($anc['anc_site_id']); ?>"><?php echo ucwords($anc['anc_site_name']).'-'.$anc['anc_site_code']; ?></option><?php } ?></select></div>
-		<div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYearFilter" name="reportingMonthYearFilter" placeholder="Select month/year" title="Please select month and year" readonly/></div>
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
-	    </div>
+	   <div class="row">
+	        <div class="col s1" style="visibility:hidden;">--FILTER START--</div>
+	        <div class="col s5">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="anc" name="anc" title="Please select anc">
+			    <option value="">All ANCs</option>
+			    <?php
+			    foreach($ancSites as $anc){
+				?>
+				<option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+			<label for="anc">Anc site name/code </label>
+		     </div>
+		</div>
+		<div class="col s5">
+		     <div class="input-field col m12 s12">
+			<input id="reportingMonthYearFilter" name="reportingMonthYearFilter" type="text" title="Please select month and year" readonly>
+			<label for="reportingMonthYearFilter">Month/Year </label>
+		     </div>
+		</div>
+		<div class="col s1" style="visibility:hidden;">--FILTER END--</div>
+	   </div>
 	    <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> ANC Data Download List</div>
@@ -169,9 +185,9 @@ if(trim($countryId)!= ''){
             "aoColumns": [
                 {"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap center_align"},
+		{"sClass":"dataTable_noWrap center_align"},
+		{"sClass":"dataTable_noWrap center_align"},
 		<?php
                 if(trim($countryId)== ''){ ?>
 		  {"sClass":"dataTable_noWrap"},
@@ -207,9 +223,9 @@ if(trim($countryId)!= ''){
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+       });
        
        $('#reportingMonthYearFilter').datepicker({
             changeMonth: true,
@@ -245,7 +261,7 @@ if(trim($countryId)!= ''){
 	$.post("<?php echo $this->url('export-clinic-data-collection'); ?>", {countryId:'<?php echo $countryId; ?>'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

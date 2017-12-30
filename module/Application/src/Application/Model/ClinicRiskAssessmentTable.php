@@ -566,6 +566,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    if($aRow['unlocked_on']!= null && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
 		$unlockedDate = explode(" ",$aRow['unlocked_on']);
+		
 		$userQuery = $sql->select()->from(array('u' => 'user'))->columns(array('user_id','full_name'))->where(array('u.user_id'=>$aRow['unlocked_by']));
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -573,18 +574,20 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		if(isset($userResult->user_id)){
 		    $unlockedBy = ($userResult->user_id == $loginContainer->userId)?'You':ucwords($userResult->full_name);
 		}
-	        $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1.3rem;"></i>';
+	        $userUnlockedHistory = '<i class="zmdi zmdi-info-outline" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'"></i>';
 	    }
 	    //data view
 	    $dataView = '<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-1" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp';
 	    //data edit
-	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']!= 'locked'){
+	    if($loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] != 'locked'){
 		$dataEdit = '<a href="/clinic/risk-assessment/edit/' . base64_encode($aRow['assessment_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp';
-	    } if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'completed'){
+	    }
+	    //data lock
+	    if($loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'completed'){
 		$dataLock = '<a href="javascript:void(0);" onclick="lockRiskAssessment(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-1" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
 	    }
-	    //for csc/cc
-	    if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+	    //data unlock(csc/cc)
+	    if(($loginContainer->roleCode == 'CSC' || $loginContainer->roleCode == 'CC') && $loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'locked'){
 		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockRiskAssessment(\''.base64_encode($aRow['assessment_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
 	    }
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;

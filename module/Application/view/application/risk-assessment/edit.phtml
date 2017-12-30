@@ -4,7 +4,7 @@ $common = new CommonService();
 if(trim($countryId)!= ''){
     $link = "/clinic/risk-assessment/".base64_encode($countryId);
 }else{
-   $link = "/clinic/risk-assessment"; 
+   $link = "/clinic/risk-assessment";
 }
 $interviewDate = '';
 if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
@@ -93,7 +93,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Risk Assessment</a>
        </div>
     </div>
-    <div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+    <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
         <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment',array('action'=>'edit')); ?>">
         <div class="card">
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>

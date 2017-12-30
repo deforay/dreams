@@ -39,7 +39,7 @@ class UserTable extends AbstractTableGateway {
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
 		if($loginResult->status== 'inactive'){
-		    $alertContainer->msg = 'Your account seems to inactive.Please contact admin to reactivate your account..';
+		    $alertContainer->msg = 'Your account seems to inactive. Please contact admin to reactivate your account..';
 		    return 'login';
 		}
 		$loginContainer = new Container('user');
@@ -81,14 +81,14 @@ class UserTable extends AbstractTableGateway {
 		    }
 		}
 		//to prevent listing unmapped(all) anc/lab
-		if($loginResult->role_code !='CSC' && count($userCountry) ==0){
-		    $alertContainer->msg = 'You are not mapped to any country. Please contact admin for further assistance!';
+		if($loginResult->role_code != 'CSC' && count($userCountry) == 0){
+		    $alertContainer->msg = 'You had not yet mapped to any country. Please contact admin for further assistance';
 		   return 'login';
 		}else if(($loginResult->role_code == 'LS' || $loginResult->role_code == 'LDEO') && count($userLaboratory) ==0){
-		    $alertContainer->msg = 'You are not mapped to any laboratory. Please contact admin for further assistance!';
+		    $alertContainer->msg = 'You had not yet mapped to any laboratory. Please contact admin for further assistance';
 		   return 'login';
-		}else if($loginResult->role_code == 'ANCSC' && count($userClinic) ==0){
-		    $alertContainer->msg = 'You are not mapped to any anc site. Please contact admin for further assistance!';
+		}else if($loginResult->role_code == 'ANCSC' && count($userClinic) == 0){
+		    $alertContainer->msg = 'You had not yet mapped to any anc site. Please contact admin for further assistance';
 		   return 'login';
 		}
 		if($isCountrySelected){
@@ -108,7 +108,7 @@ class UserTable extends AbstractTableGateway {
 			$loginContainer->forcePasswordReset = $loginResult->force_password_reset;
 		       return ($loginContainer->forcePasswordReset == 1)?'change-password':'home';
 		    }else{
-		       $alertContainer->msg = 'Please check the country that you have choosen..!';
+		       $alertContainer->msg = 'Please check the country that you have choosen !';
 		      return 'login';
 		    }
 		}else{
@@ -128,11 +128,11 @@ class UserTable extends AbstractTableGateway {
 		   return ($loginContainer->forcePasswordReset == 1)?'change-password':'home';
 		}
             }else{
-                $alertContainer->msg = 'The user name or password that you entered is incorrect..!';
+                $alertContainer->msg = 'The user name or password that you entered is incorrect';
                 return 'login';
             }
         }else{
-            $alertContainer->msg = 'Please enter all the require fields..!';
+            $alertContainer->msg = 'Please enter all the require fields';
             return 'home';
         }
     }
@@ -432,10 +432,10 @@ class UserTable extends AbstractTableGateway {
 	if($hasUpdated >0){
 	    $this->update(array('force_password_reset'=>0),array('user_id'=>$loginContainer->userId));
 	    $loginContainer->forcePasswordReset = 0;
-	    $alertContainer->msg = 'Your have successfully updated your password.';
+	    $alertContainer->msg = 'Password has been updated successfully';
 	    return true;
 	}else{
-	    $alertContainer->msg = 'OOPS..Error while updating your password.';
+	    $alertContainer->msg = 'Oops, Error while updating your password';
 	    return false;
 	}
     }

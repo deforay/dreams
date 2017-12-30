@@ -48,16 +48,33 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Dashboard</h4>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Dashboard </div>
     </div>
     <div class="row" style="max-width:1109px;">
         <form id="dashboardFilter" action="#">
-            <div class="col l12 m12 s12">
-                <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-                <div class="col l5 m5 s5" style="text-align:center;"><strong>Month/Year </strong> <input type="text" class="monthYear" id="reportingMonthYear" name="reportingMonthYear" placeholder="Select month/year" title="Please select month and year" readonly style="width:94%;"/>&nbsp;&nbsp;<a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:16px;color:#333333;"><i class="zmdi zmdi-close"></i></a></div>
-		<div class="col l5 m5 s5" style="text-align:center;"><strong>Countries </strong> <select class="material-select" id="country" name="country" title="Please select country"><option value=""> All Countries </option><?php foreach($countries as $country) { ?><option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?></select></div>
-                <div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
-            </div>
+            <div class="row">
+		<div class="col s1" style="visibility:hidden;">--FILTER START--</div>
+		<div class="col s5">
+		    <div class="input-field col m11 s11">
+			<input id="reportingMonthYear" name="reportingMonthYear" type="text" class="monthYear" title="Please select month and year" readonly>
+			<label for="reportingMonthYear">Month/Year </label>
+		    </div>
+		    <div class="col m1 s1" style="padding-top:4vh;">
+		        <a href="javascript:void(0);" title="Clear" onclick="clearReportingDate();" style="font-size:16px;color:#333333;"><i class="zmdi zmdi-close"></i></a>
+		    </div>
+		</div>
+		<div class="col s5">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="country" name="country" title="Please select country">
+			    <option value=""> All Countries </option>
+			    <?php foreach($countries as $country) { ?>
+			    <option value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option><?php } ?>
+			</select>
+			<label for="country">Country </label>
+		    </div>
+		</div>
+		<div class="col s1" style="visibility:hidden;">--FILTER END--</div>
+	    </div>
             <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
 		<a href="javascript:void(0);" onclick="searchDashboardData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractDashboardData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -65,7 +82,7 @@
             </div>
         </form>
     </div>
-    <div class="row">
+    <div class="row content-container">
         <div class="col s12">
             <div class="card card-default">
                 <div class="card-header white-text">
@@ -146,7 +163,7 @@
 	$.post("<?php echo $this->url('export-dashboard-data'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

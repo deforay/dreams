@@ -1,8 +1,7 @@
 <?php
-if(isset($countryId) && trim($countryId)!=''){
+if(trim($countryId)!=''){
     $link = "/facility/".base64_encode($countryId);
 }else{
-    $countryId = '';
     $link = "/facility";
 }
 ?>
@@ -15,7 +14,7 @@ if(isset($countryId) && trim($countryId)!=''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Lab</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 20px;">
         <form id="addLabForm" name="addLabForm" method="post" action="<?php echo $this->url('add-facility',array('action'=>'add')); ?>">
         <div class="card">
             <div class="row">

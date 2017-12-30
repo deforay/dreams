@@ -184,9 +184,8 @@ class FacilityTable extends AbstractTableGateway {
 			       ->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
            $sQuery = $sQuery->where(array('f.country'=>trim($parameters['countryId'])));
-        }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
-           $sQuery = $sQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-        }if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+        }
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $sQuery = $sQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
 	}
        if (isset($sWhere) && $sWhere != "") {
@@ -219,9 +218,8 @@ class FacilityTable extends AbstractTableGateway {
 				->join(array('c' => 'country'), "c.country_id=f.country",array('country_name'));
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('f.country'=>trim($parameters['countryId'])));
-	 }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){  
-	    $tQuery = $tQuery->where(array('f.country'=>base64_decode($parameters['country'])));
-	}if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
+	}
+	if($loginContainer->roleCode== 'LS' || $loginContainer->roleCode== 'LDEO'){
 	    $tQuery = $tQuery->where('f.facility_id IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance

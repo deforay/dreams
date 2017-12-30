@@ -166,14 +166,14 @@ if(isset($date) && trim($date)!= ''){
 		</div>
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
-		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchRiskAssessmentData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="exportRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="exportIPVReport();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export IPV Report</a>
 	    </div>
 	</form>
     </div>
-    <div class="row">
+    <div class="row content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Risk Assessment List
@@ -292,9 +292,9 @@ if(isset($date) && trim($date)!= ''){
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+       });
     });
     
     function selectDate(){
@@ -354,7 +354,7 @@ if(isset($date) && trim($date)!= ''){
 	$.post("<?php echo $this->url('export-risk-assessment-excel'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
@@ -368,7 +368,7 @@ if(isset($date) && trim($date)!= ''){
 	$.post("<?php echo $this->url('export-ipv-report'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else if(data == "d-n-a"){
 		alert('Data not available.');
@@ -388,7 +388,7 @@ if(isset($date) && trim($date)!= ''){
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    assessid = [];
-		    alert('OOPS..');
+		    alert('Error-Oops, Unable to generate pdf');
 		    $.unblockUI();
 		}else{
 		    assessid = [];
@@ -403,8 +403,8 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('lock-risk-assessment-data'); ?>", {assessment:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }
@@ -417,8 +417,8 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-risk-assessment-data'); ?>", {assessment:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }

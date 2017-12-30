@@ -22,6 +22,7 @@ class DataExtractionController extends AbstractActionController{
             $result = $dataCollectionService->getAllDataExtractions($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
+            $countryId = '';
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
@@ -60,7 +61,7 @@ class DataExtractionController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            if(trim($countryId)!= ''){
+            if(isset($countryId) && trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $facilityService = $this->getServiceLocator()->get('FacilityService');
                 $ancSiteList = $ancSiteService->getActiveAncSites('lab-logbook',$countryId,$province ='',$district ='');

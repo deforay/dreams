@@ -1,9 +1,6 @@
 <?php
 use Zend\Session\Container;
 $loginContainer = new Container('user');
-if(!isset($countryId)){
-    $countryId = '';
-}
 ?>
 <style>
     .card-default {
@@ -13,9 +10,6 @@ if(!isset($countryId)){
         background-color: #eaeaea;
         border-bottom: 1px solid #ccc;
         padding: 10px 20px;
-    }
-    pre {
-        max-height: 596px;
     }
     table.dataTable tbody td {
         padding: 8px 18px;
@@ -63,12 +57,12 @@ if(!isset($countryId)){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Users</a>
        </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 10px;">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> User List
 		<?php
-		if($loginContainer->hasViewOnlyAccess!= 'yes' && ($loginContainer->roleCode!= 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
+		if($loginContainer->hasViewOnlyAccess != 'yes' && ($loginContainer->roleCode != 'LDEO' && $loginContainer->roleCode!= 'ANCSC')) {
 		?>
 		  <span style="float:right;"><a class="custom-add-btn" href="/user/add/<?php echo base64_encode($countryId); ?>"><i class="zmdi zmdi-plus"></i> Add User</a></span>
 		<?php } ?>
@@ -90,9 +84,9 @@ if(!isset($countryId)){
                                 <th>Status</th>
                                 <th>Last Login</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess!= 'yes') {
+				if($loginContainer->hasViewOnlyAccess != 'yes') {
 				?>
-                                   <th style="width:80px !important;">Action</th>
+                                   <th style="width:100px !important;">Action</th>
 				<?php } ?>
                             </tr>
                         </thead>
@@ -173,8 +167,8 @@ if(!isset($countryId)){
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+       });
     });
 </script>

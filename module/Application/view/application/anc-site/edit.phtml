@@ -1,5 +1,5 @@
 <?php
-if(isset($countryId) && trim($countryId)!=''){
+if(trim($countryId)!=''){
     $link = "/anc-site/".base64_encode($countryId);
 }else{
     $link = "/anc-site";
@@ -14,7 +14,7 @@ if(isset($countryId) && trim($countryId)!=''){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit ANC Site</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 20px;">
         <form id="editAncSiteForm" name="editAncSiteForm" method="post" action="<?php echo $this->url('edit-anc-site',array('action'=>'edit')); ?>">
         <div class="card">
             <div class="row">

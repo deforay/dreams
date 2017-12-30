@@ -25,13 +25,11 @@ class DataCollectionController extends AbstractActionController{
         }else{
             $countryId = '';
             $type = '';
-            $dashCountryId = '';
             $dateSrc = '';
             $date = '';
             $dashLab = '';
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             $type = $this->params()->fromQuery('type');
-            $dashCountryId = base64_decode($this->params()->fromQuery('country'));
             $dateSrc = $this->params()->fromQuery('dSrc');
             $date = $this->params()->fromQuery('date');
             $dashLab = base64_decode($this->params()->fromQuery('lab'));
@@ -49,7 +47,6 @@ class DataCollectionController extends AbstractActionController{
                 'countries'=>$countryList,
                 'countryId'=>$countryId,
                 'type'=>$type,
-                'dashCountryId'=>$dashCountryId,
                 'dateSrc'=>$dateSrc,
                 'date'=>$date,
                 'dashLab'=>$dashLab,
@@ -82,29 +79,33 @@ class DataCollectionController extends AbstractActionController{
         }
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         $encodedCountryId = $this->params()->fromRoute('countryId');
-        $dataCollectionId = base64_decode($this->params()->fromRoute('id'));
-        $result = $dataCollectionService->getDataCollection($dataCollectionId);
-        if($result){
-            $preventUrl = (trim($countryId)!= '')?'/data-collection/'.$encodedCountryId:'/data-collection';
-            if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
-            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-            $commonService = $this->getServiceLocator()->get('CommonService');
-            $facilityService = $this->getServiceLocator()->get('FacilityService');
-            $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId,$province ='',$district ='');
-            $rejectionReasonList = $commonService->getActiveRejectionReasons();
-            $testStatusList = $commonService->getAllTestStatus();
-            $facilityList = $facilityService->getActivefacilities('data-collection',$countryId);
-            return new ViewModel(array(
-                'row'=>$result,
-                'ancSites'=>$ancSiteList,
-                'rejectionReasons'=>$rejectionReasonList,
-                'allTestStatus'=>$testStatusList,
-                'facilities'=>$facilityList,
-                'countryId'=>$countryId
-                
-            ));
+        if(isset($countryId) && trim($countryId)!= ''){
+            $dataCollectionId = base64_decode($this->params()->fromRoute('id'));
+            $result = $dataCollectionService->getDataCollection($dataCollectionId);
+            if($result){
+                $preventUrl = (trim($countryId)!= '')?'/data-collection/'.$encodedCountryId:'/data-collection';
+                if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); };
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $commonService = $this->getServiceLocator()->get('CommonService');
+                $facilityService = $this->getServiceLocator()->get('FacilityService');
+                $ancSiteList = $ancSiteService->getActiveAncSites('data-collection',$countryId,$province ='',$district ='');
+                $rejectionReasonList = $commonService->getActiveRejectionReasons();
+                $testStatusList = $commonService->getAllTestStatus();
+                $facilityList = $facilityService->getActivefacilities('data-collection',$countryId);
+                return new ViewModel(array(
+                    'row'=>$result,
+                    'ancSites'=>$ancSiteList,
+                    'rejectionReasons'=>$rejectionReasonList,
+                    'allTestStatus'=>$testStatusList,
+                    'facilities'=>$facilityList,
+                    'countryId'=>$countryId
+                    
+                ));
+            }else{
+               return $this->redirect()->toRoute('home');
+            }
         }else{
-           return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('home');
         }
     }
     
@@ -113,7 +114,7 @@ class DataCollectionController extends AbstractActionController{
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $result = $dataCollectionService->getDataCollection($dataCollectionId);
-        if(isset($countryId) && trim($countryId)!=''){
+        if(isset($countryId) && trim($countryId)!= ''){
             $country = $countryId;
         }else{
             $country = $result->country;

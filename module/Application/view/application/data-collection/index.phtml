@@ -2,12 +2,10 @@
 use Zend\Session\Container;
 $loginContainer = new Container('user');
 if(isset($date) && trim($date)!= ''){
-    $countryId = '';
     $link = "/";
 }else if(isset($countryId) && trim($countryId)!= ''){
     $link = "/data-collection/".base64_encode($countryId);
 }else{
-    $countryId = '';
     $link = "/data-collection";
 }
 ?>
@@ -19,9 +17,6 @@ if(isset($date) && trim($date)!= ''){
         background-color: #eaeaea;
         border-bottom: 1px solid #ccc;
         padding: 10px 20px;
-    }
-    pre {
-        max-height: 596px;
     }
     #search-items{
         display: inline-block;
@@ -129,7 +124,7 @@ if(isset($date) && trim($date)!= ''){
     </div>
     <?php
     if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
-	<div class="formContainer row dashboard-wrapper content-container" style="margin-bottom:20px;">
+	<div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
 	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;"><?php echo (trim($type)!= '')?'Show this form':'Hide this form'; ?></a>
 	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection',array('action'=>'add')); ?>" style="display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
 		<div class="card">
@@ -488,7 +483,7 @@ if(isset($date) && trim($date)!= ''){
 	    </form>
 	</div>
     <?php } ?>
-    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 5px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
@@ -569,7 +564,7 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol24">Added by</label> <br>
 	    </div>
 	    <?php
-	    if(trim($countryId)== ''){
+	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
 		<input type="hidden" id="countColumn" value="25"/>
@@ -580,10 +575,10 @@ if(isset($date) && trim($date)!= ''){
 	    <?php } ?>
 	</div>
     </div>
-    <div id="showListButton" class="row dashboard-wrapper content-container" style="margin-bottom: 10px;display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
+    <div id="showListButton" class="row content-container" style="padding: 0 20px;margin-bottom: 10px;display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
        <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadLabDataList();">Show Lab Data List</a>
     </div>
-    <div class="row dashboard-wrapper content-container hideDataTable" id="labDataList" style="display:none;">
+    <div class="row content-container hideDataTable" id="labDataList" style="padding: 0 20px;display:none;">
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
@@ -728,7 +723,6 @@ if(isset($date) && trim($date)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
-		aoData.push({"name": "dashCountryId", "value": '<?php echo $dashCountryId; ?>'});
 		aoData.push({"name": "dateSrc", "value": '<?php echo $dateSrc; ?>'});
                 aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
 		aoData.push({"name": "dashLab", "value": '<?php echo $dashLab; ?>'});
@@ -761,7 +755,7 @@ if(isset($date) && trim($date)!= ''){
        $('#search-items').on('keyup', function(){
             var oTable = $('.dataTable').dataTable();
             oTable.fnFilter($(this).val());
-        });
+       });
     }									
 
     $(document).ready(function() {
@@ -823,8 +817,8 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('lock-data-collection'); ?>", {dataCollectionId:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }
@@ -837,8 +831,8 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-data-collection'); ?>", {dataCollectionId:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }
@@ -851,8 +845,8 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('data-collection',array('action'=>'send-request')); ?>", {dataCollectionId:ID},
 		function(data){
-		    if($.trim(data) == 0 || $.trim(data) == ''){
-		      alert("OOPS..");
+		    if(data == "undefined" || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
 		    }
@@ -1175,7 +1169,7 @@ if(isset($date) && trim($date)!= ''){
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    dcid = [];
-		    alert('OOPS..');
+		    alert('Error-Oops, something went wrong!!');
 		    $.unblockUI();
 		}else{
 		    dcid = [];

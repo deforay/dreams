@@ -33,13 +33,17 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4>Summary of Online Reported Data</h4>
+        <div class="col m8 s12 left-align" style="font-size: 34px;font-weight:400;">Summary of Online Reported Data</div>
+        <div class="col m4 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Summary</a>
+        </div>
     </div>
     <br><br>
-    <div class="row content-container general" style="padding:0;">
+    <div class="row content-container general">
         <div class="row">
             <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" style="background-color:#00a65a;">
+                 <div class="card small-chart margin" style="background-color:#3dc587;">
                     <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Lab Tests Completed</small>
                         <div class="summary-count"><?php echo (isset($summaries[0]['labTestCompleted']))?$summaries[0]['labTestCompleted']:0; ?></div>
@@ -47,7 +51,7 @@
                  </div>
              </div>
              <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" style="background-color:#00c0ef;">
+                 <div class="card small-chart margin" style="background-color:#52bed8;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Behaviour Data</small>
                         <div class="summary-count"><?php echo (isset($summaries[1]['totalBD']))?$summaries[1]['totalBD']:0; ?></div>
@@ -55,7 +59,7 @@
                  </div>
              </div>
              <div class="col l4 m6 s12">
-                 <div class="card small-chart margin" style="background-color:#f39c12;">
+                 <div class="card small-chart margin" style="background-color:#fbb548;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>ANC Rapid Recency Assay Recent <span style="text-transform:none;font-size:13px;">(Visual)</span></small>
                         <div class="summary-count"><?php echo (isset($summaries[1]['totalANCRecencyTestRecent']))?$summaries[1]['totalANCRecencyTestRecent']:0; ?></div>
@@ -65,7 +69,7 @@
         </div>
         <div class="row">
             <div class="col l6 m6 s12">
-                <div class="card small-chart margin" style="background-color:#dd4b39;">
+                <div class="card small-chart margin" style="background-color:#f97465;">
                     <div class="col l12 m12 s12" style="padding:5px;">
                        <small>Behaviour Data Pending as on Today</small>
                        <div class="summary-count"><?php echo (isset($summaries[1]['bdIncompletebyToday']))?$summaries[1]['bdIncompletebyToday']:0; ?></div>
@@ -73,7 +77,7 @@
                 </div>
             </div>
             <div class="col l6 m6 s12">
-                 <div class="card small-chart margin" style="background-color:#dd4b39;">
+                 <div class="card small-chart margin" style="background-color:#f97465;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Lab Tests Pending as on Today</small>
                         <div class="summary-count"><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></div>
@@ -104,7 +108,7 @@
                     <div class="col s2" style="visibility:hidden;">--FILTER END--</div>
                 </div>
                 <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
-                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0);" onclick="searchDataReporting('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
                 </div>
             </form>
@@ -122,7 +126,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-bottom:0;">
             <div class="col l12 m12 s12">
                 <div class="card charts">
                     <div class="card-content">

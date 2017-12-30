@@ -1,5 +1,5 @@
 <?php
-if(isset($countryId) && trim($countryId)!=''){
+if(trim($countryId)!= ''){
     $link = "/user/".base64_encode($countryId);
 }else{
     $link = "/user";
@@ -37,7 +37,7 @@ if(count($row['userLaboratories'])>0){
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit User</a>
         </div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row content-container" style="padding: 0 20px;">
         <form id="editUserForm" name="editUserForm" method="post" action="<?php echo $this->url('edit-user'); ?>">
         <div class="card">
             <div class="row">

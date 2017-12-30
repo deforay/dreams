@@ -29,7 +29,7 @@ class CountryService {
             $adapter->commit();
                $alertContainer->msg = 'Country added successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
        }
        catch (Exception $exc) {
@@ -60,7 +60,7 @@ class CountryService {
             $adapter->commit();
                $alertContainer->msg = 'Country updated successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
        }
        catch (Exception $exc) {

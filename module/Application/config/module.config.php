@@ -80,7 +80,7 @@ return array(
             ),'user' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/user[/:countryId]',
+                    'route' => '/user[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\User',
                         'action' => 'index'
@@ -116,7 +116,7 @@ return array(
             ),'facility' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/facility[/:countryId]',
+                    'route' => '/facility[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Facility',
                         'action' => 'index'
@@ -152,7 +152,7 @@ return array(
             ),'anc-site' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/anc-site[/:countryId]',
+                    'route' => '/anc-site[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\AncSite',
                         'action' => 'index'
@@ -179,7 +179,7 @@ return array(
             ),'data-collection' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/data-collection[/:countryId]',
+                    'route' => '/data-collection[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataCollection',
                         'action' => 'index'
@@ -233,7 +233,7 @@ return array(
             ),'data-extraction' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/data-extraction[/:countryId]',
+                    'route' => '/data-extraction[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataExtraction',
                         'action' => 'index'
@@ -251,7 +251,7 @@ return array(
             ),'result-email' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/result-email[/:countryId]',
+                    'route' => '/result-email[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\ResultEmail',
                         'action' => 'index'
@@ -278,7 +278,7 @@ return array(
             ),'result-sms' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/result-sms[/:countryId]',
+                    'route' => '/result-sms[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\ResultSms',
                         'action' => 'index'
@@ -395,7 +395,7 @@ return array(
             ),'clinic-lab-report' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/clinic/lab-report[/:countryId]',
+                    'route' => '/lab-report[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Clinic',
                         'action' => 'lab-report'
@@ -431,7 +431,7 @@ return array(
             ),'clinic-risk-assessment' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/clinic/risk-assessment[/:countryId]',
+                    'route' => '/clinic/risk-assessment[/][/:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\RiskAssessment',
                         'action' => 'index'

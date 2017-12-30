@@ -258,15 +258,13 @@ class DataCollectionTable extends AbstractTableGateway {
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
-	}else if(isset($parameters['dashCountryId']) && trim($parameters['dashCountryId'])!= ''){
-	   $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['dashCountryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $data_Column = ($parameters['dateSrc'] == 'collected')?'da_c.specimen_collected_date':'da_c.added_on';
-	   $splitReportingMonthYear = explode("/",$parameters['date']);
-	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR('.$data_Column.') ="'.$splitReportingMonthYear[1].'"');
+	   $reportingMonthYearArray = explode("/",$parameters['date']);
+	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
 	}
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
@@ -368,6 +366,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $userUnlockedHistory = '';
 	    if($aRow['unlocked_on']!= null && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
 		$unlockedDate = explode(" ",$aRow['unlocked_on']);
+		
 		$userQuery = $sql->select()->from(array('u' => 'user'))->columns(array('user_id','full_name'))->where(array('u.user_id'=>$aRow['unlocked_by']));
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -375,7 +374,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		if(isset($userResult->user_id)){
 		    $unlockedBy = ($userResult->user_id == $loginContainer->userId)?'You':ucwords($userResult->full_name);
 		}
-	        $userUnlockedHistory = '<i class="zmdi zmdi-info-outline unlocKbtn" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'" style="font-size:1rem;"></i>';
+	        $userUnlockedHistory = '<i class="zmdi zmdi-info-outline" title="This row was unlocked on '.$common->humanDateFormat($unlockedDate[0])." ".$unlockedDate[1].' by '.$unlockedBy.'"></i>';
 	    }
 	    $dataView = '';
 	    $dataEdit = '';
@@ -383,15 +382,17 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $dataUnlock = '';
 	    $pdfLink = '';
 	    //data view
-	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($aRow['country']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-1" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp;';
+	    $dataView = '<a href="/data-collection/view/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-1" title="View"><i class="zmdi zmdi-eye"></i> View</a>&nbsp;&nbsp;';
 	    //data edit
-	    if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']!= 'locked'){
+	    if($loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name']!= 'locked'){
 		$dataEdit = '<a href="/data-collection/edit/' . base64_encode($aRow['data_collection_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
-	    } if($loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'completed'){
+	    }
+	    //data lock
+	    if($loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'completed'){
 		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-1" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
 	    }
-	    //for csc/cc
-	    if(($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC') && $loginContainer->hasViewOnlyAccess!='yes' && $aRow['test_status_name']== 'locked'){
+	    //data unlock(csc/cc)
+	    if(($loginContainer->roleCode == 'CSC' || $loginContainer->roleCode == 'CC') && $loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'locked'){
 		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
 	    }
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
@@ -963,8 +964,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	}else if($loginContainer->roleCode == 'CC'){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	} if(trim($params['reportingMonthYear'])!= ''){
-	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+	    $reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
+	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR(da_c.added_on) ="'.$reportingMonthYearArray[1].'"');
 	}
 	$queryContainer->dashboardQuery = $dataCollectionQuery;
 	$dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
@@ -1567,7 +1568,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //individual result pdf
 	    $pdfLink = '<a href="javascript:void(0);" onclick="printLabResult(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange margin-bottom-1" title="PDF"><i class="zmdi zmdi-collection-pdf"></i> PDF</a>';
 	    $row = array();
-	    $row[] = '<input type="checkbox" name="data-select[]" id="'.$aRow['data_collection_id'].'" value="'.base64_encode($aRow['data_collection_id']).'" onchange="doMultipleDataSelect(this);"/><label for="'.$aRow['data_collection_id'].'" style="padding-left:22%;"></label>';
+	    $row[] = '<input type="checkbox" name="data-select[]" id="'.$aRow['data_collection_id'].'" value="'.base64_encode($aRow['data_collection_id']).'" onchange="doMultipleDataSelect(this);"/><label for="'.$aRow['data_collection_id'].'" style="padding-left:40%;"></label>';
 	    $row[] = $specimenCollectedDate;
 	    $row[] = $status;
 	    $row[] = ucwords($aRow['anc_site_name']);
@@ -1631,8 +1632,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(trim($params['reportingMonthYear'])!= ''){
-	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH('.$params['labDataReportingDate'].') ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR('.$params['labDataReportingDate'].') ="'.$splitReportingMonthYear[1].'"');
+	    $reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
+	    $dataCollectionQuery = $dataCollectionQuery->where('MONTH('.$params['labDataReportingDate'].') ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR('.$params['labDataReportingDate'].') ="'.$reportingMonthYearArray[1].'"');
 	}
 	if(trim($params['province'])!= ''){
 	    $dataCollectionQuery = $dataCollectionQuery->where(array('f.province'=>base64_decode($params['province'])));
@@ -1671,8 +1672,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $riskAssessmentQuery = $riskAssessmentQuery->where(array('r_a.added_by'=>$loginContainer->userId));
 	}
 	if(trim($params['reportingMonthYear'])!= ''){
-	    $splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-	    $riskAssessmentQuery = $riskAssessmentQuery->where('MONTH('.$params['clinicDataReportingDate'].') ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR('.$params['clinicDataReportingDate'].') ="'.$splitReportingMonthYear[1].'"');
+	    $reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
+	    $riskAssessmentQuery = $riskAssessmentQuery->where('MONTH('.$params['clinicDataReportingDate'].') ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR('.$params['clinicDataReportingDate'].') ="'.$reportingMonthYearArray[1].'"');
 	}
 	if(trim($params['province'])!= ''){
 	    $riskAssessmentQuery = $riskAssessmentQuery->where(array('anc.province'=>base64_decode($params['province'])));
@@ -1708,8 +1709,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->where(array('anc.country'=>$params['country']))
 				  ->group('anc.anc_site_id');
 	    if(trim($params['reportingMonthYear'])!= ''){
-		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-		$labRecentQuery = $labRecentQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(da_c.added_on) ="'.$splitReportingMonthYear[1].'"');
+		$reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
+		$labRecentQuery = $labRecentQuery->where('MONTH(da_c.added_on) ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR(da_c.added_on) ="'.$reportingMonthYearArray[1].'"');
 	    } if(trim($params['province'])!= ''){
 		$labRecentQuery = $labRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	    } if(trim($params['specimenType'])!= ''){
@@ -1743,8 +1744,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				  ->where(array('anc.country'=>$params['country']))
 				  ->group('anc.anc_site_id');
 	    if(trim($params['reportingMonthYear'])!= ''){
-		$splitReportingMonthYear = explode("/",$params['reportingMonthYear']);
-		$ancRecentQuery = $ancRecentQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($splitReportingMonthYear[0])).'" AND YEAR(r_a.interview_date) ="'.$splitReportingMonthYear[1].'"');
+		$reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
+		$ancRecentQuery = $ancRecentQuery->where('MONTH(r_a.interview_date) ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR(r_a.interview_date) ="'.$reportingMonthYearArray[1].'"');
 	    } if(trim($params['province'])!= ''){
 		$ancRecentQuery = $ancRecentQuery->where(array('anc.province'=>base64_decode($params['province'])));
 	    } if(trim($params['specimenType'])!= ''){

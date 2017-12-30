@@ -59,9 +59,13 @@ $loginContainer = new Container('user');
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <h4 class="page-title">Study Files </h4>
+	<div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Study Files</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Study Files</a>
+        </div>
     </div>
-    <div class="row">
+    <div class="row content-container">
 	<div class="col s12">
 	    <div class="card card-default">
 		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Study Files
@@ -97,7 +101,6 @@ $loginContainer = new Container('user');
 	</div>
     </div>
 </div>
-<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
 <script>
     $(document).ready(function(){
        oTable = $('#studyFilesDataTable').dataTable({
@@ -137,8 +140,8 @@ $loginContainer = new Container('user');
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
         $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+	});
     });
 </script>

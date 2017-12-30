@@ -52,9 +52,6 @@
         border-bottom: 1px solid #ccc;
         padding: 10px 20px;
     }
-    pre {
-        max-height: 596px;
-    }
     #search-items{
         display: inline-block;
         background: transparent none repeat scroll 0 0;
@@ -107,62 +104,6 @@
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Print Lab Logbook</a>
        </div>
-    </div>
-    <div class="row" style="max-width:1109px;">
-	<form id="searchFilterForm" action="#">
-	    <div class="col l12 m12 s12">
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l2 m2 s2 left-align"><h6><strong>Receipt Date at Lab </strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <input id="receiptDateAtCentralLab" name="receiptDateAtCentralLab" type="text" title="Please enter receipt date at lab" onclick="selectDate();" readonly>
-		</div>
-		<div class="col l2 m2 s2 left-align" style="padding-left:4%;"><h6><strong>ANC Site </strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <select class="material-select" id="anc" name="anc" title="Please select anc site" style="width:40% !important;">
-			<option value="">All</option>
-			<?php
-			foreach($ancSites as $anc){
-			    ?>
-			    <option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
-			    <?php
-			}
-			?>
-		    </select>
-		</div>
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
-	    </div>
-	    <div class="col l12 m12 s12">
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER START--</div>
-		<div class="col l2 m2 s2 left-align"><h6><strong>Lab/Facility </strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <select class="material-select" id="lab" name="lab" title="Please select lab/facility" style="width:40% !important;">
-			<option data-lab-name="" value="">All</option>
-			<?php
-			foreach($facilities as $lab){
-			    ?>
-			    <option data-lab-name="<?php echo ucwords($lab['facility_name']); ?>" value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
-			    <?php
-			}
-			?>
-		    </select>
-		</div>
-		<div class="col l2 m2 s2 left-align"><h6><strong>Result Reported </strong></h6></div>
-		<div class="col l3 m3 s3 left-align">
-		    <select class="material-select" id="status" name="status" title="Please select status" style="width:40% !important;">
-			<option value="">All Tests</option>
-			<option value="completed" selected>Completed Tests</option>
-			<option value="pending">Pending Tests</option>
-		    </select>
-		</div>
-		<div class="col l1 m1 s1" style="visibility:hidden;">--FILTER END--</div>
-	    </div>
-	    <div class="col l12 m12 s12" style="text-align:center;">
-		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
-	    </div>
-	</form>
     </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
 	<div class="col m12">
@@ -241,7 +182,67 @@
 	    </div>
 	</div>
     </div>
-    <div class="row dashboard-wrapper content-container">
+    <div class="row" style="max-width:1109px;">
+	<form id="searchFilterForm" action="#">
+	    <div class="row">
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<input id="receiptDateAtCentralLab" name="receiptDateAtCentralLab" type="text" title="Please enter receipt date at lab" onclick="selectDate();" readonly>
+			<label for="receiptDateAtCentralLab">Receipt Date at Lab </label>
+		     </div>
+		</div>
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="anc" name="anc" title="Please select anc">
+			    <option value="">All ANCs</option>
+			    <?php
+			    foreach($ancSites as $anc){
+				?>
+				<option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+			<label for="anc">ANC Site </label>
+		     </div>
+		</div>
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="lab" name="lab" title="Please select lab">
+			    <option data-lab-name="" value="">All Labs/Facilities</option>
+			    <?php
+			    foreach($facilities as $lab){
+				?>
+				<option data-lab-name="<?php echo ucwords($lab['facility_name']); ?>" value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+			<label for="lab">Lab/Facility </label>
+		     </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="status" name="status" title="Please select test status">
+			    <option value="">All Tests</option>
+			    <option value="completed" selected>Completed Tests</option>
+			    <option value="pending">Pending Tests</option>
+			</select>
+			<label for="status">Result Reported </label>
+		     </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Logbook List
@@ -439,7 +440,7 @@
 	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name') },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate logbook pdf.');
+		alert('Error-Oops, Unable to generate pdf');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
@@ -453,7 +454,7 @@
 	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name'),frmSrc:'log'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

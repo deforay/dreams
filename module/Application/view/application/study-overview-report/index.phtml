@@ -158,7 +158,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Study Overview Report</a>
-       </div>
+        </div>
     </div>
     <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:auto;background:#e0e0e0;">
 	<div class="col m3">
@@ -317,13 +317,13 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 		</div>
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
-		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchStudyOverviewData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractOverviewData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
-    <div class="row">
+    <div class="row content-container">
 	<div class="col l12 m12 s12">
 	    <div class="card card-default">
 		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Study Overview
@@ -629,7 +629,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 	$.post("<?php echo $this->url('export-study-overview'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate excel.');
+		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

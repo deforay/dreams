@@ -9,7 +9,6 @@
 
 namespace Application\Controller;
 
-use Zend\Session\Container;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
@@ -36,7 +35,7 @@ class UserController extends AbstractActionController{
     public function addAction(){
         $userService = $this->getServiceLocator()->get('UserService');
         if($this->getRequest()->isPost()){
-            $params=$this->getRequest()->getPost();
+            $params = $this->getRequest()->getPost();
             $userService->addUser($params);
            return $this->redirect()->toUrl($params['redirectUrl']);
         }else{
@@ -62,9 +61,9 @@ class UserController extends AbstractActionController{
     }
     
     public function editAction(){
-        $userService=$this->getServiceLocator()->get('UserService');
+        $userService = $this->getServiceLocator()->get('UserService');
          if($this->getRequest()->isPost()){
-            $params=$this->getRequest()->getPost();
+            $params = $this->getRequest()->getPost();
             $userService->updateUser($params);
            return $this->redirect()->toUrl($params['redirectUrl']);
         }else{

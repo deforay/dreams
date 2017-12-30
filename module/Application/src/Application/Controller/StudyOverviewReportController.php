@@ -15,16 +15,16 @@ class StudyOverviewReportController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryInfo = $countryService->getCountry($countryId);
-            if($countryInfo){
+            if(isset($countryId) && trim($countryId)!= ''){
+                $countryService = $this->getServiceLocator()->get('CountryService');
+                $countryInfo = $countryService->getCountry($countryId);
                 $provinces = $countryService->getProvincesByCountry($countryId);
                 return new ViewModel(array(
                     'countryInfo'=>$countryInfo,
                     'provinces'=>$provinces
                 ));
             }else{
-               return $this->redirect()->toRoute('home'); 
+               return $this->redirect()->toRoute('home');
             }
         }
     }

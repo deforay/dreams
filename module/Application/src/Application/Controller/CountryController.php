@@ -81,10 +81,10 @@ class CountryController extends AbstractActionController{
     
     public function dashboardAction(){
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
-        $countryService = $this->getServiceLocator()->get('CountryService');
-        $countryInfo = $countryService->getCountry($countryId);
-        $provinces = $countryService->getProvincesByCountry($countryId);
-        if($countryInfo){
+        if(isset($countryId) && trim($countryId)!= ''){
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $countryInfo = $countryService->getCountry($countryId);
+            $provinces = $countryService->getProvincesByCountry($countryId);
             return new ViewModel(array(
                 'countryInfo'=>$countryInfo,
                 'provinces'=>$provinces

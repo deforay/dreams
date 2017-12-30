@@ -251,13 +251,13 @@ $loginContainer = new Container('user');
 		</div>
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
-		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
 	    </div>
 	</form>
     </div>
-    <div class="row">
+    <div class="row content-container">
         <div class="col l12 m12 s12">
             <div class="card card-default">
                 <div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Recency Lab Results
@@ -412,9 +412,9 @@ $loginContainer = new Container('user');
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    var oTable = $('.dataTable').dataTable();
+	    oTable.fnFilter($(this).val());
+       });
     });
     
     function fnShowHide(iCol,type){
@@ -511,7 +511,7 @@ $loginContainer = new Container('user');
 	    function(data){
 		if(data === "" || data === null || data === undefined){
 		    dcid = [];
-		    alert('OOPS..');
+		    alert('Error-Oops, unable to generate pdf');
 		    $.unblockUI();
 		}else{
 		    dcid = [];
@@ -533,7 +533,7 @@ $loginContainer = new Container('user');
 	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dataCollectionRow,frmSrc:'l_l_r_r',printSrc:'<?php echo $printSrc; ?>'},
 	function(data){
 	    if(data === "" || data === null || data === undefined){
-		alert('OOPS..');
+		alert('Error-Oops, unable to generate pdf');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
@@ -556,7 +556,7 @@ $loginContainer = new Container('user');
 	$.post("<?php echo $this->url('export-clinic-lab-report'); ?>", {reportType: $('#reportType').val()},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
-		alert('OOPS..Unable to generate lab report pdf.');
+		alert('Error-Oops, Unable to generate pdf');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

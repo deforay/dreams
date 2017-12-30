@@ -9,14 +9,13 @@
 
 namespace Application\Controller;
 
-use Zend\Session\Container;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 class ResultEmailController extends AbstractActionController{
     public function indexAction(){
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
-        if(trim($countryId)!= ''){
+        if(isset($countryId) && trim($countryId)!= ''){
             $facilityService = $this->getServiceLocator()->get('FacilityService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $commonService = $this->getServiceLocator()->get('CommonService');

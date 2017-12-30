@@ -269,7 +269,7 @@ class CommonService {
         } catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
-            error_log('Oops! Something went wrong in mailer.');
+            error_log('Error-Oops, Something went wrong in mailer');
         }
     }
     

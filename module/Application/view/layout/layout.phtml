@@ -160,6 +160,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                 display:block !important;
             }
         }
+        .content-container{
+            padding: 0 10px;
+        }
     </style>
     <script src="<?php echo $this->basePath() .'/assets/js/jquery-2.1.1.min.js' ?>"></script>
 </head>
@@ -298,7 +301,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } ?>
                                                                 <li class="countryLabResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
+                                                                    <a href="/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=lab" class="countryLabResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
                                                             <?php if($countryPrintLabLogbookAccess == 'show') { ?>
                                                                 <li class="countryLogbookMenu<?php echo $country['country_id']; ?> menuAll">
@@ -326,7 +329,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicResultMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
+                                                                    <a href="/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
@@ -656,7 +659,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='lab-report'){
+        }else if(splitsUrl[1]=='lab-report'){
             var splits=str.substr(str.lastIndexOf('/') + 1);
             var menuSrc = (location.search.substring(1) == 'frmSrc=anc')?'Clinic':'Lab';
             $(".countryMenu"+atob(splits)).addClass("active");

@@ -174,8 +174,6 @@ class AncSiteTable extends AbstractTableGateway {
 		               ->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
         if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
            $sQuery = $sQuery->where(array('anc.country'=>trim($parameters['countryId'])));
-        }else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-           $sQuery = $sQuery->where(array('anc.country'=>base64_decode($parameters['country'])));  
         }
        
        if (isset($sWhere) && $sWhere != "") {
@@ -208,8 +206,6 @@ class AncSiteTable extends AbstractTableGateway {
 				->join(array('c' => 'country'), "c.country_id=anc.country",array('country_name'));
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('anc.country'=>trim($parameters['countryId'])));
-	}else if(isset($parameters['country']) && trim($parameters['country'])!= ''){
-	    $tQuery = $tQuery->where(array('anc.country'=>base64_decode($parameters['country'])));
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);

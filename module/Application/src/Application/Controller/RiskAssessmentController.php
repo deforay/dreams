@@ -54,7 +54,7 @@ class RiskAssessmentController extends AbstractActionController{
             return $this->redirect()->toUrl($params['redirectUrl']);
         }
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
-        if(trim($countryId)!= ''){
+        if(isset($countryId) && trim($countryId)!= ''){
             $countryService = $this->getServiceLocator()->get('CountryService');
             $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $countryList = $countryService->getActiveCountries('risk-assessment','');
@@ -79,11 +79,11 @@ class RiskAssessmentController extends AbstractActionController{
            $riskAssessmentService->updateRiskAssessment($params);
           return $this->redirect()->toUrl($params['redirectUrl']);
        }
-       $countryId=base64_decode($this->params()->fromRoute('countryId'));
+       $countryId = base64_decode($this->params()->fromRoute('countryId'));
        $encodedCountryId = $this->params()->fromRoute('countryId');
-       if(trim($countryId)!= ''){
-            $riskAssessmentId=base64_decode($this->params()->fromRoute('id'));
-            $result=$riskAssessmentService->getRiskAssessment($riskAssessmentId);
+       if(isset($countryId) && trim($countryId)!= ''){
+            $riskAssessmentId = base64_decode($this->params()->fromRoute('id'));
+            $result = $riskAssessmentService->getRiskAssessment($riskAssessmentId);
             if($result){
                 $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
                 if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); }
@@ -100,13 +100,13 @@ class RiskAssessmentController extends AbstractActionController{
                return $this->redirect()->toRoute('home'); 
             }
        }else{
-        return $this->redirect()->toRoute('home');
+          return $this->redirect()->toRoute('home');
        }
     }
     
     public function viewAction(){
-       $countryId=base64_decode($this->params()->fromRoute('countryId'));
-       if(trim($countryId)!= ''){
+       $countryId = base64_decode($this->params()->fromRoute('countryId'));
+       if(isset($countryId) && trim($countryId)!= ''){
         $riskAssessmentId = base64_decode($this->params()->fromRoute('id'));
         $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
         $result = $riskAssessmentService->getRiskAssessment($riskAssessmentId);
@@ -197,9 +197,9 @@ class RiskAssessmentController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryInfo = $countryService->getCountry($countryId);
-            if($countryInfo){
+            if(isset($countryId) && trim($countryId)!= ''){
+                $countryService = $this->getServiceLocator()->get('CountryService');
+                $countryInfo = $countryService->getCountry($countryId);
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
                 $districts = $countryService->getDistrictsByCountry($countryId);

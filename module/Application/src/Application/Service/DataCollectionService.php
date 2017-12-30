@@ -31,7 +31,7 @@ class DataCollectionService {
             $adapter->commit();
                $alertContainer->msg = 'Lab Data with Patient Barcode ID '.$params['patientBarcodeId'].' has been added successfully.';
            }else{
-              $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
         }
         catch (Exception $exc) {
@@ -62,7 +62,7 @@ class DataCollectionService {
                $adapter->commit();
                $alertContainer->msg = 'Lab Data with Patient Barcode ID '.$params['patientBarcodeId'].' has been updated successfully.';
            }else{
-              $alertContainer->msg = 'OOPS..';
+              $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
        }
        catch (Exception $exc) {
@@ -102,7 +102,7 @@ class DataCollectionService {
         if(isset($global['locking_data_after_login']) && (int)$global['locking_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_data_after_login'].' hours';
         }
-        //To lock completed data
+        
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                                    ->columns(array('data_collection_id','added_on'))
                                    ->where(array('da_c.added_by'=>$loginContainer->userId,'da_c.status'=> 1));
@@ -112,7 +112,7 @@ class DataCollectionService {
             $now = date("Y-m-d H:i:s");
             foreach($dataCollectionResult as $dataCollection){
                $newDate = date("Y-m-d H:i:s", strtotime($dataCollection['added_on'] . $lockHour));
-               if($newDate <=$now){
+               if($newDate <= $now){
                    $params = array();
                    $params['dataCollectionId'] = base64_encode($dataCollection['data_collection_id']);
                    $dataCollectionDb->lockDataCollectionDetails($params);
@@ -126,7 +126,7 @@ class DataCollectionService {
         if(isset($global['locking_clinic_data_after_login']) && (int)$global['locking_clinic_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_clinic_data_after_login'].' hours';
         }
-        //To lock completed data
+        
         $clinicDataCollectionQuery = $sql->select()->from(array('cl_da_c' => 'clinic_data_collection'))
                                    ->columns(array('cl_data_collection_id','added_on'))
                                    ->where(array('cl_da_c.added_by'=>$loginContainer->userId,'cl_da_c.status'=>1));
@@ -150,7 +150,6 @@ class DataCollectionService {
         if(isset($global['locking_risk_assessment_data_after_login']) && (int)$global['locking_risk_assessment_data_after_login'] > 0){
             $lockHour = '+'.(int)$global['locking_risk_assessment_data_after_login'].' hours';
         }
-        //To lock completed data
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->columns(array('assessment_id','added_on'))
                                    ->where(array('r_a.added_by'=>$loginContainer->userId,'r_a.status'=>1));
@@ -646,7 +645,7 @@ class DataCollectionService {
             $adapter->commit();
                $alertContainer->msg = 'ANC Data Reporting added successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
         }
         catch (Exception $exc) {
@@ -677,7 +676,7 @@ class DataCollectionService {
             $adapter->commit();
                $alertContainer->msg = 'ANC Data Reporting updated successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
         }
         catch (Exception $exc) {

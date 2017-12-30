@@ -29,7 +29,7 @@ class RoleService {
             $adapter->commit();
                $alertContainer->msg = 'Role added successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
        }
        catch (Exception $exc) {
@@ -65,7 +65,7 @@ class RoleService {
             $adapter->commit();
                $alertContainer->msg = 'Role updated successfully.';
            }else{
-             $alertContainer->msg = 'OOPS..';
+             $alertContainer->msg = 'Error-Oops, something went wrong!!';
            }
        }
        catch (Exception $exc) {
