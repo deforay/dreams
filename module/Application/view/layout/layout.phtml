@@ -382,7 +382,7 @@ if($loginContainer->roleCode== 'ANCSC'){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery.blockUI.js' ?>"></script>
 <script>
     var str = $(location).attr('pathname');
-    var splitsUrl = str.split("/",5);
+    var urlArray = str.split("/",5);
     $(function () {
         ol();
         $(".opensright").css("display","none");
@@ -390,7 +390,7 @@ if($loginContainer->roleCode== 'ANCSC'){
         $(".menuAll").removeClass("active");
         $(".cscMenu").removeClass("active");
         $(".collapsibleAll").css("display","none");
-        if(splitsUrl[1]=='country'){
+        if(urlArray[1]=='country'){
           $(".cscMenu").addClass("active");
           $(".collapsibleCSCMenu").css("display","block");
           $(".collapsibleCSCAdminMenu").css("display","block");
@@ -400,8 +400,8 @@ if($loginContainer->roleCode== 'ANCSC'){
           $(".cscAdminMenuSecond").css("color","#ff69b4");
           $(".cscCountryMenu").addClass("active");
           $(".cscCountryMenu").css("color","#fff");
-        }else if(splitsUrl[1]=='dashboard'){
-          var splits=str.substr(str.lastIndexOf('/') + 1);  
+        }else if(urlArray[1]=='dashboard'){
+          var splits = str.substr(str.lastIndexOf('/') + 1);  
           $(".countryMenu"+atob(splits)).addClass("active");
           $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
           $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -413,9 +413,9 @@ if($loginContainer->roleCode== 'ANCSC'){
           $(".countryDashboardMenu"+atob(splits)).css("color","#fff");
           $(".countryFacilityMenu"+atob(splits)).css("color","#444");
           $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
-        }else if(splitsUrl[1]=='user'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+        }else if(urlArray[1]=='user'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(urlArray[2])!='undefined' && urlArray[2]!='add' && urlArray[2]!='edit' && urlArray[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -427,7 +427,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
-            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+            }else if(typeof(urlArray[2])!='undefined' && urlArray[2]=='add' && typeof(urlArray[3])!='undefined' && urlArray[3]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -439,7 +439,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryUserMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
-            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+            }else if(typeof(urlArray[4])!='undefined' && urlArray[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -462,9 +462,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".cscUserMenu").addClass("active");
                 $(".cscUserMenu").css("color","#fff");
             }
-        }else if(splitsUrl[1]=='facility'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+        }else if(urlArray[1]=='facility'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(urlArray[2])!='undefined' && urlArray[2]!='add' && urlArray[2]!='edit' && urlArray[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -476,7 +476,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
-            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+            }else if(typeof(urlArray[2])!='undefined' && urlArray[2]=='add' && typeof(urlArray[3])!='undefined' && urlArray[3]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -488,7 +488,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryFacilityMenu"+atob(splits)).css("color","#fff");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
-            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+            }else if(typeof(urlArray[4])!='undefined' && urlArray[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -501,9 +501,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#444"); 
             }
-        }else if(splitsUrl[1]=='anc-site'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!=''){
+        }else if(urlArray[1]=='anc-site'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(urlArray[2])!='undefined' && urlArray[2]!='add' && urlArray[2]!='edit' && urlArray[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -515,7 +515,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
-            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+            }else if(typeof(urlArray[2])!='undefined' && urlArray[2]=='add' && typeof(urlArray[3])!='undefined' && urlArray[3]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -527,7 +527,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryAncsiteMenu"+atob(splits)).css("color","#fff");
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
-            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+            }else if(typeof(urlArray[4])!='undefined' && urlArray[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -540,9 +540,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryFacilityMenu"+atob(splits)).css("color","#444");
                 $(".countryUserMenu"+atob(splits)).css("color","#444");
             }
-        }else if(splitsUrl[1]=='data-collection'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!='add' && splitsUrl[2]!='edit' && splitsUrl[2]!='view' && splitsUrl[2]!=''){
+        }else if(urlArray[1]=='data-collection'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(urlArray[2])!='undefined' && urlArray[2]!='add' && urlArray[2]!='edit' && urlArray[2]!='view' && urlArray[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
@@ -552,7 +552,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryLabMenuSecond"+atob(splits)).addClass("active");
                 $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
                 $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='add' && typeof(splitsUrl[3])!='undefined' && splitsUrl[3]!=''){
+            }else if(typeof(urlArray[2])!='undefined' && urlArray[2]=='add' && typeof(urlArray[3])!='undefined' && urlArray[3]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
@@ -562,7 +562,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryLabMenuSecond"+atob(splits)).addClass("active");
                 $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
                 $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-            }else if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]=='edit' && typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+            }else if(typeof(urlArray[2])!='undefined' && urlArray[2]=='edit' && typeof(urlArray[4])!='undefined' && urlArray[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
@@ -572,7 +572,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".countryLabMenuSecond"+atob(splits)).addClass("active");
                 $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
                 $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-            }else if(typeof(splitsUrl[4])!='undefined' && splitsUrl[4]!=''){
+            }else if(typeof(urlArray[4])!='undefined' && urlArray[4]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataCollectionMenu"+atob(splits)).addClass("active");
@@ -587,9 +587,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".collapsibleCSCMenu").css("display","block");
                 $(".cscDataCollectionMenu").addClass("active");
             }
-        }else if(splitsUrl[1]=='data-extraction'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
-            if(typeof(splitsUrl[2])!='undefined' && splitsUrl[2]!=''){
+        }else if(urlArray[1]=='data-extraction'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            if(typeof(urlArray[2])!='undefined' && urlArray[2]!=''){
                 $(".countryMenu"+atob(splits)).addClass("active");
                 $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
                 $(".countryDataExtractionMenu"+atob(splits)).addClass("active");
@@ -604,8 +604,8 @@ if($loginContainer->roleCode== 'ANCSC'){
                 $(".collapsibleCSCMenu").css("display","block");
                 $(".cscDataExtractionMenu").addClass("active");
             }
-        }else if(splitsUrl[1]=='print-lab-logbook'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='print-lab-logbook'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryLogbookMenu"+atob(splits)).addClass("active");
@@ -615,8 +615,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).addClass("active");
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='result-email'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='result-email'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultEmailMenu"+atob(splits)).addClass("active");
@@ -626,8 +626,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).addClass("active");
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='result-sms'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='result-sms'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryResultSmsMenu"+atob(splits)).addClass("active");
@@ -637,8 +637,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryLabMenuSecond"+atob(splits)).addClass("active");
             $(".countryLabMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryLabMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='data-collection'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='clinic' && urlArray[2]=='data-collection'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryClinicDataCollectionMenu"+atob(splits)).addClass("active");
@@ -648,8 +648,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='data-extraction'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='clinic' && urlArray[2]=='data-extraction'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryClinicDataExtractionMenu"+atob(splits)).addClass("active");
@@ -659,8 +659,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='lab-report'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='lab-report'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             var menuSrc = (location.search.substring(1) == 'frmSrc=anc')?'Clinic':'Lab';
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -671,8 +671,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).addClass("active");
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='clinic' && splitsUrl[2]=='risk-assessment'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='clinic' && urlArray[2]=='risk-assessment'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryRiskAssessmentMenu"+atob(splits)).addClass("active");
@@ -682,8 +682,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
-        }else if(splitsUrl[1]=='study-overview'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='study-overview'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -693,8 +693,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
             $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
-        }else if(splitsUrl[1]=='anc-asante-result'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='anc-asante-result'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
@@ -704,16 +704,16 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
             $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
-        }else if(splitsUrl[1]=='study-files'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='study-files'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".studyFilesMenu"+atob(splits)).addClass("active");
             $(".studyFilesMenu"+atob(splits)).css("color","#fff");
-        }else if(splitsUrl[1]=='change-password'){
+        }else if(urlArray[1]=='change-password'){
             $(".changePasswordMenu").addClass("active");
-        }else if(splitsUrl[1]=='summary'){
-            var splits=str.substr(str.lastIndexOf('/') + 1);
+        }else if(urlArray[1]=='summary'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".summaryMenu"+atob(splits)).addClass("active");
@@ -723,7 +723,7 @@ if($loginContainer->roleCode== 'ANCSC'){
         }
     });
     
-    if(splitsUrl[1]!= 'user' && splitsUrl[1]!= 'facility' && splitsUrl[1]!= 'anc-site'){
+    if(urlArray[1]!= 'user' && urlArray[1]!= 'facility' && urlArray[1]!= 'anc-site'){
         //$(document).ready(function () {
         //    $("body").on("contextmenu",function(e){
         //      return false;

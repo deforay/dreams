@@ -997,10 +997,10 @@ if(isset($date) && trim($date)!= ''){
     function getCountriesLabAnc(){
 	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
             function(data) {
-		var splitData = data.split('divider');
-		$('.ancSiteSection').html(splitData[0]);
+		var dataArray = data.split('divider');
+		$('.ancSiteSection').html(dataArray[0]);
 		$('#ancSite').material_select();
-		$('.labSection').html(splitData[1]);
+		$('.labSection').html(dataArray[1]);
 		$('#lab').material_select();
 	    });
     }
