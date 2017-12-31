@@ -223,10 +223,10 @@ class DataCollectionService {
                 $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
-                    $headerRow = 1;
                     $labs = '';
                     $receiptDateatLab = '';
                     $resultReported = 'Completed Tests, Pending Tests';
+                    $headerRow = 1;
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                         $headerRow = 4;
                         //filter content
@@ -584,7 +584,7 @@ class DataCollectionService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log($name . $exc->getMessage());
@@ -922,7 +922,7 @@ class DataCollectionService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("ANC-DATA-REPORT--" . $exc->getMessage());
@@ -1390,7 +1390,7 @@ class DataCollectionService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("STUDY-OVERVIEW-REPORT--" . $exc->getMessage());
@@ -1606,7 +1606,7 @@ class DataCollectionService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("DASHBOARD-REPORT--" . $exc->getMessage());

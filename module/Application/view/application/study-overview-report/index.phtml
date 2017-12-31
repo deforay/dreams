@@ -536,9 +536,8 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
         $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    oTable.fnFilter($(this).val());
+	});
         selectSampleCollectionDate();
         selectSampleTestedDate();
     });
@@ -630,6 +629,9 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

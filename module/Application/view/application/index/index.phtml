@@ -165,6 +165,9 @@
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
 	    }else{
 		$.unblockUI();
 		window.open("/temporary/"+data, "_blank");

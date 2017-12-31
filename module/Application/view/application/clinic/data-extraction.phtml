@@ -114,7 +114,7 @@ if(trim($countryId)!= ''){
 	    <div class="col l12 m12 s12" style="text-align:center;margin-bottom:20px;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchDataExtractionData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<a href="javascript:void(0);" onclick="exportDataCollectionData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
@@ -223,7 +223,6 @@ if(trim($countryId)!= ''){
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-	    var oTable = $('.dataTable').dataTable();
 	    oTable.fnFilter($(this).val());
        });
        
@@ -256,12 +255,15 @@ if(trim($countryId)!= ''){
         searchDataExtractionData();
     }
     
-    function extractDataCollectionData(){
+    function exportDataCollectionData(){
 	$.blockUI();
 	$.post("<?php echo $this->url('export-clinic-data-collection'); ?>", {countryId:'<?php echo $countryId; ?>'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

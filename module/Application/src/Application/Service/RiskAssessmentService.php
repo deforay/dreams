@@ -1002,7 +1002,7 @@ class RiskAssessmentService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("RISK-ASSESSMENT-REPORT--" . $exc->getMessage());
@@ -1159,7 +1159,7 @@ class RiskAssessmentService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("ANC-ASANTE-RESULT--" . $exc->getMessage());

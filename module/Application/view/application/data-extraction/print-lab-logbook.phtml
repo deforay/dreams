@@ -237,8 +237,8 @@
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<a href="javascript:void(0);" onclick="generateLabLogbookPDF();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
@@ -392,9 +392,8 @@
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-                    var oTable = $('.dataTable').dataTable();
-                    oTable.fnFilter($(this).val());
-                });
+	    oTable.fnFilter($(this).val());
+       });
     });
     
     function fnShowHide(iCol){
@@ -435,7 +434,7 @@
         searchLabLogbookData();
     }
     
-    function exportLabLogbookData(){
+    function generateLabLogbookPDF(){
 	$.blockUI();
 	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name') },
 	function(data){
@@ -449,12 +448,15 @@
 	});
     }
     
-    function extractLabLogbookData(){
+    function exportLabLogbookData(){
 	$.blockUI();
 	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name'),frmSrc:'log'},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

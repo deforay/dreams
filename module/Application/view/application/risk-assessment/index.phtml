@@ -292,7 +292,6 @@ if(isset($date) && trim($date)!= ''){
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-	    var oTable = $('.dataTable').dataTable();
 	    oTable.fnFilter($(this).val());
        });
     });
@@ -355,6 +354,9 @@ if(isset($date) && trim($date)!= ''){
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();

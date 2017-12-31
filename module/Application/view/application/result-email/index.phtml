@@ -259,7 +259,7 @@
         function(data){
             $.unblockUI();
             if(data === "" || data === null || data === undefined){
-                alert('Error-Oops, Unable to generate excel');
+                alert('Error-Oops, Unable to generate result pdf');
             }else{
                 $.blockUI();
                 $("#pdfFile").val(data);
