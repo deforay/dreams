@@ -1490,7 +1490,7 @@ class RiskAssessmentService {
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
-                    return "d-n-a";
+                    return "na";
                 }
             }catch (Exception $exc) {
                 error_log("IPV-REPORT--" . $exc->getMessage());

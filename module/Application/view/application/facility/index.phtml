@@ -77,13 +77,13 @@ $loginContainer = new Container('user');
                                 <th>Email</th>
                                 <th>Phone Number</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+                                if($loginContainer->roleCode == 'CSC' && trim($countryId) == ''){
                                 ?>
                                  <th>Country</th>
 				<?php } ?>
                                 <th>Status</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess!= 'yes') {
+				if($loginContainer->hasViewOnlyAccess != 'yes') {
 				?>
                                   <th>Action</th>
 				<?php } ?>
@@ -97,13 +97,13 @@ $loginContainer = new Container('user');
                                 <th>Email</th>
                                 <th>Phone Number</th>
 				<?php
-                                if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+                                if($loginContainer->roleCode == 'CSC' && trim($countryId) == ''){
                                 ?>
                                   <th>Country</th>
 				<?php } ?>
                                 <th>Status</th>
 				<?php
-				if($loginContainer->hasViewOnlyAccess!= 'yes') {
+				if($loginContainer->hasViewOnlyAccess != 'yes') {
 				?>
                                  <th>Action</th>
 				<?php } ?>
@@ -132,13 +132,13 @@ $loginContainer = new Container('user');
 		{"sClass":"left"},
 		{"sClass":"left"},
 		<?php
-		if($loginContainer->roleCode =='CSC' && trim($countryId)== ''){
+		if($loginContainer->roleCode == 'CSC' && trim($countryId) == ''){
 		?>
 		  {"sClass":"left"},
 		<?php } ?>
 		{"sClass":"left"},
 		<?php
-		if($loginContainer->hasViewOnlyAccess!= 'yes') {
+		if($loginContainer->hasViewOnlyAccess != 'yes') {
 		?>
 		  {"sClass":"center","bSortable":false}
 		<?php } ?>
@@ -168,8 +168,4 @@ $loginContainer = new Container('user');
 	    oTable.fnFilter($(this).val());
        });
     });
-    
-    function searchLab(){
-	oTable.draw();
-    }
 </script>

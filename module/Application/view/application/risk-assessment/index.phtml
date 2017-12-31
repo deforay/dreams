@@ -370,8 +370,8 @@ if(isset($date) && trim($date)!= ''){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');
 		$.unblockUI();
-	    }else if(data == "d-n-a"){
-		alert('Data not available.');
+	    }else if(data == "na"){
+		alert('Export data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
@@ -403,7 +403,7 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('lock-risk-assessment-data'); ?>", {assessment:ID},
 		function(data){
-		    if(data == "undefined" || data == null || data == "" || data == 0){
+		    if(data == undefined || data == null || data == "" || data == 0){
 		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
@@ -417,7 +417,7 @@ if(isset($date) && trim($date)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-risk-assessment-data'); ?>", {assessment:ID},
 		function(data){
-		    if(data == "undefined" || data == null || data == "" || data == 0){
+		    if(data == undefined || data == null || data == "" || data == 0){
 		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);

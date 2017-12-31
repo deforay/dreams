@@ -590,18 +590,18 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
 	var dateOfTestCompletion = $('#dateOfTestCompletion').val();
 	var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
-	var splitSpecimenCollectedDate = specimenCollectedDate.split('/');
-	var splitSpecimenPickedUpDateAtAnc = specimenPickedUpDateAtAnc.split('/');
-	var splitPatientDOB = patientDOB.split('/');
-	var splitReceiptAtCentralLabDate = dateOfReceiptAtcentralLab.split('/');
-	var splitTestCompletionDate = dateOfTestCompletion.split('/');
-	var splitResultDispatchedToClinicDate = dateOfResultDispatchedToClinic.split('/');
-	specimenCollectedDate = splitSpecimenCollectedDate[2]+'-'+splitSpecimenCollectedDate[1]+'-'+splitSpecimenCollectedDate[0];
-	specimenPickedUpDateAtAnc = splitSpecimenPickedUpDateAtAnc[2]+'-'+splitSpecimenPickedUpDateAtAnc[1]+'-'+splitSpecimenPickedUpDateAtAnc[0];
-	patientDOB = splitPatientDOB[2]+'-'+splitPatientDOB[1]+'-'+splitPatientDOB[0];
-	dateOfReceiptAtcentralLab = splitReceiptAtCentralLabDate[2]+'-'+splitReceiptAtCentralLabDate[1]+'-'+splitReceiptAtCentralLabDate[0];
-	dateOfTestCompletion = splitTestCompletionDate[2]+'-'+splitTestCompletionDate[1]+'-'+splitTestCompletionDate[0];
-	dateOfResultDispatchedToClinic = splitResultDispatchedToClinicDate[2]+'-'+splitResultDispatchedToClinicDate[1]+'-'+splitResultDispatchedToClinicDate[0];
+	var specimenCollectedDateArray = specimenCollectedDate.split('/');
+	var specimenPickedUpDateAtAncArray = specimenPickedUpDateAtAnc.split('/');
+	var patientDOBArray = patientDOB.split('/');
+	var receiptAtCentralLabDateArray = dateOfReceiptAtcentralLab.split('/');
+	var testCompletionDateArray = dateOfTestCompletion.split('/');
+	var resultDispatchedToClinicDateArray = dateOfResultDispatchedToClinic.split('/');
+	specimenCollectedDate = specimenCollectedDateArray[2]+'-'+specimenCollectedDateArray[1]+'-'+specimenCollectedDateArray[0];
+	specimenPickedUpDateAtAnc = specimenPickedUpDateAtAncArray[2]+'-'+specimenPickedUpDateAtAncArray[1]+'-'+specimenPickedUpDateAtAncArray[0];
+	patientDOB = patientDOBArray[2]+'-'+patientDOBArray[1]+'-'+patientDOBArray[0];
+	dateOfReceiptAtcentralLab = receiptAtCentralLabDateArray[2]+'-'+receiptAtCentralLabDateArray[1]+'-'+receiptAtCentralLabDateArray[0];
+	dateOfTestCompletion = testCompletionDateArray[2]+'-'+testCompletionDateArray[1]+'-'+testCompletionDateArray[0];
+	dateOfResultDispatchedToClinic = resultDispatchedToClinicDateArray[2]+'-'+resultDispatchedToClinicDateArray[1]+'-'+resultDispatchedToClinicDateArray[0];
 	//check specimen coll./specimen picked up date at mnc
 	if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
 	    if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
@@ -690,10 +690,10 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         return false;
       }
       //calculate age
-      var splitDob = dob.split("/");
-      dob = splitDob[2]+'-'+splitDob[1]+'-'+splitDob[0];
+      var dobArray = dob.split("/");
+      dob = dobArray[2]+'-'+dobArray[1]+'-'+dobArray[0];
       var years = moment().diff(dob, 'years',false);
-      $('label[for="age"]').css("transform", "translateY(-140%)"); 
+      $('label[for="age"]').css("transform", "translateY(-140%)");
       $("#age").val(years); // Gives difference as year
     }
     

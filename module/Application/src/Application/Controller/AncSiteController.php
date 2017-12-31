@@ -24,10 +24,7 @@ class AncSiteController extends AbstractActionController{
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
-                $countryService = $this->getServiceLocator()->get('CountryService');
-                $countryList = $countryService->getActiveCountries('anc',$countryId);
                 return new ViewModel(array(
-                    'countries'=>$countryList,
                     'countryId'=>$countryId
                 ));
             }else{

@@ -23,10 +23,7 @@ class UserController extends AbstractActionController{
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            $countryService = $this->getServiceLocator()->get('CountryService');
-            $countryList = $countryService->getActiveCountries('user',$countryId);
             return new ViewModel(array(
-                'countries'=>$countryList,
                 'countryId'=>$countryId
             ));
         }

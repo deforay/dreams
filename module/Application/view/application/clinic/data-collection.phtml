@@ -493,7 +493,7 @@ if(trim($countryId)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('lock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
-		    if(data == "undefined" || data == null || data == "" || data == 0){
+		    if(data == undefined || data == null || data == "" || data == 0){
 		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);
@@ -507,7 +507,7 @@ if(trim($countryId)!= ''){
 	if(conf){
 	    $.post("<?php echo $this->url('unlock-clinic-data-collection'); ?>", {clinicDataCollectionId:ID},
 		function(data){
-		    if(data == "undefined" || data == null || data == "" || data == 0){
+		    if(data == undefined || data == null || data == "" || data == 0){
 		      alert("Error-Oops, something went wrong!!");
 		    }else{
 		      oTable.fnDraw(false);

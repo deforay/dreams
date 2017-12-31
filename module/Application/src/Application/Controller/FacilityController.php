@@ -24,14 +24,11 @@ class FacilityController extends AbstractActionController{
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
-                $countryService = $this->getServiceLocator()->get('CountryService');
-                $countryList = $countryService->getActiveCountries('facility','');
                 return new ViewModel(array(
-                    'countries'=>$countryList,
                     'countryId'=>$countryId
                 ));
             }else{
-               return $this->redirect()->toRoute('home'); 
+               return $this->redirect()->toRoute('home');
             }
         }
     }

@@ -147,7 +147,7 @@ class CountryTable extends AbstractTableGateway {
            $row[] = ucwords($aRow['country_name']);
            $row[] = $aRow['country_code'];
            $row[] = ucwords($aRow['country_status']);
-           if($loginContainer->hasViewOnlyAccess!= 'yes') {
+           if($loginContainer->hasViewOnlyAccess != 'yes') {
               $row[] = '<a href="/country/edit/' . base64_encode($aRow['country_id']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>';
            }
           $output['aaData'][] = $row;
@@ -181,12 +181,12 @@ class CountryTable extends AbstractTableGateway {
                               ->where(array('c.country_status'=>'active'))
                               ->order('c.country_name asc');
         if(trim($from)!= 'login'){
-            if(is_array($country) && count($country) >0){
+            if(is_array($country) && count($country) > 0){
                 $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $country) . '")');
-            }else if(trim($country)!= '' && $country >0){
+            }else if(trim($country)!= '' && $country > 0){
                 $countriesQuery = $countriesQuery->where(array('c.country_id'=>$country));
             }else{
-                if($loginContainer->roleCode!= 'CSC'){
+                if($loginContainer->roleCode != 'CSC' && count($loginContainer->country) > 0){
                     $countriesQuery = $countriesQuery->where('c.country_id IN ("' . implode('", "', $loginContainer->country) . '")');
                 }
             }
