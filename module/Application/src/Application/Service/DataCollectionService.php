@@ -598,7 +598,7 @@ class DataCollectionService {
                                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
                                         $lastColName = (!isset($params['frmSrc']))?'AD':'AA';
                                     }else{
-                                        $lastColName = (!isset($params['frmSrc']))?'AD':'Z';
+                                        $lastColName = (!isset($params['frmSrc']))?'AC':'Z';
                                     }
                                     $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($redTxtArray);
                                    }
