@@ -171,23 +171,35 @@
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Recent Infection (LAg Assay)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Positive Verification Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol20">Positive Verification Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol21">Long Term Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol21">Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol22">Comments</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol23">Added Date</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="added_by" class="showhideCheckBox" /> <label for="iCol24">Added by</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="updated_on" class="showhideCheckBox" /> <label for="iCol25">Last Updated Date</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="updated_by" class="showhideCheckBox" /> <label for="iCol26">Last Updated by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="23"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol23">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="27"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol27">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="22"/>
+	      <input type="hidden" id="countColumn" value="26"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -289,6 +301,10 @@
                                 <th>Positive Verification Line (Visual)</th>
                                 <th>Long Term Line (Visual)</th>
                                 <th>Comments</th>
+				<th>Added Date</th>
+				<th>Added by</th>
+				<th>Last Updated Date</th>
+				<th>Last Updated by</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -322,6 +338,10 @@
                                 <th>Positive Verification Line (Visual)</th>
                                 <th>Long Term Line (Visual)</th>
                                 <th>Comments</th>
+				<th>Added Date</th>
+				<th>Added by</th>
+				<th>Last Updated Date</th>
+				<th>Last Updated by</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -373,6 +393,10 @@
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
 		?>

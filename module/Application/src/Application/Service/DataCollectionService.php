@@ -261,6 +261,16 @@ class DataCollectionService {
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $row = array();
+                        $addedDate = '';
+                        if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
+                            $addedDateArray = explode(' ',$aRow['added_on']);
+                            $addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
+                        }
+	                $updatedDate = '';
+                        if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
+                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
+                        }
                         $specimenCollectedDate = '';
                         if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
                             $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
@@ -332,9 +342,16 @@ class DataCollectionService {
                         $row[] = $recencyReaderLogVal;
                         $row[] = $rapidRecencyAssayDuration;
                         $row[] = ucfirst($aRow['comments']);
+                        if(!isset($params['frmSrc'])){
+                            $row[] = $addedDate;
+                            $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
+                            $row[] = $updatedDate;
+                            $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
+                        }
                         if(!isset($params['countryId']) || trim($params['countryId']) == ''){
                             $row[] = ucfirst($aRow['country_name']);
-                        } if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
+                        }
+                        if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                             $row[] = '';//empty value
                         }
                         $output[] = $row;
@@ -467,8 +484,15 @@ class DataCollectionService {
                     $sheet->setCellValue('W'.$headerRow, html_entity_decode('Long Term Line Reader Value (log10)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('X'.$headerRow, html_entity_decode('Long Term Line (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('Y'.$headerRow, html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(!isset($params['frmSrc'])){
+                        $sheet->setCellValue('Z'.$headerRow, html_entity_decode('Added Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AA'.$headerRow, html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AB'.$headerRow, html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AC'.$headerRow, html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    }
                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                        $sheet->setCellValue('Z'.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $cellName = (!isset($params['frmSrc']))?'AD':'Z';
+                        $sheet->setCellValue($cellName.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                           $sheet->setCellValue('AA'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
@@ -518,8 +542,15 @@ class DataCollectionService {
                     $sheet->getStyle('W'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('X'.$headerRow)->applyFromArray($styleArray);
                     $sheet->getStyle('Y'.$headerRow)->applyFromArray($styleArray);
-                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
+                    if(!isset($params['frmSrc'])){
                         $sheet->getStyle('Z'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AA'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AB'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AC'.$headerRow)->applyFromArray($styleArray);
+                    }
+                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
+                        $cellName = (!isset($params['frmSrc']))?'AD':'Z';
+                        $sheet->getStyle($cellName.$headerRow)->applyFromArray($styleArray);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                          $sheet->getStyle('AA'.$headerRow)->applyFromArray($styleArray);
                         }
@@ -541,12 +572,12 @@ class DataCollectionService {
                                 $value = "";
                             }
                             if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?26:25;
+                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?26:29;
                                 if($colNo > $keyCol){
                                     break;
                                 }
                             }else{
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:24;
+                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:28;
                                 if($colNo > $keyCol){
                                     break;
                                 }
@@ -561,14 +592,15 @@ class DataCollectionService {
                             if($colNo == 23){ $labHIVR = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?24:23){
-                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:24){
+                            if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?24:27){
+                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:28){
                                    if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
-                                    $sheet->getStyle('A'.$currentRow.':Z'.$currentRow)->applyFromArray($redTxtArray);
-                                   }
-                                }else{
-                                   if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
-                                    $sheet->getStyle('A'.$currentRow.':AA'.$currentRow)->applyFromArray($redTxtArray);
+                                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
+                                        $lastColName = (!isset($params['frmSrc']))?'AD':'AA';
+                                    }else{
+                                        $lastColName = (!isset($params['frmSrc']))?'AD':'Z';
+                                    }
+                                    $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($redTxtArray);
                                    }
                                 }
                             }

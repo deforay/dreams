@@ -2,11 +2,11 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
-$alertContainer->headerSize = 46;
 if(count($logbookResult) >0){
     $labs = '';
     $receiptDateatLab = '';
     $resultReported = 'Completed Tests, Pending Tests';
+    $alertContainer->headerSize = 46;
     //set labs
     if(isset($params['labName']) && trim($params['labName'])!= ''){
 	$labs = $params['labName'];
@@ -235,6 +235,6 @@ if(count($logbookResult) >0){
     $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     echo $filename;
 }else{
-    echo null;
+    echo 'na';
 }
 ?>

@@ -2,9 +2,10 @@
 use Zend\Session\Container;
 $alertContainer = new Container('alert');
 $common = new \Application\Service\CommonService();
-$alertContainer->aliasPage = 1;
-$alertContainer->nbPages = count($dataResult);
-$alertContainer->rVal = $common->generateRandomString(6);
+if(count($dataResult) > 0){
+    $alertContainer->aliasPage = 1;
+    $alertContainer->nbPages = count($dataResult);
+    $alertContainer->rVal = $common->generateRandomString(6);
     class MYPDF extends TCPDF {
 	public function setSchemeName($heading,$logo) {
 	    $this->heading = $heading;
@@ -236,4 +237,9 @@ $alertContainer->rVal = $common->generateRandomString(6);
 	$common->removeDirectory($pathFront);
 	$alertContainer->rVal = '';
 	echo $resultFilename;
+    }else{
+	echo $resultFilename;
     }
+}else{
+    echo 'na';
+}

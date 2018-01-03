@@ -260,6 +260,8 @@
             $.unblockUI();
             if(data === "" || data === null || data === undefined){
                 alert('Error-Oops, Unable to generate result pdf');
+            }else if(data == "na"){
+		alert('Print data not available');
             }else{
                 $.blockUI();
                 $("#pdfFile").val(data);

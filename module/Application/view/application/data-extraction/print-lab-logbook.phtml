@@ -441,9 +441,12 @@
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate pdf');
 		$.unblockUI();
-	    }else{
+	    }else if(data == "na"){
+		alert('Print data not available');
 		$.unblockUI();
-		window.open("/temporary/"+data, "_blank");
+	    }else{
+	        $.unblockUI();
+	        window.open("/temporary/"+data, "_blank");
 	    }
 	});
     }

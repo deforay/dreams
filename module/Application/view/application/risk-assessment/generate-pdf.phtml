@@ -1,5 +1,6 @@
 <?php
 $common = new \Application\Service\CommonService();
+if(count($dataResult) > 0){
     class MYPDF extends TCPDF {
 	public function setSchemeName($heading,$logo) {
 	    $this->heading = $heading;
@@ -917,3 +918,6 @@ $common = new \Application\Service\CommonService();
 	$pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
     }
     echo $filename;
+}else{
+    echo 'na';
+}

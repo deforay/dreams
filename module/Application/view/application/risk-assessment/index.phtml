@@ -392,6 +392,9 @@ if(isset($date) && trim($date)!= ''){
 		    assessid = [];
 		    alert('Error-Oops, Unable to generate pdf');
 		    $.unblockUI();
+		}else if(data == "na"){
+		    alert('Print data not available');
+		    $.unblockUI();
 		}else{
 		    assessid = [];
 		    $.unblockUI();

@@ -253,7 +253,7 @@ $loginContainer = new Container('user');
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchLabReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractLabReportData();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
+		<a href="javascript:void(0);" onclick="generateLabReportPDF();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>
 	    </div>
 	</form>
     </div>
@@ -512,6 +512,9 @@ $loginContainer = new Container('user');
 		    dcid = [];
 		    alert('Error-Oops, unable to generate pdf');
 		    $.unblockUI();
+		}else if(data == "na"){
+		    alert('Print data not available');
+		    $.unblockUI();
 		}else{
 		    dcid = [];
 		    $.unblockUI();
@@ -534,6 +537,9 @@ $loginContainer = new Container('user');
 	    if(data === "" || data === null || data === undefined){
 		alert('Error-Oops, unable to generate pdf');
 		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Print data not available');
+		$.unblockUI();
 	    }else{
 		$.unblockUI();
 		window.open("/temporary/"+data, "_blank");
@@ -550,12 +556,15 @@ $loginContainer = new Container('user');
 	});
     }
     
-    function extractLabReportData(){
+    function generateLabReportPDF(){
         $.blockUI();
 	$.post("<?php echo $this->url('export-clinic-lab-report'); ?>", {reportType: $('#reportType').val()},
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate pdf');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Print data not available');
 		$.unblockUI();
 	    }else{
 		$.unblockUI();
