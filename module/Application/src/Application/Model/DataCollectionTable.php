@@ -1005,7 +1005,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '')), 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
@@ -1672,7 +1672,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '')), 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))

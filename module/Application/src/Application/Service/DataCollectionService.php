@@ -1879,9 +1879,7 @@ class DataCollectionService {
                         if (!isset($value)) {
                             $value = "";
                         }
-                        if($colNo > 4){
-                            break;
-                        }
+                        
                         if (is_numeric($value)) {
                             $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                         }else{
