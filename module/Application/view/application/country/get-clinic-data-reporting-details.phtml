@@ -8,8 +8,8 @@ if(count($response) >0){
         $noofANCRecencyAssayRecentArray[] = (isset($country['noofANCRecencyTestRecent']))?$country['noofANCRecencyTestRecent']:0;
 ?>
     <tr>
-        <td><?php echo (isset($country['location_name']))?ucwords($country['location_name']):''; ?></td>
-        <td><?php echo $country['monthName'].' - '.$country['year']; ?></td>
+        <td style="text-align:left;"><?php echo (isset($country['location_name']))?ucwords($country['location_name']):''; ?></td>
+        <td style="text-align:left;"><?php echo $country['monthName'].' - '.$country['year']; ?></td>
         <td><?php echo $country['noofANCSites']; ?></td>
         <td><?php echo ($country['assessments'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country']) . '?type=assessment&date='.$country['monthName'].'/'.$country['year'].'&dSrc='.$dateSrc.'&province='.base64_encode($country['location_id']).'" target="_blank" title="View">'.$country['assessments'].'</a>':0; ?></td>
         <td><?php echo (isset($country['noofANCRecencyTestRecent']) && $country['noofANCRecencyTestRecent'] >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country']) . '?type=anc-rr-recent&date='.$country['monthName'].'/'.$country['year'].'&dSrc='.$dateSrc.'&province='.base64_encode($country['location_id']).'" target="_blank" title="View">'.$country['noofANCRecencyTestRecent'].'</a>':0; ?></td>

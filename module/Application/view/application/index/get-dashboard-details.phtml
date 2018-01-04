@@ -27,8 +27,8 @@ if(count($response) >0){
         $noofANCRecencyTestRecentArray[] = $noofANCRecencyTestRecent;
 ?>
     <tr>
-        <td><?php echo $country['monthName'].' - '.$country['year']; ?></td>
-        <td><?php echo ucwords($country['country_name']); ?></td>
+        <td style="text-align:left;"><?php echo $country['monthName'].' - '.$country['year']; ?></td>
+        <td style="text-align:left;"><?php echo ucwords($country['country_name']); ?></td>
         <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=received&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=incomplete&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=tested&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesTested'].'</a>':0; ?></td>

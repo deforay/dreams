@@ -1777,7 +1777,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		for($i=0;$i<count($sitehavingRecentInfectionbyArray);$i++){
 		    if($sitehavingRecentInfectionbyArray[$i] == 'labLAgRecency'){
 			if($i == 1){ $mapWhere.= $mapOR; }
-			$mapWhere.= 'da_c.lag_avidity_result = "recent"';
+			$mapWhere.= 'da_c.recent_infection = "yes"';
 		    }else if($sitehavingRecentInfectionbyArray[$i] == 'labRecencyAssay'){
 		       if($i == 1){ $mapWhere.= $mapOR; }
 		       $mapWhere.= 'da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'';

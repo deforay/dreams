@@ -18,8 +18,8 @@ if(count($response) >0){
         $noofLabRecencyAssayRecentArray[] = $country['noofLabRecencyAssayRecent'];
 ?>
     <tr>
-        <td><?php echo ucwords($country['facility_name']); ?></td>
-        <td><?php echo $country['monthName'].' - '.$country['year']; ?></td>
+        <td style="text-align:left;"><?php echo ucwords($country['facility_name']); ?></td>
+        <td style="text-align:left;"><?php echo $country['monthName'].' - '.$country['year']; ?></td>
         <td><?php echo $country['noofANCSites']; ?></td>
         <td><?php echo ($country['totalSample'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=received&date='.$country['monthName'].'/'.$country['year'].'&dSrc='.$dateSrc.'&lab='.base64_encode($country['facility_id']).'" target="_blank" title="View">'.$country['totalSample'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country']) . '?type=incomplete&date='.$country['monthName'].'/'.$country['year'].'&dSrc='.$dateSrc.'&lab='.base64_encode($country['facility_id']).'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
