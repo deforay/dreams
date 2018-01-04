@@ -80,7 +80,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	width:12%;
 	font-size:40px;
 	text-align:center;
-	padding-top:6vh;
+	padding-top:3vh;
     }
     #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
         text-align: center !important;
@@ -321,9 +321,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'present')?'checked="checked"':''; ?> value="present"/>
 				  <label for="asanteRapidRecencyAssayP">Present </label><br>
 				  <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" <?php echo($asanteRapidRecencyAssayPn == 'absent')?'checked="checked"':''; ?> value="absent"/>
-				  <label for="asanteRapidRecencyAssayN">Absent </label><br>
-				  <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log" onblur="getReaderValueRRDTLogVal();"/>
-				  <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
+				  <label for="asanteRapidRecencyAssayN">Absent </label>
 				</div>
 			      </div>
 			      <div id="box-breaker" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden;':''; ?>">&rArr;</div>
@@ -333,9 +331,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				  <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'absent')?'checked="checked"':''; ?> value="absent"/>
 				  <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
 				  <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" <?php echo($asanteRapidRecencyAssayRlt == 'present')?'checked="checked"':''; ?> value="present"/>
-				  <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label><br>
-				  <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log" onblur="getReaderValueRRRLogVal();"/>
-				  <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
+				  <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label>
 				</div>
 			       </div>
 			    </div>
@@ -350,22 +346,26 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			    <?php } ?>
 			</div>
 		    </div>
-		    <div class="row readerValueLogSection" style="margin-bottom:0;<?php echo(trim($readerValueRRDTLog) == '' && trim($readerValueRRRLog) == '')?'display:none;':''; ?>">
+		    <div class="row readerValueLogSection" style="margin-bottom:0;">
 			<div class="col s8">
 			   <div class="input-padding col m12 s12 l12">
-			      <div class="box-1 readerValueRRDTLog" style="<?php echo(trim($readerValueRRDTLog) == '')?'display:none;':''; ?>">
+			      <div class="box-1 readerValueRRDTLog">
 				<div class="box-11">
 				  <strong>Positive Verification Line (Visual) Reader Value</strong>
 				  <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
+				  <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log" onblur="getReaderValueRRDTLogVal();"/>
+				  <input type="hidden" id="readerValueRRDTLogOld" name="readerValueRRDTLogOld" value="<?php echo $readerValueRRDTLog; ?>"/>
 				  <br><div id="readerValueRRDTLogVal"><?php echo(trim($readerValueRRDTLog) == '')?'':$readerValueRRDTLogVal; ?></div>
 				  <!--<br><div id="readerValueRRDTLogValText"></div>-->
 				</div>
 			      </div>
 			      <div id="box-breaker"></div>
-			      <div class="box-2 readerValueRRRLog" style="<?php echo(trim($readerValueRRRLog) == '')?'display:none;':''; ?>">
+			      <div class="box-2 readerValueRRRLog" style="<?php echo($asanteRapidRecencyAssayPn == 'absent')?'visibility:hidden':''; ?>">
 				<div class="box-21">
 				  <strong>Long Term Line (Visual) Reader Value</strong>
 				  <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
+				  <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log" onblur="getReaderValueRRRLogVal();"/>
+				  <input type="hidden" id="readerValueRRRLogOld" name="readerValueRRRLogOld" value="<?php echo $readerValueRRRLog; ?>"/>
 				  <br><div id="readerValueRRRLogVal"><?php echo(trim($readerValueRRRLog) == '')?'':$readerValueRRRLogVal; ?></div>
 				  <!--<br><div id="readerValueRRRLogValText"></div>-->
 				</div>
@@ -569,7 +569,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('.box-2,#box-breaker').css('visibility','visible');
 	}else if(this.value == 'absent'){
 	    $('.box-2,#box-breaker').css('visibility','hidden');
-	    ('.readerValueRRRLog').hide();
+	    $('.readerValueRRRLog').hide();
 	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
 	    $('#asanteRapidRecencyAssayR').prop('checked',false);
 	    $('#readerValueRRR').val('');
@@ -710,7 +710,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLogOld').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    //$('#readerValueRRRLogValText').html('');
-	    $('.readerValueLogSection,.readerValueRRDTLog,.readerValueRRRLog').hide();
 	}else{
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
@@ -747,8 +746,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	   //var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
 	   var readerValueRRDTLogVal = readerValueRRDT;
 	   //var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
-	   $('.readerValueLogSection,.readerValueRRDTLog').show();
-	   $('.readerValueRRDTLog').css('visibility','visible');
 	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
 	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
 	   //$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
@@ -766,11 +763,9 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	   //var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
 	   var readerValueRRRLogVal = readerValueRRR;
 	   //var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
-	   $('.readerValueLogSection,.readerValueRRRLog').show();
 	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
 	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
 	   //$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
-	   if($('#readerValueRRDT').val() == '' && $('#readerValueRRDTLogOld').val() == ''){ $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}else{
 	    $('#readerValueRRRLog').val('');
 	    $('#readerValueRRRLogVal').html('');
@@ -785,9 +780,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    //var readerValueRRDTLogOldValText = (readerValueRRDTLogOldVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
 	    $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogOldVal);
 	    //$('#readerValueRRDTLogValText').html(readerValueRRDTLogOldValText);
-	}else {
-	    $('.readerValueRRDTLog').hide();
-	    if($('#readerValueRRR').val() == '' && $('#readerValueRRRLogOld').val() == ''){ $('.readerValueLogSection').hide(); }else { $('.readerValueRRDTLog').css('display','');$('.readerValueRRDTLog').css('visibility','hidden'); }
 	}
     }
     
@@ -797,9 +789,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    //var readerValueRRRLogOldValText = (readerValueRRRLogOldVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
 	    $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogOldVal);
 	    //$('#readerValueRRRLogValText').html(readerValueRRRLogOldValText);
-	}else{
-	    $('.readerValueRRRLog').hide();
-	    if($('#readerValueRRDT').val() == '' && $('#readerValueRRDTLogOld').val() == ''){ $('.readerValueLogSection').hide(); }
 	}
     }
     

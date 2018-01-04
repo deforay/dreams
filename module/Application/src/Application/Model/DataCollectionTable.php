@@ -366,7 +366,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
-	    
+	    $finalLagRecencyInfection = '';
+	    if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
+		if($aRow['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($aRow['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
 	    $asanteRapidRecencyAssayPn = '';
 	    $asanteRapidRecencyAssayRlt = '';
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
@@ -437,7 +446,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
 	    //$row[] = $hIVRNAResult;
-	    $row[] = ucfirst($aRow['recent_infection']);
+	    $row[] = $finalLagRecencyInfection;
 	    $row[] = $asanteRapidRecencyAssayPn;
 	    $row[] = $asanteRapidRecencyAssayRlt;
 	    $row[] = $common->humanDateFormat($addedDate[0]);
@@ -876,6 +885,12 @@ class DataCollectionTable extends AbstractTableGateway {
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
 	    }
 	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
+	//    $hIVRNAResult = '';
+	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+	//	$hIVRNAResult = 'High Viral Load';
+	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+	//	$hIVRNAResult = 'Low Viral Load';
+	//    }
 	    $finalLagRecencyInfection = '';
 	    if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
 		if($aRow['recent_infection'] == 'yes'){
@@ -886,12 +901,6 @@ class DataCollectionTable extends AbstractTableGateway {
 		    $finalLagRecencyInfection = 'Incomplete';
 		}
 	    }
-	//    $hIVRNAResult = '';
-	//    if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-	//	$hIVRNAResult = 'High Viral Load';
-	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-	//	$hIVRNAResult = 'Low Viral Load';
-	//    }
 	    $asanteRapidRecencyAssayPn = '';
 	    $asanteRapidRecencyAssayRlt = '';
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){

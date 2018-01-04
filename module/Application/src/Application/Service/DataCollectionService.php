@@ -296,7 +296,13 @@ class DataCollectionService {
                             $rejectionCode = $aRow['rejection_code'];
                         }
                         $recencyInfection = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
-
+                        
+                        //$hIVRNAResult = '';
+                        //if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
+                        //    $hIVRNAResult = 'High Viral Load';
+                        //}else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
+                        //    $hIVRNAResult = 'Low Viral Load';
+                        //}
                         $finalLagRecencyInfection = '';
                         if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
                             if($aRow['recent_infection'] == 'yes'){
@@ -306,13 +312,7 @@ class DataCollectionService {
                             }else{
                                 $finalLagRecencyInfection = 'Incomplete';
                             }
-                        }                        
-                        //$hIVRNAResult = '';
-                        //if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='yes'){
-                        //    $hIVRNAResult = 'High Viral Load';
-                        //}else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
-                        //    $hIVRNAResult = 'Low Viral Load';
-                        //}
+                        }
                         $rapidRecencyAssay = '';
                         $diagnosisReaderLogVal = '';
                         $rapidRecencyAssayDuration = '';
@@ -604,21 +604,21 @@ class DataCollectionService {
                             if($colNo == 20){ $lag = $value; }
                             if($colNo == 22){ $labHIVV = $value; }
                             if($colNo == 24){ $labHIVR = $value; }
-                            if($colNo == 31){ $status = $value; }
+                            if($colNo == 30){ $status = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > ($lastCol-1)){
-                               if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
-                                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                        $lastColName = (!isset($params['frmSrc']))?'AF':'AB';
-                                    }else{
-                                        $lastColName = (!isset($params['frmSrc']))?'AE':'AA';
-                                    }
+                                if(!isset($params['countryId']) || trim($params['countryId'])== ''){
+                                    $lastColName = (!isset($params['frmSrc']))?'AF':'AB';
+                                }else{
+                                    $lastColName = (!isset($params['frmSrc']))?'AE':'AA';
+                                }
+                                if(!isset($params['frmSrc']) && $status == 'Incomplete'){
+                                   $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($yellowTxtArray);
+                                } 
+                                if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
                                   $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($redTxtArray);
-                                  if(!isset($params['frmSrc']) && $status == 'Incomplete'){
-                                    $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($yellowTxtArray);
-                                  }
-                               }
+                                }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
                             $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
