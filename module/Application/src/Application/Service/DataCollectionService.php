@@ -223,8 +223,8 @@ class DataCollectionService {
                 $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
-                    $labs = '';
-                    $receiptDateatLab = '';
+                    $labs = '-';
+                    $receiptDateatLab = '-';
                     $resultReported = 'Completed Tests, Pending Tests';
                     $headerRow = 1;
                     if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
@@ -301,7 +301,7 @@ class DataCollectionService {
                         if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
                             if($aRow['recent_infection'] == 'yes'){
                                 $finalLagRecencyInfection = 'Recent';
-                            } else if($aRow['recent_infection'] == 'no'){
+                            }else if($aRow['recent_infection'] == 'no'){
                                 $finalLagRecencyInfection = 'Long Term';
                             }else{
                                 $finalLagRecencyInfection = 'Incomplete';
@@ -359,12 +359,13 @@ class DataCollectionService {
                             $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
                             $row[] = $updatedDate;
                             $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
+                            $row[] = ucwords($aRow['test_status_name']);
                         }
                         if(!isset($params['countryId']) || trim($params['countryId']) == ''){
                             $row[] = ucfirst($aRow['country_name']);
                         }
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                            $row[] = '';//empty value
+                            $row[] = '';//manager's approval column
                         }
                         $output[] = $row;
                     }
@@ -396,6 +397,12 @@ class DataCollectionService {
                     $redTxtArray = array(
                         'font' => array(
                             'color' => array('rgb' => 'F44336')
+                        )
+                    );
+                    $yellowTxtArray = array(
+                        'fill' => array(
+                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => 'FFFF00')
                         )
                     );
                     $titleTxtArray = array(
@@ -502,9 +509,10 @@ class DataCollectionService {
                         $sheet->setCellValue('AB'.$headerRow, html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AC'.$headerRow, html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AD'.$headerRow, html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AE'.$headerRow, html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
-                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                        $cellName = (!isset($params['frmSrc']))?'AE':'AA';
+                    if(!isset($params['countryId']) || trim($params['countryId']) == ''){
+                        $cellName = (!isset($params['frmSrc']))?'AF':'AA';
                         $sheet->setCellValue($cellName.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                           $sheet->setCellValue('AB'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -561,9 +569,10 @@ class DataCollectionService {
                         $sheet->getStyle('AB'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AC'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AD'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AE'.$headerRow)->applyFromArray($styleArray);
                     }
-                    if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                        $cellName = (!isset($params['frmSrc']))?'AE':'AA';
+                    if(!isset($params['countryId']) || trim($params['countryId']) == ''){
+                        $cellName = (!isset($params['frmSrc']))?'AF':'AA';
                         $sheet->getStyle($cellName.$headerRow)->applyFromArray($styleArray);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                          $sheet->getStyle('AB'.$headerRow)->applyFromArray($styleArray);
@@ -580,43 +589,36 @@ class DataCollectionService {
                         $labHIVV = '';
                         $labHIVR = '';
                         $colNo = 0;
+                        $status = '';
                         $lastCol = (count($rowData)-1);
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?26:29;
-                                if($colNo > $keyCol){
-                                    break;
-                                }
-                            }else{
-                                $keyCol = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:28;
-                                if($colNo > $keyCol){
-                                    break;
-                                }
-                            }
+                            
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                             }else{
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             }
-                            if($colNo == 19){ $lag = $value; }
+                            if($colNo == 20){ $lag = $value; }
                             if($colNo == 22){ $labHIVV = $value; }
                             if($colNo == 24){ $labHIVR = $value; }
+                            if($colNo == 31){ $status = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
-                            if($colNo > (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?25:28){
-                                if($lastCol == (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?26:29){
-                                   if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
+                            if($colNo > ($lastCol-1)){
+                               if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present')){
                                     if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                        $lastColName = (!isset($params['frmSrc']))?'AE':'AB';
+                                        $lastColName = (!isset($params['frmSrc']))?'AF':'AB';
                                     }else{
-                                        $lastColName = (!isset($params['frmSrc']))?'AD':'AA';
+                                        $lastColName = (!isset($params['frmSrc']))?'AE':'AA';
                                     }
-                                    $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($redTxtArray);
-                                   }
-                                }
+                                  $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($redTxtArray);
+                                  if(!isset($params['frmSrc']) && $status == 'Incomplete'){
+                                    $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($yellowTxtArray);
+                                  }
+                               }
                             }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
                             $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
@@ -1491,6 +1493,7 @@ class DataCollectionService {
                     $samplesIncompleteArray = array();
                     $samplesTestedArray = array();
                     $samplesFinalizedArray = array();
+                    $noofLAgRecentwtVlArray = array();
                     $noofLAgRecentArray = array();
                     $noofLabRecencyAssayRecentArray = array();
                     $assessmentsArray = array();
@@ -1506,6 +1509,7 @@ class DataCollectionService {
                         $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
                         $samplesTestedArray[] = $aRow['samplesTested'];
                         $samplesFinalizedArray[] = $aRow['samplesFinalized'];
+                        $noofLAgRecentwtVlArray[] = $aRow['noofLAgRecentwtVl'];
                         $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
                         $noofLabRecencyAssayRecentArray[] = $aRow['noofLabRecencyAssayRecent'];
                         $assessmentsArray[] = $assessments;
@@ -1517,6 +1521,7 @@ class DataCollectionService {
                         $row[] = $aRow['samplesIncomplete'];
                         $row[] = $aRow['samplesTested'];
                         $row[] = $aRow['samplesFinalized'];
+                        $row[] = $aRow['noofLAgRecentwtVl'];
                         $row[] = $aRow['noofLAgRecent'];
                         $row[] = $aRow['noofLabRecencyAssayRecent'];
                         $row[] = $assessments;
@@ -1585,10 +1590,11 @@ class DataCollectionService {
                     $sheet->setCellValue('D1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G1', html_entity_decode('Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I1', html_entity_decode('Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J1', html_entity_decode('ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('LAg Recent with no Viral Load entry ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Lab LAg Recent (based on algorithm) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J1', html_entity_decode('Risk Questionnaires ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K1', html_entity_decode('ANC Rapid Recency Assay Recent (Visual)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1600,6 +1606,7 @@ class DataCollectionService {
                     $sheet->getStyle('H1')->applyFromArray($styleArray);
                     $sheet->getStyle('I1')->applyFromArray($styleArray);
                     $sheet->getStyle('J1')->applyFromArray($styleArray);
+                    $sheet->getStyle('K1')->applyFromArray($styleArray);
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -1608,9 +1615,7 @@ class DataCollectionService {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            if($colNo > 9){
-                                break;
-                            }
+                        
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                             }else{
@@ -1637,16 +1642,18 @@ class DataCollectionService {
                     $sheet->getStyle('H'.$currentRow)->applyFromArray($totalArray);
                     $sheet->getStyle('I'.$currentRow)->applyFromArray($totalArray);
                     $sheet->getStyle('J'.$currentRow)->applyFromArray($totalArray);
+                    $sheet->getStyle('K'.$currentRow)->applyFromArray($totalArray);
                     
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('Total' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C'.$currentRow, html_entity_decode(array_sum($samplesReceivedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D'.$currentRow, html_entity_decode(array_sum($samplesIncompleteArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E'.$currentRow, html_entity_decode(array_sum($samplesTestedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F'.$currentRow, html_entity_decode(array_sum($samplesFinalizedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($noofLAgRecentwtVlArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($assessmentsArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K'.$currentRow, html_entity_decode(array_sum($noofANCRecencyTestRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
                     $filename = 'DASHBOARD-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
@@ -1739,6 +1746,7 @@ class DataCollectionService {
                 $samplesIncompleteArray = array();
                 $samplesTestedArray = array();
                 $samplesFinalizedArray = array();
+                $noofLAgRecentwtVlArray = array();
                 $noofLAgRecentArray = array();
                 $noofLabRecencyAssayRecentArray = array();
                 foreach($dataCollectionResult as $aRow) {
@@ -1746,6 +1754,7 @@ class DataCollectionService {
                     $samplesIncompleteArray[] = $aRow['samplesIncomplete'];
                     $samplesTestedArray[] = $aRow['samplesTested'];
                     $samplesFinalizedArray[] = $aRow['samplesFinalized'];
+                    $noofLAgRecentwtVlArray[] = $aRow['noofLAgRecentwtVl'];
                     $noofLAgRecentArray[] = $aRow['noofLAgRecent'];
                     $noofLabRecencyAssayRecentArray[] = $aRow['noofLabRecencyAssayRecent'];
                     $row = array();
@@ -1756,6 +1765,7 @@ class DataCollectionService {
                     $row[] = $aRow['samplesIncomplete'];
                     $row[] = $aRow['samplesTested'];
                     $row[] = $aRow['samplesFinalized'];
+                    $row[] = $aRow['noofLAgRecentwtVl'];
                     $row[] = $aRow['noofLAgRecent'];
                     $row[] = $aRow['noofLabRecencyAssayRecent'];
                     $output[] = $row;
@@ -1772,8 +1782,9 @@ class DataCollectionService {
                 $sheet->setCellValue('E1', html_entity_decode('Samples Incomplete ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('F1', html_entity_decode('Samples Tested ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('G1', html_entity_decode('Samples Locked for Editing ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('H1', html_entity_decode('Lab LAg Recent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('I1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H1', html_entity_decode('LAg Recent with no Viral Load entry ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I1', html_entity_decode('Lab LAg Recent (based on algorithm) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('J1', html_entity_decode('Lab Rapid Recency Assay Recent (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                
                 $sheet->getStyle('A1')->applyFromArray($styleArray);
                 $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1784,6 +1795,7 @@ class DataCollectionService {
                 $sheet->getStyle('G1')->applyFromArray($styleArray);
                 $sheet->getStyle('H1')->applyFromArray($styleArray);
                 $sheet->getStyle('I1')->applyFromArray($styleArray);
+                $sheet->getStyle('J1')->applyFromArray($styleArray);
                 
                 $currentRow = 2;
                 foreach ($output as $rowData) {
@@ -1792,9 +1804,7 @@ class DataCollectionService {
                         if (!isset($value)) {
                             $value = "";
                         }
-                        if($colNo > 8){
-                            break;
-                        }
+                        
                         if (is_numeric($value)) {
                             $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                         }else{
@@ -1819,14 +1829,16 @@ class DataCollectionService {
                 $sheet->getStyle('G'.$currentRow)->applyFromArray($totalArray);
                 $sheet->getStyle('H'.$currentRow)->applyFromArray($totalArray);
                 $sheet->getStyle('I'.$currentRow)->applyFromArray($totalArray);
+                $sheet->getStyle('J'.$currentRow)->applyFromArray($totalArray);
                 
                 $sheet->setCellValue('A'.$currentRow, html_entity_decode('Total' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('D'.$currentRow, html_entity_decode(array_sum($samplesReceivedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('E'.$currentRow, html_entity_decode(array_sum($samplesIncompleteArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('F'.$currentRow, html_entity_decode(array_sum($samplesTestedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 $sheet->setCellValue('G'.$currentRow, html_entity_decode(array_sum($samplesFinalizedArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('H'.$currentRow, html_entity_decode(array_sum($noofLAgRecentwtVlArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('I'.$currentRow, html_entity_decode(array_sum($noofLAgRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->setCellValue('J'.$currentRow, html_entity_decode(array_sum($noofLabRecencyAssayRecentArray), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                 //ANC data reporting
                 $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($queryContainer->countryClinicDataReportingQuery);
                 $riskAssessmentResult = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();

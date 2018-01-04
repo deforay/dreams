@@ -4,6 +4,7 @@ if(count($response) >0){
     $samplesIncompleteArray = array();
     $samplesTestedArray = array();
     $samplesFinalizedArray = array();
+    $noofLAgRecentwtVlArray = array();
     $noofLAgRecentArray = array();
     $noofLabRecencyAssayRecentArray = array();
     $assessmentsArray = array();
@@ -19,6 +20,7 @@ if(count($response) >0){
         $samplesIncompleteArray[] = $country['samplesIncomplete'];
         $samplesTestedArray[] = $country['samplesTested'];
         $samplesFinalizedArray[] = $country['samplesFinalized'];
+        $noofLAgRecentwtVlArray[] = $country['noofLAgRecentwtVl'];
         $noofLAgRecentArray[] = $country['noofLAgRecent'];
         $noofLabRecencyAssayRecentArray[] = $country['noofLabRecencyAssayRecent'];
         $assessmentsArray[] = $assessments;
@@ -31,7 +33,8 @@ if(count($response) >0){
         <td><?php echo ($country['samplesIncomplete'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=incomplete&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesIncomplete'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesTested'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=tested&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesTested'].'</a>':0; ?></td>
         <td><?php echo ($country['samplesFinalized'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=finalized&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['samplesFinalized'].'</a>':0; ?></td>
-        <td class="labBorder-left"><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=LAg-rececnt&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
+        <td class="labBorder-left"><?php echo ($country['noofLAgRecentwtVl'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=LAg-rececntwtvl&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecentwtVl'].'</a>':0; ?></td>
+        <td><?php echo ($country['noofLAgRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=LAg-rececnt&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLAgRecent'].'</a>':0; ?></td>
         <td class="labBorder-right"><?php echo ($country['noofLabRecencyAssayRecent'] >0)?'<a href="/data-collection/' . base64_encode($country['country_id']) . '?type=lab-rr-recent&date='.$country['monthName'].'/'.$country['year'].'" target="_blank" title="View">'.$country['noofLabRecencyAssayRecent'].'</a>':0; ?></td>
         <td><?php echo ($assessments >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=assessment&date='.$country['monthName'].'/'.$country['year'].'&dSrc=interview" target="_blank" title="View">'.$assessments.'</a>':0; ?></td>
         <td><?php echo ($noofANCRecencyTestRecent >0)?'<a href="/clinic/risk-assessment/' . base64_encode($country['country_id']) . '?type=anc-rr-recent&date='.$country['monthName'].'/'.$country['year'].'&dSrc=interview" target="_blank" title="View">'.$noofANCRecencyTestRecent.'</a>':0; ?></td>
@@ -43,13 +46,14 @@ if(count($response) >0){
         <td class="total_row"><?php echo array_sum($samplesIncompleteArray); ?></td>
         <td class="total_row"><?php echo array_sum($samplesTestedArray); ?></td>
         <td class="total_row"><?php echo array_sum($samplesFinalizedArray); ?></td>
-        <td class="total_row labBorder-left labBorder-bottom"><?php echo array_sum($noofLAgRecentArray); ?></td>
+        <td class="total_row labBorder-left labBorder-bottom"><?php echo array_sum($noofLAgRecentwtVlArray); ?></td>
+        <td class="total_row labBorder-bottom"><?php echo array_sum($noofLAgRecentArray); ?></td>
         <td class="total_row labBorder-right labBorder-bottom"><?php echo array_sum($noofLabRecencyAssayRecentArray); ?></td>
         <td class="total_row"><?php echo array_sum($assessmentsArray); ?></td>
         <td class="total_row"><?php echo array_sum($noofANCRecencyTestRecentArray); ?></td>
     </tr>
 <?php } else { ?>
     <tr>
-        <td colspan="10">No data available..</td>
+        <td colspan="11">No data available..</td>
     </tr>
 <?php } ?>

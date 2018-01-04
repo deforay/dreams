@@ -96,6 +96,9 @@
     .redTxt{
 	color:#F44336 !important;
     }
+    .yellowTxt,.remove_sorting_1_style{
+	background-color:#FFFF00 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -105,7 +108,7 @@
             <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Lab Data Download</a>
        </div>
     </div>
-    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:280px;background:#e0e0e0;">
 	<div class="col m12">
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
@@ -191,15 +194,18 @@
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="updated_by" class="showhideCheckBox" /> <label for="iCol26">Last Updated by</label> <br>
 	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol27">Status</label> <br>
+	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="27"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol27">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="28"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol28">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="26"/>
+	      <input type="hidden" id="countColumn" value="27"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -305,6 +311,7 @@
 				<th>Added by</th>
 				<th>Last Updated Date</th>
 				<th>Last Updated by</th>
+				<th>Status</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -334,7 +341,7 @@
                                 <th>Lab LAg Recency<br>(Based on LAg ODn)</th>
 				<th>HIV RNA (cp/ml)</th>
                                 <!--<th>HIV RNA > 1000</th>-->
-								<th>Lab LAg Recency<br>(Based on algorithm)</th>
+				<th>Lab LAg Recency<br>(Based on algorithm)</th>
                                 <th>Positive Verification Line (Visual)</th>
                                 <th>Long Term Line (Visual)</th>
                                 <th>Comments</th>
@@ -342,6 +349,7 @@
 				<th>Added by</th>
 				<th>Last Updated Date</th>
 				<th>Last Updated by</th>
+				<th>Status</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -397,6 +405,7 @@
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		<?php
 		if(trim($countryId)== ''){
 		?>
@@ -404,7 +413,8 @@
 		<?php } ?>
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[20] =='Absent' || (aData[17] == 'Long Term' && aData[21] == 'Absent') || (aData[17] == 'Recent' && aData[21] == 'Present')){ $(nRow).addClass("redTxt"); }
+		if(aData[27] == 'Incomplete'){ $("td:eq(1)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); }
+		if(aData[20] =='Absent' || (aData[19] == 'Long Term' && aData[21] == 'Absent') || (aData[19] == 'Recent' && aData[21] == 'Present')){ $(nRow).addClass("redTxt"); }
 	    },
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
