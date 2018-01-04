@@ -81,8 +81,8 @@ class DataCollectionTable extends AbstractTableGateway {
             }if(!isset($params['labTechName'])){
 		$params['labTechName'] = NULL;
 	    }if($params['asanteRapidRecencyAssayPn'] == 'absent'){
-		$params['asanteRapidRecencyAssayRlt'] = '';
-		$params['readerValueRRRLog'] = '';
+			$params['asanteRapidRecencyAssayRlt'] = '';
+			$params['readerValueRRRLog'] = '';
 	    }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
@@ -93,15 +93,27 @@ class DataCollectionTable extends AbstractTableGateway {
 						'reader'=>$params['readerValueRRRLog']
 					    )
 					);
-	    //status
-	    $status = 1;//complete
-	    $formCompletionDate = $common->getDateTime();
-	    if($rejectionReason == NULL || $rejectionReason == 1){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
-		    $status = 4;//incomplete
-		    $formCompletionDate = NULL;
-		}
-	    }
+			//status
+			$status = 1;//complete
+			$formCompletionDate = $common->getDateTime();
+			if($rejectionReason == NULL || $rejectionReason == 1){
+				if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
+					$status = 4;//incomplete
+					$formCompletionDate = NULL;
+				}
+			}
+
+
+			if($params['recentInfection'] == 'no'){
+				if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
+					$params['recentInfection'] = 'no';
+				}else{
+					$params['recentInfection'] = 'incomplete';
+				} 				
+			}
+
+
+
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
                         'patient_barcode_id'=>$params['patientBarcodeId'],
@@ -113,25 +125,25 @@ class DataCollectionTable extends AbstractTableGateway {
                         'age'=>$params['age'],
                         'gestational_age'=>$params['gestationalAge'],
                         'patient_dob'=>$patientDOB,
-			'specimen_type'=>$params['specimenType'],
+						'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
                         'lab_specimen_id'=>$params['labSpecimenId'],
-			'rejection_reason'=>$rejectionReason,
+						'rejection_reason'=>$rejectionReason,
                         'receipt_date_at_central_lab'=>$receiptDateAtCentralLab,
-			'lab_tech_name'=>$params['labTechName'],
+						'lab_tech_name'=>$params['labTechName'],
                         'date_of_test_completion'=>$testCompletionDate,
-			'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
+						'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
                         'final_lag_avidity_odn'=>$params['finalLagAvidityOdn'],
                         'lag_avidity_result'=>$params['lagAvidityResult'],
                         'hiv_rna'=>$params['hivRna'],
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
                         'asante_rapid_recency_assy'=>json_encode($asanteRapidRecencyAssay),
-			'comments'=>$params['comments'],
+						'comments'=>$params['comments'],
                         'country'=>$country,
-			'date_of_form_completion'=>$formCompletionDate,
-			'status'=>$status,
+						'date_of_form_completion'=>$formCompletionDate,
+						'status'=>$status,
                         'added_on'=>$common->getDateTime(),
                         'added_by'=>$loginContainer->userId
                     );
@@ -273,13 +285,13 @@ class DataCollectionTable extends AbstractTableGateway {
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=>2));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececnt'){
-	    $sQuery = $sQuery->where(array('da_c.lag_avidity_result'=>'recent'));
+	    $sQuery = $sQuery->where(array('da_c.recent_infection'=>'yes'));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'lab-rr-recent'){
 	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'');
 	}
-       if (isset($sWhere) && $sWhere != "") {
-           $sQuery->where($sWhere);
-       }
+	if (isset($sWhere) && $sWhere != "") {
+		$sQuery->where($sWhere);
+	}
 
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
@@ -529,31 +541,42 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $formCompletion = true;
 	    $formCompletionDate = $common->getDateTime();
 	    if($rejectionReason == NULL || $rejectionReason == 1){
-		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
-		    $status = 4;//incomplete
-		    $formCompletionDate = NULL;
-		}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){
-		    $formCompletion = false;//submitted with the status 'completed/unlocked' with completed date
+			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
+				$status = 4;//incomplete
+				$formCompletionDate = NULL;
+			}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){
+				$formCompletion = false;//submitted with the status 'completed/unlocked' with completed date
+			}
 		}
-	    }
+		
+
+		if($params['recentInfection'] == 'no'){
+			if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
+				$params['recentInfection'] = 'no';
+			}else{
+				$params['recentInfection'] = 'incomplete';
+			} 				
+		}
+
+
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
-			'patient_barcode_id'=>$params['patientBarcodeId'],
+						'patient_barcode_id'=>$params['patientBarcodeId'],
                         'specimen_collected_date'=>$specimenCollectedDate,
                         'anc_site'=>base64_decode($params['ancSite']),
                         'anc_patient_id'=>$params['ancPatientId'],
-			'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
-			'art_patient_id'=>$params['artPatientId'],
+						'enc_anc_patient_id'=>$this->rot47($params['ancPatientId']),
+						'art_patient_id'=>$params['artPatientId'],
                         'age'=>$params['age'],
-			'gestational_age'=>$params['gestationalAge'],
+						'gestational_age'=>$params['gestationalAge'],
                         'patient_dob'=>$patientDOB,
                         'specimen_type'=>$params['specimenType'],
                         'specimen_picked_up_date_at_anc'=>$specimenPickedUpDateAtAnc,
                         'lab'=>base64_decode($params['lab']),
                         'lab_specimen_id'=>$params['labSpecimenId'],
-			'rejection_reason'=>$rejectionReason,
+						'rejection_reason'=>$rejectionReason,
                         'receipt_date_at_central_lab'=>$receiptDateAtCentralLab,
-			'lab_tech_name'=>$params['labTechName'],
+						'lab_tech_name'=>$params['labTechName'],
                         'date_of_test_completion'=>$testCompletionDate,
                         'result_dispatched_date_to_clinic'=>$resultDispatchedDateToClinic,
                         'final_lag_avidity_odn'=>$params['finalLagAvidityOdn'],
@@ -562,7 +585,7 @@ class DataCollectionTable extends AbstractTableGateway {
                         'hiv_rna_gt_1000'=>$params['hivRnaGT1000'],
                         'recent_infection'=>$params['recentInfection'],
                         'asante_rapid_recency_assy'=>json_encode($asanteRapidRecencyAssay),
-			'comments'=>$params['comments'],
+						'comments'=>$params['comments'],
                         'status'=>$status,
                         'updated_on'=>$common->getDateTime(),
                         'updated_by'=>$loginContainer->userId
@@ -967,7 +990,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
@@ -1633,7 +1656,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
 						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_id','facility_name'))
@@ -1721,7 +1744,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	if($showLabRecent){
 	    $labRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
 				  ->columns(array('anc_site_name','latitude','longitude'))
-				  ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.lag_avidity_result = 'recent', 1,0))"),'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')),'left')
+				  ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')),'left')
 				  ->where(array('anc.country'=>$params['country']))
 				  ->group('anc.anc_site_id');
 	    if(trim($params['reportingMonthYear'])!= ''){
