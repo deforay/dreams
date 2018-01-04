@@ -109,9 +109,18 @@ class DataCollectionTable extends AbstractTableGateway {
 					$params['recentInfection'] = 'no';
 				}else{
 					$params['recentInfection'] = 'incomplete';
-				} 				
+				}
 			}
 
+			if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
+				if($params['finalLagAvidityOdn'] > 2){
+					$params['lagAvidityResult'] = 'long term';
+				}else{
+					$params['lagAvidityResult'] = 'recent';
+				}
+			}else{
+				$params['lagAvidityResult'] = '';
+			}
 
 
             $data = array(
@@ -568,6 +577,17 @@ class DataCollectionTable extends AbstractTableGateway {
 				$params['recentInfection'] = 'incomplete';
 			} 				
 		}
+
+
+		if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
+			if($params['finalLagAvidityOdn'] > 2){
+				$params['lagAvidityResult'] = 'long term';
+			}else{
+				$params['lagAvidityResult'] = 'recent';
+			}
+		}else{
+			$params['lagAvidityResult'] = '';
+		}		
 
 
             $data = array(

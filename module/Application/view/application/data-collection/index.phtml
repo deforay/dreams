@@ -930,30 +930,38 @@ if(isset($date) && trim($date)!= ''){
 		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
 	        $('.prePopulateAvidity').css('visibility','visible');
 	        $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
-                $('#lagAvidityResultLongTerm').prop('checked',true);
+            $('#lagAvidityResultLongTerm').prop('checked',true);
 	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
-		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-		if(parseInt($('#hivRna').val()) <= 1000){
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
-		    $('#lagAvidityResultLongTerm').prop('checked',true);
-		}else if(parseInt($('#hivRna').val()) > 1000){
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
-		    $('#lagAvidityResultRecent').prop('checked',true);
-		}else{
-	            $('.prePopulateAvidity').css('visibility','visible');
-		    $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
-		    $('#lagAvidityResultRecent').prop('checked',true);
-		}
+			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+			if(parseInt($('#hivRna').val()) <= 1000){
+				$('.prePopulateAvidity').css('visibility','visible');
+				// $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
+				// $('#lagAvidityResultLongTerm').prop('checked',true);
+
+				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+				$('#lagAvidityResultRecent').prop('checked',true);
+
+			}else if(parseInt($('#hivRna').val()) > 1000){
+				$('.prePopulateAvidity').css('visibility','visible');
+				// $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
+				// $('#lagAvidityResultRecent').prop('checked',true);
+
+				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+				$('#lagAvidityResultRecent').prop('checked',true);
+
+			}else{
+				$('.prePopulateAvidity').css('visibility','visible');
+				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+				$('#lagAvidityResultRecent').prop('checked',true);
+			}
 	    }else{
-		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-		$('.prePopulateAvidity').css('visibility','hidden');
-		$('label[for="lagAvidityResult"]').html('');
-		$('#lagAvidityResultRecent').prop('checked',false);
-		$('#lagAvidityResultLongTerm').prop('checked',false);
+			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+			$('.prePopulateAvidity').css('visibility','hidden');
+			$('label[for="lagAvidityResult"]').html('');
+			$('#lagAvidityResultRecent').prop('checked',false);
+			$('#lagAvidityResultLongTerm').prop('checked',false);
 	    }
 	    //Gt1000
 	    if(parseInt($('#hivRna').val()) > 1000){
