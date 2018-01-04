@@ -327,7 +327,14 @@ class DataCollectionService {
                                 $recencyReaderLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
                             }
                         }
-                        
+                        $sampleType = '';
+                        if($aRow['specimen_type'] == 1){
+                           $sampleType = 'Venous';
+                        }else if($aRow['specimen_type'] == 2){
+                           $sampleType = 'Plasma'; 
+                        }else if($aRow['specimen_type'] == 3){
+                           $sampleType = 'DBS';
+                        }
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$receiptDateAtCentralLab:$aRow['patient_barcode_id'];
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$aRow['patient_barcode_id']:$specimenCollectedDate;
                         $row[] = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?$specimenCollectedDate:ucwords($aRow['anc_site_name']);
@@ -359,6 +366,7 @@ class DataCollectionService {
                             $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
                             $row[] = $updatedDate;
                             $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
+                            $row[] = $sampleType;
                             $row[] = ucwords($aRow['test_status_name']);
                         }
                         if(!isset($params['countryId']) || trim($params['countryId']) == ''){
@@ -509,10 +517,11 @@ class DataCollectionService {
                         $sheet->setCellValue('AB'.$headerRow, html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AC'.$headerRow, html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AD'.$headerRow, html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue('AE'.$headerRow, html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AE'.$headerRow, html_entity_decode('Specimen Type', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AF'.$headerRow, html_entity_decode('Status', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                        $cellName = (!isset($params['frmSrc']))?'AF':'AA';
+                        $cellName = (!isset($params['frmSrc']))?'AG':'AA';
                         $sheet->setCellValue($cellName.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                           $sheet->setCellValue('AB'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -570,9 +579,10 @@ class DataCollectionService {
                         $sheet->getStyle('AC'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AD'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AE'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AF'.$headerRow)->applyFromArray($styleArray);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                        $cellName = (!isset($params['frmSrc']))?'AF':'AA';
+                        $cellName = (!isset($params['frmSrc']))?'AG':'AA';
                         $sheet->getStyle($cellName.$headerRow)->applyFromArray($styleArray);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
                          $sheet->getStyle('AB'.$headerRow)->applyFromArray($styleArray);
@@ -604,14 +614,14 @@ class DataCollectionService {
                             if($colNo == 20){ $lag = $value; }
                             if($colNo == 22){ $labHIVV = $value; }
                             if($colNo == 24){ $labHIVR = $value; }
-                            if($colNo == 30){ $status = $value; }
+                            if($colNo == 31){ $status = $value; }
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
                             if($colNo > ($lastCol-1)){
                                 if(!isset($params['countryId']) || trim($params['countryId'])== ''){
-                                    $lastColName = (!isset($params['frmSrc']))?'AF':'AB';
+                                    $lastColName = (!isset($params['frmSrc']))?'AG':'AB';
                                 }else{
-                                    $lastColName = (!isset($params['frmSrc']))?'AE':'AA';
+                                    $lastColName = (!isset($params['frmSrc']))?'AF':'AA';
                                 }
                                 if(!isset($params['frmSrc']) && $status == 'Incomplete'){
                                    $sheet->getStyle('A'.$currentRow.':'.$lastColName.$currentRow)->applyFromArray($yellowTxtArray);
