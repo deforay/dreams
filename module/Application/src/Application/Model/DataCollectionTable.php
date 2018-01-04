@@ -285,7 +285,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=>2));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececntwtvl'){
-	    $sQuery = $sQuery->where(array('da_c.lag_avidity_result'=>'recent'));
+	    $sQuery = $sQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "")');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececnt'){
 	    $sQuery = $sQuery->where(array('da_c.recent_infection'=>'yes'));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'lab-rr-recent'){
