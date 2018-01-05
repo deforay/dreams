@@ -1163,6 +1163,16 @@ class DataCollectionService {
                     //    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
                     //	$hIVRNAResult = 'Low Viral Load';
                     //    }
+                        $finalLagRecencyInfection = '';
+                        if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
+                            if($aRow['recent_infection'] == 'yes'){
+                                $finalLagRecencyInfection = 'Recent';
+                            }else if($aRow['recent_infection'] == 'no'){
+                                $finalLagRecencyInfection = 'Long Term';
+                            }else{
+                                $finalLagRecencyInfection = 'Incomplete';
+                            }
+                        }
                         //rapid assay
                         if(isset($aRow['asante_rapid_recency_assy']) && $aRow['asante_rapid_recency_assy']!= null && trim($aRow['asante_rapid_recency_assy'])!= ''){
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
@@ -1253,7 +1263,7 @@ class DataCollectionService {
                            $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
                         }
                         if(count($sor_Columns) == 0 || in_array('recent_infection',$sor_Columns)){
-                           $row[] = (isset($aRow['recent_infection']) && $aRow['recent_infection']!= null && trim($aRow['recent_infection'])!= '')?ucfirst($aRow['recent_infection']):'';
+                           $row[] = $finalLagRecencyInfection;
                         }
                         if(count($sor_Columns) == 0 || in_array('asante_rapid_recency_assy_rrdt',$sor_Columns)){
                             $row[] = $rapidRecencyAssay;
@@ -1331,9 +1341,9 @@ class DataCollectionService {
                         $sheet->setCellValue('P1', html_entity_decode('Date of Test Completion ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('Q1', html_entity_decode('Result Dispatched Date to Clinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('R1', html_entity_decode('LAg Avidity ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue('S1', html_entity_decode('LAg Recency Assay ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('S1', html_entity_decode('Lab LAg Recency (Based on LAg ODn) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('T1', html_entity_decode('HIV RNA (cp/ml) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue('U1', html_entity_decode('Recent Infection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('U1', html_entity_decode('Lab LAg Recency (Based on algorithm) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('V1', html_entity_decode('Lab Positive Verification Line (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('W1', html_entity_decode('Lab Long Term Line (Visual) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('X1', html_entity_decode('ANC Positive Verification Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1383,7 +1393,7 @@ class DataCollectionService {
                     
                     
                     $status_Col = array_search('test_status_name', $sor_Columns);
-                    $lag_Col = array_search('lag_avidity_result', $sor_Columns);
+                    $lag_Col = array_search('recent_infection', $sor_Columns);
                     $labHIVV_Col = array_search('asante_rapid_recency_assy_rrdt', $sor_Columns);
                     $labHIVR_Col = array_search('asante_rapid_recency_assy_rrr', $sor_Columns);
                     $ancHIVV_Col = array_search('HIV_diagnostic_line', $sor_Columns);
@@ -1410,7 +1420,7 @@ class DataCollectionService {
                             }
                             
                             if((count($sor_Columns) == 0 && $colNo == 25) || $key == $status_Col){ $status = $value; }
-                            if((count($sor_Columns) == 0 && $colNo == 18) || $key == $lag_Col){ $lag = $value; }
+                            if((count($sor_Columns) == 0 && $colNo == 20) || $key == $lag_Col){ $lag = $value; }
                             if((count($sor_Columns) == 0 && $colNo == 21) || $key == $labHIVV_Col){ $labHIVV = $value; }
                             if((count($sor_Columns) == 0 && $colNo == 22) || $key == $labHIVR_Col){ $labHIVR = $value; }
                             if((count($sor_Columns) == 0 && $colNo == 23) || $key == $ancHIVV_Col){ $ancHIVV = str_replace("-","",$value); }
@@ -1430,7 +1440,8 @@ class DataCollectionService {
                             if($colNo == $lastCol){
                                 if($status == 'Incomplete'){
                                   $sheet->getStyle('A'.$currentRow.':'.$cellName.''.$currentRow)->applyFromArray($yellowTxtArray); 
-                                }else if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present' || $recencyMismatch === true)){
+                                }
+                                if($labHIVV =='Absent' || ($lag == 'Long Term' && $labHIVR == 'Absent') || ($lag == 'Recent' && $labHIVR == 'Present' || $recencyMismatch === true)){
                                   $sheet->getStyle('A'.$currentRow.':'.$cellName.''.$currentRow)->applyFromArray($redTxtArray);
                                 }
                             }

@@ -1358,6 +1358,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
+	    $finalLagRecencyInfection = '';
+	    if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
+		if($aRow['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($aRow['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
 	    $asanteRapidRecencyAssayPn = '';
 	    $asanteRapidRecencyAssayRlt = '';
 	    if(trim($aRow['asante_rapid_recency_assy'])!= ''){
@@ -1389,7 +1399,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
 	    //$row[] = $hIVRNAResult;
-	    $row[] = ucfirst($aRow['recent_infection']);
+	    $row[] = $finalLagRecencyInfection;
 	    $row[] = $asanteRapidRecencyAssayPn;
 	    $row[] = $asanteRapidRecencyAssayRlt;
 	    $row[] = ucfirst($aRow['comments']);
@@ -1644,6 +1654,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
+	    $finalLagRecencyInfection = '';
+	    if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
+		if($aRow['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($aRow['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
 	    //status
 	    $status = ucwords($aRow['test_status_name']);
 	    if($aRow['final_lag_avidity_odn'] <= 2 && (trim($aRow['hiv_rna']) == '' || $aRow['hiv_rna'] == null)){
@@ -1672,7 +1692,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
 	    //$row[] = $hIVRNAResult;
-	    $row[] = ucfirst($aRow['recent_infection']);
+	    $row[] = $finalLagRecencyInfection;
 	    $row[] = ucfirst($aRow['comments']);
 	    if($parameters['printSrc'] == 'anc'){
 	       $row[] = ((int)$aRow['anc_print_status'] == 1)?'Printed':'';
@@ -2140,6 +2160,16 @@ class DataCollectionTable extends AbstractTableGateway {
 	//    }else if(trim($aRow['hiv_rna_gt_1000'])!= '' && $aRow['hiv_rna_gt_1000'] =='no'){
 	//	$hIVRNAResult = 'Low Viral Load';
 	//    }
+	    $finalLagRecencyInfection = '';
+	    if(isset($aRow['recent_infection']) && $aRow['recent_infection'] != null){
+		if($aRow['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($aRow['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
 	    //rapid assay
 	    if(isset($aRow['asante_rapid_recency_assy']) && $aRow['asante_rapid_recency_assy']!= null && trim($aRow['asante_rapid_recency_assy'])!= ''){
 		$asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
@@ -2190,7 +2220,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $lagResult;
 	    $row[] = (isset($aRow['hiv_rna']) && $aRow['hiv_rna']!= null && trim($aRow['hiv_rna'])!= '')?$aRow['hiv_rna']:'';
 	    //$row[] = $hIVRNAResult;
-	    $row[] = (isset($aRow['recent_infection']) && $aRow['recent_infection']!= null && trim($aRow['recent_infection'])!= '')?ucfirst($aRow['recent_infection']):'';
+	    $row[] = $finalLagRecencyInfection;
 	    $row[] = $rapidRecencyAssay;
 	    $row[] = $rapidRecencyAssayDuration;
 	    $row[] = $ancHIVVerificationClassification;

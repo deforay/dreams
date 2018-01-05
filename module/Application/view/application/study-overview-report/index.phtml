@@ -216,13 +216,13 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="final_lag_avidity_odn" data-label="LAg Avidity" class="showhideCheckBox" /> <label for="iCol17">LAg Avidity</label>
 	</div>
 	<div class="col m3">
-	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="lag_avidity_result" data-label="LAg Recency Assay" class="showhideCheckBox" /> <label for="iCol18">LAg Recency <br>Assay</label>
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="lag_avidity_result" data-label="Lab LAg Recency (Based on LAg ODn)" class="showhideCheckBox" /> <label for="iCol18">Lab LAg Recency <br>(Based on LAg ODn)</label>
 	</div>
 	<div class="col m3">
 	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna" data-label="HIV RNA (cp/ml)" class="showhideCheckBox" /> <label for="iCol19">HIV RNA(cp/ml)</label>
 	</div>
 	<div class="col m3">
-	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="recent_infection" data-label="Recent Infection" class="showhideCheckBox" /> <label for="iCol20">Recent Infection</label>
+	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="recent_infection" data-label="Lab LAg Recency (Based on algorithm)" class="showhideCheckBox" /> <label for="iCol20">Lab LAg Recency <br>(Based on algorithm)</label>
 	</div>
 	<div class="col m3">
 	    <input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy_rrdt" data-label="Lab Positive Verification Line (Visual)" class="showhideCheckBox" /> <label for="iCol21">Lab Positive <br>Verification <br>Line(Visual)</label>
@@ -357,10 +357,10 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 			    <th>Date of <br>Test <br>Completion</th>
 			    <th>Result <br>Dispatched<br>Date to Clinic</th>
 			    <th>LAg Avidity</th>
-			    <th>LAg<br>Recency<br>Assay</th>
+			    <th>Lab LAg Recency<br> (Based on LAg ODn)</th>
 			    <th>HIV RNA<br>(cp/ml)</th>
 			    <!--<th>HIV RNA > 1000</th>-->
-			    <th>Recent<br>Infection</th>
+			    <th>Lab LAg Recency <br>(Based on algorithm)</th>
 			    <th>Lab Positive<br>Verification<br>Line<br>(Visual)</th>
 			    <th>Lab Long<br>Term Line<br>(Visual)</th>
 			    <th>ANC Positive<br>Verification<br>Line</th>
@@ -389,10 +389,10 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 			    <th class="labBorder-bottom">Date of <br>Test <br>Completion</th>
 			    <th class="labBorder-bottom">Result <br>Dispatched<br>Date to Clinic</th>
 			    <th class="labBorder-bottom">LAg Avidity</th>
-			    <th class="labBorder-bottom">LAg<br>Recency<br>Assay</th>
+			    <th class="labBorder-bottom">Lab LAg Recency<br> (Based on LAg ODn)</th>
 			    <th class="labBorder-bottom">HIV RNA<br>(cp/ml)</th>
 			    <!--<th class="labBorder-bottom">HIV RNA > 1000</th>-->
-			    <th class="labBorder-bottom">Recent<br>Infection</th>
+			    <th class="labBorder-bottom">Lab LAg Recency <br>(Based on algorithm)</th>
 			    <th class="labBorder-bottom">Lab Positive<br>Verification<br>Line<br>(Visual)</th>
 			    <th class="labBorder-bottom">Lab Long<br>Term Line<br>(Visual)</th>
 			    <th>ANC Positive<br>Verification<br>Line</th>
@@ -454,7 +454,7 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		var LAgAssay = aData[18];
+		var LAgAssay = aData[20];
 		var labHIVVerificationClassification = aData[21];
 		var labHIVRecencyClassification = aData[22];
 		var ancHIVVerificationClassification = aData[23].replace("-", "");
@@ -472,7 +472,8 @@ if(isset($manage_columns) && isset($manage_columns->study_overview) && trim($man
 		if($.trim(aData[25].replace(/<\/?[^>]+(>|$)/g, "")) == "Incomplete"){
 		    $("td:eq(3)", nRow).addClass("remove_sorting_1_style");
 		    $(nRow).addClass("yellowTxt");
-		}else if(aData[21] =='Absent' || (aData[18] == 'Long Term' && aData[22] == 'Absent') || (aData[18] == 'Recent' && aData[22] == 'Present') || recencyMismatch === true){
+		}
+		if(aData[21] =='Absent' || (aData[20] == 'Long Term' && aData[22] == 'Absent') || (aData[20] == 'Recent' && aData[22] == 'Present') || recencyMismatch === true){
 		    $(nRow).addClass("redTxt");
 		}
 	    },

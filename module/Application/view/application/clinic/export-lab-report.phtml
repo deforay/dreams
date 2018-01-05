@@ -103,14 +103,14 @@ if(count($labReportResult) >0){
            $html .='<th><strong>Result Dispatched Date to Clinic</strong></th>';
            if($infectionType =='show'){
               $html .='<th><strong>LAg Avidity</strong></th>';
-              $html .='<th><strong>LAg Avidity Result</strong></th>';
+              $html .='<th><strong>Lab LAg Recency (Based on LAg ODn)</strong></th>';
            }
 	   if($vlReportType =='show'){
               $html .='<th><strong>HIV RNA</strong></th>';
               //$html .='<th><strong>HIV RNA > 1000</strong></th>';
            }
 	   if($infectionType =='show'){
-              $html .='<th><strong>Recent Infection</strong></th>';
+              $html .='<th><strong>Lab LAg Recency (Based on algorithm)</strong></th>';
            }
 	   $html .='<th><strong>Comments</strong></th>';
            $html .='</tr>';
@@ -144,6 +144,16 @@ if(count($labReportResult) >0){
 	    //}else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
 	    //  $hIVRNAResult = 'Low Viral Load';
 	    //}
+	    $finalLagRecencyInfection = '';
+	    if(isset($row['recent_infection']) && $row['recent_infection'] != null){
+		if($row['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($row['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
 	    //status
 	    if($row['final_lag_avidity_odn'] <= 2 && (trim($row['hiv_rna']) == '' || $row['hiv_rna'] == null)){
 		$status = 'Results Awaited';
@@ -173,7 +183,7 @@ if(count($labReportResult) >0){
                   //$html .='<td>'.$hIVRNAResult.'</td>';
               }
 	      if($infectionType =='show'){
-                $html .='<td>'.ucfirst($row['recent_infection']).'</td>';
+                $html .='<td>'.$finalLagRecencyInfection.'</td>';
               }
 	      $html .='<td>'.ucfirst($row['comments']).'</td>';
             $html .='</tr>';

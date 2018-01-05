@@ -742,14 +742,10 @@ if(isset($date) && trim($date)!= ''){
                 });
             }
         });
-
+        
+	$("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')}); 
 	for(colNo=0;colNo <=$("#countColumn").val();colNo++){
             $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
-            if(oTable.fnSettings().aoColumns[colNo].bVisible){
-                $("#iCol"+colNo+"-sort").show();    
-            }else{
-                $("#iCol"+colNo+"-sort").hide();    
-            }
         }
        
        $('.dataTables_filter').empty(); // clears the content generated
@@ -769,7 +765,6 @@ if(isset($date) && trim($date)!= ''){
 	  loadLabDataList();
 	<?php } ?>
 	
-       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
        <?php if(trim($countryId)!= ''){ ?>
 	    var latestCollId = $('#lDCId').val();
 	    var countryCode = $('#cCode').val();
@@ -1115,7 +1110,7 @@ if(isset($date) && trim($date)!= ''){
     }
 	
     function checkPatientRecord(){
-		checkPatientBarcodeId();
+	checkPatientBarcodeId();
     }
     
     function checkPatientBarcodeId(){
