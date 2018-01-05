@@ -322,7 +322,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select isRequired" title="Don't leave Q3C">
                         <option value=""> -- Select -- </option>
                         <option value="1" <?php echo ($row->current_marital_status == 1)?'selected="selected"':''; ?>>Married/Cohabiting - 1</option>
-                        <option value="2" <?php echo ($row->patient_ever_been_married == 2)?'selected="selected"':''; ?>>Never Married/Cohabiting - 2</option>
+                        <option value="2" <?php echo ($row->current_marital_status == 2)?'selected="selected"':''; ?>>Never Married/Cohabiting - 2</option>
                         <option value="3" <?php echo ($row->current_marital_status == 3)?'selected="selected"':''; ?>>Widowed - 3</option>
                         <option value="4" <?php echo ($row->current_marital_status == 4)?'selected="selected"':''; ?>>Separated - 4</option>
                         <option value="5" <?php echo ($row->current_marital_status == 5)?'selected="selected"':''; ?>>Divorced - 5</option>
