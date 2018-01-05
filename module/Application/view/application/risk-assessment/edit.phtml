@@ -1806,9 +1806,11 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if (frmSrc == 'change' && $("input[name='everBeenMarried']:checked").val() == 2) {
 		$("#currentMaritalStatus").val(2);
 		$("#currentMaritalStatus").material_select();
+		$('div').removeClass('isRequired');
 	    }else{
 		$("#currentMaritalStatus").val("");
 	        $("#currentMaritalStatus").material_select();
+		$('div').removeClass('isRequired');
 	    }
 	}else{
 	    //css section
@@ -1822,7 +1824,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if($.trim($("#ageAtFirstMarriageInYears").val()) == '') { $("#ageAtFirstMarriageDK").addClass("isRequired"); }
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
-	    if (frmSrc == 'change'){ $("#currentMaritalStatus").val(""); $("#currentMaritalStatus").material_select(); }
+	    if (frmSrc == 'change'){ $("#currentMaritalStatus").val(""); $("#currentMaritalStatus").material_select(); $('div').removeClass('isRequired'); }
 	}
     }
     

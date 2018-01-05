@@ -235,9 +235,11 @@ if(isset($date) && trim($date)!= ''){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
 <script>
     $(document).ready(function() {
+	<?php if(trim($dashProvince)!= '') { ?>
+	   getProvinceDistricts();
+	   getDistrictsANCs();
+	<?php } ?>
 	selectDate();
-	getProvinceDistricts();
-	getDistrictsANCs();
 	oTable = $('#riskAssessmentDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {

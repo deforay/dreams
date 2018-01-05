@@ -1758,9 +1758,11 @@ if(trim($countryId)!= ''){
 	    if ($("input[name='everBeenMarried']:checked").val() == 2) {
 		$("#currentMaritalStatus").val(2);
 		$("#currentMaritalStatus").material_select();
+		$('div').removeClass('isRequired');
 	    }else{
 		$("#currentMaritalStatus").val("");
 	        $("#currentMaritalStatus").material_select();
+		$('div').removeClass('isRequired');
 	    }
 	}else{
 	    //css section
@@ -1776,6 +1778,7 @@ if(trim($countryId)!= ''){
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
 	    $("#currentMaritalStatus").val("");
 	    $("#currentMaritalStatus").material_select();
+	    $('div').removeClass('isRequired');
 	}
     });
     
