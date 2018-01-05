@@ -952,15 +952,13 @@ class DataCollectionService {
                     $sheet->getStyle($cellName.'1:'.$cellName.'2')->applyFromArray($styleArray);
                     
                     $currentRow = 3;
-                    $highestColumn = $f1;
                     foreach ($output as $rowData) {
                         $colNo = 0;
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
-                            }if($colNo > $highestColumn){
-                                break;
                             }
+                            
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                             }else{

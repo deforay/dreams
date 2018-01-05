@@ -70,6 +70,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}
 	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
 		$patientEverBeenMarried = $params['everBeenMarried'];
+		if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 2){
+		   $currentMaritalStatus = $params['currentMaritalStatus'];
+		}
 	    }
 	    //patient HIV test result
 	    $hasPatientEverBeenTestedforHIV = NULL;
@@ -674,6 +677,9 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		}
 	    }else if(isset($params['everBeenMarried']) && trim($params['everBeenMarried'])!= ''){
 		$patientEverBeenMarried = $params['everBeenMarried'];
+		if(isset($params['everBeenMarried']) && trim($params['everBeenMarried']) == 2){
+		   $currentMaritalStatus = $params['currentMaritalStatus'];
+		}
 	    }
 	    //patient HIV test result
 	    $hasPatientEverBeenTestedforHIV = NULL;

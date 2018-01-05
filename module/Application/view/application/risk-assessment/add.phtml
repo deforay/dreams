@@ -1755,6 +1755,13 @@ if(trim($countryId)!= ''){
 	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
 	    $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
 	    $("input[name='everBeenWidowed']").removeClass("isRequired");
+	    if ($("input[name='everBeenMarried']:checked").val() == 2) {
+		$("#currentMaritalStatus").val(2);
+		$("#currentMaritalStatus").material_select();
+	    }else{
+		$("#currentMaritalStatus").val("");
+	        $("#currentMaritalStatus").material_select();
+	    }
 	}else{
 	    //css section
 	    $(".everBeenMarriedSectionRequired").css("visibility","visible");
@@ -1767,6 +1774,8 @@ if(trim($countryId)!= ''){
 	    $("#ageAtFirstMarriageInYears").addClass("isRequired");
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
+	    $("#currentMaritalStatus").val("");
+	    $("#currentMaritalStatus").material_select();
 	}
     });
     

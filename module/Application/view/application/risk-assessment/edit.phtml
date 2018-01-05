@@ -265,15 +265,15 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    <input id="everBeenMarriedYes" class="with-gap isRequired" name="everBeenMarried" title="Don't leave Q3" value="1" type="radio" onchange="manageQ3();" <?php echo ($row->patient_ever_been_married == 1)?'checked="checked"':''; ?>>
+                    <input id="everBeenMarriedYes" class="with-gap isRequired" name="everBeenMarried" title="Don't leave Q3" value="1" type="radio" onchange="manageQ3('change');" <?php echo ($row->patient_ever_been_married == 1)?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
-                    <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="2" type="radio" onchange="manageQ3();" <?php echo ($row->patient_ever_been_married == 2)?'checked="checked"':''; ?>>
+                    <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="2" type="radio" onchange="manageQ3('change');" <?php echo ($row->patient_ever_been_married == 2)?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedNo" class="active">No - 2 </label>&nbsp;&nbsp;
-		    <input id="everBeenMarriedDK" class="with-gap isRequired" name="everBeenMarried" value="88" type="radio" onchange="manageQ3();" <?php echo ($row->patient_ever_been_married == 88)?'checked="checked"':''; ?>>
+		    <input id="everBeenMarriedDK" class="with-gap isRequired" name="everBeenMarried" value="88" type="radio" onchange="manageQ3('change');" <?php echo ($row->patient_ever_been_married == 88)?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
-                    <input id="everBeenMarriedR" class="with-gap" name="everBeenMarried" value="99" type="radio" onchange="manageQ3();" <?php echo ($row->patient_ever_been_married == 99)?'checked="checked"':''; ?>>
+                    <input id="everBeenMarriedR" class="with-gap" name="everBeenMarried" value="99" type="radio" onchange="manageQ3('change');" <?php echo ($row->patient_ever_been_married == 99)?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedR" class="active">Refused - 99 </label>&nbsp;&nbsp;
-		    <input id="everBeenMarriedRNA" class="with-gap" name="everBeenMarried" value="2222" type="radio" onchange="manageQ3();" <?php echo ($row->patient_ever_been_married == 2222)?'checked="checked"':''; ?>>
+		    <input id="everBeenMarriedRNA" class="with-gap" name="everBeenMarried" value="2222" type="radio" onchange="manageQ3('change');" <?php echo ($row->patient_ever_been_married == 2222)?'checked="checked"':''; ?>>
 		    <label for="everBeenMarriedRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
@@ -322,7 +322,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                     <select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select isRequired" title="Don't leave Q3C">
                         <option value=""> -- Select -- </option>
                         <option value="1" <?php echo ($row->current_marital_status == 1)?'selected="selected"':''; ?>>Married/Cohabiting - 1</option>
-                        <option value="2" <?php echo ($row->current_marital_status == 2)?'selected="selected"':''; ?>>Never Married/Cohabiting - 2</option>
+                        <option value="2" <?php echo ($row->patient_ever_been_married == 2)?'selected="selected"':''; ?>>Never Married/Cohabiting - 2</option>
                         <option value="3" <?php echo ($row->current_marital_status == 3)?'selected="selected"':''; ?>>Widowed - 3</option>
                         <option value="4" <?php echo ($row->current_marital_status == 4)?'selected="selected"':''; ?>>Separated - 4</option>
                         <option value="5" <?php echo ($row->current_marital_status == 5)?'selected="selected"':''; ?>>Divorced - 5</option>
@@ -1090,7 +1090,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 		    }
         });
        manageQ2();
-       manageQ3();
+       manageQ3('load');
        manageQ4();
        <?php if($row->partner_HIV_test_status == 3) { ?>
           manageQ9();
@@ -1787,7 +1787,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	}
     }
     //enable/disable Demographic Characteristics fields based on q.3
-    function manageQ3(){
+    function manageQ3(frmSrc){
 	if ($("input[name='everBeenMarried']:checked").val() != 1) {
 	    //css section
 	    $(".everBeenMarriedSectionRequired").css("visibility","hidden");
@@ -1803,6 +1803,13 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
 	    $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
 	    $("input[name='everBeenWidowed']").removeClass("isRequired");
+	    if (frmSrc == 'change' && $("input[name='everBeenMarried']:checked").val() == 2) {
+		$("#currentMaritalStatus").val(2);
+		$("#currentMaritalStatus").material_select();
+	    }else{
+		$("#currentMaritalStatus").val("");
+	        $("#currentMaritalStatus").material_select();
+	    }
 	}else{
 	    //css section
 	    $(".everBeenMarriedSectionRequired").css("visibility","visible");
@@ -1815,6 +1822,7 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
 	    if($.trim($("#ageAtFirstMarriageInYears").val()) == '') { $("#ageAtFirstMarriageDK").addClass("isRequired"); }
 	    $("#currentMaritalStatus").addClass("isRequired");
 	    $("input[name='everBeenWidowed']").addClass("isRequired");
+	    if (frmSrc == 'change'){ $("#currentMaritalStatus").val(""); $("#currentMaritalStatus").material_select(); }
 	}
     }
     
