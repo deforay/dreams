@@ -32,7 +32,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                     $reportingArray[$params['field'][$f]][] = $listArray;
                 }
             }
-            $characteristicsVal = ($reportingArray >0)?json_encode($reportingArray):NULL;
+            $characteristicsVal = (count($reportingArray) >0)?json_encode($reportingArray):NULL;
             $data = array(
                         'anc'=>base64_decode($params['anc']),
                         'reporting_month_year'=>strtolower($params['reportingMonthYear']),
@@ -313,7 +313,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                     $reportingArray[$params['field'][$f]][] = $listArray;
                 }
             }
-            $characteristicsVal = ($reportingArray >0)?json_encode($reportingArray):NULL;
+            $characteristicsVal = (count($reportingArray) >0)?json_encode($reportingArray):NULL;
             $status = (base64_decode($params['status']) == 2)?base64_decode($params['status']):1;
             $data = array(
                         'anc'=>base64_decode($params['anc']),
