@@ -191,10 +191,10 @@ if(trim($countryId)!= ''){
 					?>
 					    <tr>
 					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo $labelStyle; ?><?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input type="hidden" id="field<?php echo $r; ?>" name="field[]" value="<?php echo $fieldName; ?>" style="height:2rem;"/><?php echo $formLabel.$mandatoryicon; ?></td>
-					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="5"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
-					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_unknown" name="<?php echo $fieldName; ?>[age_unknown]" type="text" class="checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" title="Please fill in all the required fields" onkeyup="getTotal('<?php echo $fieldName; ?>');" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					      <td class="<?php echo($r > 1)?'':'rowOne'; ?>" <?php echo($value == 'no')?'colspan="5"':'' ?> style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><input id="<?php echo $fieldName; ?>_age_lt_15" name="<?php echo $fieldName; ?>[age_lt_15]" type="text" class="commonField checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" data-field="<?php echo $fieldName; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_15_to_19" name="<?php echo $fieldName; ?>[age_15_to_19]" type="text" class="commonField checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" data-field="<?php echo $fieldName; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_20_to_24" name="<?php echo $fieldName; ?>[age_20_to_24]" type="text" class="commonField checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" data-field="<?php echo $fieldName; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
+					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_age_unknown" name="<?php echo $fieldName; ?>[age_unknown]" type="text" class="commonField checkNum <?php echo $fieldName.' '.$commonFieldsIsRequired; ?>" data-field="<?php echo $fieldName; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $commonFieldsStyle; ?>"/><?php if($value!= 'no') { ?></td><?php } ?>
 					     <?php if($value!= 'no') { ?><td class="<?php echo($r > 1)?'':'rowOne'; ?>" style="<?php echo($r > 1)?'padding-top:0px;padding-bottom:0px;':''; ?>"><?php } ?><input id="<?php echo $fieldName; ?>_total" name="<?php echo $fieldName; ?>[total]" type="text" class="checkNum <?php echo $isRequiredTotal; ?>" title="Please fill in all the required fields" style="height:2rem;text-align:center;<?php echo $styleTotal; ?>"/><div id="lbl_<?php echo $fieldName; ?>_total" style="width:100%;text-align:center;border-bottom: 1px solid #eee;<?php echo $labelStyleTotal; ?>">0</div></td>
 					    </tr>
 					<?php $r++; } ?>
@@ -453,18 +453,18 @@ if(trim($countryId)!= ''){
 	}
       return false;
     });
-    
-    function getTotal(commonFieldClassName){
-        var total = 0;
-        $('.'+commonFieldClassName).each( function(i,e) {
+   
+    $(document).on('change keyup','.commonField', function() {
+       var total = 0;	
+       $('.'+$(this).attr('data-field')).each( function(i,e) {
            /* you can use e.id instead of $(e).attr('id') */
             if($('#'+$(e).attr('id')).val()!= ''){
                 total = parseInt(total)+parseInt($('#'+$(e).attr('id')).val());
-                $('#lbl_'+commonFieldClassName+'_total').html(total);
-                $('#'+commonFieldClassName+'_total').val(total);
+                $('#lbl_'+$(this).attr('data-field')+'_total').html(total);
+                $('#'+$(this).attr('data-field')+'_total').val(total);
             }
         });
-    }
+    });
    
     function searchDataCollectionData(){
        oTable.fnDraw(false);
