@@ -2217,7 +2217,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = (isset($aRow['age']))?$aRow['age']:'';
 	    $row[] = (isset($aRow['gestational_age']))?$aRow['gestational_age']:'';
 	    $row[] = (isset($aRow['facility_name']))?ucwords($aRow['facility_name']):'';
-	    $row[] = (isset($aRow['rejection_code']) && $aRow['rejection_code'] > 1)?ucwords($aRow['rejectionReasonName']):'';
+	    $row[] = (isset($aRow['rejectionReasonName']) && $aRow['rejection_reason']!= 1)?ucwords($aRow['rejectionReasonName']):'';
 	    $row[] = $receiptDateatLab;
 	    $row[] = (isset($aRow['lab_tech_name']))?ucwords($aRow['lab_tech_name']):'';
 	    $row[] = $dateofTestCompletion;
