@@ -443,7 +443,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
         });
        
        <?php
-       if(isset($row->rejection_reason) && trim($row->rejection_reason)!= '' && $row->rejection_reason >0){ ?>
+       if(isset($row->rejection_reason) && $row->rejection_reason!= null && trim($row->rejection_reason)!= '' && (int)$row->rejection_reason > 0){ ?>
 	 emptyTestResultSection();
        <?php } ?>
        checkAgeFields('load');
@@ -717,7 +717,12 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
     
     function emptyTestResultSection() {
 	var rejectionReason = $("#rejectionReason").val();
-	if (base64_decode(rejectionReason)!= 1) {
+	if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5) {
+	    $('#resultSection').show();
+	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
+	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
+	    $(".testResultSectionRadio").attr('disabled',false);
+	}else{
 	    $('#resultSection').hide();
 	    $(".testResultSection").val('').attr('readonly',true);
 	    $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
@@ -728,11 +733,6 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 	    $('#readerValueRRRLogOld').val('');
 	    $('#readerValueRRRLogVal').html('');
 	    //$('#readerValueRRRLogValText').html('');
-	}else{
-	    $('#resultSection').show();
-	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
-	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
-	    $(".testResultSectionRadio").attr('disabled',false);
 	}
     }
     

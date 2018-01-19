@@ -132,7 +132,7 @@ if(count($logbookResult) >0){
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Specimen Pick Up Date at ANC</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility Code</strong></th>';
-	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Specimen ID</strong></th>';
+	    //$html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Specimen ID</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Rejection Code</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Tech. Name/ID</strong></th>';
 	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Date of Test Completion</strong></th>';
@@ -220,7 +220,7 @@ if(count($logbookResult) >0){
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name']).'</td>';
 	      $html .='<td>'.$row['facility_code'].'</td>';
-              $html .='<td>'.$row['lab_specimen_id'].'</td>';
+              //$html .='<td>'.$row['lab_specimen_id'].'</td>';
               $html .='<td>'.$rejectionCode.'</td>';
 	      $html .='<td>'.ucwords($row['lab_tech_name']).'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';

@@ -211,7 +211,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     <div class="col s4">
                         <div class="input-field col m12 s12">
                             <label for="rejectionReason">Specimen Rejection Code </label><br>
-                            <p><?php if(isset($row->rejection_code)){ echo $row->rejection_code; } ?></p>
+                            <p><?php if(isset($row->rejection_name)){ echo $row->rejection_code.' - '.ucwords($row->rejection_name); } ?></p>
                         </div>
                     </div>
                     <div class="col s4">
@@ -248,7 +248,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>-->
                 </div>
             </fieldset>
-            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && (int)$row->rejection_reason > 1){ ?>display:none;<?php } ?>">
+            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && $row->rejection_reason!= null && trim($row->rejection_reason)!= '' && (int)$row->rejection_reason != 1 && (int)$row->rejection_reason != 5){ ?>display:none;<?php } ?>">
                <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">

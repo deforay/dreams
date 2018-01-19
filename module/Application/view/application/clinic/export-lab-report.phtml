@@ -97,7 +97,7 @@ if(count($labReportResult) >0){
            $html .='<th><strong>Age</strong></th>';
            $html .='<th><strong>Specimen Pick Up Date at ANC</strong></th>';
            $html .='<th><strong>Lab/Facility</strong></th>';
-           $html .='<th><strong>Lab Specimen ID</strong></th>';
+           //$html .='<th><strong>Lab Specimen ID</strong></th>';
            $html .='<th><strong>Rejection Code</strong></th>';
            $html .='<th><strong>Receipt Date at Lab</strong></th>';
            $html .='<th><strong>Date of Test Completion</strong></th>';
@@ -171,7 +171,7 @@ if(count($labReportResult) >0){
               $html .='<td>'.$row['age'].'</td>';
               $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
               $html .='<td>'.ucwords($row['facility_name'])." - ".$row['facility_code'].'</td>';
-              $html .='<td>'.$row['lab_specimen_id'].'</td>';
+              //$html .='<td>'.$row['lab_specimen_id'].'</td>';
               $html .='<td>'.$rejectionCode.'</td>';
               $html .='<td>'.$receiptDateAtCentralLab.'</td>';
               $html .='<td>'.$testCompletionDate.'</td>';
