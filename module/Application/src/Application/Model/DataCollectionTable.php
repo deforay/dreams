@@ -2251,7 +2251,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'labTestIncompletebyToday' =>null,
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>new \Zend\Db\Sql\Expression("COUNT(*)"),'bdIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 4 AND DATE(interview_date) = CURDATE(), 1,0))")),'right')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=>new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.has_patient_had_rapid_recency_test = 'done', 1,0))")),'left');
+				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=> new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left');
 	$select1->combine($select2);
 	$collectionQuery = $sql->select()->from(array('result' => $select1));
 	$collectionQueryStr = $sql->getSqlStringForSqlObject($collectionQuery);
