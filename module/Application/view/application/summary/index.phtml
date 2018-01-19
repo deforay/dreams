@@ -68,7 +68,23 @@
              </div>
         </div>
         <div class="row">
-            <div class="col l6 m6 s12">
+	    <div class="col l4 m4 s12">
+                <div class="card small-chart margin" style="background-color:#f97465;">
+                    <div class="col l12 m12 s12" style="padding:5px;">
+                       <small>Lab Rejections</small>
+                       <div class="summary-count"><?php echo (isset($summaries[0]['labRejections']))?$summaries[0]['labRejections']:0; ?></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col l4 m4 s12">
+                 <div class="card small-chart margin" style="background-color:#f97465;">
+                     <div class="col l12 m12 s12" style="padding:5px;">
+                        <small>Lab Tests Pending as on Today</small>
+                        <div class="summary-count"><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></div>
+                     </div>
+                 </div>
+            </div>
+	    <div class="col l4 m4 s12">
                 <div class="card small-chart margin" style="background-color:#f97465;">
                     <div class="col l12 m12 s12" style="padding:5px;">
                        <small>Behaviour Data Pending as on Today</small>
@@ -76,14 +92,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col l6 m6 s12">
-                 <div class="card small-chart margin" style="background-color:#f97465;">
-                     <div class="col l12 m12 s12" style="padding:5px;">
-                        <small>Lab Tests Pending as on Today</small>
-                        <div class="summary-count"><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></div>
-                     </div>
-                 </div>
-             </div>            
         </div>
         <br>
         <hr style="border:1px solid #e0dddd;">

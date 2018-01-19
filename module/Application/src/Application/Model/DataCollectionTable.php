@@ -81,8 +81,8 @@ class DataCollectionTable extends AbstractTableGateway {
             }if(!isset($params['labTechName'])){
 		$params['labTechName'] = NULL;
 	    }if($params['asanteRapidRecencyAssayPn'] == 'absent'){
-			$params['asanteRapidRecencyAssayRlt'] = '';
-			$params['readerValueRRRLog'] = '';
+		$params['asanteRapidRecencyAssayRlt'] = '';
+		$params['readerValueRRRLog'] = '';
 	    }
 	    $asanteRapidRecencyAssay = array('rrdt'=>array(
 						'assay'=>$params['asanteRapidRecencyAssayPn'],
@@ -93,34 +93,33 @@ class DataCollectionTable extends AbstractTableGateway {
 						'reader'=>$params['readerValueRRRLog']
 					    )
 					);
-			//status
-			$status = 1;//complete
-			$formCompletionDate = $common->getDateTime();
-			if($rejectionReason == NULL || $rejectionReason == 1){
-				if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
-					$status = 4;//incomplete
-					$formCompletionDate = NULL;
-				}
-			}
+	    //status
+	    $status = 1;//complete
+	    $formCompletionDate = $common->getDateTime();
+	    if($rejectionReason == NULL || $rejectionReason == 1){
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
+		    $status = 4;//incomplete
+		    $formCompletionDate = NULL;
+		}
+	    }
 
+	    if($params['recentInfection'] == 'no'){
+		if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
+		    $params['recentInfection'] = 'no';
+		}else{
+		    $params['recentInfection'] = 'incomplete';
+		}
+	    }
 
-			if($params['recentInfection'] == 'no'){
-				if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
-					$params['recentInfection'] = 'no';
-				}else{
-					$params['recentInfection'] = 'incomplete';
-				}
-			}
-
-			if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
-				if($params['finalLagAvidityOdn'] > 2){
-					$params['lagAvidityResult'] = 'long term';
-				}else{
-					$params['lagAvidityResult'] = 'recent';
-				}
-			}else{
-				$params['lagAvidityResult'] = '';
-			}
+	    if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
+		if($params['finalLagAvidityOdn'] > 2){
+		    $params['lagAvidityResult'] = 'long term';
+		}else{
+		    $params['lagAvidityResult'] = 'recent';
+		}
+	    }else{
+		$params['lagAvidityResult'] = '';
+	    }
 
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -547,7 +546,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    }
 	    $readerValueRRDTLog = (trim($params['readerValueRRDTLog'])!= '')?$params['readerValueRRDTLog']:$params['readerValueRRDTLogOld'];
 	    $readerValueRRRLog = (trim($params['readerValueRRRLog'])!= '')?$params['readerValueRRRLog']:$params['readerValueRRRLogOld'];
-	    
 	    if($params['asanteRapidRecencyAssayPn'] == 'absent'){
 		$params['asanteRapidRecencyAssayRlt'] = '';
 		$readerValueRRRLog = '';
@@ -566,34 +564,31 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $formCompletion = true;
 	    $formCompletionDate = $common->getDateTime();
 	    if($rejectionReason == NULL || $rejectionReason == 1){
-			if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
-				$status = 4;//incomplete
-				$formCompletionDate = NULL;
-			}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){
-				$formCompletion = false;//submitted with the status 'completed/unlocked' with completed date
-			}
+		if($lagAssayValidate == false || $asanteValidate == false || ($params['lagAvidityResult'] == 'recent' && trim($params['hivRna']) == '') || ($params['asanteRapidRecencyAssayRlt'] == 'absent' && trim($params['hivRna']) == '')){
+		    $status = 4;//incomplete
+		    $formCompletionDate = NULL;
+		}else if(($params['formStatus'] == 1 || $params['formStatus'] == 3) && $params['formCompletionDate']!= null && trim($params['formCompletionDate'])!= '' && $params['formCompletionDate']!= '0000-00-00 00:00:00'){
+		    $formCompletion = false;//submitted with the status 'completed/unlocked' with completed date
 		}
+	    }
 		
-
-		if($params['recentInfection'] == 'no'){
-			if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
-				$params['recentInfection'] = 'no';
-			}else{
-				$params['recentInfection'] = 'incomplete';
-			} 				
-		}
-
-
-		if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
-			if($params['finalLagAvidityOdn'] > 2){
-				$params['lagAvidityResult'] = 'long term';
-			}else{
-				$params['lagAvidityResult'] = 'recent';
-			}
+	    if($params['recentInfection'] == 'no'){
+		if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != '' && ($params['finalLagAvidityOdn'] > 2 || $params['hiv_rna'] <= 1000)){
+		    $params['recentInfection'] = 'no';
 		}else{
-			$params['lagAvidityResult'] = '';
-		}		
+		    $params['recentInfection'] = 'incomplete';
+		} 				
+	    }
 
+	    if($params['finalLagAvidityOdn'] != 'null' && $params['finalLagAvidityOdn'] != ''){
+		if($params['finalLagAvidityOdn'] > 2){
+		    $params['lagAvidityResult'] = 'long term';
+		}else{
+		    $params['lagAvidityResult'] = 'recent';
+		}
+	    }else{
+		$params['lagAvidityResult'] = '';
+	    }		
 
             $data = array(
                         'surveillance_id'=>$params['surveillanceId'],
@@ -1037,11 +1032,11 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'monthName' => new \Zend\Db\Sql\Expression("MONTHNAME(da_c.added_on)"),
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
-						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '')), 1,0))"),
-						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
-						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
+						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '') AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)), 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
+						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))')
 						))
 				   ->join(array('c'=>'country'),'c.country_id=da_c.country',array('country_id','country_name'))
 				   ->where(array('c.country_status'=>'active'))
@@ -1725,11 +1720,11 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'totalSample' => new \Zend\Db\Sql\Expression("COUNT(*)"),
 						   'noofANCSites' => new \Zend\Db\Sql\Expression("COUNT(DISTINCT(da_c.anc_site))"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
-						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
+						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
-						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '')), 1,0))"),
-						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),
-						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')
+						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '') AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)), 1,0))"),
+						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
+						   'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))')
 						))
 				   ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_id','facility_name'))
 				   ->where(array('da_c.country'=>$params['country']))
@@ -2243,7 +2238,8 @@ class DataCollectionTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
 	$select1 = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
-						   'labTestCompleted' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3, 1,0))"),
+						   'labTestCompleted' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
+						   'labRejections' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != '' AND da_c.rejection_reason > 1, 1,0))"),
 						   'labTestIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4 AND DATE(specimen_collected_date) = CURDATE(), 1,0))"),
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>null,'bdIncompletebyToday' => null),'left')
@@ -2251,6 +2247,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				   ->columns(array(
 						   'labTestCompleted' =>null,
+						   'labRejections' =>null,
 						   'labTestIncompletebyToday' =>null,
 						))
 				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>new \Zend\Db\Sql\Expression("COUNT(*)"),'bdIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 4 AND DATE(interview_date) = CURDATE(), 1,0))")),'right')

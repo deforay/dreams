@@ -96,6 +96,9 @@
     .redTxt{
 	color:#F44336 !important;
     }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -352,7 +355,11 @@
 		{"sClass":"center dataTable_noWrap"}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[19] =='Absent' || (aData[18] == 'Long Term' && aData[20] == 'Absent') || (aData[18] == 'Recent' && aData[20] == 'Present')){ $(nRow).addClass("redTxt"); }
+		if($.trim(aData[11])!= ''){
+		    $(nRow).addClass("blueTxt");
+		}else{
+		   if(aData[19] =='Absent' || (aData[18] == 'Long Term' && aData[20] == 'Absent') || (aData[18] == 'Recent' && aData[20] == 'Present')){ $(nRow).addClass("redTxt"); }
+		}
 	    },
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,

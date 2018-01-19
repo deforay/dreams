@@ -117,6 +117,9 @@ $loginContainer = new Container('user');
     .align_Center{
 	text-align:center;
     }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -387,6 +390,9 @@ $loginContainer = new Container('user');
                     }
                 });
             },
+	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		if($.trim(aData[12])!= ''){ $(nRow).addClass("blueTxt"); }
+	    },
             "aaSorting": [[2, "asc"]],
             "bProcessing": true,
             "bServerSide": true,

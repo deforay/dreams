@@ -883,12 +883,16 @@ class RiskAssessmentService {
                     $sheet->mergeCells('G1:M2');
                     $sheet->mergeCells('N1:P2');
                     $sheet->mergeCells('Q1:AH2');
+                    
                     $sheet->mergeCells('AI1:AL2');
+                    
                     $sheet->mergeCells('AM1:AY1');
+                    
                     $sheet->mergeCells('AM2:AO2');
                     $sheet->mergeCells('AP2:AR2');
                     $sheet->mergeCells('AS2:AU2');
                     $sheet->mergeCells('AV2:AX2');
+                    
                     $sheet->mergeCells('AY2:AY3');
                     $sheet->mergeCells('AZ1:AZ3');
                     
@@ -1041,7 +1045,7 @@ class RiskAssessmentService {
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B'.$currentRow, html_entity_decode(' ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B'.$currentRow, html_entity_decode('PatientBarcodeID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C'.$currentRow, html_entity_decode('age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D'.$currentRow, html_entity_decode('interviewer ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E'.$currentRow, html_entity_decode('ancID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1690,7 +1694,7 @@ class RiskAssessmentService {
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B'.$currentRow, html_entity_decode(' ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B'.$currentRow, html_entity_decode('PatientBarcodeID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('C'.$currentRow, html_entity_decode('age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D'.$currentRow, html_entity_decode('interviewer ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E'.$currentRow, html_entity_decode('ancID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);

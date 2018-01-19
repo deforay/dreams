@@ -99,6 +99,9 @@
     .yellowTxt,.remove_sorting_1_style{
 	background-color:#FFFF00 !important;
     }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
 </style>
 <div id="page-content">
     <div class="row section-header">
@@ -413,8 +416,12 @@
 		<?php } ?>
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-		if(aData[26] == 'Incomplete'){ $("td:eq(1)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); }
-		if(aData[19] =='Absent' || (aData[18] == 'Long Term' && aData[20] == 'Absent') || (aData[18] == 'Recent' && aData[20] == 'Present')){ $(nRow).addClass("redTxt"); }
+		if($.trim(aData[10])!= ''){
+		    $(nRow).addClass("blueTxt");
+		}else{
+		    if(aData[26] == 'Incomplete'){ $("td:eq(1)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); }
+		    if(aData[19] =='Absent' || (aData[18] == 'Long Term' && aData[20] == 'Absent') || (aData[18] == 'Recent' && aData[20] == 'Present')){ $(nRow).addClass("redTxt"); }
+		}
 	    },
             "aaSorting": [[1, "desc"]],
             "bProcessing": true,
