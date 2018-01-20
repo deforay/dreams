@@ -288,15 +288,15 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'tested'){
-	    $sQuery = $sQuery->where('da_c.status IN(1,2,3)');
+	    $sQuery = $sQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'finalized'){
-	    $sQuery = $sQuery->where(array('da_c.status'=>2));
+	    $sQuery = $sQuery->where(array('da_c.status'=> 2));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececntwtvl'){
-	    $sQuery = $sQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "")');
+	    $sQuery = $sQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "") AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececnt'){
-	    $sQuery = $sQuery->where(array('da_c.recent_infection'=>'yes'));
+	    $sQuery = $sQuery->where('da_c.recent_infection = "yes" AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'lab-rr-recent'){
-	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\'');
+	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}
 	if (isset($sWhere) && $sWhere != "") {
 		$sQuery->where($sWhere);

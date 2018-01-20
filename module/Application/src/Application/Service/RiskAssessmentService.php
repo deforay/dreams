@@ -92,7 +92,7 @@ class RiskAssessmentService {
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
-                    $keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+                    $keyArray = array('0'=>'','1'=>'Husband','2'=>'Ex-Husband','3'=>'Boyfriend','4'=>'Stranger','88'=>'Don\'t Know','99'=>'Refused','2222'=>'Response Not Available');
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $interviewDate = '';
@@ -100,53 +100,57 @@ class RiskAssessmentService {
                             $interviewDate = $common->humanDateFormat($aRow['interview_date']);
                         }
                         //patient occupation
-                        $occupation = (isset($aRow['occupationName']))?ucwords($aRow['occupationName']).' - '.$aRow['occupation_code']:'';
+                        $occupation = '';
+                        $occupationOther = '';
+                        if($aRow['occupation_code']!= 1111){
+                           $occupation = (isset($aRow['occupationName']))?ucwords($aRow['occupationName']):'';
+                        }else{
+                           $occupationOther = (isset($aRow['occupationName']))?ucwords($aRow['occupationName']):'';
+                        }
                         //patient schooling details
                         $hasPatientEverAttendedSchool = '';
                         if($aRow['has_patient_ever_attended_school']!= null && trim($aRow['has_patient_ever_attended_school'])!= ''){
                             if($aRow['has_patient_ever_attended_school'] == 1){
-                                $hasPatientEverAttendedSchool = "Yes - 1";
+                                $hasPatientEverAttendedSchool = "Yes";
                             }else if($aRow['has_patient_ever_attended_school'] == 2){
-                                $hasPatientEverAttendedSchool = "No - 2";
+                                $hasPatientEverAttendedSchool = "No";
                             }else if($aRow['has_patient_ever_attended_school'] == 88){
-                                $hasPatientEverAttendedSchool = "Don't Know - 88";
+                                $hasPatientEverAttendedSchool = "Don't Know";
                             }else if($aRow['has_patient_ever_attended_school'] == 99){
-                                $hasPatientEverAttendedSchool = "Refused - 99";
+                                $hasPatientEverAttendedSchool = "Refused";
                             }else if($aRow['has_patient_ever_attended_school'] == 2222){
-                                $hasPatientEverAttendedSchool = "Response Not Available - 2222";
+                                $hasPatientEverAttendedSchool = "Response Not Available";
                             }
                         }
                         $degree = '';
                         if($aRow['patient_degree']!= null && trim($aRow['patient_degree'])!= ''){
                             if($aRow['patient_degree'] == 1){
-                                $degree = "Primary/Vocational - 1";
+                                $degree = "Primary/Vocational";
                             }else if($aRow['patient_degree'] == 2){
-                                $degree = "Secondary - 2";
+                                $degree = "Secondary";
                             }else if($aRow['patient_degree'] == 3){
-                                $degree = "University/College - 3";
+                                $degree = "University/College";
                             }else if($aRow['patient_degree'] == 88){
-                                $degree = "Don't know - 88";
+                                $degree = "Don't know";
                             }else if($aRow['patient_degree'] == 99){
-                                $degree = "Refused - 99";
+                                $degree = "Refused";
                             }else if($aRow['patient_degree'] == 2222){
-                                $degree = "Response Not Available - 2222";
-                            }else{
-                                $degree = ucwords($aRow['patient_degree']);
+                                $degree = "Response Not Available";
                             }
                         }
                         //marital status
                         $patientEverBeenMarried = '';
                         if($aRow['patient_ever_been_married']!= null && trim($aRow['patient_ever_been_married'])!= ''){
                             if($aRow['patient_ever_been_married'] == 1){
-                                $patientEverBeenMarried = "Yes - 1";
+                                $patientEverBeenMarried = "Yes";
                             }else if($aRow['patient_ever_been_married'] == 2){
-                                $patientEverBeenMarried = "No - 2";
+                                $patientEverBeenMarried = "No";
                             }else if($$aRow['patient_ever_been_married'] == 88){
-                                $patientEverBeenMarried = "Don't Know - 88";
+                                $patientEverBeenMarried = "Don't Know";
                             }else if($aRow['patient_ever_been_married'] == 99){
-                                $patientEverBeenMarried = "Refused - 99";
+                                $patientEverBeenMarried = "Refused";
                             }else if($aRow['patient_ever_been_married'] == 2222){
-                                $patientEverBeenMarried = "Response Not Available - 2222";
+                                $patientEverBeenMarried = "Response Not Available";
                             }
                         }
                         $ageAtFirstMarriage = '';
@@ -154,106 +158,96 @@ class RiskAssessmentService {
                             if($aRow['age_at_first_marriage'][0] == '@'){
                                 $ageAtFirstMarriage = substr($aRow['age_at_first_marriage'],1); //.' Year(s)';
                             }else if($aRow['age_at_first_marriage'] == 88){
-                                $ageAtFirstMarriage = "Don't Know - 88";
+                                $ageAtFirstMarriage = "Don't Know";
                             }else if($aRow['age_at_first_marriage'] == 99){
-                                $ageAtFirstMarriage = "Refused - 99";
+                                $ageAtFirstMarriage = "Refused";
                             }else if($aRow['age_at_first_marriage'] == 2222){
-                                $ageAtFirstMarriage = "Response Not Available - 2222";
-                            }else{
-                                $ageAtFirstMarriage = ucwords($aRow['age_at_first_marriage']);
+                                $ageAtFirstMarriage = "Response Not Available";
                             }
                         }
                         $patientEverBeenWidowed = '';
                         if($aRow['patient_ever_been_widowed']!= null && trim($aRow['patient_ever_been_widowed'])!= ''){
                             if($aRow['patient_ever_been_widowed'] == 1){
-                                $patientEverBeenWidowed = "Yes - 1";
+                                $patientEverBeenWidowed = "Yes";
                             }else if($aRow['patient_ever_been_widowed'] == 2){
-                                $patientEverBeenWidowed = "No - 2";
+                                $patientEverBeenWidowed = "No";
                             }else if($aRow['patient_ever_been_widowed'] == 88){
-                                $patientEverBeenWidowed = "Don't Know - 88";
+                                $patientEverBeenWidowed = "Don't Know";
                             }else if($aRow['patient_ever_been_widowed'] == 99){
-                                $patientEverBeenWidowed = "Refused - 99";
+                                $patientEverBeenWidowed = "Refused";
                             }else if($aRow['patient_ever_been_widowed'] == 2222){
-                                $patientEverBeenWidowed = "Response Not Available - 2222";
-                            }else{
-                                $patientEverBeenWidowed = ucwords($aRow['patient_ever_been_widowed']);
+                                $patientEverBeenWidowed = "Response Not Available";
                             }
                         }
                         $maritalStatus = '';
                         if($aRow['current_marital_status']!= null && trim($aRow['current_marital_status'])!= ''){
                             if($aRow['current_marital_status'] == 1){
-                                $maritalStatus = "Married/Cohabiting - 1";
+                                $maritalStatus = "Married/Cohabiting";
                             }else if($aRow['current_marital_status'] == 2){
-                                $maritalStatus = "Never Married/Cohabiting - 2";
+                                $maritalStatus = "Never Married/Cohabiting";
                             }else if($aRow['current_marital_status'] == 3){
-                                $maritalStatus = "Widowed - 3";
+                                $maritalStatus = "Widowed";
                             }else if($aRow['current_marital_status'] == 4){
-                                $maritalStatus = "Separated - 4";
+                                $maritalStatus = "Separated";
                             }else if($aRow['current_marital_status'] == 5){
-                                $maritalStatus = "Divorced - 5";
+                                $maritalStatus = "Divorced";
                             }else if($aRow['current_marital_status'] == 88){
-                                $maritalStatus = "Don't Know - 88";
+                                $maritalStatus = "Don't Know";
                             }else if($aRow['current_marital_status'] == 99){
-                                $maritalStatus = "Refused - 99";
+                                $maritalStatus = "Refused";
                             }else if($aRow['current_marital_status'] == 2222){
-                                $maritalStatus = "Response Not Available - 2222";
-                            }else{
-                                $maritalStatus = ucwords($aRow['current_marital_status']);
+                                $maritalStatus = "Response Not Available";
                             }
                         }
                         //patient HIV test result
                         $hasPatientEverBeenTestedforHIV = '';
                         if($aRow['has_patient_ever_been_tested_for_HIV']!= null && trim($aRow['has_patient_ever_been_tested_for_HIV'])!= ''){
                             if($aRow['has_patient_ever_been_tested_for_HIV'] == 1){
-                                $hasPatientEverBeenTestedforHIV = "Yes - 1";
+                                $hasPatientEverBeenTestedforHIV = "Yes";
                             }else if($aRow['has_patient_ever_been_tested_for_HIV'] == 2){
-                                $hasPatientEverBeenTestedforHIV = "No - 2";
+                                $hasPatientEverBeenTestedforHIV = "No";
                             }else if($aRow['has_patient_ever_been_tested_for_HIV'] == 88){
-                                $hasPatientEverBeenTestedforHIV = "Don't Know - 88";
+                                $hasPatientEverBeenTestedforHIV = "Don't Know";
                             }else if($aRow['has_patient_ever_been_tested_for_HIV'] == 99){
-                                $hasPatientEverBeenTestedforHIV = "Refused - 99";
+                                $hasPatientEverBeenTestedforHIV = "Refused";
                             }else if($aRow['has_patient_ever_been_tested_for_HIV'] == 2222){
-                                $hasPatientEverBeenTestedforHIV = "Response Not Available - 2222";
+                                $hasPatientEverBeenTestedforHIV = "Response Not Available";
                             }
                         }
                         $timeofMostRecentHIVTest = '';
                         if($aRow['time_of_last_HIV_test']!= null && trim($aRow['time_of_last_HIV_test'])!= ''){
                             if($aRow['time_of_last_HIV_test'] == 1){
-                                $timeofMostRecentHIVTest = "< 3 Months Ago - 1";
+                                $timeofMostRecentHIVTest = "< 3 Months Ago";
                             }else if($aRow['time_of_last_HIV_test'] == 2){
-                                $timeofMostRecentHIVTest = "3-6 Months Ago - 2";
+                                $timeofMostRecentHIVTest = "3-6 Months Ago";
                             }else if($aRow['time_of_last_HIV_test'] == 3){
-                                $timeofMostRecentHIVTest = "7-12 Months Ago - 3";
+                                $timeofMostRecentHIVTest = "7-12 Months Ago";
                             }else if($aRow['time_of_last_HIV_test'] == 4){
-                                $timeofMostRecentHIVTest = "> 12 months - 4";
+                                $timeofMostRecentHIVTest = "> 12 months";
                             }else if($aRow['time_of_last_HIV_test'] == 88){
-                                $timeofMostRecentHIVTest = "Don't Know - 88";
+                                $timeofMostRecentHIVTest = "Don't Know";
                             }else if($aRow['time_of_last_HIV_test'] == 99){
-                                $timeofMostRecentHIVTest = "Refused - 99";
+                                $timeofMostRecentHIVTest = "Refused";
                             }else if($aRow['time_of_last_HIV_test'] == 2222){
-                                $timeofMostRecentHIVTest = "Response Not Available - 2222";
-                            }else{
-                                $timeofMostRecentHIVTest = ucwords($aRow['time_of_last_HIV_test']);
+                                $timeofMostRecentHIVTest = "Response Not Available";
                             }
                         }
                         $resultofMostRecentHIVTest = '';
                         if($aRow['last_HIV_test_status']!= null && trim($aRow['last_HIV_test_status'])!= ''){
                             if($aRow['last_HIV_test_status'] == 1){
-                                $resultofMostRecentHIVTest = "I Did Not Receive Result - 1";
+                                $resultofMostRecentHIVTest = "I Did Not Receive Result";
                             }else if($aRow['last_HIV_test_status']== 2){
-                                $resultofMostRecentHIVTest = "HIV Positive - 2";
+                                $resultofMostRecentHIVTest = "HIV Positive";
                             }else if($aRow['last_HIV_test_status'] == 3){
-                                $resultofMostRecentHIVTest = "HIV Negative - 3";
+                                $resultofMostRecentHIVTest = "HIV Negative";
                             }else if($aRow['last_HIV_test_status'] == 4){
-                                $resultofMostRecentHIVTest = "Indeterminate - 4";
+                                $resultofMostRecentHIVTest = "Indeterminate";
                             }else if($aRow['last_HIV_test_status'] == 88){
-                                $resultofMostRecentHIVTest = "Don't Know - 88";
+                                $resultofMostRecentHIVTest = "Don't Know ";
                             }else if($aRow['last_HIV_test_status'] == 99){
-                                $resultofMostRecentHIVTest = "Refused - 99";
+                                $resultofMostRecentHIVTest = "Refused";
                             }else if($aRow['last_HIV_test_status'] == 2222){
-                                $resultofMostRecentHIVTest = "Response Not Available - 2222";
-                            }else{
-                                $resultofMostRecentHIVTest = ucwords($aRow['last_HIV_test_status']);
+                                $resultofMostRecentHIVTest = "Response Not Available";
                             }
                         }
                         //patient sexual activity/sexual transmitted infections
@@ -262,25 +256,25 @@ class RiskAssessmentService {
                             if($aRow['age_at_very_first_sex'][0] == '@'){
                                 $ageAtVeryFirstSex = substr($aRow['age_at_very_first_sex'],1); //.' Year(s)';
                             }else if($aRow['age_at_very_first_sex'] == 88){
-                                $ageAtVeryFirstSex = "Don't Know - 88";
+                                $ageAtVeryFirstSex = "Don't Know";
                             }else if($aRow['age_at_very_first_sex'] == 99){
-                                $ageAtVeryFirstSex = "Refused - 99";
+                                $ageAtVeryFirstSex = "Refused";
                             }else if($aRow['age_at_very_first_sex'] == 2222){
-                                $ageAtVeryFirstSex = "Response Not Available - 2222";
+                                $ageAtVeryFirstSex = "Response Not Available";
                             }
                         }
                         $reasonforVeryFirstSex = '';
                         if($aRow['reason_for_very_first_sex']!= null && trim($aRow['reason_for_very_first_sex'])!= ''){
                             if($aRow['reason_for_very_first_sex'] == 1){
-                                $reasonforVeryFirstSex = "Wanted To - 1";
+                                $reasonforVeryFirstSex = "Wanted To";
                             }else if($aRow['reason_for_very_first_sex'] == 2){
-                                $reasonforVeryFirstSex = "Forced To - 2";
+                                $reasonforVeryFirstSex = "Forced To";
                             }else if($aRow['reason_for_very_first_sex'] == 88){
-                                $reasonforVeryFirstSex = "Don't Know - 88";
+                                $reasonforVeryFirstSex = "Don't Know";
                             }else if($aRow['reason_for_very_first_sex'] == 99){
-                                $reasonforVeryFirstSex = "Refused - 99";
+                                $reasonforVeryFirstSex = "Refused";
                             }else if($aRow['reason_for_very_first_sex'] == 2222){
-                                $reasonforVeryFirstSex = "Response Not Available - 2222";
+                                $reasonforVeryFirstSex = "Response Not Available";
                             }
                         }
                         $totalNoofSexualPartners = '';
@@ -288,11 +282,11 @@ class RiskAssessmentService {
                             if($aRow['no_of_sexual_partners'][0] == '@'){
                                 $totalNoofSexualPartners = substr($aRow['no_of_sexual_partners'],1).' Person(s)';
                             }else if($aRow['no_of_sexual_partners'] == 88){
-                                $totalNoofSexualPartners = "Don't Know - 88";
+                                $totalNoofSexualPartners = "Don't Know";
                             }else if($aRow['no_of_sexual_partners'] == 99){
-                                $totalNoofSexualPartners = "Refused - 99";
+                                $totalNoofSexualPartners = "Refused";
                             }else if($aRow['no_of_sexual_partners'] == 2222){
-                                $totalNoofSexualPartners = "Response Not Available - 2222";
+                                $totalNoofSexualPartners = "Response Not Available";
                             }
                         }
                         $noofSexualPartnersinLastSixMonths = '';
@@ -300,27 +294,27 @@ class RiskAssessmentService {
                             if($aRow['no_of_sexual_partners_in_last_six_months'][0] == '@'){
                                 $noofSexualPartnersinLastSixMonths = substr($aRow['no_of_sexual_partners_in_last_six_months'],1).' Person(s)';
                             }else if($aRow['no_of_sexual_partners_in_last_six_months'] == 88){
-                                $noofSexualPartnersinLastSixMonths = "Don't Know - 88";
+                                $noofSexualPartnersinLastSixMonths = "Don't Know";
                             }else if($aRow['no_of_sexual_partners_in_last_six_months'] == 99){
-                                $noofSexualPartnersinLastSixMonths = "Refused - 99";
+                                $noofSexualPartnersinLastSixMonths = "Refused";
                             }else if($aRow['no_of_sexual_partners_in_last_six_months'] == 2222){
-                                $noofSexualPartnersinLastSixMonths = "Response Not Available - 2222";
+                                $noofSexualPartnersinLastSixMonths = "Response Not Available";
                             }
                         }
                         $partnerHIVStatus = '';
                         if($aRow['partner_HIV_test_status']!= null && trim($aRow['partner_HIV_test_status'])!= ''){
                             if($aRow['partner_HIV_test_status'] == 1){
-                                $partnerHIVStatus = "HIV Positive - 1";
+                                $partnerHIVStatus = "HIV Positive";
                             }else if($aRow['partner_HIV_test_status'] == 2){
-                                $partnerHIVStatus = "HIV Negative - 2";
+                                $partnerHIVStatus = "HIV Negative";
                             }else if($aRow['partner_HIV_test_status'] == 3){
-                                $partnerHIVStatus = "No Main Sexual Partner - 3";
+                                $partnerHIVStatus = "No Main Sexual Partner";
                             }else if($aRow['partner_HIV_test_status'] == 88){
-                                $partnerHIVStatus = "Don't Know - 88";
+                                $partnerHIVStatus = "Don't Know";
                             }else if($aRow['partner_HIV_test_status'] == 99){
-                                $partnerHIVStatus = "Refused - 99";
+                                $partnerHIVStatus = "Refused";
                             }else if($aRow['partner_HIV_test_status'] == 2222){
-                                $partnerHIVStatus = "Response Not Available - 2222";
+                                $partnerHIVStatus = "Response Not Available";
                             }
                         }
                         $ageofMainSexualpartneratLastBirthday = '';
@@ -328,213 +322,193 @@ class RiskAssessmentService {
                             if($aRow['age_of_main_sexual_partner_at_last_birthday'][0] == '@'){
                                 $ageofMainSexualpartneratLastBirthday = substr($aRow['age_of_main_sexual_partner_at_last_birthday'],1); //.' Year(s)';
                             }else if($aRow['age_of_main_sexual_partner_at_last_birthday'] == 88){
-                                $ageofMainSexualpartneratLastBirthday = "Don't Know - 88";
+                                $ageofMainSexualpartneratLastBirthday = "Don't Know";
                             }else if($aRow['age_of_main_sexual_partner_at_last_birthday'] == 99){
-                                $ageofMainSexualpartneratLastBirthday = "Refused - 99";
+                                $ageofMainSexualpartneratLastBirthday = "Refused";
                             }else if($aRow['age_of_main_sexual_partner_at_last_birthday'] == 2222){
-                                $ageofMainSexualpartneratLastBirthday = "Response Not Available - 2222";
-                            }else{
-                                $ageofMainSexualpartneratLastBirthday = ucwords($aRow['age_of_main_sexual_partner_at_last_birthday']);
+                                $ageofMainSexualpartneratLastBirthday = "Response Not Available";
                             }
                         }
                         $ageDiffofMainSexualPartner = '';
                         if($aRow['age_diff_of_main_sexual_partner']!= null && trim($aRow['age_diff_of_main_sexual_partner'])!= ''){
                             if($aRow['age_diff_of_main_sexual_partner'] == 1){
-                                $ageDiffofMainSexualPartner = "< 5 Years Older - 1";
+                                $ageDiffofMainSexualPartner = "< 5 Years Older";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 2){
-                                $ageDiffofMainSexualPartner = "5-10 Years Older - 2";
+                                $ageDiffofMainSexualPartner = "5-10 Years Older";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 3){
-                                $ageDiffofMainSexualPartner = ">10 Years Older - 3";
+                                $ageDiffofMainSexualPartner = ">10 Years Older";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 4){
-                                $ageDiffofMainSexualPartner = "Same Age - 4";
+                                $ageDiffofMainSexualPartner = "Same Age";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 5){
-                                $ageDiffofMainSexualPartner = "< 5 Years Younger - 5";
+                                $ageDiffofMainSexualPartner = "< 5 Years Younger";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 6){
-                                $ageDiffofMainSexualPartner = "5-10 Years Younger - 6";
+                                $ageDiffofMainSexualPartner = "5-10 Years Younger";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 7){
-                                $ageDiffofMainSexualPartner = ">10 Years Younger - 7";
+                                $ageDiffofMainSexualPartner = ">10 Years Younger";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 88){
-                                $ageDiffofMainSexualPartner = "Don't Know - 88";
+                                $ageDiffofMainSexualPartner = "Don't Know";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 99){
-                                $ageDiffofMainSexualPartner = "Refused - 99";
+                                $ageDiffofMainSexualPartner = "Refused";
                             }else if($aRow['age_diff_of_main_sexual_partner'] == 2222){
-                                $ageDiffofMainSexualPartner = "Response Not Available - 2222";
-                            }else{
-                                $ageDiffofMainSexualPartner = ucwords($aRow['age_diff_of_main_sexual_partner']);
+                                $ageDiffofMainSexualPartner = "Response Not Available";
                             }
                         }
                         $isPartnerCircumcised = '';
                         if($aRow['is_partner_circumcised']!= null && trim($aRow['is_partner_circumcised'])!= ''){
                             if($aRow['is_partner_circumcised'] == 1){
-                                $isPartnerCircumcised = "Yes - 1";
+                                $isPartnerCircumcised = "Yes";
                             }else if($aRow['is_partner_circumcised'] == 2){
-                                $isPartnerCircumcised = "No - 2";
+                                $isPartnerCircumcised = "No";
                             }else if($aRow['is_partner_circumcised'] == 88){
-                                $isPartnerCircumcised = "Don't Know - 88";
+                                $isPartnerCircumcised = "Don't Know";
                             }else if($aRow['is_partner_circumcised'] == 99){
-                                $isPartnerCircumcised = "Refused - 99";
+                                $isPartnerCircumcised = "Refused";
                             }else if($aRow['is_partner_circumcised'] == 2222){
-                                $isPartnerCircumcised = "Response Not Available - 2222";
-                            }else{
-                                $isPartnerCircumcised = ucwords($aRow['is_partner_circumcised']);
+                                $isPartnerCircumcised = "Response Not Available";
                             }
                         }
                         $circumcision = '';
                         if($aRow['circumcision']!= null && trim($aRow['circumcision'])!= ''){
                             if($aRow['circumcision'] == 1){
-                                $circumcision = "Medical Circumcision - 1";
+                                $circumcision = "Medical Circumcision";
                             }else if($aRow['circumcision'] == 2){
-                                $circumcision = "Traditional Circumcision - 2";
+                                $circumcision = "Traditional Circumcision";
                             }else if($aRow['circumcision'] == 88){
-                                $circumcision = "Don't Know - 88";
+                                $circumcision = "Don't Know";
                             }else if($aRow['circumcision'] == 99){
-                                $circumcision = "Refused - 99";
+                                $circumcision = "Refused";
                             }else if($aRow['circumcision'] == 2222){
-                                $circumcision = "Response Not Available - 2222";
-                            }else{
-                                $circumcision = ucwords($aRow['circumcision']);
+                                $circumcision = "Response Not Available";
                             }
                         }
                         $hasPatientEverReceivedGiftforSex = '';
-                        if($aRow['has_patient_ever_received_gift_for_sex']!= null && trim($aRow['has_patient_ever_received_gift_for_sex'])!= '' && $aRow['has_patient_ever_received_gift_for_sex']!= 'not applicable'){
+                        if($aRow['has_patient_ever_received_gift_for_sex']!= null && $aRow['has_patient_ever_received_gift_for_sex']!= 'not applicable'){
                             if($aRow['has_patient_ever_received_gift_for_sex'] == 1){
-                                $hasPatientEverReceivedGiftforSex = "Yes - 1";
+                                $hasPatientEverReceivedGiftforSex = "Yes";
                             }else if($aRow['has_patient_ever_received_gift_for_sex'] == 2){
-                                $hasPatientEverReceivedGiftforSex = "No - 2";
+                                $hasPatientEverReceivedGiftforSex = "No";
                             }else if($aRow['has_patient_ever_received_gift_for_sex'] == 88){
-                                $hasPatientEverReceivedGiftforSex = "Don't Know - 88";
+                                $hasPatientEverReceivedGiftforSex = "Don't Know";
                             }else if($aRow['has_patient_ever_received_gift_for_sex'] == 99){
-                                $hasPatientEverReceivedGiftforSex = "Refused - 99";
+                                $hasPatientEverReceivedGiftforSex = "Refused";
                             }else if($aRow['has_patient_ever_received_gift_for_sex'] == 2222){
-                                $hasPatientEverReceivedGiftforSex = "Response Not Available - 2222";
-                            }else{
-                                $hasPatientEverReceivedGiftforSex = ucwords($aRow['has_patient_ever_received_gift_for_sex']);
+                                $hasPatientEverReceivedGiftforSex = "Response Not Available";
                             }
                         }
                         $mostRecentTimeofReceivingGiftforSex = '';
                         if($aRow['last_time_of_receiving_gift_for_sex']!= null && trim($aRow['last_time_of_receiving_gift_for_sex'])!= ''){
                             if($aRow['last_time_of_receiving_gift_for_sex'] == 1){
-                                $mostRecentTimeofReceivingGiftforSex = "< 6 Months Ago - 1";
+                                $mostRecentTimeofReceivingGiftforSex = "< 6 Months Ago";
                             }else if($aRow['last_time_of_receiving_gift_for_sex'] == 2){
-                                $mostRecentTimeofReceivingGiftforSex = "6-12 Months Ago - 2";
+                                $mostRecentTimeofReceivingGiftforSex = "6-12 Months Ago";
                             }else if($aRow['last_time_of_receiving_gift_for_sex'] == 3){
-                                $mostRecentTimeofReceivingGiftforSex = "> 12 Months Ago - 3";
+                                $mostRecentTimeofReceivingGiftforSex = "> 12 Months Ago";
                             }else if($aRow['last_time_of_receiving_gift_for_sex'] == 88){
-                                $mostRecentTimeofReceivingGiftforSex = "Don't Know - 88";
+                                $mostRecentTimeofReceivingGiftforSex = "Don't Know";
                             }else if($aRow['last_time_of_receiving_gift_for_sex'] == 99){
-                                $mostRecentTimeofReceivingGiftforSex = "Refused - 99";
+                                $mostRecentTimeofReceivingGiftforSex = "Refused";
                             }else if($aRow['last_time_of_receiving_gift_for_sex'] == 2222){
-                                $mostRecentTimeofReceivingGiftforSex = "Response Not Available - 2222";
-                            }else{
-                                $mostRecentTimeofReceivingGiftforSex = ucwords($aRow['last_time_of_receiving_gift_for_sex']);
+                                $mostRecentTimeofReceivingGiftforSex = "Response Not Available";
                             }
                         }
                         $noofTimesBeenPregnant = '';
-                        if($aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= '' && $aRow['no_of_times_been_pregnant']!= 'not applicable'){
+                        if($aRow['no_of_times_been_pregnant']!= null && trim($aRow['no_of_times_been_pregnant'])!= ''){
                             if($aRow['no_of_times_been_pregnant'][0] == '@'){
                                 $noofTimesBeenPregnant = substr($aRow['no_of_times_been_pregnant'],1); //.' Time(s)';
                             }else if($aRow['no_of_times_been_pregnant'] == 88){
-                                $noofTimesBeenPregnant = "Don't Know - 88";
+                                $noofTimesBeenPregnant = "Don't Know";
                             }else if($aRow['no_of_times_been_pregnant'] == 99){
-                                $noofTimesBeenPregnant = "Refused - 99";
+                                $noofTimesBeenPregnant = "Refused";
                             }else if($aRow['no_of_times_been_pregnant'] == 2222){
-                                $noofTimesBeenPregnant = "Response Not Available - 2222";
-                            }else{
-                                $noofTimesBeenPregnant = ucwords($aRow['no_of_times_been_pregnant']);
+                                $noofTimesBeenPregnant = "Response Not Available";
                             }
                         }
                         $noofTimesCondomUsedBeforePregnancy = '';
-                        if($aRow['no_of_times_condom_used_before_pregnancy']!= null && trim($aRow['no_of_times_condom_used_before_pregnancy'])!= '' && $aRow['no_of_times_condom_used_before_pregnancy']!= 'not applicable'){
+                        if($aRow['no_of_times_condom_used_before_pregnancy']!= null && trim($aRow['no_of_times_condom_used_before_pregnancy'])!= ''){
                             if($aRow['no_of_times_condom_used_before_pregnancy'] == 1){
-                                $noofTimesCondomUsedBeforePregnancy = "Always - 1";
+                                $noofTimesCondomUsedBeforePregnancy = "Always";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 2){
-                                $noofTimesCondomUsedBeforePregnancy = "Sometimes - 2";
+                                $noofTimesCondomUsedBeforePregnancy = "Sometimes";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 3){
-                                $noofTimesCondomUsedBeforePregnancy = "Never - 3";
+                                $noofTimesCondomUsedBeforePregnancy = "Never";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 88){
-                                $noofTimesCondomUsedBeforePregnancy = "Don't Know - 88";
+                                $noofTimesCondomUsedBeforePregnancy = "Don't Know";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 99){
-                                $noofTimesCondomUsedBeforePregnancy = "Refused - 99";
+                                $noofTimesCondomUsedBeforePregnancy = "Refused";
                             }else if($aRow['no_of_times_condom_used_before_pregnancy'] == 2222){
-                                $noofTimesCondomUsedBeforePregnancy = "Response Not Available - 2222";
-                            }else{
-                                $noofTimesCondomUsedBeforePregnancy = ucwords($aRow['no_of_times_condom_used_before_pregnancy']);
+                                $noofTimesCondomUsedBeforePregnancy = "Response Not Available";
                             }
                         }
                         $noofTimesCondomUsedAfterPregnancy = '';
-                        if($aRow['no_of_times_condom_used_after_pregnancy']!= null && trim($aRow['no_of_times_condom_used_after_pregnancy'])!= '' && $aRow['no_of_times_condom_used_after_pregnancy']!= 'not applicable'){
+                        if($aRow['no_of_times_condom_used_after_pregnancy']!= null && trim($aRow['no_of_times_condom_used_after_pregnancy'])!= ''){
                             if($aRow['no_of_times_condom_used_after_pregnancy'] == 1){
-                                $noofTimesCondomUsedAfterPregnancy = "Always - 1";
+                                $noofTimesCondomUsedAfterPregnancy = "Always";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 2){
-                                $noofTimesCondomUsedAfterPregnancy = "Sometimes - 2";
+                                $noofTimesCondomUsedAfterPregnancy = "Sometimes";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 3){
-                                $noofTimesCondomUsedAfterPregnancy = "Never - 3";
+                                $noofTimesCondomUsedAfterPregnancy = "Never";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 88){
-                                $noofTimesCondomUsedAfterPregnancy = "Don't Know - 88";
+                                $noofTimesCondomUsedAfterPregnancy = "Don't Know";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 99){
-                                $noofTimesCondomUsedAfterPregnancy = "Refused - 99";
+                                $noofTimesCondomUsedAfterPregnancy = "Refused";
                             }else if($aRow['no_of_times_condom_used_after_pregnancy'] == 2222){
-                                $noofTimesCondomUsedAfterPregnancy = "Response Not Available - 2222";
-                            }else{
-                                $noofTimesCondomUsedAfterPregnancy = ucwords($aRow['no_of_times_condom_used_after_pregnancy']);
+                                $noofTimesCondomUsedAfterPregnancy = "Response Not Available";
                             }
                         }
                         $hasPatientHadPaininLowerAbdomen = '';
                         if($aRow['has_patient_had_pain_in_lower_abdomen']!= null && trim($aRow['has_patient_had_pain_in_lower_abdomen'])!= ''){
                             if($aRow['has_patient_had_pain_in_lower_abdomen'] == 1){
-                                $hasPatientHadPaininLowerAbdomen = "Yes - 1";
+                                $hasPatientHadPaininLowerAbdomen = "Yes";
                             }else if($aRow['has_patient_had_pain_in_lower_abdomen'] == 2){
-                                $hasPatientHadPaininLowerAbdomen = "No - 2";
+                                $hasPatientHadPaininLowerAbdomen = "No";
                             }else if($aRow['has_patient_had_pain_in_lower_abdomen'] == 88){
-                                $hasPatientHadPaininLowerAbdomen = "Don't Know - 88";
+                                $hasPatientHadPaininLowerAbdomen = "Don't Know";
                             }else if($aRow['has_patient_had_pain_in_lower_abdomen'] == 99){
-                                $hasPatientHadPaininLowerAbdomen = "Refused - 99";
+                                $hasPatientHadPaininLowerAbdomen = "Refused";
                             }else if($aRow['has_patient_had_pain_in_lower_abdomen'] == 2222){
-                                $hasPatientHadPaininLowerAbdomen = "Response Not Available - 2222";
+                                $hasPatientHadPaininLowerAbdomen = "Response Not Available";
                             }
                         }
                         $hasPatientBeenTreatedforLowerAbdomenPain = '';
                         if($aRow['has_patient_been_treated_for_lower_abdomen_pain']!= null && trim($aRow['has_patient_been_treated_for_lower_abdomen_pain'])!= ''){
                             if($aRow['has_patient_been_treated_for_lower_abdomen_pain'] == 1){
-                                $hasPatientBeenTreatedforLowerAbdomenPain = "Yes - 1";
+                                $hasPatientBeenTreatedforLowerAbdomenPain = "Yes";
                             }else if($aRow['has_patient_been_treated_for_lower_abdomen_pain'] == 2){
-                                $hasPatientBeenTreatedforLowerAbdomenPain = "No - 2";
+                                $hasPatientBeenTreatedforLowerAbdomenPain = "No";
                             }else if($aRow['has_patient_been_treated_for_lower_abdomen_pain'] == 88){
-                                $hasPatientBeenTreatedforLowerAbdomenPain = "Don't Know - 88";
+                                $hasPatientBeenTreatedforLowerAbdomenPain = "Don't Know";
                             }else if($aRow['has_patient_been_treated_for_lower_abdomen_pain'] == 99){
-                                $hasPatientBeenTreatedforLowerAbdomenPain = "Refused - 99";
+                                $hasPatientBeenTreatedforLowerAbdomenPain = "Refused";
                             }else if($aRow['has_patient_been_treated_for_lower_abdomen_pain'] == 2222){
-                                $hasPatientBeenTreatedforLowerAbdomenPain = "Response Not Available - 2222";
-                            }else{
-                                $hasPatientBeenTreatedforLowerAbdomenPain = ucwords($aRow['has_patient_been_treated_for_lower_abdomen_pain']);
+                                $hasPatientBeenTreatedforLowerAbdomenPain = "Response Not Available";
                             }
                         }
                         $hasPatientEverBeenTreatedforSyphilis = '';
                         if($aRow['has_patient_ever_been_treated_for_syphilis']!= null && trim($aRow['has_patient_ever_been_treated_for_syphilis'])!= ''){
                             if($aRow['has_patient_ever_been_treated_for_syphilis'] == 1){
-                                $hasPatientEverBeenTreatedforSyphilis = "Yes - 1";
+                                $hasPatientEverBeenTreatedforSyphilis = "Yes";
                             }else if($aRow['has_patient_ever_been_treated_for_syphilis'] == 2){
-                                $hasPatientEverBeenTreatedforSyphilis = "No - 2";
+                                $hasPatientEverBeenTreatedforSyphilis = "No";
                             }else if($aRow['has_patient_ever_been_treated_for_syphilis'] == 88){
-                                $hasPatientEverBeenTreatedforSyphilis = "Don't Know - 88";
+                                $hasPatientEverBeenTreatedforSyphilis = "Don't Know";
                             }else if($aRow['has_patient_ever_been_treated_for_syphilis'] == 99){
-                                $hasPatientEverBeenTreatedforSyphilis = "Refused - 99";
+                                $hasPatientEverBeenTreatedforSyphilis = "Refused";
                             }else if($aRow['has_patient_ever_been_treated_for_syphilis'] == 2222){
-                                $hasPatientEverBeenTreatedforSyphilis = "Response Not Available - 2222";
+                                $hasPatientEverBeenTreatedforSyphilis = "Response Not Available";
                             }
                         }
                         $hasPatientEverReceivedVaccinetoPreventCervicalCancer = '';
                         if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer']!= null && trim($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'])!= ''){
                             if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 1){
-                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Yes - 1";
+                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Yes";
                             }else if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 2){
-                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "No - 2";
+                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "No";
                             }else if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 88){
-                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Don't Know - 88";
+                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Don't Know";
                             }else if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 99){
-                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Refused - 99";
+                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Refused";
                             }else if($aRow['has_patient_ever_received_vaccine_to_prevent_cervical_cancer'] == 2222){
-                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Response Not Available - 2222";
+                                $hasPatientEverReceivedVaccinetoPreventCervicalCancer = "Response Not Available";
                             }
                         }
                         //alcohol and drug use
@@ -543,89 +517,87 @@ class RiskAssessmentService {
                             if($aRow['patient_had_drink_with_alcohol_in_last_six_months'][0] == '@'){
                                 $patientHadDrinkwithAlcoholinLastSixMonths = substr($aRow['patient_had_drink_with_alcohol_in_last_six_months'],1).' Day(s)';
                             }else if($aRow['patient_had_drink_with_alcohol_in_last_six_months'] == 88){
-                                $patientHadDrinkwithAlcoholinLastSixMonths = "Don't Know - 88";
+                                $patientHadDrinkwithAlcoholinLastSixMonths = "Don't Know";
                             }else if($aRow['patient_had_drink_with_alcohol_in_last_six_months'] == 99){
-                                $patientHadDrinkwithAlcoholinLastSixMonths = "Refused - 99";
+                                $patientHadDrinkwithAlcoholinLastSixMonths = "Refused";
                             }else if($aRow['patient_had_drink_with_alcohol_in_last_six_months'] == 2222){
-                                $patientHadDrinkwithAlcoholinLastSixMonths = "Response Not Available - 2222";
+                                $patientHadDrinkwithAlcoholinLastSixMonths = "Response Not Available";
                             }
                         }
                         $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = '';
                         if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion']!= null && trim($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'])!= ''){
                             if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 1){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Never - 1";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Never";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 2){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Monthly - 2";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Monthly";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 3){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Weekly - 3";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Weekly";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 4){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Daily or On Most Days of The Week - 4";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Daily or On Most Days of The Week";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 88){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Don't Know - 88";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Don't Know";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 99){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Refused - 99";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Refused";
                             }else if($aRow['has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion'] == 2222){
-                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Response Not Available - 2222";
+                                $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion = "Response Not Available";
                             }
                         }
                         $hasPatientEverTriedRecreationalDrugs = '';
                         if($aRow['has_patient_ever_tried_recreational_drugs']!= null && trim($aRow['has_patient_ever_tried_recreational_drugs'])!= ''){
                             if($aRow['has_patient_ever_tried_recreational_drugs'] == 1){
-                                $hasPatientEverTriedRecreationalDrugs = "Yes - 1";
+                                $hasPatientEverTriedRecreationalDrugs = "Yes";
                             }else if($aRow['has_patient_ever_tried_recreational_drugs'] == 2){
-                                $hasPatientEverTriedRecreationalDrugs = "No - 2";
+                                $hasPatientEverTriedRecreationalDrugs = "No";
                             }else if($aRow['has_patient_ever_tried_recreational_drugs'] == 88){
-                                $hasPatientEverTriedRecreationalDrugs = "Don't Know - 88";
+                                $hasPatientEverTriedRecreationalDrugs = "Don't Know";
                             }else if($aRow['has_patient_ever_tried_recreational_drugs'] == 99){
-                                $hasPatientEverTriedRecreationalDrugs = "Refused - 99";
+                                $hasPatientEverTriedRecreationalDrugs = "Refused";
                             }else if($aRow['has_patient_ever_tried_recreational_drugs'] == 2222){
-                                $hasPatientEverTriedRecreationalDrugs = "Response Not Available - 2222";
+                                $hasPatientEverTriedRecreationalDrugs = "Response Not Available";
                             }
                         }
                         $hasPatientHadRecreationalDrugsInLastSixMonths = '';
+                        $recreationalDrugs = '';
                         if($aRow['has_patient_had_recreational_drugs_in_last_six_months']!= null && trim($aRow['has_patient_had_recreational_drugs_in_last_six_months'])!= ''){
                             $recreationaldata = json_decode($aRow['has_patient_had_recreational_drugs_in_last_six_months'],true);
                             $hasHadinLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
-                            $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
+                            $recreationalDrugs = (isset($recreationaldata['drugs']))?ucwords($recreationaldata['drugs']):'';
                             if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 1){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Yes - 1,&nbsp;&nbsp;Drug(s) - ".ucwords($recreationalDrugs);
+                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Yes";
                             }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 2){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = "No - 2";
+                                $hasPatientHadRecreationalDrugsInLastSixMonths = "No";
                             }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 88){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Don't Know - 88";
+                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Don't Know";
                             }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 99){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Refused - 99";
+                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Refused";
                             }else if(trim($hasHadinLastSixMonths)!= '' && (int)$hasHadinLastSixMonths == 2222){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Response Not Available - 2222";
-                            }else if(trim($hasHadinLastSixMonths)!= ''){
-                                $hasPatientHadRecreationalDrugsInLastSixMonths = ucwords($hasHadinLastSixMonths);
+                                $hasPatientHadRecreationalDrugsInLastSixMonths = "Response Not Available";
                             }
                         }
                         //abuse
                         //patient abused by
                         $hasPatientEverBeenAbusedBySomeone = '';
-                        $patientAbusedByInNoofTimes = '';
                         $patientAbusedBy = '';
+                        $patientAbusedByOther = '';
+                        $patientAbusedByInNoofTimes = '';
                         if($aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= ''){
                             $patientAbusedBydata = json_decode($aRow['has_patient_ever_been_abused_by_someone'],true);
                             $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
                             if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
-                                $hasPatientEverBeenAbusedBySomeone = "Yes - 1";
+                                $hasPatientEverBeenAbusedBySomeone = "Yes";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
-                                $hasPatientEverBeenAbusedBySomeone = "No - 2";
+                                $hasPatientEverBeenAbusedBySomeone = "No";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
-                                $hasPatientEverBeenAbusedBySomeone = "Don't Know - 88";
+                                $hasPatientEverBeenAbusedBySomeone = "Don't Know";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 99){
-                                $hasPatientEverBeenAbusedBySomeone = "Refused - 99";
+                                $hasPatientEverBeenAbusedBySomeone = "Refused";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
-                                $hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
+                                $hasPatientEverBeenAbusedBySomeone = "Response Not Available";
                             }
                             
                             if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
-                                $patientAbusedBy = substr($patientAbusedBydata['who_abused'],1);
-                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused']) == 'not applicable'){
-                                $patientAbusedBy = 'Not Applicable';
-                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+                                $patientAbusedByOther = substr($patientAbusedBydata['who_abused'],1);
+                            }else if(isset($patientAbusedBydata['who_abused']) && $patientAbusedBydata['who_abused']!= null && trim($patientAbusedBydata['who_abused'])!= 'not applicable'){
                                 $abusedppl = explode(',',$patientAbusedBydata['who_abused']);
                                 $abusedGroup = array();
                                 for($i=0;$i<count($abusedppl);$i++){
@@ -637,39 +609,36 @@ class RiskAssessmentService {
                             if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
                                 $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
-                               $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientAbusedByInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 99){
-                               $patientAbusedByInNoofTimes = 'Refused - 99';
+                               $patientAbusedByInNoofTimes = 'Refused';
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 2222){
-                               $patientAbusedByInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= ''){
-                               $patientAbusedByInNoofTimes = ucwords($patientAbusedBydata['no_of_times']);
+                               $patientAbusedByInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient hurt by someone within last year
                         $hasPatientHurtBySomeoneWithinLastYear = '';
                         $patientHurtByWithinLastYear = '';
+                        $patientHurtByWithinLastYearByOther = '';
                         $patientHurtByInNoofTimes = '';
                         if($aRow['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
                             $patientHurtBydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
                             $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
                             if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Yes - 1";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Yes";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
-                                $hasPatientHurtBySomeoneWithinLastYear = "No - 2";
+                                $hasPatientHurtBySomeoneWithinLastYear = "No";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know - 88";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Refused - 99";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Refused";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available - 2222";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available";
                             }
                            
                             if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
-                                $patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
-                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
-                                $patientHurtByWithinLastYear = 'Not Applicable';
-                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+                                $patientHurtByWithinLastYearByOther = substr($patientHurtBydata['who_hurt'],1);
+                            }else if(isset($patientHurtBydata['who_hurt']) && $patientHurtBydata['who_hurt']!= null && trim($patientHurtBydata['who_hurt'])!= 'not applicable'){
                                 $hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
                                 $hurtedGroup = array();
                                 for($i=0;$i<count($hurtedppl);$i++){
@@ -681,39 +650,36 @@ class RiskAssessmentService {
                             if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
                                 $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
-                               $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientHurtByInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 99){
-                               $patientHurtByInNoofTimes = 'Refused - 99';
+                               $patientHurtByInNoofTimes = 'Refused';
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 2222){
-                               $patientHurtByInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= ''){
-                               $patientHurtByInNoofTimes = ucwords($patientHurtBydata['no_of_times']);
+                               $patientHurtByInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient hurt by someone during pregnancy
-                        $hasPatientHurtBySomeoneDuringPregnancy = 'Not Applicable';
+                        $hasPatientHurtBySomeoneDuringPregnancy = '';
                         $patientHurtByDuringPregnancy = '';
+                        $patientHurtByOtherDuringPregnancy = '';
                         $patientHurtByDuringPregnancyInNoofTimes = '';
                         if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
                             $patientHurtByDuringPregnancydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
                             $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
                             if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Yes";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "No - 2";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "No";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Don't Know - 88";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Don't Know";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 99){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Refused - 99";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Refused";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2222){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available";
                             }
                             
                             if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
-                                $patientHurtByDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
-                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt']) == 'not applicable'){
-                                $patientHurtByDuringPregnancy = 'Not Applicable';
-                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+                                $patientHurtByOtherDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && $patientHurtByDuringPregnancydata['who_hurt']!= null && trim($patientHurtByDuringPregnancydata['who_hurt'])!= 'not applicable'){
                                 $hurtedppl = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
                                 $hurtedGroup = array();
                                 for($i=0;$i<count($hurtedppl);$i++){
@@ -725,39 +691,36 @@ class RiskAssessmentService {
                             if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
                                 $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 99){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Refused - 99';
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Refused';
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 2222){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= ''){
-                               $patientHurtByDuringPregnancyInNoofTimes = ucwords($patientHurtByDuringPregnancydata['no_of_times']);
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient forced for sex within last year
                         $hasPatientForcedforSexBySomeoneWithinLastYear = '';
                         $patientForcedforSexBy = '';
+                        $patientForcedforSexByOther = '';
                         $patientForcedforSexInNoofTimes = '';
                         if($aRow['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($aRow['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
                             $patientForcedforSexdata = json_decode($aRow['has_patient_ever_been_forced_for_sex_within_last_year'],true);
                             $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
                             if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Yes";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "No - 2";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "No";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know - 88";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 99){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Refused - 99";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Refused";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2222){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available - 2222";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available";
                             }
                             
                             if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
-                                $patientForcedforSexBy = substr($patientForcedforSexdata['who_forced'],1);
-                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced']) == 'not applicable'){
-                                $patientForcedforSexBy = 'Not Applicable';
-                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+                                $patientForcedforSexByOther = substr($patientForcedforSexdata['who_forced'],1);
+                            }else if(isset($patientForcedforSexdata['who_forced']) && $patientForcedforSexdata['who_forced']!= null && trim($patientForcedforSexdata['who_forced'])!= 'not applicable'){
                                 $forcedbyppl = explode(',',$patientForcedforSexdata['who_forced']);
                                 $forcedbyGroup = array();
                                 for($i=0;$i<count($forcedbyppl);$i++){
@@ -769,27 +732,25 @@ class RiskAssessmentService {
                             if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
                                 $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
-                               $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientForcedforSexInNoofTimes = 'Don\'t Know';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 99){
-                               $patientForcedforSexInNoofTimes = 'Refused - 99';
+                               $patientForcedforSexInNoofTimes = 'Refused';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 2222){
-                               $patientForcedforSexInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= ''){
-                               $patientForcedforSexInNoofTimes = ucwords($patientForcedforSexdata['no_of_times']);
+                               $patientForcedforSexInNoofTimes = 'Response Not Available';
                             }
                         }
                         $hasPatientAfraidofAnyone = '';
                         if($aRow['is_patient_afraid_of_anyone']!= null && trim($aRow['is_patient_afraid_of_anyone'])!= ''){
                             if($aRow['is_patient_afraid_of_anyone'] == 1){
-                                $hasPatientAfraidofAnyone = "Yes - 1";
+                                $hasPatientAfraidofAnyone = "Yes";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 2){
-                                $hasPatientAfraidofAnyone = "No - 2";
+                                $hasPatientAfraidofAnyone = "No";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 88){
-                                $hasPatientAfraidofAnyone = "Don't Know - 88";
+                                $hasPatientAfraidofAnyone = "Don't Know";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 99){
-                                $hasPatientAfraidofAnyone = "Refused - 99";
+                                $hasPatientAfraidofAnyone = "Refused";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 2222){
-                                $hasPatientAfraidofAnyone = "Response Not Available - 2222";
+                                $hasPatientAfraidofAnyone = "Response Not Available";
                             }
                         }
                         $row = array();
@@ -801,6 +762,7 @@ class RiskAssessmentService {
                         $row[] = $interviewDate;
                         //$row[] = (isset($aRow['has_participant_received_dreams_services']) && $aRow['has_participant_received_dreams_services']!= null && trim($aRow['has_participant_received_dreams_services'])!= '')?ucfirst($aRow['has_participant_received_dreams_services']):'';
                         $row[] = $occupation;
+                        $row[] = $occupationOther;
                         $row[] = $hasPatientEverAttendedSchool;
                         $row[] = $degree;
                         $row[] = $patientEverBeenMarried;
@@ -832,17 +794,22 @@ class RiskAssessmentService {
                         $row[] = $hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion;
                         $row[] = $hasPatientEverTriedRecreationalDrugs;
                         $row[] = $hasPatientHadRecreationalDrugsInLastSixMonths;
+                        $row[] = $recreationalDrugs;
                         $row[] = $hasPatientEverBeenAbusedBySomeone;
                         $row[] = $patientAbusedBy;
+                        $row[] = $patientAbusedByOther;
                         $row[] = $patientAbusedByInNoofTimes;
                         $row[] = $hasPatientHurtBySomeoneWithinLastYear;
                         $row[] = $patientHurtByWithinLastYear;
+                        $row[] = $patientHurtByWithinLastYearByOther;
                         $row[] = $patientHurtByInNoofTimes;
                         $row[] = $hasPatientHurtBySomeoneDuringPregnancy;
                         $row[] = $patientHurtByDuringPregnancy;
+                        $row[] = $patientHurtByOtherDuringPregnancy;
                         $row[] = $patientHurtByDuringPregnancyInNoofTimes;
                         $row[] = $hasPatientForcedforSexBySomeoneWithinLastYear;
                         $row[] = $patientForcedforSexBy;
+                        $row[] = $patientForcedforSexByOther;
                         $row[] = $patientForcedforSexInNoofTimes;
                         $row[] = $hasPatientAfraidofAnyone;
                         $row[] = ucfirst($aRow['comment']);
@@ -880,21 +847,17 @@ class RiskAssessmentService {
                     $sheet->mergeCells('D1:D3');
                     $sheet->mergeCells('E1:E3');
                     $sheet->mergeCells('F1:F3');
-                    $sheet->mergeCells('G1:M2');
-                    $sheet->mergeCells('N1:P2');
-                    $sheet->mergeCells('Q1:AH2');
-                    
-                    $sheet->mergeCells('AI1:AL2');
-                    
-                    $sheet->mergeCells('AM1:AY1');
-                    
-                    $sheet->mergeCells('AM2:AO2');
-                    $sheet->mergeCells('AP2:AR2');
-                    $sheet->mergeCells('AS2:AU2');
-                    $sheet->mergeCells('AV2:AX2');
-                    
-                    $sheet->mergeCells('AY2:AY3');
-                    $sheet->mergeCells('AZ1:AZ3');
+                    $sheet->mergeCells('G1:N2');
+                    $sheet->mergeCells('O1:Q2');
+                    $sheet->mergeCells('R1:AI2');
+                    $sheet->mergeCells('AJ1:AN2');
+                    $sheet->mergeCells('AO1:BE1');
+                    $sheet->mergeCells('AO2:AR2');
+                    $sheet->mergeCells('AS2:AV2');
+                    $sheet->mergeCells('AW2:AZ2');
+                    $sheet->mergeCells('BA2:BD2');
+                    $sheet->mergeCells('BE2:BE3');
+                    $sheet->mergeCells('BF1:BF3');
                     
                     //Label section
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -907,68 +870,74 @@ class RiskAssessmentService {
                     
                     $sheet->setCellValue('G1', html_entity_decode('Demographic Characteristics ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G3', html_entity_decode('What kind of work/occupation do you do most of the time? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H3', html_entity_decode('Have you ever attended school? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I3', html_entity_decode('What was the highest level of education that you completed or are attending now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J3', html_entity_decode('Have you ever been married or lived with a partner in a union as if married? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K3', html_entity_decode('How old were you when you first got married or lived with a partner in a union? (in years)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L3', html_entity_decode('Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M3', html_entity_decode('What is your marital status now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H3', html_entity_decode('If other, then specify ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I3', html_entity_decode('Have you ever attended school? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J3', html_entity_decode('What was the highest level of education that you completed or are attending now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K3', html_entity_decode('Have you ever been married or lived with a partner in a union as if married? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L3', html_entity_decode('How old were you when you first got married or lived with a partner in a union? (in years)', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M3', html_entity_decode('Have you ever been widowed? That is, did a spouse ever pass away while you were still married or living with them? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N3', html_entity_decode('What is your marital status now? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('N1', html_entity_decode('HIV Testing History ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N3', html_entity_decode('Have you ever been tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O3', html_entity_decode('When was the most recent time you were tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P3', html_entity_decode('What was the result of that HIV test? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O1', html_entity_decode('HIV Testing History ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O3', html_entity_decode('Have you ever been tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P3', html_entity_decode('When was the most recent time you were tested for HIV? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q3', html_entity_decode('What was the result of that HIV test? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('Q1', html_entity_decode('Sexual Activity and History of Sexually Transmitted Infections ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q3', html_entity_decode('How old were you when you had sexual intercourse for the very first time? (in years) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R3', html_entity_decode('The first time you had sex, was it because you wanted to or because you were forced to? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S3', html_entity_decode('How many different people have you had sexual intercourse with in your entire life? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T3', html_entity_decode('How many different people have you had sex with in the last 6 months? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('U3', html_entity_decode('What is the HIV status of your spouse/main sexual partner\'s (person with whom you have sexual intercourse most frequently)? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V3', html_entity_decode('How old was your spouse/main sexual partner on his last birthday? (in years) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('W3', html_entity_decode('Is the age of your spouse/main sexual partner older, younger, or the same age as you? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('X3', html_entity_decode('Is your spouse/main sexual partner circumcised? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Y3', html_entity_decode('What type of circumcision? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Z3', html_entity_decode('Have you ever received money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AA3', html_entity_decode('When did you last receive money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AB3', html_entity_decode('How many times have you been pregnant? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AC3', html_entity_decode('Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AD3', html_entity_decode('Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AE3', html_entity_decode('In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AF3', html_entity_decode('Were you treated for these symptoms? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AG3', html_entity_decode('Have you ever been diagnosed or treated for syphilis? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AH3', html_entity_decode('Have you ever received a vaccine (HPV vaccine) to prevent cervical cancer, which is caused by a common virus that can be passed through sexual contact? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R1', html_entity_decode('Sexual Activity and History of Sexually Transmitted Infections ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R3', html_entity_decode('How old were you when you had sexual intercourse for the very first time? (in years) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S3', html_entity_decode('The first time you had sex, was it because you wanted to or because you were forced to? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T3', html_entity_decode('How many different people have you had sexual intercourse with in your entire life? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U3', html_entity_decode('How many different people have you had sex with in the last 6 months? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V3', html_entity_decode('What is the HIV status of your spouse/main sexual partner\'s (person with whom you have sexual intercourse most frequently)? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W3', html_entity_decode('How old was your spouse/main sexual partner on his last birthday? (in years) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X3', html_entity_decode('Is the age of your spouse/main sexual partner older, younger, or the same age as you? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Y3', html_entity_decode('Is your spouse/main sexual partner circumcised? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Z3', html_entity_decode('What type of circumcision? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AA3', html_entity_decode('Have you ever received money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AB3', html_entity_decode('When did you last receive money/gifts in exchange for sex? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AC3', html_entity_decode('How many times have you been pregnant? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AD3', html_entity_decode('Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AE3', html_entity_decode('Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AF3', html_entity_decode('In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AG3', html_entity_decode('Were you treated for these symptoms? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AH3', html_entity_decode('Have you ever been diagnosed or treated for syphilis? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AI3', html_entity_decode('Have you ever received a vaccine (HPV vaccine) to prevent cervical cancer, which is caused by a common virus that can be passed through sexual contact? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AI1', html_entity_decode('Alcohol and drug use ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AI3', html_entity_decode('During the past 6 months, on how many days did you have at least one drink containing alcohol? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AJ3', html_entity_decode('How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AK3', html_entity_decode('Have you ever tried recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AL3', html_entity_decode('In the last 6 months, have you taken any recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AJ1', html_entity_decode('Alcohol and drug use ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AJ3', html_entity_decode('During the past 6 months, on how many days did you have at least one drink containing alcohol? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AK3', html_entity_decode('How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AL3', html_entity_decode('Have you ever tried recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AM3', html_entity_decode('In the last 6 months, have you taken any recreational drugs? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AN3', html_entity_decode('If yes, then specify drug(s) ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AM1', html_entity_decode('Abuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AM2', html_entity_decode('Have you ever been emotionally or physically abused by your partner or your loved one? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AM3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AN3', html_entity_decode('Abused by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AO3', html_entity_decode('No.of times abused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AO1', html_entity_decode('Abuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AO2', html_entity_decode('Have you ever been emotionally or physically abused by your partner or your loved one? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AO3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AP3', html_entity_decode('Abused by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AQ3', html_entity_decode('Abused by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AR3', html_entity_decode('No.of times abused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AP2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AP3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AQ3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AR3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    
-                    $sheet->setCellValue('AS2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AS2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AS3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AT3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AU3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AU3', html_entity_decode('Hurted by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AV3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AV2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AV3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AW3', html_entity_decode('Forced by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AX3', html_entity_decode('No.of times forced ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AW2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AW3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AX3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AY3', html_entity_decode('Hurted by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AZ3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AY2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BA2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BA3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BB3', html_entity_decode('Forced by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BC3', html_entity_decode('Forced by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BD3', html_entity_decode('No.of times forced ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('AZ1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BE2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('BF1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     //Style section
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
@@ -978,7 +947,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('E1:E3')->applyFromArray($styleArray);
                     $sheet->getStyle('F1:F3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('G1:M2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1:N2')->applyFromArray($styleArray);
                     $sheet->getStyle('G3')->applyFromArray($styleArray);
                     $sheet->getStyle('H3')->applyFromArray($styleArray);
                     $sheet->getStyle('I3')->applyFromArray($styleArray);
@@ -986,14 +955,14 @@ class RiskAssessmentService {
                     $sheet->getStyle('K3')->applyFromArray($styleArray);
                     $sheet->getStyle('L3')->applyFromArray($styleArray);
                     $sheet->getStyle('M3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('N1:P2')->applyFromArray($styleArray);
                     $sheet->getStyle('N3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('O1:Q2')->applyFromArray($styleArray);
                     $sheet->getStyle('O3')->applyFromArray($styleArray);
                     $sheet->getStyle('P3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('Q1:AH2')->applyFromArray($styleArray);
                     $sheet->getStyle('Q3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('R1:AI2')->applyFromArray($styleArray);
                     $sheet->getStyle('R3')->applyFromArray($styleArray);
                     $sheet->getStyle('S3')->applyFromArray($styleArray);
                     $sheet->getStyle('T3')->applyFromArray($styleArray);
@@ -1011,37 +980,43 @@ class RiskAssessmentService {
                     $sheet->getStyle('AF3')->applyFromArray($styleArray);
                     $sheet->getStyle('AG3')->applyFromArray($styleArray);
                     $sheet->getStyle('AH3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('AI1:AL2')->applyFromArray($styleArray);
                     $sheet->getStyle('AI3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('AJ1:AN2')->applyFromArray($styleArray);
                     $sheet->getStyle('AJ3')->applyFromArray($styleArray);
                     $sheet->getStyle('AK3')->applyFromArray($styleArray);
                     $sheet->getStyle('AL3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('AM1:AY1')->applyFromArray($styleArray);
-                    $sheet->getStyle('AM2:AO2')->applyFromArray($styleArray);
                     $sheet->getStyle('AM3')->applyFromArray($styleArray);
                     $sheet->getStyle('AN3')->applyFromArray($styleArray);
-                    $sheet->getStyle('AO3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('AP2:AR2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AO1:BE1')->applyFromArray($styleArray);
+                    $sheet->getStyle('AO2:AR2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AO3')->applyFromArray($styleArray);
                     $sheet->getStyle('AP3')->applyFromArray($styleArray);
                     $sheet->getStyle('AQ3')->applyFromArray($styleArray);
                     $sheet->getStyle('AR3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('AS2:AU2')->applyFromArray($styleArray);
+                    $sheet->getStyle('AS2:AV2')->applyFromArray($styleArray);
                     $sheet->getStyle('AS3')->applyFromArray($styleArray);
                     $sheet->getStyle('AT3')->applyFromArray($styleArray);
                     $sheet->getStyle('AU3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('AV2:AX2')->applyFromArray($styleArray);
                     $sheet->getStyle('AV3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('AW2:AZ2')->applyFromArray($styleArray);
                     $sheet->getStyle('AW3')->applyFromArray($styleArray);
                     $sheet->getStyle('AX3')->applyFromArray($styleArray);
+                    $sheet->getStyle('AY3')->applyFromArray($styleArray);
+                    $sheet->getStyle('AZ3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('AY2')->applyFromArray($styleArray);
+                    $sheet->getStyle('BA2:BD2')->applyFromArray($styleArray);
+                    $sheet->getStyle('BA3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BB3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BC3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BD3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('AZ1:AZ3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BE2')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('BF1:BF3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1050,52 +1025,68 @@ class RiskAssessmentService {
                     $sheet->setCellValue('D'.$currentRow, html_entity_decode('interviewer ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E'.$currentRow, html_entity_decode('ancID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('F'.$currentRow, html_entity_decode('interviewdate ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
                     $sheet->setCellValue('G'.$currentRow, html_entity_decode('occupation ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H'.$currentRow, html_entity_decode('education ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I'.$currentRow, html_entity_decode('educationlvl ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode('evermarried ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K'.$currentRow, html_entity_decode('agemarried ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L'.$currentRow, html_entity_decode('everwidow ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M'.$currentRow, html_entity_decode('maritalstatus ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N'.$currentRow, html_entity_decode('everHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O'.$currentRow, html_entity_decode('timelastHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P'.$currentRow, html_entity_decode('resultlastHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q'.$currentRow, html_entity_decode('agefirstsex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R'.$currentRow, html_entity_decode('forcedfirstsex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S'.$currentRow, html_entity_decode('sexptnrlife ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T'.$currentRow, html_entity_decode('sexptnr6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('U'.$currentRow, html_entity_decode('ptnrHIVstat ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('V'.$currentRow, html_entity_decode('ptnrage ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('W'.$currentRow, html_entity_decode('ptnragedif ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('X'.$currentRow, html_entity_decode('circumcised ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Y'.$currentRow, html_entity_decode('circumtype ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Z'.$currentRow, html_entity_decode('gifts4sex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AA'.$currentRow, html_entity_decode('gifts4sexlast ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AB'.$currentRow, html_entity_decode('pregnancies ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AC'.$currentRow, html_entity_decode('condomyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AD'.$currentRow, html_entity_decode('condompreg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AE'.$currentRow, html_entity_decode('STIsym ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AF'.$currentRow, html_entity_decode('STItreat ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AG'.$currentRow, html_entity_decode('syphilis ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AH'.$currentRow, html_entity_decode('HPVvaccine ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AI'.$currentRow, html_entity_decode('alcdays6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('alcbingefreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AK'.$currentRow, html_entity_decode('everdrugs ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AL'.$currentRow, html_entity_decode('drugs6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AM'.$currentRow, html_entity_decode('everabuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AN'.$currentRow, html_entity_decode('everabuseby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AO'.$currentRow, html_entity_decode('everabusefreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AP'.$currentRow, html_entity_decode('abuselastyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AQ'.$currentRow, html_entity_decode('abuselastyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AR'.$currentRow, html_entity_decode('abuselastyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AS'.$currentRow, html_entity_decode('abusepreg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AT'.$currentRow, html_entity_decode('abusepregby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AU'.$currentRow, html_entity_decode('abusepregfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AV'.$currentRow, html_entity_decode('forcedsexyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AW'.$currentRow, html_entity_decode('forcedsexyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AX'.$currentRow, html_entity_decode('forcedsexyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AY'.$currentRow, html_entity_decode('afraid ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('AZ'.$currentRow, html_entity_decode('comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H'.$currentRow, html_entity_decode('occupothr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I'.$currentRow, html_entity_decode('education ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J'.$currentRow, html_entity_decode('educationlvl ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K'.$currentRow, html_entity_decode('evermarried ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L'.$currentRow, html_entity_decode('agemarried ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M'.$currentRow, html_entity_decode('everwidow ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N'.$currentRow, html_entity_decode('maritalstatus ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('O'.$currentRow, html_entity_decode('everHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P'.$currentRow, html_entity_decode('timelastHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q'.$currentRow, html_entity_decode('resultlastHIVtest ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('R'.$currentRow, html_entity_decode('agefirstsex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S'.$currentRow, html_entity_decode('forcedfirstsex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T'.$currentRow, html_entity_decode('sexptnrlife ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U'.$currentRow, html_entity_decode('sexptnr6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V'.$currentRow, html_entity_decode('ptnrHIVstat ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W'.$currentRow, html_entity_decode('ptnrage ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X'.$currentRow, html_entity_decode('ptnragedif ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Y'.$currentRow, html_entity_decode('circumcised ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Z'.$currentRow, html_entity_decode('circumtype ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AA'.$currentRow, html_entity_decode('gifts4sex ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AB'.$currentRow, html_entity_decode('gifts4sexlast ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AC'.$currentRow, html_entity_decode('pregnancies ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AD'.$currentRow, html_entity_decode('condomyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AE'.$currentRow, html_entity_decode('condompreg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AF'.$currentRow, html_entity_decode('STIsym ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AG'.$currentRow, html_entity_decode('STItreat ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AH'.$currentRow, html_entity_decode('syphilis ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AI'.$currentRow, html_entity_decode('HPVvaccine ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('alcdays6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AK'.$currentRow, html_entity_decode('alcbingefreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AL'.$currentRow, html_entity_decode('everdrugs ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AM'.$currentRow, html_entity_decode('drugs6m ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AN'.$currentRow, html_entity_decode('drugtype ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('AO'.$currentRow, html_entity_decode('everabuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AP'.$currentRow, html_entity_decode('everabuseby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AQ'.$currentRow, html_entity_decode('everabusebyothr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AR'.$currentRow, html_entity_decode('everabusefreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('AS'.$currentRow, html_entity_decode('abuselastyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AT'.$currentRow, html_entity_decode('abuselastyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AU'.$currentRow, html_entity_decode('abuselastyrbyothr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AV'.$currentRow, html_entity_decode('abuselastyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('AW'.$currentRow, html_entity_decode('abusepreg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AX'.$currentRow, html_entity_decode('abusepregby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AY'.$currentRow, html_entity_decode('abusepregbyothr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AZ'.$currentRow, html_entity_decode('abusepregfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('BA'.$currentRow, html_entity_decode('forcedsexyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BB'.$currentRow, html_entity_decode('forcedsexyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BC'.$currentRow, html_entity_decode('forcedsexbyothr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BD'.$currentRow, html_entity_decode('forcedsexyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('BE'.$currentRow, html_entity_decode('afraid ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('BF'.$currentRow, html_entity_decode('comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -1103,6 +1094,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('D'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('E'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('F'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('G'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('H'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('I'.$currentRow)->applyFromArray($styleArray);
@@ -1111,9 +1103,11 @@ class RiskAssessmentService {
                     $sheet->getStyle('L'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('M'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('N'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('O'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('P'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('Q'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('R'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('S'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('T'.$currentRow)->applyFromArray($styleArray);
@@ -1132,23 +1126,36 @@ class RiskAssessmentService {
                     $sheet->getStyle('AG'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AH'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AI'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('AJ'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AK'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AL'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AM'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AN'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('AO'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AP'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AQ'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AR'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('AS'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AT'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AU'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AV'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('AW'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AX'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AY'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AZ'.$currentRow)->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('BA'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BB'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BC'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BD'.$currentRow)->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('BE'.$currentRow)->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('BF'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {
@@ -1368,7 +1375,7 @@ class RiskAssessmentService {
                     \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
-                    $keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+                    $keyArray = array('0'=>'','1'=>'Husband','2'=>'Ex-Husband','3'=>'Boyfriend','4'=>'Stranger','88'=>'Don\'t Know','99'=>'Refused','2222'=>'Response Not Available');
                     $output = array();
                     foreach ($sResult as $aRow) {
                         $interviewDate = '';
@@ -1378,28 +1385,27 @@ class RiskAssessmentService {
                         //abuse
                         //patient abused by
                         $hasPatientEverBeenAbusedBySomeone = '';
-                        $patientAbusedByInNoofTimes = '';
                         $patientAbusedBy = '';
+                        $patientAbusedByOther = '';
+                        $patientAbusedByInNoofTimes = '';
                         if($aRow['has_patient_ever_been_abused_by_someone']!= null && trim($aRow['has_patient_ever_been_abused_by_someone'])!= ''){
                             $patientAbusedBydata = json_decode($aRow['has_patient_ever_been_abused_by_someone'],true);
                             $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
                             if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 1){
-                                $hasPatientEverBeenAbusedBySomeone = "Yes - 1";
+                                $hasPatientEverBeenAbusedBySomeone = "Yes";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2){
-                                $hasPatientEverBeenAbusedBySomeone = "No - 2";
+                                $hasPatientEverBeenAbusedBySomeone = "No";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 88){
-                                $hasPatientEverBeenAbusedBySomeone = "Don't Know - 88";
+                                $hasPatientEverBeenAbusedBySomeone = "Don't Know";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 99){
-                                $hasPatientEverBeenAbusedBySomeone = "Refused - 99";
+                                $hasPatientEverBeenAbusedBySomeone = "Refused";
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
-                                $hasPatientEverBeenAbusedBySomeone = "Response Not Available - 2222";
+                                $hasPatientEverBeenAbusedBySomeone = "Response Not Available";
                             }
                             
                             if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
-                                $patientAbusedBy = substr($patientAbusedBydata['who_abused'],1);
-                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused']) == 'not applicable'){
-                                $patientAbusedBy = 'Not Applicable';
-                            }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+                                $patientAbusedByOther = substr($patientAbusedBydata['who_abused'],1);
+                            }else if(isset($patientAbusedBydata['who_abused']) && $patientAbusedBydata['who_abused']!= null && trim($patientAbusedBydata['who_abused'])!= 'not applicable'){
                                 $abusedppl = explode(',',$patientAbusedBydata['who_abused']);
                                 $abusedGroup = array();
                                 for($i=0;$i<count($abusedppl);$i++){
@@ -1411,39 +1417,36 @@ class RiskAssessmentService {
                             if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
                                 $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
-                               $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientAbusedByInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 99){
-                               $patientAbusedByInNoofTimes = 'Refused - 99';
+                               $patientAbusedByInNoofTimes = 'Refused';
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 2222){
-                               $patientAbusedByInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= ''){
-                               $patientAbusedByInNoofTimes = ucwords($patientAbusedBydata['no_of_times']);
+                               $patientAbusedByInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient hurt by someone within last year
                         $hasPatientHurtBySomeoneWithinLastYear = '';
                         $patientHurtByWithinLastYear = '';
+                        $patientHurtByWithinLastYearByOther = '';
                         $patientHurtByInNoofTimes = '';
                         if($aRow['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
                             $patientHurtBydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
                             $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
                             if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 1){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Yes - 1";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Yes";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2){
-                                $hasPatientHurtBySomeoneWithinLastYear = "No - 2";
+                                $hasPatientHurtBySomeoneWithinLastYear = "No";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 88){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know - 88";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Don't Know";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 99){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Refused - 99";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Refused";
                             }else if(trim($hasPatientHurtByWithinLastYear)!= '' && (int)$hasPatientHurtByWithinLastYear == 2222){
-                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available - 2222";
+                                $hasPatientHurtBySomeoneWithinLastYear = "Response Not Available";
                             }
                            
                             if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
-                                $patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
-                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
-                                $patientHurtByWithinLastYear = 'Not Applicable';
-                            }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+                                $patientHurtByWithinLastYearByOther = substr($patientHurtBydata['who_hurt'],1);
+                            }else if(isset($patientHurtBydata['who_hurt']) && $patientHurtBydata['who_hurt']!= null && trim($patientHurtBydata['who_hurt'])!= 'not applicable'){
                                 $hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
                                 $hurtedGroup = array();
                                 for($i=0;$i<count($hurtedppl);$i++){
@@ -1455,39 +1458,36 @@ class RiskAssessmentService {
                             if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
                                 $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
-                               $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientHurtByInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 99){
-                               $patientHurtByInNoofTimes = 'Refused - 99';
+                               $patientHurtByInNoofTimes = 'Refused';
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 2222){
-                               $patientHurtByInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= ''){
-                               $patientHurtByInNoofTimes = ucwords($patientHurtBydata['no_of_times']);
+                               $patientHurtByInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient hurt by someone during pregnancy
-                        $hasPatientHurtBySomeoneDuringPregnancy = 'Not Applicable';
+                        $hasPatientHurtBySomeoneDuringPregnancy = '';
                         $patientHurtByDuringPregnancy = '';
+                        $patientHurtByOtherDuringPregnancy = '';
                         $patientHurtByDuringPregnancyInNoofTimes = '';
                         if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
                             $patientHurtByDuringPregnancydata = json_decode($aRow['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
                             $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
                             if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 1){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Yes - 1";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Yes";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "No - 2";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "No";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 88){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Don't Know - 88";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Don't Know";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 99){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Refused - 99";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Refused";
                             }else if(trim($hasPatientHurtByDuringPregnancy)!= '' && (int)$hasPatientHurtByDuringPregnancy == 2222){
-                                $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available - 2222";
+                                $hasPatientHurtBySomeoneDuringPregnancy = "Response Not Available";
                             }
                             
                             if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
-                                $patientHurtByDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
-                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt']) == 'not applicable'){
-                                $patientHurtByDuringPregnancy = 'Not Applicable';
-                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+                                $patientHurtByOtherDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+                            }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && $patientHurtByDuringPregnancydata['who_hurt']!= null && trim($patientHurtByDuringPregnancydata['who_hurt'])!= 'not applicable'){
                                 $hurtedppl = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
                                 $hurtedGroup = array();
                                 for($i=0;$i<count($hurtedppl);$i++){
@@ -1499,39 +1499,36 @@ class RiskAssessmentService {
                             if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
                                 $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know'; 
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 99){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Refused - 99';
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Refused';
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 2222){
-                               $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= ''){
-                               $patientHurtByDuringPregnancyInNoofTimes = ucwords($patientHurtByDuringPregnancydata['no_of_times']);
+                               $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available';
                             }
                         }
                         //patient forced for sex within last year
                         $hasPatientForcedforSexBySomeoneWithinLastYear = '';
                         $patientForcedforSexBy = '';
+                        $patientForcedforSexByOther = '';
                         $patientForcedforSexInNoofTimes = '';
                         if($aRow['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($aRow['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
                             $patientForcedforSexdata = json_decode($aRow['has_patient_ever_been_forced_for_sex_within_last_year'],true);
                             $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
                             if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 1){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Yes - 1";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Yes";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "No - 2";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "No";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 88){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know - 88";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Don't Know";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 99){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Refused - 99";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Refused";
                             }else if(trim($hasPatientForcedforSexWithinLastYear)!= '' && (int)$hasPatientForcedforSexWithinLastYear == 2222){
-                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available - 2222";
+                                $hasPatientForcedforSexBySomeoneWithinLastYear = "Response Not Available";
                             }
                             
                             if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
-                                $patientForcedforSexBy = substr($patientForcedforSexdata['who_forced'],1);
-                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced']) == 'not applicable'){
-                                $patientForcedforSexBy = 'Not Applicable';
-                            }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+                                $patientForcedforSexByOther = substr($patientForcedforSexdata['who_forced'],1);
+                            }else if(isset($patientForcedforSexdata['who_forced']) && $patientForcedforSexdata['who_forced']!= null && trim($patientForcedforSexdata['who_forced'])!= 'not applicable'){
                                 $forcedbyppl = explode(',',$patientForcedforSexdata['who_forced']);
                                 $forcedbyGroup = array();
                                 for($i=0;$i<count($forcedbyppl);$i++){
@@ -1543,27 +1540,25 @@ class RiskAssessmentService {
                             if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
                                 $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1); //.' Time(s)';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
-                               $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
+                               $patientForcedforSexInNoofTimes = 'Don\'t Know';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 99){
-                               $patientForcedforSexInNoofTimes = 'Refused - 99';
+                               $patientForcedforSexInNoofTimes = 'Refused';
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 2222){
-                               $patientForcedforSexInNoofTimes = 'Response Not Available - 2222';
-                            }else if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= ''){
-                               $patientForcedforSexInNoofTimes = ucwords($patientForcedforSexdata['no_of_times']);
+                               $patientForcedforSexInNoofTimes = 'Response Not Available';
                             }
                         }
                         $hasPatientAfraidofAnyone = '';
                         if($aRow['is_patient_afraid_of_anyone']!= null && trim($aRow['is_patient_afraid_of_anyone'])!= ''){
                             if($aRow['is_patient_afraid_of_anyone'] == 1){
-                                $hasPatientAfraidofAnyone = "Yes - 1";
+                                $hasPatientAfraidofAnyone = "Yes";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 2){
-                                $hasPatientAfraidofAnyone = "No - 2";
+                                $hasPatientAfraidofAnyone = "No";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 88){
-                                $hasPatientAfraidofAnyone = "Don't Know - 88";
+                                $hasPatientAfraidofAnyone = "Don't Know";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 99){
-                                $hasPatientAfraidofAnyone = "Refused - 99";
+                                $hasPatientAfraidofAnyone = "Refused";
                             }else if($aRow['is_patient_afraid_of_anyone'] == 2222){
-                                $hasPatientAfraidofAnyone = "Response Not Available - 2222";
+                                $hasPatientAfraidofAnyone = "Response Not Available";
                             }
                         }
                         $row = array();
@@ -1575,15 +1570,19 @@ class RiskAssessmentService {
                         $row[] = $interviewDate;
                         $row[] = $hasPatientEverBeenAbusedBySomeone;
                         $row[] = $patientAbusedBy;
+                        $row[] = $patientAbusedByOther;
                         $row[] = $patientAbusedByInNoofTimes;
                         $row[] = $hasPatientHurtBySomeoneWithinLastYear;
                         $row[] = $patientHurtByWithinLastYear;
+                        $row[] = $patientHurtByWithinLastYearByOther;
                         $row[] = $patientHurtByInNoofTimes;
                         $row[] = $hasPatientHurtBySomeoneDuringPregnancy;
                         $row[] = $patientHurtByDuringPregnancy;
+                        $row[] = $patientHurtByOtherDuringPregnancy;
                         $row[] = $patientHurtByDuringPregnancyInNoofTimes;
                         $row[] = $hasPatientForcedforSexBySomeoneWithinLastYear;
                         $row[] = $patientForcedforSexBy;
+                        $row[] = $patientForcedforSexByOther;
                         $row[] = $patientForcedforSexInNoofTimes;
                         $row[] = $hasPatientAfraidofAnyone;
                         $row[] = ucfirst($aRow['comment']);
@@ -1620,13 +1619,13 @@ class RiskAssessmentService {
                     $sheet->mergeCells('D1:D3');
                     $sheet->mergeCells('E1:E3');
                     $sheet->mergeCells('F1:F3');
-                    $sheet->mergeCells('G1:S1');
-                    $sheet->mergeCells('G2:I2');
-                    $sheet->mergeCells('J2:L2');
-                    $sheet->mergeCells('M2:O2');
-                    $sheet->mergeCells('P2:R2');
-                    $sheet->mergeCells('S2:S3');
-                    $sheet->mergeCells('T1:T2');
+                    $sheet->mergeCells('G1:W1');
+                    $sheet->mergeCells('G2:J2');
+                    $sheet->mergeCells('K2:N2');
+                    $sheet->mergeCells('O2:R2');
+                    $sheet->mergeCells('S2:V2');
+                    $sheet->mergeCells('W2:W3');
+                    $sheet->mergeCells('X1:X3');
                     
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1639,26 +1638,30 @@ class RiskAssessmentService {
                     $sheet->setCellValue('G2', html_entity_decode('Have you ever been emotionally or physically abused by your partner or your loved one? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('G3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('H3', html_entity_decode('Abused by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I3', html_entity_decode('No.of times abused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I3', html_entity_decode('Abused by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J3', html_entity_decode('No.of times abused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('J2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K2', html_entity_decode('Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M3', html_entity_decode('Hurted by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('M2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O2', html_entity_decode('Since you\'ve been pregnant have you been slapped, kicked or otherwise physically hurt by someone? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P3', html_entity_decode('Hurted by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q3', html_entity_decode('Hurted by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R3', html_entity_decode('No.of times hurted ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('P2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q3', html_entity_decode('Forced by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R3', html_entity_decode('No.of times forced ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S2', html_entity_decode('Within the last year, has anyone forced you to have sexual activities? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S3', html_entity_decode('Yes/No ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T3', html_entity_decode('Forced by ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U3', html_entity_decode('Forced by other', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V3', html_entity_decode('No.of times forced ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('S2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('W2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
-                    $sheet->setCellValue('T1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('X1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B3')->applyFromArray($styleArray);
@@ -1667,52 +1670,66 @@ class RiskAssessmentService {
                     $sheet->getStyle('E1:E3')->applyFromArray($styleArray);
                     $sheet->getStyle('F1:F3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('G1:S1')->applyFromArray($styleArray);
-                    $sheet->getStyle('G2:I2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1:W1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G2:J2')->applyFromArray($styleArray);
                     $sheet->getStyle('G3')->applyFromArray($styleArray);
                     $sheet->getStyle('H3')->applyFromArray($styleArray);
                     $sheet->getStyle('I3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('J2:L2')->applyFromArray($styleArray);
                     $sheet->getStyle('J3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('K2:N2')->applyFromArray($styleArray);
                     $sheet->getStyle('K3')->applyFromArray($styleArray);
                     $sheet->getStyle('L3')->applyFromArray($styleArray);
-                    
-                    $sheet->getStyle('M2:O2')->applyFromArray($styleArray);
                     $sheet->getStyle('M3')->applyFromArray($styleArray);
                     $sheet->getStyle('N3')->applyFromArray($styleArray);
-                    $sheet->getStyle('O3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('P2:R2')->applyFromArray($styleArray);
+                    $sheet->getStyle('O2:R2')->applyFromArray($styleArray);
+                    $sheet->getStyle('O3')->applyFromArray($styleArray);
                     $sheet->getStyle('P3')->applyFromArray($styleArray);
                     $sheet->getStyle('Q3')->applyFromArray($styleArray);
                     $sheet->getStyle('R3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('S2:S3')->applyFromArray($styleArray);
+                    $sheet->getStyle('S2:V2')->applyFromArray($styleArray);
+                    $sheet->getStyle('S3')->applyFromArray($styleArray);
+                    $sheet->getStyle('T3')->applyFromArray($styleArray);
+                    $sheet->getStyle('U3')->applyFromArray($styleArray);
+                    $sheet->getStyle('V3')->applyFromArray($styleArray);
                     
-                    $sheet->getStyle('T1:T3')->applyFromArray($styleArray);
+                    $sheet->getStyle('W2:W3')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('X1:X3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
-                    $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B'.$currentRow, html_entity_decode('PatientBarcodeID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C'.$currentRow, html_entity_decode('age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('D'.$currentRow, html_entity_decode('interviewer ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('E'.$currentRow, html_entity_decode('ancID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('F'.$currentRow, html_entity_decode('interviewdate ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('G'.$currentRow, html_entity_decode('everabuse ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('H'.$currentRow, html_entity_decode('everabuseby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('I'.$currentRow, html_entity_decode('everabusefreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('J'.$currentRow, html_entity_decode('abuselastyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('K'.$currentRow, html_entity_decode('abuselastyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('L'.$currentRow, html_entity_decode('abuselastyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('M'.$currentRow, html_entity_decode('abusepreg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('N'.$currentRow, html_entity_decode('abusepregby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('O'.$currentRow, html_entity_decode('abusepregfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('P'.$currentRow, html_entity_decode('forcedsexyr ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('Q'.$currentRow, html_entity_decode('forcedsexyrby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('R'.$currentRow, html_entity_decode('forcedsexyrfreq ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('S'.$currentRow, html_entity_decode('afraid ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('T'.$currentRow, html_entity_decode('comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C'.$currentRow, html_entity_decode('age', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D'.$currentRow, html_entity_decode('interviewer', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E'.$currentRow, html_entity_decode('ancID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F'.$currentRow, html_entity_decode('interviewdate', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('G'.$currentRow, html_entity_decode('everabuse', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H'.$currentRow, html_entity_decode('everabuseby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I'.$currentRow, html_entity_decode('everabusebyothr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J'.$currentRow, html_entity_decode('everabusefreq', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('K'.$currentRow, html_entity_decode('abuselastyr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L'.$currentRow, html_entity_decode('abuselastyrby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M'.$currentRow, html_entity_decode('abuselastyrbyothr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N'.$currentRow, html_entity_decode('abuselastyrfreq', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('O'.$currentRow, html_entity_decode('abusepreg', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P'.$currentRow, html_entity_decode('abusepregby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q'.$currentRow, html_entity_decode('abusepregbyothr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R'.$currentRow, html_entity_decode('abusepregfreq', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('S'.$currentRow, html_entity_decode('forcedsexyr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('T'.$currentRow, html_entity_decode('forcedsexyrby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('U'.$currentRow, html_entity_decode('forcedsexbyothr', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('V'.$currentRow, html_entity_decode('forcedsexyrfreq', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('W'.$currentRow, html_entity_decode('afraid', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('X'.$currentRow, html_entity_decode('comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -1720,20 +1737,30 @@ class RiskAssessmentService {
                     $sheet->getStyle('D'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('E'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('F'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('G'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('H'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('I'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('J'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('K'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('L'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('M'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('N'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('O'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('P'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('Q'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('R'.$currentRow)->applyFromArray($styleArray);
+                    
                     $sheet->getStyle('S'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('T'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('U'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('V'.$currentRow)->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('W'.$currentRow)->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('X'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {
