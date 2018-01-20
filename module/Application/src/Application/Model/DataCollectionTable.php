@@ -1280,9 +1280,9 @@ class DataCollectionTable extends AbstractTableGateway {
             $sQuery = $sQuery->where(array('da_c.lab'=>base64_decode($parameters['lab'])));
         }
 	if(isset($parameters['status']) && trim($parameters['status'])== 'completed'){
-           $sQuery = $sQuery->where('da_c.status = "2"');
+           $sQuery = $sQuery->where('da_c.status = "2" AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
         }else if(isset($parameters['status']) && trim($parameters['status'])== 'pending'){
-	   $sQuery = $sQuery->where('da_c.status IN (1,3,4)'); 
+	   $sQuery = $sQuery->where('da_c.status IN (1,3,4) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}
 	//custom filter end
        if (isset($sWhere) && $sWhere != "") {
@@ -1812,7 +1812,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $labRecentQuery = $sql->select()->from(array('anc' => 'anc_site'))
 				  ->columns(array('anc_site_name','latitude','longitude'))
 				  ->join(array('da_c'=>'data_collection'),'da_c.anc_site=anc.anc_site_id',array('noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes', 1,0))"),'noofLabRecencyAssayRecent' => new \Zend\Db\Sql\Expression('SUM(IF(da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\', 1,0))')),'left')
-				  ->where(array('anc.country'=>$params['country']))
+				  ->where('anc.country = '.$params['country'].' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)')
 				  ->group('anc.anc_site_id');
 	    if(trim($params['reportingMonthYear'])!= ''){
 		$reportingMonthYearArray = explode("/",$params['reportingMonthYear']);
@@ -2016,24 +2016,32 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery = $sQuery->where(array("specimen_collected_date >='" . $s_c_start_date ."'", "specimen_collected_date <='" . $s_c_end_date."'"));
         }else if (trim($s_c_start_date) != "") {
             $sQuery = $sQuery->where(array("specimen_collected_date = '" . $s_c_start_date. "'"));
-        } if(trim($s_t_start_date) != "" && trim($s_t_start_date)!= trim($s_t_end_date)) {
+        }
+	if(trim($s_t_start_date) != "" && trim($s_t_start_date)!= trim($s_t_end_date)) {
            $sQuery = $sQuery->where(array("date_of_test_completion >='" . $s_t_start_date ."'", "date_of_test_completion <='" . $s_t_end_date."'"));
         }else if (trim($s_t_start_date) != "") {
             $sQuery = $sQuery->where(array("date_of_test_completion = '" . $s_t_start_date. "'"));
-        } if(trim($parameters['province'])!= ''){
+        }
+	if(trim($parameters['province'])!= ''){
 	    $sQuery = $sQuery->where(array('province'=>base64_decode($parameters['province'])));
-	} if(trim($parameters['specimenType'])!= ''){
+	}
+	if(trim($parameters['specimenType'])!= ''){
 	    $sQuery = $sQuery->where('specimen_type IN('.$parameters['specimenType'].')');
-	} if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
+	}
+	if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'lt2'){
 	    $sQuery = $sQuery->where('final_lag_avidity_odn <= 2');
 	}else if(trim($parameters['finalLagAvidityOdn'])!= '' && $parameters['finalLagAvidityOdn'] == 'gt2'){
 	    $sQuery = $sQuery->where('final_lag_avidity_odn > 2');
-	} if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
+	}
+	if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'lte1000'){
 	    $sQuery = $sQuery->where('hiv_rna <= 1000');
 	}else if(trim($parameters['hivRna'])!= '' && $parameters['hivRna'] == 'gt1000'){
 	    $sQuery = $sQuery->where('hiv_rna > 1000');
-	} if(trim($parameters['asanteRapidRecencyAssayRlt'])!= ''){
-	    $sQuery = $sQuery->where('asante_rapid_recency_assy like "%'.$parameters['asanteRapidRecencyAssayRlt'].'%"');
+	}
+	if(trim($parameters['asanteRapidRecencyAssayRlt'])== 'recent'){
+	    $sQuery = $sQuery->where('asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (rejection_reason IS NULL OR rejection_reason = "" OR rejection_reason = 0 OR rejection_reason = 1)');
+	}else if(trim($parameters['asanteRapidRecencyAssayRlt'])== 'long term'){
+	   $sQuery = $sQuery->where('asante_rapid_recency_assy like \'%rrr":{"assay":"present"%\' AND (rejection_reason IS NULL OR rejection_reason = "" OR rejection_reason = 0 OR rejection_reason = 1)');
 	}
 	//custom filter end
        if (isset($sWhere) && $sWhere != "") {
