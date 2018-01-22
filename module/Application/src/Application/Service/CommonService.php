@@ -338,14 +338,12 @@ class CommonService {
         $studyFilesDb->insert($data);
         $studyFileId = $studyFilesDb->lastInsertValue;
         //file upload section
-        $studyFile = '';
         if(isset($_FILES['studyFile']['name']) && !empty($_FILES['studyFile']['name'])) {
             $supportedFormatArray = array('txt','csv','xls','xlsx','doc','pdf');
 	    $fileExtension = pathinfo($_FILES['studyFile']['name'], PATHINFO_EXTENSION);
 	    if(in_array($fileExtension,$supportedFormatArray)){
-	        $studyFile = 'study-'.$studyFileId.".".$fileExtension;
-	        move_uploaded_file($_FILES["studyFile"]["tmp_name"], UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files" . DIRECTORY_SEPARATOR . $studyFile);
-	        $studyFilesDb->update(array('file_name'=>$studyFile),array('study_file_id'=>$studyFileId));
+	        move_uploaded_file($_FILES["studyFile"]["tmp_name"], UPLOAD_PATH . DIRECTORY_SEPARATOR . "study-files" . DIRECTORY_SEPARATOR . $_FILES['studyFile']['name']);
+	        $studyFilesDb->update(array('file_name'=>$_FILES['studyFile']['name']),array('study_file_id'=>$studyFileId));
                 $alertContainer->msg = 'Study file has been uploaded successfully.';
                return true;
             }else{
@@ -353,7 +351,7 @@ class CommonService {
                return false;
             }
         }else{
-           return false; 
+           return false;
         }
     }
     
