@@ -5,9 +5,10 @@ $filterDate = '';
 $interviewDate = '';
 if(isset($date) && trim($date)!= ''){
     $dateArray = explode("/",$date);
-    $month = date('M', strtotime($dateArray[0]));
-    $year = $dateArray[1];
-    $filterDate = '01-'.$month.'-'.$year.' to 31-'.$month.'-'.$year;
+    $month = ($dateArray[0] == 'February')?'Feb':date('M', strtotime($dateArray[0]));
+    $startDate = '01-'.$month.'-'.$dateArray[1];
+    $endDate = date('t-M-Y',strtotime('01-'.$month.'-'.$dateArray[1]));
+    $filterDate = $startDate.' to '.$endDate;
     if(trim($dateSrc) == 'interview'){ $interviewDate = $filterDate; }
 }
 ?>

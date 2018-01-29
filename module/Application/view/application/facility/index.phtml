@@ -164,7 +164,7 @@ $loginContainer = new Container('user');
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
        $(document).on('keyup', "input[type='text']", function(){
-	    oTable.fnFilter($(this).val());
+	    oTable.search($(this).val()).draw();
        });
     });
 </script>

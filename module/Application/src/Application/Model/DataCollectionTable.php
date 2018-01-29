@@ -283,7 +283,12 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $data_Column = ($parameters['dateSrc'] == 'collected')?'da_c.specimen_collected_date':'da_c.added_on';
 	   $reportingMonthYearArray = explode("/",$parameters['date']);
-	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.date('m', strtotime($reportingMonthYearArray[0])).'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
+	   if($reportingMonthYearArray[0] == 'February'){
+	    $month = 02;
+	   }else{
+	    $month = date('m', strtotime($reportingMonthYearArray[0]));
+	   }
+	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.$month.'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
 	}
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
