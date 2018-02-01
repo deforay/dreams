@@ -421,6 +421,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
+                     ->join(array('u_a' => 'user'), "u_a.user_id=cl_da_c.added_by",array('addedBy'=>'full_name'))
+		     ->join(array('u_u' => 'user'), "u_u.user_id=cl_da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
            $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
@@ -462,6 +464,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array('anc_site_name','anc_site_code'))
                       ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                       ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
+                      ->join(array('u_a' => 'user'), "u_a.user_id=cl_da_c.added_by",array('addedBy'=>'full_name'))
+		      ->join(array('u_u' => 'user'), "u_u.user_id=cl_da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                       ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
            $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));

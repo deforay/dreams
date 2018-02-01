@@ -1257,6 +1257,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $mappedLab[] = $lab['laboratory_id'];
        }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+                     ->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
+		     ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
@@ -1316,9 +1318,11 @@ class DataCollectionTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-				  ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
-				  ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-				  ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+	                        ->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
+		                ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
+				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
+				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){

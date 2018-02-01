@@ -130,8 +130,10 @@ class AncRapidRecencyTable extends AbstractTableGateway {
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         $sQuery = $sql->select()->from(array('anc_r_r' => 'anc_rapid_recency'))
-                                ->join(array('r_a' => 'clinic_risk_assessment'), "r_a.assessment_id=anc_r_r.assessment_id",array('patient_barcode_id'))
+                                ->join(array('r_a' => 'clinic_risk_assessment'), "r_a.assessment_id=anc_r_r.assessment_id",array('patient_barcode_id','added_on','updated_on'))
                                 ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
+				->join(array('u_a' => 'user'), "u_a.user_id=r_a.added_by",array('addedBy'=>'full_name'))
+		                ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
                                 ->join(array('l_d' => 'location_details'), "l_d.location_id=anc.district",array('location_name'),'left');
         if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $sQuery = $sQuery->where(array('r_a.country'=>$parameters['country']));
@@ -172,8 +174,10 @@ class AncRapidRecencyTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('anc_r_r' => 'anc_rapid_recency'))
-                                ->join(array('r_a' => 'clinic_risk_assessment'), "r_a.assessment_id=anc_r_r.assessment_id",array('patient_barcode_id'))
+                                ->join(array('r_a' => 'clinic_risk_assessment'), "r_a.assessment_id=anc_r_r.assessment_id",array('patient_barcode_id','added_on','updated_on'))
                                 ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
+				->join(array('u_a' => 'user'), "u_a.user_id=r_a.added_by",array('addedBy'=>'full_name'))
+		                ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
                                 ->join(array('l_d' => 'location_details'), "l_d.location_id=anc.district",array('location_name'),'left');
 	if(isset($parameters['country']) && trim($parameters['country'])!= ''){
 	    $tQuery = $tQuery->where(array('r_a.country'=>$parameters['country']));

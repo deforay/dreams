@@ -95,6 +95,16 @@ class RiskAssessmentService {
                     $keyArray = array('0'=>'','1'=>'husband','2'=>'exhusband','3'=>'boyfriend','4'=>'stranger','88'=>'dk','99'=>'r','2222'=>'rna');
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $addedDate = '';
+                        if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
+                            $addedDateArray = explode(' ',$aRow['added_on']);
+                            $addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
+                        }
+	                $updatedDate = '';
+                        if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
+                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
+                        }
                         $interviewDate = '';
                         if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
                             $interviewDate = $common->humanDateFormat($aRow['interview_date']);
@@ -817,6 +827,10 @@ class RiskAssessmentService {
                         $row[] = $patientForcedforSexInNoofTimes;
                         $row[] = $hasPatientAfraidofAnyone;
                         $row[] = $aRow['comment'];
+                        $row[] = $addedDate;
+                        $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
+                        $row[] = $updatedDate;
+                        $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -862,6 +876,10 @@ class RiskAssessmentService {
                     $sheet->mergeCells('BA2:BD2');
                     $sheet->mergeCells('BE2:BE3');
                     $sheet->mergeCells('BF1:BF3');
+                    $sheet->mergeCells('BG1:BG3');
+                    $sheet->mergeCells('BH1:BH3');
+                    $sheet->mergeCells('BI1:BI3');
+                    $sheet->mergeCells('BJ1:BJ3');
                     
                     //Label section
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -942,6 +960,10 @@ class RiskAssessmentService {
                     $sheet->setCellValue('BE2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->setCellValue('BF1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BG1', html_entity_decode('Added Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BH1', html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BI1', html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BJ1', html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     //Style section
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
@@ -1021,6 +1043,10 @@ class RiskAssessmentService {
                     $sheet->getStyle('BE2')->applyFromArray($styleArray);
                     
                     $sheet->getStyle('BF1:BF3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BG1:BG3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BH1:BH3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BI1:BI3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BJ1:BJ3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1091,6 +1117,10 @@ class RiskAssessmentService {
                     $sheet->setCellValue('BE'.$currentRow, html_entity_decode('afraid ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->setCellValue('BF'.$currentRow, html_entity_decode('comments ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BG'.$currentRow, html_entity_decode('adddate ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BH'.$currentRow, html_entity_decode('addby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BI'.$currentRow, html_entity_decode('update ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BJ'.$currentRow, html_entity_decode('updateby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -1160,6 +1190,10 @@ class RiskAssessmentService {
                     $sheet->getStyle('BE'.$currentRow)->applyFromArray($styleArray);
                     
                     $sheet->getStyle('BF'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BG'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BH'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BI'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BJ'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {
@@ -1252,6 +1286,16 @@ class RiskAssessmentService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $addedDate = '';
+                        if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
+                            $addedDateArray = explode(' ',$aRow['added_on']);
+                            $addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
+                        }
+	                $updatedDate = '';
+                        if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
+                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
+                        }
                         $ancHIVVerificationClassification = '-';
                         $ancRecencyVerificationClassification = '-';
                         if(isset($aRow['HIV_diagnostic_line']) && trim($aRow['HIV_diagnostic_line']) == 'positive'){
@@ -1276,6 +1320,10 @@ class RiskAssessmentService {
                         $row[] = (isset($aRow['location_name']))?ucwords($aRow['location_name']):'';
                         $row[] = $ancHIVVerificationClassification;
                         $row[] = $ancRecencyVerificationClassification;
+                        $row[] = $addedDate;
+                        $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
+                        $row[] = $updatedDate;
+                        $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
                         $output[] = $row;
                     }
                     
@@ -1310,12 +1358,20 @@ class RiskAssessmentService {
                     $sheet->setCellValue('C1', html_entity_decode('District Name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('D1', html_entity_decode('ANC Positive Verification Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('E1', html_entity_decode('ANC Long Term Line ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('Added Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
                     $sheet->getStyle('C1')->applyFromArray($styleArray);
                     $sheet->getStyle('D1')->applyFromArray($styleArray);
                     $sheet->getStyle('E1')->applyFromArray($styleArray);
+                    $sheet->getStyle('F1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1')->applyFromArray($styleArray);
+                    $sheet->getStyle('H1')->applyFromArray($styleArray);
+                    $sheet->getStyle('I1')->applyFromArray($styleArray);
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -1382,6 +1438,16 @@ class RiskAssessmentService {
                     $keyArray = array('0'=>'','1'=>'husband','2'=>'exhusband','3'=>'boyfriend','4'=>'stranger','88'=>'dk','99'=>'r','2222'=>'rna');
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $addedDate = '';
+                        if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
+                            $addedDateArray = explode(' ',$aRow['added_on']);
+                            $addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
+                        }
+	                $updatedDate = '';
+                        if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
+                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
+                        }
                         $interviewDate = '';
                         if(isset($aRow['interview_date']) && $aRow['interview_date']!= null && trim($aRow['interview_date'])!= '' && $aRow['interview_date']!= '0000-00-00'){
                             $interviewDate = $common->humanDateFormat($aRow['interview_date']);
@@ -1594,6 +1660,10 @@ class RiskAssessmentService {
                         $row[] = $patientForcedforSexInNoofTimes;
                         $row[] = $hasPatientAfraidofAnyone;
                         $row[] = $aRow['comment'];
+                        $row[] = $addedDate;
+                        $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
+                        $row[] = $updatedDate;
+                        $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1634,6 +1704,10 @@ class RiskAssessmentService {
                     $sheet->mergeCells('S2:V2');
                     $sheet->mergeCells('W2:W3');
                     $sheet->mergeCells('X1:X3');
+                    $sheet->mergeCells('Y1:Y3');
+                    $sheet->mergeCells('Z1:Z3');
+                    $sheet->mergeCells('AA1:AA3');
+                    $sheet->mergeCells('AB1:AB3');
                     
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1670,6 +1744,10 @@ class RiskAssessmentService {
                     $sheet->setCellValue('W2', html_entity_decode('Are you afraid of your partner or anyone listed above? ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->setCellValue('X1', html_entity_decode('Comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Y1', html_entity_decode('Added Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Z1', html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AA1', html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AB1', html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B3')->applyFromArray($styleArray);
@@ -1706,6 +1784,10 @@ class RiskAssessmentService {
                     $sheet->getStyle('W2:W3')->applyFromArray($styleArray);
                     
                     $sheet->getStyle('X1:X3')->applyFromArray($styleArray);
+                    $sheet->getStyle('Y1:Y3')->applyFromArray($styleArray);
+                    $sheet->getStyle('Z1:Z3')->applyFromArray($styleArray);
+                    $sheet->getStyle('AA1:AA3')->applyFromArray($styleArray);
+                    $sheet->getStyle('AB1:AB3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1738,6 +1820,10 @@ class RiskAssessmentService {
                     $sheet->setCellValue('W'.$currentRow, html_entity_decode('afraid', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->setCellValue('X'.$currentRow, html_entity_decode('comments', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Y'.$currentRow, html_entity_decode('adddate', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Z'.$currentRow, html_entity_decode('addby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AA'.$currentRow, html_entity_decode('update', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AB'.$currentRow, html_entity_decode('updateby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -1769,6 +1855,10 @@ class RiskAssessmentService {
                     $sheet->getStyle('W'.$currentRow)->applyFromArray($styleArray);
                     
                     $sheet->getStyle('X'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('Y'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('Z'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('AA'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('AB'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {
