@@ -268,7 +268,7 @@ class DataCollectionService {
                         }
 	                $updatedDate = '';
                         if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
-                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDateArray = explode(' ',$aRow['updated_on']);
                             $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
                         }
                         $specimenCollectedDate = '';
@@ -877,7 +877,7 @@ class DataCollectionService {
                         }
 	                $updatedDate = '';
                         if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
-                            $updatedDateArray = explode(' ',$aRow['added_on']);
+                            $updatedDateArray = explode(' ',$aRow['updated_on']);
                             $updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
                         }
                         $reportingMonth = '';

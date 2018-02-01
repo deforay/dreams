@@ -896,7 +896,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		$addedDateArray = explode(' ',$aRow['added_on']);
 		$addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
 	    }if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
-		$updatedDateArray = explode(' ',$aRow['added_on']);
+		$updatedDateArray = explode(' ',$aRow['updated_on']);
 		$updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
 	    }if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
