@@ -553,16 +553,16 @@ if(trim($countryId)!= ''){
             </div>
             <div class="row" style="margin-bottom:0;">
                 <div class="col s12">
-                    <input id="hasPatinetEverReceivedGiftForSexYes" class="with-gap isRequired" name="hasPatinetEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio">
-		    <label for="hasPatinetEverReceivedGiftForSexYes" class="active">Yes - 1</label>&nbsp;&nbsp;
-                    <input id="hasPatinetEverReceivedGiftForSexNo" class="with-gap" name="hasPatinetEverReceivedGiftForSex" value="2" type="radio">
-		    <label for="hasPatinetEverReceivedGiftForSexNo" class="active">No - 2</label>&nbsp;&nbsp;
-                    <input id="hasPatinetEverReceivedGiftForSexDK" class="with-gap" name="hasPatinetEverReceivedGiftForSex" value="88" type="radio">
-		    <label for="hasPatinetEverReceivedGiftForSexDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
-                    <input id="hasPatinetEverReceivedGiftForSexR" class="with-gap" name="hasPatinetEverReceivedGiftForSex" value="99" type="radio">
-		    <label for="hasPatinetEverReceivedGiftForSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
-		    <input id="hasPatinetEverReceivedGiftForSexRNA" class="with-gap" name="hasPatinetEverReceivedGiftForSex" value="2222" type="radio">
-		    <label for="hasPatinetEverReceivedGiftForSexRNA" class="active">Response Not Available - 2222</label>
+                    <input id="hasPatientEverReceivedGiftForSexYes" class="with-gap isRequired" name="hasPatientEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio">
+		    <label for="hasPatientEverReceivedGiftForSexYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+                    <input id="hasPatientEverReceivedGiftForSexNo" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="2" type="radio">
+		    <label for="hasPatientEverReceivedGiftForSexNo" class="active">No - 2</label>&nbsp;&nbsp;
+                    <input id="hasPatientEverReceivedGiftForSexDK" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="88" type="radio">
+		    <label for="hasPatientEverReceivedGiftForSexDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+                    <input id="hasPatientEverReceivedGiftForSexR" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="99" type="radio">
+		    <label for="hasPatientEverReceivedGiftForSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
+		    <input id="hasPatientEverReceivedGiftForSexRNA" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="2222" type="radio">
+		    <label for="hasPatientEverReceivedGiftForSexRNA" class="active">Response Not Available - 2222</label>
                 </div>
             </div>
             <div class="row patinetReceivedGiftForSexSection" style="margin-bottom:0;margin-top:16px;">
@@ -1839,8 +1839,8 @@ if(trim($countryId)!= ''){
     });
     
     //patient received gift for sex
-    $('input:radio[name=hasPatinetEverReceivedGiftForSex]').change(function () {
-	if ($("input[name='hasPatinetEverReceivedGiftForSex']:checked").val() != 1) {
+    $('input:radio[name=hasPatientEverReceivedGiftForSex]').change(function () {
+	if ($("input[name='hasPatientEverReceivedGiftForSex']:checked").val() != 1) {
 	    $(".patinetReceivedGiftForSexSectionRequired").css("visibility","hidden");
 	    $(".patinetReceivedGiftForSexSection").css("color","rgba(0,0,0,0.26)");
 	    $(".patinetReceivedGiftForSexSection").css("pointer-events","none");

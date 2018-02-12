@@ -298,12 +298,16 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }
 	    $hasPatientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$everForcedforSex,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
 	    //patient afraid of anyone/other
-	    $patientAfraidofAnyone = NULL;
+	    $isPatientAfraidofAnyone = NULL;
 	    $patientAfraidofOther = NULL;
-	    if(isset($params['isPatientAfraidOfAnyone']) && count($params['isPatientAfraidOfAnyone']) >0){
-		$patientAfraidofAnyone = implode(',',$params['isPatientAfraidOfAnyone']);
-	    }else if(isset($params['isPatientAfraidOfAnyoneofOther']) && trim($params['isPatientAfraidOfAnyoneofOther'])!= ''){
-		$patientAfraidofOther = $params['isPatientAfraidOfAnyoneofOther'];
+	    if(isset($params['formVersion']) && $params['formVersion'] == 2){
+		if(isset($params['isPatientAfraidOfAnyone']) && count($params['isPatientAfraidOfAnyone']) >0){
+		    $isPatientAfraidofAnyone = $patientAfraidofAnyone = implode(',',$params['isPatientAfraidOfAnyone']);
+		}else if(isset($params['isPatientAfraidOfAnyoneofOther']) && trim($params['isPatientAfraidOfAnyoneofOther'])!= ''){
+		    $patientAfraidofOther = $params['isPatientAfraidOfAnyoneofOther'];
+		}
+	    }else{
+		$isPatientAfraidofAnyone = (isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL;
 	    }
 	    //Go girls teen club
 	    //club participation
@@ -364,7 +368,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($hasPatientHurtBySomeoneWithinLastYear),
 		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($hasPatientHurtBySomeoneDuringPregnancy),
 		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($hasPatientForcedforSexWithinLastYear),
-		    'is_patient_afraid_of_anyone'=>$patientAfraidofAnyone,
+		    'is_patient_afraid_of_anyone'=>$isPatientAfraidofAnyone,
 		    'patient_afraid_of_other'=>$patientAfraidofOther,
 		    'has_patient_ever_participated_in_a_clup_for_adolescents'=>$hasPatientEverParticipatedInaClupforAdolescents,
 		    'time_of_patient_participate_in_club'=>$timeofPatientParticipateinClub,
@@ -968,12 +972,16 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	    }
 	    $hasPatientForcedforSexWithinLastYear = array('ever_forced_for_sex'=>$everForcedforSex,'who_forced'=>$whoForced,'no_of_times'=>$patientForcedforSexWithinLastYearInNoofTimes);
 	    //patient afraid of anyone/other
-	    $patientAfraidofAnyone = NULL;
+	    $isPatientAfraidofAnyone = NULL;
 	    $patientAfraidofOther = NULL;
-	    if(isset($params['isPatientAfraidOfAnyone']) && count($params['isPatientAfraidOfAnyone']) >0){
-		$patientAfraidofAnyone = implode(',',$params['isPatientAfraidOfAnyone']);
-	    }else if(isset($params['isPatientAfraidOfAnyoneofOther']) && trim($params['isPatientAfraidOfAnyoneofOther'])!= ''){
-		$patientAfraidofOther = $params['isPatientAfraidOfAnyoneofOther'];
+	    if(isset($params['formVersion']) && $params['formVersion'] == 2){
+		if(isset($params['isPatientAfraidOfAnyone']) && count($params['isPatientAfraidOfAnyone']) >0){
+		    $isPatientAfraidofAnyone = $patientAfraidofAnyone = implode(',',$params['isPatientAfraidOfAnyone']);
+		}else if(isset($params['isPatientAfraidOfAnyoneofOther']) && trim($params['isPatientAfraidOfAnyoneofOther'])!= ''){
+		    $patientAfraidofOther = $params['isPatientAfraidOfAnyoneofOther'];
+		}
+	    }else{
+		$isPatientAfraidofAnyone = (isset($params['isPatientAfraidOfAnyone']) && trim($params['isPatientAfraidOfAnyone'])!= '')?$params['isPatientAfraidOfAnyone']:NULL;
 	    }
 	    //Go girls teen club
 	    //club participation
@@ -1034,7 +1042,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		    'has_patient_ever_been_hurt_by_someone_within_last_year'=>json_encode($hasPatientHurtBySomeoneWithinLastYear),
 		    'has_patient_ever_been_hurt_by_someone_during_pregnancy'=>json_encode($hasPatientHurtBySomeoneDuringPregnancy),
 		    'has_patient_ever_been_forced_for_sex_within_last_year'=>json_encode($hasPatientForcedforSexWithinLastYear),
-		    'is_patient_afraid_of_anyone'=>$patientAfraidofAnyone,
+		    'is_patient_afraid_of_anyone'=>$isPatientAfraidofAnyone,
 		    'patient_afraid_of_other'=>$patientAfraidofOther,
 		    'has_patient_ever_participated_in_a_clup_for_adolescents'=>$hasPatientEverParticipatedInaClupforAdolescents,
 		    'time_of_patient_participate_in_club'=>$timeofPatientParticipateinClub,
