@@ -2,5 +2,5 @@ Viral Load DREAM Project
 =======================
 
 * Please download the latest code from repository.
-* Configure Virtual Host to point to the vl-dream/public/ folder
-* Edit the database settings in vl-dream/configs/autoload/global.php and vl-dream/configs/autoload/local.php
+* Create a Virtual Host to point to the '/path/to/dreams/public/' folder
+* Edit the database settings in dreams/configs/autoload/global.php and dreams/configs/autoload/local.php
