@@ -1232,13 +1232,13 @@ if(trim($countryId)!= ''){
             selectYears: 100, // Creates a dropdown of 100 years to control year
             format: 'dd/mm/yyyy',
 	    	max: new Date('Today'),
-			closeOnSelect: true,
-			closeOnClear: true,
-			onSet: function(e){
-				if(e.select != undefined && e.select != null){
-					$('.picker__close').click();
-				}
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
 			}
+		    }
         });
     });
     

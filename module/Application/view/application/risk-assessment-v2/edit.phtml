@@ -1240,7 +1240,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		    </div>
 		</div>
 		<div class="col s12" style="margin-top:10px;">
-		    <input type="hidden" name="formVersion" value="<?php echo $row->form_version; ?>"/>
+		    <input type="hidden" name="formVersion" value="2"/>
 		    <input type="hidden" id="participantEligibility" name="participantEligibility" value="<?php echo $participantEligibility; ?>"/>
 		    <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
 		    <input id="ancRapidRecencyId" name="ancRapidRecencyId" type="hidden" value="<?php echo (isset($row->anc_rapid_recency_id))?base64_encode($row->anc_rapid_recency_id):''; ?>"/>

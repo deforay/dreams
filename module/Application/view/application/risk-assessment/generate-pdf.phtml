@@ -121,6 +121,21 @@ if(count($dataResult) > 0){
 		$recencyVal = 'Result not available';
 	    }
         }
+	//participant age
+	$participantAge = '';
+	if($data['participant_age']!= null && trim($data['participant_age'])!= ''){
+	    if($data['participant_age'][0] == '@'){
+		$participantAge = substr($data['participant_age'],1).' Year(s)';
+	    }else if($data['participant_age'] == 88){
+		$participantAge = "Don't Know - 88";
+	    }else if($data['participant_age'] == 99){
+		$participantAge = "Refused - 99";
+	    }else if($data['participant_age'] == 2222){
+		$participantAge = "Response Not Available - 2222";
+	    }else{
+		$participantAge = ucwords($data['participant_age']);
+	    }
+	}
         //patient occupation
         $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']).' - '.$data['occupation_code']:'';
 	//patient schooling details
@@ -154,6 +169,22 @@ if(count($dataResult) > 0){
 		$degree = "Response Not Available - 2222";
 	    }else{
 		$degree = ucwords($data['patient_degree']);
+	    }
+	}
+	$isParticipantAttendingSchoolNow = '';
+	if($data['is_participant_attending_school_now']!= null && trim($data['is_participant_attending_school_now'])!= ''){
+	    if($data['is_participant_attending_school_now'] == 1){
+		$isParticipantAttendingSchoolNow = "Yes - 1";
+	    }else if($data['is_participant_attending_school_now'] == 2){
+		$isParticipantAttendingSchoolNow = "No - 2";
+	    }else if($data['is_participant_attending_school_now'] == 88){
+		$isParticipantAttendingSchoolNow = "Don't know - 88";
+	    }else if($data['is_participant_attending_school_now'] == 99){
+		$isParticipantAttendingSchoolNow = "Refused - 99";
+	    }else if($data['is_participant_attending_school_now'] == 2222){
+		$isParticipantAttendingSchoolNow = "Response Not Available - 2222";
+	    }else{
+		$isParticipantAttendingSchoolNow = ucwords($data['is_participant_attending_school_now']);
 	    }
 	}
 	//marital status
@@ -276,6 +307,22 @@ if(count($dataResult) > 0){
 		$resultofMostRecentHIVTest = "Response Not Available - 2222";
 	    }else{
 		$resultofMostRecentHIVTest = ucwords($data['last_HIV_test_status']);
+	    }
+	}
+	$placeofLastHIVTest = '';
+	if($data['place_of_last_HIV_test']!= null && trim($data['place_of_last_HIV_test'])!= ''){
+	    if($data['place_of_last_HIV_test'] == 1){
+		$placeofLastHIVTest = "Facility - 1";
+	    }else if($data['place_of_last_HIV_test']== 2){
+		$placeofLastHIVTest = "Community - 2";
+	    }else if($data['place_of_last_HIV_test'] == 88){
+		$placeofLastHIVTest = "Don't Know - 88";
+	    }else if($data['place_of_last_HIV_test'] == 99){
+		$placeofLastHIVTest = "Refused - 99";
+	    }else if($data['place_of_last_HIV_test'] == 2222){
+		$placeofLastHIVTest = "Response Not Available - 2222";
+	    }else{
+		$placeofLastHIVTest = ucwords($data['place_of_last_HIV_test']);
 	    }
 	}
 	//patient sexual activity/sexual transmitted infections
@@ -463,6 +510,38 @@ if(count($dataResult) > 0){
 		$noofTimesBeenPregnant = "Response Not Available - 2222";
 	    }else{
 		$noofTimesBeenPregnant = ucwords($data['no_of_times_been_pregnant']);
+	    }
+	}
+	$hasPatientWantedtoGetPregnant = '';
+	if($data['has_patient_wanted_to_get_pregnant']!= null && trim($data['has_patient_wanted_to_get_pregnant'])!= ''){
+	    if($data['has_patient_wanted_to_get_pregnant'] == 1){
+		$hasPatientWantedtoGetPregnant = "Yes - 1";
+	    }else if($data['has_patient_wanted_to_get_pregnant'] == 2){
+		$hasPatientWantedtoGetPregnant = "No - 2";
+	    }else if($data['has_patient_wanted_to_get_pregnant'] == 88){
+		$hasPatientWantedtoGetPregnant = "Don't Know - 88";
+	    }else if($data['has_patient_wanted_to_get_pregnant'] == 99){
+		$hasPatientWantedtoGetPregnant = "Refused - 99";
+	    }else if($data['has_patient_wanted_to_get_pregnant'] == 2222){
+		$hasPatientWantedtoGetPregnant = "Response Not Available - 2222";
+	    }else{
+		$hasPatientWantedtoGetPregnant = ucwords($data['has_patient_wanted_to_get_pregnant']);
+	    }
+	}
+	$hasPatientWantedtoHaveaBabyLater = '';
+	if($data['has_patient_wanted_to_have_a_baby_later']!= null && trim($data['has_patient_wanted_to_have_a_baby_later'])!= ''){
+	    if($data['has_patient_wanted_to_have_a_baby_later'] == 1){
+		$hasPatientWantedtoHaveaBabyLater = "Wanted baby later - 1";
+	    }else if($data['has_patient_wanted_to_have_a_baby_later'] == 2){
+		$hasPatientWantedtoHaveaBabyLater = "Did not want any(more) - 2";
+	    }else if($data['has_patient_wanted_to_have_a_baby_later'] == 88){
+		$hasPatientWantedtoHaveaBabyLater = "Don't Know - 88";
+	    }else if($data['has_patient_wanted_to_have_a_baby_later'] == 99){
+		$hasPatientWantedtoHaveaBabyLater = "Refused - 99";
+	    }else if($data['has_patient_wanted_to_have_a_baby_later'] == 2222){
+		$hasPatientWantedtoHaveaBabyLater = "Response Not Available - 2222";
+	    }else{
+		$hasPatientWantedtoHaveaBabyLater = ucwords($data['has_patient_wanted_to_have_a_baby_later']);
 	    }
 	}
 	$noofTimesCondomUsedBeforePregnancy = '';
@@ -785,17 +864,84 @@ if(count($dataResult) > 0){
 	    }
 	}
 	$hasPatientAfraidofAnyone = '';
-	if($data['is_patient_afraid_of_anyone']!= null && trim($data['is_patient_afraid_of_anyone'])!= ''){
-	    if($data['is_patient_afraid_of_anyone'] == 1){
-		$hasPatientAfraidofAnyone = "Yes - 1";
-	    }else if($data['is_patient_afraid_of_anyone'] == 2){
-		$hasPatientAfraidofAnyone = "No - 2";
-	    }else if($data['is_patient_afraid_of_anyone'] == 88){
-		$hasPatientAfraidofAnyone = "Don't Know - 88";
-	    }else if($data['is_patient_afraid_of_anyone'] == 99){
-		$hasPatientAfraidofAnyone = "Refused - 99";
-	    }else if($data['is_patient_afraid_of_anyone'] == 2222){
-		$hasPatientAfraidofAnyone = "Response Not Available - 2222";
+	$patientAfraidofAnyone = '';
+        $patientAfraidofOther = '';
+	if($data['form_version'] == 2){
+	    if($data['is_patient_afraid_of_anyone']!= null && trim($data['is_patient_afraid_of_anyone'])!= ''){
+		$patientAfraidofPeople = explode(',',$data['is_patient_afraid_of_anyone']);
+		$patientAfraidofGroup = array();
+		for($i=0;$i<count($patientAfraidofPeople);$i++){
+		    $patientAfraidofGroup[] = $keyArray[$patientAfraidofPeople[$i]];
+		}
+		$patientAfraidofAnyone = str_replace(',',', ',implode(',',$patientAfraidofGroup));
+	    }else if($data['patient_afraid_of_other']!= null && trim($data['patient_afraid_of_other'])!= ''){
+	       $patientAfraidofOther = ucfirst($data['patient_afraid_of_other']);
+	    }
+	}else{
+	   if($data['is_patient_afraid_of_anyone']!= null && trim($data['is_patient_afraid_of_anyone'])!= ''){
+		if($data['is_patient_afraid_of_anyone'] == 1){
+		    $hasPatientAfraidofAnyone = "Yes - 1";
+		}else if($data['is_patient_afraid_of_anyone'] == 2){
+		    $hasPatientAfraidofAnyone = "No - 2";
+		}else if($data['is_patient_afraid_of_anyone'] == 88){
+		    $hasPatientAfraidofAnyone = "Don't Know - 88";
+		}else if($data['is_patient_afraid_of_anyone'] == 99){
+		    $hasPatientAfraidofAnyone = "Refused - 99";
+		}else if($data['is_patient_afraid_of_anyone'] == 2222){
+		    $hasPatientAfraidofAnyone = "Response Not Available - 2222";
+		}
+	    } 
+	}
+	//Go girls teen club
+	//club participation
+	$hasPatientEverParticipatedInaClupforAdolescents = '';
+	if($data['has_patient_ever_participated_in_a_clup_for_adolescents']!= null && trim($data['has_patient_ever_participated_in_a_clup_for_adolescents'])!= ''){
+	    if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 1){
+		$hasPatientEverParticipatedInaClupforAdolescents = "Yes, a Go Girls! club - 1";
+	    }else if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 2){
+		$hasPatientEverParticipatedInaClupforAdolescents = "Yes, a different club - 2";
+	    }else if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 3){
+		$hasPatientEverParticipatedInaClupforAdolescents = "No - 3";
+	    }else if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 88){
+		$hasPatientEverParticipatedInaClupforAdolescents = "Don't Know - 88";
+	    }else if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 99){
+		$hasPatientEverParticipatedInaClupforAdolescents = "Refused - 99";
+	    }else if($data['has_patient_ever_participated_in_a_clup_for_adolescents'] == 2222){
+		$hasPatientEverParticipatedInaClupforAdolescents = "Response Not Available - 2222";
+	    }
+	}
+	$timeofPatientParticipateinClub = '';
+	if($data['time_of_patient_participate_in_club']!= null && trim($data['time_of_patient_participate_in_club'])!= ''){
+	    if($data['time_of_patient_participate_in_club'] == 1){
+		$timeofPatientParticipateinClub = "Currently Participating - 1";
+	    }else if($data['time_of_patient_participate_in_club'] == 2){
+		$timeofPatientParticipateinClub = "< 3 months ago - 2";
+	    }else if($data['time_of_patient_participate_in_club'] == 3){
+		$timeofPatientParticipateinClub = "3-6 months ago - 3";
+	    }else if($data['time_of_patient_participate_in_club'] == 4){
+		$timeofPatientParticipateinClub = "7-12 months ago - 4";
+	    }else if($data['time_of_patient_participate_in_club'] == 5){
+		$timeofPatientParticipateinClub = "12 months - 5";
+	    }else if($data['time_of_patient_participate_in_club'] == 88){
+		$timeofPatientParticipateinClub = "Don't Know - 88";
+	    }else if($data['time_of_patient_participate_in_club'] == 99){
+		$timeofPatientParticipateinClub = "Refused - 99";
+	    }else if($data['time_of_patient_participate_in_club'] == 2222){
+		$timeofPatientParticipateinClub = "Response Not Available - 2222";
+	    }
+	}
+	$hasPatientEverParticipatedinMothersGroup = '';
+	if($data['has_patient_ever_participated_in_mothers_group']!= null && trim($data['has_patient_ever_participated_in_mothers_group'])!= ''){
+	    if($data['has_patient_ever_participated_in_mothers_group'] == 1){
+		$hasPatientEverParticipatedinMothersGroup = "Yes - 1";
+	    }else if($data['has_patient_ever_participated_in_mothers_group'] == 2){
+		$hasPatientEverParticipatedinMothersGroup = "No - 3";
+	    }else if($data['has_patient_ever_participated_in_mothers_group'] == 88){
+		$hasPatientEverParticipatedinMothersGroup = "Don't Know - 88";
+	    }else if($data['has_patient_ever_participated_in_mothers_group'] == 99){
+		$hasPatientEverParticipatedinMothersGroup = "Refused - 99";
+	    }else if($data['has_patient_ever_participated_in_mothers_group'] == 2222){
+		$hasPatientEverParticipatedinMothersGroup = "Response Not Available - 2222";
 	    }
 	}
 	//pdf content
@@ -828,12 +974,20 @@ if(count($dataResult) > 0){
 	        $html .= '</table>';
 	    $html .='</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Demographic Characteristics</td></tr>';
+	    if($data['form_version'] == 2){
+	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q0. What is your age?</td></tr>';
+               $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$participantAge.'</td></tr>';
+	    }
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q1. What kind of work/occupation do you do most of the time?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$occupation.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q2. Have you ever attended school?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverAttendedSchool.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q2A. What was the highest level of education that you completed or are attending now?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$degree.'</td></tr>';
+	    if($data['form_version'] == 2){
+	        $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q2B. Are you attending school now?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$isParticipantAttendingSchoolNow.'</td></tr>';
+	    }
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q3. Have you <span style="text-decoration:underline;">ever</span> been married or lived with a partner in a union as if married?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientEverBeenMarried.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q3A. How old were you when you <span style="text-decoration:underline;">first</span> got married or lived with a partner in a union?</td></tr>';
@@ -843,12 +997,20 @@ if(count($dataResult) > 0){
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q3C. What is your marital status <span style="text-decoration:underline;">now</span>?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$maritalStatus.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">HIV Testing History</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q4. Have you ever been tested for HIV?</td></tr>';
+	    if($data['form_version'] == 2){
+	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q4. [BEFORE TODAY] Have you ever been tested for HIV?</td></tr>';
+	    }else{
+	      $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q4. Have you ever been tested for HIV?</td></tr>';
+	    }
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenTestedforHIV.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q4A. When was the <span style="text-decoration:underline;">most recent</span> time you were tested for HIV?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$timeofMostRecentHIVTest.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q4B. What was the result of that HIV test?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$resultofMostRecentHIVTest.'</td></tr>';
+	    if($data['form_version'] == 2){
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q4C. Where were you tested for HIV in the community or at a facility?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$placeofLastHIVTest.'</td></tr>';
+	    }
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Sexual Activity and History of Sexually Transmitted Infections</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q5. How old were you when you had sexual intercourse for the very <span style="text-decoration:underline;">first</span> time?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$ageAtFirstSex.'</td></tr>';
@@ -874,11 +1036,21 @@ if(count($dataResult) > 0){
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$mostRecentTimeofReceivingGiftforSex.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q14. How many times have you been pregnant?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesBeenPregnant.'</td></tr>';
+	    if($data['form_version'] == 2){
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q14A. When you got pregnant this time, did you want to get pregnant?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientWantedtoGetPregnant.'</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q14B. Did you want to have a baby later on or did you not want any(more) children?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientWantedtoHaveaBabyLater.'</td></tr>';
+	    }
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedBeforePregnancy.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$noofTimesCondomUsedAfterPregnancy.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q17. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?</td></tr>';
+	    if($data['form_version'] == 2){
+	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q17. In the past year, did you have symptoms such as <span style="text-decoration:underline;">abnormal</span> genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?</td></tr>';
+	    }else{
+	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q17. In the past year, did you have symptoms such as genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?</td></tr>';
+	    }
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHadPaininLowerAbdomen.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q17A. Were you treated for these symptoms?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientBeenTreatedforLowerAbdomenPain.'</td></tr>';
@@ -893,10 +1065,8 @@ if(count($dataResult) > 0){
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientOftenHad4rmoreDrinkswithAlcoholonOneOccasion.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q22. Have you <span style="text-decoration:underline;">ever</span> tried recreational drugs?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverTriedRecreationalDrugs.'</td></tr>';
-	    if((int)$data['has_patient_ever_tried_recreational_drugs'] == 1){
-	        $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs?</td></tr>';
-                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientHadRecreationalDrugsInLastSixMonths.'</td></tr>';
-	    }
+	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span style="text-decoration:underline;">last 6 months</span>, have you taken any recreational drugs?</td></tr>';
+            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$hasPatientHadRecreationalDrugsInLastSixMonths.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Abuse</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q23. Have you ever been emotionally or physically abused by your partner or your loved one?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverBeenAbusedBySomeone.'</td></tr>';
@@ -906,8 +1076,24 @@ if(count($dataResult) > 0){
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientHurtBySomeoneDuringPregnancy.'</td></tr>';
 	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q26. Within the last year, has anyone forced you to have sexual activities?</td></tr>';
             $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientForcedforSexBySomeoneWithinLastYear.'</td></tr>';
-	    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q27. Are you afraid of your partner or anyone listed above?</td></tr>';
-            $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientAfraidofAnyone.'</td></tr>';
+	    if($data['form_version'] == 2){
+	        $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q27. Are you afraid of any of the following people?</td></tr>';
+		if(trim($patientAfraidofAnyone)!= ''){
+		    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientAfraidofAnyone.'</td></tr>';
+		}else{
+                    $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$patientAfraidofOther.'</td></tr>';
+		}
+		$html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:16px;">Go Girls Teen Club</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q28. Have you ever participated in a club for adolescents? If YES, was it a Go Girls! club or a different club?</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverParticipatedInaClupforAdolescents.'</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;Q28A. When did you participate in the club?</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;'.$timeofPatientParticipateinClub.'</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q29. Have you ever participated in a mother\'s group?</td></tr>';
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientEverParticipatedinMothersGroup.'</td></tr>';
+	    }else{
+		$html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Q27. Are you afraid of your partner or anyone listed above?</td></tr>';
+                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">'.$hasPatientAfraidofAnyone.'</td></tr>';
+	    }
 	    if($data['comment']!= null && trim($data['comment'])!= ''){
 	       $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;font-weight:bold;">Comments</td></tr>';
                $html .='<tr><td colspan="3" style="line-height:20px;font-size:11px;">&nbsp;'.ucfirst($data['comment']).'</td></tr>';

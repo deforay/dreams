@@ -1057,6 +1057,8 @@ if(trim($countryId)!= ''){
                 </div>
             </div>
             <div class="col s12" style="margin-top:10px;">
+		<input type="hidden" name="formVersion" value="1"/>
+		<input type="hidden" id="participantEligibility" name="participantEligibility" value="1"/>
                 <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
                 <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                 <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
@@ -1074,13 +1076,13 @@ if(trim($countryId)!= ''){
             selectYears: 100, // Creates a dropdown of 100 years to control year
             format: 'dd/mm/yyyy',
 	    	max: new Date('Today'),
-			closeOnSelect: true,
-			closeOnClear: true,
-			onSet: function(e){
-				if(e.select != undefined && e.select != null){
-					$('.picker__close').click();
-				}
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
 			}
+		    }
         });
     });
     

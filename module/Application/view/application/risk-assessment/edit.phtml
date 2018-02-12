@@ -1061,6 +1061,8 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                 </div>
             </div>
             <div class="col s12" style="margin-top:10px;">
+		<input type="hidden" name="formVersion" value="1"/>
+		<input type="hidden" id="participantEligibility" name="participantEligibility" value="1"/>
                 <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
                 <input id="ancRapidRecencyId" name="ancRapidRecencyId" type="hidden" value="<?php echo (isset($row->anc_rapid_recency_id))?base64_encode($row->anc_rapid_recency_id):''; ?>"/>
                 <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
