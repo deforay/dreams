@@ -20,7 +20,7 @@ if(trim($countryId)!= ''){
        </div>
     </div>
     <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
-        <form id="addRiskAssessmentForm" name="addRiskAssessmentForm" method="post" action="<?php echo $this->url('add-clinic-risk-assessment',array('action'=>'add')); ?>">
+        <form id="addRiskAssessmentForm" name="addRiskAssessmentForm" method="post" action="<?php echo $this->url('add-clinic-risk-assessment'); ?>">
         <div class="card">
             <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
             <fieldset style="border-color:#2196F3;border-style:solid;">
@@ -265,7 +265,7 @@ if(trim($countryId)!= ''){
 		    <label for="everBeenMarriedYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
                     <input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="2" type="radio">
 		    <label for="everBeenMarriedNo" class="active">No - 2 </label>&nbsp;&nbsp;
-		    <input id="everBeenMarriedDK" class="with-gap isRequired" name="everBeenMarried" value="88" type="radio">
+		    <input id="everBeenMarriedDK" class="with-gap" name="everBeenMarried" value="88" type="radio">
 		    <label for="everBeenMarriedDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
                     <input id="everBeenMarriedR" class="with-gap" name="everBeenMarried" value="99" type="radio">
 		    <label for="everBeenMarriedR" class="active">Refused - 99 </label>&nbsp;&nbsp;

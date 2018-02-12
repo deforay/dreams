@@ -1,11 +1,12 @@
 <?php
+
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Json\Json;
 
-class RiskAssessmentController extends AbstractActionController{
+class RiskAssessmentV2Controller extends AbstractActionController{
     public function indexAction(){
         $countryService = $this->getServiceLocator()->get('CountryService');
         $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
@@ -85,7 +86,7 @@ class RiskAssessmentController extends AbstractActionController{
             $riskAssessmentId = base64_decode($this->params()->fromRoute('id'));
             $result = $riskAssessmentService->getRiskAssessment($riskAssessmentId);
             if($result){
-                $preventUrl = '/clinic/risk-assessment/'.$encodedCountryId;
+                $preventUrl = '/clinic/risk-assessment/v2/'.$encodedCountryId;
                 if($result->status == 2){ return $this->redirect()->toUrl($preventUrl); }
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
                 $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
@@ -101,7 +102,7 @@ class RiskAssessmentController extends AbstractActionController{
             }
        }else{
           return $this->redirect()->toRoute('home');
-       }
+       } 
     }
     
     public function viewAction(){
@@ -112,8 +113,8 @@ class RiskAssessmentController extends AbstractActionController{
         $result = $riskAssessmentService->getRiskAssessment($riskAssessmentId);
         if($result){
          return new ViewModel(array(
-                  'row'=>$result,
-                  'countryId'=>$countryId
+                'row'=>$result,
+                'countryId'=>$countryId
               ));
         }else{
          return $this->redirect()->toRoute('home');
@@ -121,109 +122,5 @@ class RiskAssessmentController extends AbstractActionController{
        }else{
         return $this->redirect()->toRoute('home');
        }
-    }
-    
-    public function exportExcelAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response = $riskAssessmentService->exportRiskAssessmentInExcel($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
-    }
-    
-    public function exportIpvReportAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response = $riskAssessmentService->exportIPVReportInExcel($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
-    }
-    
-    public function generatePdfAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $dataResult = $riskAssessmentService->generateRiskAssessmentPdf($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('dataResult' =>$dataResult));
-            $viewModel->setTerminal(true);
-           return $viewModel;
-        }
-    }
-    
-    public function lockAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response=$riskAssessmentService->lockRiskAssessment($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
-    }
-    
-    public function unlockAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response=$riskAssessmentService->unlockRiskAssessment($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
-    }
-    
-    public function ancAsanteResultAction(){
-        $request = $this->getRequest();
-        if($request->isPost()){
-            $parameters = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $result = $riskAssessmentService->getANCAsanteResults($parameters);
-            return $this->getResponse()->setContent(Json::encode($result));
-        }else{
-            $countryId = base64_decode($this->params()->fromRoute('countryId'));
-            if(isset($countryId) && trim($countryId)!= ''){
-                $countryService = $this->getServiceLocator()->get('CountryService');
-                $countryInfo = $countryService->getCountry($countryId);
-                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList = $ancSiteService->getActiveAncSites('risk-assessment',$countryId,$province ='',$district ='');
-                $districts = $countryService->getDistrictsByCountry($countryId);
-                return new ViewModel(array(
-                    'ancSites'=>$ancSiteList,
-                    'districts'=>$districts,
-                    'countryInfo'=>$countryInfo
-                ));
-            }else{
-               return $this->redirect()->toRoute('home');
-            }
-        }
-    }
-    
-    public function exportAncAsanteResultAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
-            $response=$riskAssessmentService->exportAsanteResultInExcel($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('response' =>$response));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
     }
 }

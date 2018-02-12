@@ -855,3 +855,20 @@ ALTER TABLE `data_collection` ADD `last_printed_by_anc` INT(11) NULL DEFAULT NUL
 ALTER TABLE `data_collection_event_log` ADD `last_printed_by_lab` INT(11) NULL DEFAULT NULL AFTER `lab_print_status`, ADD `last_printed_on_lab` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_lab`;
 
 ALTER TABLE `data_collection_event_log` ADD `last_printed_by_anc` INT(11) NULL DEFAULT NULL AFTER `anc_print_status`, ADD `last_printed_on_anc` DATETIME NULL DEFAULT NULL AFTER `last_printed_by_anc`;
+
+--Pal 05/02/2018
+ALTER TABLE `clinic_risk_assessment` ADD `form_version` INT(11) NOT NULL DEFAULT '1' AFTER `assessment_id`;
+
+--Pal 08/02/2018
+ALTER TABLE `clinic_risk_assessment` ADD `participant_age` VARCHAR(45) NULL DEFAULT NULL AFTER `has_participant_received_dreams_services`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `is_participant_attending_school_now` VARCHAR(45) NULL DEFAULT NULL AFTER `patient_degree`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `place_of_last_HIV_test` VARCHAR(45) NULL DEFAULT NULL AFTER `last_HIV_test_status`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_wanted_to_get_pregnant` VARCHAR(45) NULL DEFAULT NULL AFTER `no_of_times_been_pregnant`, ADD `has_patient_wanted_to_have_a_baby_later` VARCHAR(45) NULL DEFAULT NULL AFTER `has_patient_wanted_to_get_pregnant`;
+
+ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_participated_in_a_clup_for_adolescents` VARCHAR(45) NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`, ADD `time_of_patient_participate_in_club` VARCHAR(45) NULL DEFAULT NULL AFTER `has_patient_ever_participated_in_a_clup_for_adolescents`, ADD `has_patient_ever_participated_in_mothers_group` VARCHAR(45) NULL DEFAULT NULL AFTER `time_of_patient_participate_in_club`;
+
+--Pal 12/02/2018
+ALTER TABLE `clinic_risk_assessment` ADD `patient_afraid_of_other` VARCHAR(255) NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`; 

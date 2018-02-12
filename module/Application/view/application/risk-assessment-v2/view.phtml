@@ -1,0 +1,1549 @@
+<?php
+use Application\Service\CommonService;
+$common = new CommonService();
+if(trim($countryId)!= ''){
+    $link = "/clinic/risk-assessment/v2/".base64_encode($countryId);
+}else{
+   $link = "/clinic/risk-assessment/v2";
+}
+$keyArray = array('0'=>'','1'=>'Husband - 1','2'=>'Ex-Husband - 2','3'=>'Boyfriend - 3','4'=>'Stranger - 4','88'=>'Don\'t Know - 88','99'=>'Refused - 99','2222'=>'Response Not Available - 2222');
+$interviewDate = '';
+if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+    $interviewDate = $common->viewDateFormat($row->interview_date);
+}
+$participantAge = '';
+if($row->participant_age!= null && trim($row->participant_age)!= '' && $row->participant_age[0] == '@'){
+   $participantAge = substr($row->participant_age,1);
+}else if($row->participant_age!= null && trim($row->participant_age)!= ''){
+  $participantAge = $row->participant_age; 
+}
+$participantEligibility = 1;
+if((int)$participantAge < 13 || (int)$participantAge >= 25){
+   $participantEligibility = 0;
+}else if($row->last_HIV_test_status!= null && trim($row->last_HIV_test_status)!= '' && (int)$row->last_HIV_test_status == 2){
+   $participantEligibility = 0;
+}
+//recreational drugs
+$hasPatientHadRecreationalDrugsInLastSixMonths = '';
+$recreationalDrugs = '';
+if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!= ''){
+    $recreationaldata = json_decode($row->has_patient_had_recreational_drugs_in_last_six_months,true);
+    $hasPatientHadRecreationalDrugsInLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
+    $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
+}
+//patient abused by
+$everAbusedBy = '';
+$patientAbusedBy = '';
+$patientAbusedByInNoofTimes = '';
+if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patient_ever_been_abused_by_someone)!= ''){
+    $patientAbusedBydata = json_decode($row->has_patient_ever_been_abused_by_someone,true);
+    $everAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
+    if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= '' && $patientAbusedBydata['no_of_times'][0] == '@'){
+        $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
+    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
+       $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
+    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 99){
+       $patientAbusedByInNoofTimes = 'Refused - 99';
+    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 2222){
+       $patientAbusedByInNoofTimes = 'Response Not Available - 2222';
+    }else if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= ''){
+       $patientAbusedByInNoofTimes = ucwords($patientAbusedBydata['no_of_times']);
+    }
+    if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
+        $patientAbusedBy = substr($patientAbusedBydata['who_abused'],1);
+    }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused']) == 'not applicable'){
+        $patientAbusedBy = 'Not Applicable';
+    }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+        $abusedppl = explode(',',$patientAbusedBydata['who_abused']);
+        $abusedGroup = array();
+        for($i=0;$i<count($abusedppl);$i++){
+            $abusedGroup[] = $keyArray[$abusedppl[$i]];
+        }
+        $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
+    }
+}
+//patient hurt by someone within last year
+$everHurtedBy = '';
+$patientHurtByWithinLastYear = '';
+$patientHurtByInNoofTimes = '';
+if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+    $patientHurtBydata = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
+    $everHurtedBy = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
+    if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= '' && $patientHurtBydata['no_of_times'][0] == '@'){
+        $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
+    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
+       $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
+    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 99){
+       $patientHurtByInNoofTimes = 'Refused - 99';
+    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 2222){
+       $patientHurtByInNoofTimes = 'Response Not Available - 2222';
+    }else if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= ''){
+       $patientHurtByInNoofTimes = ucwords($patientHurtBydata['no_of_times']);
+    }
+    if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
+        $patientHurtByWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
+    }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt']) == 'not applicable'){
+        $patientHurtByWithinLastYear = 'Not Applicable';
+    }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+        $hurtedppl = explode(',',$patientHurtBydata['who_hurt']);
+        $hurtedGroup = array();
+        for($i=0;$i<count($hurtedppl);$i++){
+            $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+        }
+        $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
+    }
+}
+//patient hurt by someone during pregnancy
+$everHurtedBydp = 'not applicable';
+$patientHurtByDuringPregnancy = 'not applicable';
+$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
+if(trim($everHurtedBy) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+    $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
+    $everHurtedBydp = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
+    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= '' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+        $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
+    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
+       $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
+    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 99){
+       $patientHurtByDuringPregnancyInNoofTimes = 'Refused - 99';
+    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 2222){
+       $patientHurtByDuringPregnancyInNoofTimes = 'Response Not Available - 2222';
+    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= ''){
+       $patientHurtByDuringPregnancyInNoofTimes = ucwords($patientHurtByDuringPregnancydata['no_of_times']);
+    }
+    if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
+        $patientHurtByDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+    }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt']) == 'not applicable'){
+        $patientHurtByDuringPregnancy = 'Not Applicable';
+    }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+        $hurtedppl = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
+        $hurtedGroup = array();
+        for($i=0;$i<count($hurtedppl);$i++){
+            $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
+        }
+        $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
+    }
+}
+//patient forced for sex within last year
+$everForcedforSex = '';
+$patientForcedforSexBy = '';
+$patientForcedforSexInNoofTimes = '';
+if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+    $patientForcedforSexdata = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
+    $everForcedforSex = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
+    if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!='' && $patientForcedforSexdata['no_of_times'][0] == '@'){
+        $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
+    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
+       $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
+    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 99){
+       $patientForcedforSexInNoofTimes = 'Refused - 99';
+    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 2222){
+       $patientForcedforSexInNoofTimes = 'Response Not Available - 2222';
+    }else if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= ''){
+       $patientForcedforSexInNoofTimes = ucwords($patientForcedforSexdata['no_of_times']);
+    }
+    if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
+        $patientForcedforSexBy = substr($patientForcedforSexdata['who_forced'],1);
+    }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced']) == 'not applicable'){
+        $patientForcedforSexBy = 'Not Applicable';
+    }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+        $forcedbyppl = explode(',',$patientForcedforSexdata['who_forced']);
+        $forcedbyGroup = array();
+        for($i=0;$i<count($forcedbyppl);$i++){
+            $forcedbyGroup[] = $keyArray[$forcedbyppl[$i]];
+        }
+        $patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
+    }
+}
+//patient afraid of anyone/other
+$patientAfraidofAnyone = '';
+$patientAfraidofOther = '';
+if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_anyone)!= ''){
+   $patientAfraidofPeople = explode(',',$row->is_patient_afraid_of_anyone);
+   $patientAfraidofGroup = array();
+    for($i=0;$i<count($patientAfraidofPeople);$i++){
+	$patientAfraidofGroup[] = $keyArray[$patientAfraidofPeople[$i]];
+    }
+    $patientAfraidofAnyone = str_replace(',',', ',implode(',',$patientAfraidofGroup));
+}else if($row->patient_afraid_of_other!= null && trim($row->patient_afraid_of_other)!= ''){
+   $patientAfraidofOther = $row->patient_afraid_of_other;
+}
+?>
+<style>
+    .card p{font-size:12.5px;font-weight:bold;}
+    .highlightedTxt{
+	text-decoration:underline;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">View Risk Assessment</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="/" class="breadcrumb">Home</a>
+            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">View Risk Assessment</a>
+       </div>
+    </div>
+    <div class="row content-container" style="margin-bottom:20px;padding: 0 20px;">
+        <div class="card">
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+            <fieldset style="border-color:#2196F3;border-style:solid;">
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancSite">ANC Site</label><br/>
+                            <p>
+                                <?php echo ucwords($row->anc_site_name);?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="patientBarcodeId" class="">Patient Barcode ID </label><br>
+                            <p><?php echo $row->patient_barcode_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="interviewerName" class="">Interviewer Name </label><br>
+                            <p><?php echo ucwords($row->interviewer_name); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancPatientId" class="">ANC Patient ID </label><br>
+                            <p><?php echo $row->anc_patient_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="interviewDate" class="">Interview Date </label><br>
+                            <p><?php echo $interviewDate; ?></p>
+                        </div>
+                    </div>
+                    <!--<div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="hasParticipantReceivedDreamsServices" class="">Has participant received DREAMS services ?</label><br>
+                            <p>< ?php echo ($row->has_participant_received_dreams_services!= null && trim($row->has_participant_received_dreams_services)!= '')?ucfirst($row->has_participant_received_dreams_services):''; ?></p>
+                        </div>
+                    </div>-->
+                </div>
+            </fieldset>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Recency Test Result</strong></h6>
+	    <fieldset id="rtrSection" style="height:90px;border-color:#F44336;border-style:solid;">
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s3">
+			<div class="input-field col m12 s12" style="margin-top:6px;">
+			   <label for="hasPatientHadRapidRecencyTest" class="">Rapid Recency Result</label> <br>
+			   <p>
+                           <?php
+                            if(isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test!= null && trim($row->has_patient_had_rapid_recency_test)!= ''){
+                                echo ucwords($row->has_patient_had_rapid_recency_test);
+                            }
+                           ?>
+                           </p>
+			</div>
+		    </div>
+                    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
+			<div class="input-field col m12 s12" style="margin-top:6px;">
+                           <label for="rrrControl">Control Line </label><br>
+                           <p>
+                           <?php
+                            if(isset($row->control_line) && $row->control_line!= null && trim($row->control_line)!= ''){
+                               if($row->control_line == 'positive'){
+                                echo 'Present (Positive/P)';
+                               }else if($row->control_line == 'negative'){
+                                echo 'Absent (Negative/N)';
+                               }else if($row->control_line == 'invalid'){
+                                echo 'Invalid';
+                               }else if($row->control_line == 'result-not-available'){
+                                echo 'Result not available';
+                               }
+                            }
+                            ?>
+                           </p>
+			</div>
+		    </div>
+		    <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none'; ?>;">
+			<div class="input-field col m12 s12" style="margin-top:6px;">
+                           <label for="rrrHIVDiagnostic">Positive Verification Line </label><br>
+                           <p>
+                           <?php
+                            if(isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line!= null && trim($row->HIV_diagnostic_line)!= ''){
+                               if($row->HIV_diagnostic_line == 'positive'){
+                                echo 'Present (Positive/P)';
+                               }else if($row->HIV_diagnostic_line == 'negative'){
+                                echo 'Absent (Negative/N)';
+                               }else if($row->HIV_diagnostic_line == 'invalid'){
+                                echo 'Invalid';
+                               }else if($row->HIV_diagnostic_line == 'result-not-available'){
+                                echo 'Result not available';
+                               }
+                            }
+                            ?>
+                           </p>
+			</div>
+		    </div>
+		    <div class="col s3 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none'; ?>;">
+			<div class="input-field col m12 s12" style="margin-top:6px;">
+                            <label for="rrrRecency">Long Term (Recency) Line </label><br>
+                            <p>
+                            <?php
+                            if(isset($row->recency_line) && $row->recency_line!= null && trim($row->recency_line)!= ''){
+                               if($row->recency_line == 'long term'){
+                                echo 'Present (Long Term/LT)';
+                               }else if($row->recency_line == 'recent'){
+                                echo 'Absent (Recent/R)';
+                               }else if($row->recency_line == 'invalid'){
+                                echo 'Invalid';
+                               }else if($row->recency_line == 'result-not-available'){
+                                echo 'Result not available';
+                               }
+                            }
+                            ?>
+                            </p>
+			</div>
+		    </div>
+		</div>
+	    </fieldset>
+            <h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q0. What is your age?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->participant_age!= null && trim($row->participant_age)!= ''){
+                            if($row->participant_age[0] == '@'){
+                                echo substr($row->participant_age,1).' Year(s)';
+                            }else if($row->participant_age == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->participant_age == 99){
+                                echo "Refused - 99";
+                            }else if($row->participant_age == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->participant_age);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q1. What kind of work/occupation do you do most of the time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p><?php echo (isset($row->occupationName))?ucwords($row->occupationName)." - ".$row->occupation_code:''; ?></p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q2. Have you ever attended school?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_attended_school!= null && trim($row->has_patient_ever_attended_school)!= ''){
+                            if($row->has_patient_ever_attended_school == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_attended_school == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_attended_school == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_attended_school == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_attended_school == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q2A. What was the highest level of education that you completed or are attending now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->patient_degree!= null && trim($row->patient_degree)!= ''){
+                            if($row->patient_degree == 1){
+                                echo "Primary/Vocational - 1";
+                            }else if($row->patient_degree == 2){
+                                echo "Secondary - 2";
+                            }else if($row->patient_degree == 3){
+                                echo "University/College - 3";
+                            }else if($row->patient_degree == 88){
+                                echo "Don't know - 88";
+                            }else if($row->patient_degree == 99){
+                                echo "Refused - 99";
+                            }else if($row->patient_degree == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->patient_degree);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q2B. Are you attending school now?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->is_participant_attending_school_now!= null && trim($row->is_participant_attending_school_now)!= ''){
+                            if($row->is_participant_attending_school_now == 1){
+                                echo "Yes - 1";
+                            }else if($row->is_participant_attending_school_now == 2){
+                                echo "No - 2";
+                            }else if($row->is_participant_attending_school_now == 88){
+                                echo "Don't know - 88";
+                            }else if($row->is_participant_attending_school_now == 99){
+                                echo "Refused - 99";
+                            }else if($row->is_participant_attending_school_now == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->is_participant_attending_school_now);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->patient_ever_been_married!= null && trim($row->patient_ever_been_married)!= ''){
+                            if($row->patient_ever_been_married == 1){
+                                echo "Yes - 1";
+                            }else if($row->patient_ever_been_married == 2){
+                                echo "No - 2";
+                            }else if($row->patient_ever_been_married == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->patient_ever_been_married == 99){
+                                echo "Refused - 99";
+                            }else if($row->patient_ever_been_married == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q3A. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= ''){
+                            if($row->age_at_first_marriage[0] == '@'){
+                                echo substr($row->age_at_first_marriage,1).' Year(s)';
+                            }else if($row->age_at_first_marriage == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->age_at_first_marriage == 99){
+                                echo "Refused - 99";
+                            }else if($row->age_at_first_marriage == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->age_at_first_marriage);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q3B. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->patient_ever_been_widowed!= null && trim($row->patient_ever_been_widowed)!= ''){
+                            if($row->patient_ever_been_widowed == 1){
+                                echo "Yes - 1";
+                            }else if($row->patient_ever_been_widowed == 2){
+                                echo "No - 2";
+                            }else if($row->patient_ever_been_widowed == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->patient_ever_been_widowed == 99){
+                                echo "Refused - 99";
+                            }else if($row->patient_ever_been_widowed == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->patient_ever_been_widowed);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q3C. What is your marital status <span class="highlightedTxt">now</span>?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->current_marital_status!= null && trim($row->current_marital_status)!= ''){
+                            if($row->current_marital_status == 1){
+                                echo "Married/Cohabiting - 1";
+                            }else if($row->current_marital_status == 2){
+                                echo "Never Married/Cohabiting - 2";
+                            }else if($row->current_marital_status == 3){
+                                echo "Widowed - 3";
+                            }else if($row->current_marital_status == 4){
+                                echo "Separated - 4";
+                            }else if($row->current_marital_status == 5){
+                                echo "Divorced - 5";
+                            }else if($row->current_marital_status == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->current_marital_status == 99){
+                                echo "Refused - 99";
+                            }else if($row->current_marital_status == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->current_marital_status);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>HIV Testing History</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q4. [BEFORE TODAY] Have you ever been tested for HIV?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_been_tested_for_HIV!= null && trim($row->has_patient_ever_been_tested_for_HIV)!= ''){
+                            if($row->has_patient_ever_been_tested_for_HIV == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_been_tested_for_HIV == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_been_tested_for_HIV == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_been_tested_for_HIV == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_been_tested_for_HIV == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q4A. When was the <span class="highlightedTxt">most recent</span> time you were tested for HIV?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->time_of_last_HIV_test!= null && trim($row->time_of_last_HIV_test)!= ''){
+                            if($row->time_of_last_HIV_test == 1){
+                                echo "< 3 Months Ago - 1";
+                            }else if($row->time_of_last_HIV_test == 2){
+                                echo "3-6 Months Ago - 2";
+                            }else if($row->time_of_last_HIV_test == 3){
+                                echo "7-12 Months Ago - 3";
+                            }else if($row->time_of_last_HIV_test == 4){
+                                echo "> 12 months - 4";
+                            }else if($row->time_of_last_HIV_test == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->time_of_last_HIV_test == 99){
+                                echo "Refused - 99";
+                            }else if($row->time_of_last_HIV_test == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->time_of_last_HIV_test);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q4B. What was the result of that HIV test?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->last_HIV_test_status!= null && trim($row->last_HIV_test_status)!= ''){
+                            if($row->last_HIV_test_status == 1){
+                                echo "I Did Not Receive Result - 1";
+                            }else if($row->last_HIV_test_status == 2){
+                                echo "HIV Positive - 2";
+                            }else if($row->last_HIV_test_status == 3){
+                                echo "HIV Negative - 3";
+                            }else if($row->last_HIV_test_status == 4){
+                                echo "Indeterminate - 4";
+                            }else if($row->last_HIV_test_status == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->last_HIV_test_status == 99){
+                                echo "Refused - 99";
+                            }else if($row->last_HIV_test_status == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->last_HIV_test_status);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    &nbsp;&nbsp;&nbsp;&nbsp;Q4C. Where were you tested for HIV in the community or at a facility?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->place_of_last_HIV_test!= null && trim($row->place_of_last_HIV_test)!= ''){
+                            if($row->place_of_last_HIV_test == 1){
+                                echo "Facility - 1";
+                            }else if($row->place_of_last_HIV_test == 2){
+                                echo "Community - 2";
+                            }else if($row->place_of_last_HIV_test == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->place_of_last_HIV_test == 99){
+                                echo "Refused - 99";
+                            }else if($row->place_of_last_HIV_test == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->place_of_last_HIV_test);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q5. How old were you when you had sexual intercourse for the very <span class="highlightedTxt">first</span> time?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->age_at_very_first_sex!= null && trim($row->age_at_very_first_sex)!= ''){
+                            if($row->age_at_very_first_sex[0] == '@'){
+                                echo substr($row->age_at_very_first_sex,1).' Year(s)';
+                            }else if($row->age_at_very_first_sex == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->age_at_very_first_sex == 99){
+                                echo "Refused - 99";
+                            }else if($row->age_at_very_first_sex == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q6. The <span class="highlightedTxt">first</span> time you had sex, was it because you wanted to or because you were forced to?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->reason_for_very_first_sex!= null && trim($row->reason_for_very_first_sex)!= ''){
+                            if($row->reason_for_very_first_sex == 1){
+                                echo "Wanted To - 1";
+                            }else if($row->reason_for_very_first_sex == 2){
+                                echo "Forced To - 2";
+                            }else if($row->reason_for_very_first_sex == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->reason_for_very_first_sex == 99){
+                                echo "Refused - 99";
+                            }else if($row->reason_for_very_first_sex == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q7. How many different people have you had sexual intercourse with <span class="highlightedTxt">in your entire life</span>?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= ''){
+                            if($row->no_of_sexual_partners[0] == '@'){
+                                echo substr($row->no_of_sexual_partners,1).' Person(s)';
+                            }else if($row->no_of_sexual_partners == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->no_of_sexual_partners == 99){
+                                echo "Refused - 99";
+                            }else if($row->no_of_sexual_partners == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q8. How many different people have you had sex with in the last 6 months?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= ''){
+                            if($row->no_of_sexual_partners_in_last_six_months[0] == '@'){
+                                echo substr($row->no_of_sexual_partners_in_last_six_months,1).' Person(s)';
+                            }else if($row->no_of_sexual_partners_in_last_six_months == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->no_of_sexual_partners_in_last_six_months == 99){
+                                echo "Refused - 99";
+                            }else if($row->no_of_sexual_partners_in_last_six_months == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q9. What is the HIV status of your <span class="highlightedTxt">spouse/main</span> sexual partner's (person with whom you have sexual intercourse most frequently)?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->partner_HIV_test_status!= null && trim($row->partner_HIV_test_status)!= ''){
+                            if($row->partner_HIV_test_status == 1){
+                                echo "HIV Positive - 1";
+                            }else if($row->partner_HIV_test_status == 2){
+                                echo "HIV Negative - 2";
+                            }else if($row->partner_HIV_test_status == 3){
+                                echo "No Main Sexual Partner - 3";
+                            }else if($row->partner_HIV_test_status == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->partner_HIV_test_status == 99){
+                                echo "Refused - 99";
+                            }else if($row->partner_HIV_test_status == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q10. How old was your <span class="highlightedTxt">spouse/main</span> sexual partner on his last birthday?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= ''){
+                            if($row->age_of_main_sexual_partner_at_last_birthday[0] == '@'){
+                                echo substr($row->age_of_main_sexual_partner_at_last_birthday,1).' Year(s)';
+                            }else if($row->age_of_main_sexual_partner_at_last_birthday == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->age_of_main_sexual_partner_at_last_birthday == 99){
+                                echo "Refused - 99";
+                            }else if($row->age_of_main_sexual_partner_at_last_birthday == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->age_of_main_sexual_partner_at_last_birthday);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q11. Is the age of your <span class="highlightedTxt">spouse/main</span> sexual partner older, younger, or the same age as you?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->age_diff_of_main_sexual_partner!= null && trim($row->age_diff_of_main_sexual_partner)!= ''){
+                            if($row->age_diff_of_main_sexual_partner == 1){
+                                echo "< 5 Years Older - 1";
+                            }else if($row->age_diff_of_main_sexual_partner == 2){
+                                echo "5-10 Years Older - 2";
+                            }else if($row->age_diff_of_main_sexual_partner == 3){
+                                echo ">10 Years Older - 3";
+                            }else if($row->age_diff_of_main_sexual_partner == 4){
+                                echo "Same Age - 4";
+                            }else if($row->age_diff_of_main_sexual_partner == 5){
+                                echo "< 5 Years Younger - 5";
+                            }else if($row->age_diff_of_main_sexual_partner == 6){
+                                echo "5-10 Years Younger - 6";
+                            }else if($row->age_diff_of_main_sexual_partner == 7){
+                                echo ">10 Years Younger - 7";
+                            }else if($row->age_diff_of_main_sexual_partner == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->age_diff_of_main_sexual_partner == 99){
+                                echo "Refused - 99";
+                            }else if($row->age_diff_of_main_sexual_partner == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->age_diff_of_main_sexual_partner);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q12. Is your <span class="highlightedTxt">spouse/main</span> sexual partner circumcised?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->is_partner_circumcised!= null && trim($row->is_partner_circumcised)!= ''){
+                            if($row->is_partner_circumcised == 1){
+                                echo "Yes - 1";
+                            }else if($row->is_partner_circumcised == 2){
+                                echo "No - 2";
+                            }else if($row->is_partner_circumcised == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->is_partner_circumcised == 99){
+                                echo "Refused - 99";
+                            }else if($row->is_partner_circumcised == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->is_partner_circumcised);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q12A. What type of circumcision?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->circumcision!= null && trim($row->circumcision)!= ''){
+                            if($row->circumcision == 1){
+                                echo "Medical Circumcision - 1";
+                            }else if($row->circumcision == 2){
+                                echo "Traditional Circumcision - 2";
+                            }else if($row->circumcision == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->circumcision == 99){
+                                echo "Refused - 99";
+                            }else if($row->circumcision == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->circumcision);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    Q13. Have you ever received money/gifts in exchange for sex?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_received_gift_for_sex!= null && trim($row->has_patient_ever_received_gift_for_sex)!= ''){
+                            if($row->has_patient_ever_received_gift_for_sex == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_received_gift_for_sex == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_received_gift_for_sex == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_received_gift_for_sex == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_received_gift_for_sex == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->has_patient_ever_received_gift_for_sex);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q13A. When did you last receive money/gifts in exchange for sex?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->last_time_of_receiving_gift_for_sex!= null && trim($row->last_time_of_receiving_gift_for_sex)!= ''){
+                            if($row->last_time_of_receiving_gift_for_sex == 1){
+                                echo "< 6 Months Ago - 1";
+                            }else if($row->last_time_of_receiving_gift_for_sex == 2){
+                                echo "6-12 Months Ago - 2";
+                            }else if($row->last_time_of_receiving_gift_for_sex == 3){
+                                echo "> 12 Months Ago - 3";
+                            }else if($row->last_time_of_receiving_gift_for_sex == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->last_time_of_receiving_gift_for_sex == 99){
+                                echo "Refused - 99";
+                            }else if($row->last_time_of_receiving_gift_for_sex == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->last_time_of_receiving_gift_for_sex);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q14. How many times have you been pregnant?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= ''){
+                            if($row->no_of_times_been_pregnant[0] == '@'){
+                                echo substr($row->no_of_times_been_pregnant,1).' Time(s)';
+                            }else if($row->no_of_times_been_pregnant == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->no_of_times_been_pregnant == 99){
+                                echo "Refused - 99";
+                            }else if($row->no_of_times_been_pregnant == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->no_of_times_been_pregnant);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q14A. When you got pregnant this time, did you want to get pregnant?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->has_patient_wanted_to_get_pregnant!= null && trim($row->has_patient_wanted_to_get_pregnant)!= ''){
+                            if($row->has_patient_wanted_to_get_pregnant == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_wanted_to_get_pregnant == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_wanted_to_get_pregnant == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_wanted_to_get_pregnant == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_wanted_to_get_pregnant == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->has_patient_wanted_to_get_pregnant);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q14B. Did you want to have a baby later on or did you not want any(more) children?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->has_patient_wanted_to_have_a_baby_later!= null && trim($row->has_patient_wanted_to_have_a_baby_later)!= ''){
+                            if($row->has_patient_wanted_to_have_a_baby_later == 1){
+                                echo "Wanted baby later - 1";
+                            }else if($row->has_patient_wanted_to_have_a_baby_later == 2){
+                                echo "Did not want any(more) - 2";
+                            }else if($row->has_patient_wanted_to_have_a_baby_later == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_wanted_to_have_a_baby_later == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_wanted_to_have_a_baby_later == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->has_patient_wanted_to_have_a_baby_later);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->no_of_times_condom_used_before_pregnancy!= null && trim($row->no_of_times_condom_used_before_pregnancy)!= ''){
+                            if($row->no_of_times_condom_used_before_pregnancy == 1){
+                                echo "Always - 1";
+                            }else if($row->no_of_times_condom_used_before_pregnancy == 2){
+                                echo "Sometimes - 2";
+                            }else if($row->no_of_times_condom_used_before_pregnancy == 3){
+                                echo "Never - 3";
+                            }else if($row->no_of_times_condom_used_before_pregnancy == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->no_of_times_condom_used_before_pregnancy == 99){
+                                echo "Refused - 99";
+                            }else if($row->no_of_times_condom_used_before_pregnancy == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->no_of_times_condom_used_before_pregnancy);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->no_of_times_condom_used_after_pregnancy!= null && trim($row->no_of_times_condom_used_after_pregnancy)!= ''){
+                            if($row->no_of_times_condom_used_after_pregnancy == 1){
+                                echo "Always - 1";
+                            }else if($row->no_of_times_condom_used_after_pregnancy == 2){
+                                echo "Sometimes - 2";
+                            }else if($row->no_of_times_condom_used_after_pregnancy == 3){
+                                echo "Never - 3";
+                            }else if($row->no_of_times_condom_used_after_pregnancy == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->no_of_times_condom_used_after_pregnancy == 99){
+                                echo "Refused - 99";
+                            }else if($row->no_of_times_condom_used_after_pregnancy == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->no_of_times_condom_used_after_pregnancy);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q17. In the past year, did you have symptoms such as <span class="highlightedTxt">abnormal</span> genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_had_pain_in_lower_abdomen!= null && trim($row->has_patient_had_pain_in_lower_abdomen)!= ''){
+                            if($row->has_patient_had_pain_in_lower_abdomen == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_had_pain_in_lower_abdomen == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_had_pain_in_lower_abdomen == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_had_pain_in_lower_abdomen == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_had_pain_in_lower_abdomen == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q17A. Were you treated for these symptoms?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->has_patient_been_treated_for_lower_abdomen_pain!= null && trim($row->has_patient_been_treated_for_lower_abdomen_pain)!= ''){
+                            if($row->has_patient_been_treated_for_lower_abdomen_pain == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_been_treated_for_lower_abdomen_pain == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_been_treated_for_lower_abdomen_pain == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_been_treated_for_lower_abdomen_pain == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_been_treated_for_lower_abdomen_pain == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->has_patient_been_treated_for_lower_abdomen_pain);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q18. Have you <span class="highlightedTxt">ever</span> been diagnosed or treated for syphilis?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_been_treated_for_syphilis!= null && trim($row->has_patient_ever_been_treated_for_syphilis)!= ''){
+                            if($row->has_patient_ever_been_treated_for_syphilis == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_been_treated_for_syphilis == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_been_treated_for_syphilis == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_been_treated_for_syphilis == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_been_treated_for_syphilis == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q19. Have you ever received a vaccine (HPV vaccine) to prevent cervical cancer, which is caused by a common virus that can be passed through sexual contact?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer!= null && trim($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer)!= ''){
+                            if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Alcohol and drug use</strong></h6>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q20. During the past 6 months, on how many days did you have at least one drink containing alcohol?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->patient_had_drink_with_alcohol_in_last_six_months)!= ''){
+                            if($row->patient_had_drink_with_alcohol_in_last_six_months[0] == '@'){
+                                echo substr($row->patient_had_drink_with_alcohol_in_last_six_months,1).' Day(s)';
+                            }else if($row->patient_had_drink_with_alcohol_in_last_six_months == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->patient_had_drink_with_alcohol_in_last_six_months == 99){
+                                echo "Refused - 99";
+                            }else if($row->patient_had_drink_with_alcohol_in_last_six_months == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q21. How often do you have 4 or more drinks with alcohol on one occasion? (e.g. within 2 hours)
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion!= null && trim($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion)!= ''){
+                            if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 1){
+                                echo "Never - 1";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 2){
+                                echo "Monthly - 2";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 3){
+                                echo "Weekly - 3";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 4){
+                                echo "Daily or On Most Days of The Week - 4";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q22. Have you <span class="highlightedTxt">ever</span> tried recreational drugs?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_tried_recreational_drugs!= null && trim($row->has_patient_ever_tried_recreational_drugs)!= ''){
+                            if($row->has_patient_ever_tried_recreational_drugs == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_tried_recreational_drugs == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_tried_recreational_drugs == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_tried_recreational_drugs == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_tried_recreational_drugs == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+		<div class="col s12">
+		   &nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs?
+		</div>
+	    </div>
+	    <div class="row" style="margin-bottom:0;">
+		<div class="col s12">
+		    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+			<?php
+			if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 1){
+			    echo "Yes - 1,&nbsp;&nbsp;&nbsp;&nbsp;<span style='font-weight:normal;'>Drug(s)</span> - ".ucwords($recreationalDrugs);
+			}else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2){
+			    echo "No - 2";
+			}else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 88){
+			    echo "Don't Know - 88";
+			}else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 99){
+			    echo "Refused - 99";
+			}else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= '' && (int)$hasPatientHadRecreationalDrugsInLastSixMonths == 2222){
+			    echo "Response Not Available - 2222";
+			}else if(trim($hasPatientHadRecreationalDrugsInLastSixMonths)!= ''){
+			    echo ucwords($hasPatientHadRecreationalDrugsInLastSixMonths);
+			}
+			?>
+		    </p>
+		</div>
+	    </div>
+	    <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q23. Have you ever been emotionally or physically abused by your partner or your loved one?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    <p>
+                        <?php
+                        if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 1){
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Abused by</span> - ".$patientAbusedBy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times abused</span> - ".$patientAbusedByInNoofTimes;
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 2){
+                            echo "No - 2";
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 88){
+                            echo "Don't Know - 88";
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 99){
+                            echo "Refused - 99";
+                        }else if(trim($everAbusedBy)!= '' && (int)$everAbusedBy == 2222){
+                            echo "Response Not Available - 2222";
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q24. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    <p>
+                        <?php
+                        if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 1){
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Hurt by</span> - ".$patientHurtByWithinLastYear."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times hurted</span> - ".$patientHurtByInNoofTimes;
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 2){
+                            echo "No - 2";
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 88){
+                            echo "Don't Know - 88";
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 99){
+                            echo "Refused - 99";
+                        }else if(trim($everHurtedBy)!= '' && (int)$everHurtedBy == 2222){
+                            echo "Response Not Available - 2222";
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q25. Since you've been pregnant have you been slapped, kicked or otherwise physically hurt by someone?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    <p>
+                        <?php
+                        if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 1){
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Hurt by</span> - ".$patientHurtByDuringPregnancy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times hurted</span> - ".$patientHurtByDuringPregnancyInNoofTimes;
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 2){
+                            echo "No - 2";
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 88){
+                            echo "Don't Know - 88";
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 99){
+                            echo "Refused - 99";
+                        }else if(trim($everHurtedBydp)!= '' && (int)$everHurtedBydp == 2222){
+                            echo "Response Not Available - 2222";
+                        }else{
+                            echo ucwords($everHurtedBydp);
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q26. Within the last year, has anyone forced you to have sexual activities?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    <p>
+                        <?php
+                        if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 1){
+                            echo "Yes - 1<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;Forced by</span> - ".$patientForcedforSexBy."<span style='font-weight:normal;'>&nbsp;&nbsp;|&nbsp;&nbsp;No.of times forced</span> - ".$patientForcedforSexInNoofTimes;
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 2){
+                            echo "No - 2";
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 88){
+                            echo "Don't Know - 88";
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 99){
+                            echo "Refused - 99";
+                        }else if(trim($everForcedforSex)!= '' && (int)$everForcedforSex == 2222){
+                            echo "Response Not Available - 2222";
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q27. Are you afraid of any of the following people?
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                    <p>
+                        <?php
+			if(trim($patientAfraidofAnyone)!= ''){
+                           echo ucwords($patientAfraidofAnyone);
+			}else{
+			    echo ucwords($patientAfraidofOther);
+			}
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Go Girls Teen Club</strong></h6>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q28. Have you ever participated in a club for adolescents? If YES, was it a Go Girls! club or a different club?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_participated_in_a_clup_for_adolescents!= null && trim($row->has_patient_ever_participated_in_a_clup_for_adolescents)!= ''){
+                            if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 1){
+                                echo "Yes, a Go Girls! club - 1";
+                            }else if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 2){
+                                echo "Yes, a different club - 2";
+                            }else if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 3){
+                                echo "No - 3";
+                            }else if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_participated_in_a_clup_for_adolescents == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   &nbsp;&nbsp;&nbsp;&nbsp;Q28A. When did you participate in the club?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?php
+                        if($row->time_of_patient_participate_in_club!= null && trim($row->time_of_patient_participate_in_club)!= ''){
+                            if($row->time_of_patient_participate_in_club == 1){
+                                echo "Currently Participating - 1";
+                            }else if($row->time_of_patient_participate_in_club == 2){
+                                echo "< 3 months ago - 2";
+                            }else if($row->time_of_patient_participate_in_club == 3){
+                                echo "3-6 months ago - 3";
+                            }else if($row->time_of_patient_participate_in_club == 4){
+                                echo "7-12 months ago - 4";
+                            }else if($row->time_of_patient_participate_in_club == 5){
+                                echo "12 months - 5";
+                            }else if($row->time_of_patient_participate_in_club == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->time_of_patient_participate_in_club == 99){
+                                echo "Refused - 99";
+                            }else if($row->time_of_patient_participate_in_club == 2222){
+                                echo "Response Not Available - 2222";
+                            }else{
+                                echo ucwords($row->time_of_patient_participate_in_club);
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <div class="row" style="margin-bottom:0;">
+                <div class="col s12">
+                   Q29. Have you ever participated in a mother's group?
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:0;">
+                <div class="col s4">
+                    <p>
+                        <?php
+                        if($row->has_patient_ever_participated_in_mothers_group!= null && trim($row->has_patient_ever_participated_in_mothers_group)!= ''){
+                            if($row->has_patient_ever_participated_in_mothers_group == 1){
+                                echo "Yes - 1";
+                            }else if($row->has_patient_ever_participated_in_mothers_group == 2){
+                                echo "No - 2";
+                            }else if($row->has_patient_ever_participated_in_mothers_group == 88){
+                                echo "Don't Know - 88";
+                            }else if($row->has_patient_ever_participated_in_mothers_group == 99){
+                                echo "Refused - 99";
+                            }else if($row->has_patient_ever_participated_in_mothers_group == 2222){
+                                echo "Response Not Available - 2222";
+                            }
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+	    <?php if($row->comment!= null && trim($row->comment)!= ''){ ?>
+                <div class="row" style="margin:10px 0px 0px 0px;">
+                    <div class="col s12">
+                       Comments
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s6">
+                        <p style="font-weight:normal;">
+                            <?php echo ucfirst($row->comment); ?>
+                        </p>
+                    </div>
+                </div>
+            <?php } ?>
+            <div class="col s12" style="margin-top:20px;">
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2362 @@
+<?php
+use Application\Service\CommonService;
+$common = new CommonService();
+if(trim($countryId)!= ''){
+   $link = "/clinic/risk-assessment/v2/".base64_encode($countryId);
+}else{
+   $link = "/clinic/risk-assessment/v2";
+}
+$interviewDate = '';
+if($row->interview_date!= null && trim($row->interview_date)!= '' && $row->interview_date!= '0000-00-00'){
+   $interviewDate = $common->viewDateFormat($row->interview_date);
+}
+$participantAge = '';
+if($row->participant_age!= null && trim($row->participant_age)!= '' && $row->participant_age[0] == '@'){
+   $participantAge = substr($row->participant_age,1);
+}else if($row->participant_age!= null && trim($row->participant_age)!= ''){
+  $participantAge = $row->participant_age; 
+}
+$endSrc = '';
+$participantEligibility = 1;
+if((int)$participantAge < 13 || (int)$participantAge >= 25){
+   $endSrc = 'age';
+   $participantEligibility = 0;
+}else if($row->last_HIV_test_status!= null && trim($row->last_HIV_test_status)!= '' && (int)$row->last_HIV_test_status == 2){
+   $endSrc = 'testst';
+   $participantEligibility = 0;
+}
+//recreational drugs
+$hasPatientHadRecreationalDrugsInLastSixMonths = '';
+$recreationalDrugs = '';
+if($row->has_patient_had_recreational_drugs_in_last_six_months!= null && trim($row->has_patient_had_recreational_drugs_in_last_six_months)!= ''){
+   $recreationaldata = json_decode($row->has_patient_had_recreational_drugs_in_last_six_months,true);
+   $hasPatientHadRecreationalDrugsInLastSixMonths = (isset($recreationaldata['has_had_in_last_six_months']))?$recreationaldata['has_had_in_last_six_months']:'';
+   $recreationalDrugs = (isset($recreationaldata['drugs']))?$recreationaldata['drugs']:'';
+}
+//patient abused by
+$hasPatientAbusedBy = '';
+$patientAbusedBy = array();
+$patientAbusedByOther = '';
+$patientAbusedByInNoofTimes = '';
+if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patient_ever_been_abused_by_someone)!= ''){
+   $patientAbusedBydata = json_decode($row->has_patient_ever_been_abused_by_someone,true);
+   $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
+   $patientAbusedByInNoofTimes = (isset($patientAbusedBydata['no_of_times']))?$patientAbusedBydata['no_of_times']:'';
+   if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
+      $patientAbusedByOther = substr($patientAbusedBydata['who_abused'],1);
+   }else if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= ''){
+      $patientAbusedBy = explode(',',$patientAbusedBydata['who_abused']);
+   }
+}
+//patient hurt by someone within last year
+$hasPatientHurtByWithinLastYear = '';
+$patientHurtByWithinLastYear = array();
+$patientHurtByOtherWithinLastYear = '';
+$patientHurtByInNoofTimes = '';
+if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
+   $patientHurtBydata = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
+   $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
+   $patientHurtByInNoofTimes = (isset($patientHurtBydata['no_of_times']))?$patientHurtBydata['no_of_times']:'';
+   if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= '' && $patientHurtBydata['who_hurt'][0] == '@'){
+      $patientHurtByOtherWithinLastYear = substr($patientHurtBydata['who_hurt'],1);
+   }else if(isset($patientHurtBydata['who_hurt']) && trim($patientHurtBydata['who_hurt'])!= ''){
+      $patientHurtByWithinLastYear = explode(',',$patientHurtBydata['who_hurt']);
+   }
+}
+//patient hurt by someone during pregnancy
+$hasPatientHurtByDuringPregnancy = '';
+$patientHurtByDuringPregnancy = array();
+$patientHurtByOtherDuringPregnancy = '';
+$patientHurtByDuringPregnancyInNoofTimes = '';
+if(trim($hasPatientHurtByWithinLastYear) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
+   $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
+   $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
+   $patientHurtByDuringPregnancyInNoofTimes = (isset($patientHurtByDuringPregnancydata['no_of_times']))?$patientHurtByDuringPregnancydata['no_of_times']:'';
+   if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= '' && $patientHurtByDuringPregnancydata['who_hurt'][0] == '@'){
+      $patientHurtByOtherDuringPregnancy = substr($patientHurtByDuringPregnancydata['who_hurt'],1);
+   }else if(isset($patientHurtByDuringPregnancydata['who_hurt']) && trim($patientHurtByDuringPregnancydata['who_hurt'])!= ''){
+      $patientHurtByDuringPregnancy = explode(',',$patientHurtByDuringPregnancydata['who_hurt']);
+   }
+}
+//patient forced for sex within last year
+$hasPatientForcedforSexWithinLastYear = '';
+$patientForcedforSexBy = array();
+$patientForcedforSexByOther = '';
+$patientForcedforSexInNoofTimes = '';
+if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
+   $patientForcedforSexdata = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
+   $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
+   $patientForcedforSexInNoofTimes = (isset($patientForcedforSexdata['no_of_times']))?$patientForcedforSexdata['no_of_times']:'';
+   if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= '' && $patientForcedforSexdata['who_forced'][0] == '@'){
+      $patientForcedforSexByOther = substr($patientForcedforSexdata['who_forced'],1);
+   }else if(isset($patientForcedforSexdata['who_forced']) && trim($patientForcedforSexdata['who_forced'])!= ''){
+      $patientForcedforSexBy = explode(',',$patientForcedforSexdata['who_forced']);
+   }
+}
+//patient afraid of anyone/other
+$patientAfraidofAnyone = array();
+$patientAfraidofOther = '';
+if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_anyone)!= ''){
+   $patientAfraidofAnyone = explode(',',$row->is_patient_afraid_of_anyone);
+}else if($row->patient_afraid_of_other!= null && trim($row->patient_afraid_of_other)!= ''){
+   $patientAfraidofOther = $row->patient_afraid_of_other;
+}
+?>
+<style>
+   .highlightedTxt{
+      text-decoration:underline;
+   }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Risk Assessment</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Risk Assessment</a>
+       </div>
+    </div>
+    <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
+        <form id="editRiskAssessmentForm" name="editRiskAssessmentForm" method="post" action="<?php echo $this->url('edit-clinic-risk-assessment-v2'); ?>">
+	    <div class="card">
+		<h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Sample Particpant Risk Questionnaire</strong></h6>
+		<fieldset style="border-color:#2196F3;border-style:solid;">
+		  <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                        <select id="ancSite" name="ancSite" class="material-select isRequired" title="Please select ANC Site">
+                           <option value=""> -- Select -- </option>
+                           <?php
+                            foreach($ancSites as $anc){
+                            ?>
+                            <option value="<?php echo base64_encode($anc['anc_site_id']); ?>" <?php echo ($anc['anc_site_id'] == $row->anc)?'selected="selected"':''; ?>><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']); ?></option>
+                            <?php } ?>
+                        </select>
+                            <label for="ancSite">ANC Site *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" value="<?php echo $row->patient_barcode_id; ?>" onblur="checkPatientRecord();">
+                            <label for="patientBarcodeId" class="">Patient Barcode ID *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <input id="interviewerName" name="interviewerName" type="text" class="validate isRequired" title="Please enter interviewer name" value="<?php echo $row->interviewer_name; ?>">
+                            <label for="interviewerName" class="">Interviewer Name *</label>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                           <input id="ancPatientId" name="ancPatientId" type="text" class="validate isRequired" title="Please enter anc patient ID" value="<?php echo $row->anc_patient_id; ?>">
+                           <label for="ancPatientId" class="">ANC Patient ID *</label>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                           <input id="interviewDate" name="interviewDate" type="text" class="validate isRequired datepicker" title="Please enter interview date" value="<?php echo $interviewDate; ?>">
+                           <label for="interviewDate" class="">Interview Date *</label>
+                        </div>
+                    </div>
+                    <!--<div class="col s4">
+                        <div class="input-field col m12 s12">
+                        Has participant received DREAMS services ? (Optional)<br><br>
+                        <input id="hasParticipantReceivedDreamsServicesYes" class="with-gap" name="hasParticipantReceivedDreamsServices" title="Please select participant-dreams services received status" value="yes" type="radio" < ?php echo ($row->has_participant_received_dreams_services == 'yes')?'checked="checked"':''; ?>>
+                        <label for="hasParticipantReceivedDreamsServicesYes" class="active">Yes </label>&nbsp;&nbsp;
+                        <input id="hasParticipantReceivedDreamsServicesNo" class="with-gap" name="hasParticipantReceivedDreamsServices" value="no" type="radio" < ?php echo ($row->has_participant_received_dreams_services == 'no')?'checked="checked"':''; ?>>
+                        <label for="hasParticipantReceivedDreamsServicesNo" class="active">No </label>
+                        </div>
+                    </div>-->
+                  </div> 
+		</fieldset>
+		<h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Recency Test Result</strong></h6>
+		<fieldset id="rtrSection" style="height:90px;border-color:#F44336;border-style:solid;">
+		  <div class="row" style="margin-bottom:0;">
+		     <div class="col s3">
+			<div class="input-field col m12 s12">
+			Rapid Recency Result *<br><br>
+			<input id="hasPatientHadRapidRecencyTestYes" class="with-gap isRequired" name="hasPatientHadRapidRecencyTest" title="Please select patient rapid recency test status" value="done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'checked="checked"':''; ?>>
+			<label for="hasPatientHadRapidRecencyTestYes" class="active">Done </label>&nbsp;&nbsp;
+			<input id="hasPatientHadRapidRecencyTestNo" class="with-gap" name="hasPatientHadRapidRecencyTest" value="not done" type="radio" <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'not done')?'checked="checked"':''; ?>>
+			<label for="hasPatientHadRapidRecencyTestNo" class="active">Not Done </label>&nbsp;&nbsp;
+			</div>
+		     </div>
+		     <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
+			<div class="input-field col m12 s12">
+			<select id="rrrControl" name="rrrControl" class="material-select <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'isRequired':''; ?>" title="Please select control line">
+                            <option value=""> -- Select -- </option>
+			    <option value="positive" <?php echo (isset($row->control_line) && $row->control_line == 'positive')?'selected="selected"':''; ?>>Present (Positive/P)</option>
+			    <option value="negative" <?php echo (isset($row->control_line) && $row->control_line == 'negative')?'selected="selected"':''; ?>>Absent (Negative/N)</option>
+			    <option value="invalid" <?php echo (isset($row->control_line) && $row->control_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->control_line) && $row->control_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
+                        </select>
+                        <label for="rrrControl">Control Line *</label>
+			</div>
+		     </div>
+		     <div class="col s3 rrrSection" style="display:<?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'':'none;'; ?>;">
+			<div class="input-field col m12 s12">
+			<select id="rrrHIVDiagnostic" name="rrrHIVDiagnostic" class="material-select <?php echo (isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done')?'isRequired':''; ?>" title="Please select positive verfication line">
+                            <option value=""> -- Select -- </option>
+			    <option value="positive" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'positive')?'selected="selected"':''; ?>>Present (Positive/P)</option>
+			    <option value="negative" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'negative')?'selected="selected"':''; ?>>Absent (Negative/N)</option>
+			    <option value="invalid" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
+                        </select>
+                        <label for="rrrHIVDiagnostic">Positive Verification Line *</label>
+			</div>
+		     </div>
+		     <div class="col s3 rrrRecency rrrSection" style="display:<?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'':'none;'; ?>">
+			<div class="input-field col m12 s12">
+			<select id="rrrRecency" name="rrrRecency" class="material-select <?php echo ((isset($row->has_patient_had_rapid_recency_test) && $row->has_patient_had_rapid_recency_test == 'done') && (!isset($row->HIV_diagnostic_line) || (isset($row->HIV_diagnostic_line) && $row->HIV_diagnostic_line !='negative')))?'isRequired':''; ?>" title="Please select long term (recency) line">
+                            <option value=""> -- Select -- </option>
+			    <option value="long term" <?php echo (isset($row->recency_line) && $row->recency_line == 'long term')?'selected="selected"':''; ?>>Present(Long Term/LT)</option>
+			    <option value="recent" <?php echo (isset($row->recency_line) && $row->recency_line == 'recent')?'selected="selected"':''; ?>>Absent (Recent/R)</option>
+			    <option value="invalid" <?php echo (isset($row->recency_line) && $row->recency_line == 'invalid')?'selected="selected"':''; ?>>Invalid</option>
+			    <option value="result-not-available" <?php echo (isset($row->recency_line) && $row->recency_line == 'result-not-available')?'selected="selected"':''; ?>>Result not available</option>
+                        </select>
+                        <label for="rrrRecency">Long Term (Recency) Line *</label>
+			</div>
+		     </div>
+		  </div>
+		</fieldset>
+		<h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Demographic Characteristics</strong></h6>
+		<div class="row" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q0. What is your age? *
+		    </div>
+		</div>
+		<div class="row" style="margin-bottom:20px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="participantAgeInYears" name="participantAgeInYears" type="text" class="validate years checkNum" title="Don't leave Q0" value="<?php echo($row->participant_age!= null && trim($row->participant_age)!= '' && $row->participant_age[0] == '@')?substr($row->participant_age,1):'';?>" style="width:10%;"> Years&nbsp;
+			<input id="participantAgeDK" class="with-gap" name="participantAge" value="88" type="radio" <?php echo ($row->participant_age == 88)?'checked="checked"':''; ?>>
+			<label for="participantAgeDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="participantAgeR" class="with-gap" name="participantAge" value="99" type="radio" <?php echo ($row->participant_age == 99)?'checked="checked"':''; ?>>
+			<label for="participantAgeR" class="active">Refused - 99 </label>&nbsp;&nbsp;
+			<input id="participantAgeRNA" class="with-gap" name="participantAge" value="2222" type="radio" <?php echo ($row->participant_age == 2222)?'checked="checked"':''; ?>>
+			<label for="participantAgeRNA" class="active">Response Not Available - 2222 </label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q1. What kind of work/occupation do you do most of the time? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection">
+			<select id="occupation" name="occupation" class="material-select mandatoryField" title="Don't leave Q1">
+			    <option value=""> -- Select -- </option>
+			    <?php
+			    foreach($occupationTypes as $occupation){
+			    ?>
+			      <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->patient_occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']).' - '.$occupation['occupation_code']; ?></option>
+			    <?php } ?>
+			    <option value="1111">Other - 1111</option>
+			</select>
+		    </div>
+		    <div class="col s4 occupationNew" style="display:none;">
+			<input id="occupationNew" name="occupationNew" type="text" class="validate mandatoryField" placeholder="Occupation" title="Please enter occupation" onblur="checkNameValidation('occupation_type', 'occupation', this, null,'The occupation that you entered already listed. Please enter different occupation');">
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q2. Have you ever attended school? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="hasPatientEverAttendedSchoolYes" class="with-gap mandatoryField" name="hasPatientEverAttendedSchool" title="Don't leave Q2" value="1" type="radio" <?php echo ($row->has_patient_ever_attended_school == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverAttendedSchoolYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverAttendedSchoolNo" class="with-gap" name="hasPatientEverAttendedSchool" value="2" type="radio" <?php echo ($row->has_patient_ever_attended_school == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverAttendedSchoolNo" class="active">No - 2 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverAttendedSchoolDK" class="with-gap" name="hasPatientEverAttendedSchool" value="88" type="radio" <?php echo ($row->has_patient_ever_attended_school == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverAttendedSchoolDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverAttendedSchoolR" class="with-gap" name="hasPatientEverAttendedSchool" value="99" type="radio" <?php echo ($row->has_patient_ever_attended_school == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverAttendedSchoolR" class="active">Refused - 99 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverAttendedSchoolRNA" class="with-gap" name="hasPatientEverAttendedSchool" value="2222" type="radio" <?php echo ($row->has_patient_ever_attended_school == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverAttendedSchoolRNA" class="active">Response Not Available - 2222 </label>
+		    </div>
+		</div>
+		<div class="row allSection degreeSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q2A. What was the highest level of education that you completed or are attending now?<span class="mandatoryIconSection degreeSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection degreeSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection degree" style="padding-left:3%;">
+			<select id="degree" name="degree" class="material-select mandatoryField" title="Don't leave Q2A">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->patient_degree == 1)?'selected="selected"':''; ?>>Primary/Vocational - 1</option>
+                           <option value="2" <?php echo ($row->patient_degree == 2)?'selected="selected"':''; ?>>Secondary - 2</option>
+                           <option value="3" <?php echo ($row->patient_degree == 3)?'selected="selected"':''; ?>>University/College - 3</option>
+			   <option value="88" <?php echo ($row->patient_degree == 88)?'selected="selected"':''; ?>>Don't know - 88</option>
+			   <option value="99" <?php echo ($row->patient_degree == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->patient_degree == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection participantSchoolSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q2B. Are you attending school now? <span class="mandatoryIconSection participantSchoolSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection participantSchoolSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="isParticipantAttendingSchoolNowYes" class="with-gap mandatoryField" name="isParticipantAttendingSchoolNow" title="Don't leave Q2B" value="1" type="radio" <?php echo ($row->is_participant_attending_school_now == 1)?'checked="checked"':''; ?>>
+			<label for="isParticipantAttendingSchoolNowYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="isParticipantAttendingSchoolNowNo" class="with-gap" name="isParticipantAttendingSchoolNow" value="2" type="radio" <?php echo ($row->is_participant_attending_school_now == 2)?'checked="checked"':''; ?>>
+			<label for="isParticipantAttendingSchoolNowNo" class="active">No - 2 </label>&nbsp;&nbsp;
+			<input id="isParticipantAttendingSchoolNowDK" class="with-gap" name="isParticipantAttendingSchoolNow" value="88" type="radio" <?php echo ($row->is_participant_attending_school_now == 88)?'checked="checked"':''; ?>>
+			<label for="isParticipantAttendingSchoolNowDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="isParticipantAttendingSchoolNowR" class="with-gap" name="isParticipantAttendingSchoolNow" value="99" type="radio" <?php echo ($row->is_participant_attending_school_now == 99)?'checked="checked"':''; ?>>
+			<label for="isParticipantAttendingSchoolNowR" class="active">Refused - 99 </label>&nbsp;&nbsp;
+			<input id="isParticipantAttendingSchoolNowRNA" class="with-gap" name="isParticipantAttendingSchoolNow" value="2222" type="radio" <?php echo ($row->is_participant_attending_school_now == 2222)?'checked="checked"':''; ?>>
+			<label for="isParticipantAttendingSchoolNowRNA" class="active">Response Not Available - 2222 </label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q3. Have you <span class="highlightedTxt">ever</span> been married or lived with a partner in a union as if married? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="everBeenMarriedYes" class="with-gap mandatoryField" name="everBeenMarried" title="Don't leave Q3" value="1" type="radio" <?php echo ($row->patient_ever_been_married == 1)?'checked="checked"':''; ?>>
+			<label for="everBeenMarriedYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="2" type="radio" <?php echo ($row->patient_ever_been_married == 2)?'checked="checked"':''; ?>>
+			<label for="everBeenMarriedNo" class="active">No - 2 </label>&nbsp;&nbsp;
+			<input id="everBeenMarriedDK" class="with-gap" name="everBeenMarried" value="88" type="radio" <?php echo ($row->patient_ever_been_married == 88)?'checked="checked"':''; ?>>
+			<label for="everBeenMarriedDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="everBeenMarriedR" class="with-gap" name="everBeenMarried" value="99" type="radio" <?php echo ($row->patient_ever_been_married == 99)?'checked="checked"':''; ?>>
+			<label for="everBeenMarriedR" class="active">Refused - 99 </label>&nbsp;&nbsp;
+			<input id="everBeenMarriedRNA" class="with-gap" name="everBeenMarried" value="2222" type="radio" <?php echo ($row->patient_ever_been_married == 2222)?'checked="checked"':''; ?>>
+			<label for="everBeenMarriedRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q3A. How old were you when you <span class="highlightedTxt">first</span> got married or lived with a partner in a union? <span class="mandatoryIconSection everBeenMarriedSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ageAtFirstMarriageInYears" name="ageAtFirstMarriageInYears" type="text" class="validate years checkNum mandatoryField" title="Don't leave Q3A" value="<?php echo($row->age_at_first_marriage!= null && trim($row->age_at_first_marriage)!= '' && $row->age_at_first_marriage[0] == '@')?substr($row->age_at_first_marriage,1):'';?>" style="width:10%;"> Years&nbsp;
+			<input id="ageAtFirstMarriageDK" class="with-gap" name="ageAtFirstMarriage" value="88" type="radio" <?php echo ($row->age_at_first_marriage == 88)?'checked="checked"':''; ?>>
+			<label for="ageAtFirstMarriageDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="ageAtFirstMarriageR" class="with-gap" name="ageAtFirstMarriage" value="99" type="radio" <?php echo ($row->age_at_first_marriage == 99)?'checked="checked"':''; ?>>
+			<label for="ageAtFirstMarriageR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="ageAtFirstMarriageRNA" class="with-gap" name="ageAtFirstMarriage" value="2222" type="radio" <?php echo ($row->age_at_first_marriage == 2222)?'checked="checked"':''; ?>>
+			<label for="ageAtFirstMarriageRNA" class="active">Response Not Available - 2222 </label>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q3B. Have you <span class="highlightedTxt">ever</span> been widowed? That is, did a spouse ever pass away while you were still married or living with them? <span class="mandatoryIconSection everBeenMarriedSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="everBeenWidowedYes" class="with-gap mandatoryField" name="everBeenWidowed" title="Don't leave Q3B" value="1" type="radio" <?php echo ($row->patient_ever_been_widowed == 1)?'checked="checked"':''; ?>>
+			<label for="everBeenWidowedYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="everBeenWidowedNo" class="with-gap" name="everBeenWidowed" value="2" type="radio" <?php echo ($row->patient_ever_been_widowed == 2)?'checked="checked"':''; ?>>
+			<label for="everBeenWidowedNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="everBeenWidowedDK" class="with-gap" name="everBeenWidowed" value="88" type="radio" <?php echo ($row->patient_ever_been_widowed == 88)?'checked="checked"':''; ?>>
+			<label for="everBeenWidowedDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="everBeenWidowedR" class="with-gap" name="everBeenWidowed" value="99" type="radio" <?php echo ($row->patient_ever_been_widowed == 99)?'checked="checked"':''; ?>>
+			<label for="everBeenWidowedR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="everBeenWidowedRNA" class="with-gap" name="everBeenWidowed" value="2222" type="radio" <?php echo ($row->patient_ever_been_widowed == 2222)?'checked="checked"':''; ?>>
+			<label for="everBeenWidowedRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q3C. What is your marital status <span class="highlightedTxt">now</span>? <span class="mandatoryIconSection everBeenMarriedSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection everBeenMarriedSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection currentMaritalStatus" style="padding-left:3%;">
+			<select id="currentMaritalStatus" name="currentMaritalStatus" class="material-select mandatoryField" title="Don't leave Q3C">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->current_marital_status == 1)?'selected="selected"':''; ?>>Married/Cohabiting - 1</option>
+			   <option value="2" <?php echo ($row->current_marital_status == 2)?'selected="selected"':''; ?>>Never Married/Cohabiting - 2</option>
+			   <option value="3" <?php echo ($row->current_marital_status == 3)?'selected="selected"':''; ?>>Widowed - 3</option>
+			   <option value="4" <?php echo ($row->current_marital_status == 4)?'selected="selected"':''; ?>>Separated - 4</option>
+			   <option value="5" <?php echo ($row->current_marital_status == 5)?'selected="selected"':''; ?>>Divorced - 5</option>
+			   <option value="88" <?php echo ($row->current_marital_status == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->current_marital_status == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->current_marital_status == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>HIV Testing History</strong></h6>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q4. [BEFORE TODAY] Have you ever been tested for HIV? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="hasPatientEverBeenTestedforHIVYes" class="with-gap mandatoryField" name="hasPatientEverBeenTestedforHIV" value="1" type="radio" title="Don't leave Q4" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTestedforHIVYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTestedforHIVNo" class="with-gap" name="hasPatientEverBeenTestedforHIV" value="2" type="radio" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTestedforHIVNo" class="active">No - 2 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTestedforHIVDK" class="with-gap" name="hasPatientEverBeenTestedforHIV" value="88" type="radio" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTestedforHIVDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTestedforHIVR" class="with-gap" name="hasPatientEverBeenTestedforHIV" value="99" type="radio" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTestedforHIVR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTestedforHIVRNA" class="with-gap" name="hasPatientEverBeenTestedforHIV" value="2222" type="radio" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTestedforHIVRNA" class="active">Response Not Available - 2222 </label>
+		    </div>
+		</div>
+		<div class="row allSection everBeenTestedforHIVSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q4A. When was the <span class="highlightedTxt">most recent</span> time you were tested for HIV? <span class="mandatoryIconSection everBeenTestedforHIVSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection everBeenTestedforHIVSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection timeOfLastHIVTest" style="padding-left:3%;">
+			<select id="timeOfLastHIVTest" name="timeOfLastHIVTest" class="material-select mandatoryField" title="Don't leave Q4A">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->time_of_last_HIV_test == 1)?'selected="selected"':''; ?>>< 3 Months Ago - 1</option>
+			   <option value="2" <?php echo ($row->time_of_last_HIV_test == 2)?'selected="selected"':''; ?>>3-6 Months Ago - 2</option>
+			   <option value="3" <?php echo ($row->time_of_last_HIV_test == 3)?'selected="selected"':''; ?>>7-12 Months Ago - 3</option>
+			   <option value="4" <?php echo ($row->time_of_last_HIV_test == 4)?'selected="selected"':''; ?>> > 12 months - 4</option>
+			   <option value="88" <?php echo ($row->time_of_last_HIV_test == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->time_of_last_HIV_test == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->time_of_last_HIV_test == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection lastHIVTestStatus everBeenTestedforHIVSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q4B. What was the result of that HIV test? <span class="mandatoryIconSection lastHIVTestStatusSectionRequired everBeenTestedforHIVSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection lastHIVTestStatus everBeenTestedforHIVSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection lastHIVTestStatus" style="padding-left:3%;">
+			<select id="lastHIVTestStatus" name="lastHIVTestStatus" class="material-select mandatoryField" title="Don't leave Q4B">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->last_HIV_test_status == 1)?'selected="selected"':''; ?>>I Did Not Receive Result - 1</option>
+			   <option value="2" <?php echo ($row->last_HIV_test_status == 2)?'selected="selected"':''; ?>>HIV Positive - 2</option>
+			   <option value="3" <?php echo ($row->last_HIV_test_status == 3)?'selected="selected"':''; ?>>HIV Negative - 3</option>
+			   <option value="4" <?php echo ($row->last_HIV_test_status == 4)?'selected="selected"':''; ?>>Indeterminate - 4</option>
+			   <option value="88" <?php echo ($row->last_HIV_test_status == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->last_HIV_test_status == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->last_HIV_test_status == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection everBeenTestedforHIVSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q4C. Where were you tested for HIV in the community or at a facility? <span class="mandatoryIconSection everBeenTestedforHIVSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection everBeenTestedforHIVSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection placeofLastHIVTest" style="padding-left:3%;">
+			<select id="placeofLastHIVTest" name="placeofLastHIVTest" class="material-select mandatoryField" title="Don't leave Q4C">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->place_of_last_HIV_test == 1)?'selected="selected"':''; ?>>Facility - 1</option>
+			   <option value="2" <?php echo ($row->place_of_last_HIV_test == 2)?'selected="selected"':''; ?>>Community - 2</option>
+			   <option value="88" <?php echo ($row->place_of_last_HIV_test == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->place_of_last_HIV_test == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->place_of_last_HIV_test == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Sexual Activity and History of Sexually Transmitted Infections</strong></h6>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q5. How old were you when you had sexual intercourse for the very <span class="highlightedTxt">first</span> time? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="ageAtVeryFirstSexInNumbers" name="ageAtVeryFirstSexInNumbers" type="text" class="validate mandatoryField years checkNum" title="Don't leave Q5" value="<?php echo($row->age_at_very_first_sex!= null && trim($row->age_at_very_first_sex)!= '' && $row->age_at_very_first_sex[0] == '@')?substr($row->age_at_very_first_sex,1):'';?>" style="width:10%;"> Years &nbsp;&nbsp;
+			<input id="ageAtVeryFirstSexDK" class="with-gap" name="ageAtVeryFirstSex" value="88" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<label for="ageAtVeryFirstSexDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="ageAtVeryFirstSexR" class="with-gap" name="ageAtVeryFirstSex" value="99" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<label for="ageAtVeryFirstSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="ageAtVeryFirstSexRNA" class="with-gap" name="ageAtVeryFirstSex" value="2222" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<label for="ageAtVeryFirstSexRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q6. The <span class="highlightedTxt">first</span> time you had sex, was it because you wanted to or because you were forced to? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="reasonForVeryFirstSexWT" class="with-gap mandatoryField" name="reasonForVeryFirstSex" title="Don't leave Q6" value="1" type="radio" <?php echo ($row->reason_for_very_first_sex == 1)?'checked="checked"':''; ?>>
+			<label for="reasonForVeryFirstSexWT" class="active">Wanted To - 1</label>&nbsp;&nbsp;
+			<input id="reasonForVeryFirstSexFT" class="with-gap" name="reasonForVeryFirstSex" value="2" type="radio" <?php echo ($row->reason_for_very_first_sex == 2)?'checked="checked"':''; ?>>
+			<label for="reasonForVeryFirstSexFT" class="active">Forced To - 2</label>&nbsp;&nbsp;
+			<input id="reasonForVeryFirstSexDK" class="with-gap" name="reasonForVeryFirstSex" value="88" type="radio" <?php echo ($row->reason_for_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<label for="reasonForVeryFirstSexDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="reasonForVeryFirstSexR" class="with-gap" name="reasonForVeryFirstSex" value="99" type="radio" <?php echo ($row->reason_for_very_first_sex == 99)?'checked="checked"':''; ?>>
+			<label for="reasonForVeryFirstSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="reasonForVeryFirstSexRNA" class="with-gap" name="reasonForVeryFirstSex" value="2222" type="radio" <?php echo ($row->reason_for_very_first_sex == 2222)?'checked="checked"':''; ?>>
+			<label for="reasonForVeryFirstSexRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			Q7. How many different people have you had sexual intercourse with <span class="highlightedTxt">in your entire life</span>? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="noOfSexualPartnersInNumbers" name="noOfSexualPartnersInNumbers" type="text" class="validate persons checkNum mandatoryField" title="Don't leave Q7" value="<?php echo($row->no_of_sexual_partners!= null && trim($row->no_of_sexual_partners)!= '' && $row->no_of_sexual_partners[0] == '@')?substr($row->no_of_sexual_partners,1):'';?>" style="width:10%;"> Persons&nbsp;
+			<input id="noOfSexualPartnersDK" class="with-gap" name="noOfSexualPartners" value="88" type="radio" <?php echo ($row->no_of_sexual_partners == 88)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="noOfSexualPartnersR" class="with-gap" name="noOfSexualPartners" value="99" type="radio" <?php echo ($row->no_of_sexual_partners == 99)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="noOfSexualPartnersRNA" class="with-gap" name="noOfSexualPartners" value="2222" type="radio" <?php echo ($row->no_of_sexual_partners == 2222)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q8. How many different people have you had sex with in the last 6 months? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="noOfSexualPartnersInLastSixMonthsInNumbers" name="noOfSexualPartnersInLastSixMonthsInNumbers" type="text" class="validate persons checkNum mandatoryField" title="Don't leave Q8" value="<?php echo($row->no_of_sexual_partners_in_last_six_months!= null && trim($row->no_of_sexual_partners_in_last_six_months)!= '' && $row->no_of_sexual_partners_in_last_six_months[0] == '@')?substr($row->no_of_sexual_partners_in_last_six_months,1):'';?>" style="width:10%;"> Persons&nbsp;
+			<input id="noOfSexualPartnersInLastSixMonthsDK" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="88" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 88)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersInLastSixMonthsDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="noOfSexualPartnersInLastSixMonthsR" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="99" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 99)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersInLastSixMonthsR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="noOfSexualPartnersInLastSixMonthsRNA" class="with-gap" name="noOfSexualPartnersInLastSixMonths" value="2222" type="radio" <?php echo ($row->no_of_sexual_partners_in_last_six_months == 2222)?'checked="checked"':''; ?>>
+			<label for="noOfSexualPartnersInLastSixMonthsRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q9. What is the HIV status of your <span class="highlightedTxt">spouse/main</span> sexual partner's (person with whom you have sexual intercourse most frequently)? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection">
+			<select id="partnerHIVTestStatus" name="partnerHIVTestStatus" class="material-select mandatoryField" title="Don't leave Q9">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->partner_HIV_test_status == 1)?'selected="selected"':''; ?>>HIV Positive - 1</option>
+			   <option value="2" <?php echo ($row->partner_HIV_test_status == 2)?'selected="selected"':''; ?>>HIV Negative - 2</option>
+			   <option value="3" <?php echo ($row->partner_HIV_test_status == 3)?'selected="selected"':''; ?>>No Main Sexual Partner - 3</option>
+			   <option value="88" <?php echo ($row->partner_HIV_test_status == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->partner_HIV_test_status == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->partner_HIV_test_status == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q10. How old was your <span class="highlightedTxt">spouse/main</span> sexual partner on his last birthday? <span class="mandatoryIconSection partnerHIVTestStatusRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="ageOfMainSexualPartnerAtLastBirthdayInYears" name="ageOfMainSexualPartnerAtLastBirthdayInYears" type="text" class="validate mandatoryField years checkNum" title="Don't leave Q10" value="<?php echo($row->age_of_main_sexual_partner_at_last_birthday!= null && trim($row->age_of_main_sexual_partner_at_last_birthday)!= '' && $row->age_of_main_sexual_partner_at_last_birthday[0] == '@')?substr($row->age_of_main_sexual_partner_at_last_birthday,1):'';?>" style="width:13%;"> Years&nbsp;
+			<input id="ageOfMainSexualPartnerAtLastBirthdayDK" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="88" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 88)?'checked="checked"':''; ?>>
+			<label for="ageOfMainSexualPartnerAtLastBirthdayDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
+			<input id="ageOfMainSexualPartnerAtLastBirthdayR" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="99" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 99)?'checked="checked"':''; ?>>
+			<label for="ageOfMainSexualPartnerAtLastBirthdayR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="ageOfMainSexualPartnerAtLastBirthdayRNA" class="with-gap" name="ageOfMainSexualPartnerAtLastBirthday" value="2222" type="radio" <?php echo ($row->age_of_main_sexual_partner_at_last_birthday == 2222)?'checked="checked"':''; ?>>
+			<label for="ageOfMainSexualPartnerAtLastBirthdayRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus mainSexualPartnerAgeSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q11. Is the age of your <span class="highlightedTxt">spouse/main</span> sexual partner older, younger, or the same age as you? <span class="mandatoryIconSection partnerHIVTestStatusRequired mainSexualPartnerAgeSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus mainSexualPartnerAgeSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection">
+			<select id="ageDiffOfMainSexualPartner" name="ageDiffOfMainSexualPartner" class="material-select mandatoryField" title="Don't leave Q11">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->age_diff_of_main_sexual_partner == 1)?'selected="selected"':''; ?>> < 5 Years Older - 1</option>
+			   <option value="2" <?php echo ($row->age_diff_of_main_sexual_partner == 2)?'selected="selected"':''; ?>> 5-10 Years Older - 2</option>
+			   <option value="3" <?php echo ($row->age_diff_of_main_sexual_partner == 3)?'selected="selected"':''; ?>> >10 Years Older - 3</option>
+			   <option value="4" <?php echo ($row->age_diff_of_main_sexual_partner == 4)?'selected="selected"':''; ?>>Same Age - 4</option>
+			   <option value="5" <?php echo ($row->age_diff_of_main_sexual_partner == 5)?'selected="selected"':''; ?>> < 5 Years Younger - 5</option>
+			   <option value="6" <?php echo ($row->age_diff_of_main_sexual_partner == 6)?'selected="selected"':''; ?>>5-10 Years Younger - 6</option>
+			   <option value="7" <?php echo ($row->age_diff_of_main_sexual_partner == 7)?'selected="selected"':''; ?>> >10 Years Younger - 7</option>
+			   <option value="88" <?php echo ($row->age_diff_of_main_sexual_partner == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->age_diff_of_main_sexual_partner == 89)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->age_diff_of_main_sexual_partner == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q12. Is your <span class="highlightedTxt">spouse/main</span> sexual partner circumcised? <span class="mandatoryIconSection partnerHIVTestStatusRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="isPartnerCircumcisedYes" class="with-gap mandatoryField" name="isPartnerCircumcised" title="Don't leave Q12" value="1" type="radio" <?php echo ($row->is_partner_circumcised == 1)?'checked="checked"':''; ?>>
+			<label for="isPartnerCircumcisedYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="2" type="radio" <?php echo ($row->is_partner_circumcised == 2)?'checked="checked"':''; ?>>
+			<label for="isPartnerCircumcisedNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="isPartnerCircumcisedDK" class="with-gap" name="isPartnerCircumcised" value="88" type="radio" <?php echo ($row->is_partner_circumcised == 88)?'checked="checked"':''; ?>>
+			<label for="isPartnerCircumcisedDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="isPartnerCircumcisedR" class="with-gap" name="isPartnerCircumcised" value="99" type="radio" <?php echo ($row->is_partner_circumcised == 99)?'checked="checked"':''; ?>>
+			<label for="isPartnerCircumcisedR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="isPartnerCircumcisedRNA" class="with-gap" name="isPartnerCircumcised" value="2222" type="radio" <?php echo ($row->is_partner_circumcised == 2222)?'checked="checked"':''; ?>>
+			<label for="isPartnerCircumcisedRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus circumcisionSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q12A. What type of circumcision? <span class="mandatoryIconSection partnerHIVTestStatusRequired circumcisionSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection partnerHIVTestStatus circumcisionSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection circumcisionSection" style="padding-left:3%;">
+			<select id="circumcision" name="circumcision" class="material-select mandatoryField" title="Don't leave Q12A">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->circumcision == 1)?'selected="selected"':''; ?>> Medical Circumcision - 1</option>
+			   <option value="2" <?php echo ($row->circumcision == 2)?'selected="selected"':''; ?>> Traditional Circumcision - 2</option>
+			   <option value="88" <?php echo ($row->circumcision == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->circumcision == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->circumcision == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q13. Have you ever received money/gifts in exchange for sex? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="hasPatientEverReceivedGiftForSexYes" class="with-gap mandatoryField" name="hasPatientEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedGiftForSexYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedGiftForSexNo" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="2" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedGiftForSexNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedGiftForSexDK" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="88" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedGiftForSexDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedGiftForSexR" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="99" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedGiftForSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedGiftForSexRNA" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="2222" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedGiftForSexRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientReceivedGiftForSexSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q13A. When did you last receive money/gifts in exchange for sex? <span class="mandatoryIconSection patientReceivedGiftForSexSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientReceivedGiftForSexSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection patientReceivedGiftForSexSection" style="padding-left:3%;">
+			<select id="lastTimeOfReceivingGiftForSex" name="lastTimeOfReceivingGiftForSex" class="material-select mandatoryField" title="Don't leave Q13A">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->last_time_of_receiving_gift_for_sex == 1)?'selected="selected"':''; ?>> < 6 Months Ago - 1</option>
+			   <option value="2" <?php echo ($row->last_time_of_receiving_gift_for_sex == 2)?'selected="selected"':''; ?>> 6-12 Months Ago - 2</option>
+			   <option value="3" <?php echo ($row->last_time_of_receiving_gift_for_sex == 3)?'selected="selected"':''; ?>> > 12 Months Ago - 3</option>
+			   <option value="88" <?php echo ($row->last_time_of_receiving_gift_for_sex == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->last_time_of_receiving_gift_for_sex == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->last_time_of_receiving_gift_for_sex == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q14. How many times have you been pregnant? <span class="mandatoryIconSection">*</span> (including this pregnancy)
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="noOfTimesBeenPregnantInNumbers" name="noOfTimesBeenPregnantInNumbers" type="text" class="validate times checkNum mandatoryField" title="Don't leave Q14" value="<?php echo($row->no_of_times_been_pregnant!= null && trim($row->no_of_times_been_pregnant)!= '' && $row->no_of_times_been_pregnant[0] == '@')?substr($row->no_of_times_been_pregnant,1):'';?>" style="width:20%;"> Times &nbsp;&nbsp;
+			<input id="noOfTimesBeenPregnantDK" class="with-gap" name="noOfTimesBeenPregnant" value="88" type="radio" <?php echo ($row->no_of_times_been_pregnant == 88)?'checked="checked"':''; ?>>
+			<label for="noOfTimesBeenPregnantDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="noOfTimesBeenPregnantR" class="with-gap" name="noOfTimesBeenPregnant" value="99" type="radio" <?php echo ($row->no_of_times_been_pregnant == 99)?'checked="checked"':''; ?>>
+			<label for="noOfTimesBeenPregnantR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="noOfTimesBeenPregnantRNA" class="with-gap" name="noOfTimesBeenPregnant" value="2222" type="radio" <?php echo ($row->no_of_times_been_pregnant == 2222)?'checked="checked"':''; ?>>
+			<label for="noOfTimesBeenPregnantRNA" class="active">Response Not Available </label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q14A. When you got pregnant this time, did you want to get pregnant? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="hasPatientWantedtoGetPregnantYes" class="with-gap mandatoryField" name="hasPatientWantedtoGetPregnant" title="Don't leave Q14A" value="1" type="radio" <?php echo ($row->has_patient_wanted_to_get_pregnant == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoGetPregnantYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoGetPregnantNo" class="with-gap" name="hasPatientWantedtoGetPregnant" value="2" type="radio" <?php echo ($row->has_patient_wanted_to_get_pregnant == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoGetPregnantNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoGetPregnantDK" class="with-gap" name="hasPatientWantedtoGetPregnant" value="88" type="radio" <?php echo ($row->has_patient_wanted_to_get_pregnant == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoGetPregnantDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoGetPregnantR" class="with-gap" name="hasPatientWantedtoGetPregnant" value="99" type="radio" <?php echo ($row->has_patient_wanted_to_get_pregnant == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoGetPregnantR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoGetPregnantRNA" class="with-gap" name="hasPatientWantedtoGetPregnant" value="2222" type="radio" <?php echo ($row->has_patient_wanted_to_get_pregnant == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoGetPregnantRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientWantedtoHaveaBabyLaterSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q14B. Did you want to have a baby later on or did you not want any(more) children? <span class="mandatoryIconSection patientWantedtoHaveaBabyLaterSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientWantedtoHaveaBabyLaterSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="hasPatientWantedtoHaveaBabyLater" class="with-gap mandatoryField" name="hasPatientWantedtoHaveaBabyLater" title="Don't leave Q14B" value="1" type="radio" <?php echo ($row->has_patient_wanted_to_have_a_baby_later == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoHaveaBabyLater" class="active">Wanted baby later - 1</label>&nbsp;&nbsp;
+			<input id="hasnotPatientWantedtoHaveaBaby" class="with-gap" name="hasPatientWantedtoHaveaBabyLater" value="2" type="radio" <?php echo ($row->has_patient_wanted_to_have_a_baby_later == 2)?'checked="checked"':''; ?>>
+			<label for="hasnotPatientWantedtoHaveaBaby" class="active">Did not want any(more) - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoHaveaBabyLaterDK" class="with-gap" name="hasPatientWantedtoHaveaBabyLater" value="88" type="radio" <?php echo ($row->has_patient_wanted_to_have_a_baby_later == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoHaveaBabyLaterDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoHaveaBabyLaterR" class="with-gap" name="hasPatientWantedtoHaveaBabyLater" value="99" type="radio" <?php echo ($row->has_patient_wanted_to_have_a_baby_later == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoHaveaBabyLaterR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientWantedtoHaveaBabyLaterRNA" class="with-gap" name="hasPatientWantedtoHaveaBabyLater" value="2222" type="radio" <?php echo ($row->has_patient_wanted_to_have_a_baby_later == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientWantedtoHaveaBabyLaterRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q15. Before becoming pregnant this time, in the past year how frequently did you use a condom when having sexual intercourse? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap mandatoryField" name="noOfTimesCondomUsedBeforePregnancy" title="Don't leave Q15" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 1)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedBeforePregnancyS" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="2" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 2)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyS" class="active">Sometimes - 2</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedBeforePregnancyN" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="3" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 3)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyN" class="active">Never - 3</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedBeforePregnancyDK" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="88" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 88)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedBeforePregnancyR" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="99" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 99)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedBeforePregnancyRNA" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="2222" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 2222)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedBeforePregnancyRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			Q16. Since becoming pregnant this time, how frequently have you used a condom when having sexual intercourse? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap mandatoryField" name="noOfTimesCondomUsedAfterPregnancy" title="Don't leave Q16" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 1)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedAfterPregnancyS" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="2" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 2)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyS" class="active">Sometimes - 2</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedAfterPregnancyN" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="3" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 3)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyN" class="active">Never - 3</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedAfterPregnancyDK" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="88" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 88)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedAfterPregnancyR" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="99" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 99)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="noOfTimesCondomUsedAfterPregnancyRNA" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="2222" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 2222)?'checked="checked"':''; ?>>
+			<label for="noOfTimesCondomUsedAfterPregnancyRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			Q17. In the past year, did you have symptoms such as <span class="highlightedTxt">abnormal</span> genital discharge, sores in your genital area, pain during urination, or pain in your lower abdomen? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="hasPatientHadPainInLowerAbdomenYes" class="with-gap mandatoryField" name="hasPatientHadPainInLowerAbdomen" title="Don't leave Q17" value="1" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientHadPainInLowerAbdomenYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientHadPainInLowerAbdomenNo" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="2" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientHadPainInLowerAbdomenNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientHadPainInLowerAbdomenDK" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="88" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientHadPainInLowerAbdomenDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientHadPainInLowerAbdomenR" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="99" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientHadPainInLowerAbdomenR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientHadPainInLowerAbdomenRNA" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="2222" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientHadPainInLowerAbdomenRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection symptomsSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q17A. Were you treated for these symptoms? <span class="mandatoryIconSection symptomsSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection symptomsSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="hasPatientBeenTreatedForLowerAbdomenPainYes" class="with-gap mandatoryField" name="hasPatientBeenTreatedForLowerAbdomenPain" title="Don't leave Q17A" value="1" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientBeenTreatedForLowerAbdomenPainYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientBeenTreatedForLowerAbdomenPainNo" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="2" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientBeenTreatedForLowerAbdomenPainNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientBeenTreatedForLowerAbdomenPainDK" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="88" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientBeenTreatedForLowerAbdomenPainDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientBeenTreatedForLowerAbdomenPainR" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="99" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientBeenTreatedForLowerAbdomenPainR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientBeenTreatedForLowerAbdomenPainRNA" class="with-gap" name="hasPatientBeenTreatedForLowerAbdomenPain" value="2222" type="radio" <?php echo ($row->has_patient_been_treated_for_lower_abdomen_pain == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientBeenTreatedForLowerAbdomenPainRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			Q18. Have you <span class="highlightedTxt">ever</span> been diagnosed or treated for syphilis? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="hasPatientEverBeenTreatedForSyphilisYes" class="with-gap mandatoryField" name="hasPatientEverBeenTreatedForSyphilis" title="Don't leave Q18" value="1" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTreatedForSyphilisYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTreatedForSyphilisNo" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="2" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTreatedForSyphilisNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTreatedForSyphilisDK" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="88" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTreatedForSyphilisDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTreatedForSyphilisR" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="99" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTreatedForSyphilisR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenTreatedForSyphilisRNA" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="2222" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenTreatedForSyphilisRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			Q19. Have you ever received a vaccine (HPV vaccine) to prevent cervical cancer, which is caused by a common virus that can be passed through sexual contact? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerYes" class="with-gap mandatoryField" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" title="Don't leave Q19" value="1" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerNo" class="with-gap" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" value="2" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerDK" class="with-gap" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" value="88" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerR" class="with-gap" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" value="99" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerRNA" class="with-gap" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" value="2222" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Alcohol and drug use</strong></h6>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q20. During the past 6 months, on how many days did you have at least one drink containing alcohol? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="patientHadDrinkWithAlcoholInLastSixMonthsInDays" name="patientHadDrinkWithAlcoholInLastSixMonthsInDays" type="text" class="validate days checkNum mandatoryField" title="Don't leave Q20" value="<?php echo($row->patient_had_drink_with_alcohol_in_last_six_months!= null && trim($row->patient_had_drink_with_alcohol_in_last_six_months)!= '' && $row->patient_had_drink_with_alcohol_in_last_six_months[0] == '@')?substr($row->patient_had_drink_with_alcohol_in_last_six_months,1):'';?>" style="width:10%;"> Days&nbsp;
+			<input id="patientHadDrinkWithAlcoholInLastSixMonthsDK" class="with-gap" name="patientHadDrinkWithAlcoholInLastSixMonths" value="88" type="radio" <?php echo ($row->patient_had_drink_with_alcohol_in_last_six_months == 88)?'checked="checked"':''; ?>>
+			<label for="patientHadDrinkWithAlcoholInLastSixMonthsDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientHadDrinkWithAlcoholInLastSixMonthsR" class="with-gap" name="patientHadDrinkWithAlcoholInLastSixMonths" value="99" type="radio" <?php echo ($row->patient_had_drink_with_alcohol_in_last_six_months == 99)?'checked="checked"':''; ?>>
+			<label for="patientHadDrinkWithAlcoholInLastSixMonthsR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientHadDrinkWithAlcoholInLastSixMonthsRNA" class="with-gap" name="patientHadDrinkWithAlcoholInLastSixMonths" value="2222" type="radio" <?php echo ($row->patient_had_drink_with_alcohol_in_last_six_months == 2222)?'checked="checked"':''; ?>>
+			<label for="patientHadDrinkWithAlcoholInLastSixMonthsRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q21. How often do you have 4 or more drinks with alcohol on one occasion? <span class="mandatoryIconSection patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSectionRequired">*</span> (e.g. within 2 hours)
+		    </div>
+		</div>
+		<div class="row allSection patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion">
+			<select id="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" name="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" class="material-select mandatoryField" title="Don't leave Q21">
+			   <option value=""> -- Select -- </option>
+			   <option value="1" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 1)?'selected="selected"':''; ?>>Never - 1</option>
+			   <option value="2" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 2)?'selected="selected"':''; ?>>Monthly - 2</option>
+			   <option value="3" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 3)?'selected="selected"':''; ?>>Weekly - 3</option>
+			   <option value="4" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 4)?'selected="selected"':''; ?>>Daily or On Most Days of The Week - 4</option>
+			   <option value="88" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			   <option value="99" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			   <option value="2222" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q22. Have you <span class="highlightedTxt">ever</span> tried recreational drugs? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			<input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap mandatoryField" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave Q22" value="1" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverTriedRecreationalDrugsYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverTriedRecreationalDrugsNo" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="2" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverTriedRecreationalDrugsNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverTriedRecreationalDrugsDK" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="88" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverTriedRecreationalDrugsDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverTriedRecreationalDrugsR" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="99" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverTriedRecreationalDrugsR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverTriedRecreationalDrugsRNA" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="2222" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverTriedRecreationalDrugsRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection recreationalDrugSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q22A. In the <span class="highlightedTxt">last 6 months</span>, have you taken any recreational drugs? <span class="mandatoryIconSection recreationalDrugSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection recreationalDrugSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="with-gap mandatoryField" name="hasPatientHadRecreationalDrugsInLastSixMonths" title="Don't leave Q22A" value="1" type="radio" <?php echo ($hasPatientHadRecreationalDrugsInLastSixMonths == 1)?'checked="checked"':'';?>>
+			<label for="hasPatientHadRecreationalDrugsInLastSixMonthsYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientHadRecreationalDrugsInLastSixMonthsNo" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="2" type="radio" <?php echo ($hasPatientHadRecreationalDrugsInLastSixMonths == 2)?'checked="checked"':'';?>>
+			<label for="hasPatientHadRecreationalDrugsInLastSixMonthsNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="88" type="radio" <?php echo ($hasPatientHadRecreationalDrugsInLastSixMonths == 88)?'checked="checked"':'';?>>
+			<label for="hasPatientHadRecreationalDrugsInLastSixMonthsDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="99" type="radio" <?php echo ($hasPatientHadRecreationalDrugsInLastSixMonths == 99)?'checked="checked"':'';?>>
+			<label for="hasPatientHadRecreationalDrugsInLastSixMonthsR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientHadRecreationalDrugsInLastSixMonthsRNA" class="with-gap" name="hasPatientHadRecreationalDrugsInLastSixMonths" value="2222" type="radio" <?php echo ($hasPatientHadRecreationalDrugsInLastSixMonths == 2222)?'checked="checked"':'';?>>
+			<label for="hasPatientHadRecreationalDrugsInLastSixMonthsRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection recreationalDrugSection recreationalDrugs" style="margin-bottom:0;margin-top:16px;display:none;">
+		    &nbsp;&nbsp;&nbsp;&nbsp;Specify Drug(s) <span class="mandatoryIconSection recreationalDrugSectionRequired recreationalDrugsRequired">*</span> <input id="recreationalDrugs" name="recreationalDrugs" type="text" class="validate mandatoryField" title="Please enter recreational drugs" value="<?php echo $recreationalDrugs; ?>" style="width:40%;">
+		</div>
+		<h6 style="padding:10px 0px 10px 6px;font-size:16px;"><strong>Abuse</strong></h6>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q23. Have you ever been emotionally or physically abused by your partner or your loved one? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:20px;">
+		    <div class="col s12" style="margin-bottom:0px;">
+			<input id="hasPatientEverBeenAbusedBySomeoneYes" class="with-gap mandatoryField" name="hasPatientEverBeenAbusedBySomeone" title="Don't leave Q23" value="1" type="radio" <?php echo ($hasPatientAbusedBy == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenAbusedBySomeoneYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenAbusedBySomeoneNo" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="2" type="radio" <?php echo ($hasPatientAbusedBy == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenAbusedBySomeoneNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenAbusedBySomeoneDK" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="88" type="radio" <?php echo ($hasPatientAbusedBy == 3)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenAbusedBySomeoneDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenAbusedBySomeoneR" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="99" type="radio" <?php echo ($hasPatientAbusedBy == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenAbusedBySomeoneR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenAbusedBySomeoneRNA" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="2222" type="radio" <?php echo ($hasPatientAbusedBy == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenAbusedBySomeoneRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientAbusedBySomeone" style="margin-bottom:5px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q23A. Who abused you? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientAbusedBySomeone" style="margin-bottom:10px;display:none;">
+		    <div class="col s12 allSection" style="margin-bottom:0px;padding-left:4%;">
+			<input id="patientAbusedByH" class="with-gap abusedBy mandatoryField" name="patientAbusedBy[]" title="Don't leave Q23A" value="1" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(1,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByH" class="active">Husband - 1</label>&nbsp;&nbsp;
+			<input id="patientAbusedByExH" class="with-gap abusedBy" name="patientAbusedBy[]" value="2" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(2,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByExH" class="active">Ex-Husband - 2</label>&nbsp;&nbsp;
+			<input id="patientAbusedByBf" class="with-gap abusedBy" name="patientAbusedBy[]" value="3" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(3,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByBf" class="active">Boyfriend - 3</label>&nbsp;&nbsp;
+			<input id="patientAbusedByS" class="with-gap abusedBy" name="patientAbusedBy[]" value="4" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(4,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByS" class="active">Stranger - 4</label>&nbsp;&nbsp;
+			<input id="patientAbusedByDK" class="with-gap notAbusedBy" name="patientAbusedBy[]" value="88" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(88,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientAbusedByR" class="with-gap notAbusedBy" name="patientAbusedBy[]" value="99" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(99,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientAbusedByRNA" class="with-gap notAbusedBy" name="patientAbusedBy[]" value="2222" type="checkbox" onchange="setAbusedBy(this);" <?php echo(in_array(2222,$patientAbusedBy))?'checked="checked"':''; ?>>
+			<label for="patientAbusedByRNA" class="active">Response Not Available - 2222</label>&nbsp;&nbsp;
+			Other <input id="patientAbusedByOther" name="patientAbusedByOther" type="text" class="validate" value="<?php echo $patientAbusedByOther; ?>" style="width:20%;">
+		    </div>
+		</div>
+		<div class="row allSection patientAbusedBySomeone" style="margin-bottom:0;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q23B. How many times were you abused? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientAbusedBySomeone" style="margin-bottom:10px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientAbusedBySomeoneInNoofTimes" name="patientAbusedBySomeoneInNoofTimes" type="text" class="validate nooftimes checkNum mandatoryField" title="Don't leave Q23B" value="<?php echo(trim($patientAbusedByInNoofTimes)!= '' && $patientAbusedByInNoofTimes[0] == '@')?substr($patientAbusedByInNoofTimes,1):'';?>" style="width:10%;"> Times&nbsp;
+			<input id="patientAbusedByNoofTimesDK" class="with-gap" name="patientAbusedByNoofTimes" value="88" type="radio" <?php echo($patientAbusedByInNoofTimes == 88)?'checked="checked"':''; ?>>
+			<label for="patientAbusedByNoofTimesDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientAbusedByNoofTimesR" class="with-gap" name="patientAbusedByNoofTimes" value="99" type="radio" <?php echo($patientAbusedByInNoofTimes == 99)?'checked="checked"':''; ?>>
+			<label for="patientAbusedByNoofTimesR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientAbusedByNoofTimesRNA" class="with-gap" name="patientAbusedByNoofTimes" value="2222" type="radio" <?php echo($patientAbusedByInNoofTimes == 2222)?'checked="checked"':''; ?>>
+			<label for="patientAbusedByNoofTimesRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q24. Within the last year, have you ever been hit, slapped, kicked, or otherwise physically hurt by someone? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:20px;">
+		    <div class="col s12" style="margin-bottom:0px;">
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="with-gap mandatoryField" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" title="Don't leave Q24" value="1" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="2" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="88" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="99" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearRNA" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="2222" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneWithinLastYear" style="margin-bottom:5px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q24A. Who hurt you? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneWithinLastYear" style="margin-bottom:10px;display:none;">
+		    <div class="col s12 allSection" style="margin-bottom:0px;padding-left:4%;">
+			<input id="patientHurtBySomeoneWithinLastYearH" class="with-gap hurtedBy mandatoryField" name="patientHurtBySomeoneWithinLastYear[]" title="Don't leave Q24A" value="1" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(1,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearH" class="active">Husband - 1</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearExH" class="with-gap hurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="2" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(2,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearExH" class="active">Ex-Husband - 2</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearBf" class="with-gap hurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="3" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(3,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearBf" class="active">Boyfriend - 3</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearS" class="with-gap hurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="4" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(4,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearS" class="active">Stranger - 4</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearDK" class="with-gap notHurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="88" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(88,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearR" class="with-gap notHurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="99" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(99,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneWithinLastYearRNA" class="with-gap notHurtedBy" name="patientHurtBySomeoneWithinLastYear[]" value="2222" type="checkbox" onchange="setHurtBy(this);" <?php echo(in_array(2222,$patientHurtByWithinLastYear))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneWithinLastYearRNA" class="active">Response Not Available - 2222</label>&nbsp;&nbsp;
+			Other <input id="patientHurtByOther" name="patientHurtByOther" type="text" class="validate" value="<?php echo $patientHurtByOtherWithinLastYear; ?>" style="width:20%;">
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneWithinLastYear" style="margin-bottom:0;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q24B. How many times were you hurt? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneWithinLastYear" style="margin-bottom:10px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientHurtBySomeoneInNoofTimes" name="patientHurtBySomeoneInNoofTimes" type="text" class="validate nooftimes checkNum mandatoryField" title="Don't leave Q24B" value="<?php echo(trim($patientHurtByInNoofTimes)!= '' && $patientHurtByInNoofTimes[0] == '@')?substr($patientHurtByInNoofTimes,1):'';?>" style="width:10%;"> Times&nbsp;
+			<input id="patientHurtByNoofTimesDK" class="with-gap" name="patientHurtByNoofTimes" value="88" type="radio" <?php echo($patientHurtByInNoofTimes == 88)?'checked="checked"':''; ?>>
+			<label for="patientHurtByNoofTimesDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientHurtByNoofTimesR" class="with-gap" name="patientHurtByNoofTimes" value="99" type="radio" <?php echo($patientHurtByInNoofTimes == 99)?'checked="checked"':''; ?>>
+			<label for="patientHurtByNoofTimesR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientHurtByNoofTimesRNA" class="with-gap" name="patientHurtByNoofTimes" value="2222" type="radio" <?php echo($patientHurtByInNoofTimes == 2222)?'checked="checked"':''; ?>>
+			<label for="patientHurtByNoofTimesRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancySection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q25. Since you've been pregnant have you been slapped, kicked or otherwise physically hurt by someone? <span class="mandatoryIconSection patientHurtBySomeoneDuringPregnancySectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancySection" style="margin-bottom:20px;">
+		    <div class="col s12" style="margin-bottom:0px;">
+			<input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="with-gap mandatoryField" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" title="Don't leave Q25" value="1" type="radio" <?php echo($hasPatientHurtByDuringPregnancy == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="2" type="radio" <?php echo($hasPatientHurtByDuringPregnancy == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="88" type="radio" <?php echo($hasPatientHurtByDuringPregnancy == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="99" type="radio" <?php echo($hasPatientHurtByDuringPregnancy == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenHurtBySomeoneDuringPregnancyRNA" class="with-gap" name="hasPatientEverBeenHurtBySomeoneDuringPregnancy" value="2222" type="radio" <?php echo($hasPatientHurtByDuringPregnancy == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenHurtBySomeoneDuringPregnancyRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancy" style="margin-bottom:5px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q25A. Who hurt you? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancy" style="margin-bottom:10px;display:none;">
+		    <div class="col s12 allSection" style="margin-bottom:0px;padding-left:4%;">
+			<input id="patientHurtBySomeoneDuringPregnancyH" class="with-gap hurtedByDuringPregnancy mandatoryField" name="patientHurtBySomeoneDuringPregnancy[]" title="Don't leave Q25A" value="1" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(1,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyH" class="active">Husband - 1</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyExH" class="with-gap hurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="2" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(2,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyExH" class="active">Ex-Husband - 2</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyBf" class="with-gap hurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="3" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(3,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyBf" class="active">Boyfriend - 3</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyS" class="with-gap hurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="4" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(4,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyS" class="active">Stranger - 4</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyDK" class="with-gap notHurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="88" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(88,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyR" class="with-gap notHurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="99" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(99,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientHurtBySomeoneDuringPregnancyRNA" class="with-gap notHurtedByDuringPregnancy" name="patientHurtBySomeoneDuringPregnancy[]" value="2222" type="checkbox" onchange="setHurtBySomoneDuringPregnancy(this);" <?php echo(in_array(2222,$patientHurtByDuringPregnancy))?'checked="checked"':''; ?>>
+			<label for="patientHurtBySomeoneDuringPregnancyRNA" class="active">Response Not Available - 2222</label>&nbsp;&nbsp;
+			Other <input id="patientHurtByOtherDuringPregnancy" name="patientHurtByOtherDuringPregnancy" type="text" class="validate" value="<?php echo $patientHurtByOtherDuringPregnancy; ?>" style="width:20%;">
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancy" style="margin-bottom:0;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q25B. How many times were you hurt? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientHurtBySomeoneDuringPregnancy" style="margin-bottom:10px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientHurtBySomeoneDuringPregnancyInNoofTimes" name="patientHurtBySomeoneDuringPregnancyInNoofTimes" type="text" class="validate nooftimes checkNum mandatoryField" title="Don't leave Q25B" value="<?php echo(trim($patientHurtByDuringPregnancyInNoofTimes)!= '' && $patientHurtByDuringPregnancyInNoofTimes[0] == '@')?substr($patientHurtByDuringPregnancyInNoofTimes,1):'';?>" style="width:10%;"> Times&nbsp;
+			<input id="patientHurtByDuringPregnancyNoofTimesDK" class="with-gap" name="patientHurtByDuringPregnancyNoofTimes" value="88" type="radio" <?php echo($patientHurtByDuringPregnancyInNoofTimes == 88)?'checked="checked"':''; ?>>
+			<label for="patientHurtByDuringPregnancyNoofTimesDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientHurtByDuringPregnancyNoofTimesR" class="with-gap" name="patientHurtByDuringPregnancyNoofTimes" value="99" type="radio" <?php echo($patientHurtByDuringPregnancyInNoofTimes == 99)?'checked="checked"':''; ?>>
+			<label for="patientHurtByDuringPregnancyNoofTimesR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientHurtByDuringPregnancyNoofTimesRNA" class="with-gap" name="patientHurtByDuringPregnancyNoofTimes" value="2222" type="radio" <?php echo($patientHurtByDuringPregnancyInNoofTimes == 2222)?'checked="checked"':''; ?>>
+			<label for="patientHurtByDuringPregnancyNoofTimesRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0;">
+		    <div class="col s12">
+			Q26. Within the last year, has anyone forced you to have sexual activities? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:20px;">
+		    <div class="col s12" style="margin-bottom:0px;">
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearYes" class="with-gap mandatoryField" name="hasPatientEverBeenForcedForSexWithinLastYear" title="Don't leave Q26" value="1" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenForcedForSexWithinLastYearYes" class="active">Yes - 1</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearNo" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="2" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenForcedForSexWithinLastYearNo" class="active">No - 2</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearDK" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="88" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenForcedForSexWithinLastYearDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearR" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="99" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenForcedForSexWithinLastYearR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearRNA" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="2222" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverBeenForcedForSexWithinLastYearRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientForcedForSexWithinLastYear" style="margin-bottom:5px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q26A. Who forced you? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientForcedForSexWithinLastYear" style="margin-bottom:10px;display:none;">
+		    <div class="col s12 allSection" style="margin-bottom:0px;padding-left:4%;">
+			<input id="patientForcedForSexWithinLastYearH" class="with-gap forcedForSex mandatoryField" name="patientForcedForSexWithinLastYear[]" title="Don't leave Q26A" value="1" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(1,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearH" class="active">Husband </label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearExH" class="with-gap forcedForSex" name="patientForcedForSexWithinLastYear[]" value="2" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(2,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearExH" class="active">Ex-Husband </label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearBf" class="with-gap forcedForSex" name="patientForcedForSexWithinLastYear[]" value="3" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(3,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearBf" class="active">Boyfriend </label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearS" class="with-gap forcedForSex" name="patientForcedForSexWithinLastYear[]" value="4" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(4,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearS" class="active">Stranger</label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearDK" class="with-gap notForcedForSex" name="patientForcedForSexWithinLastYear[]" value="88" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(88,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearR" class="with-gap notForcedForSex" name="patientForcedForSexWithinLastYear[]" value="99" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(99,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientForcedForSexWithinLastYearRNA" class="with-gap notForcedForSex" name="patientForcedForSexWithinLastYear[]" value="2222" type="checkbox" onchange="setPatientForcedforSexWithinLastYear(this);" <?php echo(in_array(2222,$patientForcedforSexBy))?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexWithinLastYearRNA" class="active">Response Not Available - 2222</label>&nbsp;&nbsp;
+			Other <input id="patientForcedForSexByOtherWithinLastYear" name="patientForcedForSexByOtherWithinLastYear" type="text" class="validate" value="<?php echo $patientForcedforSexByOther; ?>" style="width:20%;">
+		    </div>
+		</div>
+		<div class="row allSection patientForcedForSexWithinLastYear" style="margin-bottom:0;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q26B. How many times were you forced? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientForcedForSexWithinLastYear" style="margin-bottom:10px;display:none;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="patientForcedForSexInNoofTimes" name="patientForcedForSexInNoofTimes" type="text" class="validate nooftimes checkNum mandatoryField" title="Don't leave Q26B" value="<?php echo(trim($patientForcedforSexInNoofTimes)!= '' && $patientForcedforSexInNoofTimes[0] == '@')?substr($patientForcedforSexInNoofTimes,1):'';?>" style="width:10%;"> Times&nbsp;
+			<input id="patientForcedForSexNoofTimesDK" class="with-gap" name="patientForcedForSexNoofTimes" value="88" type="radio" <?php echo($patientForcedforSexInNoofTimes == 88)?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexNoofTimesDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="patientForcedForSexNoofTimesR" class="with-gap" name="patientForcedForSexNoofTimes" value="99" type="radio" <?php echo($patientForcedforSexInNoofTimes == 99)?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexNoofTimesR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="patientForcedForSexNoofTimesRNA" class="with-gap" name="patientForcedForSexNoofTimes" value="2222" type="radio" <?php echo($patientForcedforSexInNoofTimes == 2222)?'checked="checked"':''; ?>>
+			<label for="patientForcedForSexNoofTimesRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:5px;">
+		    <div class="col s12">
+			Q27. Are you afraid of any of the following people? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0px;">
+		    <div class="col s12 allSection">
+			<input id="isPatientAfraidOfAnyoneH" class="with-gap afraidOfAnyone mandatoryField" name="isPatientAfraidOfAnyone[]" title="Don't leave Q27" value="1" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(1,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneH" class="active">Husband </label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneExH" class="with-gap afraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="2" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(2,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneExH" class="active">Ex-Husband </label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneBf" class="with-gap afraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="3" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(3,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneBf" class="active">Boyfriend </label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneS" class="with-gap afraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="4" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(4,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneS" class="active">Stranger</label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneDK" class="with-gap notAfraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="88" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(88,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneR" class="with-gap notAfraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="99" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(99,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="isPatientAfraidOfAnyoneRNA" class="with-gap notAfraidOfAnyone" name="isPatientAfraidOfAnyone[]" value="2222" type="checkbox" onchange="setPatientAfraidofAnyone(this);" <?php echo(in_array(2222,$patientAfraidofAnyone))?'checked="checked"':''; ?>>
+			<label for="isPatientAfraidOfAnyoneRNA" class="active">Response Not Available - 2222</label>&nbsp;&nbsp;
+			Other <input id="isPatientAfraidOfAnyoneofOther" name="isPatientAfraidOfAnyoneofOther" type="text" class="validate" value="<?php echo $patientAfraidofOther; ?>" style="width:20%;">
+		    </div>
+		</div>
+		<h6 style="padding:0px 0px 10px 6px;font-size:16px;"><strong>Go Girls Teen Club</strong></h6>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			Q28. Have you ever participated in a club for adolescents? If YES, was it a Go Girls! club or a different club? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:0px;">
+		    <div class="col s12">
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsGGC" class="with-gap mandatoryField" name="hasPatientEverParticipatedInaClupforAdolescents" title="Don't leave Q28" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsGGC" class="active">Yes, a Go Girls! club - 1 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsDC" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="2" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsDC" class="active">Yes, a different club - 2 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsN" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="3" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 3)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsN" class="active">No - 3 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsDK" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="88" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsR" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="99" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsRNA" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="2222" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedInaClupforAdolescentsRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row allSection patientClubParticipateSection" style="margin-bottom:0;margin-top:16px;">
+		    <div class="col s12">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Q28A. When did you participate in the club? <span class="mandatoryIconSection patientClubParticipateSectionRequired">*</span>
+		    </div>
+		</div>
+		<div class="row allSection patientClubParticipateSection" style="margin-bottom:10px;">
+		    <div class="col s4 allSection patientClubParticipateSection" style="padding-left:3%;">
+			<select id="timeofPatientParticipateinClub" name="timeofPatientParticipateinClub" class="material-select mandatoryField" title="Don't leave Q28A">
+			    <option value=""> -- Select -- </option>
+			    <option value="1" <?php echo($row->time_of_patient_participate_in_club == 1)?'selected="selected"':''; ?>> Currently Participating - 1</option>
+			    <option value="2" <?php echo($row->time_of_patient_participate_in_club == 2)?'selected="selected"':''; ?>> < 3 months ago - 2</option>
+			    <option value="3" <?php echo($row->time_of_patient_participate_in_club == 3)?'selected="selected"':''; ?>> 3-6 months ago - 3</option>
+			    <option value="4" <?php echo($row->time_of_patient_participate_in_club == 4)?'selected="selected"':''; ?>> 7-12 months ago - 4</option>
+			    <option value="5" <?php echo($row->time_of_patient_participate_in_club == 5)?'selected="selected"':''; ?>> >12 months - 5</option>
+			    <option value="88" <?php echo($row->time_of_patient_participate_in_club == 88)?'selected="selected"':''; ?>>Don't Know - 88</option>
+			    <option value="99" <?php echo($row->time_of_patient_participate_in_club == 99)?'selected="selected"':''; ?>>Refused - 99</option>
+			    <option value="2222" <?php echo($row->time_of_patient_participate_in_club == 2222)?'selected="selected"':''; ?>>Response Not Available - 2222</option>
+			</select>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			Q29. Have you ever participated in a mother's group? <span class="mandatoryIconSection">*</span>
+		    </div>
+		</div>
+		<div class="row allSection" style="margin-bottom:10px;">
+		    <div class="col s12">
+			<input id="hasPatientEverParticipatedinMothersGroupYes" class="with-gap mandatoryField" name="hasPatientEverParticipatedinMothersGroup" title="Don't leave Q29" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 1)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedinMothersGroupYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedinMothersGroupNo" class="with-gap" name="hasPatientEverParticipatedinMothersGroup" value="2" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 2)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedinMothersGroupNo" class="active">No - 2 </label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedinMothersGroupDK" class="with-gap" name="hasPatientEverParticipatedinMothersGroup" value="88" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 88)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedinMothersGroupDK" class="active">Don't Know - 88</label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedinMothersGroupR" class="with-gap" name="hasPatientEverParticipatedinMothersGroup" value="99" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 99)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedinMothersGroupR" class="active">Refused - 99</label>&nbsp;&nbsp;
+			<input id="hasPatientEverParticipatedinMothersGroupRNA" class="with-gap" name="hasPatientEverParticipatedinMothersGroup" value="2222" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 2222)?'checked="checked"':''; ?>>
+			<label for="hasPatientEverParticipatedinMothersGroupRNA" class="active">Response Not Available - 2222</label>
+		    </div>
+		</div>
+		<div class="row" style="margin-bottom:10px;">
+		    <div class="input-field col s6">
+			<textarea id="comment" name="comment" class="materialize-textarea" title="Please enter comments"><?php echo $row->comment; ?></textarea>
+			<label for="comment">Comments </label>
+		    </div>
+		</div>
+		<div class="col s12" style="margin-top:10px;">
+		    <input type="hidden" name="formVersion" value="<?php echo $row->form_version; ?>"/>
+		    <input type="hidden" id="participantEligibility" name="participantEligibility" value="<?php echo $participantEligibility; ?>"/>
+		    <input id="riskAssessmentId" name="riskAssessmentId" type="hidden" value="<?php echo base64_encode($row->assessment_id); ?>"/>
+		    <input id="ancRapidRecencyId" name="ancRapidRecencyId" type="hidden" value="<?php echo (isset($row->anc_rapid_recency_id))?base64_encode($row->anc_rapid_recency_id):''; ?>"/>
+		    <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId);?>"/>
+		    <input type="hidden" name="status" id="status" value="<?php echo base64_encode($row->status); ?>"/>
+		    <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+		    <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+		    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="updateRiskAssessment();">UPDATE</a>&nbsp;&nbsp;
+		</div>
+	    </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
+<script>
+   $(document).ready(function(){
+       $('.datepicker').pickadate({
+	   selectMonths: true, // Creates a dropdown to control month
+	   selectYears: 100, // Creates a dropdown of 100 years to control year
+	   format: 'dd/mm/yyyy',
+	      max: new Date('Today'),
+		 closeOnSelect: true,
+		 closeOnClear: true,
+		 onSet: function(e){
+		    if(e.select != undefined && e.select != null){
+		       $('.picker__close').click();
+		    }
+		 }
+       });
+       <?php if($participantEligibility == 0){ ?>
+	endForm('<?php echo $endSrc; ?>');
+       <?php } else { ?>
+	participantAge('');
+	$('#occupation').trigger("change");
+	manageQ2();
+	manageQ3('load');
+	manageQ4('');
+	ageAtVeryFirstSex('');
+	setNoOfSexualPartners('');
+	setNoOfSexualPartnersInLastSixMonths('');
+	$('#partnerHIVTestStatus').trigger("change");
+	mainSexualPartnerAgeAtLastBirthday('');
+	manageQ12();
+	manageQ13();
+	totalNoofPregnancy('');
+	manageQ14A();
+	manageQ17();
+	noOfDaysHadDrinkInLastSixMonth('');
+	manageQ22();
+	manageQ23();
+	manageQ23Other();
+	patientAbusedBySomeoneinNumbers('');
+	manageQ24();
+	manageQ24Other();
+	patientHurtBySomeoneinNumbers('');
+	skipToQ26();
+	manageQ25();
+	manageQ25Other();
+	patientHurtBySomeoneDuringPrenancyinNumbers('');
+	manageQ26();
+	manageQ26Other();
+	patientForcedforSexWithinLastYearinNumbers('');
+	manageQ27();
+	manageQ28();
+       <?php } ?>
+   });
+   
+   function checkNameValidation(tableName, fieldName, obj, fnct, msg){
+       checkValue = document.getElementById(obj.id).value;
+       if($.trim(checkValue)!=''){
+	   $.post("<?php echo $this->url('common', array('action' => 'index')); ?>", {tableName: tableName, fieldName: fieldName, value: checkValue, fnct: fnct},
+	   function(data) {
+	       if (data > 0){
+		   alert(msg);
+		   duplicateName = false;
+		   document.getElementById(obj.id).value = "";
+	       }else {
+		   duplicateName = true;
+	       }
+	   });
+       }
+   }
+   
+   //set occupation
+   $('#occupation').on('change',function(){
+       if(this.value == 1111){
+	   $('.occupationNew').show();
+	   $('#occupationNew').addClass('isRequired');
+	   $('#occupationNew').focus();
+       }else{
+	  $('.occupationNew').hide();
+	  $('#occupationNew').removeClass('isRequired'); 
+       }
+   });
+   
+   //set age at first marriage
+   $('#ageAtFirstMarriageInYears').on('change',function() {
+       setAgeAtFirstMarriage('txt');
+   });
+   $('input:radio[name=ageAtFirstMarriage]').change(function () {
+       setAgeAtFirstMarriage('rd');
+   });
+   
+   function setAgeAtFirstMarriage(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#ageAtFirstMarriageInYears').val()!= ''){
+	       $('input[name="ageAtFirstMarriage"]:radio').prop('checked',false);
+	   }
+	   $('#ageAtFirstMarriageInYears').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	   $('#ageAtFirstMarriageInYears').val('');
+	   $('#ageAtFirstMarriageInYears').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=ageAtFirstMarriage]:checked').length > 0) {
+	       $('#ageAtFirstMarriageInYears').removeClass('isRequired');
+	   }else{
+	       $('#ageAtFirstMarriageInYears').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set no.of sexual partners
+   $('#noOfSexualPartnersInNumbers').on('change',function() {
+       setNoOfSexualPartners('txt');
+   });
+   $('input:radio[name=noOfSexualPartners]').change(function () {
+       setNoOfSexualPartners('rd');
+   });
+   function setNoOfSexualPartners(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#noOfSexualPartnersInNumbers').val()!= ''){
+	       $('input[name="noOfSexualPartners"]:radio').prop('checked',false);
+	   }
+	   $('#noOfSexualPartnersInNumbers').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#noOfSexualPartnersInNumbers').val('');
+	  $('#noOfSexualPartnersInNumbers').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=noOfSexualPartners]:checked').length > 0) {
+	       $('#noOfSexualPartnersInNumbers').removeClass('isRequired');
+	   }else{
+	       $('#noOfSexualPartnersInNumbers').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set no.of sexual partners in last six months
+   $('#noOfSexualPartnersInLastSixMonthsInNumbers').on('change',function() {
+       setNoOfSexualPartnersInLastSixMonths('txt');
+   });
+   $('input:radio[name=noOfSexualPartnersInLastSixMonths]').change(function () {
+       setNoOfSexualPartnersInLastSixMonths('rd');
+   });
+   function setNoOfSexualPartnersInLastSixMonths(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#noOfSexualPartnersInLastSixMonthsInNumbers').val()!= ''){
+	       $('input[name="noOfSexualPartnersInLastSixMonths"]:radio').prop('checked',false);
+	   }
+	   $('#noOfSexualPartnersInLastSixMonthsInNumbers').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#noOfSexualPartnersInLastSixMonthsInNumbers').val('');
+	  $('#noOfSexualPartnersInLastSixMonthsInNumbers').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=noOfSexualPartnersInLastSixMonths]:checked').length > 0) {
+	       $('#noOfSexualPartnersInLastSixMonthsInNumbers').removeClass('isRequired');
+	   }else{
+	       $('#noOfSexualPartnersInLastSixMonthsInNumbers').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set main sexual partner age at last birthday
+   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').on('change',function() {
+       mainSexualPartnerAgeAtLastBirthday('txt');
+   });
+   $('input:radio[name=ageOfMainSexualPartnerAtLastBirthday]').change(function () {
+       mainSexualPartnerAgeAtLastBirthday('rd');
+   });
+   function mainSexualPartnerAgeAtLastBirthday(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#ageOfMainSexualPartnerAtLastBirthdayInYears').val()!= ''){
+	       $('.mainSexualPartnerAgeSectionRequired').css('visibility','hidden');
+	       $('.mainSexualPartnerAgeSection').css('color','rgba(0,0,0,0.26)');
+	       $('.mainSexualPartnerAgeSection').css('pointer-events','none');
+	       $('input[name="ageOfMainSexualPartnerAtLastBirthday"]:radio').prop('checked',false);
+	       $('#ageDiffOfMainSexualPartner').removeClass('isRequired');
+	   }
+	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('.mainSexualPartnerAgeSectionRequired').css('visibility','visible');
+	  $('.mainSexualPartnerAgeSection').css('color','');
+	  $('.mainSexualPartnerAgeSection').css('pointer-events','auto');
+	  $('#ageOfMainSexualPartnerAtLastBirthdayInYears').val('');
+	  $('#ageOfMainSexualPartnerAtLastBirthdayInYears').removeClass('isRequired');
+	  $('#ageDiffOfMainSexualPartner').addClass('isRequired');
+       }else{
+	   if($('#partnerHIVTestStatus').val()!= 3){
+	       if($('input:radio[name=ageOfMainSexualPartnerAtLastBirthday]:checked').length > 0) {
+		   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').removeClass('isRequired');
+		   mainSexualPartnerAgeAtLastBirthday('rd');
+	       }else{
+		   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').addClass('isRequired');
+		   mainSexualPartnerAgeAtLastBirthday('txt');
+	       }
+	   }
+       }
+   }
+   
+   //set no.of days in last six months
+   $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').on('change',function() {
+       noOfDaysHadDrinkInLastSixMonth('txt');
+   });
+   $('input:radio[name=patientHadDrinkWithAlcoholInLastSixMonths]').change(function () {
+       noOfDaysHadDrinkInLastSixMonth('rd');
+   });
+   function noOfDaysHadDrinkInLastSixMonth(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').val() == '' || $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').val() > 0){
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSectionRequired').css('visibility','visible');
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('color','');
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('pointer-events','auto');
+	       $('#hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion').addClass('isRequired');
+	   }else{
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSectionRequired').css('visibility','hidden');
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('color','rgba(0,0,0,0.26)');
+	       $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('pointer-events','none');
+	       $('#hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion').removeClass('isRequired');
+	   }
+	   $('input[name="patientHadDrinkWithAlcoholInLastSixMonths"]:radio').prop('checked',false);
+	   $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	   $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSectionRequired').css('visibility','hidden');
+	   $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('color','rgba(0,0,0,0.26)');
+	   $('.patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection').css('pointer-events','none');
+	   $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').val('');
+	   $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').removeClass('isRequired');
+	   $('#hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=patientHadDrinkWithAlcoholInLastSixMonths]:checked').length > 0) {
+	       $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').removeClass('isRequired');
+	       noOfDaysHadDrinkInLastSixMonth('rd');
+	   }else{
+	       $('#patientHadDrinkWithAlcoholInLastSixMonthsInDays').addClass('isRequired');
+	       noOfDaysHadDrinkInLastSixMonth('txt');
+	   }
+       }
+   }
+   
+   //set patient abused by
+   $('input:radio[name=hasPatientEverBeenAbusedBySomeone]').change(function () {
+       manageQ23();
+   });
+   
+   function manageQ23(){
+       if ($("input[name='hasPatientEverBeenAbusedBySomeone']:checked").val() == 1) {
+	   $('.patientAbusedBySomeone').show();
+	   $('#patientAbusedByH,#patientAbusedBySomeoneInNoofTimes').addClass('isRequired');
+       }else{
+	 $('.patientAbusedBySomeone').hide();
+	 //$('input[name="patientAbusedBy[]"]:checkbox').prop('checked',false);
+	 //$('input[name="patientAbusedByNoofTimes"]:radio').prop('checked',false);
+	 $('#patientAbusedByH,#patientAbusedBySomeoneInNoofTimes').removeClass('isRequired');
+	 //$('#patientAbusedBySomeoneInNoofTimes').val('');
+       }
+   }
+   
+   var abusedByGroup = [1,2,3,4];
+   var notAbusedByGroup = [88,99,2222];
+   function setAbusedBy(obj){
+       if(abusedByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.notAbusedBy').prop('checked', false);
+	   $('#patientAbusedByOther').val('');
+       }else if(notAbusedByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.abusedBy').prop('checked', false);
+	   $('#patientAbusedByOther').val('');
+	   if(obj.value == 88){
+	       $(".notAbusedBy:not(#patientAbusedByDK)").prop('checked',false);
+	   }else if(obj.value == 99){
+	       $(".notAbusedBy:not(#patientAbusedByR)").prop('checked',false);
+	   }else if(obj.value == 2222){
+	       $(".notAbusedBy:not(#patientAbusedByRNA)").prop('checked',false);
+	   }
+       }
+   }
+   
+   $('#patientAbusedByOther').on('change',function() {
+       manageQ23Other();
+   });
+   
+   function manageQ23Other(){
+       if($("input[name='hasPatientEverBeenAbusedBySomeone']:checked").val()!= undefined && $("input[name='hasPatientEverBeenAbusedBySomeone']:checked").val()!= ''){
+	   if($("input[name='hasPatientEverBeenAbusedBySomeone']:checked").val()!= 1 || $.trim($('#patientAbusedByOther').val())!= ''){
+	       $('.abusedBy').prop('checked', false);
+	       $('.notAbusedBy').prop('checked', false);
+	       $('#patientAbusedByH').removeClass('isRequired');
+	   }else{
+	      $('#patientAbusedByH').addClass('isRequired'); 
+	   }
+       }
+   }
+   
+   $('#patientAbusedBySomeoneInNoofTimes').on('change',function() {
+       patientAbusedBySomeoneinNumbers('txt');
+   });
+   $('input:radio[name=patientAbusedByNoofTimes]').change(function () {
+       patientAbusedBySomeoneinNumbers('rd');
+   });
+   function patientAbusedBySomeoneinNumbers(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#patientAbusedBySomeoneInNoofTimes').val()!= ''){
+	       $('#patientAbusedByNoofTimesDK,#patientAbusedByNoofTimesR,#patientAbusedByNoofTimesRNA').prop('checked',false);
+	   }
+	   $('#patientAbusedBySomeoneInNoofTimes').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#patientAbusedBySomeoneInNoofTimes').val('');
+	  $('#patientAbusedBySomeoneInNoofTimes').removeClass('isRequired');
+       }else{
+	   if($("input[name='hasPatientEverBeenAbusedBySomeone']:checked").val()!= 1 || $('input:radio[name=patientAbusedByNoofTimes]:checked').length > 0) {
+	       $('#patientAbusedBySomeoneInNoofTimes').removeClass('isRequired');
+	   }else{
+	       $('#patientAbusedBySomeoneInNoofTimes').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set patient hurt by some within last year
+   $('input:radio[name=hasPatientEverBeenHurtBySomeoneWithinLastYear]').change(function () {
+       skipToQ26();
+       manageQ24();
+   });
+   
+   function manageQ24(){
+       if ($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val() == 1) {
+	   $('.patientHurtBySomeoneWithinLastYear').show();
+	   $('#patientHurtBySomeoneWithinLastYearH,#patientHurtBySomeoneInNoofTimes').addClass('isRequired');
+       }else{
+	   $('.patientHurtBySomeoneWithinLastYear').hide();
+	   //$('input[name="patientHurtBySomeoneWithinLastYear[]"]:checkbox').prop('checked',false);
+	   //$('input[name="patientHurtByNoofTimes"]:radio').prop('checked',false);
+	   $('#patientHurtBySomeoneWithinLastYearH,#patientHurtBySomeoneInNoofTimes').removeClass('isRequired');
+	   //$('#patientHurtBySomeoneInNoofTimes').val('');
+       }
+   }
+   
+   var hurtByGroup = [1,2,3,4];
+   var notHurtByGroup = [88,99,2222];
+   function setHurtBy(obj){
+       if(hurtByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.notHurtedBy').prop('checked', false);
+	   $('#patientHurtByOther').val('');
+       }else if(notHurtByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.hurtedBy').prop('checked', false);
+	   $('#patientHurtByOther').val('');
+	   if(obj.value == 88){
+	       $(".notHurtedBy:not(#patientHurtBySomeoneWithinLastYearDK)").prop('checked',false);
+	   }else if(obj.value == 99){
+	       $(".notHurtedBy:not(#patientHurtBySomeoneWithinLastYearR)").prop('checked',false);
+	   }else if(obj.value == 2222){
+	       $(".notHurtedBy:not(#patientHurtBySomeoneWithinLastYearRNA)").prop('checked',false);
+	   }
+       }
+   }
+   
+   $('#patientHurtByOther').on('change',function() {
+       manageQ24Other();
+   });
+   
+   function manageQ24Other(){
+       if($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= undefined && $("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= ''){
+	   if($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= 1 || $.trim($('#patientHurtByOther').val())!= ''){
+	       $('.hurtedBy').prop('checked', false);
+	       $('.notHurtedBy').prop('checked', false);
+	       $('#patientHurtBySomeoneWithinLastYearH').removeClass('isRequired');
+	   }else{
+	      $('#patientHurtBySomeoneWithinLastYearH').addClass('isRequired'); 
+	   }
+       }
+   }
+   
+   $('#patientHurtBySomeoneInNoofTimes').on('change',function() {
+      patientHurtBySomeoneinNumbers('txt');
+   });
+   $('input:radio[name=patientHurtByNoofTimes]').change(function () {
+      patientHurtBySomeoneinNumbers('rd');
+   });
+   function patientHurtBySomeoneinNumbers(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#patientHurtBySomeoneInNoofTimes').val()!= ''){
+	       $('#patientHurtByNoofTimesDK,#patientHurtByNoofTimesR,#patientHurtByNoofTimesRNA').prop('checked',false);
+	   }
+	   $('#patientHurtBySomeoneInNoofTimes').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#patientHurtBySomeoneInNoofTimes').val('');
+	  $('#patientHurtBySomeoneInNoofTimes').removeClass('isRequired');
+       }else{
+	   if($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= 1 || $('input:radio[name=patientHurtByNoofTimes]:checked').length > 0) {
+	       $('#patientHurtBySomeoneInNoofTimes').removeClass('isRequired');
+	   }else{
+	       $('#patientHurtBySomeoneInNoofTimes').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set patient hurt by someone during pregnancy
+   $('input:radio[name=hasPatientEverBeenHurtBySomeoneDuringPregnancy]').change(function () {
+       manageQ25();
+   });
+   
+   function manageQ25(){
+       if ($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val() == 1) {
+	   $('.patientHurtBySomeoneDuringPregnancy').show();
+	   $('#patientHurtBySomeoneDuringPregnancyH,#patientHurtBySomeoneDuringPregnancyInNoofTimes').addClass('isRequired');
+       }else{
+	 $('.patientHurtBySomeoneDuringPregnancy').hide();
+	 //$('input[name="patientHurtBySomeoneDuringPregnancy[]"]:checkbox').prop('checked',false);
+	 //$('input[name="patientHurtByDuringPregnancyNoofTimes"]:radio').prop('checked',false);
+	 $('#patientHurtBySomeoneDuringPregnancyH,#patientHurtBySomeoneDuringPregnancyInNoofTimes').removeClass('isRequired');
+	 //$('#patientHurtBySomeoneDuringPregnancyInNoofTimes').val('');
+       }
+   }
+   
+   var hurtByDuringPregnancyGroup = [1,2,3,4];
+   var notHurtByDuringPregnancyGroup = [88,99,2222];
+   function setHurtBySomoneDuringPregnancy(obj){
+       if(hurtByDuringPregnancyGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.notHurtedByDuringPregnancy').prop('checked', false);
+	   $('#patientHurtByOtherDuringPregnancy').val('');
+       }else if(notHurtByDuringPregnancyGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.hurtedByDuringPregnancy').prop('checked', false);
+	   $('#patientHurtByOtherDuringPregnancy').val('');
+	   if(obj.value == 88){
+	       $(".notHurtedByDuringPregnancy:not(#patientHurtBySomeoneDuringPregnancyDK)").prop('checked',false);
+	   }else if(obj.value == 99){
+	       $(".notHurtedByDuringPregnancy:not(#patientHurtBySomeoneDuringPregnancyR)").prop('checked',false);
+	   }else if(obj.value == 2222){
+	       $(".notHurtedByDuringPregnancy:not(#patientHurtBySomeoneDuringPregnancyRNA)").prop('checked',false);
+	   }
+       }
+   }
+   
+   $('#patientHurtByOtherDuringPregnancy').on('change',function() {
+       manageQ25Other();
+   });
+   
+   function manageQ25Other(){
+      if($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val()!= undefined && $("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val()!= ''){
+	  if($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val()!= 1 || $.trim($('#patientHurtByOtherDuringPregnancy').val())!= ''){
+	      $('.hurtedByDuringPregnancy').prop('checked', false);
+	      $('.notHurtedByDuringPregnancy').prop('checked', false);
+	      $('#patientHurtBySomeoneDuringPregnancyH').removeClass('isRequired');
+	  }else{
+	     $('#patientHurtBySomeoneDuringPregnancyH').addClass('isRequired'); 
+	  }
+      }
+   }
+   
+   $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').on('change',function() {
+       patientHurtBySomeoneDuringPrenancyinNumbers('txt');
+   });
+   $('input:radio[name=patientHurtByDuringPregnancyNoofTimes]').change(function () {
+       patientHurtBySomeoneDuringPrenancyinNumbers('rd');
+   });
+   function patientHurtBySomeoneDuringPrenancyinNumbers(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#patientHurtBySomeoneDuringPregnancyInNoofTimes').val()!= ''){
+	       $('#patientHurtByDuringPregnancyNoofTimesDK,#patientHurtByDuringPregnancyNoofTimesR,#patientHurtByDuringPregnancyNoofTimesRNA').prop('checked',false);
+	   }
+	   $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').val('');
+	  $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').removeClass('isRequired');
+       }else{
+	   if($("input[name='hasPatientEverBeenHurtBySomeoneDuringPregnancy']:checked").val()!= 1 || $('input:radio[name=patientHurtByDuringPregnancyNoofTimes]:checked').length > 0) {
+	       $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').removeClass('isRequired');
+	   }else{
+	       $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set patient forced for sex within last year
+   $('input:radio[name=hasPatientEverBeenForcedForSexWithinLastYear]').change(function () {
+       manageQ26();
+   });
+   
+   function manageQ26(){
+       if ($("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val() == 1) {
+	   $('.patientForcedForSexWithinLastYear').show();
+	   $('#patientForcedForSexWithinLastYearH,#patientForcedForSexInNoofTimes').addClass('isRequired');
+       }else{
+	 $('.patientForcedForSexWithinLastYear').hide();
+	 //$('input[name="patientForcedForSexWithinLastYear[]"]:checkbox').prop('checked',false);
+	 //$('input[name="patientForcedForSexNoofTimes"]:radio').prop('checked',false);
+	 $('#patientForcedForSexWithinLastYearH,#patientForcedForSexInNoofTimes').removeClass('isRequired');
+	 //$('#patientForcedForSexInNoofTimes').val('');
+       }
+   }
+   
+   var forcedforSexByGroup = [1,2,3,4];
+   var notForcedforSexByGroup = [88,99,2222];
+   function setPatientForcedforSexWithinLastYear(obj){
+       if(forcedforSexByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.notForcedForSex').prop('checked', false);
+	   $('#patientForcedForSexByOtherWithinLastYear').val('');
+       }else if(notForcedforSexByGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.forcedForSex').prop('checked', false);
+	   $('#patientForcedForSexByOtherWithinLastYear').val('');
+	   if(obj.value == 88){
+	       $(".notForcedForSex:not(#patientForcedForSexWithinLastYearDK)").prop('checked',false);
+	   }else if(obj.value == 99){
+	       $(".notForcedForSex:not(#patientForcedForSexWithinLastYearR)").prop('checked',false);
+	   }else if(obj.value == 2222){
+	       $(".notForcedForSex:not(#patientForcedForSexWithinLastYearRNA)").prop('checked',false);
+	   }
+       }
+   }
+   
+   $('#patientForcedForSexByOtherWithinLastYear').on('change',function() {
+       manageQ26Other();
+   });
+   
+   function manageQ26Other(){
+       if($("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val()!= undefined && $("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val()!= ''){
+	   if($("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val()!= 1 || $.trim($('#patientForcedForSexByOtherWithinLastYear').val())!= ''){
+	       $('.forcedForSex').prop('checked', false);
+	       $('.notForcedForSex').prop('checked', false);
+	       $('#patientForcedForSexWithinLastYearH').removeClass('isRequired');
+	   }else{
+	      $('#patientForcedForSexWithinLastYearH').addClass('isRequired'); 
+	   }
+       }
+   }
+   
+   $('#patientForcedForSexInNoofTimes').on('change',function() {
+       patientForcedforSexWithinLastYearinNumbers('txt');
+   });
+   $('input:radio[name=patientForcedForSexNoofTimes]').change(function () {
+       patientForcedforSexWithinLastYearinNumbers('rd');
+   });
+   function patientForcedforSexWithinLastYearinNumbers(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#patientForcedForSexInNoofTimes').val()!= ''){
+	       $('#patientForcedForSexNoofTimesDK,#patientForcedForSexNoofTimesR,#patientForcedForSexNoofTimesRNA').prop('checked',false);
+	   }
+	   $('#patientForcedForSexInNoofTimes').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#patientForcedForSexInNoofTimes').val('');
+	  $('#patientForcedForSexInNoofTimes').removeClass('isRequired');
+       }else{
+	   if($("input[name='hasPatientEverBeenForcedForSexWithinLastYear']:checked").val()!= 1 || $('input:radio[name=patientForcedForSexNoofTimes]:checked').length > 0) {
+	       $('#patientForcedForSexInNoofTimes').removeClass('isRequired');
+	   }else{
+	       $('#patientForcedForSexInNoofTimes').addClass('isRequired');
+	   }
+       }
+   }
+   
+   function skipToQ26(){
+       if($("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= undefined && $("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= '' && $("input[name='hasPatientEverBeenHurtBySomeoneWithinLastYear']:checked").val()!= 1){
+	  $('.patientHurtBySomeoneDuringPregnancySectionRequired').css('visibility','hidden');
+	  $('.patientHurtBySomeoneDuringPregnancySection').css('color','rgba(0,0,0,0.26)');
+	  $('.patientHurtBySomeoneDuringPregnancySection').css('pointer-events','none');
+	  $('input[name="hasPatientEverBeenHurtBySomeoneDuringPregnancy"]:radio').prop('checked',false);
+	  $('.patientHurtBySomeoneDuringPregnancy').hide();
+	  $('input[name="patientHurtBySomeoneDuringPregnancy[]"]:checkbox').prop('checked',false);
+	  $('input[name="patientHurtByDuringPregnancyNoofTimes"]:radio').prop('checked',false);
+	  $('#hasPatientEverBeenHurtBySomeoneDuringPregnancyYes,#patientHurtBySomeoneDuringPregnancyH,#patientHurtBySomeoneDuringPregnancyInNoofTimes').removeClass('isRequired');
+	  $('#patientHurtBySomeoneDuringPregnancyInNoofTimes').val('');
+       }else{
+	  $('.patientHurtBySomeoneDuringPregnancySectionRequired').css('visibility','visible');
+	  $(".patientHurtBySomeoneDuringPregnancySection").css("color","");
+	  $('.patientHurtBySomeoneDuringPregnancySection').css('pointer-events','auto');
+	  $('#hasPatientEverBeenHurtBySomeoneDuringPregnancyYes').addClass('isRequired');
+       }
+   }
+   
+   //set patient afraid of anyone
+   var afraidofAnyoneGroup = [1,2,3,4];
+   var notAfraidofAnyoneGroup = [88,99,2222];
+   function setPatientAfraidofAnyone(obj){
+       if(afraidofAnyoneGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.notAfraidOfAnyone').prop('checked', false);
+	   $('#isPatientAfraidOfAnyoneofOther').val('');
+       }else if(notAfraidofAnyoneGroup.indexOf(parseInt(obj.value))!= -1){
+	   $('.afraidOfAnyone').prop('checked', false);
+	   $('#isPatientAfraidOfAnyoneofOther').val('');
+	   if(obj.value == 88){
+	       $(".notAfraidOfAnyone:not(#isPatientAfraidOfAnyoneDK)").prop('checked',false);
+	   }else if(obj.value == 99){
+	       $(".notAfraidOfAnyone:not(#isPatientAfraidOfAnyoneR)").prop('checked',false);
+	   }else if(obj.value == 2222){
+	       $(".notAfraidOfAnyone:not(#isPatientAfraidOfAnyoneRNA)").prop('checked',false);
+	   }
+       }
+   }
+   
+   $('#isPatientAfraidOfAnyoneofOther').on('change',function() {
+      manageQ27();
+   });
+   
+   function manageQ27(){
+       if($.trim($('#isPatientAfraidOfAnyoneofOther').val())!= ''){
+	   $('.afraidOfAnyone').prop('checked', false);
+	   $('.notAfraidOfAnyone').prop('checked', false);
+	   $('#isPatientAfraidOfAnyoneH').removeClass('isRequired');
+       }else{
+	  $('#isPatientAfraidOfAnyoneH').addClass('isRequired'); 
+       }
+   }
+   
+   //set patient recency test status
+   $('input:radio[name=hasPatientHadRapidRecencyTest]').change(function () {
+       if ($("input[name='hasPatientHadRapidRecencyTest']:checked").val() == 'done') {
+	   $('#rtrSection').css('height','auto');
+	   $('.rrrSection').show();
+	   $('#rrrControl,#rrrHIVDiagnostic,#rrrRecency').addClass('isRequired');
+       }else{
+	  $('#rtrSection').css('height','90px');
+	  $('.rrrSection').hide();
+	  //$('#rrrHIVDiagnostic option:first').prop('selected', true);
+	  //$('#rrrRecency option:first').prop('selected', true);
+	  $('#rrrControl,#rrrHIVDiagnostic,#rrrRecency').removeClass('isRequired');
+       }
+   });
+   
+   //recency show/hide based on HIV diagostic
+   $('#rrrHIVDiagnostic').on('change',function () {
+       if ($('#rrrHIVDiagnostic').val() == 'negative') {
+	   $('.rrrRecency').hide();
+	   $('#rrrRecency').removeClass('isRequired');
+       }else{
+	   $('.rrrRecency').show();
+	   $('#rrrRecency').addClass('isRequired');
+       }
+   });
+   
+   //enable/disable Demographic Characteristics fields based on q.2
+   $('input:radio[name=hasPatientEverAttendedSchool]').change(function () {
+      manageQ2();
+   });
+   function manageQ2(){
+      if($("input[name='hasPatientEverAttendedSchool']:checked").val()!= undefined){
+	  if ($("input[name='hasPatientEverAttendedSchool']:checked").val()!= 1) {
+	      //css section
+	      $(".degreeSectionRequired,.participantSchoolSectionRequired").css("visibility","hidden");
+	      $(".degreeSection,.participantSchoolSection").css("color","rgba(0,0,0,0.26)");
+	      $(".degree,.participantSchoolSection").css("pointer-events","none");
+	      //validate/content section
+	      $("#degree,#isParticipantAttendingSchoolNowYes").removeClass("isRequired");
+	      $('div').removeClass('isRequired');
+	  }else{
+	      //css section
+	      $(".degreeSectionRequired,.participantSchoolSectionRequired").css("visibility","visible");
+	      $(".degreeSection,.participantSchoolSection").css("color","");
+	      $(".degree,.participantSchoolSection").css("pointer-events","auto");
+	      //validate/content section
+	      $("#degree,#isParticipantAttendingSchoolNowYes").addClass("isRequired");
+	      $('div').removeClass('isRequired');
+	  }
+      }
+   }
+   
+   //enable/disable Demographic Characteristics fields based on q.3
+   $('input:radio[name=everBeenMarried]').change(function () {
+      manageQ3('change');
+   });
+   function manageQ3(frmSrc){
+      if($("input[name='everBeenMarried']:checked").val()!= undefined){
+	 if ($("input[name='everBeenMarried']:checked").val() != 1) {
+	     //css section
+	     $(".everBeenMarriedSectionRequired").css("visibility","hidden");
+	     $(".everBeenMarriedSection").css("color","rgba(0,0,0,0.26)");
+	     $('#ageAtFirstMarriageInYears').css("pointer-events","none");
+	     $("input[name='ageAtFirstMarriage']").attr("disabled","disabled");
+	     $("input[name='everBeenWidowed']").attr("disabled","disabled");
+	     $(".currentMaritalStatus").css("pointer-events","none");
+	     //validate/content section
+	     $("#ageAtFirstMarriageInYears").val("");
+	     $('input[name="ageAtFirstMarriage"]:radio').prop('checked',false);
+	     $('input[name="everBeenWidowed"]:radio').prop('checked',false);
+	     $("#ageAtFirstMarriageInYears,#currentMaritalStatus").removeClass("isRequired");
+	     $("input[name='ageAtFirstMarriage']").removeClass("isRequired");
+	     $("input[name='everBeenWidowed']").removeClass("isRequired");
+	     if(frmSrc == 'change'){
+	       if ($("input[name='everBeenMarried']:checked").val() == 2) {
+		  $("#currentMaritalStatus").val(2);
+		  $("#currentMaritalStatus").material_select();
+		  $('div').removeClass('isRequired');
+	       }else{
+		  $("#currentMaritalStatus").val("");
+		  $("#currentMaritalStatus").material_select();
+		  $('div').removeClass('isRequired');
+	       }
+	     }
+	 }else{
+	     //css section
+	     $(".everBeenMarriedSectionRequired").css("visibility","visible");
+	     $(".everBeenMarriedSection").css("color","");
+	     $('#ageAtFirstMarriageInYears').css("pointer-events","auto");
+	     $("input[name='ageAtFirstMarriage']").removeAttr("disabled");
+	     $("input[name='everBeenWidowed']").removeAttr("disabled");
+	     $(".currentMaritalStatus").css("pointer-events","auto");
+	     //validate/content section
+	     $("#ageAtFirstMarriageInYears").addClass("isRequired");
+	     $("#currentMaritalStatus").addClass("isRequired");
+	     $("input[name='everBeenWidowed']").addClass("isRequired");
+	     //$("#currentMaritalStatus").val("");
+	     //$("#currentMaritalStatus").material_select();
+	     $('div').removeClass('isRequired');
+	     setAgeAtFirstMarriage('');
+	 }
+      }
+   }
+   
+   //enable/disable Demographic Characteristics fields based on q.4
+   $('input:radio[name=hasPatientEverBeenTestedforHIV]').change(function () {
+      manageQ4('change');
+   });
+   function manageQ4(frmSrc){
+      if($("input[name='hasPatientEverBeenTestedforHIV']:checked").val()!= undefined){
+	  if ($("input[name='hasPatientEverBeenTestedforHIV']:checked").val() != 1) {
+	      //css section
+	      $(".everBeenTestedforHIVSectionRequired").css("visibility","hidden");
+	      $(".everBeenTestedforHIVSection").css("color","rgba(0,0,0,0.26)");
+	      $(".timeOfLastHIVTest,.lastHIVTestStatus,.placeofLastHIVTest").css("pointer-events","none");
+	      //validate/content section
+	      $("#timeOfLastHIVTest,#lastHIVTestStatus,#placeofLastHIVTest").removeClass("isRequired");
+	      $('div').removeClass('isRequired');
+	  }else{
+	      //css section
+	      $(".everBeenTestedforHIVSectionRequired").css("visibility","visible");
+	      $(".everBeenTestedforHIVSection").css("color","");
+	      $(".timeOfLastHIVTest,.lastHIVTestStatus,.placeofLastHIVTest").css("pointer-events","auto");
+	      //validate/content section
+	      $("#timeOfLastHIVTest,#lastHIVTestStatus,#placeofLastHIVTest").addClass("isRequired");
+	      if(frmSrc == 'agenyr' && $('#lastHIVTestStatus').val() == 2){
+	         $('#lastHIVTestStatus').val('');
+	         $('#lastHIVTestStatus').material_select();
+	      }
+	      $('div').removeClass('isRequired');
+	  }
+      }
+   }
+   
+   //partner HIV status
+   $('#partnerHIVTestStatus').on('change',function() {
+       if($.trim($('#partnerHIVTestStatus').val()) == 3){
+	   $(".partnerHIVTestStatusRequired").css("visibility","hidden");
+	   $(".partnerHIVTestStatus").css("color","rgba(0,0,0,0.26)");
+	   $(".partnerHIVTestStatus").css("pointer-events","none");
+	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').val('');
+	   $('input[name="ageOfMainSexualPartnerAtLastBirthday"]:radio').prop('checked',false);
+	   $('input[name="isPartnerCircumcised"]:radio').prop('checked',false);
+	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').removeClass("isRequired");
+       }else{
+	  $(".partnerHIVTestStatusRequired").css("visibility","visible");
+	  $(".partnerHIVTestStatus").css("color","");
+	  $(".partnerHIVTestStatus").css("pointer-events","auto");
+	  $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').addClass("isRequired");
+       }
+   });
+   
+   //patient circumcision status
+   $('input:radio[name=isPartnerCircumcised]').change(function () {
+       manageQ12();
+   });
+   
+   function manageQ12(){
+       if($("input[name='isPartnerCircumcised']:checked").val()!= undefined){
+	   if ($("input[name='isPartnerCircumcised']:checked").val() != 1) {
+	       $(".circumcisionSectionRequired").css("visibility","hidden");
+	       $(".circumcisionSection").css("color","rgba(0,0,0,0.26)");
+	       $(".circumcisionSection").css("pointer-events","none");
+	       $("#circumcision").removeClass("isRequired");
+	   }else{
+	      $(".circumcisionSectionRequired").css("visibility","visible");
+	      $(".circumcisionSection").css("color","");
+	      $(".circumcisionSection").css("pointer-events","auto");
+	      $("#circumcision").addClass("isRequired");
+	   }
+       }
+   }
+   
+   //patient received gift for sex
+   $('input:radio[name=hasPatientEverReceivedGiftForSex]').change(function () {
+       manageQ13();
+   });
+   
+   function manageQ13(){
+       if($("input[name='hasPatientEverReceivedGiftForSex']:checked").val()!= undefined){
+	   if ($("input[name='hasPatientEverReceivedGiftForSex']:checked").val() != 1) {
+	       $(".patientReceivedGiftForSexSectionRequired").css("visibility","hidden");
+	       $(".patientReceivedGiftForSexSection").css("color","rgba(0,0,0,0.26)");
+	       $(".patientReceivedGiftForSexSection").css("pointer-events","none");
+	       $("#lastTimeOfReceivingGiftForSex").removeClass("isRequired");
+	   }else{
+	      $(".patientReceivedGiftForSexSectionRequired").css("visibility","visible");
+	      $(".patientReceivedGiftForSexSection").css("color","");
+	      $(".patientReceivedGiftForSexSection").css("pointer-events","auto");
+	      $("#lastTimeOfReceivingGiftForSex").addClass("isRequired");
+	   }
+       }
+   }
+   
+   //treated for symptoms
+   $('input:radio[name=hasPatientHadPainInLowerAbdomen]').change(function () {
+       manageQ17();
+   });
+   
+   function manageQ17(){
+       if($("input[name='hasPatientHadPainInLowerAbdomen']:checked").val()!= undefined){
+	   if ($("input[name='hasPatientHadPainInLowerAbdomen']:checked").val() != 1) {
+	       $(".symptomsSectionRequired").css("visibility","hidden");
+	       $(".symptomsSection").css("color","rgba(0,0,0,0.26)");
+	       $(".symptomsSection").css("pointer-events","none");
+	       $('input[name="hasPatientBeenTreatedForLowerAbdomenPain"]:radio').prop('checked',false);
+	       $("#hasPatientBeenTreatedForLowerAbdomenPainYes").removeClass("isRequired");
+	   }else{
+	       $(".symptomsSectionRequired").css("visibility","visible");
+	       $(".symptomsSection").css("color","");
+	       $(".symptomsSection").css("pointer-events","auto");
+	       $("#hasPatientBeenTreatedForLowerAbdomenPainYes").addClass("isRequired");
+	   }
+       }
+   }
+   //recerational drugs
+   $('input:radio[name=hasPatientEverTriedRecreationalDrugs]').change(function () {
+       manageQ22();
+   });
+   
+   $('input:radio[name=hasPatientHadRecreationalDrugsInLastSixMonths]').change(function () {
+       setRecreationalDrugs();
+   });
+   
+   function manageQ22(){
+       if($("input[name='hasPatientEverTriedRecreationalDrugs']:checked").val()!= undefined){
+	   if ($("input[name='hasPatientEverTriedRecreationalDrugs']:checked").val() != 1) {
+	       $(".recreationalDrugSectionRequired").css("visibility","hidden");
+	       $(".recreationalDrugSection").css("color","rgba(0,0,0,0.26)");
+	       $(".recreationalDrugSection").css("pointer-events","none");
+	       $('input[name="hasPatientHadRecreationalDrugsInLastSixMonths"]:radio').prop('checked',false);
+	       $("#hasPatientHadRecreationalDrugsInLastSixMonthsYes").removeClass("isRequired");
+	   }else{
+	       $(".recreationalDrugSectionRequired").css("visibility","visible");
+	       $(".recreationalDrugSection").css("color","");
+	       $(".recreationalDrugSection").css("pointer-events","auto");
+	       $("#hasPatientHadRecreationalDrugsInLastSixMonthsYes").addClass("isRequired");
+	   }
+	   setRecreationalDrugs();
+       }
+   }
+   
+   function setRecreationalDrugs(){
+       if ($("input[name='hasPatientHadRecreationalDrugsInLastSixMonths']:checked").val() == 1) {
+	   $('.recreationalDrugs').show();
+	   $('#recreationalDrugs').addClass('isRequired');
+	   $('#recreationalDrugs').focus();
+       }else{
+	  $('.recreationalDrugs').hide();
+	  $('#recreationalDrugs').val('');
+	  $('#recreationalDrugs').removeClass('isRequired');
+       }
+   }
+   
+   //set age at very first sex
+   $('#ageAtVeryFirstSexInNumbers').on('change',function() {
+       ageAtVeryFirstSex('txt');
+   });
+   $('input:radio[name=ageAtVeryFirstSex]').change(function () {
+       ageAtVeryFirstSex('rd');
+   });
+   function ageAtVeryFirstSex(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#ageAtVeryFirstSexInNumbers').val()!= ''){
+	       $('input[name="ageAtVeryFirstSex"]:radio').prop('checked',false);
+	   }
+	   $('#ageAtVeryFirstSexInNumbers').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	   $('#ageAtVeryFirstSexInNumbers').val('');
+	   $('#ageAtVeryFirstSexInNumbers').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=ageAtVeryFirstSex]:checked').length > 0) {
+	       $('#ageAtVeryFirstSexInNumbers').removeClass('isRequired');
+	   }else{
+	       $('#ageAtVeryFirstSexInNumbers').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //set no.of times been pregnant
+   $('#noOfTimesBeenPregnantInNumbers').on('change',function() {
+       totalNoofPregnancy('txt');
+   });
+   $('input:radio[name=noOfTimesBeenPregnant]').change(function () {
+       totalNoofPregnancy('rd');
+   });
+   function totalNoofPregnancy(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#noOfTimesBeenPregnantInNumbers').val()!= ''){
+	       $('input[name="noOfTimesBeenPregnant"]:radio').prop('checked',false);
+	   }
+	   $('#noOfTimesBeenPregnantInNumbers').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	  $('#noOfTimesBeenPregnantInNumbers').val('');
+	  $('#noOfTimesBeenPregnantInNumbers').removeClass('isRequired');
+       }else{
+	   if($('input:radio[name=noOfTimesBeenPregnant]:checked').length > 0) {
+	       $('#noOfTimesBeenPregnantInNumbers').removeClass('isRequired');
+	   }else{
+	       $('#noOfTimesBeenPregnantInNumbers').addClass('isRequired');
+	   }
+       }
+   }
+   
+   //V2
+   //set participant age
+   $('#participantAgeInYears').on('change',function() {
+      participantAge('txt');
+   });
+   $('input:radio[name=participantAge]').change(function () {
+      participantAge('rd');
+   });
+   
+   function participantAge(fromSource){
+       if(fromSource == 'txt'){
+	   if($('#participantAgeInYears').val()!= ''){
+	       $('input[name="participantAge"]:radio').prop('checked',false);
+	       if($('#participantAgeInYears').val() < 13 || $('#participantAgeInYears').val() >= 25){
+		  alert('Are you sure you want to enter this result with age '+$('#participantAgeInYears').val());
+		  endForm('age');
+	       }else{
+		  continueForm('agenyr');
+	       }
+	   }
+	   $('#participantAgeInYears').addClass('isRequired');
+       }else if(fromSource == 'rd'){
+	   $('#participantAgeInYears').val('');
+	   $('#participantAgeInYears').removeClass('isRequired');
+	   if ($("input[name='participantAge']:checked").val() == 88 || $("input[name='participantAge']:checked").val() == 99 || $("input[name='participantAge']:checked").val() == 2222) {
+	       endForm('age'); 
+	   }else{
+	       continueForm(''); 
+	   }
+       }else{
+	   if($('input:radio[name=participantAge]:checked').length > 0) {
+	       $('#participantAgeInYears').removeClass('isRequired');
+	   }else{
+	       $('#participantAgeInYears').addClass('isRequired');
+	   }
+       }
+   }
+   
+   $('#lastHIVTestStatus').change(function () {
+       if($('#lastHIVTestStatus').val() == 2){
+	 endForm('testst');
+       }else{
+	 continueForm('testst');  
+       }
+   });
+   
+   $('input:radio[name=hasPatientWantedtoGetPregnant]').change(function () {
+       manageQ14A();
+   });
+   
+   function manageQ14A(){
+       if($("input[name='hasPatientWantedtoGetPregnant']:checked").val()!= undefined){
+	   if ($("input[name='hasPatientWantedtoGetPregnant']:checked").val() != 2) {
+	     $(".patientWantedtoHaveaBabyLaterSectionRequired").css("visibility","hidden");
+	     $(".patientWantedtoHaveaBabyLaterSection").css("color","rgba(0,0,0,0.26)");
+	     $(".patientWantedtoHaveaBabyLaterSection").css("pointer-events","none");
+	     $('input[name="hasPatientWantedtoHaveaBabyLater"]:radio').prop('checked',false);
+	     $('#hasPatientWantedtoHaveaBabyLater').removeClass('isRequired');
+	   }else{
+	     $(".patientWantedtoHaveaBabyLaterSectionRequired").css("visibility","visible");
+	     $(".patientWantedtoHaveaBabyLaterSection").css("color","");
+	     $(".patientWantedtoHaveaBabyLaterSection").css("pointer-events","auto");
+	     $('#hasPatientWantedtoHaveaBabyLater').addClass('isRequired');
+	   }
+       }
+   }
+   
+   $('input:radio[name=hasPatientEverParticipatedInaClupforAdolescents]').change(function () {
+      manageQ28();
+   });
+   function manageQ28(){
+      if ($("input[name='hasPatientEverParticipatedInaClupforAdolescents']:checked").val() == undefined || $("input[name='hasPatientEverParticipatedInaClupforAdolescents']:checked").val() == '' || $("input[name='hasPatientEverParticipatedInaClupforAdolescents']:checked").val() == 1 ||  $("input[name='hasPatientEverParticipatedInaClupforAdolescents']:checked").val() == 2) {
+	  $(".patientClubParticipateSectionRequired").css("visibility","visible");
+	  $(".patientClubParticipateSection").css("color","");
+	  $(".patientClubParticipateSection").css("pointer-events","auto");
+	  $('#timeofPatientParticipateinClub').addClass('isRequired');
+      }else{
+	  $(".patientClubParticipateSectionRequired").css("visibility","hidden");
+	  $(".patientClubParticipateSection").css("color","rgba(0,0,0,0.26)");
+	  $(".patientClubParticipateSection").css("pointer-events","none");
+	  $('#timeofPatientParticipateinClub').removeClass('isRequired');
+	  //$('#timeofPatientParticipateinClub').val('');
+	  //$('#timeofPatientParticipateinClub').material_select();
+      }
+   }
+   
+   function endForm(frmSrc){
+      $('#participantEligibility').val(0);
+      
+      $('.mandatoryIconSection').css('visibility','hidden');
+      $('.mandatoryField').removeClass('isRequired');
+      
+      $(".allSection").css("color","rgba(0,0,0,0.26)");
+      $(".allSection").css("pointer-events","none");
+      
+      if(frmSrc == 'testst'){
+	 $(".lastHIVTestStatusSectionRequired").css("visibility","visible");
+	 $(".lastHIVTestStatus").css("color","");
+	 $(".lastHIVTestStatus").css("pointer-events","auto");
+      }else{
+	 //$(".participantAgeSectionRequired").css("visibility","visible");
+	 //$(".participantAgeSection").css("color","");
+	 //$(".participantAgeSection").css("pointer-events","auto");
+      }
+   }
+   
+   function continueForm(frmSrc){
+      $('#participantEligibility').val(1);
+      
+      $('.mandatoryIconSection').css('visibility','visible');
+      $('.mandatoryField').addClass('isRequired');
+      $('div').removeClass('isRequired');
+       
+      $(".allSection").css("color","");
+      $(".allSection").css("pointer-events","auto");
+      
+      participantAge('');
+      $('#occupation').trigger("change");
+      manageQ2();
+      manageQ3('change');
+      manageQ4(frmSrc);
+      ageAtVeryFirstSex('');
+      setNoOfSexualPartners('');
+      setNoOfSexualPartnersInLastSixMonths('');
+      $('#partnerHIVTestStatus').trigger("change");
+      mainSexualPartnerAgeAtLastBirthday('');
+      manageQ12();
+      manageQ13();
+      totalNoofPregnancy('');
+      manageQ14A();
+      manageQ17();
+      noOfDaysHadDrinkInLastSixMonth('');
+      manageQ22();
+      manageQ23();
+      manageQ23Other();
+      patientAbusedBySomeoneinNumbers('');
+      manageQ24();
+      manageQ24Other();
+      patientHurtBySomeoneinNumbers('');
+      skipToQ26();
+      manageQ25();
+      manageQ25Other();
+      patientHurtBySomeoneDuringPrenancyinNumbers('');
+      manageQ26();
+      manageQ26Other();
+      patientForcedforSexWithinLastYearinNumbers('');
+      manageQ27();
+      manageQ28();
+   }
+   //V2
+   //age range validation
+   $('.years').on('change',function() {
+       var years = $('#'+this.id).val();
+       if(parseInt(years) < 1 || parseInt(years) > 100) { alert('Age range should be 1-100'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+   });
+   
+   //person range validation
+   $('.persons').on('change',function() {
+       var persons = $('#'+this.id).val();
+       if(parseInt(persons) > 10000) { alert('Person range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+   });
+   
+   //pregnancy range validation
+   $('.times').on('change',function() {
+       var times = $('#'+this.id).val();
+       if(parseInt(times) > 15) { alert('Pregnancy range should be 0-15'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+   });
+   
+   //alcohol days range validation
+   $('.days').on('change',function() {
+       var days = $('#'+this.id).val();
+       if(parseInt(days) > 185) { alert('Days can\'t be more than 185'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+   });
+   
+   //patient hurt/forced to have sex range validation
+   $('.nooftimes').on('change',function() {
+       var nooftimes = $('#'+this.id).val();
+       if(parseInt(nooftimes) > 10000) { alert('No.of times range should be 0-10,000'); $('#'+this.id).val(''); $('#'+this.id).focus(); }
+   });
+   
+   function checkPatientRecord(){
+       checkPatientBarcodeId();
+   }
+   
+   function checkPatientBarcodeId(){
+       var patientBarcodeId = $('#patientBarcodeId').val();
+       var countryId = $('#chosenCountry').val();
+       if($.trim(patientBarcodeId)!= '' && $.trim(countryId)!= ''){
+	   $.post("<?php echo $this->url('check-patient-record'); ?>", {assessmentId:'<?php echo base64_encode($row->assessment_id); ?>',patientBarcodeId: patientBarcodeId,countryId:countryId,type:'clinic'},
+	   function(data) {
+	       if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+	   });
+       }
+   }
+   
+   function updateRiskAssessment(){
+       flag = deforayValidator.init({
+	   formId: 'editRiskAssessmentForm'
+       });
+       
+       if(flag){
+	   document.getElementById('editRiskAssessmentForm').submit();
+       }
+   }
+</script>

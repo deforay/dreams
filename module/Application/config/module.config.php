@@ -644,6 +644,42 @@ return array(
                         'action' => 'export-ipv-report'
                     ),
                 ),
+            ),'clinic-risk-assessment-v2' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/v2[/][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessmentV2',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'add-clinic-risk-assessment-v2' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/v2/add[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessmentV2',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-clinic-risk-assessment-v2' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/v2/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessmentV2',
+                        'action' => 'edit'
+                    ),
+                ),
+            ),'view-clinic-risk-assessment-v2' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/risk-assessment/v2/view[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessmentV2',
+                        'action' => 'view'
+                    ),
+                ),
             )
         ),
     ),
@@ -654,16 +690,6 @@ return array(
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
-        ),
-    ),
-    'translator' => array(
-        'locale' => 'en_US',
-        'translation_file_patterns' => array(
-            array(
-                'type'     => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
-            ),
         ),
     ),
     'controllers' => array(
@@ -684,7 +710,8 @@ return array(
             'Application\Controller\RiskAssessment' => 'Application\Controller\RiskAssessmentController',
             'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController',
             'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController',
-            'Application\Controller\Summary' => 'Application\Controller\SummaryController'
+            'Application\Controller\Summary' => 'Application\Controller\SummaryController',
+            'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller'
         ),
     ),
     'controller_plugins' => array(
