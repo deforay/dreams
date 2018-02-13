@@ -38,7 +38,8 @@ $PRAccess = 'hide';
 if($loginContainer->roleCode== 'ANCSC'){
     if($loginContainer->hasDRAccess == 'yes'){
         $DRAccess = 'show';
-    }if($loginContainer->hasPRAccess == 'yes'){
+    }
+    if($loginContainer->hasPRAccess == 'yes'){
         $PRAccess = 'show';
     }
 }
@@ -333,7 +334,10 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
                                                                 <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/risk-assessment/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment Form</a>
+                                                                    <a href="/clinic/risk-assessment/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment V1</a>
+                                                                </li>
+                                                                <li class="countryRiskAssessmentV2Menu<?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentV2Menu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment V2</a>
                                                                 </li>
                                                             <?php } ?>
                                                         </ul>
@@ -671,6 +675,17 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).addClass("active");
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".country"+menuSrc+"MenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(urlArray[1]=='clinic' && urlArray[2]=='risk-assessment' && urlArray[3]== 'v2'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryRiskAssessmentV2Menu"+atob(splits)).addClass("active");
+            $(".countryRiskAssessmentV2Menu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
+            $(".countryClinicMenu"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
         }else if(urlArray[1]=='clinic' && urlArray[2]=='risk-assessment'){
             var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
