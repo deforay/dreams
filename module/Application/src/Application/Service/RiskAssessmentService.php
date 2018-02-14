@@ -686,7 +686,7 @@ class RiskAssessmentService {
                                 $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
                             }
                             
-                            if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+                            if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= '' && $patientAbusedBydata['no_of_times'][0] == '@'){
                                 $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1);
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
                                $patientAbusedByInNoofTimes = 888; 
@@ -728,7 +728,7 @@ class RiskAssessmentService {
                                 $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
-                            if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+                            if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!='' && $patientHurtBydata['no_of_times'][0] == '@'){
                                 $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1);
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
                                $patientHurtByInNoofTimes = 888; 
@@ -770,7 +770,7 @@ class RiskAssessmentService {
                                 $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
-                            if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+                            if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!='' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
                                 $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1);
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
                                $patientHurtByDuringPregnancyInNoofTimes = 888; 
@@ -812,7 +812,7 @@ class RiskAssessmentService {
                                 $patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
                             }
                             
-                            if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+                            if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!='' && $patientForcedforSexdata['no_of_times'][0] == '@'){
                                 $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1);
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
                                $patientForcedforSexInNoofTimes = 888;
@@ -1692,7 +1692,7 @@ class RiskAssessmentService {
                                 $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
                             }
                             
-                            if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+                            if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= '' && $patientAbusedBydata['no_of_times'][0] == '@'){
                                 $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1);
                             }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
                                $patientAbusedByInNoofTimes = 888; 
@@ -1734,7 +1734,7 @@ class RiskAssessmentService {
                                 $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
-                            if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+                            if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= '' && $patientHurtBydata['no_of_times'][0] == '@'){
                                 $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1);
                             }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
                                $patientHurtByInNoofTimes = 888; 
@@ -1776,7 +1776,7 @@ class RiskAssessmentService {
                                 $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
-                            if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+                            if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!= '' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
                                 $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1);
                             }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
                                $patientHurtByDuringPregnancyInNoofTimes = 888; 
@@ -1818,7 +1818,7 @@ class RiskAssessmentService {
                                 $patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
                             }
                             
-                            if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+                            if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!= '' && $patientForcedforSexdata['no_of_times'][0] == '@'){
                                 $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1);
                             }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
                                $patientForcedforSexInNoofTimes = 888;
