@@ -708,7 +708,7 @@ if(count($dataResult) > 0){
 	if($data['has_patient_ever_been_abused_by_someone']!= null && trim($data['has_patient_ever_been_abused_by_someone'])!= ''){
 	    $patientAbusedBydata = json_decode($data['has_patient_ever_been_abused_by_someone'],true);
 	    $hasPatientAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
-	    if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+	    if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!='' && $patientAbusedBydata['no_of_times'][0] == '@'){
 		$patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
 	    }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
 	       $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
@@ -748,7 +748,7 @@ if(count($dataResult) > 0){
 	if($data['has_patient_ever_been_hurt_by_someone_within_last_year']!= null && trim($data['has_patient_ever_been_hurt_by_someone_within_last_year'])!= ''){
 	    $patientHurtBydata = json_decode($data['has_patient_ever_been_hurt_by_someone_within_last_year'],true);
 	    $hasPatientHurtByWithinLastYear = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
-	    if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+	    if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!= '' && $patientHurtBydata['no_of_times'][0] == '@'){
 		$patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
 	    }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
 	       $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
@@ -788,7 +788,7 @@ if(count($dataResult) > 0){
 	if(isset($hasPatientHurtByWithinLastYear) && trim($hasPatientHurtByWithinLastYear) == 1 && $data['has_patient_ever_been_hurt_by_someone_during_pregnancy']!= null && trim($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'])!= ''){
 	    $patientHurtByDuringPregnancydata = json_decode($data['has_patient_ever_been_hurt_by_someone_during_pregnancy'],true);
 	    $hasPatientHurtByDuringPregnancy = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
-	    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+	    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!='' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
 		$patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
 	    }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
 	       $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
@@ -828,7 +828,7 @@ if(count($dataResult) > 0){
 	if($data['has_patient_ever_been_forced_for_sex_within_last_year']!= null && trim($data['has_patient_ever_been_forced_for_sex_within_last_year'])!= ''){
 	    $patientForcedforSexdata = json_decode($data['has_patient_ever_been_forced_for_sex_within_last_year'],true);
 	    $hasPatientForcedforSexWithinLastYear = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
-	    if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+	    if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!='' && $patientForcedforSexdata['no_of_times'][0] == '@'){
 		$patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
 	    }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
 	       $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 

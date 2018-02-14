@@ -26,7 +26,7 @@ $patientAbusedByInNoofTimes = '';
 if($row->has_patient_ever_been_abused_by_someone!= null && trim($row->has_patient_ever_been_abused_by_someone)!= ''){
     $patientAbusedBydata = json_decode($row->has_patient_ever_been_abused_by_someone,true);
     $everAbusedBy = (isset($patientAbusedBydata['ever_abused']))?(int)$patientAbusedBydata['ever_abused']:'';
-    if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'][0] == '@'){
+    if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!='' && $patientAbusedBydata['no_of_times'][0] == '@'){
         $patientAbusedByInNoofTimes = substr($patientAbusedBydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientAbusedBydata['no_of_times']) && $patientAbusedBydata['no_of_times'] == 88){
        $patientAbusedByInNoofTimes = 'Don\'t Know - 88'; 
@@ -57,7 +57,7 @@ $patientHurtByInNoofTimes = '';
 if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($row->has_patient_ever_been_hurt_by_someone_within_last_year)!= ''){
     $patientHurtBydata = json_decode($row->has_patient_ever_been_hurt_by_someone_within_last_year,true);
     $everHurtedBy = (isset($patientHurtBydata['ever_hurt']))?(int)$patientHurtBydata['ever_hurt']:'';
-    if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'][0] == '@'){
+    if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!='' && $patientHurtBydata['no_of_times'][0] == '@'){
         $patientHurtByInNoofTimes = substr($patientHurtBydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientHurtBydata['no_of_times']) && $patientHurtBydata['no_of_times'] == 88){
        $patientHurtByInNoofTimes = 'Don\'t Know - 88'; 
@@ -88,7 +88,7 @@ $patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
 if(trim($everHurtedBy) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
     $everHurtedBydp = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
-    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
+    if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!='' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
         $patientHurtByDuringPregnancyInNoofTimes = substr($patientHurtByDuringPregnancydata['no_of_times'],1).' Time(s)';
     }else if(isset($patientHurtByDuringPregnancydata['no_of_times']) && $patientHurtByDuringPregnancydata['no_of_times'] == 88){
        $patientHurtByDuringPregnancyInNoofTimes = 'Don\'t Know - 88'; 
@@ -119,7 +119,7 @@ $patientForcedforSexInNoofTimes = '';
 if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($row->has_patient_ever_been_forced_for_sex_within_last_year)!= ''){
     $patientForcedforSexdata = json_decode($row->has_patient_ever_been_forced_for_sex_within_last_year,true);
     $everForcedforSex = (isset($patientForcedforSexdata['ever_forced_for_sex']))?(int)$patientForcedforSexdata['ever_forced_for_sex']:'';
-    if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'][0] == '@'){
+    if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!='' && $patientForcedforSexdata['no_of_times'][0] == '@'){
         $patientForcedforSexInNoofTimes = substr($patientForcedforSexdata['no_of_times'],1).' Time(s)';
     }else if(isset($patientForcedforSexdata['no_of_times']) && $patientForcedforSexdata['no_of_times'] == 88){
        $patientForcedforSexInNoofTimes = 'Don\'t Know - 88'; 
