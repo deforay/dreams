@@ -534,8 +534,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('full_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'))
-		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'))
 		      ->join(array('u_a' => 'user'), "u_a.user_id=r_a.added_by",array('addedBy'=>'full_name'))
+		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 		      ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
 		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left')
 		      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array('age'),'left');
@@ -594,8 +594,8 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
                       ->join(array('u' => 'user'), "u.user_id=r_a.added_by",array('full_name'))
                       ->join(array('c' => 'country'), "c.country_id=r_a.country",array('country_name'))
 		      ->join(array('t' => 'test_status'), "t.test_status_id=r_a.status",array('test_status_name'))
-		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'))
 		      ->join(array('u_a' => 'user'), "u_a.user_id=r_a.added_by",array('addedBy'=>'full_name'))
+		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 		      ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
 		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left')
 		      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array('age'),'left');
@@ -690,10 +690,10 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
                                    ->join(array('anc' => 'anc_site'), "anc.anc_site_id=r_a.anc",array('anc_site_name'))
-                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'))
+                                   ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 				   ->join(array('anc_r_r' => 'anc_rapid_recency'), "anc_r_r.assessment_id=r_a.assessment_id",array('anc_rapid_recency_id','has_patient_had_rapid_recency_test','control_line','HIV_diagnostic_line','recency_line'),'left')
                                    ->where(array('r_a.assessment_id'=>$riskAssessmentId));
-	   $riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
       return $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
     }
     
