@@ -215,6 +215,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	        $patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
 	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
 		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+		$patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
 	    }
 	    //patient abused by
 	    $everAbused = '';
@@ -889,6 +890,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 	        $patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
 	    }else if(isset($params['hasPatientEverTriedRecreationalDrugs']) && trim($params['hasPatientEverTriedRecreationalDrugs'])!= ''){
 		$hasPatientEverTriedRecreationalDrugs = $params['hasPatientEverTriedRecreationalDrugs'];
+		$patientHadRecreationalDrugsInLastSixMonths = array('has_had_in_last_six_months'=>$hasPatientHadRecreationalDrugsInLastSixMonths,'drugs'=>$recreationalDrugs);
 	    }
 	    //patient abused by
 	    $everAbused = '';

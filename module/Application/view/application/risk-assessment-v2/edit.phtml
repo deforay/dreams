@@ -476,9 +476,9 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 			<input id="ageAtVeryFirstSexInNumbers" name="ageAtVeryFirstSexInNumbers" type="text" class="validate mandatoryField years checkNum" title="Don't leave Q5" value="<?php echo($row->age_at_very_first_sex!= null && trim($row->age_at_very_first_sex)!= '' && $row->age_at_very_first_sex[0] == '@')?substr($row->age_at_very_first_sex,1):'';?>" style="width:10%;"> Years &nbsp;&nbsp;
 			<input id="ageAtVeryFirstSexDK" class="with-gap" name="ageAtVeryFirstSex" value="88" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
 			<label for="ageAtVeryFirstSexDK" class="active">Don't Know - 88 </label>&nbsp;&nbsp;
-			<input id="ageAtVeryFirstSexR" class="with-gap" name="ageAtVeryFirstSex" value="99" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<input id="ageAtVeryFirstSexR" class="with-gap" name="ageAtVeryFirstSex" value="99" type="radio" <?php echo ($row->age_at_very_first_sex == 99)?'checked="checked"':''; ?>>
 			<label for="ageAtVeryFirstSexR" class="active">Refused - 99</label>&nbsp;&nbsp;
-			<input id="ageAtVeryFirstSexRNA" class="with-gap" name="ageAtVeryFirstSex" value="2222" type="radio" <?php echo ($row->age_at_very_first_sex == 88)?'checked="checked"':''; ?>>
+			<input id="ageAtVeryFirstSexRNA" class="with-gap" name="ageAtVeryFirstSex" value="2222" type="radio" <?php echo ($row->age_at_very_first_sex == 2222)?'checked="checked"':''; ?>>
 			<label for="ageAtVeryFirstSexRNA" class="active">Response Not Available - 2222</label>
 		    </div>
 		</div>
@@ -857,7 +857,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		    </div>
 		</div>
 		<div class="row allSection patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection" style="margin-bottom:10px;">
-		    <div class="col s4 allSection hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion">
+		    <div class="col s4 allSection patientOftenHad4rmoreDrinksWithAlcoholOnOneOccasionSection">
 			<select id="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" name="hasPatientOftenHad4rmoreDrinksWithAlcoholOnOneOccasion" class="material-select mandatoryField" title="Don't leave Q21">
 			   <option value=""> -- Select -- </option>
 			   <option value="1" <?php echo ($row->has_patient_often_had_4rmore_drinks_with_alcohol_on_one_occasion == 1)?'selected="selected"':''; ?>>Never - 1</option>

@@ -17,11 +17,11 @@ if($row->participant_age!= null && trim($row->participant_age)!= '' && $row->par
 }else if($row->participant_age!= null && trim($row->participant_age)!= ''){
   $participantAge = $row->participant_age; 
 }
-$participantEligibility = 1;
+$participantEligibility = true;
 if((int)$participantAge < 13 || (int)$participantAge >= 25){
-   $participantEligibility = 0;
+   $participantEligibility = false;
 }else if($row->last_HIV_test_status!= null && trim($row->last_HIV_test_status)!= '' && (int)$row->last_HIV_test_status == 2){
-   $participantEligibility = 0;
+   $participantEligibility = false;
 }
 //recreational drugs
 $hasPatientHadRecreationalDrugsInLastSixMonths = '';
@@ -94,9 +94,9 @@ if($row->has_patient_ever_been_hurt_by_someone_within_last_year!= null && trim($
     }
 }
 //patient hurt by someone during pregnancy
-$everHurtedBydp = 'not applicable';
-$patientHurtByDuringPregnancy = 'not applicable';
-$patientHurtByDuringPregnancyInNoofTimes = 'not applicable';
+$everHurtedBydp = ($participantEligibility)?'not applicable':'';
+$patientHurtByDuringPregnancy = ($participantEligibility)?'not applicable':'';
+$patientHurtByDuringPregnancyInNoofTimes = ($participantEligibility)?'not applicable':'';
 if(trim($everHurtedBy) == 1 && $row->has_patient_ever_been_hurt_by_someone_during_pregnancy!= null && trim($row->has_patient_ever_been_hurt_by_someone_during_pregnancy)!= ''){
     $patientHurtByDuringPregnancydata = json_decode($row->has_patient_ever_been_hurt_by_someone_during_pregnancy,true);
     $everHurtedBydp = (isset($patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']))?(int)$patientHurtByDuringPregnancydata['ever_hurt_by_during_pregnancy']:'';
