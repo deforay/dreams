@@ -246,7 +246,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:10px;">
 		    <div class="col s4 allSection">
-			<select id="occupation" name="occupation" class="material-select mandatoryField" title="Don't leave Q1">
+			<select id="occupation" name="occupation" class="material-select mandatoryField isRequired" title="Don't leave Q1">
 			    <option value=""> -- Select -- </option>
 			    <?php
 			    foreach($occupationTypes as $occupation){
@@ -267,7 +267,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:10px;">
 		    <div class="col s12">
-			<input id="hasPatientEverAttendedSchoolYes" class="with-gap mandatoryField" name="hasPatientEverAttendedSchool" title="Don't leave Q2" value="1" type="radio" <?php echo ($row->has_patient_ever_attended_school == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverAttendedSchoolYes" class="with-gap mandatoryField isRequired" name="hasPatientEverAttendedSchool" title="Don't leave Q2" value="1" type="radio" <?php echo ($row->has_patient_ever_attended_school == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverAttendedSchoolYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
 			<input id="hasPatientEverAttendedSchoolNo" class="with-gap" name="hasPatientEverAttendedSchool" value="2" type="radio" <?php echo ($row->has_patient_ever_attended_school == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverAttendedSchoolNo" class="active">No - 2 </label>&nbsp;&nbsp;
@@ -323,7 +323,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="everBeenMarriedYes" class="with-gap mandatoryField" name="everBeenMarried" title="Don't leave Q3" value="1" type="radio" <?php echo ($row->patient_ever_been_married == 1)?'checked="checked"':''; ?>>
+			<input id="everBeenMarriedYes" class="with-gap mandatoryField isRequired" name="everBeenMarried" title="Don't leave Q3" value="1" type="radio" <?php echo ($row->patient_ever_been_married == 1)?'checked="checked"':''; ?>>
 			<label for="everBeenMarriedYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
 			<input id="everBeenMarriedNo" class="with-gap" name="everBeenMarried" value="2" type="radio" <?php echo ($row->patient_ever_been_married == 2)?'checked="checked"':''; ?>>
 			<label for="everBeenMarriedNo" class="active">No - 2 </label>&nbsp;&nbsp;
@@ -398,7 +398,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:10px;">
 		    <div class="col s12">
-			<input id="hasPatientEverBeenTestedforHIVYes" class="with-gap mandatoryField" name="hasPatientEverBeenTestedforHIV" value="1" type="radio" title="Don't leave Q4" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverBeenTestedforHIVYes" class="with-gap mandatoryField isRequired" name="hasPatientEverBeenTestedforHIV" value="1" type="radio" title="Don't leave Q4" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenTestedforHIVYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
 			<input id="hasPatientEverBeenTestedforHIVNo" class="with-gap" name="hasPatientEverBeenTestedforHIV" value="2" type="radio" <?php echo ($row->has_patient_ever_been_tested_for_HIV == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenTestedforHIVNo" class="active">No - 2 </label>&nbsp;&nbsp;
@@ -489,7 +489,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="reasonForVeryFirstSexWT" class="with-gap mandatoryField" name="reasonForVeryFirstSex" title="Don't leave Q6" value="1" type="radio" <?php echo ($row->reason_for_very_first_sex == 1)?'checked="checked"':''; ?>>
+			<input id="reasonForVeryFirstSexWT" class="with-gap mandatoryField isRequired" name="reasonForVeryFirstSex" title="Don't leave Q6" value="1" type="radio" <?php echo ($row->reason_for_very_first_sex == 1)?'checked="checked"':''; ?>>
 			<label for="reasonForVeryFirstSexWT" class="active">Wanted To - 1</label>&nbsp;&nbsp;
 			<input id="reasonForVeryFirstSexFT" class="with-gap" name="reasonForVeryFirstSex" value="2" type="radio" <?php echo ($row->reason_for_very_first_sex == 2)?'checked="checked"':''; ?>>
 			<label for="reasonForVeryFirstSexFT" class="active">Forced To - 2</label>&nbsp;&nbsp;
@@ -540,7 +540,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:10px;">
 		    <div class="col s4 allSection">
-			<select id="partnerHIVTestStatus" name="partnerHIVTestStatus" class="material-select mandatoryField" title="Don't leave Q9">
+			<select id="partnerHIVTestStatus" name="partnerHIVTestStatus" class="material-select mandatoryField isRequired" title="Don't leave Q9">
 			   <option value=""> -- Select -- </option>
 			   <option value="1" <?php echo ($row->partner_HIV_test_status == 1)?'selected="selected"':''; ?>>HIV Positive - 1</option>
 			   <option value="2" <?php echo ($row->partner_HIV_test_status == 2)?'selected="selected"':''; ?>>HIV Negative - 2</option>
@@ -574,7 +574,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection partnerHIVTestStatus mainSexualPartnerAgeSection" style="margin-bottom:10px;">
 		    <div class="col s4 allSection">
-			<select id="ageDiffOfMainSexualPartner" name="ageDiffOfMainSexualPartner" class="material-select mandatoryField" title="Don't leave Q11">
+			<select id="ageDiffOfMainSexualPartner" name="ageDiffOfMainSexualPartner" class="material-select mandatoryField isRequired" title="Don't leave Q11">
 			   <option value=""> -- Select -- </option>
 			   <option value="1" <?php echo ($row->age_diff_of_main_sexual_partner == 1)?'selected="selected"':''; ?>> < 5 Years Older - 1</option>
 			   <option value="2" <?php echo ($row->age_diff_of_main_sexual_partner == 2)?'selected="selected"':''; ?>> 5-10 Years Older - 2</option>
@@ -596,7 +596,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection partnerHIVTestStatus" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="isPartnerCircumcisedYes" class="with-gap mandatoryField" name="isPartnerCircumcised" title="Don't leave Q12" value="1" type="radio" <?php echo ($row->is_partner_circumcised == 1)?'checked="checked"':''; ?>>
+			<input id="isPartnerCircumcisedYes" class="with-gap mandatoryField isRequired" name="isPartnerCircumcised" title="Don't leave Q12" value="1" type="radio" <?php echo ($row->is_partner_circumcised == 1)?'checked="checked"':''; ?>>
 			<label for="isPartnerCircumcisedYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="isPartnerCircumcisedNo" class="with-gap" name="isPartnerCircumcised" value="2" type="radio" <?php echo ($row->is_partner_circumcised == 2)?'checked="checked"':''; ?>>
 			<label for="isPartnerCircumcisedNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -632,7 +632,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="hasPatientEverReceivedGiftForSexYes" class="with-gap mandatoryField" name="hasPatientEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverReceivedGiftForSexYes" class="with-gap mandatoryField isRequired" name="hasPatientEverReceivedGiftForSex" title="Don't leave Q13" value="1" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverReceivedGiftForSexYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverReceivedGiftForSexNo" class="with-gap" name="hasPatientEverReceivedGiftForSex" value="2" type="radio" <?php echo ($row->has_patient_ever_received_gift_for_sex == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverReceivedGiftForSexNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -723,7 +723,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap mandatoryField" name="noOfTimesCondomUsedBeforePregnancy" title="Don't leave Q15" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 1)?'checked="checked"':''; ?>>
+			<input id="noOfTimesCondomUsedBeforePregnancyA" class="with-gap mandatoryField isRequired" name="noOfTimesCondomUsedBeforePregnancy" title="Don't leave Q15" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 1)?'checked="checked"':''; ?>>
 			<label for="noOfTimesCondomUsedBeforePregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
 			<input id="noOfTimesCondomUsedBeforePregnancyS" class="with-gap" name="noOfTimesCondomUsedBeforePregnancy" value="2" type="radio" <?php echo ($row->no_of_times_condom_used_before_pregnancy == 2)?'checked="checked"':''; ?>>
 			<label for="noOfTimesCondomUsedBeforePregnancyS" class="active">Sometimes - 2</label>&nbsp;&nbsp;
@@ -744,7 +744,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap mandatoryField" name="noOfTimesCondomUsedAfterPregnancy" title="Don't leave Q16" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 1)?'checked="checked"':''; ?>>
+			<input id="noOfTimesCondomUsedAfterPregnancyA" class="with-gap mandatoryField isRequired" name="noOfTimesCondomUsedAfterPregnancy" title="Don't leave Q16" value="1" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 1)?'checked="checked"':''; ?>>
 			<label for="noOfTimesCondomUsedAfterPregnancyA" class="active">Always - 1</label>&nbsp;&nbsp;
 			<input id="noOfTimesCondomUsedAfterPregnancyS" class="with-gap" name="noOfTimesCondomUsedAfterPregnancy" value="2" type="radio" <?php echo ($row->no_of_times_condom_used_after_pregnancy == 2)?'checked="checked"':''; ?>>
 			<label for="noOfTimesCondomUsedAfterPregnancyS" class="active">Sometimes - 2</label>&nbsp;&nbsp;
@@ -765,7 +765,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="hasPatientHadPainInLowerAbdomenYes" class="with-gap mandatoryField" name="hasPatientHadPainInLowerAbdomen" title="Don't leave Q17" value="1" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientHadPainInLowerAbdomenYes" class="with-gap mandatoryField isRequired" name="hasPatientHadPainInLowerAbdomen" title="Don't leave Q17" value="1" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientHadPainInLowerAbdomenYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientHadPainInLowerAbdomenNo" class="with-gap" name="hasPatientHadPainInLowerAbdomen" value="2" type="radio" <?php echo ($row->has_patient_had_pain_in_lower_abdomen == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientHadPainInLowerAbdomenNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -803,7 +803,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="hasPatientEverBeenTreatedForSyphilisYes" class="with-gap mandatoryField" name="hasPatientEverBeenTreatedForSyphilis" title="Don't leave Q18" value="1" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverBeenTreatedForSyphilisYes" class="with-gap mandatoryField isRequired" name="hasPatientEverBeenTreatedForSyphilis" title="Don't leave Q18" value="1" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenTreatedForSyphilisYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverBeenTreatedForSyphilisNo" class="with-gap" name="hasPatientEverBeenTreatedForSyphilis" value="2" type="radio" <?php echo ($row->has_patient_ever_been_treated_for_syphilis == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenTreatedForSyphilisNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -822,7 +822,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerYes" class="with-gap mandatoryField" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" title="Don't leave Q19" value="1" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerYes" class="with-gap mandatoryField isRequired" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" title="Don't leave Q19" value="1" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverReceivedVaccineToPreventCervicalCancerNo" class="with-gap" name="hasPatientEverReceivedVaccineToPreventCervicalCancer" value="2" type="radio" <?php echo ($row->has_patient_ever_received_vaccine_to_prevent_cervical_cancer == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverReceivedVaccineToPreventCervicalCancerNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -877,7 +877,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0;">
 		    <div class="col s12">
-			<input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap mandatoryField" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave Q22" value="1" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverTriedRecreationalDrugsYes" class="with-gap mandatoryField isRequired" name="hasPatientEverTriedRecreationalDrugs" title="Don't leave Q22" value="1" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverTriedRecreationalDrugsYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverTriedRecreationalDrugsNo" class="with-gap" name="hasPatientEverTriedRecreationalDrugs" value="2" type="radio" <?php echo ($row->has_patient_ever_tried_recreational_drugs == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverTriedRecreationalDrugsNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -919,7 +919,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:20px;">
 		    <div class="col s12" style="margin-bottom:0px;">
-			<input id="hasPatientEverBeenAbusedBySomeoneYes" class="with-gap mandatoryField" name="hasPatientEverBeenAbusedBySomeone" title="Don't leave Q23" value="1" type="radio" <?php echo ($hasPatientAbusedBy == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverBeenAbusedBySomeoneYes" class="with-gap mandatoryField isRequired" name="hasPatientEverBeenAbusedBySomeone" title="Don't leave Q23" value="1" type="radio" <?php echo ($hasPatientAbusedBy == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenAbusedBySomeoneYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverBeenAbusedBySomeoneNo" class="with-gap" name="hasPatientEverBeenAbusedBySomeone" value="2" type="radio" <?php echo ($hasPatientAbusedBy == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenAbusedBySomeoneNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -978,7 +978,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:20px;">
 		    <div class="col s12" style="margin-bottom:0px;">
-			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="with-gap mandatoryField" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" title="Don't leave Q24" value="1" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="with-gap mandatoryField isRequired" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" title="Don't leave Q24" value="1" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="with-gap" name="hasPatientEverBeenHurtBySomeoneWithinLastYear" value="2" type="radio" <?php echo($hasPatientHurtByWithinLastYear == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenHurtBySomeoneWithinLastYearNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -1096,7 +1096,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:20px;">
 		    <div class="col s12" style="margin-bottom:0px;">
-			<input id="hasPatientEverBeenForcedForSexWithinLastYearYes" class="with-gap mandatoryField" name="hasPatientEverBeenForcedForSexWithinLastYear" title="Don't leave Q26" value="1" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverBeenForcedForSexWithinLastYearYes" class="with-gap mandatoryField isRequired" name="hasPatientEverBeenForcedForSexWithinLastYear" title="Don't leave Q26" value="1" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenForcedForSexWithinLastYearYes" class="active">Yes - 1</label>&nbsp;&nbsp;
 			<input id="hasPatientEverBeenForcedForSexWithinLastYearNo" class="with-gap" name="hasPatientEverBeenForcedForSexWithinLastYear" value="2" type="radio" <?php echo($hasPatientForcedforSexWithinLastYear == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverBeenForcedForSexWithinLastYearNo" class="active">No - 2</label>&nbsp;&nbsp;
@@ -1180,7 +1180,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:0px;">
 		    <div class="col s12">
-			<input id="hasPatientEverParticipatedInaClupforAdolescentsGGC" class="with-gap mandatoryField" name="hasPatientEverParticipatedInaClupforAdolescents" title="Don't leave Q28" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverParticipatedInaClupforAdolescentsGGC" class="with-gap mandatoryField isRequired" name="hasPatientEverParticipatedInaClupforAdolescents" title="Don't leave Q28" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverParticipatedInaClupforAdolescentsGGC" class="active">Yes, a Go Girls! club - 1 </label>&nbsp;&nbsp;
 			<input id="hasPatientEverParticipatedInaClupforAdolescentsDC" class="with-gap" name="hasPatientEverParticipatedInaClupforAdolescents" value="2" type="radio" <?php echo($row->has_patient_ever_participated_in_a_clup_for_adolescents == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverParticipatedInaClupforAdolescentsDC" class="active">Yes, a different club - 2 </label>&nbsp;&nbsp;
@@ -1221,7 +1221,7 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 		</div>
 		<div class="row allSection" style="margin-bottom:10px;">
 		    <div class="col s12">
-			<input id="hasPatientEverParticipatedinMothersGroupYes" class="with-gap mandatoryField" name="hasPatientEverParticipatedinMothersGroup" title="Don't leave Q29" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 1)?'checked="checked"':''; ?>>
+			<input id="hasPatientEverParticipatedinMothersGroupYes" class="with-gap mandatoryField isRequired" name="hasPatientEverParticipatedinMothersGroup" title="Don't leave Q29" value="1" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 1)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverParticipatedinMothersGroupYes" class="active">Yes - 1 </label>&nbsp;&nbsp;
 			<input id="hasPatientEverParticipatedinMothersGroupNo" class="with-gap" name="hasPatientEverParticipatedinMothersGroup" value="2" type="radio" <?php echo($row->has_patient_ever_participated_in_mothers_group == 2)?'checked="checked"':''; ?>>
 			<label for="hasPatientEverParticipatedinMothersGroupNo" class="active">No - 2 </label>&nbsp;&nbsp;
