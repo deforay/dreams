@@ -5,6 +5,12 @@ if(trim($countryId)!=''){
     $link = "/user";
 }
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/chosen.min.css' ?>"/>
+<style>
+    .chosen-container-single .chosen-search input[type="text"]{
+	padding:4px 0px 4px 0px !important;
+    }
+</style>
 <div id="page-content">
     <div class="row section-header">
         <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add User</div>
@@ -167,9 +173,8 @@ if(trim($countryId)!=''){
             <div class="row">
                 <div class="col s6 clinicanSection" style="display:none;">
                     <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
-                            <option value="" selected="selected" disabled> -- Select -- </option>
+                        <span>ANC site name *</span>
+                        <select id="ancSite" name="ancSite[]" multiple title="Please select ANC site">
                             <?php
                             foreach($ancSites as $anc){
                                 ?>
@@ -178,14 +183,12 @@ if(trim($countryId)!=''){
                             }
                             ?>
                         </select>
-                        <label for="ancSite" class="">ANC site name *</label>
                     </div>
                 </div>
                 <div class="col s6 supervisorDeoSection" style="display:none;">
                     <div class="input-field col m10 s10">
-                        <i class="material-icons prefix">done</i>
-                        <select class="material-select" id="lab" name="lab[]" multiple title="Please select lab site name">
-                            <option value="" selected="selected" disabled> -- Select -- </option>
+                        <span>Lab site name *</span>
+                        <select id="lab" name="lab[]" multiple title="Please select lab site name">
                             <?php
                             foreach($facilities as $facility){
                                 ?>
@@ -194,7 +197,6 @@ if(trim($countryId)!=''){
                             }
                             ?>
                         </select>
-                        <label for="lab" class="">Lab site name *</label>
                     </div>
                 </div>
                 <?php
@@ -217,7 +219,19 @@ if(trim($countryId)!=''){
         </form>
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/chosen.jquery.js' ?>"></script>
 <script>
+    $(document).ready(function() {
+        $("#ancSite").chosen({
+	    placeholder_text_multiple:"Select ANC",
+	    width:"100%"
+	});
+        $("#lab").chosen({
+	    placeholder_text_multiple:"Select Lab",
+	    width:"100%"
+	});
+    });
+    
     duplicateName = true;
     function addUser(){
         flag = deforayValidator.init({
@@ -226,8 +240,8 @@ if(trim($countryId)!=''){
         
         if(flag){
             if(duplicateName){
+                var role = $('#role').val();
                 if($('#country').length  > 0 || $('#countryMulti').length > 0){
-                    var role = $('#role').val();
                     if(base64_decode(role) == 3 || base64_decode(role) == 4 || base64_decode(role) == 5){
                        var country = $("#country").val(); 
                     }else if(base64_decode(role) == 2) {
@@ -237,12 +251,11 @@ if(trim($countryId)!=''){
                         alert("Please choose country");
                         return false;
                     }
-                } if(base64_decode(role) == 3 || base64_decode(role) == 4){
-                   var lab = $('#lab').val();
-                   if(lab.length == 0){ alert("Please select lab site name"); return false; }
+                }
+                if(base64_decode(role) == 3 || base64_decode(role) == 4){
+                   if($('#lab').val() == null){ alert("Please select lab site name"); return false; }
                 }else if(base64_decode(role) == 5){
-                   var anc = $('#ancSite').val();
-                   if(anc.length == 0){ alert("Please select ANC site"); return false; }
+                   if($('#ancSite').val() == null){ alert("Please select ANC site"); return false; }
                 }
               document.getElementById('addUserForm').submit();
             }
