@@ -95,6 +95,10 @@ class RiskAssessmentService {
                     $keyArray = array('0'=>'','1'=>'husband','2'=>'exhusband','3'=>'boyfriend','4'=>'stranger','88'=>'dk','99'=>'r','2222'=>'rna');
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $ancSiteDistrict = '';
+                        if(isset($aRow['anc_site_district']) && $aRow['anc_site_district']!= null && trim($aRow['anc_site_district'])!= ''){
+                           $ancSiteDistrict = ucwords($aRow['anc_site_district']);
+                        }
                         $addedDate = '';
                         if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
                             $addedDateArray = explode(' ',$aRow['added_on']);
@@ -978,6 +982,7 @@ class RiskAssessmentService {
                         $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
                         $row[] = $updatedDate;
                         $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
+                        $row[] = $ancSiteDistrict;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1035,6 +1040,7 @@ class RiskAssessmentService {
                     $sheet->mergeCells('BR1:BR3');
                     $sheet->mergeCells('BS1:BS3');
                     $sheet->mergeCells('BT1:BT3');
+                    $sheet->mergeCells('BU1:BU3');
                     
                     //Label section
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1134,6 +1140,7 @@ class RiskAssessmentService {
                     $sheet->setCellValue('BR1', html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('BS1', html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('BT1', html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BU1', html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     //Style section
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
@@ -1231,6 +1238,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('BR1:BR3')->applyFromArray($styleArray);
                     $sheet->getStyle('BS1:BS3')->applyFromArray($styleArray);
                     $sheet->getStyle('BT1:BT3')->applyFromArray($styleArray);
+                    $sheet->getStyle('BU1:BU3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1316,6 +1324,7 @@ class RiskAssessmentService {
                     $sheet->setCellValue('BR'.$currentRow, html_entity_decode('addby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('BS'.$currentRow, html_entity_decode('update ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('BT'.$currentRow, html_entity_decode('updateby ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('BU'.$currentRow, html_entity_decode('ancdistrict ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -1401,6 +1410,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('BR'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('BS'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('BT'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('BU'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {
@@ -1645,6 +1655,10 @@ class RiskAssessmentService {
                     $keyArray = array('0'=>'','1'=>'husband','2'=>'exhusband','3'=>'boyfriend','4'=>'stranger','88'=>'dk','99'=>'r','2222'=>'rna');
                     $output = array();
                     foreach ($sResult as $aRow) {
+                        $ancSiteDistrict = '';
+                        if(isset($aRow['anc_site_district']) && $aRow['anc_site_district']!= null && trim($aRow['anc_site_district'])!= ''){
+                           $ancSiteDistrict = ucwords($aRow['anc_site_district']);
+                        }
                         $addedDate = '';
                         if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
                             $addedDateArray = explode(' ',$aRow['added_on']);
@@ -1889,6 +1903,7 @@ class RiskAssessmentService {
                         $row[] = (isset($aRow['addedBy']))?ucwords($aRow['addedBy']):'';
                         $row[] = $updatedDate;
                         $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
+                        $row[] = $ancSiteDistrict;
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -1935,6 +1950,7 @@ class RiskAssessmentService {
                     $sheet->mergeCells('AB1:AB3');
                     $sheet->mergeCells('AC1:AC3');
                     $sheet->mergeCells('AD1:AD3');
+                    $sheet->mergeCells('AE1:AE3');
                     
                     $sheet->setCellValue('A1', html_entity_decode('ANC Site', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('B1', html_entity_decode('Patient Barcode ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -1980,6 +1996,7 @@ class RiskAssessmentService {
                     $sheet->setCellValue('AB1', html_entity_decode('Added by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AC1', html_entity_decode('Last Updated Date', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AD1', html_entity_decode('Last Updated by', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AE1', html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A1:A3')->applyFromArray($styleArray);
                     $sheet->getStyle('B1:B3')->applyFromArray($styleArray);
@@ -2025,6 +2042,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('AB1:AB3')->applyFromArray($styleArray);
                     $sheet->getStyle('AC1:AC3')->applyFromArray($styleArray);
                     $sheet->getStyle('AD1:AD3')->applyFromArray($styleArray);
+                    $sheet->getStyle('AE1:AE3')->applyFromArray($styleArray);
                     
                     $currentRow = 4;
                     $sheet->setCellValue('A'.$currentRow, html_entity_decode('ANCsite', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -2063,6 +2081,7 @@ class RiskAssessmentService {
                     $sheet->setCellValue('AB'.$currentRow, html_entity_decode('addby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AC'.$currentRow, html_entity_decode('update', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('AD'.$currentRow, html_entity_decode('updateby', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('AE'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     
                     $sheet->getStyle('A'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('B'.$currentRow)->applyFromArray($styleArray);
@@ -2100,6 +2119,7 @@ class RiskAssessmentService {
                     $sheet->getStyle('AB'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AC'.$currentRow)->applyFromArray($styleArray);
                     $sheet->getStyle('AD'.$currentRow)->applyFromArray($styleArray);
+                    $sheet->getStyle('AE'.$currentRow)->applyFromArray($styleArray);
                     
                     $currentRow = 5;
                     foreach ($output as $rowData) {

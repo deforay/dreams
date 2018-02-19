@@ -422,6 +422,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
                      ->join(array('u_a' => 'user'), "u_a.user_id=cl_da_c.added_by",array('addedBy'=>'full_name'))
+                     ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 		     ->join(array('u_u' => 'user'), "u_u.user_id=cl_da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
@@ -465,6 +466,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                       ->join(array('c'=>'country'),'c.country_id=cl_da_c.country',array('country_name'))
                       ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'))
                       ->join(array('u_a' => 'user'), "u_a.user_id=cl_da_c.added_by",array('addedBy'=>'full_name'))
+                      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 		      ->join(array('u_u' => 'user'), "u_u.user_id=cl_da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                       ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){

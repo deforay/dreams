@@ -262,11 +262,11 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $mappedLab[] = $lab['laboratory_id'];
        }
        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-                     ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
-                     ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
                      ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
+		     ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+                     ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if(isset($parameters['dashLab']) && trim($parameters['dashLab'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
@@ -329,12 +329,12 @@ class DataCollectionTable extends AbstractTableGateway {
 
        /* Total data set length */
 	$tQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
-				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-				->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
-				->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
-				->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
-				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+                      ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
+                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+		      ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
+		      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
+		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
@@ -799,6 +799,7 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
 		     ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+		     ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	             //->where('da_c.status IN (2)');
@@ -861,6 +862,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
 		                ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+				->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	                        //->where('da_c.status IN (2)');
@@ -1260,6 +1262,7 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
 		     ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+		     ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if($loginContainer->roleCode== 'LS'){
@@ -1321,6 +1324,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	                        ->join(array('u_a' => 'user'), "u_a.user_id=da_c.added_by",array('addedBy'=>'full_name'))
 		                ->join(array('u_u' => 'user'), "u_u.user_id=da_c.updated_by",array('updatedBy'=>'full_name'),'left')
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+				->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
 	if($loginContainer->roleCode== 'LS'){
@@ -2002,7 +2006,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'left')
 				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code','r_anc_site_name'=>'anc_site_name'),'left')
+				 ->join(array('r_anc_l_d'=>'location_details'),'r_anc_l_d.location_id=r_anc.district',array('r_anc_site_district'=>'location_name'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code','anc_site_name'),'left')
+				 ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
@@ -2012,7 +2018,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
 				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code','r_anc_site_name'=>'anc_site_name'),'left')
+				 ->join(array('r_anc_l_d'=>'location_details'),'r_anc_l_d.location_id=r_anc.district',array('r_anc_site_district'=>'location_name'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code','anc_site_name'),'left')
+				 ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
@@ -2082,7 +2090,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'left')
 				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code','r_anc_site_name'=>'anc_site_name'),'left')
+				 ->join(array('r_anc_l_d'=>'location_details'),'r_anc_l_d.location_id=r_anc.district',array('r_anc_site_district'=>'location_name'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code','anc_site_name'),'left')
+				 ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
@@ -2092,7 +2102,9 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
 				 ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line'),'left')
 				 ->join(array('r_anc'=>'anc_site'),'r_anc.anc_site_id=r_a.anc',array('r_anc_site_code'=>'anc_site_code','r_anc_site_name'=>'anc_site_name'),'left')
+				 ->join(array('r_anc_l_d'=>'location_details'),'r_anc_l_d.location_id=r_anc.district',array('r_anc_site_district'=>'location_name'),'left')
 				 ->join(array('anc'=>'anc_site'),'anc.anc_site_id=da_c.anc_site',array('anc_site_code','anc_site_name'),'left')
+				 ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				 ->join(array('t'=>'test_status'),'t.test_status_id=da_c.status',array('test_status_name'),'left')
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
