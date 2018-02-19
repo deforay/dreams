@@ -15,6 +15,12 @@ class OccupationTypeTable extends AbstractTableGateway {
     }
     
     public function fetchOccupationTypes(){
-        return $this->select(array('occupation_status'=>'active'))->toArray();
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $query = $sql->select()->from(array('o_t' => 'occupation_type'))
+                               ->where(array('o_t.occupation_status'=>'active'))
+                               ->order('o_t.occupation_code asc');
+        $queryStr = $sql->getSqlStringForSqlObject($query);
+       return $dbAdapter->query($queryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }
