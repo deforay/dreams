@@ -12,11 +12,11 @@ if(trim($countryId)!= ''){
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Risk Assessment</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Add Risk Assessment (V2)</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Risk Assessment</a>
+            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form (V2)</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Add Risk Assessment (V2)</a>
        </div>
     </div>
     <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
@@ -2100,7 +2100,7 @@ if(trim($countryId)!= ''){
 	    if($('#participantAgeInYears').val()!= ''){
 		$('input[name="participantAge"]:radio').prop('checked',false);
 		if($('#participantAgeInYears').val() < 13 || $('#participantAgeInYears').val() >= 25){
-		    alert('Are you sure you want to enter this result with age '+$('#participantAgeInYears').val());
+		    alert('Are you sure you want to proceed to enter this result with age '+$('#participantAgeInYears').val() + ' ?');
 		    endForm('age');
 		}else{
 		    continueForm('agenyr');
