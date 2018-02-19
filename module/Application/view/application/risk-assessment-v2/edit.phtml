@@ -109,11 +109,11 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 </style>
 <div id="page-content">
     <div class="row section-header">
-        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Risk Assessment</div>
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Edit Risk Assessment (V2)</div>
         <div class="col m6 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Risk Assessment</a>
+            <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($countryId); ?>" class="breadcrumb">Risk Assessment Form (V2)</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Edit Risk Assessment (V2)</a>
        </div>
     </div>
     <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
@@ -2169,10 +2169,10 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
 	   if($('#participantAgeInYears').val()!= ''){
 	       $('input[name="participantAge"]:radio').prop('checked',false);
 	       if($('#participantAgeInYears').val() < 13 || $('#participantAgeInYears').val() >= 25){
-		  alert('Are you sure you want to enter this result with age '+$('#participantAgeInYears').val());
-		  endForm('age');
+			alert('Are you sure you want to proceed to enter this result with age '+$('#participantAgeInYears').val() + ' ?');
+		  	endForm('age');
 	       }else{
-		  continueForm('agenyr');
+		  	continueForm('agenyr');
 	       }
 	   }
 	   $('#participantAgeInYears').addClass('isRequired');
