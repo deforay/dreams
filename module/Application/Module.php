@@ -92,7 +92,7 @@ class Module{
                         return $response;
                     }
                 }else{
-                    if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1)== 'RiskAssessment') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
+                    if((substr($tempName[1], 1) == 'Index' || substr($tempName[1], 1) == 'Country' || substr($tempName[1], 1) == 'User' || substr($tempName[1], 1) == 'Facility' || substr($tempName[1], 1) == 'AncSite' || substr($tempName[1], 1) == 'StudyOverviewReport' || substr($tempName[1], 1)== 'RiskAssessment' || substr($tempName[1], 1) == 'RiskAssessmentV2' || substr($tempName[1], 1) == 'Summary') && $e->getRouteMatch()->getParam('action')!= 'change-password' && ($loginContainer->roleCode == 'LS' || $loginContainer->roleCode == 'LDEO')){
                         if ($e->getRequest()->isXmlHttpRequest()) {
                             return;
                         }
@@ -110,7 +110,7 @@ class Module{
 			//Attach the "break" as a listener with a high priority
 			$e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_ROUTE, $stopCallBack, -10000);
 		       return $response;
-                    }else if(substr($tempName[1], 1)!= 'Clinic' && substr($tempName[1], 1)!= 'RiskAssessment' && substr($tempName[1], 1)!= 'StudyFiles' && $e->getRouteMatch()->getParam('action')!= 'change-password' && $loginContainer->roleCode == 'ANCSC'){
+                    }else if(substr($tempName[1], 1)!= 'Clinic' && substr($tempName[1], 1)!= 'RiskAssessment' && substr($tempName[1], 1)!= 'RiskAssessmentV2' && substr($tempName[1], 1)!= 'StudyFiles' && $e->getRouteMatch()->getParam('action')!= 'change-password' && $loginContainer->roleCode == 'ANCSC'){
                         if ($e->getRequest()->isXmlHttpRequest()) {
                             return;
                         }
@@ -146,7 +146,7 @@ class Module{
                            return $response;
                         }
                     }else if($loginContainer->hasViewOnlyAccess == 'yes' && $loginContainer->roleCode == 'ANCSC'){
-                        if(substr($tempName[1], 1)== 'RiskAssessment' && ($e->getRouteMatch()->getParam('action') == 'add' || $e->getRouteMatch()->getParam('action') == 'edit')){
+                        if((substr($tempName[1], 1)== 'RiskAssessment' || substr($tempName[1], 1)!= 'RiskAssessmentV2') && ($e->getRouteMatch()->getParam('action') == 'add' || $e->getRouteMatch()->getParam('action') == 'edit')){
                             $response = $e->getResponse();
                             $response->getHeaders()->addHeaderLine('Location', '/clinic/risk-assessment/'.base64_encode($loginContainer->country[0]));
                             $response->setStatusCode(302);

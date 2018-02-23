@@ -245,9 +245,11 @@ if($loginContainer->roleCode== 'ANCSC'){
                             <div class="collapsible-header waves-effect menuAll countryMenu<?php echo $country['country_id']; ?>"><i class="zmdi zmdi-pin"></i> <?php echo ucwords($country['country_name']); ?> <i class="zmdi zmdi-chevron-down"></i><i class="zmdi zmdi-chevron-up"></i></div>
                             <div class="collapsible-body collapsibleAll collapsibleCountryMenu<?php echo $country['country_id']; ?>" style="">
                                 <ul>
-                                    <li class="summaryMenu<?php echo $country['country_id']; ?> menuAll">
-                                        <a href="/summary/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header summaryMenu<?php echo $country['country_id']; ?> menuAll" style="height:44px !important;line-height:44px !important;"><i class="zmdi zmdi-chart zmdi-hc-fw"></i> Summary</a>
-                                    </li>
+                                    <?php if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC'){ ?>
+                                        <li class="summaryMenu<?php echo $country['country_id']; ?> menuAll">
+                                            <a href="/summary/<?php echo base64_encode($country['country_id']); ?>" class="collapsible-header summaryMenu<?php echo $country['country_id']; ?> menuAll" style="height:44px !important;line-height:44px !important;"><i class="zmdi zmdi-chart zmdi-hc-fw"></i> Summary</a>
+                                        </li>
+                                    <?php } ?>
                                     <li>
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <?php if($adminMenuAccess == 'show'){ ?>
