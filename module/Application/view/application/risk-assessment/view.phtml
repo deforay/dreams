@@ -291,7 +291,14 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
             </div>
             <div class="row" style="margin-bottom:10px;">
                 <div class="col s4">
-                    <p><?php echo (isset($row->occupationName))?ucwords($row->occupationName)." - ".$row->occupation_code:''; ?></p>
+                    <p>
+                    <?php
+                    if(isset($row->occupationName)){
+                        $occupationCode = (strtolower($row->occupationName) == 'farmer')?1111:$row->occupation_code;
+                        echo ucwords($row->occupationName)." - ".$occupationCode;
+                    }
+                    ?>
+                    </p>
                 </div>
             </div>
             <div class="row" style="margin-bottom:0;">

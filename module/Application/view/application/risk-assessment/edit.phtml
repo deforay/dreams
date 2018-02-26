@@ -211,8 +211,9 @@ if($row->has_patient_ever_been_forced_for_sex_within_last_year!= null && trim($r
                         <option value=""> -- Select -- </option>
                         <?php
 			foreach($occupationTypes as $occupation){
+			    $occupationCode = (strtolower($occupation['occupation']) == 'farmer')?1111:$occupation['occupation_code'];
 			?>
-                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->patient_occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']).' - '.$occupation['occupation_code']; ?></option>
+                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>" <?php echo ($row->patient_occupation == $occupation['occupation_id'])?'selected="selected"':''; ?>><?php echo ucwords($occupation['occupation']).' - '.$occupationCode; ?></option>
 			<?php } ?>
                         <option value="1111">Other - 1111</option>
                     </select>

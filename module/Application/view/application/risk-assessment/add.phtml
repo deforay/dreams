@@ -207,8 +207,9 @@ if(trim($countryId)!= ''){
                         <option value=""> -- Select -- </option>
                         <?php
 			foreach($occupationTypes as $occupation){
+			    $occupationCode = (strtolower($occupation['occupation']) == 'farmer')?1111:$occupation['occupation_code'];
 			?>
-                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>"><?php echo ucwords($occupation['occupation']).' - '.$occupation['occupation_code']; ?></option>
+                           <option value="<?php echo base64_encode($occupation['occupation_id']); ?>"><?php echo ucwords($occupation['occupation']).' - '.$occupationCode; ?></option>
 			<?php } ?>
                         <option value="1111">Other - 1111</option>
                     </select>

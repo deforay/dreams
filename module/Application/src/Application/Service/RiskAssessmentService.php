@@ -129,10 +129,18 @@ class RiskAssessmentService {
                         //patient occupation
                         $occupation = 'other';
                         $occupationOther = '';
-                        if($aRow['occupation_code']!= 1111){
-                           $occupation = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                        if($aRow['form_version'] == 2){
+                            if(isset($aRow['occupationName']) && $aRow['occupation_code']!= 1111){
+                               $occupation = strtolower($aRow['occupationName']);
+                            }else{
+                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                            }
                         }else{
-                           $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                            if(isset($aRow['occupationName']) && strtolower($aRow['occupationName'])!= 'farmer' && $aRow['occupation_code']!= 1111){
+                               $occupation = strtolower($aRow['occupationName']);
+                            }else{
+                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                            }
                         }
                         //patient schooling details
                         $hasPatientEverAttendedSchool = '';
@@ -1010,6 +1018,11 @@ class RiskAssessmentService {
                             ),
                         )
                     );
+                    $redTxtArray = array(
+                        'font' => array(
+                            'color' => array('rgb' => 'F44336')
+                        )
+                    );
                     //Merge section
                     $sheet->mergeCells('A1:A3');
                     $sheet->mergeCells('B1:B3');
@@ -1415,11 +1428,17 @@ class RiskAssessmentService {
                     $currentRow = 5;
                     foreach ($output as $rowData) {
                         $colNo = 0;
+                        $isParticipantEligible = true;
+                        $lastCol = (count($rowData)-1);
                         foreach ($rowData as $field => $value) {
                             if (!isset($value)) {
                                 $value = "";
                             }
-                            
+                            if($colNo == 6 && $value!= null && trim($value)!= '' && ((int) $value < 13 || (int) $value >= 25 || $value == 888 || $value == 777 || $value == 999)){
+                               $isParticipantEligible = false; 
+                            }else if($colNo == 18 && $value!= null && trim($value)!= '' && $value == 'HIVpos'){
+                               $isParticipantEligible = false;
+                            }
                             if (is_numeric($value)) {
                                 $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
                             }else{
@@ -1428,6 +1447,9 @@ class RiskAssessmentService {
                             
                             $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
                             $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            if($colNo > ($lastCol-1) && !$isParticipantEligible){
+                               $sheet->getStyle('A'.$currentRow.':'.$cellName.''.$currentRow)->applyFromArray($redTxtArray); 
+                            }
                             $sheet->getDefaultRowDimension()->setRowHeight(20);
                             $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
                             $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);

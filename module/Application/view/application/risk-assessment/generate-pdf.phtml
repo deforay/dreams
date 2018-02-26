@@ -137,7 +137,12 @@ if(count($dataResult) > 0){
 	    }
 	}
         //patient occupation
-        $occupation = (isset($data['occupationName']))?ucwords($data['occupationName']).' - '.$data['occupation_code']:'';
+	$occupationCode = '';
+	$occupation = '';
+	if(isset($data['occupationName'])){
+	   $occupationCode = ($data['form_version'] == 1 && strtolower($data['occupationName']) == 'farmer')?1111:$data['occupation_code'];
+	   $occupation = ucwords($data['occupationName']).' - '.$occupationCode;
+	}
 	//patient schooling details
 	$hasPatientEverAttendedSchool = '';
 	if($data['has_patient_ever_attended_school']!= null && trim($data['has_patient_ever_attended_school'])!= ''){
@@ -921,7 +926,7 @@ if(count($dataResult) > 0){
 	    }else if($data['time_of_patient_participate_in_club'] == 4){
 		$timeofPatientParticipateinClub = "7-12 months ago - 4";
 	    }else if($data['time_of_patient_participate_in_club'] == 5){
-		$timeofPatientParticipateinClub = "12 months - 5";
+		$timeofPatientParticipateinClub = "12 months ago - 5";
 	    }else if($data['time_of_patient_participate_in_club'] == 88){
 		$timeofPatientParticipateinClub = "Don't Know - 88";
 	    }else if($data['time_of_patient_participate_in_club'] == 99){
