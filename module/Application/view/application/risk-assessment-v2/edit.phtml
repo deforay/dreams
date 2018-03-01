@@ -1989,16 +1989,16 @@ if($row->is_patient_afraid_of_anyone!= null && trim($row->is_patient_afraid_of_a
    $('#partnerHIVTestStatus').on('change',function() {
        if($.trim($('#partnerHIVTestStatus').val()) == 3){
 	   $(".partnerHIVTestStatusRequired").css("visibility","hidden");
-	   $(".partnerHIVTestStatus").css("color","rgba(0,0,0,0.26)");
-	   $(".partnerHIVTestStatus").css("pointer-events","none");
+	   $(".partnerHIVTestStatus,.mainSexualPartnerAgeSection,.circumcisionSection").css("color","rgba(0,0,0,0.26)");
+	   $(".partnerHIVTestStatus,.mainSexualPartnerAgeSection,.circumcisionSection").css("pointer-events","none");
 	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears').val('');
 	   $('input[name="ageOfMainSexualPartnerAtLastBirthday"]:radio').prop('checked',false);
 	   $('input[name="isPartnerCircumcised"]:radio').prop('checked',false);
 	   $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').removeClass("isRequired");
        }else{
 	  $(".partnerHIVTestStatusRequired").css("visibility","visible");
-	  $(".partnerHIVTestStatus").css("color","");
-	  $(".partnerHIVTestStatus").css("pointer-events","auto");
+	  $(".partnerHIVTestStatus,.mainSexualPartnerAgeSection,.circumcisionSection").css("color","");
+	  $(".partnerHIVTestStatus,.mainSexualPartnerAgeSection,.circumcisionSection").css("pointer-events","auto");
 	  $('#ageOfMainSexualPartnerAtLastBirthdayInYears,#ageDiffOfMainSexualPartner,#isPartnerCircumcisedYes,#circumcision').addClass("isRequired");
        }
    });
