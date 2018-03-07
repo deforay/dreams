@@ -711,7 +711,8 @@ return array(
             'Application\Controller\StudyOverviewReport' => 'Application\Controller\StudyOverviewReportController',
             'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController',
             'Application\Controller\Summary' => 'Application\Controller\SummaryController',
-            'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller'
+            'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller',
+            'Application\Controller\Cron' => 'Application\Controller\CronController'
         ),
     ),
     'controller_plugins' => array(
@@ -739,7 +740,16 @@ return array(
     'console' => array(
         'router' => array(
             'routes' => array(
-                
+                'import-ussd' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'import-ussd',
+                        'defaults' => array(
+                            'controller' => 'Application\Controller\Cron',
+                            'action' => 'importussd',
+                        ),
+                    ),
+                ),
             ),
         ),
     ),

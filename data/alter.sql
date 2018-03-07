@@ -871,4 +871,20 @@ ALTER TABLE `clinic_risk_assessment` ADD `has_patient_wanted_to_get_pregnant` VA
 ALTER TABLE `clinic_risk_assessment` ADD `has_patient_ever_participated_in_a_clup_for_adolescents` VARCHAR(45) NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`, ADD `time_of_patient_participate_in_club` VARCHAR(45) NULL DEFAULT NULL AFTER `has_patient_ever_participated_in_a_clup_for_adolescents`, ADD `has_patient_ever_participated_in_mothers_group` VARCHAR(45) NULL DEFAULT NULL AFTER `time_of_patient_participate_in_club`;
 
 --Pal 12/02/2018
-ALTER TABLE `clinic_risk_assessment` ADD `patient_afraid_of_other` VARCHAR(255) NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`; 
+ALTER TABLE `clinic_risk_assessment` ADD `patient_afraid_of_other` VARCHAR(255) NULL DEFAULT NULL AFTER `is_patient_afraid_of_anyone`;
+
+--Pal 07/03/2018
+CREATE TABLE `ussd_survey` (
+  `facility_code` int(11) DEFAULT NULL,
+  `last_event` int(11) DEFAULT NULL,
+  `last_update_on` datetime DEFAULT NULL,
+  `enrolled_on` datetime DEFAULT NULL,
+  `date_result_returned_clinic` datetime DEFAULT NULL,
+  `date_returned_to_participant` datetime DEFAULT NULL,
+  `reason_for_not_enrolling` int(11) DEFAULT NULL,
+  `reason_for_not_enrolling_other` varchar(255) DEFAULT NULL,
+  `reason_for_client_refusal` varchar(255) DEFAULT NULL,
+  `reason_for_client_refusal_other` varchar(255) DEFAULT NULL
+)
+
+ALTER TABLE `ussd_survey` ADD `patient_barcode_id` VARCHAR(45) NOT NULL FIRST, ADD PRIMARY KEY (`patient_barcode_id`);

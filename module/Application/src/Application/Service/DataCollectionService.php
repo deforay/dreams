@@ -2305,4 +2305,124 @@ class DataCollectionService {
         $dataCollectionDb = $this->sm->get('DataCollectionTable');
       return $dataCollectionDb->fetchWeeklyDataReportingDetails($params);
     }
+    
+    public function importUSSDData(){
+        $ussdFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd";
+        $ussdSyncedFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd-synced";
+        $ussdFiles = scandir($ussdFilesPath, SCANDIR_SORT_DESCENDING);
+        if(sizeof($ussdFiles) > 0){
+            $common = new CommonService();
+            $ussdSurveryDb = $this->sm->get('USSDSurveyTable');
+            $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+            $sql = new Sql($dbAdapter);
+            try {
+                for($file=0;$file < count($ussdFiles);$file++){
+                    if($ussdFiles[$file]!= '..' && $ussdFiles[$file]!= '.' && file_exists($ussdFilesPath . DIRECTORY_SEPARATOR . $ussdFiles[$file])){
+                        $objPHPExcel = \PHPExcel_IOFactory::load($ussdFilesPath . DIRECTORY_SEPARATOR . $ussdFiles[$file]);
+                        $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
+                        $count = count($sheetData);
+                        for($i = 2; $i <= $count; $i++) {
+                            if($sheetData[$i]['A']!= NULL && $sheetData[$i]['A']!= 'NULL' && $sheetData[$i]['A']!= 'Null' && $sheetData[$i]['A']!= 'null' && trim($sheetData[$i]['A'])!= '') {
+                                $facility = ($sheetData[$i]['G']!= NULL && $sheetData[$i]['G']!= 'NULL' && $sheetData[$i]['G']!= 'Null' && $sheetData[$i]['G']!= 'null' && trim($sheetData[$i]['G'])!= '')?trim($sheetData[$i]['G']):NULL;
+                                $lastEvent = ($sheetData[$i]['J']!= NULL && $sheetData[$i]['J']!= 'NULL' && $sheetData[$i]['J']!= 'Null' && $sheetData[$i]['J']!= 'null' && trim($sheetData[$i]['J'])!= '')?trim($sheetData[$i]['J']):NULL;
+                                $patientBarcodeID = NULL;
+                                $enrolledOn = NULL;
+                                $dateResultReturnedClinic = NULL;
+                                $dateReturnedtoParticipant = NULL;
+                                $reasonForNotEnrolling = ($sheetData[$i]['N']!= NULL && $sheetData[$i]['N']!= 'NULL' && $sheetData[$i]['N']!= 'Null' && $sheetData[$i]['N']!= 'null' && trim($sheetData[$i]['N'])!= '')?trim($sheetData[$i]['N']):NULL;
+                                $reasonForNotEnrollingOther = ($sheetData[$i]['O']!= NULL && $sheetData[$i]['O']!= 'NULL' && $sheetData[$i]['O']!= 'Null' && $sheetData[$i]['O']!= 'null' && trim($sheetData[$i]['O'])!= '')?trim($sheetData[$i]['O']):NULL;
+                                $reasonForClientRefused = ($sheetData[$i]['P']!= NULL && $sheetData[$i]['P']!= 'NULL' && $sheetData[$i]['P']!= 'Null' && $sheetData[$i]['P']!= 'null' && trim($sheetData[$i]['P'])!= '')?trim($sheetData[$i]['P']):NULL;
+                                $reasonForClientRefusedOther = ($sheetData[$i]['Q']!= NULL && $sheetData[$i]['Q']!= 'NULL' && $sheetData[$i]['Q']!= 'Null' && $sheetData[$i]['Q']!= 'null' && trim($sheetData[$i]['Q'])!= '')?trim($sheetData[$i]['Q']):NULL;
+                                $dateVal = NULL;
+                                $timeVal = '00:00:00';//default
+                                if($sheetData[$i]['E']!= NULL && $sheetData[$i]['E']!= 'NULL' && $sheetData[$i]['E']!= 'Null' && $sheetData[$i]['E']!= 'null' && trim($sheetData[$i]['E'])!= '' && $sheetData[$i]['E']!= '00-00-00'){
+                                    $dateArray = explode('-',trim($sheetData[$i]['E']));
+                                    $dateVal = date('Y-m-d',strtotime($dateArray[2].'-'.$dateArray[1].'-'.$dateArray[0]));
+                                }
+                                if(trim($sheetData[$i]['F'])!= '' && $sheetData[$i]['F']!= NULL && $sheetData[$i]['F']!= 'NULL' && $sheetData[$i]['F']!= 'Null' && $sheetData[$i]['F']!= 'null'&& trim($sheetData[$i]['F'])!= ''){
+                                   $timeVal = trim($sheetData[$i]['F']);
+                                }
+                                if($sheetData[$i]['K']!= NULL && $sheetData[$i]['K']!= 'NULL' && $sheetData[$i]['K']!= 'Null' && $sheetData[$i]['K']!= 'null' && trim($sheetData[$i]['K'])!= ''){
+                                    $patientBarcodeID = trim($sheetData[$i]['K']);
+                                    $enrolledOn = ($dateVal!= NULL)?$dateVal.' '.$timeVal:$enrolledOn;
+                                }else if($sheetData[$i]['L']!= NULL && $sheetData[$i]['L']!= 'NULL' && $sheetData[$i]['L']!= 'Null' && $sheetData[$i]['L']!= 'null' && trim($sheetData[$i]['L'])!= ''){
+                                    $patientBarcodeID = trim($sheetData[$i]['L']);
+                                    $dateResultReturnedClinic = ($dateVal!= NULL)?$dateVal.' '.$timeVal:$dateResultReturnedClinic;
+                                }else if($sheetData[$i]['M']!= NULL && $sheetData[$i]['M']!= 'NULL' && $sheetData[$i]['M']!= 'Null' && $sheetData[$i]['M']!= 'null' && trim($sheetData[$i]['M'])!= ''){
+                                    $patientBarcodeID = trim($sheetData[$i]['M']);
+                                    $dateReturnedtoParticipant = ($dateVal!= NULL)?$dateVal.' '.$timeVal:$dateReturnedtoParticipant;
+                                }
+                                //Patient barcode ID check
+                                if($patientBarcodeID!= NULL){
+                                    $validateQuery = $sql->select()->from(array('ussd_s' => 'ussd_survey'))
+                                                         ->columns(array('patient_barcode_id'))
+                                                         ->where(array('ussd_s.patient_barcode_id'=>$patientBarcodeID));
+                                    $validateQueryStr = $sql->getSqlStringForSqlObject($validateQuery);
+                                    $validateResult = $dbAdapter->query($validateQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                                    if(isset($validateResult->patient_barcode_id)){
+                                        $data = array(
+                                                      'last_update_on'=>$common->getDateTime(),
+                                                    );
+                                        if($facility!= NULL){
+                                           $data['facility_code'] = $facility;
+                                        }
+                                        if($lastEvent!= NULL){
+                                           $data['last_event'] = $lastEvent;
+                                        }
+                                        if($enrolledOn!= NULL){
+                                           $data['enrolled_on'] = $enrolledOn; 
+                                        }
+                                        if($dateResultReturnedClinic!= NULL){
+                                           $data['date_result_returned_clinic'] = $dateResultReturnedClinic; 
+                                        }
+                                        if($dateReturnedtoParticipant!= NULL){
+                                           $data['date_returned_to_participant'] = $dateReturnedtoParticipant; 
+                                        }
+                                        if($reasonForNotEnrolling!= NULL){
+                                           $data['reason_for_not_enrolling'] = $reasonForNotEnrolling; 
+                                        }
+                                        if($reasonForNotEnrollingOther!= NULL){
+                                           $data['reason_for_not_enrolling_other'] = $reasonForNotEnrollingOther; 
+                                        }
+                                        if($reasonForClientRefused!= NULL){
+                                           $data['reason_for_client_refusal'] = $reasonForClientRefused; 
+                                        }
+                                        if($reasonForClientRefusedOther!= NULL){
+                                           $data['reason_for_client_refusal_other'] = $reasonForClientRefusedOther; 
+                                        }
+                                        $ussdSurveryDb->update($data,array('patient_barcode_id'=>$validateResult->patient_barcode_id));
+                                    }else{
+                                        $data = array(
+                                                      'patient_barcode_id'=>$patientBarcodeID,
+                                                      'facility_code'=>$facility,
+                                                      'last_event'=>$lastEvent,
+                                                      'last_update_on'=>$common->getDateTime(),
+                                                      'enrolled_on'=>$enrolledOn,
+                                                      'date_result_returned_clinic'=>$dateResultReturnedClinic,
+                                                      'date_returned_to_participant'=>$dateReturnedtoParticipant,
+                                                      'reason_for_not_enrolling'=>$reasonForNotEnrolling,
+                                                      'reason_for_not_enrolling_other'=>$reasonForNotEnrollingOther,
+                                                      'reason_for_client_refusal'=>$reasonForClientRefused,
+                                                      'reason_for_client_refusal_other'=>$reasonForClientRefusedOther
+                                                    );
+                                        $ussdSurveryDb->insert($data);
+                                    }
+                                    //File operation
+                                    if(!file_exists($ussdSyncedFilesPath) && !is_dir($ussdSyncedFilesPath)) {
+                                        mkdir($ussdSyncedFilesPath);
+                                    }
+                                    if(file_exists($ussdFilesPath . DIRECTORY_SEPARATOR . $ussdFiles[$file]) && copy($ussdFilesPath . DIRECTORY_SEPARATOR . $ussdFiles[$file], $ussdSyncedFilesPath. DIRECTORY_SEPARATOR.$ussdFiles[$file])) {
+                                        unlink($ussdFilesPath . DIRECTORY_SEPARATOR . $ussdFiles[$file]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch (Exception $exc) {
+                error_log($exc->getMessage());
+                error_log($exc->getTraceAsString());
+            }
+        }
+    }
 }

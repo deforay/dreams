@@ -37,6 +37,7 @@ use Application\Model\AncRapidRecencyTable;
 use Application\Model\LocationDetailsTable;
 use Application\Model\StudyFilesTable;
 use Application\Model\ManageColumnsTable;
+use Application\Model\USSDSurveyTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -310,6 +311,10 @@ class Module{
                 },'ManageColumnsTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new ManageColumnsTable($dbAdapter);
+                    return $table;
+                },'USSDSurveyTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new USSDSurveyTable($dbAdapter);
                     return $table;
                 }
             ),
