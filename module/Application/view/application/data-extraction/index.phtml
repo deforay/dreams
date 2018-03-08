@@ -200,15 +200,21 @@
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol26">Status</label> <br>
 	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol27">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol28">Date Returned to Participant</label> <br>
+	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="27"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol27">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="29"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="29" id="iCol29" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol29">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="26"/>
+	      <input type="hidden" id="countColumn" value="28"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -315,6 +321,8 @@
 				<th>Last Updated Date</th>
 				<th>Last Updated by</th>
 				<th>Status</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -353,6 +361,8 @@
 				<th>Last Updated Date</th>
 				<th>Last Updated by</th>
 				<th>Status</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -404,6 +414,8 @@
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},

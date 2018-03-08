@@ -174,11 +174,11 @@ class DataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name');
-	    $orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.added_on','u.user_name');
+	    $aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name');
+	    $orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','date_result_returned_clinic','date_returned_to_participant','da_c.added_on','u.user_name');
 	}else{
-	    $aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name','c.country_name');
-	    $orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.added_on','u.user_name','c.country_name');
+	    $aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name','c.country_name');
+	    $orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','date_result_returned_clinic','date_returned_to_participant','da_c.added_on','u.user_name','c.country_name');
 	}
 
        /*
@@ -267,7 +267,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 		     ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	if(isset($parameters['dashLab']) && trim($parameters['dashLab'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	}else if($loginContainer->roleCode== 'LS'){
@@ -334,7 +335,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		      ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
 		      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
                       ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+		      ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
@@ -360,16 +362,30 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $receiptDateAtCentralLab = '';
 	    $testCompletionDate = '';
 	    $resultDispatchedDateToClinic = '';
+	    $dateResultReturnedatClinic = '';
+	    $dateReturnedtoParticipant = '';
 	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-	    }if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
 		$specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-	    }if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
 		$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-	    }if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
 		$testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
-	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    }
+	    if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+		$dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
+	    }
+	    if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_returned_to_participant']);
+		$dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
 	    }
 	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
@@ -405,7 +421,6 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $userUnlockedHistory = '';
 	    if($aRow['unlocked_on']!= null && trim($aRow['unlocked_on'])!= '' && $aRow['unlocked_on']!= '0000-00-00 00:00:00'){
 		$unlockedDate = explode(" ",$aRow['unlocked_on']);
-		
 		$userQuery = $sql->select()->from(array('u' => 'user'))->columns(array('user_id','full_name'))->where(array('u.user_id'=>$aRow['unlocked_by']));
 	        $userQueryStr = $sql->getSqlStringForSqlObject($userQuery);
 	        $userResult = $dbAdapter->query($userQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -453,7 +468,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    //$row[] = $aRow['lab_specimen_id'];
-	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] >1)?$aRow['rejection_code']:'';
 	    $row[] = $receiptDateAtCentralLab;
 	    $row[] = ucwords($aRow['lab_tech_name']);
 	    $row[] = $testCompletionDate;
@@ -467,6 +482,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $asanteRapidRecencyAssayPn;
 	    $row[] = $asanteRapidRecencyAssayRltLogVal;
 	    $row[] = $asanteRapidRecencyAssayRlt;
+	    $row[] = $dateResultReturnedatClinic;
+	    $row[] = $dateReturnedtoParticipant;
 	    $row[] = $common->humanDateFormat($addedDate[0]);
 	    $row[] = ucwords($aRow['user_name']);
 	    if($parameters['countryId']== ''){
@@ -696,11 +713,11 @@ class DataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-	    $aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name');
-	    $orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name');
+	    $aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')");
+	    $orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','date_result_returned_clinic','date_returned_to_participant');
 	}else{
-	    $aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name','c.country_name');
-	    $orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','c.country_name');
+	    $aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')",'c.country_name');
+	    $orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','c.country_name','date_result_returned_clinic','date_returned_to_participant');
 	}
 
        /*
@@ -801,7 +818,8 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 		     ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	             //->where('da_c.status IN (2)');
 	if($loginContainer->roleCode== 'LS'){
 	    if(trim($parameters['lab']) ==''){
@@ -864,7 +882,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 				->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+				->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	                        //->where('da_c.status IN (2)');
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
@@ -894,22 +913,38 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $receiptDateAtCentralLab = '';
 	    $testCompletionDate = '';
 	    $resultDispatchedDateToClinic = '';
+	    $dateResultReturnedatClinic = '';
+	    $dateReturnedtoParticipant = '';
 	    if(isset($aRow['added_on']) && $aRow['added_on']!= null && trim($aRow['added_on'])!= '' && $aRow['added_on']!= '0000-00-00 00:00:00'){
 		$addedDateArray = explode(' ',$aRow['added_on']);
 		$addedDate = $common->humanDateFormat($addedDateArray[0]).' '.$addedDateArray[1];
-	    }if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
+	    }
+	    if(isset($aRow['updated_on']) && $aRow['updated_on']!= null && trim($aRow['updated_on'])!= '' && $aRow['updated_on']!= '0000-00-00 00:00:00'){
 		$updatedDateArray = explode(' ',$aRow['updated_on']);
 		$updatedDate = $common->humanDateFormat($updatedDateArray[0]).' '.$updatedDateArray[1];
-	    }if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-	    }if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
 		$specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-	    }if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
 		$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-	    }if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
 		$testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
-	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    }
+	    if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+		$dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
+	    }
+	    if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_returned_to_participant']);
+		$dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
 	    }
 	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
@@ -968,6 +1003,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $updatedDate;
 	    $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
 	    $row[] = ucwords($aRow['test_status_name']);
+	    $row[] = $dateResultReturnedatClinic;
+	    $row[] = $dateReturnedtoParticipant;
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
@@ -1165,8 +1202,8 @@ class DataCollectionTable extends AbstractTableGateway {
         * you want to insert a non-database field (for example a counter or static image)
         */
 	
-	$aColumns = array("DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments');
-	$orderColumns = array('receipt_date_at_central_lab','da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments');
+	$aColumns = array("DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')");
+	$orderColumns = array('receipt_date_at_central_lab','da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','date_result_returned_clinic','date_returned_to_participant');
 
        /*
         * Paging
@@ -1264,7 +1301,8 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 		     ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	if($loginContainer->roleCode== 'LS'){
 	    if(trim($parameters['lab']) ==''){
 	       $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
@@ -1326,7 +1364,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
 				->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
-				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left');
+				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+				->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	if($loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}else if($loginContainer->roleCode== 'LDEO'){
@@ -1353,16 +1392,30 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $receiptDateAtCentralLab = '';
 	    $testCompletionDate = '';
 	    $resultDispatchedDateToClinic = '';
+	    $dateResultReturnedatClinic = '';
+	    $dateReturnedtoParticipant = '';
 	    if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
 		$specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
-	    }if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['specimen_picked_up_date_at_anc']) && trim($aRow['specimen_picked_up_date_at_anc'])!= '' && $aRow['specimen_picked_up_date_at_anc']!= '0000-00-00'){
 		$specimenPickUpDateatAnc = $common->humanDateFormat($aRow['specimen_picked_up_date_at_anc']);
-	    }if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
 		$receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
-	    }if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['date_of_test_completion']) && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
 		$testCompletionDate = $common->humanDateFormat($aRow['date_of_test_completion']);
-	    }if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
+	    }
+	    if(isset($aRow['result_dispatched_date_to_clinic']) && trim($aRow['result_dispatched_date_to_clinic'])!= '' && $aRow['result_dispatched_date_to_clinic']!= '0000-00-00'){
 		$resultDispatchedDateToClinic = $common->humanDateFormat($aRow['result_dispatched_date_to_clinic']);
+	    }
+	    if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+		$dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
+	    }
+	    if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_returned_to_participant']);
+		$dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
 	    }
 	    $lAgAvidityResult = ($aRow['lag_avidity_result']!= null && trim($aRow['lag_avidity_result'])!= '')?ucwords($aRow['lag_avidity_result']):'';
 	//    $hIVRNAResult = '';
@@ -1404,7 +1457,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = ucwords($aRow['facility_name']);
 	    $row[] = $aRow['facility_code'];
 	    //$row[] = $aRow['lab_specimen_id'];
-	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1)?$aRow['rejection_code']:'';
+	    $row[] = (isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] >1)?$aRow['rejection_code']:'';
 	    $row[] = $aRow['lab_tech_name'];
 	    $row[] = $testCompletionDate;
 	    $row[] = $resultDispatchedDateToClinic;
@@ -1415,6 +1468,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $finalLagRecencyInfection;
 	    $row[] = $asanteRapidRecencyAssayPn;
 	    $row[] = $asanteRapidRecencyAssayRlt;
+	    $row[] = $dateResultReturnedatClinic;
+	    $row[] = $dateReturnedtoParticipant;
 	    $row[] = ucfirst($aRow['comments']);
 	   $output['aaData'][] = $row;
 	}
@@ -1886,8 +1941,8 @@ class DataCollectionTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-	$aColumns = array('location_name','patient_barcode_id',"DATE_FORMAT(specimen_collected_date,'%d-%b-%Y')",'anc_site_name','anc_site_code',"DATE_FORMAT(specimen_picked_up_date_at_anc,'%d-%b-%Y')",'specimen_type','anc_patient_id','art_patient_id',"DATE_FORMAT(patient_dob,'%d-%b-%Y')",'age','gestational_age','facility_name','rejection_reason',"DATE_FORMAT(receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(result_dispatched_date_to_clinic,'%d-%b-%Y')",'final_lag_avidity_odn','lag_avidity_result','hiv_rna','recent_infection','asante_rapid_recency_assy','asante_rapid_recency_assy','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line','test_status_name');
-	$orderColumns = array('location_name','patient_barcode_id','specimen_collected_date','anc_site_name','specimen_picked_up_date_at_anc','specimen_type','anc_patient_id','art_patient_id','patient_dob','age','gestational_age','facility_name','rejection_reason','receipt_date_at_central_lab','lab_tech_name','date_of_test_completion','result_dispatched_date_to_clinic','final_lag_avidity_odn','lag_avidity_result','hiv_rna','recent_infection','asante_rapid_recency_assy','asante_rapid_recency_assy','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line','test_status_name','assessment_id');
+	$aColumns = array('location_name','patient_barcode_id',"DATE_FORMAT(specimen_collected_date,'%d-%b-%Y')",'anc_site_name','anc_site_code',"DATE_FORMAT(specimen_picked_up_date_at_anc,'%d-%b-%Y')",'specimen_type','anc_patient_id','art_patient_id',"DATE_FORMAT(patient_dob,'%d-%b-%Y')",'age','gestational_age','facility_name','rejection_reason',"DATE_FORMAT(receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(result_dispatched_date_to_clinic,'%d-%b-%Y')",'final_lag_avidity_odn','lag_avidity_result','hiv_rna','recent_infection','asante_rapid_recency_assy','asante_rapid_recency_assy','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line','test_status_name',"DATE_FORMAT(date_result_returned_clinic,'%d-%b-%Y %H:%i:%s')","DATE_FORMAT(date_returned_to_participant,'%d-%b-%Y %H:%i:%s')");
+	$orderColumns = array('location_name','patient_barcode_id','specimen_collected_date','anc_site_name','specimen_picked_up_date_at_anc','specimen_type','anc_patient_id','art_patient_id','patient_dob','age','gestational_age','facility_name','rejection_reason','receipt_date_at_central_lab','lab_tech_name','date_of_test_completion','result_dispatched_date_to_clinic','final_lag_avidity_odn','lag_avidity_result','hiv_rna','recent_infection','asante_rapid_recency_assy','asante_rapid_recency_assy','has_patient_had_rapid_recency_test','HIV_diagnostic_line','recency_line','test_status_name','assessment_id','date_result_returned_clinic','date_returned_to_participant');
        /*
         * Paging
         */
@@ -2013,6 +2068,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
+				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
@@ -2025,6 +2081,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
+				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select1->combine($select2);
 	$sQuery = $sql->select()->from(array('result' => $select1));
@@ -2097,6 +2154,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
+				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
 				 ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('r_assessment_id'=>'assessment_id','r_patient_barcode_id'=>'patient_barcode_id','r_country'=>'country'),'right')
@@ -2109,6 +2167,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('f'=>'facility'),'f.facility_id=da_c.lab',array('facility_name','province'),'left')
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
+				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select1->combine($select2);
 	$tQuery = $sql->select()->from(array('result' => $select1));
@@ -2177,6 +2236,18 @@ class DataCollectionTable extends AbstractTableGateway {
 	    //date of test completion
 	    if(isset($aRow['date_of_test_completion']) && $aRow['date_of_test_completion']!= null && trim($aRow['date_of_test_completion'])!= '' && $aRow['date_of_test_completion']!= '0000-00-00'){
 		$dateofTestCompletion = $common->humanDateFormat($aRow['date_of_test_completion']);
+	    }
+	    //date result return at clinic
+	    $dateResultReturnedatClinic = '';
+	    if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+		$dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
+	    }
+	    //date returned to participant
+	    $dateReturnedtoParticipant = '';
+	    if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+		$dateArray = explode(" ",$aRow['date_returned_to_participant']);
+		$dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]).' '.$dateArray[1];
 	    }
 	    //status
 	    if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
@@ -2257,6 +2328,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $ancRecencyVerificationClassification;
 	    $row[] = $status;
 	    $row[] = (isset($aRow['r_assessment_id']) && $aRow['r_assessment_id']!= null && trim($aRow['r_assessment_id'])!= '')?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['r_assessment_id']). '/' . base64_encode($aRow['r_country']) . '" style="text-decoration:underline;" target="_blank" title="View data"> Yes</a>':'No';
+	    $row[] = $dateResultReturnedatClinic;
+	    $row[] = $dateReturnedtoParticipant;
 	    $output['aaData'][] = $row;
 	}
       return $output;

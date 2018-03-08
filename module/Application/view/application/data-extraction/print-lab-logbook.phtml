@@ -180,8 +180,14 @@
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="21"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol21">Comments</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol21">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol22">Date Returned to Participant</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="hidden" id="countColumn" value="23"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol23">Comments</label> <br>
 	    </div>
 	</div>
     </div>
@@ -279,6 +285,8 @@
                                 <th>Positive Verification Line (Visual)</th>
                                 <th>Long Term Line (Visual)</th>
 				<th>Comments</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
                             </tr>
                         </thead>
 			<tfoot>
@@ -307,6 +315,8 @@
                                 <th>Positive Verification Line (Visual)</th>
                                 <th>Long Term Line (Visual)</th>
 				<th>Comments</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -344,6 +354,8 @@
 		//{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},

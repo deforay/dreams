@@ -577,20 +577,26 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol23">Asante Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol24">Added On</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol24">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol25">Date Returned to Participant</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol25">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol26">Added On</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol27">Added by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="26"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol26">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="28"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol26">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="25"/>
+	      <input type="hidden" id="countColumn" value="27"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -633,6 +639,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>Asante Positive<br>Verification<br>Line<br>(Visual)</th>
 				<th>Asante Long Term <br>Line Reader <br>Value (log10)</th>
 				<th>Asante Long<br>Term<br>Line<br>(Visual)</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
 				<th>Added On</th>
 				<th>Added by</th>
 				<?php
@@ -671,6 +679,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>Asante Positive<br>Verification<br>Line<br>(Visual)</th>
 				<th>Asante Long Term <br>Line Reader <br>Value (log10)</th>
 				<th>Asante Long<br>Term<br>Line<br>(Visual)</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
 				<th>Added On</th>
 				<th>Added by</th>
 				<?php
@@ -720,6 +730,8 @@ if(isset($date) && trim($date)!= ''){
 		{"sClass":"dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
