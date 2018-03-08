@@ -38,6 +38,7 @@ use Application\Model\LocationDetailsTable;
 use Application\Model\StudyFilesTable;
 use Application\Model\ManageColumnsTable;
 use Application\Model\USSDSurveyTable;
+use Application\Model\USSDImportStatusTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -315,6 +316,10 @@ class Module{
                 },'USSDSurveyTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new USSDSurveyTable($dbAdapter);
+                    return $table;
+                },'USSDImportStatusTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new USSDImportStatusTable($dbAdapter);
                     return $table;
                 }
             ),

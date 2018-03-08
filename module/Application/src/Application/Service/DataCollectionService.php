@@ -2367,6 +2367,7 @@ class DataCollectionService {
         if(sizeof($ussdFiles) > 0){
             $common = new CommonService();
             $ussdSurveryDb = $this->sm->get('USSDSurveyTable');
+            $ussdImportStatusDb = $this->sm->get('USSDImportStatusTable');
             $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
             $sql = new Sql($dbAdapter);
             try {
@@ -2378,6 +2379,15 @@ class DataCollectionService {
                             $highestColumn = $worksheet->getHighestColumn(); // get highest column
                             $highestColumnIndex = \PHPExcel_Cell::columnIndexFromString($highestColumn);
                             $nrColumns = ord($highestColumn) - 64;
+                            $totalImportedCount = $highestRow - 1;
+                            $notEnrolledCount = 0;
+                            $notMatchingCount = 0;
+                            $notMatchingIDsArray = array();
+                            $insertedCount = 0;
+                            $insertedIDsArray = array();
+                            $updatedCount = 0;
+                            $updatedIDsArray = array();
+                            $importedOn = $lastUpdatedOn = $common->getDateTime();
                             for($row = 2; $row <= $highestRow; $row++){
                                 $facility = NULL;
                                 $lastEvent = NULL;
@@ -2385,6 +2395,8 @@ class DataCollectionService {
                                 $enrolledOn = NULL;
                                 $dateResultReturnedClinic = NULL;
                                 $dateReturnedtoParticipant = NULL;
+                                $notEnrolled = false;
+                                $notEnrolledOther = false;
                                 $reasonForNotEnrolling = NULL;
                                 $reasonForNotEnrollingOther = NULL;
                                 $reasonForClientRefused = NULL;
@@ -2406,9 +2418,11 @@ class DataCollectionService {
                                     }
                                     if($headerVal == 'reason_not_enrolled' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $reasonForNotEnrolling = $currentVal;
+                                        $notEnrolled = true;
                                     }
                                     if($headerVal == 'reason_not_enrolled_other' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $reasonForNotEnrollingOther = $currentVal;
+                                        $notEnrolledOther = true;
                                     }
                                     if($headerVal == 'reason_client_refused' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $reasonForClientRefused = $currentVal;
@@ -2416,11 +2430,11 @@ class DataCollectionService {
                                     if($headerVal == 'reason_client_refused_other' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $reasonForClientRefusedOther = $currentVal;
                                     }
-                                    if($headerVal == 'date' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= '' && $currentVal!= '00-00-00'){
+                                    if(strtolower($headerVal) == 'date' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= '' && $currentVal!= '00-00-00'){
                                         $dateArray = explode('-',str_replace('/','-',$currentVal));
                                         $dateVal = (sizeof($dateArray) == 3)?date('Y-m-d',strtotime($dateArray[2].'-'.$dateArray[1].'-'.$dateArray[0])):NULL;
                                     }
-                                    if($headerVal == 'time' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
+                                    if(strtolower($headerVal) == 'time' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                        $timeVal = $currentVal;
                                     }
                                     if($headerVal == 'id_enrolled' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
@@ -2438,12 +2452,17 @@ class DataCollectionService {
                                 if($patientBarcodeID!= NULL){
                                     $validateQuery = $sql->select()->from(array('ussd_s' => 'ussd_survey'))
                                                          ->columns(array('patient_barcode_id'))
+                                                         ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=ussd_s.patient_barcode_id',array('data_collection_id'),'left')
                                                          ->where(array('ussd_s.patient_barcode_id'=>$patientBarcodeID));
                                     $validateQueryStr = $sql->getSqlStringForSqlObject($validateQuery);
                                     $validateResult = $dbAdapter->query($validateQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                                    if(!isset($validateResult->data_collection_id)){
+                                        $notMatchingIDsArray[] = $patientBarcodeID;
+                                        $notMatchingCount+= 1;
+                                    }
                                     if(isset($validateResult->patient_barcode_id)){
                                         $data = array(
-                                                    'last_update_on'=>$common->getDateTime()
+                                                    'last_update_on'=>$lastUpdatedOn
                                                 );
                                         if($facility!= NULL){
                                            $data['facility_code'] = $facility;
@@ -2473,12 +2492,14 @@ class DataCollectionService {
                                            $data['reason_for_client_refusal_other'] = $reasonForClientRefusedOther; 
                                         }
                                         $ussdSurveryDb->update($data,array('patient_barcode_id'=>$validateResult->patient_barcode_id));
+                                        $updatedIDsArray[] = $patientBarcodeID;
+                                        $updatedCount+= 1;
                                     }else{
                                         $data = array(
                                                       'patient_barcode_id'=>$patientBarcodeID,
                                                       'facility_code'=>$facility,
                                                       'last_event'=>$lastEvent,
-                                                      'last_update_on'=>$common->getDateTime(),
+                                                      'last_update_on'=>$lastUpdatedOn,
                                                       'enrolled_on'=>$enrolledOn,
                                                       'date_result_returned_clinic'=>$dateResultReturnedClinic,
                                                       'date_returned_to_participant'=>$dateReturnedtoParticipant,
@@ -2488,10 +2509,27 @@ class DataCollectionService {
                                                       'reason_for_client_refusal_other'=>$reasonForClientRefusedOther
                                                     );
                                         $ussdSurveryDb->insert($data);
+                                        $insertedIDsArray[] = $patientBarcodeID;
+                                        $insertedCount+= 1;
                                     }
                                 }
+                                $notEnrolledCount = ($notEnrolled || $notEnrolledOther)?$notEnrolledCount+=1:$notEnrolledCount;
                             }
                         }
+                        //Add USSD import status row
+                        $statusData = array(
+                                        'file_name'=>$ussdFiles[$file],
+                                        'total_imported_count'=>$totalImportedCount,
+                                        'not_enrolled_count'=>$notEnrolledCount,
+                                        'not_matching_count'=>$notMatchingCount,
+                                        'not_matching_ids'=>(sizeof($notMatchingIDsArray) > 0)?implode(',',$notMatchingIDsArray):NULL,
+                                        'inserted_count'=>$insertedCount,
+                                        'inserted_ids'=>(sizeof($insertedIDsArray) > 0)?implode(',',$insertedIDsArray):NULL,
+                                        'updated_count'=>$updatedCount,
+                                        'updated_ids'=>(sizeof($updatedIDsArray) > 0)?implode(',',$updatedIDsArray):NULL,
+                                        'imported_on'=>$importedOn
+                                    );
+                        $ussdImportStatusDb->insert($statusData);
                         //File operation
                         if(!file_exists($ussdSyncedFilesPath) && !is_dir($ussdSyncedFilesPath)) {
                             mkdir($ussdSyncedFilesPath);

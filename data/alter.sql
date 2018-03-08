@@ -888,3 +888,24 @@ CREATE TABLE `ussd_survey` (
 )
 
 ALTER TABLE `ussd_survey` ADD `patient_barcode_id` VARCHAR(45) NOT NULL FIRST, ADD PRIMARY KEY (`patient_barcode_id`);
+
+--Pal 08/03/2018
+CREATE TABLE `ussd_import_status` (
+  `id` int(11) NOT NULL,
+  `file_name` varchar(500) DEFAULT NULL,
+  `total_imported_count` int(11) NOT NULL DEFAULT '0',
+  `not_enrolled_count` int(11) NOT NULL DEFAULT '0',
+  `not_matching_count` int(11) NOT NULL DEFAULT '0',
+  `not_matching_ids` text,
+  `inserted_count` int(11) NOT NULL DEFAULT '0',
+  `inserted_ids` text,
+  `updated_count` int(11) NOT NULL DEFAULT '0',
+  `updated_ids` text,
+  `imported_on` datetime DEFAULT NULL
+)
+
+ALTER TABLE `ussd_import_status`
+  ADD PRIMARY KEY (`id`);
+  
+ALTER TABLE `ussd_import_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT
