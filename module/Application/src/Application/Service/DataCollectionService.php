@@ -1590,7 +1590,8 @@ class DataCollectionService {
                             $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
                             if(isset($asanteRapidRecencyAssy['rrdt'])){
                                 $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
-                            }if(isset($asanteRapidRecencyAssy['rrr'])){
+                            }
+                            if(isset($asanteRapidRecencyAssy['rrr'])){
                                 $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
                             }
                         }
