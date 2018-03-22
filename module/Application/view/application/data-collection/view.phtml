@@ -248,7 +248,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
                     </div>-->
                 </div>
             </fieldset>
-            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && $row->rejection_reason!= null && trim($row->rejection_reason)!= '' && (int)$row->rejection_reason != 1 && (int)$row->rejection_reason != 5){ ?>display:none;<?php } ?>">
+            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && $row->rejection_reason!= null && trim($row->rejection_reason)!= '' && (int)$row->rejection_reason != 1 && (int)$row->rejection_reason != 5 && (int)$row->rejection_reason != 8){ ?>display:none;<?php } ?>">
                <legend>TEST RESULT</legend>
                 <div class="row" style="margin-bottom:0;">
                     <div class="col s4">

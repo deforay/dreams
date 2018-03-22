@@ -148,7 +148,8 @@ if(count($dataResult) > 0){
 	if(trim($rejectionCode)!= ''){
 	    $rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
 	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
-	}else if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
+	}
+	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
 	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
 	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent</h3><br>(This result suggests that patient was likely infected with the HIV virus within the last 12 months or so)';
 	    //$lagAssayImage = '<img src="'.$this->basePath() .'/assets/images/recent.png" alt="Recent">';
@@ -205,14 +206,16 @@ if(count($dataResult) > 0){
 	    $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result Dispatch Date:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$resultDispatchedDateToClinic.'</td></tr>';
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;">Recency Test Result</td></tr>';
-	    if(trim($rejectionCode) == ''){
+	    if(trim($rejectionCode)!= ''){
+	       $rejectionLabel = ($rejectionCode == 5 || $rejectionCode == 8)?'Specimen Rejection Reason':'LAg based recency interpretation';
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$rejectionLabel.':</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample Reject ('.$rejectionName.')</td></tr>';
+	    }
+	    if(trim($rejectionCode) == '' || $rejectionCode == 5 || $rejectionCode == 8){
 	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">'.$lblLAgAssay.'</td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td></tr>';
 	       //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
-	    }else {
-	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample Reject ('.$rejectionName.')</td></tr>';
 	    }
 	    //viral load info
-	    //if(trim($rejectionCode) == ''){
+	    //if(trim($rejectionCode) == '' || $rejectionCode == 5 || $rejectionCode == 8){
 	    //   $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Viral Load Result</td></tr>';
 	    //   $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>HIV RNA:</strong></td><td style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$hivRna.$hivRnagt1000.'</td><td style="text-align:left;border-top:1px solid #f1f8fb;">'.$viralLoadImage.'</td></tr>';
 	    //}

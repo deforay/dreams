@@ -1232,7 +1232,7 @@ if(isset($date) && trim($date)!= ''){
     
     function emptyTestResultSection() {
 	var rejectionReason = $("#rejectionReason").val();
-	if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5) {
+	if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5 || base64_decode(rejectionReason) == 8) {
 	    $('#resultSection').show();
 	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
 	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
