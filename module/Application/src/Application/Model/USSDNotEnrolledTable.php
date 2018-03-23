@@ -132,7 +132,7 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
        }
-       $queryContainer->ussdNotEnrolledQuery = $sQuery;
+       $queryContainer->notEnrolledQuery = $sQuery;
        
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);

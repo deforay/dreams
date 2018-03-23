@@ -2618,11 +2618,11 @@ class DataCollectionService {
     public function exportUSSDNotEnrolledInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
-        if(isset($queryContainer->ussdNotEnrolledQuery)){
+        if(isset($queryContainer->notEnrolledQuery)){
             try{
                 $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
                 $sql = new Sql($dbAdapter);
-                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->ussdNotEnrolledQuery);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->notEnrolledQuery);
                 $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
                 if(isset($sResult) && count($sResult)>0){
                     $excel = new PHPExcel();
@@ -2666,8 +2666,8 @@ class DataCollectionService {
                     );
                     
                     $sheet->setCellValue('A1', html_entity_decode('Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Reason Not Enrolled ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Reason Not Enrolled Other ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Participant Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -2696,14 +2696,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'USSD-NOT-ENROLLED-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'NOT-ENROLLED-REPORT(USSD)--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "na";
                 }
             }catch (Exception $exc) {
-                error_log("USSD-NOT-ENROLLED-REPORT--" . $exc->getMessage());
+                error_log("NOT-ENROLLED-REPORT(USSD)--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  

@@ -127,10 +127,10 @@
 </style>
 <div id="page-content">
     <div class="row section-header">
-	<div class="col m7 s12 left-align" style="font-size: 34px;font-weight:400;">USSD Not Enrolled Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</div>
+	<div class="col m7 s12 left-align" style="font-size: 34px;font-weight:400;">Not Enrolled Report(USSD) (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</div>
         <div class="col m5 s12 classic-breadcrumbs right-align">
             <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
-            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">USSD Not Enrolled Report</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Not Enrolled Report (USSD)</a>
         </div>
     </div>
     <div class="row" style="max-width:1109px;">
@@ -176,21 +176,21 @@
     <div class="row content-container">
 	<div class="col l12 m12 s12">
 	    <div class="card card-default">
-		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> USSD Not Enrolled </div>
+		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i>Not Enrolled (USSD) </div>
 		<div id="double-scroll" class="card-content clearfix">
 		    <table id="ussdNotEnrolledDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
 			    <th>Facility</th>
-			    <th>Reason Not Enrolled</th>
-			    <th>Reason Not Enrolled Other</th>
+			    <th>Participant Refused</th>
+			    <th>Other Reason</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
 			    <th>Facility</th>
-			    <th>Reason Not Enrolled</th>
-			    <th>Reason Not Enrolled Other</th>
+			    <th>Participant Refused</th>
+			    <th>Other Reason</th>
 			</tr>
 			</tfoot>
 			<tbody>
