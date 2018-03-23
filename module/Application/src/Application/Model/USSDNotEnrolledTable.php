@@ -117,8 +117,6 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
             $sQuery = $sQuery->where(array("date = '" . $start_date. "'"));
         }
         if(isset($parameters['facility']) && trim($parameters['facility'])!= ''){
-            $facilityArray = array_filter(explode(',',$parameters['facility']));
-            $parameters['facility'] = implode(',',$facilityArray);
            $sQuery = $sQuery->where('anc.anc_site_id IN('.$parameters['facility'].')');
         }
         if(isset($parameters['reasonType']) && trim($parameters['reasonType'])!= ''){
