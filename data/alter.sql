@@ -909,3 +909,18 @@ ALTER TABLE `ussd_import_status`
   
 ALTER TABLE `ussd_import_status`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT
+  
+--Pal 23/03/2018
+CREATE TABLE `ussd_not_enrolled` (
+  `id` int(11) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `facility` varchar(45) DEFAULT NULL,
+  `reason_not_enrolled` int(11) DEFAULT NULL,
+  `reason_not_enrolled_other` varchar(500) DEFAULT NULL
+)
+
+ALTER TABLE `ussd_not_enrolled`
+  ADD PRIMARY KEY (`id`);
+  
+ALTER TABLE `ussd_not_enrolled`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT

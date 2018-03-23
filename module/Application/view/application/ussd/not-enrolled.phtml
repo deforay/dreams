@@ -1,0 +1,309 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/multiple-select.css' ?>"/>
+<style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+        width: 190px;
+    }
+    @font-face {
+        font-family: 'Glyphicons Halflings';
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot');
+        src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    *{
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    /*.left{float: right !important;}*/
+    .card-header{
+        background-color:#ff69b4;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        padding: 10px 20px;
+    }
+    table th,table td{
+        text-align:center;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    .left_Align{
+	text-align:left;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td {
+	    padding: 6px 4px 6px 4px;
+	}
+    }
+
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td{
+	text-align:center;
+    }
+
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td,
+    table.dataTable.row-border tbody th, 
+    table.dataTable.row-border tbody td, 
+    table.dataTable.display tbody th, 
+    table.dataTable.display tbody td{
+      border: 1px solid #eeeeef;
+    }
+    div.ms-drop ul li label{
+	font-size:13px !important;
+    }
+    div.ms-drop ul li label input[type=checkbox],div.ms-drop ul li label{
+	position:static !important;
+	opacity:1 !important;
+	margin-right: 4px !important;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+	<div class="col m7 s12 left-align" style="font-size: 34px;font-weight:400;">USSD Not Enrolled Report (<?php echo (isset($countryInfo->country_name) && trim($countryInfo->country_name)!= '')?ucwords($countryInfo->country_name):'#'; ?>)</div>
+        <div class="col m5 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">USSD Not Enrolled Report</a>
+        </div>
+    </div>
+    <div class="row" style="max-width:1109px;">
+	<form id="ussdNotEnrolledFilter" action="#">
+	    <div class="row">
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<input id="dateRange" name="dateRange" type="text" title="Please enter date" onclick="selectDate();" readonly>
+			<label for="dateRange">Date Range </label>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<span style="color:#9e9e9e;">Facilities </span>
+			<select id="facility" name="facility[]" multiple title="Please select facilities">
+			    <option value=""> All Facilities </option>
+			    <?php
+			    foreach($ancSiteList as $ancSite){
+			    ?>
+			      <option value="<?php echo $ancSite['anc_site_id']; ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+			    <?php } ?>
+			</select>
+		    </div>
+		</div>
+		<div class="col s4">
+		    <div class="input-field col m12 s12">
+			<select class="material-select" id="reasonType" name="reasonType" title="Please select reason type">
+			    <option value=""> All Types </option>
+			    <option value="1">1</option>
+			    <option value="2">2</option>
+			</select>
+			<label for="reasonType">Reason Type </label>
+		    </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchUSSDNotEnrolledData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractUSSDNotEnrolledData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row content-container">
+	<div class="col l12 m12 s12">
+	    <div class="card card-default">
+		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> USSD Not Enrolled </div>
+		<div id="double-scroll" class="card-content clearfix">
+		    <table id="ussdNotEnrolledDataTable" class="responsive-table display dataTable">
+			<thead>
+			<tr>
+			    <th>Facility</th>
+			    <th>Reason Not Enrolled</th>
+			    <th>Reason Not Enrolled Other</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+			    <th>Facility</th>
+			    <th>Reason Not Enrolled</th>
+			    <th>Reason Not Enrolled Other</th>
+			</tr>
+			</tfoot>
+			<tbody>
+			</tbody>
+		    </table>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/multiple-select.js' ?>"></script>
+<script>
+    $(document).ready(function(){
+        $("#facility").multipleSelect({
+	    placeholder: "Select Facilities",
+	    width: '100%',
+            filter: true
+        });
+       
+       oTable = $('#ussdNotEnrolledDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+		{"sClass":"dataTable_noWrap left_Align"},
+		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap","bSortable":false}
+            ],
+            "aaSorting": [[0, "asc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('ussd-not-enrolled'); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+		aoData.push({"name": "dateRange", "value": $('#dateRange').val()});
+		aoData.push({"name": "facility", "value": $('#facility').val()});
+		aoData.push({"name": "reasonType", "value": $('#reasonType').val()});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+       
+        $('.dataTables_filter').empty(); // clears the content generated
+        $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+        $('#search-items').on('keyup', "input[type='text']", function(){
+	    oTable.fnFilter($(this).val());
+	});
+        selectDate();
+    });
+    
+    function selectDate(){
+        $(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#dateRange').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="dateRange"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function searchUSSDNotEnrolledData(){
+        oTable.fnDraw(false);
+    }
+    
+    function clearSearchFields(){
+       $('#ussdNotEnrolledFilter')[0].reset();
+       $('.ms-choice span').html('Select Facilities');
+       $('label[for="dateRange"]').css("transform", "translateY(0%)");
+       searchUSSDNotEnrolledData();
+    }
+    
+    function extractUSSDNotEnrolledData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-ussd-not-enrolled'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+</script>

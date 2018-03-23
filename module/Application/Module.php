@@ -39,6 +39,7 @@ use Application\Model\StudyFilesTable;
 use Application\Model\ManageColumnsTable;
 use Application\Model\USSDSurveyTable;
 use Application\Model\USSDImportStatusTable;
+use Application\Model\USSDNotEnrolledTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -320,6 +321,10 @@ class Module{
                 },'USSDImportStatusTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new USSDImportStatusTable($dbAdapter);
+                    return $table;
+                },'USSDNotEnrolledTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new USSDNotEnrolledTable($dbAdapter);
                     return $table;
                 }
             ),

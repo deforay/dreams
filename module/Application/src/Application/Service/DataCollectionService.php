@@ -2422,6 +2422,7 @@ class DataCollectionService {
             $common = new CommonService();
             $ussdSurveryDb = $this->sm->get('USSDSurveyTable');
             $ussdImportStatusDb = $this->sm->get('USSDImportStatusTable');
+            $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
             $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
             $sql = new Sql($dbAdapter);
             try {
@@ -2456,7 +2457,7 @@ class DataCollectionService {
                                 $reasonForClientRefused = NULL;
                                 $reasonForClientRefusedOther = NULL;
                                 $dateVal = NULL;
-                                $timeVal = '00:00:00';
+                                $timeVal = NULL;
                                 for($col = 0; $col < $highestColumnIndex; $col++){
                                     //get header and current col. values
                                     $headerCell = $worksheet->getCellByColumnAndRow($col, 1);
@@ -2566,8 +2567,17 @@ class DataCollectionService {
                                         $insertedIDsArray[] = $patientBarcodeID;
                                         $insertedCount+= 1;
                                     }
+                                }else{
+                                    $notEnrolledCount = ($notEnrolled || $notEnrolledOther)?$notEnrolledCount+=1:$notEnrolledCount;
+                                    $date = ($dateVal!= NULL)?$dateVal.' '.$timeVal:NULL;
+                                    $data = array(
+                                                'date'=>$date,
+                                                'facility'=>$facility,
+                                                'reason_not_enrolled'=>$reasonForNotEnrolling,
+                                                'reason_not_enrolled_other'=>$reasonForNotEnrollingOther
+                                              );
+                                    $ussdNotEnrolledDb->insert($data);
                                 }
-                                $notEnrolledCount = ($notEnrolled || $notEnrolledOther)?$notEnrolledCount+=1:$notEnrolledCount;
                             }
                         }
                         //Add USSD import status row
@@ -2597,6 +2607,108 @@ class DataCollectionService {
                 error_log($exc->getMessage());
                 error_log($exc->getTraceAsString());
             }
+        }
+    }
+    
+    public function getUSSDNotEnrolledData($parameters){
+        $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
+        return $ussdNotEnrolledDb->fetchUSSDNotEnrolledData($parameters);
+    }
+    
+    public function exportUSSDNotEnrolledInExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->ussdNotEnrolledQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->ussdNotEnrolledQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                        $row = array();
+                        $row[] = $aRow['facility'].' - '.ucwords($aRow['anc_site_name']);
+                        $row[] = $aRow['reasonNotEnrolled'];
+                        $row[] = $aRow['reasonNotEnrolledOther'];
+                        $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    
+                    $sheet->setCellValue('A1', html_entity_decode('Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Reason Not Enrolled ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Reason Not Enrolled Other ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                   
+                    $sheet->getStyle('A1')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1')->applyFromArray($styleArray);
+                    
+                    $currentRow = 2;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }
+                        
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'USSD-NOT-ENROLLED-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "na";
+                }
+            }catch (Exception $exc) {
+                error_log("USSD-NOT-ENROLLED-REPORT--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
         }
     }
 }

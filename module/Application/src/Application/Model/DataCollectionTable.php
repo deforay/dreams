@@ -2132,6 +2132,7 @@ class DataCollectionTable extends AbstractTableGateway {
            $sQuery->order($sOrder);
        }
        $queryContainer->overviewQuery = $sQuery;
+       
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);

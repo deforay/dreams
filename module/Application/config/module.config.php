@@ -680,7 +680,25 @@ return array(
                         'action' => 'view'
                     ),
                 ),
-            )
+            ),'ussd-not-enrolled' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/ussd-not-enrolled[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Ussd',
+                        'action' => 'not-enrolled',
+                    ),
+                ),
+            ),'export-ussd-not-enrolled' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-ussd-not-enrolled',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Ussd',
+                        'action' => 'export-ussd-not-enrolled',
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -712,6 +730,7 @@ return array(
             'Application\Controller\StudyFiles' => 'Application\Controller\StudyFilesController',
             'Application\Controller\Summary' => 'Application\Controller\SummaryController',
             'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller',
+            'Application\Controller\Ussd' => 'Application\Controller\UssdController',
             'Application\Controller\Cron' => 'Application\Controller\CronController'
         ),
     ),

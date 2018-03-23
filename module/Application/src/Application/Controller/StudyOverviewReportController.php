@@ -7,7 +7,7 @@ use Zend\Json\Json;
 
 class StudyOverviewReportController extends AbstractActionController{
     public function indexAction(){
-       $request = $this->getRequest();
+        $request = $this->getRequest();
         if($request->isPost()){
             $parameters = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
@@ -30,11 +30,11 @@ class StudyOverviewReportController extends AbstractActionController{
     }
     
     public function exportStudyOverviewAction(){
-       $request = $this->getRequest();
+        $request = $this->getRequest();
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->exportStudyOverviewInExcel($params);
+            $response = $dataCollectionService->exportStudyOverviewInExcel($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
