@@ -249,7 +249,7 @@
                 "    <input id='search-items' type='text' class='validate' />" +
                 "    <label for='icon_prefix' class='search-label'>Search</label>   "+
                 "</div>");
-        $('#search-items').on('keyup', "input[type='text']", function(){
+        $(document).on('keyup', "input[type='text']", function(){
 	    oTable.fnFilter($(this).val());
 	});
         selectDate();
