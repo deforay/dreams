@@ -275,8 +275,8 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                             <li class="studyOverviewReportMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="studyOverviewReportMenu<?php echo $country['country_id']; ?>" href="/study-overview/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Study Overview Report</a>
                                                             </li>
-                                                            <li class="ussdNotEnrolledReportMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                <a class="ussdNotEnrolledReportMenu<?php echo $country['country_id']; ?>" href="/ussd-not-enrolled/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Not Enrolled Report</a>
+                                                            <li class="notEnrolledReportMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a class="notEnrolledReportMenu<?php echo $country['country_id']; ?>" href="/not-enrolled/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> Not Enrolled Report</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -713,7 +713,7 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".studyOverviewReportMenu"+atob(splits)).addClass("active");
             $(".studyOverviewReportMenu"+atob(splits)).css("color","#fff");
-        }else if(urlArray[1]=='ussd-not-enrolled'){
+        }else if(urlArray[1]=='not-enrolled'){
             var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
@@ -722,8 +722,8 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
             $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
-            $(".ussdNotEnrolledReportMenu"+atob(splits)).addClass("active");
-            $(".ussdNotEnrolledReportMenu"+atob(splits)).css("color","#fff");
+            $(".notEnrolledReportMenu"+atob(splits)).addClass("active");
+            $(".notEnrolledReportMenu"+atob(splits)).css("color","#fff");
         }else if(urlArray[1]=='anc-asante-result'){
             var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");

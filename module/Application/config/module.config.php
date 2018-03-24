@@ -680,22 +680,31 @@ return array(
                         'action' => 'view'
                     ),
                 ),
-            ),'ussd-not-enrolled' => array(
+            ),'not-enrolled' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/ussd-not-enrolled[/][:countryId]',
+                    'route' => '/not-enrolled[/][:countryId]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Ussd',
                         'action' => 'not-enrolled',
                     ),
                 ),
-            ),'export-ussd-not-enrolled' => array(
+            ),'export-not-enrolled' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/export-ussd-not-enrolled',
+                    'route' => '/export-not-enrolled',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Ussd',
-                        'action' => 'export-ussd-not-enrolled',
+                        'action' => 'export-not-enrolled',
+                    ),
+                ),
+            ),'get-not-enrolled-pie-chart' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-not-enrolled-pie-chart',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Ussd',
+                        'action' => 'get-not-enrolled-pie-chart',
                     ),
                 ),
             ),

@@ -167,17 +167,30 @@
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchUSSDNotEnrolledData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="extractUSSDNotEnrolledData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+		<a href="javascript:void(0);" onclick="searchNotEnrolledData();searchNotEnrolledPieData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="extractNotEnrolledData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
+    </div>
+    <div class="row" style="padding: 0.75rem;">
+	<div class="col l12 m12 s12">
+	    <div class="card charts">
+		<div class="card-content" style="text-align:center;">
+		    <h5>Not Enrolled (USSD)</h5>
+		</div>
+		<div class="card-action">
+		    <div class="not-enrolled-pie-container">
+		    </div>
+		</div>
+	    </div>
+	</div>
     </div>
     <div class="row content-container">
 	<div class="col l12 m12 s12">
 	    <div class="card card-default">
 		<div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i>Not Enrolled (USSD) </div>
-		<div id="double-scroll" class="card-content clearfix">
-		    <table id="ussdNotEnrolledDataTable" class="responsive-table display dataTable">
+		<div class="card-content clearfix">
+		    <table id="notEnrolledDataTable" class="responsive-table display dataTable">
 			<thead>
 			<tr>
 			    <th>Facility</th>
@@ -210,8 +223,8 @@
 	    width: '100%',
             filter: true
         });
-       
-       oTable = $('#ussdNotEnrolledDataTable').dataTable({
+       searchNotEnrolledPieData('load');
+       oTable = $('#notEnrolledDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {
                 "sLengthMenu": "_MENU_ records per page"
@@ -226,7 +239,7 @@
             "aaSorting": [[0, "asc"]],
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?php echo $this->url('ussd-not-enrolled'); ?>",
+            "sAjaxSource": "<?php echo $this->url('not-enrolled'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback) {
 		aoData.push({"name": "dateRange", "value": $('#dateRange').val()});
 		aoData.push({"name": "facility", "value": $('#facility').val()});
@@ -278,7 +291,31 @@
         $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
     }
     
-    function searchUSSDNotEnrolledData(){
+    $('#reasonType').change(function(e){
+        if(this.value == '1'){
+            cols = '1';
+        }else if(this.value == '2'){
+	    cols = '2';
+        }else{
+          cols = '1/2';
+        }
+        fnShowHide(cols);
+    });
+    
+    function fnShowHide(iCol){
+	if(iCol == '1'){
+	   oTable.fnSetColumnVis(1, true);
+	   oTable.fnSetColumnVis(2, false);
+	}else if(iCol == '2'){
+	   oTable.fnSetColumnVis(2, true);
+	   oTable.fnSetColumnVis(1, false);
+	}else if(iCol == '1/2'){
+	   oTable.fnSetColumnVis(1, true);
+	   oTable.fnSetColumnVis(2, true);
+	}
+    }
+    
+    function searchNotEnrolledData(){
         oTable.fnDraw(false);
     }
     
@@ -286,12 +323,27 @@
        $('#ussdNotEnrolledFilter')[0].reset();
        $('.ms-choice span').html('Select Facilities');
        $('label[for="dateRange"]').css("transform", "translateY(0%)");
-       searchUSSDNotEnrolledData();
+       fnShowHide('1/2');
+       searchNotEnrolledData();
+       getNotEnrolledPieData('reset');
     }
     
-    function extractUSSDNotEnrolledData(){
+    function searchNotEnrolledPieData(frmSrc){
+        getNotEnrolledPieData(frmSrc);
+    }
+    
+    function getNotEnrolledPieData(frmSrc){
+        if(frmSrc!= 'load') { $.blockUI(); }
+        $.post("<?php echo $this->url('get-not-enrolled-pie-chart'); ?>",{dateRange:$('#dateRange').val(),facility:($('#facility').val() == null)?'':$('#facility').val().join(','),reasonType:$('#reasonType').val() },
+        function (data) {
+            if(frmSrc!= 'load') { $.unblockUI(); }
+            $(".not-enrolled-pie-container").html(data);
+        });
+    }
+    
+    function extractNotEnrolledData(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-ussd-not-enrolled'); ?>", { },
+	$.post("<?php echo $this->url('export-not-enrolled'); ?>", {reasonType:$('#reasonType').val() },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');

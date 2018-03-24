@@ -16,7 +16,7 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
         $this->adapter = $adapter;
     }
     
-    public function fetchUSSDNotEnrolledData($parameters){
+    public function fetchNotEnrolledData($parameters){
         $queryContainer = new Container('query');
         $common = new CommonService();
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
@@ -169,5 +169,41 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
             $output['aaData'][] = $row;
        }
       return $output;
+    }
+    
+    public function fetchNotEnrolledPieChartData($params){
+        $common = new CommonService();
+        $result = array();
+        $start_date = '';
+        $end_date = '';
+        if(isset($params['dateRange']) && trim($params['dateRange'])!= ''){
+	    $date = explode("to", $params['dateRange']);
+	    if(isset($date[0]) && trim($date[0]) != "") {
+	       $start_date = $common->dateRangeFormat(trim($date[0]));
+	    }if(isset($date[1]) && trim($date[1]) != "") {
+	       $end_date = $common->dateRangeFormat(trim($date[1]));
+	    }
+	}
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $sQuery = $sql->select()->from(array('ussd_n_e'=>'ussd_not_enrolled'))
+                      ->columns(array('reasonNotEnrolled' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 1), 1,0))"),'reasonNotEnrolledOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 2), 1,0))")))
+                      ->join(array('anc'=>'anc_site'),'anc.anc_site_code=ussd_n_e.facility',array());
+        if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+            $sQuery = $sQuery->where(array("date >='" . $start_date ."'", "date <='" . $end_date."'"));
+        }else if (trim($start_date) != "") {
+            $sQuery = $sQuery->where(array("date = '" . $start_date. "'"));
+        }
+        if(isset($params['facility']) && trim($params['facility'])!= ''){
+           $sQuery = $sQuery->where('anc.anc_site_id IN('.$params['facility'].')');
+        }
+        if(isset($params['reasonType']) && trim($params['reasonType'])!= ''){
+           $sQuery = $sQuery->where(array('ussd_n_e.reason_not_enrolled'=>$params['reasonType']));
+        }
+        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
+        $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        $result[0]['reason_Not_Enrolled'] = (isset($sResult->reasonNotEnrolled))?$sResult->reasonNotEnrolled:0;
+        $result[0]['reason_Not_Enrolled_Other'] = (isset($sResult->reasonNotEnrolledOther))?$sResult->reasonNotEnrolledOther:0;
+      return $result;
     }
 }

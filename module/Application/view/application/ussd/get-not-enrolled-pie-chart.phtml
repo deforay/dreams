@@ -1,0 +1,61 @@
+<div id="not-enrolled-pie-container" style="width:100%;height: 400px; margin: 0 auto"></div>
+<script>
+  Highcharts.chart('not-enrolled-pie-container', {
+    chart: {
+            type: 'pie'
+        },
+        title: {
+            text: ''
+        },
+        exporting:{
+            chartOptions:{
+                subtitle: {
+                    text:'Not Enrolled (USSD)',
+                }
+            }
+        },
+       credits: {
+            enabled: false
+       },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.number})</b>'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'center',
+            useHTML: true,
+            verticalAlign: 'bottom',
+            labelFormatter: function () {
+                return '<div style="width:230px"><span style="float:left;font-size:10px;">' + this.name + ' - </span><span style="font-size:10px;padding:1px; ">'+ this.percentage.toFixed(1)+'% ('+Highcharts.numberFormat(this.y, 0)+')</span></div>';
+            }
+        },
+        plotOptions: {
+            pie: {
+                cursor: 'dafault',
+                dataLabels: {
+                   distance: -30
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Not Enrolled',
+            colorByPoint: true,
+            data: [<?php
+            if(isset($result) && count($result)>0){
+              foreach($result[0] as $key=>$row){
+                $reasonNotEnrolled = ($key == 'reason_Not_Enrolled')?'Participant Refused':'Other Reason';
+                ?>
+                {
+                  name:'<?php echo $reasonNotEnrolled; ?>',
+                  y:<?php echo $result[0][$key]; ?>,
+                  number:<?php echo $result[0][$key]; ?>,
+                  <?php if($result[0][$key] == 0){ ?> visible:false <?php } ?>
+                },
+                <?php
+              }
+            }
+            ?>]
+        }]
+ });
+</script>

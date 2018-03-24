@@ -2610,12 +2610,12 @@ class DataCollectionService {
         }
     }
     
-    public function getUSSDNotEnrolledData($parameters){
+    public function getNotEnrolledData($parameters){
         $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
-        return $ussdNotEnrolledDb->fetchUSSDNotEnrolledData($parameters);
+        return $ussdNotEnrolledDb->fetchNotEnrolledData($parameters);
     }
     
-    public function exportUSSDNotEnrolledInExcel($params){
+    public function exportNotEnrolledInExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
         if(isset($queryContainer->notEnrolledQuery)){
@@ -2635,8 +2635,12 @@ class DataCollectionService {
                     foreach ($sResult as $aRow) {
                         $row = array();
                         $row[] = $aRow['facility'].' - '.ucwords($aRow['anc_site_name']);
-                        $row[] = $aRow['reasonNotEnrolled'];
-                        $row[] = $aRow['reasonNotEnrolledOther'];
+                        if($params['reasonType'] == '' || $params['reasonType'] == 1){
+                           $row[] = $aRow['reasonNotEnrolled'];
+                        }
+                        if($params['reasonType'] == '' || $params['reasonType'] == 2){
+                           $row[] = $aRow['reasonNotEnrolledOther'];
+                        }
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -2666,12 +2670,20 @@ class DataCollectionService {
                     );
                     
                     $sheet->setCellValue('A1', html_entity_decode('Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('B1', html_entity_decode('Participant Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue('C1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if($params['reasonType'] == '' || $params['reasonType'] == 1){
+                       $sheet->setCellValue('B1', html_entity_decode('Participant Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    }
+                    if($params['reasonType'] == '' || $params['reasonType'] == 2){
+                       $sheet->setCellValue(($params['reasonType'] == 2)?'B1':'C1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    }
                    
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
-                    $sheet->getStyle('B1')->applyFromArray($styleArray);
-                    $sheet->getStyle('C1')->applyFromArray($styleArray);
+                    if($params['reasonType'] == '' || $params['reasonType'] == 1){
+                       $sheet->getStyle('B1')->applyFromArray($styleArray);
+                    }
+                    if($params['reasonType'] == '' || $params['reasonType'] == 2){
+                       $sheet->getStyle(($params['reasonType'] == 2)?'B1':'C1')->applyFromArray($styleArray);
+                    }
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -2710,5 +2722,10 @@ class DataCollectionService {
         }else{
             return "";
         }
+    }
+    
+    public function getNotEnrolledPieChartData($params){
+        $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
+        return $ussdNotEnrolledDb->fetchNotEnrolledPieChartData($params);
     }
 }
