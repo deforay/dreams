@@ -207,15 +207,14 @@ if(count($dataResult) > 0){
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;">Recency Test Result</td></tr>';
 	    if(trim($rejectionCode)!= ''){
-	       $rejectionLabel = ($rejectionCode == 5 || $rejectionCode == 8)?'Specimen Rejection Reason':'LAg based recency interpretation';
-	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$rejectionLabel.':</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample Reject ('.$rejectionName.')</td></tr>';
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recency test could not be completed due to <strong>'.$rejectionName.'</strong></td></tr>';
 	    }
-	    if(trim($rejectionCode) == '' || $rejectionCode == 5 || $rejectionCode == 8){
+	    if(trim($rejectionCode) == ''){
 	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">'.$lblLAgAssay.'</td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td></tr>';
 	       //$html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Asante:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rapidRecencyAssayDuration.'</td></tr>';
 	    }
 	    //viral load info
-	    //if(trim($rejectionCode) == '' || $rejectionCode == 5 || $rejectionCode == 8){
+	    //if(trim($rejectionCode) == ''){
 	    //   $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;border:1px solid #f1f8fb;">Viral Load Result</td></tr>';
 	    //   $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>HIV RNA:</strong></td><td style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$hivRna.$hivRnagt1000.'</td><td style="text-align:left;border-top:1px solid #f1f8fb;">'.$viralLoadImage.'</td></tr>';
 	    //}
