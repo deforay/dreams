@@ -755,7 +755,7 @@ if(isset($date) && trim($date)!= ''){
 		if($.trim(aData[11])!= ''){
 		    $(nRow).addClass("blueTxt");
 		}else{
-		    if(aData[1] == 'Incomplete'){ $("td:eq(2)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); $("td:eq(26)", nRow).addClass('no_bgColor'); }
+		    if(aData[1] == 'Incomplete'){ $("td:eq(2)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); $("td:eq(28)", nRow).addClass('no_bgColor'); }
 		    if(aData[21] =='Absent' || (aData[19] == 'Long Term' && aData[23] == 'Absent') || (aData[19] == 'Recent' && aData[23] == 'Present')){ $(nRow).addClass("redTxt"); }
 		}
 	    },
