@@ -23,7 +23,7 @@ class LocationDetailsTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('code_known_group:code','facility_name','','rep_period_1',"DATE_FORMAT(date,'%d-%b-%Y %H:%i:%s')",'eligibility_2','','','','','','','','study_activity:not_eligible_to_calculate','study_activity:dc_review_1','study_activity:dc_review_2','study_activity:dc_review_3','study_activity:dc_review_4','study_activity:dc_review_5');
+        $aColumns = array('code_known_group:code','facility_name','rep_period_1',"DATE_FORMAT(`date`,'%d-%b-%Y %H:%i:%s')",'eligibility_2','study_activity:not_eligible_to_calculate','study_activity:dc_review_1','study_activity:dc_review_2','study_activity:dc_review_3','study_activity:dc_review_4','study_activity:dc_review_5');
         $orderColumns = array('code_known_group:code','facility_name','','rep_period_1','date','eligibility_2','','','','','','','','study_activity:not_eligible_to_calculate','study_activity:dc_review_1','study_activity:dc_review_2','study_activity:dc_review_3','study_activity:dc_review_4','study_activity:dc_review_5');
 
        /*
@@ -69,6 +69,7 @@ class LocationDetailsTable extends AbstractTableGateway {
                $colSize = count($aColumns);
 
                for ($i = 0; $i < $colSize; $i++) {
+                   $aColumns[$i] = ($i == 3)?$aColumns[$i]:"`".$aColumns[$i]."`";
                    if ($i < $colSize - 1) {
                        $sWhereSub .= $aColumns[$i] . " LIKE '%" . ($search ) . "%' OR ";
                    } else {
@@ -83,6 +84,7 @@ class LocationDetailsTable extends AbstractTableGateway {
        /* Individual column filtering */
        for ($i = 0; $i < count($aColumns); $i++) {
            if (isset($parameters['bSearchable_' . $i]) && $parameters['bSearchable_' . $i] == "true" && $parameters['sSearch_' . $i] != '') {
+               $aColumns[$i] = ($i == 3)?$aColumns[$i]:"`".$aColumns[$i]."`";
                if ($sWhere == "") {
                    $sWhere .= $aColumns[$i] . " LIKE '%" . ($parameters['sSearch_' . $i]) . "%' ";
                } else {
@@ -142,8 +144,8 @@ class LocationDetailsTable extends AbstractTableGateway {
            if (isset($sOrder) && $sOrder != "") {
                $sQuery->order($sOrder);
            }
-           $queryContainer->odkSupervisoryAuditQuery = $sQuery;
            
+           $queryContainer->odkSupervisoryAuditQuery = $sQuery;
            if (isset($sLimit) && isset($sOffset)) {
                $sQuery->limit($sLimit);
                $sQuery->offset($sOffset);
@@ -190,7 +192,7 @@ class LocationDetailsTable extends AbstractTableGateway {
             $noofVisittoClinic = 0;
             $countQuery = $sql->select()->from(array('s_c_'.$parameters['province']=>$tbl))
                               ->columns(array("totalVisit" => new Expression('COUNT(*)')))
-                              ->where('`code_known_group:code` = '.$aRow['code_known_group:code']);
+                              ->where('(`code_known_group:code` = "'.$aRow['code_known_group:code'].'" OR `facility_name` = "'.$aRow['facility_name'].'")');
             if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
                 $countQuery = $countQuery->where(array("date >='" . $start_date ."'", "date <='" . $end_date."'"));
             }else if (trim($start_date) != "") {
