@@ -15,4 +15,8 @@ class CronController extends AbstractActionController{
         $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $dataCollectionService->importUSSDData();
     }
+    
+    public function dataManagementAction(){
+        
+    }
 }

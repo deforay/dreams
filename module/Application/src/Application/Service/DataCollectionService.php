@@ -2728,4 +2728,9 @@ class DataCollectionService {
         $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
         return $ussdNotEnrolledDb->fetchNotEnrolledPieChartData($params);
     }
+    
+    public function getOdkSupervisoryAuditDetails($parameters){
+        $locationDetailsDb = $this->sm->get('LocationDetailsTable');
+        return $locationDetailsDb->fetchOdkSupervisoryAuditDetails($parameters);
+    }
 }

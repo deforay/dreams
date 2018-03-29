@@ -707,7 +707,16 @@ return array(
                         'action' => 'get-not-enrolled-pie-chart',
                     ),
                 ),
-            ),
+            ),'odk-supervisory-audit' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/odk-supervisory-audit[/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\OdkSupervisoryAudit',
+                        'action' => 'index',
+                    ),
+                ),
+            )
         ),
     ),
     'service_manager' => array(
@@ -740,6 +749,7 @@ return array(
             'Application\Controller\Summary' => 'Application\Controller\SummaryController',
             'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller',
             'Application\Controller\Ussd' => 'Application\Controller\UssdController',
+            'Application\Controller\OdkSupervisoryAudit' => 'Application\Controller\OdkSupervisoryAuditController',
             'Application\Controller\Cron' => 'Application\Controller\CronController'
         ),
     ),
@@ -775,6 +785,15 @@ return array(
                         'defaults' => array(
                             'controller' => 'Application\Controller\Cron',
                             'action' => 'importussd',
+                        ),
+                    ),
+                ),'data-management' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'data-management',
+                        'defaults' => array(
+                            'controller' => 'Application\Controller\Cron',
+                            'action' => 'data-management',
                         ),
                     ),
                 ),

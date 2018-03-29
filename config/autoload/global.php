@@ -17,7 +17,7 @@ return array(
         'dsn'            => 'mysql:dbname=dream;host=localhost',
         'driver_options' => array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
-        ),
+        )
     ),
     'module_layouts' => array(
         'Application' => 'layout/layout'
@@ -26,6 +26,6 @@ return array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter'
                     => 'Zend\Db\Adapter\AdapterServiceFactory',
-        ),
+        )
     ),
 );

@@ -14,6 +14,6 @@
 return array(
         'db' => array(
         'username' => 'root',
-        'password' => 'zaq12345',
+        'password' => 'zaq12345'
     )
 );
