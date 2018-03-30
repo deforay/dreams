@@ -4,6 +4,9 @@ namespace Application\Service;
 use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\Sql\Expression;
+use Application\Service\CommonService;
 use PHPExcel;
 use PHPExcel_Worksheet;
 
@@ -2732,5 +2735,214 @@ class DataCollectionService {
     public function getOdkSupervisoryAuditDetails($parameters){
         $locationDetailsDb = $this->sm->get('LocationDetailsTable');
         return $locationDetailsDb->fetchOdkSupervisoryAuditDetails($parameters);
+    }
+    
+    public function exportOdkSupervisoryAuditInExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->odkSupervisoryAuditQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->odkSupervisoryAuditQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    $start_date = '';
+                    $end_date = '';
+                    if(isset($params['dateRange']) && trim($params['dateRange'])!= ''){
+                        $date = explode("to", $params['dateRange']);
+                        if(isset($date[0]) && trim($date[0]) != "") {
+                           $start_date = $common->dateRangeFormat(trim($date[0]));
+                        }if(isset($date[1]) && trim($date[1]) != "") {
+                           $end_date = $common->dateRangeFormat(trim($date[1]));
+                        }
+                    }
+                    $tbl = "supervisor_checklist_".$params['province'];
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                        $supportVisitDate = '';
+                        $noofVisittoClinic = 0;
+                        $countQuery = $sql->select()->from(array('s_c_'.$params['province']=>$tbl))
+                                          ->columns(array("totalVisit" => new Expression('COUNT(*)')))
+                                          ->where('(`code_known_group:code` = "'.$aRow['code_known_group:code'].'" OR `facility_name` = "'.$aRow['facility_name'].'")');
+                        if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+                            $countQuery = $countQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
+                        }else if (trim($start_date) != "") {
+                            $countQuery = $countQuery->where(array("DATE(date) = '" . $start_date. "'"));
+                        }
+                        $countQueryStr = $sql->getSqlStringForSqlObject($countQuery);
+                        $countResult = $dbAdapter->query($countQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                        $noofVisittoClinic = (isset($countResult->totalVisit))?$countResult->totalVisit:0;
+                        if($aRow['date']!= NULL && $aRow['date']!= '' && $aRow['date']!='0000-00-00 00:00:00.0' && $aRow['date']!='0000-00-00 00:00:00' && $aRow['date']!='1970-01-01 00:00:00.0' && $aRow['date']!='1970-01-01 00:00:00'){
+                            $dateArray = explode(" ",$aRow['date']);
+                            $supportVisitDate = $common->humanDateFormat($dateArray[0])." ".$dateArray[1];
+                        }
+                        $noofEligibleWomennotInvitedtoParticipateinReportingPeriod = (int)$aRow['eligibility_1'] - (int)$aRow['participants_2'] - (int)$aRow['eligibility_2'];
+                        $row = array();
+                        $row[] = $aRow['code_known_group:code'];
+                        $row[] = ucwords($aRow['facility_name']);
+                        $row[] = $noofVisittoClinic;
+                        $row[] = $aRow['rep_period_1'];
+                        $row[] = $supportVisitDate;
+                        $row[] = $aRow['eligibility_2'];
+                        $row[] = '';
+                        $row[] = '';
+                        $row[] = '';
+                        $row[] = '';
+                        $row[] = '';
+                        $row[] = '';
+                        $row[] = $noofEligibleWomennotInvitedtoParticipateinReportingPeriod;
+                        $row[] = $aRow['study_activity:not_eligible_to_calculate'];
+                        $row[] = $aRow['study_activity:dc_review_1'];
+                        $row[] = $aRow['study_activity:dc_review_2'];
+                        $row[] = $aRow['study_activity:dc_review_3'];
+                        $row[] = $aRow['study_activity:dc_review_4'];
+                        $row[] = $aRow['study_activity:dc_review_5'];
+                       $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $sheet->mergeCells('A1:A2');
+                    $sheet->mergeCells('B1:B2');
+                    $sheet->mergeCells('C1:C2');
+                    $sheet->mergeCells('D1:D2');
+                    $sheet->mergeCells('E1:E2');
+                    $sheet->mergeCells('F1:F2');
+                    $sheet->mergeCells('G1:L1');
+                    $sheet->mergeCells('M1:M2');
+                    $sheet->mergeCells('N1:N2');
+                    $sheet->mergeCells('O1:O2');
+                    $sheet->mergeCells('P1:P2');
+                    $sheet->mergeCells('Q1:Q2');
+                    $sheet->mergeCells('R1:R2');
+                    $sheet->mergeCells('S1:S2');
+                    
+                    $sheet->setCellValue('A1', html_entity_decode('Clinic ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Clinic name ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Number of visits to clinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Reporting Period ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Support Visit Date ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('Number of women who declined to participate in this reporting period ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('Reasons for refusal in this reporting period ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M1', html_entity_decode('Number of eligible women who were not invited to participate in this reporting period ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N1', html_entity_decode('Number of ineligible women who were enrolled in this reporting period ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O1', html_entity_decode('DC Assessment - Screening ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('P1', html_entity_decode('DC Assessment - Informed Consent ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('Q1', html_entity_decode('DC Assessment - Blood Collection ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('R1', html_entity_decode('DC Assessment - Packaging and Storage ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('S1', html_entity_decode('DC Assessment - Return of Results ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('G2', html_entity_decode('Do not have time to participate in study ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H2', html_entity_decode('Not interested in this study ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I2', html_entity_decode('Fear of needles or blood draw ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J2', html_entity_decode('Religious objection to blood draw ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K2', html_entity_decode('Need partner permission to participate ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L2', html_entity_decode('Other ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                   
+                    $sheet->getStyle('A1:A2')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1:B2')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1:C2')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1:D2')->applyFromArray($styleArray);
+                    $sheet->getStyle('E1:E2')->applyFromArray($styleArray);
+                    $sheet->getStyle('F1:F2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1:L1')->applyFromArray($styleArray);
+                    $sheet->getStyle('M1:M2')->applyFromArray($styleArray);
+                    $sheet->getStyle('N1:N2')->applyFromArray($styleArray);
+                    $sheet->getStyle('O1:O2')->applyFromArray($styleArray);
+                    $sheet->getStyle('P1:P2')->applyFromArray($styleArray);
+                    $sheet->getStyle('Q1:Q2')->applyFromArray($styleArray);
+                    $sheet->getStyle('R1:R2')->applyFromArray($styleArray);
+                    $sheet->getStyle('S1:S2')->applyFromArray($styleArray);
+                    
+                    $sheet->getStyle('G2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('I2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('J2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('K2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('L2')->applyFromArray($styleArray)
+                                          ->getAlignment()->setWrapText(true);
+                    
+                    $sheet->getStyle('F1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('M1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('N1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('O1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('P1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('Q1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('R1')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('S1')->getAlignment()->setWrapText(true);
+                   
+                    
+                    $currentRow = 3;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }
+                        
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'ODK-SUPERVISORY-AUDIT-REPROT--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "na";
+                }
+            }catch (Exception $exc) {
+                error_log("ODK-SUPERVISORY-AUDIT-REPROT--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
+        }
     }
 }

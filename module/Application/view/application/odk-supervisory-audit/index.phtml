@@ -338,4 +338,21 @@
        $('label[for="dateRange"]').css("transform", "translateY(0%)");
        searchOdkSupervisoryData();
     }
+    
+    function extractOdkSupervisoryData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-odk-supervisory-audit'); ?>", {dateRange:$('#dateRange').val(), province:$('#province').val() },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
 </script>

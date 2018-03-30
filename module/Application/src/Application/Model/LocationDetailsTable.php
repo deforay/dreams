@@ -132,9 +132,9 @@ class LocationDetailsTable extends AbstractTableGateway {
                                     ));
             //custom filter start
             if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-                $sQuery = $sQuery->where(array("date >='" . $start_date ."'", "date <='" . $end_date."'"));
+                $sQuery = $sQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
             }else if (trim($start_date) != "") {
-                $sQuery = $sQuery->where(array("date = '" . $start_date. "'"));
+                $sQuery = $sQuery->where(array("DATE(date) = '" . $start_date. "'"));
             }
            //custom filter end
            if (isset($sWhere) && $sWhere != "") {
@@ -194,9 +194,9 @@ class LocationDetailsTable extends AbstractTableGateway {
                               ->columns(array("totalVisit" => new Expression('COUNT(*)')))
                               ->where('(`code_known_group:code` = "'.$aRow['code_known_group:code'].'" OR `facility_name` = "'.$aRow['facility_name'].'")');
             if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-                $countQuery = $countQuery->where(array("date >='" . $start_date ."'", "date <='" . $end_date."'"));
+                $countQuery = $countQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
             }else if (trim($start_date) != "") {
-                $countQuery = $countQuery->where(array("date = '" . $start_date. "'"));
+                $countQuery = $countQuery->where(array("DATE(date) = '" . $start_date. "'"));
             }
             $countQueryStr = $sql->getSqlStringForSqlObject($countQuery);
             $countResult = $dbAdapter->query($countQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
@@ -226,7 +226,7 @@ class LocationDetailsTable extends AbstractTableGateway {
             $row[] = $aRow['study_activity:dc_review_3'];
             $row[] = $aRow['study_activity:dc_review_4'];
             $row[] = $aRow['study_activity:dc_review_5'];
-            $output['aaData'][] = $row;
+          $output['aaData'][] = $row;
        }
       return $output;
     }

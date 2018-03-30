@@ -28,4 +28,17 @@ class OdkSupervisoryAuditController extends AbstractActionController{
            return $this->redirect()->toRoute('home');
         }
     }
+    
+    public function exportOdkSupervisoryAuditAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $file = $dataCollectionService->exportOdkSupervisoryAuditInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('file' =>$file));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        } 
+    }
 }

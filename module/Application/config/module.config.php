@@ -716,6 +716,15 @@ return array(
                         'action' => 'index',
                     ),
                 ),
+            ),'export-odk-supervisory-audit' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-odk-supervisory-audit',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\OdkSupervisoryAudit',
+                        'action' => 'export-odk-supervisory-audit',
+                    ),
+                ),
             )
         ),
     ),
