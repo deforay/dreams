@@ -2766,19 +2766,25 @@ class DataCollectionService {
                     $tbl = "supervisor_checklist_".$params['province'];
                     $output = array();
                     foreach ($sResult as $aRow) {
-                        $supportVisitDate = '';
                         $noofVisittoClinic = 0;
-                        $countQuery = $sql->select()->from(array('s_c_'.$params['province']=>$tbl))
-                                          ->columns(array("totalVisit" => new Expression('COUNT(*)')))
-                                          ->where('(`code_known_group:code` = "'.$aRow['code_known_group:code'].'" OR `facility_name` = "'.$aRow['facility_name'].'")');
-                        if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
-                            $countQuery = $countQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
-                        }else if (trim($start_date) != "") {
-                            $countQuery = $countQuery->where(array("DATE(date) = '" . $start_date. "'"));
+                        if(($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= '') || ($aRow['facility_name'] != NULL && trim($aRow['facility_name'])!= '')){
+                            $countQuery = $sql->select()->from(array('s_c_'.$params['province']=>$tbl))
+                                              ->columns(array("totalVisit" => new Expression('COUNT(*)')));
+                            if($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= ''){
+                                $countQuery = $countQuery->where('`code_known_group:code` = "'.$aRow['code_known_group:code'].'"');
+                            }else if($aRow['facility_name'] != NULL && trim($aRow['facility_name'])!= ''){
+                                $countQuery = $countQuery->where('`facility_name` = "'.$aRow['facility_name'].'"');
+                            }
+                            if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+                                $countQuery = $countQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
+                            }else if (trim($start_date) != "") {
+                                $countQuery = $countQuery->where(array("DATE(date) = '" . $start_date. "'"));
+                            }
+                            $countQueryStr = $sql->getSqlStringForSqlObject($countQuery);
+                            $countResult = $dbAdapter->query($countQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                            $noofVisittoClinic = (isset($countResult->totalVisit))?$countResult->totalVisit:0;
                         }
-                        $countQueryStr = $sql->getSqlStringForSqlObject($countQuery);
-                        $countResult = $dbAdapter->query($countQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-                        $noofVisittoClinic = (isset($countResult->totalVisit))?$countResult->totalVisit:0;
+                        $supportVisitDate = '';
                         if($aRow['date']!= NULL && $aRow['date']!= '' && $aRow['date']!='0000-00-00 00:00:00.0' && $aRow['date']!='0000-00-00 00:00:00' && $aRow['date']!='1970-01-01 00:00:00.0' && $aRow['date']!='1970-01-01 00:00:00'){
                             $dateArray = explode(" ",$aRow['date']);
                             $supportVisitDate = $common->humanDateFormat($dateArray[0])." ".$dateArray[1];
