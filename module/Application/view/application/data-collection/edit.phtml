@@ -225,7 +225,7 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 				      <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>" <?php echo(isset($row->rejection_reason) && $row->rejection_reason == $rejection['rejection_reason_id'])?'selected="selected"':''; ?>><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
 				    <?php } ?>
 				</select>
-				<label for="rejectionReason">Specimen Rejection Code </label>
+				<label for="rejectionReason">Rejection Code At Central Lab </label>
 			    </div>
 			</div>
 			<div class="col s4">

@@ -528,7 +528,7 @@ class DataCollectionService {
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'K'.$headerRow:'J'.$headerRow, html_entity_decode('Lab/Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'L'.$headerRow:'K'.$headerRow, html_entity_decode('Lab/Facility Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     //$sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'M'.$headerRow:'L'.$headerRow, html_entity_decode('Lab Specimen ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'M'.$headerRow:'L'.$headerRow, html_entity_decode('Rejection Code ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'M'.$headerRow:'L'.$headerRow, html_entity_decode('Rejection Code At Central Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue((isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?'A'.$headerRow:'M'.$headerRow, html_entity_decode('Receipt Date at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('N'.$headerRow, html_entity_decode('Lab Tech. Name/ID', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->setCellValue('O'.$headerRow, html_entity_decode('Date of Test Completion', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -2769,12 +2769,8 @@ class DataCollectionService {
                         $noofVisittoClinic = 0;
                         if(($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= '') || ($aRow['facility_name'] != NULL && trim($aRow['facility_name'])!= '')){
                             $countQuery = $sql->select()->from(array('s_c_'.$params['province']=>$tbl))
-                                              ->columns(array("totalVisit" => new Expression('COUNT(*)')));
-                            if($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= ''){
-                                $countQuery = $countQuery->where('`code_known_group:code` = "'.$aRow['code_known_group:code'].'"');
-                            }else if($aRow['facility_name'] != NULL && trim($aRow['facility_name'])!= ''){
-                                $countQuery = $countQuery->where('`facility_name` = "'.$aRow['facility_name'].'"');
-                            }
+                                              ->columns(array("totalVisit" => new Expression('COUNT(*)')))
+                                              ->where('`code_known_group:code` = "'.$aRow['code_known_group:code'].'"');
                             if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
                                 $countQuery = $countQuery->where(array("DATE(date) >='" . $start_date ."'", "DATE(date) <='" . $end_date."'"));
                             }else if (trim($start_date) != "") {
@@ -2790,19 +2786,248 @@ class DataCollectionService {
                             $supportVisitDate = $common->humanDateFormat($dateArray[0])." ".$dateArray[1];
                         }
                         $noofEligibleWomennotInvitedtoParticipateinReportingPeriod = (int)$aRow['eligibility_1'] - (int)$aRow['participants_2'] - (int)$aRow['eligibility_2'];
+                        $refusal_1 = 0;
+                        $refusal_2 = 0;
+                        $refusal_3 = 0;
+                        $refusal_4 = 0;
+                        $refusal_5 = 0;
+                        $refusal_6 = 0;
+                        if((int)$aRow['refuse_1'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_1'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_1'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_1'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_1'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_1'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_2_1'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_2_1'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_2_1'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_2_1'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_2_1'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_2_1'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_2_2'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_2_2'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_2_2'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_2_2'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_2_2'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_2_2'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_3_1'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_3_1'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_3_1'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_3_1'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_3_1'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_3_1'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_3_2'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_3_2'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_3_2'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_3_2'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_3_2'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_3_2'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_3_3'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_3_3'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_3_3'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_3_3'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_3_3'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_3_3'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_4_1'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_4_1'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_4_1'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_4_1'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_4_1'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_4_1'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_4_2'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_4_2'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_4_2'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_4_2'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_4_2'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_4_2'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_4_3'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_4_3'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_4_3'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_4_4'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_4_4'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_4_4'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_4_4'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_4_4'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_4_4'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_5_1'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_5_1'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_5_1'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_5_1'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_5_1'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_5_1'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_5_2'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_5_2'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_5_2'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_5_2'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_5_2'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_5_2'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_5_3'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_5_3'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_5_3'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_5_3'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_5_3'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_5_3'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_5_4'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_5_4'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_5_4'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_5_4'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_5_4'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_5_4'] === 6){
+                            $refusal_6+=1;
+                        }
+                        
+                        if((int)$aRow['refuse_5_5'] === 1){
+                            $refusal_1+=1;
+                        }else if((int)$aRow['refuse_5_5'] === 2){
+                            $refusal_2+=1;
+                        }else if((int)$aRow['refuse_5_5'] === 3){
+                            $refusal_3+=1;
+                        }else if((int)$aRow['refuse_5_5'] === 4){
+                            $refusal_4+=1;
+                        }else if((int)$aRow['refuse_5_5'] === 5){
+                            $refusal_5+=1;
+                        }else if((int)$aRow['refuse_5_5'] === 6){
+                            $refusal_6+=1;
+                        }
                         $row = array();
                         $row[] = $aRow['code_known_group:code'];
-                        $row[] = ucwords($aRow['facility_name']);
+                        $row[] = (isset($aRow['anc_site_name']))?ucwords($aRow['anc_site_name']):ucwords($aRow['facility_name']);
                         $row[] = $noofVisittoClinic;
                         $row[] = $aRow['rep_period_1'];
                         $row[] = $supportVisitDate;
                         $row[] = $aRow['eligibility_2'];
-                        $row[] = '';
-                        $row[] = '';
-                        $row[] = '';
-                        $row[] = '';
-                        $row[] = '';
-                        $row[] = '';
+                        $row[] = $refusal_1;
+                        $row[] = $refusal_2;
+                        $row[] = $refusal_3;
+                        $row[] = $refusal_4;
+                        $row[] = $refusal_5;
+                        $row[] = $refusal_6;
                         $row[] = $noofEligibleWomennotInvitedtoParticipateinReportingPeriod;
                         $row[] = $aRow['study_activity:not_eligible_to_calculate'];
                         $row[] = $aRow['study_activity:dc_review_1'];
