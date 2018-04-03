@@ -145,10 +145,10 @@ if(count($dataResult) > 0){
 	$rejectionName = '';
 	//$lagAssayImage = '';
 	//$rejectedImage = '';
-	if(trim($rejectionCode)!= ''){
-	    $rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
+	//if(trim($rejectionCode)!= ''){
+	    //$rejectionName = (isset($data['rejection_name']))?ucwords($data['rejection_name']):'';
 	    //$rejectedImage = '<img src="'.$this->basePath() .'/assets/images/rejected.png" alt="Rejected">';
-	}
+	//}
 	if(isset($data['lag_avidity_result']) && trim($data['lag_avidity_result']) == 'recent'){
 	    $lblLAgAssay = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>LAg based recency interpretation:</strong>';
 	    $lagAssay = '<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recent</h3><br>(This result suggests that patient was likely infected with the HIV virus within the last 12 months or so)';
@@ -207,7 +207,7 @@ if(count($dataResult) > 0){
 	    //recency test result info
 	    $html .='<tr><td colspan="3" style="line-height:30px;text-align:left;font-size:17px;">Recency Test Result</td></tr>';
 	    if(trim($rejectionCode)!= ''){
-	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recency test could not be completed due to '.$rejectionName.'</td></tr>';
+	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Result:</strong></td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The recency test could not be completed because the quantity or <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quality of the specimen was insufficient</td></tr>';
 	    }
 	    if(trim($rejectionCode) == ''){
 	       $html .='<tr><td style="line-height:18px;font-size:12px;text-align:left;border:1px solid #f1f8fb;">'.$lblLAgAssay.'</td><td colspan="2" style="line-height:18px;font-size:12px;text-align:left;border-top:1px solid #f1f8fb;">'.$lagAssay.'</td></tr>';

@@ -221,7 +221,7 @@ class LocationDetailsTable extends AbstractTableGateway {
        );
        foreach ($rResult as $aRow) {
             $noofVisittoClinic = 0;
-            if(($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= '') || ($aRow['facility_name'] != NULL && trim($aRow['facility_name'])!= '')){
+            if($aRow['code_known_group:code'] != NULL && trim($aRow['code_known_group:code'])!= ''){
                 $countQuery = $sql->select()->from(array('s_c_'.$parameters['province']=>$tbl))
                                   ->columns(array("totalVisit" => new Expression('COUNT(*)')))
                                   ->where('`code_known_group:code` = "'.$aRow['code_known_group:code'].'"');
