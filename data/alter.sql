@@ -924,3 +924,10 @@ ALTER TABLE `ussd_not_enrolled`
   
 ALTER TABLE `ussd_not_enrolled`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT
+
+--Pal 09/04/2018
+ALTER TABLE `ussd_survey` ADD `id` INT(11) NOT NULL FIRST;
+
+ALTER TABLE `ussd_not_enrolled` DROP `id`
+
+ALTER TABLE `ussd_not_enrolled` ADD `id` INT(11) NOT NULL FIRST; 

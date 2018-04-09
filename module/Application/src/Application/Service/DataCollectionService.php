@@ -2447,6 +2447,7 @@ class DataCollectionService {
                             $updatedIDsArray = array();
                             $importedOn = $lastUpdatedOn = $common->getDateTime();
                             for($row = 2; $row <= $highestRow; $row++){
+                                $id = NULL;
                                 $facility = NULL;
                                 $lastEvent = NULL;
                                 $patientBarcodeID = NULL;
@@ -2464,10 +2465,13 @@ class DataCollectionService {
                                 for($col = 0; $col < $highestColumnIndex; $col++){
                                     //get header and current col. values
                                     $headerCell = $worksheet->getCellByColumnAndRow($col, 1);
-                                    $headerVal = trim($headerCell->getValue());
+                                    $headerVal = strtolower(trim($headerCell->getValue()));
                                     $currentCell = $worksheet->getCellByColumnAndRow($col, $row);
                                     $currentVal = trim($currentCell->getValue());
                                     //set db data values
+                                    if($headerVal == 'id' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
+                                        $id = $currentVal;
+                                    }
                                     if($headerVal == 'facility' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $facility = $currentVal;
                                     }
@@ -2488,11 +2492,11 @@ class DataCollectionService {
                                     if($headerVal == 'reason_client_refused_other' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                         $reasonForClientRefusedOther = $currentVal;
                                     }
-                                    if(strtolower($headerVal) == 'date' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= '' && $currentVal!= '00-00-00'){
+                                    if($headerVal == 'date' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= '' && $currentVal!= '00-00-00'){
                                         $dateArray = explode('-',str_replace('/','-',$currentVal));
                                         $dateVal = (sizeof($dateArray) == 3)?date('Y-m-d',strtotime($dateArray[2].'-'.$dateArray[1].'-'.$dateArray[0])):NULL;
                                     }
-                                    if(strtolower($headerVal) == 'time' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
+                                    if($headerVal == 'time' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
                                        $timeVal = $currentVal;
                                     }
                                     if($headerVal == 'id_enrolled' && $currentVal!= NULL && $currentVal!= 'NULL' && $currentVal!= 'Null' && $currentVal!= 'null' && $currentVal!= ''){
@@ -2507,82 +2511,100 @@ class DataCollectionService {
                                     }
                                 }
                                 //DB operation
-                                if($patientBarcodeID!= NULL){
-                                    $validateQuery = $sql->select()->from(array('ussd_s' => 'ussd_survey'))
-                                                         ->columns(array('patient_barcode_id'))
-                                                         ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=ussd_s.patient_barcode_id',array('data_collection_id'),'left')
-                                                         ->where(array('ussd_s.patient_barcode_id'=>$patientBarcodeID));
-                                    $validateQueryStr = $sql->getSqlStringForSqlObject($validateQuery);
-                                    $validateResult = $dbAdapter->query($validateQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-                                    if(!isset($validateResult->data_collection_id)){
-                                        $notMatchingIDsArray[] = $patientBarcodeID;
-                                        $notMatchingCount+= 1;
+                               if($id!= NULL){
+                                    $rowQuery = $sql->select()->from(array('ussd_s' => 'ussd_survey'))
+                                                    ->columns(array('id'))
+                                                    ->where(array('ussd_s.id'=>$id));
+                                    $rowQueryStr = $sql->getSqlStringForSqlObject($rowQuery);
+                                    $rowResult = $dbAdapter->query($rowQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                                    if(!isset($rowResult) || count($rowResult) == 0){
+                                        if($patientBarcodeID!= NULL){
+                                            $validateQuery = $sql->select()->from(array('ussd_s' => 'ussd_survey'))
+                                                                 ->columns(array('patient_barcode_id'))
+                                                                 ->join(array('da_c'=>'data_collection'),'da_c.patient_barcode_id=ussd_s.patient_barcode_id',array('data_collection_id'),'left')
+                                                                 ->where(array('ussd_s.patient_barcode_id'=>$patientBarcodeID));
+                                            $validateQueryStr = $sql->getSqlStringForSqlObject($validateQuery);
+                                            $validateResult = $dbAdapter->query($validateQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+                                            if(isset($validateResult->patient_barcode_id)){
+                                                $data = array(
+                                                            'last_update_on'=>$lastUpdatedOn
+                                                        );
+                                                if($facility!= NULL){
+                                                   $data['facility_code'] = $facility;
+                                                }
+                                                if($lastEvent!= NULL){
+                                                   $data['last_event'] = $lastEvent;
+                                                }
+                                                if($enrolledOn!= NULL){
+                                                   $data['enrolled_on'] = $enrolledOn; 
+                                                }
+                                                if($dateResultReturnedClinic!= NULL){
+                                                   $data['date_result_returned_clinic'] = $dateResultReturnedClinic; 
+                                                }
+                                                if($dateReturnedtoParticipant!= NULL){
+                                                   $data['date_returned_to_participant'] = $dateReturnedtoParticipant; 
+                                                }
+                                                if($reasonForNotEnrolling!= NULL){
+                                                   $data['reason_for_not_enrolling'] = $reasonForNotEnrolling; 
+                                                }
+                                                if($reasonForNotEnrollingOther!= NULL){
+                                                   $data['reason_for_not_enrolling_other'] = $reasonForNotEnrollingOther; 
+                                                }
+                                                if($reasonForClientRefused!= NULL){
+                                                   $data['reason_for_client_refusal'] = $reasonForClientRefused; 
+                                                }
+                                                if($reasonForClientRefusedOther!= NULL){
+                                                   $data['reason_for_client_refusal_other'] = $reasonForClientRefusedOther; 
+                                                }
+                                                $ussdSurveryDb->update($data,array('patient_barcode_id'=>$validateResult->patient_barcode_id));
+                                                $updatedIDsArray[] = $patientBarcodeID;
+                                                $updatedCount+= 1;
+                                            }else{
+                                                $data = array(
+                                                              'id'=>$id,
+                                                              'patient_barcode_id'=>$patientBarcodeID,
+                                                              'facility_code'=>$facility,
+                                                              'last_event'=>$lastEvent,
+                                                              'last_update_on'=>$lastUpdatedOn,
+                                                              'enrolled_on'=>$enrolledOn,
+                                                              'date_result_returned_clinic'=>$dateResultReturnedClinic,
+                                                              'date_returned_to_participant'=>$dateReturnedtoParticipant,
+                                                              'reason_for_not_enrolling'=>$reasonForNotEnrolling,
+                                                              'reason_for_not_enrolling_other'=>$reasonForNotEnrollingOther,
+                                                              'reason_for_client_refusal'=>$reasonForClientRefused,
+                                                              'reason_for_client_refusal_other'=>$reasonForClientRefusedOther
+                                                            );
+                                                $ussdSurveryDb->insert($data);
+                                                $insertedIDsArray[] = $patientBarcodeID;
+                                                $insertedCount+= 1;
+                                                //For import status count
+                                                $notMatchingIDsArray[] = $patientBarcodeID;
+                                                $notMatchingCount+= 1;
+                                            }
+                                        }else{
+                                            $rowQuery = $sql->select()->from(array('ussd_n_e' => 'ussd_not_enrolled'))
+                                                            ->columns(array('id'))
+                                                            ->where(array('ussd_n_e.id'=>$id));
+                                            $rowQueryStr = $sql->getSqlStringForSqlObject($rowQuery);
+                                            $rowResult = $dbAdapter->query($rowQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                                            if(!isset($rowResult) || count($rowResult) == 0){
+                                                $notEnrolledCount = ($notEnrolled || $notEnrolledOther)?$notEnrolledCount+=1:$notEnrolledCount;
+                                                $date = ($dateVal!= NULL)?$dateVal.' '.$timeVal:NULL;
+                                                $data = array(
+                                                            'id'=>$id,
+                                                            'date'=>$date,
+                                                            'facility'=>$facility,
+                                                            'reason_not_enrolled'=>$reasonForNotEnrolling,
+                                                            'reason_not_enrolled_other'=>$reasonForNotEnrollingOther
+                                                          );
+                                                $ussdNotEnrolledDb->insert($data);
+                                            }
+                                        }
                                     }
-                                    if(isset($validateResult->patient_barcode_id)){
-                                        $data = array(
-                                                    'last_update_on'=>$lastUpdatedOn
-                                                );
-                                        if($facility!= NULL){
-                                           $data['facility_code'] = $facility;
-                                        }
-                                        if($lastEvent!= NULL){
-                                           $data['last_event'] = $lastEvent;
-                                        }
-                                        if($enrolledOn!= NULL){
-                                           $data['enrolled_on'] = $enrolledOn; 
-                                        }
-                                        if($dateResultReturnedClinic!= NULL){
-                                           $data['date_result_returned_clinic'] = $dateResultReturnedClinic; 
-                                        }
-                                        if($dateReturnedtoParticipant!= NULL){
-                                           $data['date_returned_to_participant'] = $dateReturnedtoParticipant; 
-                                        }
-                                        if($reasonForNotEnrolling!= NULL){
-                                           $data['reason_for_not_enrolling'] = $reasonForNotEnrolling; 
-                                        }
-                                        if($reasonForNotEnrollingOther!= NULL){
-                                           $data['reason_for_not_enrolling_other'] = $reasonForNotEnrollingOther; 
-                                        }
-                                        if($reasonForClientRefused!= NULL){
-                                           $data['reason_for_client_refusal'] = $reasonForClientRefused; 
-                                        }
-                                        if($reasonForClientRefusedOther!= NULL){
-                                           $data['reason_for_client_refusal_other'] = $reasonForClientRefusedOther; 
-                                        }
-                                        $ussdSurveryDb->update($data,array('patient_barcode_id'=>$validateResult->patient_barcode_id));
-                                        $updatedIDsArray[] = $patientBarcodeID;
-                                        $updatedCount+= 1;
-                                    }else{
-                                        $data = array(
-                                                      'patient_barcode_id'=>$patientBarcodeID,
-                                                      'facility_code'=>$facility,
-                                                      'last_event'=>$lastEvent,
-                                                      'last_update_on'=>$lastUpdatedOn,
-                                                      'enrolled_on'=>$enrolledOn,
-                                                      'date_result_returned_clinic'=>$dateResultReturnedClinic,
-                                                      'date_returned_to_participant'=>$dateReturnedtoParticipant,
-                                                      'reason_for_not_enrolling'=>$reasonForNotEnrolling,
-                                                      'reason_for_not_enrolling_other'=>$reasonForNotEnrollingOther,
-                                                      'reason_for_client_refusal'=>$reasonForClientRefused,
-                                                      'reason_for_client_refusal_other'=>$reasonForClientRefusedOther
-                                                    );
-                                        $ussdSurveryDb->insert($data);
-                                        $insertedIDsArray[] = $patientBarcodeID;
-                                        $insertedCount+= 1;
-                                    }
-                                }else{
-                                    $notEnrolledCount = ($notEnrolled || $notEnrolledOther)?$notEnrolledCount+=1:$notEnrolledCount;
-                                    $date = ($dateVal!= NULL)?$dateVal.' '.$timeVal:NULL;
-                                    $data = array(
-                                                'date'=>$date,
-                                                'facility'=>$facility,
-                                                'reason_not_enrolled'=>$reasonForNotEnrolling,
-                                                'reason_not_enrolled_other'=>$reasonForNotEnrollingOther
-                                              );
-                                    $ussdNotEnrolledDb->insert($data);
                                 }
                             }
                         }
+                        //print_r($updatedIDsArray);die;
                         //Add USSD import status row
                         $statusData = array(
                                         'file_name'=>$ussdFiles[$file],
