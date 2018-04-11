@@ -930,4 +930,7 @@ ALTER TABLE `ussd_survey` ADD `id` INT(11) NOT NULL FIRST;
 
 ALTER TABLE `ussd_not_enrolled` DROP `id`
 
-ALTER TABLE `ussd_not_enrolled` ADD `id` INT(11) NOT NULL FIRST; 
+ALTER TABLE `ussd_not_enrolled` ADD `id` INT(11) NOT NULL FIRST;
+
+--Pal 11/04/2018
+ALTER TABLE `ussd_not_enrolled` ADD `reason_client_refused` INT(11) NULL DEFAULT NULL AFTER `reason_not_enrolled_other`, ADD `reason_client_refused_other` VARCHAR(500) NULL DEFAULT NULL AFTER `reason_client_refused`; 

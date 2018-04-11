@@ -167,19 +167,30 @@
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchNotEnrolledData();searchNotEnrolledPieData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchNotEnrolledData();searchPieData('search');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="extractNotEnrolledData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
     <div class="row" style="padding: 0.75rem;">
-	<div class="col l12 m12 s12">
+	<div class="col l6 m6 s6">
 	    <div class="card charts">
-		<div class="card-content" style="text-align:center;">
+		<div class="card-content">
 		    <h5>Not Enrolled (USSD)</h5>
 		</div>
 		<div class="card-action">
 		    <div class="not-enrolled-pie-container">
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<div class="col l6 m6 s6">
+	    <div class="card charts">
+		<div class="card-content">
+		    <h5>Reason for Refusal (USSD)</h5>
+		</div>
+		<div class="card-action">
+		    <div class="reason-refused-pie-container">
 		    </div>
 		</div>
 	    </div>
@@ -196,12 +207,16 @@
 			    <th>Facility</th>
 			    <th>Participant Refused</th>
 			    <th>Other Reason</th>
+			    <th>Reason Client Refused</th>
+			    <th>Other Reason</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
 			    <th>Facility</th>
 			    <th>Participant Refused</th>
+			    <th>Other Reason</th>
+			    <th>Reason Client Refused</th>
 			    <th>Other Reason</th>
 			</tr>
 			</tfoot>
@@ -224,7 +239,7 @@
 	    width: '100%',
             filter: true
         });
-       searchNotEnrolledPieData('load');
+       searchPieData('load');
        oTable = $('#notEnrolledDataTable').dataTable({
 	    "autoWidth": false,
             "oLanguage": {
@@ -234,6 +249,8 @@
 	    "iDisplayLength": 25,
             "aoColumns": [
 		{"sClass":"dataTable_noWrap left_Align"},
+		{"sClass":"dataTable_noWrap","bSortable":false},
+		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap","bSortable":false},
 		{"sClass":"dataTable_noWrap","bSortable":false}
             ],
@@ -326,11 +343,12 @@
        $('label[for="dateRange"]').css("transform", "translateY(0%)");
        fnShowHide('1/2');
        searchNotEnrolledData();
-       getNotEnrolledPieData('reset');
+       searchPieData('reset');
     }
     
-    function searchNotEnrolledPieData(frmSrc){
+    function searchPieData(frmSrc){
         getNotEnrolledPieData(frmSrc);
+	getReasonforRefusedPieData(frmSrc);
     }
     
     function getNotEnrolledPieData(frmSrc){
@@ -339,6 +357,15 @@
         function (data) {
             if(frmSrc!= 'load') { $.unblockUI(); }
             $(".not-enrolled-pie-container").html(data);
+        });
+    }
+    
+    function getReasonforRefusedPieData(frmSrc){
+        if(frmSrc!= 'load') { $.blockUI(); }
+        $.post("<?php echo $this->url('get-reason-for-refused-pie-chart'); ?>",{dateRange:$('#dateRange').val(),facility:($('#facility').val() == null)?'':$('#facility').val().join(','),reasonType:$('#reasonType').val() },
+        function (data) {
+            if(frmSrc!= 'load') { $.unblockUI(); }
+            $(".reason-refused-pie-container").html(data);
         });
     }
     

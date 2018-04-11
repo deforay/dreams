@@ -59,5 +59,18 @@ class UssdController extends AbstractActionController{
             return $viewModel;
         } 
     }
+    
+    public function getReasonforRefusedPieChartAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result = $dataCollectionService->getReasonforRefusedPieChartData($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('result' =>$result));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        } 
+    }
   
 }

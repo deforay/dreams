@@ -22,8 +22,8 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
         /* Array of database columns which should be read and sent back to DataTables. Use a space where
         * you want to insert a non-database field (for example a counter or static image)
         */
-        $aColumns = array('anc_site_name','facility','reason_not_enrolled','reason_not_enrolled_other');
-        $orderColumns = array('anc_site_name','reason_not_enrolled','reason_not_enrolled_other');
+        $aColumns = array('anc_site_name','facility','reason_not_enrolled','reason_not_enrolled_other','reason_client_refused','reason_client_refused_other');
+        $orderColumns = array('anc_site_name','reason_not_enrolled','reason_not_enrolled_other','reason_client_refused','reason_client_refused_other');
 
        /*
         * Paging
@@ -107,7 +107,14 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
        $dbAdapter = $this->adapter;
        $sql = new Sql($dbAdapter);
        $sQuery = $sql->select()->from(array('ussd_n_e'=>'ussd_not_enrolled'))
-                     ->columns(array('facility','reasonNotEnrolled' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 1), 1,0))"),'reasonNotEnrolledOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 2), 1,0))")))
+                     ->columns(array(
+                                'facility',
+                                'reasonNotEnrolled' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 1), 1,0))"),
+                                'reasonNotEnrolledOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 2), 1,0))"),
+                                'reasonRefused' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 1 OR reason_client_refused = 2 OR reason_client_refused = 3 OR reason_client_refused = 4 OR reason_client_refused = 5), 1,0))"),
+                                'reasonRefusedOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 6), 1,0))")
+                            )
+                        )
                      ->join(array('anc'=>'anc_site'),'anc.anc_site_code=ussd_n_e.facility',array('anc_site_name'))
                      ->group('facility');
         //custom filter start
@@ -149,7 +156,14 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
 
        /* Total data set length */
         $tQuery = $sql->select()->from(array('ussd_n_e'=>'ussd_not_enrolled'))
-                      ->columns(array('facility','reasonNotEnrolled' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 1), 1,0))"),'reasonNotEnrolledOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 2), 1,0))")))
+                      ->columns(array(
+                                'facility',
+                                'reasonNotEnrolled' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 1), 1,0))"),
+                                'reasonNotEnrolledOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_not_enrolled = 2), 1,0))"),
+                                'reasonRefused' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 1 OR reason_client_refused = 2 OR reason_client_refused = 3 OR reason_client_refused = 4 OR reason_client_refused = 5), 1,0))"),
+                                'reasonRefusedOther' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 6), 1,0))")
+                            )
+                        )
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_code=ussd_n_e.facility',array('anc_site_name'))
                       ->group('facility');
        $tQueryStr = $sql->getSqlStringForSqlObject($tQuery);
@@ -166,6 +180,8 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
             $row[] = $aRow['facility'].' - '.ucwords($aRow['anc_site_name']);
             $row[] = $aRow['reasonNotEnrolled'];
             $row[] = $aRow['reasonNotEnrolledOther'];
+            $row[] = $aRow['reasonRefused'];
+            $row[] = $aRow['reasonRefusedOther'];
             $output['aaData'][] = $row;
        }
       return $output;
@@ -204,6 +220,53 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
         $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
         $result[0]['reason_Not_Enrolled'] = (isset($sResult->reasonNotEnrolled))?$sResult->reasonNotEnrolled:0;
         $result[0]['reason_Not_Enrolled_Other'] = (isset($sResult->reasonNotEnrolledOther))?$sResult->reasonNotEnrolledOther:0;
+      return $result;
+    }
+    
+    public function fetchReasonforRefusedPieChartData($params){
+        $common = new CommonService();
+        $result = array();
+        $start_date = '';
+        $end_date = '';
+        if(isset($params['dateRange']) && trim($params['dateRange'])!= ''){
+	    $date = explode("to", $params['dateRange']);
+	    if(isset($date[0]) && trim($date[0]) != "") {
+	       $start_date = $common->dateRangeFormat(trim($date[0]));
+	    }if(isset($date[1]) && trim($date[1]) != "") {
+	       $end_date = $common->dateRangeFormat(trim($date[1]));
+	    }
+	}
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $sQuery = $sql->select()->from(array('ussd_n_e'=>'ussd_not_enrolled'))
+                      ->columns(array(
+                                    'refusal1' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 1), 1,0))"),
+                                    'refusal2' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 2), 1,0))"),
+                                    'refusal3' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 3), 1,0))"),
+                                    'refusal4' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 4), 1,0))"),
+                                    'refusal5' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 5), 1,0))"),
+                                    'refusal6' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 6), 1,0))")
+                                ))
+                      ->join(array('anc'=>'anc_site'),'anc.anc_site_code=ussd_n_e.facility',array());
+        if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
+            $sQuery = $sQuery->where(array("date >='" . $start_date ."'", "date <='" . $end_date."'"));
+        }else if (trim($start_date) != "") {
+            $sQuery = $sQuery->where(array("date = '" . $start_date. "'"));
+        }
+        if(isset($params['facility']) && trim($params['facility'])!= ''){
+           $sQuery = $sQuery->where('anc.anc_site_id IN('.$params['facility'].')');
+        }
+        if(isset($params['reasonType']) && trim($params['reasonType'])!= ''){
+           $sQuery = $sQuery->where(array('ussd_n_e.reason_not_enrolled'=>$params['reasonType']));
+        }
+        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
+        $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+        $result[0]['Refusal1'] = (isset($sResult->refusal1))?$sResult->refusal1:0;
+        $result[0]['Refusal2'] = (isset($sResult->refusal2))?$sResult->refusal2:0;
+        $result[0]['Refusal3'] = (isset($sResult->refusal3))?$sResult->refusal3:0;
+        $result[0]['Refusal4'] = (isset($sResult->refusal4))?$sResult->refusal4:0;
+        $result[0]['Refusal5'] = (isset($sResult->refusal5))?$sResult->refusal5:0;
+        $result[0]['Refusal6'] = (isset($sResult->refusal6))?$sResult->refusal6:0;
       return $result;
     }
 }

@@ -725,6 +725,15 @@ return array(
                         'action' => 'export-odk-supervisory-audit',
                     ),
                 ),
+            ),'get-reason-for-refused-pie-chart' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-reason-for-refused-pie-chart',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Ussd',
+                        'action' => 'get-reason-for-refused-pie-chart',
+                    ),
+                ),
             )
         ),
     ),

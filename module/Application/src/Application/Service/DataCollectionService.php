@@ -2595,7 +2595,9 @@ class DataCollectionService {
                                                             'date'=>$date,
                                                             'facility'=>$facility,
                                                             'reason_not_enrolled'=>$reasonForNotEnrolling,
-                                                            'reason_not_enrolled_other'=>$reasonForNotEnrollingOther
+                                                            'reason_not_enrolled_other'=>$reasonForNotEnrollingOther,
+                                                            'reason_client_refused'=>$reasonForClientRefused,
+                                                            'reason_client_refused_other'=>$reasonForClientRefusedOther
                                                           );
                                                 $ussdNotEnrolledDb->insert($data);
                                             }
@@ -2666,6 +2668,8 @@ class DataCollectionService {
                         if($params['reasonType'] == '' || $params['reasonType'] == 2){
                            $row[] = $aRow['reasonNotEnrolledOther'];
                         }
+                        $row[] = $aRow['reasonRefused'];
+                        $row[] = $aRow['reasonRefusedOther'];
                         $output[] = $row;
                     }
                     $styleArray = array(
@@ -2693,7 +2697,7 @@ class DataCollectionService {
                             ),
                         )
                     );
-                    
+                    //title section
                     $sheet->setCellValue('A1', html_entity_decode('Facility ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     if($params['reasonType'] == '' || $params['reasonType'] == 1){
                        $sheet->setCellValue('B1', html_entity_decode('Participant Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
@@ -2701,7 +2705,10 @@ class DataCollectionService {
                     if($params['reasonType'] == '' || $params['reasonType'] == 2){
                        $sheet->setCellValue(($params['reasonType'] == 2)?'B1':'C1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
+                    $sheet->setCellValue(($params['reasonType'] == '')?'D1':'C1', html_entity_decode('Reason Client Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue(($params['reasonType'] == '')?'E1':'D1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
+                    //style section
                     $sheet->getStyle('A1')->applyFromArray($styleArray);
                     if($params['reasonType'] == '' || $params['reasonType'] == 1){
                        $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -2709,6 +2716,8 @@ class DataCollectionService {
                     if($params['reasonType'] == '' || $params['reasonType'] == 2){
                        $sheet->getStyle(($params['reasonType'] == 2)?'B1':'C1')->applyFromArray($styleArray);
                     }
+                    $sheet->getStyle(($params['reasonType'] == '')?'D1':'C1')->applyFromArray($styleArray);
+                    $sheet->getStyle(($params['reasonType'] == '')?'E1':'D1')->applyFromArray($styleArray);
                     
                     $currentRow = 2;
                     foreach ($output as $rowData) {
@@ -3197,5 +3206,10 @@ class DataCollectionService {
         }else{
             return "";
         }
+    }
+    
+    public function getReasonforRefusedPieChartData($params){
+        $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
+       return $ussdNotEnrolledDb->fetchReasonforRefusedPieChartData($params);
     }
 }

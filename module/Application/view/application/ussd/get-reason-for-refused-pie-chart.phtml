@@ -1,0 +1,75 @@
+<div id="get-reason-for-refused-pie-chart" style="width:100%;height: 400px; margin: 0 auto"></div>
+<script>
+  Highcharts.chart('get-reason-for-refused-pie-chart', {
+    chart: {
+            type: 'pie'
+        },
+        title: {
+            text: ''
+        },
+        exporting:{
+            chartOptions:{
+                subtitle: {
+                    text:'Reason for Refusal (USSD)',
+                }
+            }
+        },
+       credits: {
+            enabled: false
+       },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.number})</b>'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'center',
+            useHTML: true,
+            verticalAlign: 'bottom',
+            labelFormatter: function () {
+                return '<div style="width:330px !important;"><span style="float:left;font-size:10px;">' + this.myData + ' - </span><span style="font-size:10px;padding:1px; ">'+ this.percentage.toFixed(1)+'% ('+Highcharts.numberFormat(this.y, 0)+')</span></div>';
+            }
+        },
+        plotOptions: {
+            pie: {
+                cursor: 'dafault',
+                dataLabels: {
+                   distance: -30
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Reason for refusal',
+            colorByPoint: true,
+            data: [<?php
+            if(isset($result) && count($result)>0){
+              foreach($result[0] as $key=>$row){
+                $legend = '';
+                if($key == 'Refusal1'){
+                  $legend = 'Refusal1 - Do not have time to participate in study';
+                }else if($key == 'Refusal2'){
+                  $legend = 'Refusal2 - Not interested in this study';
+                }else if($key == 'Refusal3'){
+                  $legend = 'Refusal3 - Fear of needles or blood draw';
+                }else if($key == 'Refusal4'){
+                  $legend = 'Refusal4 - Religious objection to blood draw';
+                }else if($key == 'Refusal5'){
+                  $legend = 'Refusal5 - Need partner permission to participate';
+                }else if($key == 'Refusal6'){
+                  $legend = 'Refusal6 - Other';
+                }
+                ?>
+                {
+                  myData:'<?php echo $legend; ?>',
+                  name:'<?php echo $key; ?>',
+                  y:<?php echo $result[0][$key]; ?>,
+                  number:<?php echo $result[0][$key]; ?>,
+                  <?php if($result[0][$key] == 0){ ?> visible:false <?php } ?>
+                },
+                <?php
+              }
+            }
+            ?>]
+        }]
+ });
+</script>
