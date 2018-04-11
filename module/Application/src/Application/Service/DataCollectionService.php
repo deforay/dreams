@@ -2742,14 +2742,14 @@ class DataCollectionService {
                       $currentRow++;
                     }
                     $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
-                    $filename = 'NOT-ENROLLED-REPORT(USSD)--' . date('d-M-Y-H-i-s') . '.xls';
+                    $filename = 'NOT-ENROLLED-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
                     $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
                     return $filename;
                 }else{
                     return "na";
                 }
             }catch (Exception $exc) {
-                error_log("NOT-ENROLLED-REPORT(USSD)--" . $exc->getMessage());
+                error_log("NOT-ENROLLED-REPORT--" . $exc->getMessage());
                 error_log($exc->getTraceAsString());
                 return "";
             }  
