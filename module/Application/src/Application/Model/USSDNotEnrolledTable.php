@@ -240,12 +240,12 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
         $sql = new Sql($dbAdapter);
         $sQuery = $sql->select()->from(array('ussd_n_e'=>'ussd_not_enrolled'))
                       ->columns(array(
-                                    'refusal1' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 1), 1,0))"),
-                                    'refusal2' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 2), 1,0))"),
-                                    'refusal3' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 3), 1,0))"),
-                                    'refusal4' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 4), 1,0))"),
-                                    'refusal5' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 5), 1,0))"),
-                                    'refusal6' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 6), 1,0))")
+                                    'reason1' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 1), 1,0))"),
+                                    'reason2' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 2), 1,0))"),
+                                    'reason3' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 3), 1,0))"),
+                                    'reason4' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 4), 1,0))"),
+                                    'reason5' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 5), 1,0))"),
+                                    'reason6' => new \Zend\Db\Sql\Expression("SUM(IF((reason_client_refused = 6), 1,0))")
                                 ))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_code=ussd_n_e.facility',array());
         if(trim($start_date) != "" && trim($start_date)!= trim($end_date)) {
@@ -261,12 +261,12 @@ class USSDNotEnrolledTable extends AbstractTableGateway {
         }
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
         $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-        $result[0]['Refusal1'] = (isset($sResult->refusal1))?$sResult->refusal1:0;
-        $result[0]['Refusal2'] = (isset($sResult->refusal2))?$sResult->refusal2:0;
-        $result[0]['Refusal3'] = (isset($sResult->refusal3))?$sResult->refusal3:0;
-        $result[0]['Refusal4'] = (isset($sResult->refusal4))?$sResult->refusal4:0;
-        $result[0]['Refusal5'] = (isset($sResult->refusal5))?$sResult->refusal5:0;
-        $result[0]['Refusal6'] = (isset($sResult->refusal6))?$sResult->refusal6:0;
+        $result[0]['Reason 1'] = (isset($sResult->reason1))?$sResult->reason1:0;
+        $result[0]['Reason 2'] = (isset($sResult->reason2))?$sResult->reason2:0;
+        $result[0]['Reason 3'] = (isset($sResult->reason3))?$sResult->reason3:0;
+        $result[0]['Reason 4'] = (isset($sResult->reason4))?$sResult->reason4:0;
+        $result[0]['Reason 5'] = (isset($sResult->reason5))?$sResult->reason5:0;
+        $result[0]['Reason 6'] = (isset($sResult->reason6))?$sResult->reason6:0;
       return $result;
     }
 }

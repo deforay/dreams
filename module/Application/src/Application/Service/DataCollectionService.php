@@ -2705,8 +2705,8 @@ class DataCollectionService {
                     if($params['reasonType'] == '' || $params['reasonType'] == 2){
                        $sheet->setCellValue(($params['reasonType'] == 2)?'B1':'C1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
-                    $sheet->setCellValue(($params['reasonType'] == '')?'D1':'C1', html_entity_decode('Reason Client Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                    $sheet->setCellValue(($params['reasonType'] == '')?'E1':'D1', html_entity_decode('Other Reason ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue(($params['reasonType'] == '')?'D1':'C1', html_entity_decode('Reason Refused ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue(($params['reasonType'] == '')?'E1':'D1', html_entity_decode('Reason Refused Other ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                    
                     //style section
                     $sheet->getStyle('A1')->applyFromArray($styleArray);

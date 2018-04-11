@@ -39,24 +39,24 @@
             }
         },
         series: [{
-            name: 'Reason for refusal',
+            name: 'Refusal',
             colorByPoint: true,
             data: [<?php
             if(isset($result) && count($result)>0){
               foreach($result[0] as $key=>$row){
                 $legend = '';
-                if($key == 'Refusal1'){
-                  $legend = 'Refusal1 - Do not have time to participate in study';
-                }else if($key == 'Refusal2'){
-                  $legend = 'Refusal2 - Not interested in this study';
-                }else if($key == 'Refusal3'){
-                  $legend = 'Refusal3 - Fear of needles or blood draw';
-                }else if($key == 'Refusal4'){
-                  $legend = 'Refusal4 - Religious objection to blood draw';
-                }else if($key == 'Refusal5'){
-                  $legend = 'Refusal5 - Need partner permission to participate';
-                }else if($key == 'Refusal6'){
-                  $legend = 'Refusal6 - Other';
+                if($key == 'Reason 1'){
+                  $legend = 'Reason 1 - Do not have time to participate in study';
+                }else if($key == 'Reason 2'){
+                  $legend = 'Reason 2 - Not interested in this study';
+                }else if($key == 'Reason 3'){
+                  $legend = 'Reason 3 - Fear of needles or blood draw';
+                }else if($key == 'Reason 4'){
+                  $legend = 'Reason 4 - Religious objection to blood draw';
+                }else if($key == 'Reason 5'){
+                  $legend = 'Reason 5 - Need partner permission to participate';
+                }else if($key == 'Reason 6'){
+                  $legend = 'Reason 6 - Other';
                 }
                 ?>
                 {
