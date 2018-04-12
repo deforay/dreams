@@ -1,3 +1,13 @@
+<?php
+$behaviourDataPending = 0;
+$totalBehaviourLabData = 0;
+if(isset($summaries['collectionResult'][0]['totalLabData']) && $summaries['collectionResult'][0]['totalLabData'] > 0){
+    $totalLabDatas = $summaries['collectionResult'][0]['totalLabData'];
+}
+if(isset($summaries['collectionResult'][0]['totalBehaviourLabData']) && $summaries['collectionResult'][0]['totalBehaviourLabData'] > 0){
+    $totalBehaviourLabData = $summaries['collectionResult'][0]['totalBehaviourLabData'];
+}
+?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/jquery-ui.css' ?>"/>
 <style>
     .ui-datepicker-calendar {
@@ -46,7 +56,7 @@
                  <div class="card small-chart margin" style="background-color:#3dc587;">
                     <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Lab Tests Completed</small>
-                        <div class="summary-count"><?php echo (isset($summaries[0]['labTestCompleted']))?$summaries[0]['labTestCompleted']:0; ?></div>
+                        <div class="summary-count"><?php echo (isset($summaries['collectionResult'][0]['labTestCompleted']))?$summaries['collectionResult'][0]['labTestCompleted']:0; ?></div>
                     </div>
                  </div>
              </div>
@@ -54,7 +64,7 @@
                  <div class="card small-chart margin" style="background-color:#52bed8;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Behaviour Data</small>
-                        <div class="summary-count"><?php echo (isset($summaries[1]['totalBD']))?$summaries[1]['totalBD']:0; ?></div>
+                        <div class="summary-count"><?php echo (isset($summaries['riskAssessmentResult'][0]['totalBehaviourData']))?$summaries['riskAssessmentResult'][0]['totalBehaviourData']:0; ?></div>
                      </div>
                  </div>
              </div>
@@ -62,7 +72,7 @@
                  <div class="card small-chart margin" style="background-color:#fbb548;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>ANC Rapid Recency Assay Recent <span style="text-transform:none;font-size:13px;">(Visual)</span></small>
-                        <div class="summary-count"><?php echo (isset($summaries[1]['totalANCRecencyTestRecent']))?$summaries[1]['totalANCRecencyTestRecent']:0; ?></div>
+                        <div class="summary-count"><?php echo (isset($summaries['riskAssessmentResult'][0]['totalANCRecencyTestRecent']))?$summaries['riskAssessmentResult'][0]['totalANCRecencyTestRecent']:0; ?></div>
                      </div>
                  </div>
              </div>
@@ -72,7 +82,7 @@
                 <div class="card small-chart margin" style="background-color:#f97465;">
                     <div class="col l12 m12 s12" style="padding:5px;">
                        <small>Lab Rejections</small>
-                       <div class="summary-count"><?php echo (isset($summaries[0]['labRejections']))?$summaries[0]['labRejections']:0; ?></div>
+                       <div class="summary-count"><?php echo (isset($summaries['collectionResult'][0]['labRejections']))?$summaries['collectionResult'][0]['labRejections']:0; ?></div>
                     </div>
                 </div>
             </div>
@@ -80,15 +90,15 @@
                  <div class="card small-chart margin" style="background-color:#f97465;">
                      <div class="col l12 m12 s12" style="padding:5px;">
                         <small>Lab Tests Pending as on Today</small>
-                        <div class="summary-count"><?php echo (isset($summaries[0]['labTestIncompletebyToday']))?$summaries[0]['labTestIncompletebyToday']:0; ?></div>
+                        <div class="summary-count"><?php echo (isset($summaries['collectionResult'][0]['labTestIncompletes']))?$summaries['collectionResult'][0]['labTestIncompletes']:0; ?></div>
                      </div>
                  </div>
             </div>
 	    <div class="col l4 m4 s12">
                 <div class="card small-chart margin" style="background-color:#f97465;">
                     <div class="col l12 m12 s12" style="padding:5px;">
-                       <small>Behaviour Data Pending as on Today</small>
-                       <div class="summary-count"><?php echo (isset($summaries[1]['bdIncompletebyToday']))?$summaries[1]['bdIncompletebyToday']:0; ?></div>
+                       <small>Behaviour Data Pending</small>
+                       <div class="summary-count"><?php echo $totalLabDatas-$totalBehaviourLabData; ?></div>
                     </div>
                 </div>
             </div>

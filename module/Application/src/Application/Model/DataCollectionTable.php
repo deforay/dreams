@@ -2346,26 +2346,25 @@ class DataCollectionTable extends AbstractTableGateway {
     public function fecthSummaryDetails(){
 	$dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
-	$select1 = $sql->select()->from(array('da_c' => 'data_collection'))
-				   ->columns(array(
-						   'labTestCompleted' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
-						   'labRejections' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != '' AND da_c.rejection_reason > 1, 1,0))"),
-						   'labTestIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4 AND DATE(specimen_collected_date) = CURDATE(), 1,0))"),
-						))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>null,'bdIncompletebyToday' => null),'left')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=>null),'left');
-	$select2 = $sql->select()->from(array('da_c' => 'data_collection'))
-				   ->columns(array(
-						   'labTestCompleted' =>null,
-						   'labRejections' =>null,
-						   'labTestIncompletebyToday' =>null,
-						))
-				   ->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBD'=>new \Zend\Db\Sql\Expression("COUNT(*)"),'bdIncompletebyToday' => new \Zend\Db\Sql\Expression("SUM(IF(r_a.status = 4 AND DATE(interview_date) = CURDATE(), 1,0))")),'right')
-				   ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=> new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left');
-	$select1->combine($select2);
-	$collectionQuery = $sql->select()->from(array('result' => $select1));
+	$collectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+				->columns(array(
+					    'totalLabData'=>new \Zend\Db\Sql\Expression("COUNT(*)"),
+					    'labTestCompleted' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
+					    'labRejections' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != '' AND da_c.rejection_reason > 1, 1,0))"),
+					    'labTestIncompletes' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))")
+					 ))
+				->join(array('r_a'=>'clinic_risk_assessment'),'r_a.patient_barcode_id=da_c.patient_barcode_id',array('totalBehaviourLabData'=>new \Zend\Db\Sql\Expression("COUNT(r_a.assessment_id)")),'left');
 	$collectionQueryStr = $sql->getSqlStringForSqlObject($collectionQuery);
-      return $dbAdapter->query($collectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $collectionResult = $dbAdapter->query($collectionQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+	
+	$riskAssessmentQuery = $sql->select()->from(array('r_a' => 'clinic_risk_assessment'))
+				   ->columns(array(
+						'totalBehaviourData'=>new \Zend\Db\Sql\Expression("COUNT(*)")
+					    ))
+				    ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('totalANCRecencyTestRecent'=> new \Zend\Db\Sql\Expression("SUM(IF(anc_r_r.recency_line = 'recent', 1,0))")),'left');
+	$riskAssessmentQueryStr = $sql->getSqlStringForSqlObject($riskAssessmentQuery);
+        $riskAssessmentResult = $dbAdapter->query($riskAssessmentQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+      return array('collectionResult'=>$collectionResult,'riskAssessmentResult'=>$riskAssessmentResult);
     }
     
     public function fetchWeeklyDataReportingDetails($params){
