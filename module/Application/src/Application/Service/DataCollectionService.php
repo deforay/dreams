@@ -3327,7 +3327,11 @@ class DataCollectionService {
                         'fill' => array(
                             'type' => \PHPExcel_Style_Fill::FILL_SOLID,
                             'color' => array('rgb' => 'E2EFDA')
-                        )
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
                     );
                     $topHeadingArray = array(
                         'font' => array(
