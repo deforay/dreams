@@ -3212,4 +3212,366 @@ class DataCollectionService {
         $ussdNotEnrolledDb = $this->sm->get('USSDNotEnrolledTable');
        return $ussdNotEnrolledDb->fetchReasonforRefusedPieChartData($params);
     }
+    
+    public function generateRSOTExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->rsotQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->rsotQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                       $row = array();
+                       $specimenType = '';
+                        if((int)$aRow['specimen_type'] == 1){
+                          $specimenType = 'Venous';
+                        }else if((int)$aRow['specimen_type'] == 2){
+                          $specimenType = 'Plasma';
+                        }else if((int)$aRow['specimen_type'] == 3){
+                          $specimenType = 'DBS';
+                        }
+                        $specimenCollectedDate = '';
+                        if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+                            $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+                        }
+                        $receiptDateAtCentralLab = '';
+                        if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+                            $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+                        }
+                        $asanteRapidRecencyAssayRlt = '';
+                        $asanteRapidRecencyAssayRltLogVal = '';
+                        if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+                            $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+                            if(isset($asanteRapidRecencyAssy['rrr'])){
+                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+                                $asanteRapidRecencyAssayRltLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+                            }
+                        }
+                        $vl_out1 = '';
+                        $vl_out2 = '';
+                        $vl_out3 = '';
+                        $lag_out = '';
+                        $asar_out = '';
+                        $asav_out = '';
+                        if((float)$aRow['final_lag_avidity_odn'] < 2 && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                           $vl_out1 = 'x';
+                        }
+                        if(trim($asanteRapidRecencyAssayRlt) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                           $vl_out2 = 'x';
+                        }
+                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                           $vl_out3 = 'x';
+                        }
+                        if(($aRow['final_lag_avidity_odn'] == null || $aRow['final_lag_avidity_odn'] == '') && (int)$aRow['rejection_reason']!= 1){
+                           $lag_out = 'x';
+                        }
+                        if(trim($asanteRapidRecencyAssayRlt) == '' && (int)$aRow['specimen_type'] == 1 && (int)$aRow['rejection_reason']!= 1){
+                           $asar_out = 'x';
+                        }
+                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && (int)$aRow['specimen_type'] == 1 && (int)$aRow['rejection_reason']!= 1){
+                           $asav_out = 'x';
+                        }
+                        $row[] = $aRow['patient_barcode_id'];
+                        $row[] = ucwords($aRow['anc_site_name']);
+                        $row[] = $specimenType;
+                        $row[] = $specimenCollectedDate;
+                        $row[] = $receiptDateAtCentralLab;
+                        $row[] = $aRow['final_lag_avidity_odn'];
+                        $row[] = $asanteRapidRecencyAssayRltLogVal;
+                        $row[] = $asanteRapidRecencyAssayRlt;
+                        $row[] = $aRow['hiv_rna'];
+                        $row[] = $vl_out1;
+                        $row[] = $vl_out2;
+                        $row[] = $vl_out3;
+                        $row[] = $lag_out;
+                        $row[] = $asar_out;
+                        $row[] = $asav_out;
+                       $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $greenBgArray = array(
+                        'fill' => array(
+                            'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => 'E2EFDA')
+                        )
+                    );
+                    $topHeadingArray = array(
+                        'font' => array(
+                            'size' => 16,
+                            'bold' => true
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    
+                    $sheet->mergeCells('J1:O1');
+                   
+                    $sheet->setCellValue('J1', html_entity_decode('Tests Outstanding  ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('A2', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B2', html_entity_decode('ANC site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C2', html_entity_decode('Spec type ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D2', html_entity_decode('Date Specimen Collected ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E2', html_entity_decode('Date Specimen Arrived at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F2', html_entity_decode('LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G2', html_entity_decode('Asante LT Reader Value ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H2', html_entity_decode('Asante LT Visual ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I2', html_entity_decode('VL Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('J2', html_entity_decode('VL due to LAg Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('K2', html_entity_decode('VL due to Asante Reader Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('L2', html_entity_decode('VL due to Asante Visual Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('M2', html_entity_decode('LAg ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('N2', html_entity_decode('Asante Reader ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('O2', html_entity_decode('Asante Visual ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->getStyle('A2')->applyFromArray($styleArray);
+                    $sheet->getStyle('B2')->applyFromArray($styleArray);
+                    $sheet->getStyle('C2')->applyFromArray($styleArray);
+                    $sheet->getStyle('D2')->applyFromArray($styleArray);
+                    $sheet->getStyle('E2')->applyFromArray($styleArray);
+                    $sheet->getStyle('F2')->applyFromArray($styleArray);
+                    $sheet->getStyle('G2')->applyFromArray($styleArray);
+                    $sheet->getStyle('H2')->applyFromArray($styleArray);
+                    $sheet->getStyle('I2')->applyFromArray($styleArray);
+                    $sheet->getStyle('J2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('K2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('L2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('M2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('N2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('O2')->applyFromArray($styleArray)
+                                          ->applyFromArray($greenBgArray);
+                    $sheet->getStyle('J1:O1')->applyFromArray($topHeadingArray)
+                                             ->applyFromArray($greenBgArray);
+                   
+                    
+                    $currentRow = 3;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }
+                        
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            if($colNo > 8){
+                                $sheet->getStyle($cellName . $currentRow)->applyFromArray($greenBgArray);
+                            }
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'RECENCY-STUDY-OUTSTANDING-TEST-LIST--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "na";
+                }
+            }catch (Exception $exc) {
+                error_log("RECENCY-STUDY-OUTSTANDING-TEST-LIST--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
+        }
+    }
+    
+    public function generateNTLExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->ntlQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->ntlQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    $output = array();
+                    foreach ($sResult as $aRow) {
+                       $row = array();
+                       $specimenType = '';
+                        if((int)$aRow['specimen_type'] == 1){
+                          $specimenType = 'Venous';
+                        }else if((int)$aRow['specimen_type'] == 2){
+                          $specimenType = 'Plasma';
+                        }else if((int)$aRow['specimen_type'] == 3){
+                          $specimenType = 'DBS';
+                        }
+                        $specimenCollectedDate = '';
+                        if(isset($aRow['specimen_collected_date']) && trim($aRow['specimen_collected_date'])!= '' && $aRow['specimen_collected_date']!= '0000-00-00'){
+                            $specimenCollectedDate = $common->humanDateFormat($aRow['specimen_collected_date']);
+                        }
+                        $receiptDateAtCentralLab = '';
+                        if(isset($aRow['receipt_date_at_central_lab']) && trim($aRow['receipt_date_at_central_lab'])!= '' && $aRow['receipt_date_at_central_lab']!= '0000-00-00'){
+                            $receiptDateAtCentralLab = $common->humanDateFormat($aRow['receipt_date_at_central_lab']);
+                        }
+                        $asanteRapidRecencyAssayRlt = '';
+                        $asanteRapidRecencyAssayRltLogVal = '';
+                        if(trim($aRow['asante_rapid_recency_assy'])!= ''){
+                            $asanteRapidRecencyAssy = json_decode($aRow['asante_rapid_recency_assy'],true);
+                            if(isset($asanteRapidRecencyAssy['rrr'])){
+                                $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+                                $asanteRapidRecencyAssayRltLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+                            }
+                        }
+                        
+                        $row[] = $aRow['patient_barcode_id'];
+                        $row[] = ucwords($aRow['anc_site_name']);
+                        $row[] = $specimenType;
+                        $row[] = $specimenCollectedDate;
+                        $row[] = $receiptDateAtCentralLab;
+                        $row[] = $aRow['final_lag_avidity_odn'];
+                        $row[] = $asanteRapidRecencyAssayRltLogVal;
+                        $row[] = $asanteRapidRecencyAssayRlt;
+                        $row[] = $aRow['hiv_rna'];
+                       $output[] = $row;
+                    }
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                    $borderStyle = array(
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                        ),
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_THIN,
+                            ),
+                        )
+                    );
+                   
+                    
+                    $sheet->setCellValue('A1', html_entity_decode('Study ID ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('ANC site ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C1', html_entity_decode('Spec type ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('D1', html_entity_decode('Date Specimen Collected ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('E1', html_entity_decode('Date Specimen Arrived at Lab ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('F1', html_entity_decode('LAg Avidity ODn ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('G1', html_entity_decode('Asante LT Reader Value ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('H1', html_entity_decode('Asante LT Visual ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('I1', html_entity_decode('VL Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                   
+                    $sheet->getStyle('A1')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1')->applyFromArray($styleArray);
+                    $sheet->getStyle('C1')->applyFromArray($styleArray);
+                    $sheet->getStyle('D1')->applyFromArray($styleArray);
+                    $sheet->getStyle('E1')->applyFromArray($styleArray);
+                    $sheet->getStyle('F1')->applyFromArray($styleArray);
+                    $sheet->getStyle('G1')->applyFromArray($styleArray);
+                    $sheet->getStyle('H1')->applyFromArray($styleArray);
+                    $sheet->getStyle('I1')->applyFromArray($styleArray);
+                   
+                    
+                    $currentRow = 2;
+                    foreach ($output as $rowData) {
+                        $colNo = 0;
+                        foreach ($rowData as $field => $value) {
+                            if (!isset($value)) {
+                                $value = "";
+                            }
+                        
+                            if (is_numeric($value)) {
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_NUMERIC);
+                            }else{
+                                $sheet->getCellByColumnAndRow($colNo, $currentRow)->setValueExplicit(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            }
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, $currentRow)->getColumn();
+                            $sheet->getStyle($cellName . $currentRow)->applyFromArray($borderStyle);
+                            $sheet->getDefaultRowDimension()->setRowHeight(20);
+                            $sheet->getColumnDimensionByColumn($colNo)->setWidth(20);
+                            $sheet->getStyleByColumnAndRow($colNo, $currentRow)->getAlignment()->setWrapText(true);
+                            $colNo++;
+                        }
+                      $currentRow++;
+                    }
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'NEW-TEST-LIST--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "na";
+                }
+            }catch (Exception $exc) {
+                error_log("NEW-TEST-LIST--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
+        }
+    }
 }

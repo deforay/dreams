@@ -734,6 +734,24 @@ return array(
                         'action' => 'get-reason-for-refused-pie-chart',
                     ),
                 ),
+            ),'export-rsot-excel' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-rsot-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'export-rsot-excel',
+                    ),
+                ),
+            ),'export-ntl-excel' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-ntl-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'export-ntl-excel',
+                    ),
+                ),
             )
         ),
     ),
