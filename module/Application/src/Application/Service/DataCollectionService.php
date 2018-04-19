@@ -3262,7 +3262,7 @@ class DataCollectionService {
                         $lag_out = '';
                         $asar_out = '';
                         $asav_out = '';
-                        if((float)$aRow['final_lag_avidity_odn'] < 2 && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
+                        if(($aRow['final_lag_avidity_odn']!= null && trim($aRow['final_lag_avidity_odn'])!= '' && $aRow['final_lag_avidity_odn'] < 2) && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out1 = 'x';
                         }
                         if(trim($asanteRapidRecencyAssayRlt) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
