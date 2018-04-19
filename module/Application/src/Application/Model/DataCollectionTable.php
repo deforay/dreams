@@ -334,7 +334,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $ntlQuery = $ntlQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}
 	$rsotQuery = $rsotQuery->where('DATEDIFF(CURDATE(),receipt_date_at_central_lab) > 10');
-	$ntlQuery = $ntlQuery->where('DATEDIFF(CURDATE(),receipt_date_at_central_lab) >= 5 AND DATEDIFF(CURDATE(),receipt_date_at_central_lab) <= 7');
+	$ntlQuery = $ntlQuery->where('DATEDIFF(CURDATE(),receipt_date_at_central_lab) <= 7');
 
 	if (isset($sWhere) && $sWhere != "") {
 	    $sQuery->where($sWhere);
