@@ -3292,11 +3292,11 @@ class DataCollectionService {
                             $row[] = $asanteRapidRecencyAssayRlt;
                             $row[] = $aRow['hiv_rna'];
                             $row[] = $vl_out1;
-                            $row[] = $vl_out2;
                             $row[] = $vl_out3;
+                            $row[] = $vl_out2;
                             $row[] = $lag_out;
-                            $row[] = $asar_out;
                             $row[] = $asav_out;
+                            $row[] = $asar_out;
                            $output[] = $row;
                         }
                     }
