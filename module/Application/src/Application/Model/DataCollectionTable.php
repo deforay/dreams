@@ -278,14 +278,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	   $rsotQuery = $rsotQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	   $ntlQuery = $ntlQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
-	}else if($loginContainer->roleCode== 'LS'){
+	}else if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    $rsotQuery = $rsotQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    $ntlQuery = $ntlQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	    $rsotQuery = $rsotQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	    $ntlQuery = $ntlQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
@@ -375,10 +371,8 @@ class DataCollectionTable extends AbstractTableGateway {
                       ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		      ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 		      ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(date_returned_to_participant)')),'left');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
@@ -857,12 +851,10 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	             //->where('da_c.status IN (2)');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    if(trim($parameters['lab']) ==''){
 	       $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    }
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
@@ -921,10 +913,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 				->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
 	                        //->where('da_c.status IN (2)');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
@@ -1077,23 +1067,26 @@ class DataCollectionTable extends AbstractTableGateway {
         $dataCollectionQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 	                           ->columns(array('data_collection_id','surveillance_id','lag_avidity_result','hiv_rna_gt_1000'))
 				   ->where(array('da_c.status'=>2));
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode == 'LDEO' || $loginContainer->roleCode == 'LS'){
 	    if(trim($params['facility']) ==''){
 	       $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    }
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
-	}if(trim($start_date) != "" && trim($end_date) != "" && trim($start_date)!= trim($end_date)) {
+	}
+	if(trim($start_date) != "" && trim($end_date) != "" && trim($start_date)!= trim($end_date)) {
            $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date >='" . $start_date ."'", "da_c.specimen_collected_date <='" . $end_date."'"));
         }else if (trim($start_date) != "") {
             $dataCollectionQuery = $dataCollectionQuery->where(array("da_c.specimen_collected_date = '" . $start_date. "'"));
-        }if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!= ''){
+        }
+	if(isset($params['chosenCountry']) && trim($params['chosenCountry'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.country'=>base64_decode($params['chosenCountry'])));
-        }if(isset($params['anc']) && trim($params['anc'])!= ''){
+        }
+	if(isset($params['anc']) && trim($params['anc'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.anc_site'=>base64_decode($params['anc'])));
-        }if(isset($params['facility']) && trim($params['facility'])!= ''){
+        }
+	if(isset($params['facility']) && trim($params['facility'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.lab'=>base64_decode($params['facility'])));
-        }if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
+        }
+	if(isset($params['mailSentStatus']) && trim($params['mailSentStatus'])!= ''){
             $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.result_mail_sent'=>$params['mailSentStatus']));
         }
         $dataCollectionQueryStr = $sql->getSqlStringForSqlObject($dataCollectionQuery);
@@ -1339,12 +1332,10 @@ class DataCollectionTable extends AbstractTableGateway {
                      ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    if(trim($parameters['lab']) ==''){
 	       $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    }
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));  
@@ -1402,10 +1393,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 				->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('date_result_returned_clinic','date_returned_to_participant'),'left');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
@@ -1659,10 +1648,8 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code','rejection_name'=>'rejection_reason'),'left');
 	if($loginContainer->roleCode == 'ANCSC' && trim($parameters['anc']) == ''){
             $sQuery = $sQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
-        }else if($loginContainer->roleCode== 'LS' && trim($parameters['lab']) == ''){
+        }else if(($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS') && trim($parameters['lab']) == ''){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO' && trim($parameters['lab']) == ''){
-	    $sQuery = $sQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>$parameters['countryId']));
@@ -1715,10 +1702,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code','rejection_name'=>'rejection_reason'),'left');
 	if($loginContainer->roleCode == 'ANCSC'){
             $tQuery = $tQuery->where('da_c.anc_site IN ("' . implode('", "', $mappedANC) . '")');
-        }else if($loginContainer->roleCode== 'LS'){
+        }else if($loginContainer->roleCode == 'LDEO' || $loginContainer->roleCode == 'LS'){
 	    $tQuery = $tQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $tQuery = $tQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $tQuery = $tQuery->where(array('da_c.country'=>$parameters['countryId']));  
@@ -1836,10 +1821,8 @@ class DataCollectionTable extends AbstractTableGateway {
 				   ->group(new \Zend\Db\Sql\Expression("MONTHNAME(".$params['labDataReportingDate'].")"))
 				   ->group('da_c.lab')
 				   ->order($params['labDataReportingDate'].' asc');
-	if($loginContainer->roleCode== 'LS'){
+	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $dataCollectionQuery = $dataCollectionQuery->where('da_c.lab IN ("' . implode('", "', $loginContainer->laboratory) . '")');
-	}else if($loginContainer->roleCode== 'LDEO'){
-	    $dataCollectionQuery = $dataCollectionQuery->where(array('da_c.added_by'=>$loginContainer->userId));
 	}
 	if(trim($params['reportingMonthYear'])!= ''){
 	    $reportingMonthYearArray = explode("/",$params['reportingMonthYear']);

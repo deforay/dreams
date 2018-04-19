@@ -141,13 +141,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
            $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-            $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
+        }
+        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+           $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
         }else if($loginContainer->roleCode== 'CC'){
 	   $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	} if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+	}
+        if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
            $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
-        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
+        }
+        if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
            $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
         }
     
@@ -182,7 +185,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->join(array('t' => 'test_status'), "t.test_status_id=cl_da_c.status",array('test_status_name'));
         if($loginContainer->roleCode == 'ANCSC'){
            $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }
+        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
             $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
         }else if($loginContainer->roleCode== 'CC'){
 	   $tQuery = $tQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
@@ -427,13 +431,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                      ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
            $sQuery = $sQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }
+        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
             $sQuery = $sQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
         }else if($loginContainer->roleCode== 'CC'){
 	   $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	}if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
+	}
+        if(isset($parameters['anc']) && trim($parameters['anc'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($parameters['anc'])));
-        }if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
+        }
+        if(isset($parameters['reportingMonthYear']) && trim($parameters['reportingMonthYear'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($parameters['reportingMonthYear'])));
         }
        
@@ -471,7 +478,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
                       ->where('cl_da_c.status IN (2)');
         if($loginContainer->roleCode == 'ANCSC'){
            $tQuery = $tQuery->where(array('cl_da_c.added_by'=>$loginContainer->userId));
-        } if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
+        }
+        if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
             $tQuery = $tQuery->where(array('cl_da_c.country'=>$parameters['countryId']));
         }else if($loginContainer->roleCode== 'CC'){
 	   $tQuery = $tQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
