@@ -3265,10 +3265,10 @@ class DataCollectionService {
                         if(($aRow['final_lag_avidity_odn']!= null && trim($aRow['final_lag_avidity_odn'])!= '' && $aRow['final_lag_avidity_odn'] < 2) && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out1 = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRlt) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
+                        if(($asanteRapidRecencyAssayRlt!= null && trim($asanteRapidRecencyAssayRlt)!= '' && strtolower($asanteRapidRecencyAssayRlt) == 'not present') && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out2 = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
+                        if(($asanteRapidRecencyAssayRltLogVal!= null && trim($asanteRapidRecencyAssayRltLogVal)!= '' && $asanteRapidRecencyAssayRltLogVal < 3.0) && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out3 = 'x';
                         }
                         if(($aRow['final_lag_avidity_odn'] == null || $aRow['final_lag_avidity_odn'] == '') && (int)$aRow['rejection_reason'] <= 1){
