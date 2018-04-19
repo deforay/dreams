@@ -3231,7 +3231,6 @@ class DataCollectionService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
-                       $row = array();
                        $specimenType = '';
                         if((int)$aRow['specimen_type'] == 1){
                           $specimenType = 'Venous';
@@ -3263,40 +3262,43 @@ class DataCollectionService {
                         $lag_out = '';
                         $asar_out = '';
                         $asav_out = '';
-                        if((float)$aRow['final_lag_avidity_odn'] < 2 && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                        if((float)$aRow['final_lag_avidity_odn'] < 2 && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out1 = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRlt) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                        if(trim($asanteRapidRecencyAssayRlt) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out2 = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason']!= 1){
+                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && ($aRow['hiv_rna'] == null || $aRow['hiv_rna'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $vl_out3 = 'x';
                         }
-                        if(($aRow['final_lag_avidity_odn'] == null || $aRow['final_lag_avidity_odn'] == '') && (int)$aRow['rejection_reason']!= 1){
+                        if(($aRow['final_lag_avidity_odn'] == null || $aRow['final_lag_avidity_odn'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $lag_out = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRlt) == '' && (int)$aRow['specimen_type'] == 1 && (int)$aRow['rejection_reason']!= 1){
+                        if(trim($asanteRapidRecencyAssayRlt) == '' && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
                            $asar_out = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && (int)$aRow['specimen_type'] == 1 && (int)$aRow['rejection_reason']!= 1){
+                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
                            $asav_out = 'x';
                         }
-                        $row[] = $aRow['patient_barcode_id'];
-                        $row[] = ucwords($aRow['anc_site_name']);
-                        $row[] = $specimenType;
-                        $row[] = $specimenCollectedDate;
-                        $row[] = $receiptDateAtCentralLab;
-                        $row[] = $aRow['final_lag_avidity_odn'];
-                        $row[] = $asanteRapidRecencyAssayRltLogVal;
-                        $row[] = $asanteRapidRecencyAssayRlt;
-                        $row[] = $aRow['hiv_rna'];
-                        $row[] = $vl_out1;
-                        $row[] = $vl_out2;
-                        $row[] = $vl_out3;
-                        $row[] = $lag_out;
-                        $row[] = $asar_out;
-                        $row[] = $asav_out;
-                       $output[] = $row;
+                        if(trim($vl_out1)!= '' || trim($vl_out2)!= '' || trim($vl_out3)!= '' || trim($lag_out)!= '' || trim($asar_out)!= '' || trim($asav_out)!= ''){
+                           $row = array();
+                            $row[] = $aRow['patient_barcode_id'];
+                            $row[] = ucwords($aRow['anc_site_name']);
+                            $row[] = $specimenType;
+                            $row[] = $specimenCollectedDate;
+                            $row[] = $receiptDateAtCentralLab;
+                            $row[] = $aRow['final_lag_avidity_odn'];
+                            $row[] = $asanteRapidRecencyAssayRltLogVal;
+                            $row[] = $asanteRapidRecencyAssayRlt;
+                            $row[] = $aRow['hiv_rna'];
+                            $row[] = $vl_out1;
+                            $row[] = $vl_out2;
+                            $row[] = $vl_out3;
+                            $row[] = $lag_out;
+                            $row[] = $asar_out;
+                            $row[] = $asav_out;
+                           $output[] = $row;
+                        }
                     }
                     $styleArray = array(
                         'font' => array(
