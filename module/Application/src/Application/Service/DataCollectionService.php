@@ -3274,10 +3274,10 @@ class DataCollectionService {
                         if(($aRow['final_lag_avidity_odn'] == null || $aRow['final_lag_avidity_odn'] == '') && (int)$aRow['rejection_reason'] <= 1){
                            $lag_out = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRlt) == '' && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
+                        if(($asanteRapidRecencyAssayRlt == null || trim($asanteRapidRecencyAssayRlt) == '') && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
                            $asar_out = 'x';
                         }
-                        if(trim($asanteRapidRecencyAssayRltLogVal) == '' && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
+                        if(($asanteRapidRecencyAssayRltLogVal == null || trim($asanteRapidRecencyAssayRltLogVal) == '') && (int)$aRow['specimen_type'] == 2 && (int)$aRow['rejection_reason'] <= 1){
                            $asav_out = 'x';
                         }
                         if(trim($vl_out1)!= '' || trim($vl_out2)!= '' || trim($vl_out3)!= '' || trim($lag_out)!= '' || trim($asar_out)!= '' || trim($asav_out)!= ''){
