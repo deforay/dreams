@@ -273,8 +273,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':''; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-				<label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':'*'; ?></label>
+				<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+				<label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn <= 2 || ($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt == 'absent'))?'*':''; ?></label>
 			    </div>
 			</div>
 			<div class="col s4">
@@ -342,8 +342,8 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 			<div class="col s4">
 			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				<input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':''; ?>" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
-				<label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt!= 'absent')?'':'*'; ?></label>
+				<input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
+				<label for="hivRnaNew" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn <= 2 || ($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt == 'absent'))?'*':''; ?></label>
 			    </div>
 			    <?php if($asanteRapidRecencyAssayPn == 'absent' || ($row->lag_avidity_result == 'long term' && $asanteRapidRecencyAssayRlt == 'absent') || ($row->lag_avidity_result == 'recent' && $asanteRapidRecencyAssayRlt == 'present')){ ?>
 				<span style="width:100%;font-size:16px;color:red;">"Because of inconsistent or mismatching results, you are required to provide HIV RNA Result"</span>
