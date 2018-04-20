@@ -272,25 +272,19 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(date_returned_to_participant)')),'left');
 	$rsotQuery = $sql->select()->from(array('da_c' => 'data_collection'))
 			 ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left');
-	$ntlQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-			->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left');
 	if(isset($parameters['dashLab']) && trim($parameters['dashLab'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	   $rsotQuery = $rsotQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
-	   $ntlQuery = $ntlQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	}else if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    $sQuery = $sQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	    $rsotQuery = $rsotQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
-	    $ntlQuery = $ntlQuery->where('da_c.lab IN ("' . implode('", "', $mappedLab) . '")');
 	}
 	if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
 	    $sQuery = $sQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	    $rsotQuery = $rsotQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
-	    $ntlQuery = $ntlQuery->where(array('da_c.country'=>trim($parameters['countryId'])));
 	}else if($loginContainer->roleCode== 'CC'){
 	    $sQuery = $sQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	    $rsotQuery = $rsotQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	    $ntlQuery = $ntlQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	if(isset($parameters['date']) && trim($parameters['date'])!= ''){
 	   $data_Column = ($parameters['dateSrc'] == 'collected')?'da_c.specimen_collected_date':'da_c.added_on';
@@ -302,50 +296,38 @@ class DataCollectionTable extends AbstractTableGateway {
 	   }
 	   $sQuery = $sQuery->where('MONTH('.$data_Column.') ="'.$month.'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
 	   $rsotQuery = $rsotQuery->where('MONTH('.$data_Column.') ="'.$month.'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
-	   $ntlQuery = $ntlQuery->where('MONTH('.$data_Column.') ="'.$month.'" AND YEAR('.$data_Column.') ="'.$reportingMonthYearArray[1].'"');
 	}
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
 	    $rsotQuery = $rsotQuery->where('da_c.status = 4');
-	    $ntlQuery = $ntlQuery->where('da_c.status = 4');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'tested'){
 	    $sQuery = $sQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	    $rsotQuery = $rsotQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
-	    $ntlQuery = $ntlQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'finalized'){
 	    $sQuery = $sQuery->where(array('da_c.status'=> 2));
 	    $rsotQuery = $rsotQuery->where(array('da_c.status'=> 2));
-	    $ntlQuery = $ntlQuery->where(array('da_c.status'=> 2));
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececntwtvl'){
 	    $sQuery = $sQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "") AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	    $rsotQuery = $rsotQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "") AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
-	    $ntlQuery = $ntlQuery->where('da_c.lag_avidity_result = "recent" AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = "") AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'LAg-rececnt'){
 	    $sQuery = $sQuery->where('da_c.recent_infection = "yes" AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	    $rsotQuery = $rsotQuery->where('da_c.recent_infection = "yes" AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
-	    $ntlQuery = $ntlQuery->where('da_c.recent_infection = "yes" AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'lab-rr-recent'){
 	    $sQuery = $sQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	    $rsotQuery = $rsotQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
-	    $ntlQuery = $ntlQuery->where('da_c.asante_rapid_recency_assy like \'%rrr":{"assay":"absent"%\' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	}
-	$rsotQuery = $rsotQuery->where('DATEDIFF(CURDATE(),receipt_date_at_central_lab) > 10');
-	$ntlQuery = $ntlQuery->where('DATEDIFF(CURDATE(),receipt_date_at_central_lab) <= 7');
 
 	if (isset($sWhere) && $sWhere != "") {
 	    $sQuery->where($sWhere);
 	    $rsotQuery->where($sWhere);
-	    $ntlQuery->where($sWhere);
 	}
 
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
 	   $rsotQuery->order($sOrder);
-	   $ntlQuery->order($sOrder);
        }
 
        $queryContainer->rsotQuery = $rsotQuery;
-       $queryContainer->ntlQuery = $ntlQuery;
        if (isset($sLimit) && isset($sOffset)) {
            $sQuery->limit($sLimit);
            $sQuery->offset($sOffset);

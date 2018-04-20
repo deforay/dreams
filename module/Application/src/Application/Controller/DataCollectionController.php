@@ -215,17 +215,4 @@ class DataCollectionController extends AbstractActionController{
             return $viewModel;
         }
     }
-    
-    public function exportNtlExcelAction(){
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $file = $dataCollectionService->generateNTLExcel($params);
-            $viewModel = new ViewModel();
-            $viewModel->setVariables(array('file' =>$file));
-            $viewModel->setTerminal(true);
-            return $viewModel;
-        }
-    }
 }

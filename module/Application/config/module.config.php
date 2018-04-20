@@ -743,15 +743,6 @@ return array(
                         'action' => 'export-rsot-excel',
                     ),
                 ),
-            ),'export-ntl-excel' => array(
-                'type' => 'literal',
-                'options' => array(
-                    'route' => '/export-ntl-excel',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\DataCollection',
-                        'action' => 'export-ntl-excel',
-                    ),
-                ),
             )
         ),
     ),
