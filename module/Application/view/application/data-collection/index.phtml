@@ -486,7 +486,7 @@ if(isset($date) && trim($date)!= ''){
 			<input type="hidden" name="cCode" id="cCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
 			<input type="hidden" name="surveillanceId" id="surveillanceId"/>
 			<a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-			<a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
+			<a id="addBtn" href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
 		    </div>
 		    <div class="col s6" style="text-align:right;">
 			** required for Sample Registration<br>
@@ -1148,6 +1148,8 @@ if(isset($date) && trim($date)!= ''){
         });
 	
         if(flag){
+	    $("#addBtn").css("pointer-events","none");
+	    $("#addBtn").css("background-color","#f3cdcd !important");
             document.getElementById('addDataReportingForm').submit();
         }
     }

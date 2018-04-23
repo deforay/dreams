@@ -214,7 +214,7 @@ if(trim($countryId)!= ''){
                     <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo base64_encode($countryId); ?>"/>
                     <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
                     <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
-                    <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">SAVE</a>&nbsp;&nbsp;
+                    <a id="addBtn" href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">SAVE</a>&nbsp;&nbsp;
                 </div>
             </form>
         </div>
@@ -521,6 +521,8 @@ if(trim($countryId)!= ''){
         });
         
         if(flag){
+	    $("#addBtn").css("pointer-events","none");
+	    $("#addBtn").css("background-color","#f3cdcd !important");
             document.getElementById('addClinicDataReportingForm').submit();
         }
     }
