@@ -300,6 +300,9 @@ class DataCollectionTable extends AbstractTableGateway {
 	if(isset($parameters['type']) && trim($parameters['type'])== 'incomplete'){
 	    $sQuery = $sQuery->where('da_c.status = 4');
 	    $rsotQuery = $rsotQuery->where('da_c.status = 4');
+	}else if(isset($parameters['type']) && trim($parameters['type'])== 'rejected'){
+	    $sQuery = $sQuery->where('da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != "" AND da_c.rejection_reason > 1');
+	    $rsotQuery = $rsotQuery->where('da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != "" AND da_c.rejection_reason > 1');
 	}else if(isset($parameters['type']) && trim($parameters['type'])== 'tested'){
 	    $sQuery = $sQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
 	    $rsotQuery = $rsotQuery->where('da_c.status IN(1,2,3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = "" OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)');
@@ -324,7 +327,7 @@ class DataCollectionTable extends AbstractTableGateway {
 
        if (isset($sOrder) && $sOrder != "") {
            $sQuery->order($sOrder);
-	   $rsotQuery->order($sOrder);
+	   $rsotQuery->order('da_c.receipt_date_at_central_lab DESC');
        }
 
        $queryContainer->rsotQuery = $rsotQuery;
@@ -1792,6 +1795,7 @@ class DataCollectionTable extends AbstractTableGateway {
 						   'noofANCSites' => new \Zend\Db\Sql\Expression("COUNT(DISTINCT(da_c.anc_site))"),
 						   'samplesIncomplete' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 4, 1,0))"),
 						   'samplesTested' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.status = 1 OR da_c.status = 2 OR da_c.status = 3) AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
+						   'samplesRejected' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.rejection_reason IS NOT NULL AND da_c.rejection_reason != '' AND da_c.rejection_reason > 1, 1,0))"),
 						   'samplesFinalized' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.status = 2, 1,0))"),
 						   'noofLAgRecentwtVl' => new \Zend\Db\Sql\Expression("SUM(IF((da_c.lag_avidity_result = 'recent' AND (da_c.hiv_rna IS NULL OR da_c.hiv_rna = '') AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1)), 1,0))"),
 						   'noofLAgRecent' => new \Zend\Db\Sql\Expression("SUM(IF(da_c.recent_infection = 'yes' AND (da_c.rejection_reason IS NULL OR da_c.rejection_reason = '' OR da_c.rejection_reason = 0 OR da_c.rejection_reason = 1), 1,0))"),
