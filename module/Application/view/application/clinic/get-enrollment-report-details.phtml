@@ -1,0 +1,193 @@
+<?php
+if(isset($result) && count($result) > 0){
+    $atttotal = 0;
+    $anc1stVisitwithNonmissingAgeOverall = 0;
+    $anc1stVisitwithNonmissingAgeOverallCent = 0;
+    $eligibleforRecentStudyOverall = 0;
+    $eligibleforRecentStudyOverallCent = 0;
+    $enrolledinRecentStudyOverall = 0;
+    $enrolledinRecentStudyOverallCent = 0;
+    foreach($result as $row){
+        $fields = json_decode($row['characteristics_data'],true);
+        //anc 1st visit
+        $atttotal+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+        //anc 1st visit with non-missing age
+        $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+        $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+        $anc1stVisitwithNonmissingAgeOverall+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+        //eligible for recency study
+        $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+        $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+        $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+        $eligibleforRecentStudyOverall+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+        //enrolled in recent study
+        $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+        $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+        $enr20to24 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+        $enrolledinRecentStudyOverall+= $enrunder15+$enr15to19+$enr20to24;
+    }
+    $anc1stVisitwithNonmissingAgeOverallCent = round(($anc1stVisitwithNonmissingAgeOverall/$atttotal)*100,2);
+    $eligibleforRecentStudyOverallCent = round(($eligibleforRecentStudyOverall/$anc1stVisitwithNonmissingAgeOverall)*100,2);
+    $enrolledinRecentStudyOverallCent = round(($enrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
+}
+?>
+<tr>
+    <td style="width:24%;">ANC 1st visit</td>
+    <td><?php echo $atttotal; ?></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){
+            if(isset($result) && count($result) > 0){
+                $anc1stVisit = 0;
+                foreach($result as $row){
+                    if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                        $fields = json_decode($row['characteristics_data'],true);
+                        $anc1stVisit+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                    }
+                }
+            }
+            ?>
+      <td><?php echo $anc1stVisit; ?></td>
+      <td></td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>ANC 1st visit with non-missing age and serostatus</td>
+    <td><?php echo $anc1stVisitwithNonmissingAgeOverall; ?></td>
+    <td><?php echo $anc1stVisitwithNonmissingAgeOverallCent; ?>%</td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){
+            if(isset($result) && count($result) > 0){
+                $anc1stVisit = 0;
+                $anc1stVisitwithNonmissingAge = 0;
+                $anc1stVisitwithNonmissingAgeCent = 0;
+                foreach($result as $row){
+                    if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                        $fields = json_decode($row['characteristics_data'],true);
+                        $anc1stVisit+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                        
+                        $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+                        $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+                        $anc1stVisitwithNonmissingAge+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+                    }
+                }
+               $anc1stVisitwithNonmissingAgeCent = round(($anc1stVisitwithNonmissingAge/$anc1stVisit)*100,2);
+            }
+            ?>
+        <td><?php echo $anc1stVisitwithNonmissingAge; ?></td>
+        <td><?php echo $anc1stVisitwithNonmissingAgeCent; ?>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>Eligible</td>
+    <td><?php echo $eligibleforRecentStudyOverall; ?></td>
+    <td><?php echo $eligibleforRecentStudyOverallCent; ?>%</td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){
+            if(isset($result) && count($result) > 0){
+                $anc1stVisitwithNonmissingAge = 0;
+                $eligibleforRecentStudy = 0;
+                $eligibleforRecentStudyCent = 0;
+                foreach($result as $row){
+                    if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                        $fields = json_decode($row['characteristics_data'],true);
+    
+                        $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+                        $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+                        $anc1stVisitwithNonmissingAge+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+                        
+                        $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                        $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                        $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                        $eligibleforRecentStudy+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                    }
+                }
+              $eligibleforRecentStudyCent = round(($eligibleforRecentStudy/$anc1stVisitwithNonmissingAge)*100,2);
+            }
+            ?>
+        <td><?php echo $eligibleforRecentStudy; ?></td>
+        <td><?php echo $eligibleforRecentStudyCent; ?>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>Enrolled</td>
+    <td><?php echo $enrolledinRecentStudyOverall; ?></td>
+    <td><?php echo $enrolledinRecentStudyOverallCent; ?>%</td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){
+            if(isset($result) && count($result) > 0){
+                $eligibleforRecentStudy = 0;
+                $enrolledinRecentStudy = 0;
+                $enrolledinRecentStudyCent = 0;
+                foreach($result as $row){
+                    if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                        $fields = json_decode($row['characteristics_data'],true);
+                        
+                        $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                        $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                        $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                        $eligibleforRecentStudy+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                        
+                        $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                        $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                        $enr20to24 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                        $enrolledinRecentStudy+= $enrunder15+$enr15to19+$enr20to24;
+                    }
+                }
+                $enrolledinRecentStudyCent = round(($enrolledinRecentStudy/$eligibleforRecentStudy)*100,2);
+            }
+            ?>
+        <td><?php echo $enrolledinRecentStudy; ?></td>
+        <td><?php echo $enrolledinRecentStudyCent; ?>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>by Age</td>
+    <td></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){ ?>
+        <td></td>
+        <td></td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
+    <td></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){ ?>
+        <td></td>
+        <td>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;< 15-19*</td>
+    <td></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){ ?>
+        <td></td>
+        <td>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
+    <td></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){ ?>
+        <td></td>
+        <td>%</td>
+    <?php } } ?>
+</tr>
+<tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;Age Unknown</td>
+    <td></td>
+    <td></td>
+    <?php if(isset($provinces) && count($provinces) > 0){
+        foreach($provinces as $province){ ?>
+        <td></td>
+        <td>%</td>
+    <?php } } ?>
+</tr>

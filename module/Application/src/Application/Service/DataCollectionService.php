@@ -3447,4 +3447,9 @@ class DataCollectionService {
             return "";
         }
     }
+    
+    public function getClinicEnrollmentDetails($params){
+       $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
+      return $clinicDataCollectionDb->fetchClinicEnrollmentDetails($params);
+    }
 }

@@ -89,7 +89,8 @@ class CountryService {
         $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
         $sql = new Sql($dbAdapter);
         $pQuery = $sql->select()->from(array('l_d' => 'location_details'))
-                                ->where(array('l_d.parent_location'=>0,'l_d.country'=>$countryId));
+                                ->where(array('l_d.parent_location'=>0,'l_d.country'=>$countryId))
+                                ->order('l_d.location_name ASC');
         $pQueryStr = $sql->getSqlStringForSqlObject($pQuery);
       return $dbAdapter->query($pQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }

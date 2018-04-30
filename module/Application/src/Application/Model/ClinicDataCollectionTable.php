@@ -4,6 +4,7 @@ namespace Application\Model;
 use Zend\Session\Container;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Application\Service\CommonService;
 
@@ -581,5 +582,16 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
 	    'unlocked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
 	);
       return $this->update($data,array('cl_data_collection_id'=>base64_decode($params['clinicDataCollectionId'])));
+    }
+    
+    public function fetchClinicEnrollmentDetails($params){
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter);
+        $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
+                      ->columns(array('reporting_month_year','characteristics_data'))
+                      ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array())
+                      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.province',array('location_name'));
+        $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
+      return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

@@ -1,0 +1,246 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
+<style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+	width: 190px;
+    }
+    @font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url('../../assets/fonts/glyphicons-halflings-regular.eot');
+	src: url('../../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    * {
+      -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	      box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	      box-sizing: border-box;
+    }
+    .card-header{
+        background-color:#ff69b4;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        padding: 10px 20px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
+    }
+    #clinicEnrollmentDataTable_wrapper{
+	padding-top:3vh;
+    }
+    .align_Center{
+	text-align:center;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Enrollment Report</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Enrollment Report</a>
+       </div>
+    </div>
+    <div class="row" style="max-width:1109px;">
+	<form id="searchFilterForm" action="#">
+	    <div class="row">
+		<div class="col s6">
+		     <div class="input-field col m12 s12">
+			<input id="date" name="date" type="text" title="Please enter date" onclick="selectDate();" readonly>
+			<label for="date">Date Range</label>
+		     </div>
+		</div>
+		<div class="col s6">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="anc" name="anc" title="Please select anc">
+			    <option value="">All ANCs</option>
+			</select>
+			<label for="anc">ANC Site </label>
+		     </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchEnrollmentReportData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default">
+                <div class="card-header white-text"><i class="zmdi zmdi-filter-list"></i> Enrollment Report</div>
+                    <table id="clinicEnrollmentDataTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+				<th></th>
+				<th>Overall</th>
+				<th></th>
+				<?php if(isset($provinces) && count($provinces) > 0){
+				    foreach($provinces as $province){
+				    ?>
+				  <th><?php echo ucwords($province['location_name']); ?></th>
+				  <th></th>
+				<?php } } ?>
+                            </tr>
+                        </thead>
+			<tfoot>
+                            <tr>
+				<th></th>
+                                <th>Overall</th>
+				<th></th>
+				<?php if(isset($provinces) && count($provinces) > 0){
+				    foreach($provinces as $province){
+				    ?>
+				  <th><?php echo ucwords($province['location_name']); ?></th>
+				  <th></th>
+				<?php } } ?>
+                            </tr>
+                        </tfoot>
+                        <tbody id="clinicEnrollmentReportDetails">
+                            
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/jquery-ui.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
+<script>
+    var oTable = null;
+    $(document).ready(function() {
+	selectDate();
+	oTable = $('#clinicEnrollmentDataTable').dataTable({
+	    "aoColumns": [
+		{"sClass":"","bSortable":false},
+                {"sClass":"","bSortable":false},
+		{"sClass":"","bSortable":false},
+		<?php if(isset($provinces) && count($provinces) > 0){
+		    foreach($provinces as $province){
+		    ?>
+		  {"sClass":"","bSortable":false},
+		  {"sClass":"","bSortable":false},
+		<?php } } ?>
+            ],
+	    "aaSorting": []
+	});
+       
+        $('.dataTables_filter').empty(); // clears the content generated
+        $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+        $(document).on('keyup', "input[type='text']", function(){
+	    oTable.fnFilter($(this).val());
+        });
+	searchEnrollmentReportData();
+    });
+    
+    function selectDate(){
+	$(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#date').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="date"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function searchEnrollmentReportData(){
+       $.post("<?php echo $this->url('get-enrollment-report-details'); ?>", {country:'<?php echo $countryId; ?>'},
+	function(data) {
+	    $("#clinicEnrollmentReportDetails").html(data);
+	});
+    }
+    
+    function clearSearchFields(){
+        $('#searchFilterForm')[0].reset();
+        searchEnrollmentReportData();
+    }
+</script>

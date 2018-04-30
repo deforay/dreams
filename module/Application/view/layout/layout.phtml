@@ -336,7 +336,11 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/data-extraction/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Data Download</a>
                                                                 </li>
-                                                            <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
+                                                            <?php } ?>
+                                                            <li class="countryClinicEnrollmentReportMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/clinic/enrollment-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicEnrollmentReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Enrollment</a>
+                                                            </li>
+                                                            <?php if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $PRAccess == 'show') { ?>
                                                                 <li class="countryClinicResultMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
@@ -666,6 +670,17 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
             $(".countryClinicDataExtractionMenu"+atob(splits)).addClass("active");
             $(".countryClinicDataExtractionMenu"+atob(splits)).css("color","#fff");
+            $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
+            $(".countryClinicMenu"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).addClass("active");
+            $(".countryClinicMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryClinicMenuSecond"+atob(splits)).css("color","#ff69b4");
+        }else if(urlArray[1]=='clinic' && urlArray[2]=='enrollment-report'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".countryClinicEnrollmentReportMenu"+atob(splits)).addClass("active");
+            $(".countryClinicEnrollmentReportMenu"+atob(splits)).css("color","#fff");
             $(".collapsibleCountryClinicMenu"+atob(splits)).css("display","block");
             $(".countryClinicMenu"+atob(splits)).addClass("active");
             $(".countryClinicMenuSecond"+atob(splits)).addClass("active");

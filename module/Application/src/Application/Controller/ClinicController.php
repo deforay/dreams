@@ -19,11 +19,11 @@ class ClinicController extends AbstractActionController{
             $result = $dataCollectionService->getAllClinicDataCollections($parameters);
             return $this->getResponse()->setContent(Json::encode($result));
         }else{
-            $countryId=base64_decode($this->params()->fromRoute('countryId'));
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
-                $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                $ancSiteList = $ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
+                $ancFormFieldList = $dataCollectionService->getActiveAncFormFields();
                 return new ViewModel(array(
                     'ancSites'=>$ancSiteList,
                     'ancFormFields'=>$ancFormFieldList,
@@ -55,12 +55,12 @@ class ClinicController extends AbstractActionController{
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
-                $clinicDataCollectionId=base64_decode($this->params()->fromRoute('id'));
+                $clinicDataCollectionId = base64_decode($this->params()->fromRoute('id'));
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $result=$dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
+                $result = $dataCollectionService->getClinicDataCollection($clinicDataCollectionId);
                 if($result){
-                    $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId,$province ='',$district ='');
-                    $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                    $ancSiteList = $ancSiteService->getActiveAncSites('clinic-data-collection-edit',$countryId,$province ='',$district ='');
+                    $ancFormFieldList = $dataCollectionService->getActiveAncFormFields();
                     return new ViewModel(array(
                         'row'=>$result,
                         'ancSites'=>$ancSiteList,
@@ -87,8 +87,8 @@ class ClinicController extends AbstractActionController{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
                 $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
-                $ancSiteList=$ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId,$province ='',$district ='');
-                $ancFormFieldList=$dataCollectionService->getActiveAncFormFields();
+                $ancSiteList = $ancSiteService->getActiveAncSites('clinic-data-extraction',$countryId,$province ='',$district ='');
+                $ancFormFieldList = $dataCollectionService->getActiveAncFormFields();
                 return new ViewModel(array(
                         'ancSites'=>$ancSiteList,
                         'ancFormFields'=>$ancFormFieldList,
@@ -105,7 +105,7 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->exportClinicDataCollectionInExcel($params);
+            $response = $dataCollectionService->exportClinicDataCollectionInExcel($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -147,7 +147,7 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $labReportResult=$dataCollectionService->getLabReportResult();
+            $labReportResult = $dataCollectionService->getLabReportResult();
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('params'=>$params,'labReportResult' =>$labReportResult));
             $viewModel->setTerminal(true);
@@ -160,7 +160,7 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->checkDublicateClinicDataReport($params);
+            $response = $dataCollectionService->checkDublicateClinicDataReport($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response'=>$response));
             $viewModel->setTerminal(true);
@@ -173,7 +173,7 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->lockClinicDataCollection($params);
+            $response = $dataCollectionService->lockClinicDataCollection($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);
@@ -186,9 +186,38 @@ class ClinicController extends AbstractActionController{
         if ($request->isPost()) {
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
-            $response=$dataCollectionService->unlockClinicDataCollection($params);
+            $response = $dataCollectionService->unlockClinicDataCollection($params);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    
+    public function enrollmentReportAction(){
+        $countryId = base64_decode($this->params()->fromRoute('countryId'));
+        if(isset($countryId) && trim($countryId)!= ''){
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $provinces = $countryService->getProvincesByCountry($countryId);
+            return new ViewModel(array(
+                'countryId'=>$countryId,
+                'provinces'=>$provinces
+            ));
+        }else{
+            return $this->redirect()->toRoute('home');
+        }
+    }
+    
+    public function getEnrollmentReportDetailsAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $countryService = $this->getServiceLocator()->get('CountryService');
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $provinces = $countryService->getProvincesByCountry($params['country']);
+            $result = $dataCollectionService->getClinicEnrollmentDetails($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('provinces'=>$provinces,'result' =>$result));
             $viewModel->setTerminal(true);
             return $viewModel;
         }

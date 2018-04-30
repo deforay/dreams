@@ -383,6 +383,15 @@ return array(
                         'action' => 'data-extraction'
                     ),
                 ),
+            ),'clinic-enrollment' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/enrollment-report[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'enrollment-report'
+                    ),
+                ),
             ),'export-clinic-data-collection' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -741,6 +750,15 @@ return array(
                     'defaults' => array(
                         'controller' => 'Application\Controller\DataCollection',
                         'action' => 'export-rsot-excel',
+                    ),
+                ),
+            ),'get-enrollment-report-details' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-enrollment-report-details',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'get-enrollment-report-details'
                     ),
                 ),
             )
