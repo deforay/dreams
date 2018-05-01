@@ -587,10 +587,23 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
     public function fetchClinicEnrollmentDetails($params){
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
+        if((isset($params['fromDate']) && trim($params['fromDate'])!= '') && (isset($params['toDate']) && trim($params['toDate'])!= '')){
+	    $fromDateArray = explode("/",$params['fromDate']);
+	    $toDateArray = explode("/",$params['toDate']);
+	    $start = strtotime($fromDateArray[1].'-'.date('m', strtotime($fromDateArray[0])));
+	    $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
+	}
         $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                       ->columns(array('reporting_month_year','characteristics_data'))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array())
-                      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.province',array('location_name'));
+                      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.province',array('location_name'))
+                      ->where("cl_da_c.country = '".$params['country']."'");
+        if(isset($params['anc']) && trim($params['anc'])!= ''){
+          $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($params['anc'])));  
+        }
+        if(isset($params['reportingMonthYear']) && trim($params['reportingMonthYear'])!= ''){
+           $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($params['reportingMonthYear'])));
+        }
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
       return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }

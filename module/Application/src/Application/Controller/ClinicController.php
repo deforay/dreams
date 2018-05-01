@@ -198,10 +198,13 @@ class ClinicController extends AbstractActionController{
         $countryId = base64_decode($this->params()->fromRoute('countryId'));
         if(isset($countryId) && trim($countryId)!= ''){
             $countryService = $this->getServiceLocator()->get('CountryService');
+            $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
             $provinces = $countryService->getProvincesByCountry($countryId);
+            $ancSiteList = $ancSiteService->getActiveAncSites('clinic-enrollment-report',$countryId,$province ='',$district ='');
             return new ViewModel(array(
                 'countryId'=>$countryId,
-                'provinces'=>$provinces
+                'provinces'=>$provinces,
+                'ancSiteList'=>$ancSiteList
             ));
         }else{
             return $this->redirect()->toRoute('home');
