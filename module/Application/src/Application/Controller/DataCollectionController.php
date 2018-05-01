@@ -215,4 +215,17 @@ class DataCollectionController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function exportRsotPdfAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $result = $dataCollectionService->generateRSOTPdf($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('result' =>$result));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

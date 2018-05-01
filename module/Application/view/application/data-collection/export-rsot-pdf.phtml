@@ -1,0 +1,186 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+$common = new \Application\Service\CommonService();
+if(isset($result) && count($result) >0){
+    //header and footer
+    class MYPDF extends TCPDF {
+        public function setSchemeName($heading,$logo) {
+	  $this->heading = $heading;
+	  $this->logo = $logo;
+        }
+	
+        //Page header
+        public function Header() {
+	    $alertContainer = new Container('alert');
+            // Logo
+            $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
+            $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+             //Set font
+            $this->SetFont('helvetica', 'B', 20);
+             //Title
+            $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
+	    $alertContainer->headerSize = $this->GetY();
+        }
+    
+        // Page footer
+        public function Footer() {
+            // Position at 15 mm from bottom
+            $this->SetY(-15);
+            // Set font
+            $this->SetFont('helvetica', '', 8);
+            // Page number
+            $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+    // create new PDF document
+    //$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'A3', true, 'UTF-8', false);
+    $pdf->setPageOrientation('L');
+    $pdf->setSchemeName('Recency Study Outstanding Test List','dreams-small-logo.png');
+    // set document information
+    $pdf->SetCreator('HIV Recency');
+    //$pdf->SetAuthor('Dream');
+    $pdf->SetTitle('Recency Study Outstanding Test List');
+    //$pdf->SetSubject('TCPDF Tutorial');
+    //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+    
+    // set default header data
+    $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+    
+    // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+    
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+    
+    // set margins
+    //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_RIGHT);
+    //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+    
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+    
+    // set image scale factor
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+    
+    // set some language-dependent strings (optional)
+    //if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+    //    require_once(dirname(__FILE__).'/lang/eng.php');
+    //    $pdf->setLanguageArray($l);
+    //}
+    
+    // ---------------------------------------------------------
+    
+    // set font
+    $pdf->SetFont('helvetica', '', 10);
+    
+    $pdf->AddPage();
+    $pdf->SetMargins(10, $alertContainer->headerSize, 10, true);
+    //$pdf->SetFooterMargin(10);
+    $pdf->SetY($alertContainer->headerSize,true,false);
+    //pdf content
+    $html = '';
+      $html.='<table border="1" style="padding:2px;">';
+          $html .='<thead>';
+	   $html .='<tr>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Study ID</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>ANC site</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Spec type</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Date Specimen Collected</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Date Specimen Arrived at Lab</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Reader Value</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Visual</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL Result</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to LAg Result</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Reader Result</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Visual Result</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Reader</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Visual</strong></th>';
+	   $html .='</tr>';
+          $html .='</thead>';
+          $html .='<tbody>';
+          foreach($result as $row){
+            $specimenType = '';
+            if((int)$row['specimen_type'] == 1){
+              $specimenType = 'Venous';
+            }else if((int)$row['specimen_type'] == 2){
+              $specimenType = 'Plasma';
+            }else if((int)$row['specimen_type'] == 3){
+              $specimenType = 'DBS';
+            }
+            $specimenCollectedDate = '';
+            if(isset($row['specimen_collected_date']) && trim($row['specimen_collected_date'])!= '' && $row['specimen_collected_date']!= '0000-00-00'){
+                $specimenCollectedDate = $common->humanDateFormat($row['specimen_collected_date']);
+            }
+            $receiptDateAtCentralLab = '';
+            if(isset($row['receipt_date_at_central_lab']) && trim($row['receipt_date_at_central_lab'])!= '' && $row['receipt_date_at_central_lab']!= '0000-00-00'){
+                $receiptDateAtCentralLab = $common->humanDateFormat($row['receipt_date_at_central_lab']);
+            }
+            $asanteRapidRecencyAssayRlt = '';
+            $asanteRapidRecencyAssayRltLogVal = '';
+            if(trim($row['asante_rapid_recency_assy'])!= ''){
+                $asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
+                if(isset($asanteRapidRecencyAssy['rrr'])){
+                    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+                    $asanteRapidRecencyAssayRltLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+                }
+            }
+            $vl_out1 = '';
+            $vl_out2 = '';
+            $vl_out3 = '';
+            $lag_out = '';
+            $asar_out = '';
+            $asav_out = '';
+            if(($row['final_lag_avidity_odn']!= null && trim($row['final_lag_avidity_odn'])!= '' && $row['final_lag_avidity_odn'] < 2) && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
+               $vl_out1 = 'x';
+            }
+            if(($asanteRapidRecencyAssayRlt!= null && trim($asanteRapidRecencyAssayRlt)!= '' && strtolower($asanteRapidRecencyAssayRlt) == 'absent') && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
+               $vl_out2 = 'x';
+            }
+            if(($asanteRapidRecencyAssayRltLogVal!= null && trim($asanteRapidRecencyAssayRltLogVal)!= '' && $asanteRapidRecencyAssayRltLogVal < 3.0) && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
+               $vl_out3 = 'x';
+            }
+            if(($row['final_lag_avidity_odn'] == null || $row['final_lag_avidity_odn'] == '') && (int)$row['rejection_reason'] <= 1){
+               $lag_out = 'x';
+            }
+            if(($asanteRapidRecencyAssayRlt == null || trim($asanteRapidRecencyAssayRlt) == '') && (int)$row['specimen_type'] == 2 && (int)$row['rejection_reason'] <= 1){
+               $asar_out = 'x';
+            }
+            if(($asanteRapidRecencyAssayRltLogVal == null || trim($asanteRapidRecencyAssayRltLogVal) == '') && (int)$row['specimen_type'] == 2 && (int)$row['rejection_reason'] <= 1){
+               $asav_out = 'x';
+            }
+            if(trim($vl_out1)!= '' || trim($vl_out2)!= '' || trim($vl_out3)!= '' || trim($lag_out)!= '' || trim($asar_out)!= '' || trim($asav_out)!= ''){
+                $html .='<tr>';
+                  $html .='<td>'.$row['patient_barcode_id'].'</td>';
+                  $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
+                  $html .='<td>'.$specimenType.'</td>';
+                  $html .='<td>'.$specimenCollectedDate.'</td>';
+                  $html .='<td>'.$receiptDateAtCentralLab.'</td>';
+                  $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
+                  $html .='<td>'.$asanteRapidRecencyAssayRltLogVal.'</td>';
+                  $html .='<td>'.$asanteRapidRecencyAssayRlt.'</td>';
+                  $html .='<td>'.$row['hiv_rna'].'</td>';
+                  $html .='<td style="text-align:center;">'.$vl_out1.'</td>';
+                  $html .='<td style="text-align:center;">'.$vl_out3.'</td>';
+                  $html .='<td style="text-align:center;">'.$vl_out2.'</td>';
+                  $html .='<td style="text-align:center;">'.$lag_out.'</td>';
+                  $html .='<td style="text-align:center;">'.$asav_out.'</td>';
+                  $html .='<td style="text-align:center;">'.$asar_out.'</td>';
+                $html .='</tr>';
+            }
+          }
+          $html .='</tbody>';
+      $html.='</table>';
+    $pdf->writeHTML(utf8_encode($html),true,0,true,0);
+    $filename = 'RECENCY-STUDY-OUTSTANDING-TEST-LIST-'.date('d-M-Y-H-i-s').'-'.rand().'.pdf';
+    $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
+    echo $filename;
+}else{
+    echo 'na';
+}
+?>

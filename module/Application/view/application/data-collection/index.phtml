@@ -605,7 +605,7 @@ if(isset($date) && trim($date)!= ''){
     </div>
     <div class="row content-container hideDataTable" id="labDataList" style="padding: 0 20px;display:none;">
 	<div class="col l12 m12 s12" style="padding:0;">
-	    <a href="javascript:void(0);" onclick="generateRSOT();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green" style="float:right;"><i class="zmdi zmdi-collection-text"></i> Export Recency Study Outstanding Test List</a>
+	    <a href="javascript:void(0);" onclick="generateRSOT();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange" style="float:right;"><i class="zmdi zmdi-collection-pdf"></i> Export Recency Study Outstanding Test List PDF</a>
 	</div>
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
@@ -1309,15 +1309,16 @@ if(isset($date) && trim($date)!= ''){
     
     function generateRSOT(){
 	$.blockUI();
-	$.post("<?php echo $this->url('export-rsot-excel'); ?>", { },
+	$.post("<?php echo $this->url('export-rsot-pdf'); ?>", { },
 	function(data){
-	    if(data == "" || data == null || data == undefined){
-		alert('Error-Oops, Unable to generate excel');
+	    if(data === "" || data === null || data === undefined){
+		alert('Error-Oops, Unable to generate pdf');
 		$.unblockUI();
 	    }else if(data == "na"){
-		alert('Export data not available');
+		alert('Print data not available');
 		$.unblockUI();
 	    }else{
+		dcid = [];
 		$.unblockUI();
 		window.open("/temporary/"+data, "_blank");
 	    }

@@ -3220,6 +3220,14 @@ class DataCollectionService {
        return $ussdNotEnrolledDb->fetchReasonforRefusedPieChartData($params);
     }
     
+    public function generateRSOTPdf($params){
+        $queryContainer = new Container('query');
+        $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+        $sql = new Sql($dbAdapter);
+        $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->rsotQuery);
+        return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+    }
+    
     public function generateRSOTExcel($params){
         $queryContainer = new Container('query');
         $common = new CommonService();
@@ -3238,7 +3246,7 @@ class DataCollectionService {
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
                     foreach ($sResult as $aRow) {
-                       $specimenType = '';
+                        $specimenType = '';
                         if((int)$aRow['specimen_type'] == 1){
                           $specimenType = 'Venous';
                         }else if((int)$aRow['specimen_type'] == 2){

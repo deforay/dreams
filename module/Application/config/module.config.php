@@ -752,6 +752,15 @@ return array(
                         'action' => 'export-rsot-excel',
                     ),
                 ),
+            ),'export-rsot-pdf' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-rsot-pdf',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollection',
+                        'action' => 'export-rsot-pdf',
+                    ),
+                ),
             ),'get-enrollment-report-details' => array(
                 'type' => 'literal',
                 'options' => array(

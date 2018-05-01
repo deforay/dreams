@@ -262,7 +262,7 @@ class DataCollectionTable extends AbstractTableGateway {
        foreach($uMapResult as $lab){
 	   $mappedLab[] = $lab['laboratory_id'];
        }
-       $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
+        $sQuery = $sql->select()->from(array('da_c' => 'data_collection'))
                      ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
                      ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
 		     ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
@@ -271,7 +271,13 @@ class DataCollectionTable extends AbstractTableGateway {
 		     ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 		     ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(date_returned_to_participant)')),'left');
 	$rsotQuery = $sql->select()->from(array('da_c' => 'data_collection'))
-			 ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left');
+			 ->join(array('u' => 'user'), "u.user_id=da_c.added_by",array('user_name'))
+			 ->join(array('c' => 'country'), "c.country_id=da_c.country",array('country_name'))
+			 ->join(array('t' => 'test_status'), "t.test_status_id=da_c.status",array('test_status_name'))
+			 ->join(array('anc' => 'anc_site'), "anc.anc_site_id=da_c.anc_site",array('anc_site_name','anc_site_code'),'left')
+			 ->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
+			 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
+			 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(date_returned_to_participant)')),'left');
 	if(isset($parameters['dashLab']) && trim($parameters['dashLab'])!= ''){
 	   $sQuery = $sQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
 	   $rsotQuery = $rsotQuery->where(array('da_c.lab'=>trim($parameters['dashLab'])));
