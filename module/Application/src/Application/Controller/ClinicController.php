@@ -225,4 +225,17 @@ class ClinicController extends AbstractActionController{
             return $viewModel;
         }
     }
+    
+    public function exportEnrollmentReportAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+            $response = $dataCollectionService->exportEnrollmentReportInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }

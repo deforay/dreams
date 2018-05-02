@@ -3460,4 +3460,616 @@ class DataCollectionService {
        $clinicDataCollectionDb = $this->sm->get('ClinicDataCollectionTable');
       return $clinicDataCollectionDb->fetchClinicEnrollmentDetails($params);
     }
+    
+    public function exportEnrollmentReportInExcel($params){
+        $queryContainer = new Container('query');
+        $common = new CommonService();
+        if(isset($queryContainer->clinicEnrollmentQuery)){
+            try{
+                $dbAdapter = $this->sm->get('Zend\Db\Adapter\Adapter');
+                $sql = new Sql($dbAdapter);
+                $pQuery = $sql->select()->from(array('l_d' => 'location_details'))
+                              ->where(array('l_d.parent_location'=>0,'l_d.country'=>$params['country']))
+                              ->order('l_d.location_name ASC');
+                $pQueryStr = $sql->getSqlStringForSqlObject($pQuery);
+                $pResult = $dbAdapter->query($pQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+            
+                $sQueryStr = $sql->getSqlStringForSqlObject($queryContainer->clinicEnrollmentQuery);
+                $sResult = $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+                if(isset($sResult) && count($sResult)>0){
+                    $excel = new PHPExcel();
+                    $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+                    $cacheSettings = array('memoryCacheSize' => '80MB');
+                    \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+                    $sheet = $excel->getActiveSheet();
+                    $sheet->getSheetView()->setZoomScale(80);
+                    
+                    $styleArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        ),
+                        'alignment' => array(
+                            'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+                        ),
+                        'borders' => array(
+                            'bottom' => array(
+                                'style' => \PHPExcel_Style_Border::BORDER_MEDIUM,
+                            ),
+                        )
+                    );
+                    $labelArray = array(
+                        'font' => array(
+                            'size' => 12,
+                            'bold' => true,
+                        )
+                    );
+                    //merge section
+                    $sheet->mergeCells('B1:C1');
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 1)->getColumn();
+                            $colNo++;
+                            $cell2Name = $sheet->getCellByColumnAndRow($colNo, 1)->getColumn();
+                            $sheet->mergeCells($cell1Name.'1:'.$cell2Name.'1');
+                          $colNo++;
+                        }
+                    }
+                    
+                    //title section
+                    $sheet->setCellValue('A1', html_entity_decode(' ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B1', html_entity_decode('Overall ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $cellName = $sheet->getCellByColumnAndRow($colNo, 1)->getColumn();
+                            $sheet->setCellValue($cellName.'1', html_entity_decode(ucwords($province['location_name']) , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                          $colNo++;
+                        }
+                    }
+                   
+                    //style section
+                    $sheet->getStyle('A1')->applyFromArray($styleArray);
+                    $sheet->getStyle('B1:C1')->applyFromArray($styleArray);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 1)->getColumn();
+                            $colNo++;
+                            $cell2Name = $sheet->getCellByColumnAndRow($colNo, 1)->getColumn();
+                            $sheet->getStyle($cell1Name.'1:'.$cell2Name.'1')->applyFromArray($styleArray);
+                          $colNo++;
+                        }
+                    }
+                    
+                    //content section
+                    $atttotal = 0;
+                    $anc1stVisitwithNonmissingAgeOverall = 0;
+                    $anc1stVisitwithNonmissingAgeOverallCent = 0;
+                    $eligibleforRecentStudyOverall = 0;
+                    $eligibleforRecentStudyOverallCent = 0;
+                    $enrolledinRecentStudyOverall = 0;
+                    $enrolledinRecentStudyOverallCent = 0;
+                    $enrolledinRecentStudyLT15Overall = 0;
+                    $enrolledinRecentStudyLT15OverallCent = 0;
+                    $enrolledinRecentStudy15to19Overall = 0;
+                    $enrolledinRecentStudy15to19OverallCent = 0;
+                    $enrolledinRecentStudy20to24Overall = 0;
+                    $enrolledinRecentStudy20to24OverallCent = 0;
+                    $notenrolledinRecentStudyOverall = 0;
+                    $notenrolledinRecentStudyOverallCent = 0;
+                    $notenrolledinRecentStudyLT15Overall = 0;
+                    $notenrolledinRecentStudyLT15OverallCent = 0;
+                    $notenrolledinRecentStudy15to19Overall = 0;
+                    $notenrolledinRecentStudy15to19OverallCent = 0;
+                    $notenrolledinRecentStudy20to24Overall = 0;
+                    $notenrolledinRecentStudy20to24OverallCent = 0;
+                    $months = array();
+                    foreach($sResult as $row){
+                        $fields = json_decode($row['characteristics_data'],true);
+                        if(!in_array(strtolower($row['reporting_month_year']),$months)){
+                            $months[] = strtolower($row['reporting_month_year']);
+                        }
+                        if(!isset($months[strtolower($row['reporting_month_year'])])){
+                            $months[strtolower($row['reporting_month_year'])] = array();
+                        }
+                        //anc 1st visit
+                        $atttotal+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                        //anc 1st visit with non-missing age
+                        $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+                        $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+                        $anc1stVisitwithNonmissingAgeOverall+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+                        //eligible for recency study
+                        $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                        $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                        $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                        $eligibleforRecentStudyOverall+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                        //enrolled in recent study
+                        $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                        $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                        $enr20to24 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                        $enrolledinRecentStudyOverall+= $enrunder15+$enr15to19+$enr20to24;
+                        //enrolled by month
+                        if(!isset($months[strtolower($row['reporting_month_year'])]['overall_enroll'])){
+                           $months[strtolower($row['reporting_month_year'])]['overall_enroll'] = 0; 
+                        }else{
+                           $months[strtolower($row['reporting_month_year'])]['overall_enroll']+= $enrunder15+$enr15to19+$enr20to24;
+                        }
+                        //enrolled in recent study - age < 15
+                        $enrolledinRecentStudyLT15Overall+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                        //enrolled in recent study - age 15-19
+                        $enrolledinRecentStudy15to19Overall+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                        //enrolled in recent study - age 20-24
+                        $enrolledinRecentStudy20to24Overall+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                        //not-enrolled in recent study
+                        $notenrunder15  = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                        $notenr15to19 = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                        $notenr20to24 = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                        $notenrolledinRecentStudyOverall+= $notenrunder15+$notenr15to19+$notenr20to24;
+                        //not-enrolled by month
+                        if(!isset($months[strtolower($row['reporting_month_year'])]['overall_notenroll'])){
+                           $months[strtolower($row['reporting_month_year'])]['overall_notenroll'] = 0; 
+                        }else{
+                           $months[strtolower($row['reporting_month_year'])]['overall_notenroll']+= $notenrunder15+$notenr15to19+$notenr20to24;
+                        }
+                        //not-enrolled in recent study - age < 15
+                        $notenrolledinRecentStudyLT15Overall+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                        //not-enrolled in recent study - age 15-19
+                        $notenrolledinRecentStudy15to19Overall+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                        //not-enrolled in recent study - age 20-24
+                        $notenrolledinRecentStudy20to24Overall+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                    }
+                    if($atttotal > 0){
+                        $anc1stVisitwithNonmissingAgeOverallCent = round(($anc1stVisitwithNonmissingAgeOverall/$atttotal)*100,2);
+                    }
+                    if($anc1stVisitwithNonmissingAgeOverall > 0){
+                        $eligibleforRecentStudyOverallCent = round(($eligibleforRecentStudyOverall/$anc1stVisitwithNonmissingAgeOverall)*100,2);
+                    }
+                    if($eligibleforRecentStudyOverall > 0){
+                        $enrolledinRecentStudyOverallCent = round(($enrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
+                    }
+                    if($enrolledinRecentStudyOverall > 0){
+                        $enrolledinRecentStudyLT15OverallCent = round(($enrolledinRecentStudyLT15Overall/$enrolledinRecentStudyOverall)*100,2);
+                    }
+                    if($enrolledinRecentStudyOverall > 0){
+                        $enrolledinRecentStudy15to19OverallCent = round(($enrolledinRecentStudy15to19Overall/$enrolledinRecentStudyOverall)*100,2);
+                    }
+                    if($enrolledinRecentStudyOverall > 0){
+                        $enrolledinRecentStudy20to24OverallCent = round(($enrolledinRecentStudy20to24Overall/$enrolledinRecentStudyOverall)*100,2);
+                    }
+                    if($eligibleforRecentStudyOverall > 0){
+                        $notenrolledinRecentStudyOverallCent = round(($notenrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
+                    }
+                    if($notenrolledinRecentStudyOverall > 0){
+                        $notenrolledinRecentStudyLT15OverallCent = round(($notenrolledinRecentStudyLT15Overall/$notenrolledinRecentStudyOverall)*100,2);
+                    }
+                    if($notenrolledinRecentStudyOverall > 0){
+                        $notenrolledinRecentStudy15to19OverallCent = round(($notenrolledinRecentStudy15to19Overall/$notenrolledinRecentStudyOverall)*100,2);
+                    }
+                    if($notenrolledinRecentStudyOverall > 0){
+                        $notenrolledinRecentStudy20to24OverallCent = round(($notenrolledinRecentStudy20to24Overall/$notenrolledinRecentStudyOverall)*100,2);
+                    }
+                    $sheet->setCellValue('A2', html_entity_decode('ANC 1st visit ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->getStyle('A2')->applyFromArray($labelArray);
+                    $sheet->setCellValue('B2', html_entity_decode($atttotal , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $anc1stVisit = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $anc1stVisit+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                                }
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'2', html_entity_decode($anc1stVisit , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A3', html_entity_decode('ANC 1st visit with non-missing age and serostatus ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->getStyle('A3')->applyFromArray($labelArray);
+                    $sheet->setCellValue('B3', html_entity_decode($anc1stVisitwithNonmissingAgeOverall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C3', html_entity_decode($anc1stVisitwithNonmissingAgeOverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $anc1stVisit = 0;
+                            $anc1stVisitwithNonmissingAge = 0;
+                            $anc1stVisitwithNonmissingAgeCent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $anc1stVisit+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                                    
+                                    $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+                                    $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+                                    $anc1stVisitwithNonmissingAge+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+                                }
+                            }
+                            if($anc1stVisit > 0){
+                               $anc1stVisitwithNonmissingAgeCent = round(($anc1stVisitwithNonmissingAge/$anc1stVisit)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'3', html_entity_decode($anc1stVisitwithNonmissingAge , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'3', html_entity_decode($anc1stVisitwithNonmissingAgeCent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A4', html_entity_decode('Eligible ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->getStyle('A4')->applyFromArray($labelArray);
+                    $sheet->setCellValue('B4', html_entity_decode($eligibleforRecentStudyOverall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C4', html_entity_decode($eligibleforRecentStudyOverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $anc1stVisitwithNonmissingAge = 0;
+                            $eligibleforRecentStudy = 0;
+                            $eligibleforRecentStudyCent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                
+                                    $unkhivtotal = (int)$fields['no_of_clients_with_UNKNOWN_HIV_STATUS_at_ANC_first_visit'][0]['total'];
+                                    $attageunk = (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['age_unknown'];
+                                    $anc1stVisitwithNonmissingAge+= ((int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'] - $unkhivtotal - $attageunk);
+                                    
+                                    $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                                    $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                                    $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                                    $eligibleforRecentStudy+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                                }
+                            }
+                            if($anc1stVisitwithNonmissingAge > 0){
+                              $eligibleforRecentStudyCent = round(($eligibleforRecentStudy/$anc1stVisitwithNonmissingAge)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'4', html_entity_decode($eligibleforRecentStudy , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'4', html_entity_decode($eligibleforRecentStudyCent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A5', html_entity_decode('Enrolled ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->getStyle('A5')->applyFromArray($labelArray);
+                    $sheet->setCellValue('B5', html_entity_decode($enrolledinRecentStudyOverall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C5', html_entity_decode($enrolledinRecentStudyOverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $eligibleforRecentStudy = 0;
+                            $enrolledinRecentStudy = 0;
+                            $enrolledinRecentStudyCent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    
+                                    $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                                    $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                                    $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                                    $eligibleforRecentStudy+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                                    
+                                    $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                                    $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                                    $enr20to24 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudy+= $enrunder15+$enr15to19+$enr20to24;
+                                }
+                            }
+                            if($eligibleforRecentStudy > 0){
+                               $enrolledinRecentStudyCent = round(($enrolledinRecentStudy/$eligibleforRecentStudy)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'5', html_entity_decode($enrolledinRecentStudy , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'5', html_entity_decode($enrolledinRecentStudyCent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A6', html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;by Age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    
+                    $sheet->setCellValue('A7', html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B7', html_entity_decode($enrolledinRecentStudyLT15Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C7', html_entity_decode($enrolledinRecentStudyLT15OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $enrolledinRecentStudyAll = 0;
+                            $enrolledinRecentStudyLT15 = 0;
+                            $enrolledinRecentStudyLT15Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyLT15+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                                }
+                            }
+                            if($enrolledinRecentStudyAll > 0){
+                               $enrolledinRecentStudyLT15Cent = round(($enrolledinRecentStudyLT15/$enrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'7', html_entity_decode($enrolledinRecentStudyLT15 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'7', html_entity_decode($enrolledinRecentStudyLT15Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A8', html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15 - 19 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B8', html_entity_decode($enrolledinRecentStudy15to19Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C8', html_entity_decode($enrolledinRecentStudy15to19OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $enrolledinRecentStudyAll = 0;
+                            $enrolledinRecentStudy15to19 = 0;
+                            $enrolledinRecentStudy15to19Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudy15to19+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                                }
+                            }
+                            if($enrolledinRecentStudyAll > 0){
+                               $enrolledinRecentStudy15to19Cent = round(($enrolledinRecentStudy15to19/$enrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'8', html_entity_decode($enrolledinRecentStudy15to19 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'8', html_entity_decode($enrolledinRecentStudy15to19Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A9', html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20 - 24 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B9', html_entity_decode($enrolledinRecentStudy20to24Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C9', html_entity_decode($enrolledinRecentStudy20to24OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $enrolledinRecentStudyAll = 0;
+                            $enrolledinRecentStudy20to24 = 0;
+                            $enrolledinRecentStudy20to24Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudy20to24+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                }
+                            }
+                            if($enrolledinRecentStudyAll > 0){
+                               $enrolledinRecentStudy20to24Cent = round(($enrolledinRecentStudy20to24/$enrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'9', html_entity_decode($enrolledinRecentStudy20to24 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.'9', html_entity_decode($enrolledinRecentStudy20to24Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A10', html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;by Month ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $rowNo = 11;
+                    for($m=0;$m<count($months);$m++){
+                        if(isset($months[$m]) && trim($months[$m])!= ''){
+                            $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucfirst($months[$m]), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('B'.$rowNo, html_entity_decode($months[$months[$m]]['overall_enroll'] , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$enrolledinRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            if(isset($pResult) && count($pResult) > 0){
+                                $colNo = 3;
+                                foreach($pResult as $province){
+                                    $totalEnrollment = 0;
+                                    $monthEnrollment = 0;
+                                    foreach($sResult as $row){
+                                      $fields = json_decode($row['characteristics_data'],true);
+                                      if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                        $totalEnrollment+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                      }
+                                      if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
+                                        $monthEnrollment+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                      }
+                                    }
+                                    $cell1Name = $sheet->getCellByColumnAndRow($colNo, $rowNo)->getColumn();
+                                    $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($monthEnrollment , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                                  $colNo+= 1;
+                                    $cell1Name = $sheet->getCellByColumnAndRow($colNo,$rowNo)->getColumn();
+                                    $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode(($totalEnrollment > 0)?round(($monthEnrollment/$totalEnrollment)*100,2).'%':'0%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                                  $colNo++;
+                                }
+                            }
+                          $rowNo++;
+                        }
+                    }
+                    
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('Not enrolled ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->getStyle('A'.$rowNo)->applyFromArray($labelArray);
+                    $sheet->setCellValue('B'.$rowNo, html_entity_decode($notenrolledinRecentStudyOverall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C'.$rowNo, html_entity_decode($notenrolledinRecentStudyOverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $eligibleforRecentStudy = 0;
+                            $notenrolledinRecentStudy = 0;
+                            $notenrolledinRecentStudyCent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    
+                                    $rdtposunder15 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
+                                    $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
+                                    $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
+                                    $eligibleforRecentStudy+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+                                    
+                                    $enrunder15  = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                                    $enr15to19 = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                                    $enr20to24 = (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $notenrolledinRecentStudy+= $enrunder15+$enr15to19+$enr20to24;
+                                }
+                            }
+                            if($eligibleforRecentStudy > 0){
+                               $notenrolledinRecentStudyCent = round(($notenrolledinRecentStudy/$eligibleforRecentStudy)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, $rowNo)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudy , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, $rowNo)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudyCent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $rowNo+= 1;
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;by Age ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $rowNo+= 1;
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15 ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B'.$rowNo, html_entity_decode($notenrolledinRecentStudyLT15Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C'.$rowNo, html_entity_decode($notenrolledinRecentStudyLT15OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $notenrolledinRecentStudyAll = 0;
+                            $notenrolledinRecentStudyLT15 = 0;
+                            $notenrolledinRecentStudyLT15Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $notenrolledinRecentStudyLT15+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+                                }
+                            }
+                            if($notenrolledinRecentStudyAll > 0){
+                               $notenrolledinRecentStudyLT15Cent = round(($notenrolledinRecentStudyLT15/$notenrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudyLT15 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudyLT15Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $rowNo+= 1;
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15 - 19', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B'.$rowNo, html_entity_decode($notenrolledinRecentStudy15to19Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C'.$rowNo, html_entity_decode($notenrolledinRecentStudy15to19OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $notenrolledinRecentStudyAll = 0;
+                            $notenrolledinRecentStudy15to19 = 0;
+                            $notenrolledinRecentStudy15to19Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $notenrolledinRecentStudy15to19+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
+                                }
+                            }
+                            if($notenrolledinRecentStudyAll > 0){
+                               $notenrolledinRecentStudy15to19Cent = round(($notenrolledinRecentStudy15to19/$notenrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudy15to19 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudy15to19Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $rowNo+= 1;
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20 - 24', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('B'.$rowNo, html_entity_decode($notenrolledinRecentStudy20to24Overall , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $sheet->setCellValue('C'.$rowNo, html_entity_decode($notenrolledinRecentStudy20to24OverallCent.'%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    if(isset($pResult) && count($pResult) > 0){
+                        $colNo = 3;
+                        foreach($pResult as $province){
+                            $notenrolledinRecentStudyAll = 0;
+                            $notenrolledinRecentStudy20to24 = 0;
+                            $notenrolledinRecentStudy20to24Cent = 0;
+                            foreach($sResult as $row){
+                                if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                    $fields = json_decode($row['characteristics_data'],true);
+                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $notenrolledinRecentStudy20to24+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                }
+                            }
+                            if($notenrolledinRecentStudyAll > 0){
+                               $notenrolledinRecentStudy20to24Cent = round(($notenrolledinRecentStudy20to24/$notenrolledinRecentStudyAll)*100,2);
+                            }
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudy20to24 , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo+= 1;
+                            $cell1Name = $sheet->getCellByColumnAndRow($colNo, 2)->getColumn();
+                            $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($notenrolledinRecentStudy20to24Cent.'%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $colNo++;
+                        }
+                    }
+                    
+                    $rowNo+= 1;
+                    $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;by Month ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $rowNo+= 1;
+                    for($m=0;$m<count($months);$m++){
+                        if(isset($months[$m]) && trim($months[$m])!= ''){
+                            $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucfirst($months[$m]), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('B'.$rowNo, html_entity_decode($months[$months[$m]]['overall_notenroll'] , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$notenrolledinRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            if(isset($pResult) && count($pResult) > 0){
+                                $colNo = 3;
+                                foreach($pResult as $province){
+                                    $totalNotenrollment = 0;
+                                    $monthNotenrollment = 0;
+                                    foreach($sResult as $row){
+                                      $fields = json_decode($row['characteristics_data'],true);
+                                      if(strtolower($row['location_name']) == strtolower($province['location_name'])){
+                                        $totalNotenrollment+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                      }
+                                      if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
+                                        $monthNotenrollment+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                      }
+                                    }
+                                    $cell1Name = $sheet->getCellByColumnAndRow($colNo, $rowNo)->getColumn();
+                                    $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode($monthNotenrollment , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                                  $colNo+= 1;
+                                    $cell1Name = $sheet->getCellByColumnAndRow($colNo,$rowNo)->getColumn();
+                                    $sheet->setCellValue($cell1Name.$rowNo, html_entity_decode(($totalNotenrollment > 0)?round(($monthNotenrollment/$totalNotenrollment)*100,2).'%':'0%' , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                                  $colNo++;
+                                }
+                            }
+                          $rowNo++;
+                        }
+                    }
+                    
+                    $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+                    $filename = 'CLINIC-ENROLLMENT-REPORT--' . date('d-M-Y-H-i-s') . '.xls';
+                    $writer->save(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename);
+                    return $filename;
+                }else{
+                    return "na";
+                }
+            }catch (Exception $exc) {
+                error_log("CLINIC-ENROLLMENT-REPORT--" . $exc->getMessage());
+                error_log($exc->getTraceAsString());
+                return "";
+            }  
+        }else{
+            return "";
+        }
+    }
 }

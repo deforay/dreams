@@ -225,7 +225,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>by Age</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;by Age</td>
     <td></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -235,7 +235,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
     <td><?php echo $enrolledinRecentStudyLT15Overall; ?></td>
     <td><?php echo $enrolledinRecentStudyLT15OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -261,7 +261,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
     <td><?php echo $enrolledinRecentStudy15to19Overall; ?></td>
     <td><?php echo $enrolledinRecentStudy15to19OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -287,7 +287,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
     <td><?php echo $enrolledinRecentStudy20to24Overall; ?></td>
     <td><?php echo $enrolledinRecentStudy20to24OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -386,7 +386,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>by Age</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;by Age</td>
     <td></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -396,7 +396,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
     <td><?php echo $notenrolledinRecentStudyLT15Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudyLT15OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -422,7 +422,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
     <td><?php echo $notenrolledinRecentStudy15to19Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudy15to19OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -448,7 +448,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
     <td><?php echo $notenrolledinRecentStudy20to24Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudy20to24OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -474,7 +474,7 @@ if(isset($result) && count($result) > 0){
     <?php } } ?>
 </tr>
 <tr>
-    <td>by Month</td>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;by Month</td>
     <td></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -488,7 +488,7 @@ if(isset($result) && count($result) > 0){
     if(isset($months[$m]) && trim($months[$m])!= ''){
     ?>
     <tr>
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
         <td><?php echo $months[$months[$m]]['overall_notenroll']; ?></td>
         <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$notenrolledinRecentStudyOverall)*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){

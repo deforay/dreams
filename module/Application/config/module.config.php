@@ -770,6 +770,15 @@ return array(
                         'action' => 'get-enrollment-report-details'
                     ),
                 ),
+            ),'export-enrollment-report' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-enrollment-report',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'export-enrollment-report',
+                    ),
+                ),
             )
         ),
     ),

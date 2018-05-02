@@ -146,7 +146,8 @@ $loginContainer = new Container('user');
 	    </div>
 	    <div class="col l12 m12 s12" style="text-align:center;">
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="searchEnrollmentReportData('change');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>
+		<a href="javascript:void(0);" onclick="searchEnrollmentReportData('change');" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportEnrollmentReportData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
 	    </div>
 	</form>
     </div>
@@ -229,5 +230,22 @@ $loginContainer = new Container('user');
     function clearSearchFields(){
         $('#searchFilterForm')[0].reset();
         searchEnrollmentReportData('reset');
+    }
+    
+    function exportEnrollmentReportData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-enrollment-report'); ?>", {country:'<?php echo $countryId; ?>'},
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
     }
 </script>
