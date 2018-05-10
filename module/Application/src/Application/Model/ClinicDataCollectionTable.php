@@ -590,11 +590,11 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         $dbAdapter = $this->adapter;
         $sql = new Sql($dbAdapter);
         if((isset($params['fromDate']) && trim($params['fromDate'])!= '') && (isset($params['toDate']) && trim($params['toDate'])!= '')){
-	    $fromDateArray = explode("/",$params['fromDate']);
-	    $toDateArray = explode("/",$params['toDate']);
-	    $start = strtotime($fromDateArray[1].'-'.date('m', strtotime($fromDateArray[0])));
-	    $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
-	}
+            $fromDateArray = explode("/",$params['fromDate']);
+            $toDateArray = explode("/",$params['toDate']);
+            $start = strtotime($fromDateArray[1].'-'.date('m', strtotime($fromDateArray[0])));
+            $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
+	    }
         $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
                       ->columns(array('reporting_month_year','characteristics_data'))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array())
@@ -605,16 +605,18 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         if(isset($params['country']) && trim($params['country'])!= ''){
             $sQuery = $sQuery->where(array('cl_da_c.country'=>$params['country']));
         }else if($loginContainer->roleCode== 'CC'){
-	   $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
-	}
+	        $sQuery = $sQuery->where('cl_da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
+	    }
         if(isset($params['anc']) && trim($params['anc'])!= ''){
           $sQuery = $sQuery->where(array('cl_da_c.anc'=>base64_decode($params['anc'])));  
         }
         if(isset($params['reportingMonthYear']) && trim($params['reportingMonthYear'])!= ''){
            $sQuery = $sQuery->where(array('cl_da_c.reporting_month_year'=>strtolower($params['reportingMonthYear'])));
         }
+        
         $queryContainer->clinicEnrollmentQuery = $sQuery;
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
-      return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        //echo $sQueryStr; die;
+        return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
     }
 }

@@ -3889,7 +3889,7 @@ class DataCollectionService {
                         if(isset($months[$m]) && trim($months[$m])!= ''){
                             $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucfirst($months[$m]), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             $sheet->setCellValue('B'.$rowNo, html_entity_decode($months[$months[$m]]['overall_enroll'] , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$enrolledinRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$eligibleforRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             if(isset($pResult) && count($pResult) > 0){
                                 $colNo = 3;
                                 foreach($pResult as $province){
@@ -4049,7 +4049,7 @@ class DataCollectionService {
                         if(isset($months[$m]) && trim($months[$m])!= ''){
                             $sheet->setCellValue('A'.$rowNo, html_entity_decode('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.ucfirst($months[$m]), ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             $sheet->setCellValue('B'.$rowNo, html_entity_decode($months[$months[$m]]['overall_notenroll'] , ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$notenrolledinRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                            $sheet->setCellValue('C'.$rowNo, html_entity_decode(($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$eligibleforRecentStudyOverall)*100,2).'%':'0%', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                             if(isset($pResult) && count($pResult) > 0){
                                 $colNo = 3;
                                 foreach($pResult as $province){

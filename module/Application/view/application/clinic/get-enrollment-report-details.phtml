@@ -350,7 +350,7 @@ if(isset($result) && count($result) > 0){
     <tr>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
         <td><?php echo $months[$months[$m]]['overall_enroll']; ?></td>
-        <td><?php echo ($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$enrolledinRecentStudyOverall)*100,2):0; ?>%</td>
+        <td><?php echo ($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$eligibleforRecentStudyOverall)*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalEnrollment = 0;
@@ -511,7 +511,7 @@ if(isset($result) && count($result) > 0){
     <tr>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
         <td><?php echo $months[$months[$m]]['overall_notenroll']; ?></td>
-        <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$notenrolledinRecentStudyOverall)*100,2):0; ?>%</td>
+        <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$eligibleforRecentStudyOverall)*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalNotenrollment = 0;
