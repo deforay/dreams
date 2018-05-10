@@ -72,7 +72,7 @@ class Module{
     }
     
     public function preSetter(MvcEvent $e) {
-        if(($e->getRouteMatch()->getParam('controller') != 'Application\Controller\Login')){
+        if($e->getRouteMatch()->getParam('controller') != 'Application\Controller\Login'){
             $tempName = explode('Controller',$e->getRouteMatch()->getParam('controller'));
             if(substr($tempName[0], 0, -1) == 'Application'){
                 $loginContainer = new Container('user');

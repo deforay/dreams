@@ -3549,16 +3549,29 @@ class DataCollectionService {
                     $atttotal = 0;
                     $anc1stVisitwithNonmissingAgeOverall = 0;
                     $anc1stVisitwithNonmissingAgeOverallCent = 0;
+
+
                     $eligibleforRecentStudyOverall = 0;
                     $eligibleforRecentStudyOverallCent = 0;
+
+
+
                     $enrolledinRecentStudyOverall = 0;
                     $enrolledinRecentStudyOverallCent = 0;
+
+                    $eligibleforRecentStudyLT15Overall = 0;
                     $enrolledinRecentStudyLT15Overall = 0;
                     $enrolledinRecentStudyLT15OverallCent = 0;
+
+                    $eligibleforRecentStudy15to19Overall = 0;
                     $enrolledinRecentStudy15to19Overall = 0;
                     $enrolledinRecentStudy15to19OverallCent = 0;
+
+                    $eligibleforRecentStudy20to24Overall = 0;
                     $enrolledinRecentStudy20to24Overall = 0;
                     $enrolledinRecentStudy20to24OverallCent = 0;
+
+
                     $notenrolledinRecentStudyOverall = 0;
                     $notenrolledinRecentStudyOverallCent = 0;
                     $notenrolledinRecentStudyLT15Overall = 0;
@@ -3587,6 +3600,13 @@ class DataCollectionService {
                         $rdtpos15to19 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
                         $rdtpos20to24 = (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                         $eligibleforRecentStudyOverall+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+
+                        $eligibleforRecentStudyLT15Overall += $rdtposunder15;
+                        $eligibleforRecentStudy15to19Overall += $rdtpos15to19;
+                        $eligibleforRecentStudy20to24Overall += $rdtpos20to24;
+                        
+                        
+
                         //enrolled in recent study
                         $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
                         $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
@@ -3632,25 +3652,25 @@ class DataCollectionService {
                         $enrolledinRecentStudyOverallCent = round(($enrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
                     }
                     if($enrolledinRecentStudyOverall > 0){
-                        $enrolledinRecentStudyLT15OverallCent = round(($enrolledinRecentStudyLT15Overall/$enrolledinRecentStudyOverall)*100,2);
+                        $enrolledinRecentStudyLT15OverallCent = round(($enrolledinRecentStudyLT15Overall/$eligibleforRecentStudyLT15Overall)*100,2);
                     }
                     if($enrolledinRecentStudyOverall > 0){
-                        $enrolledinRecentStudy15to19OverallCent = round(($enrolledinRecentStudy15to19Overall/$enrolledinRecentStudyOverall)*100,2);
+                        $enrolledinRecentStudy15to19OverallCent = round(($enrolledinRecentStudy15to19Overall/$eligibleforRecentStudy15to19Overall)*100,2);
                     }
                     if($enrolledinRecentStudyOverall > 0){
-                        $enrolledinRecentStudy20to24OverallCent = round(($enrolledinRecentStudy20to24Overall/$enrolledinRecentStudyOverall)*100,2);
+                        $enrolledinRecentStudy20to24OverallCent = round(($enrolledinRecentStudy20to24Overall/$eligibleforRecentStudy20to24Overall)*100,2);
                     }
                     if($eligibleforRecentStudyOverall > 0){
                         $notenrolledinRecentStudyOverallCent = round(($notenrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
                     }
                     if($notenrolledinRecentStudyOverall > 0){
-                        $notenrolledinRecentStudyLT15OverallCent = round(($notenrolledinRecentStudyLT15Overall/$notenrolledinRecentStudyOverall)*100,2);
+                        $notenrolledinRecentStudyLT15OverallCent = round(($notenrolledinRecentStudyLT15Overall/$eligibleforRecentStudyLT15Overall)*100,2);
                     }
                     if($notenrolledinRecentStudyOverall > 0){
-                        $notenrolledinRecentStudy15to19OverallCent = round(($notenrolledinRecentStudy15to19Overall/$notenrolledinRecentStudyOverall)*100,2);
+                        $notenrolledinRecentStudy15to19OverallCent = round(($notenrolledinRecentStudy15to19Overall/$eligibleforRecentStudy15to19Overall)*100,2);
                     }
                     if($notenrolledinRecentStudyOverall > 0){
-                        $notenrolledinRecentStudy20to24OverallCent = round(($notenrolledinRecentStudy20to24Overall/$notenrolledinRecentStudyOverall)*100,2);
+                        $notenrolledinRecentStudy20to24OverallCent = round(($notenrolledinRecentStudy20to24Overall/$eligibleforRecentStudy20to24Overall)*100,2);
                     }
                     $sheet->setCellValue('A2', html_entity_decode('ANC 1st visit ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     $sheet->getStyle('A2')->applyFromArray($labelArray);
@@ -3791,7 +3811,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
                                     $enrolledinRecentStudyLT15+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
                                 }
                             }
@@ -3819,7 +3839,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
                                     $enrolledinRecentStudy15to19+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
                                 }
                             }
@@ -3847,7 +3867,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                                     $enrolledinRecentStudy20to24+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
                                 }
                             }
@@ -3878,7 +3898,7 @@ class DataCollectionService {
                                     foreach($sResult as $row){
                                       $fields = json_decode($row['characteristics_data'],true);
                                       if(strtolower($row['location_name']) == strtolower($province['location_name'])){
-                                        $totalEnrollment+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                        $totalEnrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                                       }
                                       if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
                                         $monthEnrollment+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
@@ -3948,7 +3968,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15'];
                                     $notenrolledinRecentStudyLT15+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
                                 }
                             }
@@ -3977,7 +3997,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19'];
                                     $notenrolledinRecentStudy15to19+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
                                 }
                             }
@@ -4006,7 +4026,7 @@ class DataCollectionService {
                             foreach($sResult as $row){
                                 if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                                     $fields = json_decode($row['characteristics_data'],true);
-                                    $notenrolledinRecentStudyAll+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                    $enrolledinRecentStudyAll+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                                     $notenrolledinRecentStudy20to24+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
                                 }
                             }
@@ -4038,7 +4058,7 @@ class DataCollectionService {
                                     foreach($sResult as $row){
                                       $fields = json_decode($row['characteristics_data'],true);
                                       if(strtolower($row['location_name']) == strtolower($province['location_name'])){
-                                        $totalNotenrollment+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
+                                        $totalNotenrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                                       }
                                       if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
                                         $monthNotenrollment+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
