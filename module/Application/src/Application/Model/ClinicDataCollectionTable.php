@@ -596,7 +596,7 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
             $end = strtotime($toDateArray[1].'-'.date('m', strtotime($toDateArray[0])));
 	    }
         $sQuery = $sql->select()->from(array('cl_da_c'=>'clinic_data_collection'))
-                      ->columns(array('reporting_month_year','characteristics_data'))
+                      ->columns(array('anc','reporting_month_year','characteristics_data'))
                       ->join(array('anc'=>'anc_site'),'anc.anc_site_id=cl_da_c.anc',array())
                       ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.province',array('location_name'));
         if($loginContainer->roleCode == 'ANCSC'){
@@ -617,6 +617,8 @@ class ClinicDataCollectionTable extends AbstractTableGateway {
         $queryContainer->clinicEnrollmentQuery = $sQuery;
         $sQueryStr = $sql->getSqlStringForSqlObject($sQuery);
         //echo $sQueryStr; die;
-        return $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        $response =  $dbAdapter->query($sQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->toArray();
+        //\Zend\Debug\Debug::dump($response);die;
+        return $response;
     }
 }

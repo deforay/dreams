@@ -158,27 +158,30 @@ $loginContainer = new Container('user');
                     <table id="clinicEnrollmentDataTable" class="responsive-table display dataTable">
                         <thead>
                             <tr>
-				<th></th>
-				<th style="text-align:center;">Overall</th>
-				<th></th>
-				<?php if(isset($provinces) && count($provinces) > 0){
-				    foreach($provinces as $province){
-				    ?>
-				  <th style="text-align:center;"><?php echo ucwords($province['location_name']); ?></th>
-				  <th></th>
-				<?php } } ?>
+                            <th></th>
+                            <th># of ANC Sites</th>
+                            <th style="text-align:center;">Overall</th>
+                            <th></th>
+                            <?php if(isset($provinces) && count($provinces) > 0){
+                                foreach($provinces as $province){
+                                ?>
+                            <th style="text-align:center;"><?php echo ucwords($province['location_name']); ?></th>
+                            <th></th>
+                                <?php } 
+                                } ?>
                             </tr>
                         </thead>
 			<tfoot>
                             <tr>
-				<th></th>
+                                <th></th>
+                                <th></th>
                                 <th style="text-align:center;">Overall</th>
-				<th></th>
-				<?php if(isset($provinces) && count($provinces) > 0){
-				    foreach($provinces as $province){
-				    ?>
-				  <th style="text-align:center;"><?php echo ucwords($province['location_name']); ?></th>
-				  <th></th>
+                                <th></th>
+                                <?php if(isset($provinces) && count($provinces) > 0){
+                                    foreach($provinces as $province){
+                                    ?>
+                                <th style="text-align:center;"><?php echo ucwords($province['location_name']); ?></th>
+                                <th></th>
 				<?php } } ?>
                             </tr>
                         </tfoot>

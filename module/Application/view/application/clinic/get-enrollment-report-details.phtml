@@ -7,8 +7,6 @@ $anc1stVisitwithNonmissingAgeOverallCent = 0;
 $eligibleforRecentStudyOverall = 0;
 $eligibleforRecentStudyOverallCent = 0;
 
-
-
 $enrolledinRecentStudyOverall = 0;
 $enrolledinRecentStudyOverallCent = 0;
 
@@ -33,9 +31,17 @@ $notenrolledinRecentStudy15to19Overall = 0;
 $notenrolledinRecentStudy15to19OverallCent = 0;
 $notenrolledinRecentStudy20to24Overall = 0;
 $notenrolledinRecentStudy20to24OverallCent = 0;
+
+$anc = 0;
+$ancLT15 = array();
+$anc15to19 = array();
+$anc20to24 = array();
+
+
 $months = array();
 if(isset($result) && count($result) > 0){
     foreach($result as $row){
+        
         $fields = json_decode($row['characteristics_data'],true);
         if(!in_array(strtolower($row['reporting_month_year']),$months)){
             $months[] = strtolower($row['reporting_month_year']);
@@ -61,6 +67,17 @@ if(isset($result) && count($result) > 0){
 
 
         $eligibleforRecentStudyOverall+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+
+        if(!isset($months[strtolower($row['reporting_month_year'])]['overall_eligible'])){
+            $months[strtolower($row['reporting_month_year'])]['overall_eligible'] = 0; 
+         }else{
+            $months[strtolower($row['reporting_month_year'])]['overall_eligible']+= $rdtposunder15+$rdtpos15to19+$rdtpos20to24;
+         }
+
+        $months[strtolower($row['reporting_month_year'])]['anc'][] = $row['anc']; 
+         
+
+
         //enrolled in recent study
         $enrunder15  = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
         $enr15to19 = (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
@@ -72,8 +89,24 @@ if(isset($result) && count($result) > 0){
         }else{
            $months[strtolower($row['reporting_month_year'])]['overall_enroll']+= $enrunder15+$enr15to19+$enr20to24;
         }
+
+        
+
         //enrolled in recent study - age < 15
         $enrolledinRecentStudyLT15Overall+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'];
+       
+        if($fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15'] > 0){
+            $ancLT15[] = $row['anc'];
+        }
+        if($fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'] > 0){
+            $anc15to19[] = $row['anc'];
+        }
+        if($fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'] > 0){
+            $anc20to24[] = $row['anc'];
+        }
+
+        
+
         //enrolled in recent study - age 15-19
         $enrolledinRecentStudy15to19Overall+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19'];
         //enrolled in recent study - age 20-24
@@ -105,44 +138,55 @@ if(isset($result) && count($result) > 0){
     if($eligibleforRecentStudyOverall > 0){
         $enrolledinRecentStudyOverallCent = round(($enrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
     }
-    if($enrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudyLT15Overall > 0){
         $enrolledinRecentStudyLT15OverallCent = round(($enrolledinRecentStudyLT15Overall/$eligibleforRecentStudyLT15Overall)*100,2);
     }
-    if($enrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudy15to19Overall > 0){
         $enrolledinRecentStudy15to19OverallCent = round(($enrolledinRecentStudy15to19Overall/$eligibleforRecentStudy15to19Overall)*100,2);
     }
-    if($enrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudy20to24Overall > 0){
         $enrolledinRecentStudy20to24OverallCent = round(($enrolledinRecentStudy20to24Overall/$eligibleforRecentStudy20to24Overall)*100,2);
     }
     if($eligibleforRecentStudyOverall > 0){
         $notenrolledinRecentStudyOverallCent = round(($notenrolledinRecentStudyOverall/$eligibleforRecentStudyOverall)*100,2);
     }
-    if($notenrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudyLT15Overall > 0){
         $notenrolledinRecentStudyLT15OverallCent = round(($notenrolledinRecentStudyLT15Overall/$eligibleforRecentStudyLT15Overall)*100,2);
     }
-    if($notenrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudy15to19Overall > 0){
         $notenrolledinRecentStudy15to19OverallCent = round(($notenrolledinRecentStudy15to19Overall/$eligibleforRecentStudy15to19Overall)*100,2);
     }
-    if($notenrolledinRecentStudyOverall > 0){
+    if($eligibleforRecentStudy20to24Overall > 0){
         $notenrolledinRecentStudy20to24OverallCent = round(($notenrolledinRecentStudy20to24Overall/$eligibleforRecentStudy20to24Overall)*100,2);
     }
 }
+
+$ancLT15 = array_unique($ancLT15);
+$anc15to19 = array_unique($anc15to19);
+$anc20to24 = array_unique($anc20to24);
+
 ?>
 <tr>
     <td style="width:24%;"><strong>ANC 1st visit</strong></td>
+    <td></td>
     <td><?php echo $atttotal; ?></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
             $anc1stVisit = 0;
+            //$anc = 0;
             if(isset($result) && count($result) > 0){
+                //\Zend\Debug\Debug::dump($result);continue;
                 foreach($result as $row){
+                    
                     if(strtolower($row['location_name']) == strtolower($province['location_name'])){
                         $fields = json_decode($row['characteristics_data'],true);
                         $anc1stVisit+= (int)$fields['no_of_clients_ATTENDING_ANC_FIRST_VISIT'][0]['total'];
+                       // $anc+=1;
                     }
                 }
             }
+           // die;
             ?>
       <td><?php echo $anc1stVisit; ?></td>
       <td></td>
@@ -150,6 +194,7 @@ if(isset($result) && count($result) > 0){
 </tr>
 <tr>
     <td><strong>ANC 1st visit with non-missing age and serostatus</strong></td>
+    <td></td>
     <td><?php echo $anc1stVisitwithNonmissingAgeOverall; ?></td>
     <td><?php echo $anc1stVisitwithNonmissingAgeOverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -179,6 +224,7 @@ if(isset($result) && count($result) > 0){
 </tr>
 <tr>
     <td><strong>Eligible</strong></td>
+    <td></td>
     <td><?php echo $eligibleforRecentStudyOverall; ?></td>
     <td><?php echo $eligibleforRecentStudyOverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -212,6 +258,7 @@ if(isset($result) && count($result) > 0){
 </tr>
 <tr>
     <td><strong>Enrolled</strong></td>
+    <td></td>
     <td><?php echo $enrolledinRecentStudyOverall; ?></td>
     <td><?php echo $enrolledinRecentStudyOverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -248,6 +295,7 @@ if(isset($result) && count($result) > 0){
     <td>&nbsp;&nbsp;&nbsp;&nbsp;by Age</td>
     <td></td>
     <td></td>
+    <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){ ?>
         <td></td>
@@ -256,7 +304,8 @@ if(isset($result) && count($result) > 0){
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
-    <td><?php echo $enrolledinRecentStudyLT15Overall; ?></td>
+    <td><?php //echo count($ancLT15); ?></td>
+    <td><?php echo $enrolledinRecentStudyLT15Overall."/".$eligibleforRecentStudyLT15Overall; ?></td>
     <td><?php echo $enrolledinRecentStudyLT15OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -277,13 +326,14 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $enrolledinRecentStudyLT15; ?></td>
+        <td><?php echo $enrolledinRecentStudyLT15."/".$enrolledinRecentStudyAll; ?></td>
         <td><?php echo $enrolledinRecentStudyLT15Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
-    <td><?php echo $enrolledinRecentStudy15to19Overall; ?></td>
+    <td><?php //echo count($anc15to19); ?></td>
+    <td><?php  echo $enrolledinRecentStudy15to19Overall."/".$eligibleforRecentStudy15to19Overall; ?></td>
     <td><?php echo $enrolledinRecentStudy15to19OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -303,13 +353,14 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $enrolledinRecentStudy15to19; ?></td>
+        <td><?php echo $enrolledinRecentStudy15to19."/".$enrolledinRecentStudyAll; ?></td>
         <td><?php echo $enrolledinRecentStudy15to19Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
-    <td><?php echo $enrolledinRecentStudy20to24Overall; ?></td>
+    <td><?php //echo count($anc20to24); ?></td>
+    <td><?php echo $enrolledinRecentStudy20to24Overall."/".$eligibleforRecentStudy20to24Overall; ?></td>
     <td><?php echo $enrolledinRecentStudy20to24OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -329,12 +380,13 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $enrolledinRecentStudy20to24; ?></td>
+        <td><?php echo $enrolledinRecentStudy20to24."/".$enrolledinRecentStudyAll; ?></td>
         <td><?php echo $enrolledinRecentStudy20to24Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>by Month</td>
+    <td></td>
     <td></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -345,12 +397,16 @@ if(isset($result) && count($result) > 0){
 </tr>
 
 <?php for($m=0;$m<count($months);$m++){
+    
     if(isset($months[$m]) && trim($months[$m])!= ''){
+        
+        
     ?>
     <tr>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
-        <td><?php echo $months[$months[$m]]['overall_enroll']; ?></td>
-        <td><?php echo ($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$eligibleforRecentStudyOverall)*100,2):0; ?>%</td>
+        <td><?php echo count($months[$months[$m]]['anc']); ?></td>
+        <td><?php echo $months[$months[$m]]['overall_enroll']."/".$months[$months[$m]]['overall_eligible']; ?></td>
+        <td><?php echo ($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalEnrollment = 0;
@@ -358,22 +414,21 @@ if(isset($result) && count($result) > 0){
                 if(isset($result) && count($result) > 0){
                     foreach($result as $row){
                       $fields = json_decode($row['characteristics_data'],true);
-                      if(strtolower($row['location_name']) == strtolower($province['location_name'])){
-                        $totalEnrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
-                      }
                       if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
+                        $totalEnrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                         $monthEnrollment+= (int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
                       }
                     }
                 }
                 ?>
-            <td><?php echo $monthEnrollment; ?></td>
+            <td><?php echo $monthEnrollment."/$totalEnrollment"; ?></td>
             <td><?php echo($totalEnrollment > 0)?round(($monthEnrollment/$totalEnrollment)*100,2):0; ?>%</td>
         <?php } } ?>
     </tr>
 <?php } } ?>
 <tr>
     <td><strong>Not enrolled</strong></td>
+    <td></td>
     <td><?php echo $notenrolledinRecentStudyOverall; ?></td>
     <td><?php echo $notenrolledinRecentStudyOverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -410,6 +465,7 @@ if(isset($result) && count($result) > 0){
     <td>&nbsp;&nbsp;&nbsp;&nbsp;by Age</td>
     <td></td>
     <td></td>
+    <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){ ?>
         <td></td>
@@ -418,7 +474,8 @@ if(isset($result) && count($result) > 0){
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;< 15</td>
-    <td><?php echo $notenrolledinRecentStudyLT15Overall; ?></td>
+    <td><?php //echo count($ancLT15); ?></td>
+    <td><?php echo $notenrolledinRecentStudyLT15Overall."/".$eligibleforRecentStudyLT15Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudyLT15OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -438,13 +495,14 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $notenrolledinRecentStudyLT15; ?></td>
+        <td><?php echo $notenrolledinRecentStudyLT15."/".$notenrolledinRecentStudyAll; ?></td>
         <td><?php echo $notenrolledinRecentStudyLT15Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15-19</td>
-    <td><?php echo $notenrolledinRecentStudy15to19Overall; ?></td>
+    <td><?php //echo count($anc15to19); ?></td>
+    <td><?php echo $notenrolledinRecentStudy15to19Overall."/".$eligibleforRecentStudy15to19Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudy15to19OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -464,13 +522,14 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $notenrolledinRecentStudy15to19; ?></td>
+        <td><?php echo $notenrolledinRecentStudy15to19."/".$notenrolledinRecentStudyAll; ?></td>
         <td><?php echo $notenrolledinRecentStudy15to19Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20-24</td>
-    <td><?php echo $notenrolledinRecentStudy20to24Overall; ?></td>
+    <td><?php //echo count($anc20to24); ?></td>
+    <td><?php echo $notenrolledinRecentStudy20to24Overall."/".$eligibleforRecentStudy20to24Overall; ?></td>
     <td><?php echo $notenrolledinRecentStudy20to24OverallCent; ?>%</td>
     <?php if(isset($provinces) && count($provinces) > 0){
         foreach($provinces as $province){
@@ -490,12 +549,13 @@ if(isset($result) && count($result) > 0){
                 }
             }
             ?>
-        <td><?php echo $notenrolledinRecentStudy20to24; ?></td>
+        <td><?php echo $notenrolledinRecentStudy20to24."/".$notenrolledinRecentStudyAll; ?></td>
         <td><?php echo $notenrolledinRecentStudy20to24Cent; ?>%</td>
     <?php } } ?>
 </tr>
 <tr>
     <td>&nbsp;&nbsp;&nbsp;&nbsp;by Month</td>
+    <td></td>
     <td></td>
     <td></td>
     <?php if(isset($provinces) && count($provinces) > 0){
@@ -509,9 +569,10 @@ if(isset($result) && count($result) > 0){
     if(isset($months[$m]) && trim($months[$m])!= ''){
     ?>
     <tr>
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
-        <td><?php echo $months[$months[$m]]['overall_notenroll']; ?></td>
-        <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$eligibleforRecentStudyOverall)*100,2):0; ?>%</td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
+        <td><?php echo count($months[$months[$m]]['anc']); ?></td>
+        <td><?php echo $months[$months[$m]]['overall_notenroll']."/".$months[$months[$m]]['overall_eligible']; ?></td>
+        <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalNotenrollment = 0;
@@ -519,16 +580,14 @@ if(isset($result) && count($result) > 0){
                 if(isset($result) && count($result) > 0){
                     foreach($result as $row){
                       $fields = json_decode($row['characteristics_data'],true);
-                      if(strtolower($row['location_name']) == strtolower($province['location_name'])){
-                        $totalNotenrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
-                      }
                       if(strtolower($row['location_name']) == strtolower($province['location_name']) && strtolower($row['reporting_month_year']) == $months[$m]){
+                        $totalNotenrollment+= (int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_lt_15']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_15_to_19']+(int)$fields['no_of_clients_TESTED_NEWLY_POSITIVE_FOR_HIV_with_RDT_at_ANC_first_visit'][0]['age_20_to_24'];
                         $monthNotenrollment+= (int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_lt_15']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_15_to_19']+(int)$fields['no_of_eligible_clients_NOT_ENROLLED_IN_RECENT_STUDY'][0]['age_20_to_24'];
                       }
                     }
                 }
                 ?>
-            <td><?php echo $monthNotenrollment; ?></td>
+            <td><?php echo $monthNotenrollment."/".$totalNotenrollment; ?></td>
             <td><?php echo($totalNotenrollment > 0)?round(($monthNotenrollment/$totalNotenrollment)*100,2):0; ?>%</td>
         <?php } } ?>
     </tr>
