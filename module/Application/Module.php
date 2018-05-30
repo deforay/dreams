@@ -40,6 +40,7 @@ use Application\Model\ManageColumnsTable;
 use Application\Model\USSDSurveyTable;
 use Application\Model\USSDImportStatusTable;
 use Application\Model\USSDNotEnrolledTable;
+use Application\Model\ReturnOfRecencyResultsTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -325,6 +326,10 @@ class Module{
                 },'USSDNotEnrolledTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new USSDNotEnrolledTable($dbAdapter);
+                    return $table;
+                },'ReturnOfRecencyResultsTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new ReturnOfRecencyResultsTable($dbAdapter);
                     return $table;
                 }
             ),

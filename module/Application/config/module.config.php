@@ -428,7 +428,37 @@ return array(
                         'action' => 'check-duplicate-data-report'
                     ),
                 ),
-            ),'rot47' => array(
+            ),'return-recency' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/return-recency[/][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'return-recency'
+                    ),
+                ),
+            ),'add-return-recency' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/return-recency/add',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'add-return-recency'
+                    ),
+                ),
+            ),'edit-return-recency' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/return-recency/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'edit-return-recency'
+                    ),
+                ),
+            ),
+            
+            
+            'rot47' => array(
                 'type' => 'Literal',
                 'options' => array(
                     'route' => '/rot47',

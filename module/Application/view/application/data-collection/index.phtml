@@ -195,7 +195,7 @@ if(isset($date) && trim($date)!= ''){
 				</div>
 				<div class="col s4">
 				    <div class="input-field col m12 s12">
-					<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
+					<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select specimen type">
 					    <option value=""> -- Select -- </option>
 					    <option value="1">Venous</option>
 					    <option value="2">Plasma</option>
@@ -204,6 +204,17 @@ if(isset($date) && trim($date)!= ''){
 					<label for="specimenType">Specimen Type **</label>
 				    </div>
 				</div>
+				<div class="col s4" style="display:none;" id="isDbsAvailableDiv">
+					<div class="input-field col m12 s12">
+						<select id="isDbsAvailable" name="isDbsAvailable" class="material-select" title="Please select if DBS is available">
+							<option value=""> -- Select -- </option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+						<label for="isDbsAvailableDiv">Is DBS also available ? **</label>
+						</div>
+					</div>
+			    </div>
 			    </div>
 			<?php } else { ?>
 			    <div class="row" style="margin-bottom:0;">
@@ -242,7 +253,7 @@ if(isset($date) && trim($date)!= ''){
 				</div>
 				<div class="col s4">
 				    <div class="input-field col m12 s12">
-					<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
+					<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select specimen type">
 					    <option value=""> -- Select -- </option>
 					    <option value="1">Venous</option>
 					    <option value="2">Plasma</option>
@@ -251,6 +262,16 @@ if(isset($date) && trim($date)!= ''){
 					<label for="specimenType">Specimen Type **</label>
 				    </div>
 				</div>
+				<div class="col s4" style="display:none;" id="isDbsAvailableDiv">
+					<div class="input-field col m12 s12">
+						<select id="isDbsAvailable" name="isDbsAvailable" class="material-select" title="Please select if DBS is available">
+							<option value=""> -- Select -- </option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+						<label for="isDbsAvailableDiv">Is DBS also available ? **</label>
+						</div>
+					</div>
 			    </div>
 			<?php } ?>
 		    </fieldset>
@@ -364,20 +385,37 @@ if(isset($date) && trim($date)!= ''){
 		       <legend>TEST RESULT</legend>
 			<div class="row" style="margin-bottom:0;">
 			    <div class="col s4">
-				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				    <input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum testResultSection" title="Please enter LAg avidity ODn">
-				    <label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
-				</div>
+					<div class="input-field col m12 s12" style="">
+						<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum testResultSection" title="Please enter LAg avidity ODn">
+						<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
+					</div>
 			    </div>
 			    <div class="col s4">
-				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
-				    <input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA">
-				    <label for="hivRna" class="">HIV RNA (copies/ml) *</label>
+					<div class="input-field col m12 s12" style="">
+						<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA">
+						<label for="hivRna" class="">HIV RNA (copies/ml) *</label>
+					</div>
+			    </div>
+			    <div class="col s4" style="display:none;" id="vlSpecimenTypeDiv">
+				    <div class="input-field col m12 s12">
+					<select id="vlSpecimenType" name="vlSpecimenType" class="material-select" title="Please select viral load lab specimen type">
+					    <option value=""> -- Select -- </option>
+					    <option value="1">Venous</option>
+				    	<option value="2">Plasma</option>
+				    	<option value="3">DBS</option>
+					</select>
+					<label for="vlSpecimenType">VL Specimen Type **<label>
+				    </div>
 				</div>
-			    </div>
-			    <div class="col s4">
-				<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
-			    </div>
+		    </div>
+			    
+			</div>
+			<div class="row">
+
+					<div class="col s6">
+						<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
+					</div>			
+
 			</div>
 			<div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
 			    <div class="col s4">
@@ -558,45 +596,51 @@ if(isset($date) && trim($date)!= ''){
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol18">HIV RNA (cp/ml)</label> <br>
 	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="is_dbs_available" class="showhideCheckBox" /> <label for="iCol19">Is DBS Available?</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="is_dbs_available" class="showhideCheckBox" /> <label for="iCol20">VL Specimen</label> <br>
+	    </div>
 	    <!--<div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol19">HIV RNA > 1000 <br>
 	    </div>-->
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Lab LAg Recency (Based on algorithm)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol21">Lab LAg Recency (Based on algorithm)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol20">Asante Positive Verification Line Reader Value (log10)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol22">Asante Positive Verification Line Reader Value (log10)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol21">Asante Positive Verification Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol23">Asante Positive Verification Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol22">Asante Long Term Line Reader Value (log10)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol24">Asante Long Term Line Reader Value (log10)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol23">Asante Long Term Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol25">Asante Long Term Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol24">Date Result Returned at Clinic</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol26">Date Result Returned at Clinic</label> <br>
 	    </div>
 	      <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol25">Date Returned to Participant</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol27">Date Returned to Participant</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol26">Added On</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol28">Added On</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol27">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="29" id="iCol29" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol29">Added by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="28"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol26">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="30"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="30" id="iCol30" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol30">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="27"/>
+	      <input type="hidden" id="countColumn" value="30"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -636,6 +680,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>LAg Avidity</th>
 				<th>Lab LAg Recency <br>(Based on LAg ODn)</th>
 				<th>HIV RNA<br>(cp/ml)</th>
+				<th>Is DBS Available?</th>
+				<th>VL Specimen Type</th>
 				<!--<th>HIV RNA > 1000</th>-->
 				<th>Lab LAg Recency<br> (Based on algorithm)</th>
 				<th>Asante Positive<br> Verification <br>Line Reader <br>Value (log10)</th>
@@ -676,6 +722,8 @@ if(isset($date) && trim($date)!= ''){
 				<th>LAg Avidity</th>
 				<th>Lab LAg Recency <br>(Based on LAg ODn)</th>
 				<th>HIV RNA<br>(cp/ml)</th>
+				<th>Is DBS Available?</th>
+				<th>VL Specimen Type</th>
 				<!--<th>HIV RNA > 1000</th>-->
 				<th>Lab LAg Recency<br> (Based on algorithm)</th>
 				<th>Asante Positive<br> Verification <br>Line Reader <br>Value (log10)</th>
@@ -719,40 +767,42 @@ if(isset($date) && trim($date)!= ''){
 	    "iDisplayLength": 25,
             "aoColumns": [
                 {"sClass":"dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		//{"sClass":"dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"center dataTable_noWrap"},
-		{"sClass":"dataTable_noWrap"},
-		<?php
-		if(trim($countryId) == ''){
-		?>
-		  {"sClass":"dataTable_noWrap"},
-		<?php } ?>
-		{"sClass":"dataTable_noWrap","bSortable":false}
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				//{"sClass":"dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				<?php
+				if(trim($countryId) == ''){
+				?>
+		  		{"sClass":"dataTable_noWrap"},
+				<?php } ?>
+				{"sClass":"dataTable_noWrap","bSortable":false}
             ],
 	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 		if($.trim(aData[11])!= ''){
@@ -769,9 +819,9 @@ if(isset($date) && trim($date)!= ''){
             "fnServerData": function(sSource, aoData, fnCallback) {
                 aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
                 aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
-		aoData.push({"name": "dateSrc", "value": '<?php echo $dateSrc; ?>'});
+				aoData.push({"name": "dateSrc", "value": '<?php echo $dateSrc; ?>'});
                 aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
-		aoData.push({"name": "dashLab", "value": '<?php echo $dashLab; ?>'});
+				aoData.push({"name": "dashLab", "value": '<?php echo $dashLab; ?>'});
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -800,13 +850,37 @@ if(isset($date) && trim($date)!= ''){
     }									
 
     $(document).ready(function() {
+
+		$("#specimenType").on('change',function(){
+			if($(this).val() == 1 || $(this).val() == 2){
+				$("#isDbsAvailableDiv").show();
+				$("#isDbsAvailable").addClass('isRequired');
+			}else{
+				$("#isDbsAvailableDiv").hide();
+				$("#isDbsAvailable").removeClass('isRequired');
+				$("#isDbsAvailable").val('');
+			}
+		});
+
+		$("#hivRna, #hivRnaNew").on('keyup',function(){
+			if($(this).val()==''){
+				$("#vlSpecimenType").removeClass('isRequired');
+				$("#vlSpecimenTypeDiv").hide();
+				$("#vlSpecimenType").val('');
+			}else{
+				$("#vlSpecimenTypeDiv").show();
+				$("#vlSpecimenType").addClass('isRequired');
+			}
+		});
+
         $(".ancSite").chosen({
-	    placeholder_text_single:"Select ANC", 
-	    width:"100%"
-	});
-	<?php if(trim($type)!= '' || $loginContainer->hasViewOnlyAccess == 'yes') { ?>
-	  loadLabDataList();
-	<?php } ?>
+	    	placeholder_text_single:"Select ANC", 
+	    	width:"100%"
+		});
+
+		<?php if(trim($type)!= '' || $loginContainer->hasViewOnlyAccess == 'yes') { ?>
+			loadLabDataList();
+		<?php } ?>
 	
        <?php if(trim($countryId)!= ''){ ?>
 	    var latestCollId = $('#lDCId').val();
@@ -916,16 +990,16 @@ if(isset($date) && trim($date)!= ''){
     });
     
     $('#hivRnaNew').on('keyup', function() {
-	 $('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
-        if($.trim($('#hivRnaNew').val())!= ''){
-	   $('label[for="hivRna"]').css("transform", "translateY(-140%)");  
-	   $('#hivRna').val($('#hivRnaNew').val());
-	}else{
-	   $('label[for="hivRna"]').css("transform", "translateY(0%)");  
-	   $('label[for="hivRnaNew"]').css("transform", "translateY(0%)");  
-	   $('#hivRna').val('');
-	}
-	populateResult('');
+		$('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
+		if($.trim($('#hivRnaNew').val())!= ''){
+			$('label[for="hivRna"]').css("transform", "translateY(-140%)");  
+			$('#hivRna').val($('#hivRnaNew').val());
+		}else{
+			$('label[for="hivRna"]').css("transform", "translateY(0%)");  
+			$('label[for="hivRnaNew"]').css("transform", "translateY(0%)");  
+			$('#hivRna').val('');
+		}
+		populateResult('');
     });
     
     $('#hivRna').on('keyup', function() {
@@ -943,192 +1017,192 @@ if(isset($date) && trim($date)!= ''){
     
     //For Pre-populate Result
     $('#finalLagAvidityOdn').on('keyup', function() {
-	populateResult('');
+		populateResult('');
     });
     
     function populateResult(fromSource){
-	if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
-	    $('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-	    $('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-	    $('.prePopulateAvidity').css('visibility','hidden');
-	    $('.prePopulateHIVRNA').css('visibility','hidden');
-	    $('.prePopulateRecentInfection').css('visibility','hidden');
-	    $('#lagAvidityResultRecent').prop('checked',false);
-            $('#lagAvidityResultLongTerm').prop('checked',false);
-	    $('#hivRnaGT1000Yes').prop('checked',false);
-	    $('#hivRnaGT1000No').prop('checked',false);
-	    $('#recentInfectionYes').prop('checked',false);
-	    $('#recentInfectionNo').prop('checked',false);
-	    $('label[for="lagAvidityResult"]').html('');
-	    $('label[for="hivRnaGT1000"]').html('');
-	    $('label[for="recentInfection"]').html('');
-	}else{
-	    if(parseFloat($('#finalLagAvidityOdn').val()) >2){
-		$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
-		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
-	        $('.prePopulateAvidity').css('visibility','visible');
-	        $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
-            $('#lagAvidityResultLongTerm').prop('checked',true);
-	    }else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
-			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-			if(parseInt($('#hivRna').val()) <= 1000){
-				$('.prePopulateAvidity').css('visibility','visible');
-				// $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
-				// $('#lagAvidityResultLongTerm').prop('checked',true);
-
-				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
-				$('#lagAvidityResultRecent').prop('checked',true);
-
-			}else if(parseInt($('#hivRna').val()) > 1000){
-				$('.prePopulateAvidity').css('visibility','visible');
-				// $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
-				// $('#lagAvidityResultRecent').prop('checked',true);
-
-				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
-				$('#lagAvidityResultRecent').prop('checked',true);
-
-			}else{
-				$('.prePopulateAvidity').css('visibility','visible');
-				$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
-				$('#lagAvidityResultRecent').prop('checked',true);
-			}
-	    }else{
+		if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
 			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
 			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
 			$('.prePopulateAvidity').css('visibility','hidden');
-			$('label[for="lagAvidityResult"]').html('');
+			$('.prePopulateHIVRNA').css('visibility','hidden');
+			$('.prePopulateRecentInfection').css('visibility','hidden');
 			$('#lagAvidityResultRecent').prop('checked',false);
 			$('#lagAvidityResultLongTerm').prop('checked',false);
-	    }
-	    //Gt1000
-	    if(parseInt($('#hivRna').val()) > 1000){
-		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('High Viral Load (> 1000 cp/mL)');
-		$('#hivRnaGT1000Yes').prop('checked',true);
-	    }else if(parseInt($('#hivRna').val()) <= 1000){
-		$('.prePopulateHIVRNA').css('visibility','visible');
-		$('label[for="hivRnaGT1000"]').html('Low Viral Load (<= 1000 cp/mL)');
-		$('#hivRnaGT1000No').prop('checked',true);
-	    }else{
-		$('.prePopulateHIVRNA').css('visibility','hidden');
-		$('label[for="hivRnaGT1000"]').html('');
-		$('#hivRnaGT1000Yes').prop('checked',false);
-		$('#hivRnaGT1000No').prop('checked',false);
-	    }
-		
-	    //Recent infection
-	    if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
-		$('label[for="recentInfection"]').html('Yes');
-		$('#recentInfectionYes').prop('checked',true);
-	    }else{
-		$('label[for="recentInfection"]').html('No');
-		$('#recentInfectionNo').prop('checked',true);
-	    }
-	    //Showing result section
-	    if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 2){
-	       $('.prePopulateRecentInfection').css('visibility','visible');
-	    }else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 2){
-	       if($('#hivRna').val() == ''){
-		  $('.prePopulateRecentInfection').css('visibility','hidden');
-	       }else{
-		  $('.prePopulateRecentInfection').css('visibility','visible');
-	       }
-	    }else{
-	       $('.prePopulateRecentInfection').css('visibility','hidden');
-	    }
-	    
-	    //hiv rna mandatory
-	    if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
-		$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
-		$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
-	    }
-	}
+			$('#hivRnaGT1000Yes').prop('checked',false);
+			$('#hivRnaGT1000No').prop('checked',false);
+			$('#recentInfectionYes').prop('checked',false);
+			$('#recentInfectionNo').prop('checked',false);
+			$('label[for="lagAvidityResult"]').html('');
+			$('label[for="hivRnaGT1000"]').html('');
+			$('label[for="recentInfection"]').html('');
+		}else{
+			if(parseFloat($('#finalLagAvidityOdn').val()) >2){
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
+				$('.prePopulateAvidity').css('visibility','visible');
+				$('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
+				$('#lagAvidityResultLongTerm').prop('checked',true);
+			}else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+				if(parseInt($('#hivRna').val()) <= 1000){
+					$('.prePopulateAvidity').css('visibility','visible');
+					// $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
+					// $('#lagAvidityResultLongTerm').prop('checked',true);
+
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+
+				}else if(parseInt($('#hivRna').val()) > 1000){
+					$('.prePopulateAvidity').css('visibility','visible');
+					// $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
+					// $('#lagAvidityResultRecent').prop('checked',true);
+
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+
+				}else{
+					$('.prePopulateAvidity').css('visibility','visible');
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+				}
+			}else{
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+				$('.prePopulateAvidity').css('visibility','hidden');
+				$('label[for="lagAvidityResult"]').html('');
+				$('#lagAvidityResultRecent').prop('checked',false);
+				$('#lagAvidityResultLongTerm').prop('checked',false);
+			}
+			//Gt1000
+			if(parseInt($('#hivRna').val()) > 1000){
+				$('.prePopulateHIVRNA').css('visibility','visible');
+				$('label[for="hivRnaGT1000"]').html('High Viral Load (> 1000 cp/mL)');
+				$('#hivRnaGT1000Yes').prop('checked',true);
+			}else if(parseInt($('#hivRna').val()) <= 1000){
+				$('.prePopulateHIVRNA').css('visibility','visible');
+				$('label[for="hivRnaGT1000"]').html('Low Viral Load (<= 1000 cp/mL)');
+				$('#hivRnaGT1000No').prop('checked',true);
+			}else{
+				$('.prePopulateHIVRNA').css('visibility','hidden');
+				$('label[for="hivRnaGT1000"]').html('');
+				$('#hivRnaGT1000Yes').prop('checked',false);
+				$('#hivRnaGT1000No').prop('checked',false);
+			}
+			
+			//Recent infection
+			if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+			$('label[for="recentInfection"]').html('Yes');
+			$('#recentInfectionYes').prop('checked',true);
+			}else{
+			$('label[for="recentInfection"]').html('No');
+			$('#recentInfectionNo').prop('checked',true);
+			}
+			//Showing result section
+			if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 2){
+			$('.prePopulateRecentInfection').css('visibility','visible');
+			}else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 2){
+			if($('#hivRna').val() == ''){
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+			}else{
+			$('.prePopulateRecentInfection').css('visibility','visible');
+			}
+			}else{
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+			}
+			
+			//hiv rna mandatory
+			if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
+			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+			}
+		}
     }
     
     function getCountriesLabAnc(){
-	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
-            function(data) {
-		var dataArray = data.split('divider');
-		$('.ancSiteSection').html(dataArray[0]);
-		$(".ancSite").chosen({ placeholder_text_single:"Select ANC",  width:"100%" });
-		$('.labSection').html(dataArray[1]);
-		$('#lab').material_select();
-	    });
-    }
-    
-    $('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
-	if(this.value == 'present') {
-	    $('.box-2,#box-breaker').css('visibility','visible');
-	}else if(this.value == 'absent'){
-	    $('.box-2,#box-breaker').css('visibility','hidden');
-	    $('#asanteRapidRecencyAssayLt').prop('checked',false);
-	    $('#asanteRapidRecencyAssayR').prop('checked',false);
-	    $('#readerValueRRR').val('');
-	    $('#readerValueRRRLogVal').html('');
-	    //$('#readerValueRRRLogValText').html('');
-	}
-	populateResult('');
+		$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
+				function(data) {
+			var dataArray = data.split('divider');
+			$('.ancSiteSection').html(dataArray[0]);
+			$(".ancSite").chosen({ placeholder_text_single:"Select ANC",  width:"100%" });
+			$('.labSection').html(dataArray[1]);
+			$('#lab').material_select();
+			});
+		}
+		
+		$('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
+		if(this.value == 'present') {
+			$('.box-2,#box-breaker').css('visibility','visible');
+		}else if(this.value == 'absent'){
+			$('.box-2,#box-breaker').css('visibility','hidden');
+			$('#asanteRapidRecencyAssayLt').prop('checked',false);
+			$('#asanteRapidRecencyAssayR').prop('checked',false);
+			$('#readerValueRRR').val('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
+		populateResult('');
     });
     
     $('input[type=radio][name=asanteRapidRecencyAssayRlt]').change(function() {
-	populateResult('');
+		populateResult('');
     });
     
     function validateDataReportingDates(){
-	var specimenCollectedDate = $('#specimenCollectedDate').val();
-	var specimenPickedUpDateAtAnc = $('#specimenPickedUpDateAtAnc').val();
-	var patientDOB = $('#dob').val();
-	var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
-	var dateOfTestCompletion = $('#dateOfTestCompletion').val();
-	var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
-	var specimenCollectedDateArray = specimenCollectedDate.split('/');
-	var specimenPickedUpDateAtAncArray = specimenPickedUpDateAtAnc.split('/');
-	var patientDOBArray = patientDOB.split('/');
-	var receiptAtCentralLabDateArray = dateOfReceiptAtcentralLab.split('/');
-	var testCompletionDateArray = dateOfTestCompletion.split('/');
-	var resultDispatchedToClinicDateArray = dateOfResultDispatchedToClinic.split('/');
-	specimenCollectedDate = specimenCollectedDateArray[2]+'-'+specimenCollectedDateArray[1]+'-'+specimenCollectedDateArray[0];
-	specimenPickedUpDateAtAnc = specimenPickedUpDateAtAncArray[2]+'-'+specimenPickedUpDateAtAncArray[1]+'-'+specimenPickedUpDateAtAncArray[0];
-	patientDOB = patientDOBArray[2]+'-'+patientDOBArray[1]+'-'+patientDOBArray[0];
-	dateOfReceiptAtcentralLab = receiptAtCentralLabDateArray[2]+'-'+receiptAtCentralLabDateArray[1]+'-'+receiptAtCentralLabDateArray[0];
-	dateOfTestCompletion = testCompletionDateArray[2]+'-'+testCompletionDateArray[1]+'-'+testCompletionDateArray[0];
-	dateOfResultDispatchedToClinic = resultDispatchedToClinicDateArray[2]+'-'+resultDispatchedToClinicDateArray[1]+'-'+resultDispatchedToClinicDateArray[0];
-	//check specimen coll./specimen picked up date at mnc
-	if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
-	    if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
-		alert('Specimen picked up date at anc cannot be earlier than specimen collection date!');
-		$('#specimenPickedUpDateAtAnc').val('');
-	    }
-	}
-	//check patient dob/specimen coll. date
-	if($.trim(patientDOB)!= '' && $.trim(specimenCollectedDate)!= ''){
-	    if(moment(patientDOB).isAfter(specimenCollectedDate)) {
-		alert('Specimen collection date cannot be earlier than patient\'s date of birth!');
-		$('#dob').val('');
-	    }
-	}
-	//check specimen picked up date at anc/receipt at lab
-	if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
-	    if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
-		alert('Date of receipt at lab cannot be earlier than specimen picked up date!');
-		$('#dateOfReceiptAtCentralLab').val('');
-	    }
-	}
-	//check receipt at lab/test completion
-	if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
-	    if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
-		alert('Test completion date cannot be earlier than date of receipt at lab!');
-		$('#dateOfTestCompletion').val('');
-	    }
-	}
-	//check test completion/result dispatched to clinic
-	if($.trim(dateOfTestCompletion)!= '' && $.trim(dateOfResultDispatchedToClinic)!= ''){
-	    if(moment(dateOfTestCompletion).isAfter(dateOfResultDispatchedToClinic)) {
-		alert('Date of result dispatched to clinic cannot be earlier than test completion date!');
-		$('#dateOfResultDispatchedToClinic').val('');
-	    }
-	}
+		var specimenCollectedDate = $('#specimenCollectedDate').val();
+		var specimenPickedUpDateAtAnc = $('#specimenPickedUpDateAtAnc').val();
+		var patientDOB = $('#dob').val();
+		var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
+		var dateOfTestCompletion = $('#dateOfTestCompletion').val();
+		var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
+		var specimenCollectedDateArray = specimenCollectedDate.split('/');
+		var specimenPickedUpDateAtAncArray = specimenPickedUpDateAtAnc.split('/');
+		var patientDOBArray = patientDOB.split('/');
+		var receiptAtCentralLabDateArray = dateOfReceiptAtcentralLab.split('/');
+		var testCompletionDateArray = dateOfTestCompletion.split('/');
+		var resultDispatchedToClinicDateArray = dateOfResultDispatchedToClinic.split('/');
+		specimenCollectedDate = specimenCollectedDateArray[2]+'-'+specimenCollectedDateArray[1]+'-'+specimenCollectedDateArray[0];
+		specimenPickedUpDateAtAnc = specimenPickedUpDateAtAncArray[2]+'-'+specimenPickedUpDateAtAncArray[1]+'-'+specimenPickedUpDateAtAncArray[0];
+		patientDOB = patientDOBArray[2]+'-'+patientDOBArray[1]+'-'+patientDOBArray[0];
+		dateOfReceiptAtcentralLab = receiptAtCentralLabDateArray[2]+'-'+receiptAtCentralLabDateArray[1]+'-'+receiptAtCentralLabDateArray[0];
+		dateOfTestCompletion = testCompletionDateArray[2]+'-'+testCompletionDateArray[1]+'-'+testCompletionDateArray[0];
+		dateOfResultDispatchedToClinic = resultDispatchedToClinicDateArray[2]+'-'+resultDispatchedToClinicDateArray[1]+'-'+resultDispatchedToClinicDateArray[0];
+		//check specimen coll./specimen picked up date at mnc
+		if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
+			if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
+				alert('Specimen picked up date at anc cannot be earlier than specimen collection date!');
+				$('#specimenPickedUpDateAtAnc').val('');
+			}
+		}
+		//check patient dob/specimen coll. date
+		if($.trim(patientDOB)!= '' && $.trim(specimenCollectedDate)!= ''){
+			if(moment(patientDOB).isAfter(specimenCollectedDate)) {
+				alert('Specimen collection date cannot be earlier than patient\'s date of birth!');
+				$('#dob').val('');
+			}
+		}
+		//check specimen picked up date at anc/receipt at lab
+		if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
+			if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
+				alert('Date of receipt at lab cannot be earlier than specimen picked up date!');
+				$('#dateOfReceiptAtCentralLab').val('');
+			}
+		}
+		//check receipt at lab/test completion
+		if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
+			if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
+				alert('Test completion date cannot be earlier than date of receipt at lab!');
+				$('#dateOfTestCompletion').val('');
+			}
+		}
+		//check test completion/result dispatched to clinic
+		if($.trim(dateOfTestCompletion)!= '' && $.trim(dateOfResultDispatchedToClinic)!= ''){
+			if(moment(dateOfTestCompletion).isAfter(dateOfResultDispatchedToClinic)) {
+				alert('Date of result dispatched to clinic cannot be earlier than test completion date!');
+				$('#dateOfResultDispatchedToClinic').val('');
+			}
+		}
     }
     
     function addDataReporting(){
@@ -1155,48 +1229,48 @@ if(isset($date) && trim($date)!= ''){
     }
 	
     function checkPatientRecord(){
-	checkPatientBarcodeId();
+		checkPatientBarcodeId();
     }
     
     function checkPatientBarcodeId(){
-	var patientBarcodeId = $('#patientBarcodeId').val();
-	var countryId = $('#chosenCountry').val();
+		var patientBarcodeId = $('#patientBarcodeId').val();
+		var countryId = $('#chosenCountry').val();
         var optCountryId = ($('#country').length) ? $('#country').val():'';
-	if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
-            $.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab'},
-            function(data) {
-                if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
-            });
-        }
+		if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+				$.post("<?php echo $this->url('check-patient-record'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab'},
+				function(data) {
+					if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+				});
+		}
     }
     
     $("a.formHide").click(function(){
-	$("#addDataReportingForm").toggle();
-	if ($.trim($(this).text()) === 'Hide this form') {
-           $(this).text('Show this form');
-	   $('.formContainer').css('margin-bottom','0px');
-	} else {
-	   $(this).text('Hide this form');
-	   $('.formContainer').css('margin-bottom','20px');
-	}
-      return false;
-    });
-    
-    $('#ancPatientId').on('keyup',function(){
-	if(this.value == ''){
-	   $('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
-	   $('.encAncPatientId').css('padding-top','30px');
-	   $('.encAncPatientId').html('');
-	   $('#encAncPatientId').val('');
-	}else{
-	   $('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
-	   $.post("<?php echo $this->url('rot47'); ?>", {pId: this.value},
-	    function(data) {
-		$('.encAncPatientId').css('padding-top','10px');
-		$('.encAncPatientId').html(data);	
-		$('#encAncPatientId').val(data);
-	    });
-	}
+		$("#addDataReportingForm").toggle();
+		if ($.trim($(this).text()) === 'Hide this form') {
+			$(this).text('Show this form');
+		$('.formContainer').css('margin-bottom','0px');
+		} else {
+		$(this).text('Hide this form');
+		$('.formContainer').css('margin-bottom','20px');
+		}
+		return false;
+		});
+		
+		$('#ancPatientId').on('keyup',function(){
+		if(this.value == ''){
+		$('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
+		$('.encAncPatientId').css('padding-top','30px');
+		$('.encAncPatientId').html('');
+		$('#encAncPatientId').val('');
+		}else{
+		$('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
+		$.post("<?php echo $this->url('rot47'); ?>", {pId: this.value},
+			function(data) {
+			$('.encAncPatientId').css('padding-top','10px');
+			$('.encAncPatientId').html(data);	
+			$('#encAncPatientId').val(data);
+			});
+		}
     });
     
     //get age
@@ -1216,112 +1290,112 @@ if(isset($date) && trim($date)!= ''){
     
     dcid = [];
     function printDataCollection(ID){
-	dcid.push(ID);
-	$.blockUI();
-	$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid,printSrc:'lab'},
-	    function(data){
-		if(data === "" || data === null || data === undefined){
-		    dcid = [];
-		    alert('Error-Oops, Unable to generate pdf');
-		    $.unblockUI();
-		}else if(data == "na"){
-		    alert('Print data not available');
-		    $.unblockUI();
-		}else{
-		    dcid = [];
-		    $.unblockUI();
-		    window.open("/temporary/"+data, "_blank");
-		}
-	    });
+		dcid.push(ID);
+		$.blockUI();
+		$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid,printSrc:'lab'},
+			function(data){
+				if(data === "" || data === null || data === undefined){
+					dcid = [];
+					alert('Error-Oops, Unable to generate pdf');
+					$.unblockUI();
+				}else if(data == "na"){
+					alert('Print data not available');
+					$.unblockUI();
+				}else{
+					dcid = [];
+					$.unblockUI();
+					window.open("/temporary/"+data, "_blank");
+				}
+			});
     }
     
     function emptyTestResultSection() {
-	var rejectionReason = $("#rejectionReason").val();
-	if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5 || base64_decode(rejectionReason) == 8) {
-	    $('#resultSection').show();
-	    $(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
-	    $("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
-	    $(".testResultSectionRadio").attr('disabled',false);
-        }else{
-	    $('#resultSection').hide();
-            $(".testResultSection").val('').attr('readonly',true);
-            $(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
-	    $('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
-	    $('#readerValueRRDTLogVal').html('');
-	    //$('#readerValueRRDTLogValText').html('');
-	    $('#readerValueRRRLogVal').html('');
-	    //$('#readerValueRRRLogValText').html('');
-	}
+		var rejectionReason = $("#rejectionReason").val();
+		if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5 || base64_decode(rejectionReason) == 8) {
+			$('#resultSection').show();
+			$(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
+			$("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
+			$(".testResultSectionRadio").attr('disabled',false);
+		}else{
+			$('#resultSection').hide();
+			$(".testResultSection").val('').attr('readonly',true);
+			$(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
+			$('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
+			$('#readerValueRRDTLogVal').html('');
+			//$('#readerValueRRDTLogValText').html('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
     }
     
     $('#gestationalAge').on('change',function(){
-	if($('#gestationalAge').val()!= '' && ($('#gestationalAge').val() < 1 || $('#gestationalAge').val() > 50)){
-	    alert('Gestational Age can only be between 1 to 50 Weeks');
-	    $('#gestationalAge').val('');
-	}
+		if($('#gestationalAge').val()!= '' && ($('#gestationalAge').val() < 1 || $('#gestationalAge').val() > 50)){
+			alert('Gestational Age can only be between 1 to 50 Weeks');
+			$('#gestationalAge').val('');
+		}
     });
     
     $('#readerValueRRDT').on('blur',function(){
-	var readerValueRRDT = $('#readerValueRRDT').val();
-	if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
-	   //var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
-	   var readerValueRRDTLogVal = readerValueRRDT;
-	   //var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
-	   $('.readerValueRRDTLog').css('visibility','visible');
-	   $('#readerValueRRDTLog').val(readerValueRRDTLogVal);
-	   $('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
-	   //$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
-	}else{
-	   $('#readerValueRRDTLog').val('');
-	   $('#readerValueRRDTLogVal').html('');
-	   //$('#readerValueRRDTLogValText').html('');
-	}
+		var readerValueRRDT = $('#readerValueRRDT').val();
+		if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
+		//var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
+		var readerValueRRDTLogVal = readerValueRRDT;
+		//var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+		$('.readerValueRRDTLog').css('visibility','visible');
+		$('#readerValueRRDTLog').val(readerValueRRDTLogVal);
+		$('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
+		//$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
+		}else{
+		$('#readerValueRRDTLog').val('');
+		$('#readerValueRRDTLogVal').html('');
+		//$('#readerValueRRDTLogValText').html('');
+		}
     });
     
     $('#readerValueRRR').on('blur',function(){
-	var readerValueRRR = $('#readerValueRRR').val();
-	if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
-	   //var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
-	   var readerValueRRRLogVal = readerValueRRR;
-	   //var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
-	   $('#readerValueRRRLog').val(readerValueRRRLogVal);
-	   $('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
-	   //$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
-	}else{
-	    $('#readerValueRRRLog').val('');
-	    $('#readerValueRRRLogVal').html('');
-	    //$('#readerValueRRRLogValText').html('');
-	}
+		var readerValueRRR = $('#readerValueRRR').val();
+		if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
+		//var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
+		var readerValueRRRLogVal = readerValueRRR;
+		//var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+		$('#readerValueRRRLog').val(readerValueRRRLogVal);
+		$('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
+		//$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+		}else{
+			$('#readerValueRRRLog').val('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
     });
     
     $('#age').on('blur',function(){
         var age = $('#age').val();
         var dob = $('#dob').val();
         if($.trim(age)!= ''){
-	  $('label[for="dob"]').html('DOB');
-	  $('#dob').val('');
-	  $('#dob').removeClass('isRequired');
+			$('label[for="dob"]').html('DOB');
+			$('#dob').val('');
+			$('#dob').removeClass('isRequired');
         }else{
-	  $('label[for="dob"]').html('DOB **');
-	  $('#dob').addClass('isRequired');
+	  		$('label[for="dob"]').html('DOB **');
+	  		$('#dob').addClass('isRequired');
         }
     });
     
     function generateRSOT(){
-	$.blockUI();
-	$.post("<?php echo $this->url('export-rsot-pdf'); ?>", { },
-	function(data){
-	    if(data === "" || data === null || data === undefined){
-		alert('Error-Oops, Unable to generate pdf');
-		$.unblockUI();
-	    }else if(data == "na"){
-		alert('Print data not available');
-		$.unblockUI();
-	    }else{
-		dcid = [];
-		$.unblockUI();
-		window.open("/temporary/"+data, "_blank");
-	    }
-	});
+		$.blockUI();
+		$.post("<?php echo $this->url('export-rsot-pdf'); ?>", { },
+		function(data){
+			if(data === "" || data === null || data === undefined){
+			alert('Error-Oops, Unable to generate pdf');
+			$.unblockUI();
+			}else if(data == "na"){
+			alert('Print data not available');
+			$.unblockUI();
+			}else{
+			dcid = [];
+			$.unblockUI();
+			window.open("/temporary/"+data, "_blank");
+			}
+		});
     }
 </script>

@@ -1,0 +1,567 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+if(isset($date) && trim($date)!= ''){
+    $link = "/";
+}else if(isset($countryId) && trim($countryId)!= ''){
+    $link = "/clinic/return-recency/".base64_encode($countryId);
+}else{
+    $link = "/clinic/return-recency";
+}
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/chosen.min.css' ?>"/>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+    }
+    #recencyReturnTable_wrapper{
+	overflow-x:scroll;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:2px 4px 2px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
+    }
+    .box-1,.box-2{
+	float:left;
+	width:44%;
+    }
+    .box-11,.box-21{
+	float:left;
+	width:100%;
+	border:2px dotted #333;
+	margin-top:8px !important;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+	padding-top:3vh;
+    }
+    @media (max-width: 460px) {
+	.hideDataTable{
+	    display: none;
+	}
+    }
+    /*.unlocKbtn:hover{
+	position:relative;
+    }
+    .unlocKbtn[title]:hover:after {
+	content: attr(title);
+	position: absolute;
+	left: -600px;
+	top: 100%;
+	white-space: nowrap;
+	z-index: 1;
+	background:red;
+    }*/
+    .redTxt{
+	color:#F44336 !important;
+    }
+    .yellowTxt,.remove_sorting_1_style{
+	background-color:#FFFF00 !important;
+    }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
+    .no_bgColor{
+	background-color:#fff;
+    }
+    #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
+        text-align: center !important;
+        font-size:14px;
+    }
+    #readerValueRRDTLogValText/*, #readerValueRRRLogValText*/{
+        font-weight:bold;
+        font-size:13px;
+    }
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td{
+	text-align:center;
+    }
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td,
+    table.dataTable.row-border tbody th, 
+    table.dataTable.row-border tbody td, 
+    table.dataTable.display tbody th, 
+    table.dataTable.display tbody td{
+	border: 1px solid #eeeeef;
+    }
+    .chosen-container-single .chosen-search input[type="text"]{
+	padding:4px 0px 4px 0px !important;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Return of Recency Results</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">ANC Return of Recency Results</a>
+       </div>
+    </div>
+    <?php
+    if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
+        <div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
+            <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;"><?php echo (trim($type)!= '')?'Show Form':'Hide Form'; ?></a>
+            <form id="returnRecencyForm" name="returnRecencyForm" method="post" action="<?php echo $this->url('add-return-recency'); ?>" style="display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
+            <div class="card">
+                
+                    <div class="row" style="margin-bottom:0;">
+                            <?php
+                            if(trim($countryId) == ''){
+                            ?>
+                            <div class="row" style="margin-bottom:0;">
+                                <div class="col s4">
+                                    <div class="input-field col m12 s12">
+                                        <select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();">
+                                            <option data-code="" value=""> -- Select -- </option>
+                                            <?php
+                                            foreach($countries as $country){
+                                            ?>
+                                            <option data-code="<?php echo $country['country_code']; ?>" value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <label for="country">Country **</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php } ?>
+                            <div class="row" style="margin-bottom:0;">
+                                <div class="col s4">
+                                    <div class="input-field col m12 s12">
+                                        <input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter Patient Barcode ID">
+                                        <label for="patientBarcodeId" class="">Patient Barcode ID **</label>
+                                    </div>
+                                </div>
+                                <div class="col s4">
+                                    <div class="input-field col m12 s12">
+                                        <input id="ancPatientId" name="ancPatientId" type="text" class="validate" title="Please enter ANC patient ID">
+                                        <label for="ancPatientId" class="">ANC Patient ID</label>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div class="col s4">
+                                    <div class="input-field col m12 s12 ancSiteSection">
+                                    <span>ANC site name **</span>
+                                    <select id="ancSite" name="ancSite" class="ancSite isRequired" title="Please select ANC site">
+                                        <option data-anc-site-code="" value=""> -- Select -- </option>
+                                        <?php
+                                        foreach($ancSites as $ancSite){
+                                        ?>
+                                        <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+                                        <?php } ?>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:0;">
+                                <div class="col s6">
+                                    <div class="input-field col m12 s12">
+                                    <input id="dateReturnedToANC" name="dateReturnedToANC" type="text" class="validate datepicker" title="Please enter date result returned to anc">
+                                    <label for="dateReturnedToANC" class="">Date recency result returned to ANC site </label>
+                                    </div>
+                                </div>
+                                <div class="col s6">
+                                    <div class="input-field col m12 s12">
+                                    <input id="dateReturnedToPatient" name="dateReturnedToPatient" type="text" class="validate datepicker" title="Please enter Date recency result returned to participant">
+                                    <label for="dateReturnedToPatient" class="">Date recency result returned to participant </label>
+                                    </div>
+                                </div>                
+                                            
+                            </div>
+                            <div class="row" style="margin-bottom:0;">
+                                <div class="col s6">
+                                        <div class="input-field col m12 s12">
+                                            <select id="reasonForNotReturningResult" name="reasonForNotReturningResult" class="material-select" title="Please select reason for not returning result">
+                                                <option value=""> -- Select -- </option>
+                                                <option value="1">Woman has not returned for follow-up</option>
+                                                <option value="2">Woman returned for follow-up, but result had not yet been returned to ANC site at that time</option>
+                                                <option value="3">Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result. </option>
+                                                <option value="4">Other</option>
+                                            </select>
+                                            <label for="reasonForNotReturningResult" class="">Reason for not returning result </label>
+                                        </div>
+                                </div>   
+                                <div class="col s6" style="display:none;" id="reasonForNotReturningResultOtherSection">
+                                    <div class="input-field col m12 s12">
+                                    <input id="reasonForNotReturningResultOther" name="reasonForNotReturningResultOther" type="text" class="validate" title="Please enter reason for not returning result">
+                                    <label for="reasonForNotReturningResultOther" class="">Please enter reason for not returning the result ** </label>
+                                    </div>
+                                </div>                                             
+                            </div>
+                        
+                            
+                    
+                        <div class="col s6">
+                        <input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo (trim($countryId)!= '')?base64_encode($countryId):'';?>"/>
+                        <input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+                        
+                        <a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+                        <a id="addBtn" href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="returnRecency();">SAVE RETURN OF RECENCY RESULT</a>&nbsp;&nbsp;
+                        </div>
+                        <div class="col s6" style="text-align:right;">
+                            ** required fields
+                        </div>
+                    </div>
+                    </form>
+                </div>
+	    </div>
+	</div>
+    <?php } ?>
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 5px 5px 5px;height:250px;background:#e0e0e0;">
+	<div class="col m12">
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol1"> Status</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol3">ANC Site</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol4">ANC Site Code</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol5">ANC Patient ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="age" class="showhideCheckBox" /> <label for="iCol6">Age</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="gestational_age" class="showhideCheckBox" /> <label for="iCol7">Gestation Age (Weeks)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol8">Specimen Pick Up Date at ANC</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol9">Lab/Facility</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol10">Lab/Facility Code</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol11">Lab Specimen ID</label> <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code At Central Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol13">Lab Tech. Name/ID</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol14">Date of Test Completion</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity ODn</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol17">Lab LAg Recency (Based on LAg ODn)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol18">HIV RNA (cp/ml)</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol19">HIV RNA > 1000 <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Lab LAg Recency (Based on algorithm)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol20">Asante Positive Verification Line Reader Value (log10)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol21">Asante Positive Verification Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol22">Asante Long Term Line Reader Value (log10)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol23">Asante Long Term Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol24">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol25">Date Returned to Participant</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol26">Added On</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol27">Added by</label> <br>
+	    </div>
+	    <?php
+	    if(trim($countryId) == ''){
+	    ?>
+	    <div class="col m3">
+		<input type="hidden" id="countColumn" value="28"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol26">Country Name</label> <br>
+	    </div>
+	    <?php } else { ?>
+	      <input type="hidden" id="countColumn" value="27"/>
+	    <?php } ?>
+	</div>
+    </div>
+    <div id="showListButton" class="row content-container" style="padding: 0 20px;margin-bottom: 10px;display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
+       <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadLabDataList();">Show Recency Return List</a>
+    </div>
+    <div class="row content-container hideDataTable" id="labDataList" style="padding: 0 20px;display:none;">
+	
+        <div class="col l12 m12 s12" style="padding:0;">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Return of Recency Results List
+		   
+		</div>
+                <div class="card-content clearfix">
+                    <table id="recencyReturnTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+                                <th>Patient<br>Barcode<br>ID</th>
+                                <th>ANC Site</th>
+                                <th>ANC<br>Site Code</th>
+                                <th>ANC<br>Patient ID</th>
+                                <th>Date Result Returned<br>at Clinic</th>
+                                <th>Date Returned to<br>Participant</th>
+                                <th>Reason for not<br>returning result</th>
+                                <?php
+                                if(trim($countryId)== ''){
+                                ?>
+                                <th>Country</th>
+                                <?php } ?>
+                                <th>Status</th>
+                                <th style="width:120px !important;text-align:center;">Action</th>
+                            </tr>
+				</thead>
+				<tfoot>
+				            <tr>
+                                <th>Patient<br>Barcode<br>ID</th>
+                                <th>ANC Site</th>
+                                <th>ANC<br>Site Code</th>
+                                <th>ANC<br>Patient ID</th>
+                                <th>Date Result Returned<br>at Clinic</th>
+                                <th>Date Returned to<br>Participant</th>
+                                <th>Reason for not<br>returning result</th>
+                                <?php
+                                if(trim($countryId)== ''){
+                                ?>
+                                <th>Country</th>
+                                <?php } ?>
+                                <th>Status</th>
+                                <th style="width:120px !important;text-align:center;">Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/chosen.jquery.js' ?>"></script>
+<script>
+    var oTable = null;
+    function loadLabDataList(){
+	$("#labDataList").show();
+	$("#showListButton").hide();
+	oTable = $('#recencyReturnTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50,100, -1], [10, 25, 50,100, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":""},
+                <?php
+                if(trim($countryId) == ''){
+                ?>
+                {"sClass":"dataTable_noWrap"},
+                <?php } ?>
+                {"sClass":"dataTable_noWrap"},
+                {"sClass":"dataTable_noWrap","bSortable":false}
+            ],
+	    
+            "aaSorting": [[2, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('return-recency'); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+        
+	
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $('#search-items').on('keyup', function(){
+            oTable.fnFilter($(this).val());
+       });
+    }									
+
+    $(document).ready(function() {
+        $(".ancSite").chosen({
+	        placeholder_text_single:"Select ANC", 
+	        width:"100%"
+	    });
+	});
+    
+    
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    }
+
+    
+    
+    
+    
+    $(document).ready(function(){
+
+        $("a.formHide").click(function(){
+            $("#returnRecencyForm").toggle();
+            if ($.trim($(this).text()) === 'Hide Form') {
+                $(this).text('Show Form');
+                $('.formContainer').css('margin-bottom','0px');
+            } else {
+                $(this).text('Hide Form');
+                $('.formContainer').css('margin-bottom','20px');
+            }
+        return false;
+        });        
+
+        $("#reasonForNotReturningResult").on('change',function(){
+
+            if($(this).val() != ''){
+                $("#dateReturnedToPatient").val("");
+            }
+
+            if($(this).val() == 4){
+                $("#reasonForNotReturningResultOther").addClass('isRequired');
+                $("#reasonForNotReturningResultOtherSection").show();
+            }else{
+                $("#reasonForNotReturningResultOther").val('');
+                $("#reasonForNotReturningResultOther").removeClass('isRequired');
+                $("#reasonForNotReturningResultOtherSection").hide();
+            }
+        });
+
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 100, // Creates a dropdown of 100 years to control year
+                format: 'dd/mm/yyyy',
+                max: new Date('Today'),
+                closeOnSelect: true,
+                closeOnClear: true,
+                onSet: function(e){
+                    validateDataReportingDates();
+                    if(e.select != undefined && e.select != null){
+                        $('.picker__close').click();
+                    }
+                }
+            });
+    });
+    
+    
+    function getCountriesLabAnc(){
+	$.post("<?php echo $this->url('get-countries-lab-anc'); ?>", {country: $('#country').val()},
+            function(data) {
+		var dataArray = data.split('divider');
+		    $('.ancSiteSection').html(dataArray[0]);
+		    $(".ancSite").chosen({ placeholder_text_single:"Select ANC",  width:"100%" });
+	    });
+    }
+    
+   
+    
+    function validateDataReportingDates(){
+	
+    }
+    
+    function returnRecency(){
+	
+	    if($("#ancSite").val()==''){
+		    alert("Please choose ANC site name");
+		    $("#ancSite").css("background-color","#ffff99");
+		    return false;
+	    }
+	
+        flag = deforayValidator.init({
+            formId: 'returnRecencyForm'
+        });
+	
+        if(flag){
+	    $("#addBtn").css("pointer-events","none");
+	    $("#addBtn").css("background-color","#f3cdcd !important");
+            document.getElementById('returnRecencyForm').submit();
+        }
+    }
+
+</script>

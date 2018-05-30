@@ -210,6 +210,62 @@ class ClinicController extends AbstractActionController{
             return $this->redirect()->toRoute('home');
         }
     }
+
+    public function addReturnRecencyAction(){
+        $request = $this->getRequest();
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        if ($request->isPost()) {
+            $parameters = $request->getPost();
+            $result = $dataCollectionService->saveReturnOfRecencyResults($parameters);
+            return $this->redirect()->toUrl($parameters['redirectUrl']);
+        }
+    }
+    public function editReturnRecencyAction(){
+        $request = $this->getRequest();
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        if ($request->isPost()) {
+            $parameters = $request->getPost();
+            $result = $dataCollectionService->saveReturnOfRecencyResults($parameters);
+            return $this->redirect()->toUrl($parameters['redirectUrl']);
+        }else{
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(isset($countryId) && trim($countryId)!= ''){
+                $patientBarcodeId = base64_decode($this->params()->fromRoute('id'));
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList = $ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
+                $result = $dataCollectionService->fetchSingleReturnOfRecencyResult($patientBarcodeId);
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'countryId'=>$countryId,
+                    'result' => $result
+                ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
+        }
+    }
+
+    public function returnRecencyAction(){
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $parameters = $request->getPost();
+            $result = $dataCollectionService->fetchAllReturnOfRecencyResults($parameters);
+            return $this->getResponse()->setContent(Json::encode($result));
+        }else{
+            $countryId = base64_decode($this->params()->fromRoute('countryId'));
+            if(isset($countryId) && trim($countryId)!= ''){
+                $ancSiteService = $this->getServiceLocator()->get('AncSiteService');
+                $ancSiteList = $ancSiteService->getActiveAncSites('clinic-data-collection',$countryId,$province ='',$district ='');
+                return new ViewModel(array(
+                    'ancSites'=>$ancSiteList,
+                    'countryId'=>$countryId
+                ));
+            }else{
+                return $this->redirect()->toRoute('home');
+            }
+        }
+    }    
     
     public function getEnrollmentReportDetailsAction(){
         $request = $this->getRequest();

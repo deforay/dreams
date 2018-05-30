@@ -6,13 +6,13 @@ if(isset($result) && count($result) >0){
     //header and footer
     class MYPDF extends TCPDF {
         public function setSchemeName($heading,$logo) {
-	  $this->heading = $heading;
-	  $this->logo = $logo;
+	        $this->heading = $heading;
+	        $this->logo = $logo;
         }
 	
         //Page header
         public function Header() {
-	    $alertContainer = new Container('alert');
+	        $alertContainer = new Container('alert');
             // Logo
             $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
             $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
@@ -20,7 +20,7 @@ if(isset($result) && count($result) >0){
             $this->SetFont('helvetica', 'B', 20);
              //Title
             $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
-	    $alertContainer->headerSize = $this->GetY();
+	        $alertContainer->headerSize = $this->GetY();
         }
     
         // Page footer
@@ -82,40 +82,42 @@ if(isset($result) && count($result) >0){
     //$pdf->SetFooterMargin(10);
     $pdf->SetY($alertContainer->headerSize,true,false);
     //pdf content
-    $html = '';
-      $html.='<table border="1" style="padding:2px;">';
-          $html .='<thead>';
-	   $html .='<tr>';
-	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> Study ID</strong></th>';
-	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> ANC site</strong></th>';
-	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> Spec type</strong></th>';
-            $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br> Date Specimen Collected</strong></th>';
-	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br> Date Specimen Arrived at Lab</strong></th>';
-            $html .='<th colspan="4" style="white-space: nowrap;text-align:center;"><strong>Test Results Available</strong></th>';
-            $html .='<th colspan="6" style="white-space: nowrap;text-align:center;"><strong>Tests Outstanding-marked with X</strong></th>';
-           $html .='</tr>';
-           $html .='<tr>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Reader Value</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Visual</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL Result</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to LAg Result</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Reader Result</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Visual Result</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Reader</strong></th>';
-            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Visual</strong></th>';
-	   $html .='</tr>';
-          $html .='</thead>';
-          $html .='<tbody>';
-          foreach($result as $row){
+        $html = '';
+        $html.='<table border="1" style="padding:2px;">';
+        $html .='<thead>';
+        $html .='<tr>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> Study ID</strong></th>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> ANC site</strong></th>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> ANC District</strong></th>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br><br> Spec type</strong></th>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br> Date Specimen Collected</strong></th>';
+        $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><strong><br> Date Specimen Arrived at Lab</strong></th>';
+        $html .='<th colspan="4" style="white-space: nowrap;text-align:center;"><strong>Test Results Available</strong></th>';
+        $html .='<th colspan="6" style="white-space: nowrap;text-align:center;"><strong>Tests Outstanding-marked with X</strong></th>';
+        $html .='</tr>';
+        $html .='<tr>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Reader Value</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante LT Visual</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL Result</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to LAg Result</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Reader Result</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>VL due to Asante Visual Result</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Reader</strong></th>';
+        $html .='<th style="white-space: nowrap;text-align:center;"><strong>Asante Visual</strong></th>';
+        $html .='</tr>';
+        $html .='</thead>';
+        $html .='<tbody>';
+        foreach($result as $row){
+            //\Zend\Debug\Debug::dump($row);die;
             $specimenType = '';
             if((int)$row['specimen_type'] == 1){
-              $specimenType = 'Venous';
+                $specimenType = 'Venous';
             }else if((int)$row['specimen_type'] == 2){
-              $specimenType = 'Plasma';
+                $specimenType = 'Plasma';
             }else if((int)$row['specimen_type'] == 3){
-              $specimenType = 'DBS';
+                $specimenType = 'DBS';
             }
             $specimenCollectedDate = '';
             if(isset($row['specimen_collected_date']) && trim($row['specimen_collected_date'])!= '' && $row['specimen_collected_date']!= '0000-00-00'){
@@ -141,43 +143,44 @@ if(isset($result) && count($result) >0){
             $asar_out = '';
             $asav_out = '';
             if(($row['final_lag_avidity_odn']!= null && trim($row['final_lag_avidity_odn'])!= '' && $row['final_lag_avidity_odn'] < 2) && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
-               $vl_out1 = 'x';
+                $vl_out1 = 'x';
             }
             if(($asanteRapidRecencyAssayRlt!= null && trim($asanteRapidRecencyAssayRlt)!= '' && strtolower($asanteRapidRecencyAssayRlt) == 'absent') && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
-               $vl_out2 = 'x';
+                $vl_out2 = 'x';
             }
             if(($asanteRapidRecencyAssayRltLogVal!= null && trim($asanteRapidRecencyAssayRltLogVal)!= '' && $asanteRapidRecencyAssayRltLogVal < 3.0) && ($row['hiv_rna'] == null || $row['hiv_rna'] == '') && (int)$row['rejection_reason'] <= 1){
-               $vl_out3 = 'x';
+                $vl_out3 = 'x';
             }
             if(($row['final_lag_avidity_odn'] == null || $row['final_lag_avidity_odn'] == '') && (int)$row['rejection_reason'] <= 1){
-               $lag_out = 'x';
+                $lag_out = 'x';
             }
             if(($asanteRapidRecencyAssayRlt == null || trim($asanteRapidRecencyAssayRlt) == '') && (int)$row['specimen_type'] == 2 && (int)$row['rejection_reason'] <= 1){
-               $asar_out = 'x';
+                $asar_out = 'x';
             }
             if(($asanteRapidRecencyAssayRltLogVal == null || trim($asanteRapidRecencyAssayRltLogVal) == '') && (int)$row['specimen_type'] == 2 && (int)$row['rejection_reason'] <= 1){
-               $asav_out = 'x';
+                $asav_out = 'x';
             }
             if(trim($vl_out1)!= '' || trim($vl_out2)!= '' || trim($vl_out3)!= '' || trim($lag_out)!= '' || trim($asar_out)!= '' || trim($asav_out)!= ''){
                 $html .='<tr>';
-                  $html .='<td>'.$row['patient_barcode_id'].'</td>';
-                  $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
-                  $html .='<td>'.$specimenType.'</td>';
-                  $html .='<td>'.$specimenCollectedDate.'</td>';
-                  $html .='<td>'.$receiptDateAtCentralLab.'</td>';
-                  $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
-                  $html .='<td>'.$asanteRapidRecencyAssayRltLogVal.'</td>';
-                  $html .='<td>'.$asanteRapidRecencyAssayRlt.'</td>';
-                  $html .='<td>'.$row['hiv_rna'].'</td>';
-                  $html .='<td style="text-align:center;">'.$vl_out1.'</td>';
-                  $html .='<td style="text-align:center;">'.$vl_out3.'</td>';
-                  $html .='<td style="text-align:center;">'.$vl_out2.'</td>';
-                  $html .='<td style="text-align:center;">'.$lag_out.'</td>';
-                  $html .='<td style="text-align:center;">'.$asav_out.'</td>';
-                  $html .='<td style="text-align:center;">'.$asar_out.'</td>';
+                    $html .='<td>'.$row['patient_barcode_id'].'</td>';
+                    $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
+                    $html .='<td>'.($row['location_name']).'</td>';
+                    $html .='<td>'.$specimenType.'</td>';
+                    $html .='<td>'.$specimenCollectedDate.'</td>';
+                    $html .='<td>'.$receiptDateAtCentralLab.'</td>';
+                    $html .='<td>'.$row['final_lag_avidity_odn'].'</td>';
+                    $html .='<td>'.$asanteRapidRecencyAssayRltLogVal.'</td>';
+                    $html .='<td>'.$asanteRapidRecencyAssayRlt.'</td>';
+                    $html .='<td>'.$row['hiv_rna'].'</td>';
+                    $html .='<td style="text-align:center;">'.$vl_out1.'</td>';
+                    $html .='<td style="text-align:center;">'.$vl_out3.'</td>';
+                    $html .='<td style="text-align:center;">'.$vl_out2.'</td>';
+                    $html .='<td style="text-align:center;">'.$lag_out.'</td>';
+                    $html .='<td style="text-align:center;">'.$asav_out.'</td>';
+                    $html .='<td style="text-align:center;">'.$asar_out.'</td>';
                 $html .='</tr>';
             }
-          }
+        }
           $html .='</tbody>';
       $html.='</table>';
     $pdf->writeHTML(utf8_encode($html),true,0,true,0);

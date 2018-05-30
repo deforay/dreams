@@ -934,3 +934,33 @@ ALTER TABLE `ussd_not_enrolled` ADD `id` INT(11) NOT NULL FIRST;
 
 --Pal 11/04/2018
 ALTER TABLE `ussd_not_enrolled` ADD `reason_client_refused` INT(11) NULL DEFAULT NULL AFTER `reason_not_enrolled_other`, ADD `reason_client_refused_other` VARCHAR(500) NULL DEFAULT NULL AFTER `reason_client_refused`; 
+
+
+-- Amit 25 May 2018
+
+
+CREATE TABLE `return_of_recency_results` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `country` int(11) DEFAULT NULL,
+ `anc` int(11) DEFAULT NULL,
+ `patient_barcode_id` varchar(255) DEFAULT NULL,
+ `anc_patient_id` varchar(255) DEFAULT NULL,
+ `date_returned_to_anc` date DEFAULT NULL,
+ `date_returned_to_participant` date DEFAULT NULL,
+ `reason_for_not_returning` int(11) DEFAULT NULL,
+ `reason_for_not_returning_other` varchar(255) DEFAULT NULL,
+ `added_on` datetime DEFAULT CURRENT_TIMESTAMP,
+ `added_by` int(11) DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+ALTER TABLE `return_of_recency_results` ADD `updated_on` DATETIME NULL DEFAULT NULL AFTER `added_by`, ADD `updated_by` INT NULL DEFAULT NULL AFTER `updated_on`;
+ALTER TABLE `return_of_recency_results` ADD `status` VARCHAR(255) NULL DEFAULT NULL AFTER `updated_by`;
+
+-- Amit 27 May 2018
+
+ALTER TABLE `data_collection` ADD `is_dbs_available` VARCHAR(255) NULL DEFAULT NULL AFTER `specimen_type`;
+ALTER TABLE `data_collection_event_log` ADD `is_dbs_available` VARCHAR(255) NULL DEFAULT NULL AFTER `specimen_type`;
+
+
+

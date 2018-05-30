@@ -6,6 +6,7 @@ if(isset($countryId) && trim($countryId)!= ''){
 }else{
     $link = "/data-collection";
 }
+
 $specimenCollectedDate = '';
 if(isset($row->specimen_collected_date) && trim($row->specimen_collected_date)!= '' && $row->specimen_collected_date!= '0000-00-00'){
     $specimenCollectedDate = $common->viewDateFormat($row->specimen_collected_date);
@@ -145,16 +146,28 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 			</div>
 			<div class="col s4">
 			   <div class="input-field col m12 s12">
-			       <select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select speciment type">
+			       <select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select specimen type">
 				    <option value=""> -- Select -- </option>
-				    <option value="1"<?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
+				    <option value="1" <?php echo(isset($row->specimen_type) && $row->specimen_type == 1)?'selected="selected"':''; ?>>Venous</option>
 				    <option value="2"<?php echo(isset($row->specimen_type) && $row->specimen_type == 2)?'selected="selected"':''; ?>>Plasma</option>
 				    <option value="3"<?php echo(isset($row->specimen_type) && $row->specimen_type == 3)?'selected="selected"':''; ?>>DBS</option>
 			       </select>
 			       <label for="specimenType">Specimen Type **</label>
 			   </div>
 			</div>
-		    </div>
+
+				<div class="col s4" style="display:none;" id="isDbsAvailableDiv">
+					<div class="input-field col m12 s12">
+						<select id="isDbsAvailable" name="isDbsAvailable" class="material-select" title="Please select if DBS is available">
+							<option value=""> -- Select -- </option>
+							<option value="yes" <?php echo(isset($row->is_dbs_available) && $row->is_dbs_available == 'yes')?'selected="selected"':''; ?>>Yes</option>
+							<option value="no" <?php echo(isset($row->is_dbs_available) && $row->is_dbs_available == 'no')?'selected="selected"':''; ?>>No</option>
+						</select>
+						<label for="isDbsAvailableDiv">Is DBS also available ? **</label>
+						</div>
+					</div>
+			    </div>			
+			
 		</fieldset>
 		<fieldset style="border-color:#ff9800;border-style: solid;">
 		    <legend>PATIENT INFORMATION</legend>
@@ -266,21 +279,38 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 		    <legend>TEST RESULT</legend>
 		    <div class="row" style="margin-bottom:0;">
 			<div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <div class="input-field col m12 s12" style="">
 				<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum testResultSection" title="Please enter LAg avidity ODn" value="<?php echo $row->final_lag_avidity_odn; ?>">
 				<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
 			    </div>
 			</div>
 			<div class="col s4">
-			    <div class="input-field col m12 s12" style="margin-top:0.5rem;">
+			    <div class="input-field col m12 s12" style="">
 				<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA" value="<?php echo $row->hiv_rna; ?>">
 				<label for="hivRna" class="">HIV RNA (copies/ml) <?php echo($row->final_lag_avidity_odn <= 2 || ($row->final_lag_avidity_odn > 2 && $asanteRapidRecencyAssayRlt == 'absent'))?'*':''; ?></label>
 			    </div>
 			</div>
-			<div class="col s4">
-			    <a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
-			</div>
+			<div class="col s4" style="display:none;" id="vlSpecimenTypeDiv">
+				    <div class="input-field col m12 s12">
+					<select id="vlSpecimenType" name="vlSpecimenType" class="material-select" title="Please select viral load lab specimen type">
+					    <option value=""> -- Select -- </option>
+					    <option value="1" <?php echo(isset($row->lab_specimen_id) && $row->lab_specimen_id == 1)?'selected="selected"':''; ?>>Venous</option>
+				    	<option value="2" <?php echo(isset($row->lab_specimen_id) && $row->lab_specimen_id == 1)?'selected="selected"':''; ?>>Plasma</option>
+				    	<option value="3" <?php echo(isset($row->lab_specimen_id) && $row->lab_specimen_id == 1)?'selected="selected"':''; ?>>DBS</option>
+					</select>
+					<label for="vlSpecimenType">VL Specimen Type **<label>
+				    </div>
+				</div>
 		    </div>
+
+
+			<div class="row">
+
+			<div class="col s6">
+				<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
+			</div>			
+
+			</div>			
 		    <div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
 			<div class="col s4">
 			    <div class="input-padding col m10 s10 prePopulateAvidity">
@@ -422,6 +452,48 @@ if(isset($asanteRapidRecencyAssy['rrdt'])){
 <script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/chosen.jquery.js' ?>"></script>
 <script>
     $(document).ready(function(){
+
+		if($("#specimenType").val() == 1 || $("#specimenType").val() == 2){
+			$("#isDbsAvailableDiv").show();
+			$("#isDbsAvailable").addClass('isRequired');
+		}else{
+			$("#isDbsAvailableDiv").hide();
+			$("#isDbsAvailable").removeClass('isRequired');
+			$("#isDbsAvailable").val('');
+		}
+	
+		if($("#hivRna").val()==''){
+			$("#vlSpecimenType").removeClass('isRequired');
+			$("#vlSpecimenTypeDiv").hide();
+			$("#vlSpecimenType").val('');
+		}else{
+			$("#vlSpecimenTypeDiv").show();
+			$("#vlSpecimenType").addClass('isRequired');
+		}
+
+		$("#specimenType").on('change',function(){
+			if($(this).val() == 1 || $(this).val() == 2){
+				$("#isDbsAvailableDiv").show();
+				$("#isDbsAvailable").addClass('isRequired');
+			}else{
+				$("#isDbsAvailableDiv").hide();
+				$("#isDbsAvailable").removeClass('isRequired');
+				$("#isDbsAvailable").val('');
+			}
+		});
+
+		$("#hivRna, #hivRnaNew").on('keyup',function(){
+			if($(this).val()==''){
+				$("#vlSpecimenType").removeClass('isRequired');
+				$("#vlSpecimenTypeDiv").hide();
+				$("#vlSpecimenType").val('');
+			}else{
+				$("#vlSpecimenTypeDiv").show();
+				$("#vlSpecimenType").addClass('isRequired');
+			}
+		});
+
+
 	$(".ancSite").chosen({
 	    placeholder_text_single:"Select ANC", 
 	    width:"100%"

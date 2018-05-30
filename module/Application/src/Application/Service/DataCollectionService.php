@@ -4098,4 +4098,19 @@ class DataCollectionService {
             return "";
         }
     }
+
+    public function saveReturnOfRecencyResults($params){
+        $recencyReturnDb = $this->sm->get('ReturnOfRecencyResultsTable');
+        return $recencyReturnDb->saveReturnOfRecencyResults($params);
+    }
+
+    public function fetchAllReturnOfRecencyResults($params){
+        $recencyReturnDb = $this->sm->get('ReturnOfRecencyResultsTable');
+        return $recencyReturnDb->fetchAllReturnOfRecencyResults($params);
+    }
+
+    public function fetchSingleReturnOfRecencyResult($patientBarcodeId){
+        $recencyReturnDb = $this->sm->get('ReturnOfRecencyResultsTable');
+        return $recencyReturnDb->fetchSingleReturnOfRecencyResult($patientBarcodeId);
+    }
 }
