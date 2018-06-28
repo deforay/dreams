@@ -2424,6 +2424,11 @@ class DataCollectionService {
       return $dataCollectionDb->fetchWeeklyDataReportingDetails($params);
     }
     
+    public function getUssdForBarcode($barcodeId){
+        $ussdDb = $this->sm->get('USSDSurveyTable');
+        return $ussdDb->getUssdForBarcode($barcodeId);
+    }
+    
     public function importUSSDData(){
         $ussdFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd";
         $ussdSyncedFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd-synced";
@@ -4106,7 +4111,7 @@ class DataCollectionService {
 
     public function fetchAllReturnOfRecencyResults($params){
         $recencyReturnDb = $this->sm->get('ReturnOfRecencyResultsTable');
-        return $recencyReturnDb->fetchAllReturnOfRecencyResults($params);
+        return $recencyReturnDb->getAllReturnOfRecencyResults();
     }
 
     public function fetchSingleReturnOfRecencyResult($patientBarcodeId){

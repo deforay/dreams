@@ -1,0 +1,58 @@
+<?php 
+
+$filter = new \Zend\Filter\DateTimeFormatter();
+$filter->setFormat('d-M-Y g:i A');
+
+?>
+
+<table  class="responsive-table display dataTable" id="returnData">
+    <thead>
+
+        <tr>
+            <th>Patient Barcode ID</th>
+            <th>ANC Site Name</th>
+            <th>Date Result Returned at ANC Site</th>
+            <th>Date Result Returned to Patient</th>
+            <th>Reason not Returned</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($response as $key => $value){ ?>
+        <tr>
+            <td class="center"><?php echo $key ?></td>
+            <td style=""><?php echo ($value['anc_name']); ?></td>
+            <td><?php echo $filter->filter($value['anc_date_anc']); ?></td>
+            <td><?php echo $filter->filter($value['anc_date_patient']); ?></td>
+            <td><?php echo ($value['reason']); ?></td>
+            <td><?php echo $value['edit_link']; ?></td>
+            
+            
+            
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+<script>
+$(document).ready(function(){
+    var oTable = $("#returnData").dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50,100, -1], [10, 25, 50,100, "All"]],
+	    "iDisplayLength": 25,
+        });
+
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $('#search-items').on('keyup', function(){
+            oTable.fnFilter($(this).val());
+       });        
+});
+</script>

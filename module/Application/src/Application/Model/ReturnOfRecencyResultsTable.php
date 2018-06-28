@@ -24,10 +24,12 @@ class ReturnOfRecencyResultsTable extends AbstractTableGateway {
 
        // $status = 'incomplete';
 
+       //var_dump($params['patientBarcodeId']);die;
+
        
         if(isset($params['patientBarcodeId']) && trim($params['patientBarcodeId'])!= ''){
             
-            $existing = $this->fetchSingleReturnOfRecencyResult($params['patientBarcodeId']);
+            $existing = $this->select(array('patient_barcode_id'=>$params['patientBarcodeId']))->current();
        
             if((isset($params['reasonForNotReturningResult']) && $params['reasonForNotReturningResult'] !='') || (isset($params['dateReturnedToPatient']) && $params['dateReturnedToPatient'] != '')){
                 $status = 'complete';
@@ -44,25 +46,107 @@ class ReturnOfRecencyResultsTable extends AbstractTableGateway {
                         'reason_for_not_returning'=>(isset($params['reasonForNotReturningResult']) && trim($params['reasonForNotReturningResult'])!= '')?($params['reasonForNotReturningResult']):NULL,
                         'reason_for_not_returning_other'=>(isset($params['reasonForNotReturningResultOther']) && trim($params['reasonForNotReturningResultOther'])!= '')?($params['reasonForNotReturningResultOther']):NULL,
                         'country'=>base64_decode($params['chosenCountry']),
-                        'added_on'=>$common->getDateTime(),
-                        'added_by'=>$loginContainer->userId,
                         'status'=>$status
                     );
 
-                    //var_dump($data);
+            //var_dump($data);die;
 
             if($existing == false){
+                $data['added_on']=$common->getDateTime();
+                $data['added_by']=$loginContainer->userId;                
+                //\Zend\Debug\Debug::dump($data);die;
                 $this->insert($data);
                 $lastInsertedId = $this->lastInsertValue;
             }else{
+
+
                 $data['updated_on']=$common->getDateTime();
                 $data['updated_by']=$loginContainer->userId;
+
+                //\Zend\Debug\Debug::dump($data);die;
+
+
 
                 $lastInsertedId = $this->update($data,array('patient_barcode_id'=>$params['patientBarcodeId']));
             }   
         }
         //var_dump($lastInsertedId);die;
       return $lastInsertedId;
+    }
+
+    public function getAllReturnOfRecencyResults(){
+
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter); 
+        $loginContainer = new Container('user');
+
+        $response = array();
+        
+        $qry = $sql->select()
+                ->from(array('d' => 'data_collection'))
+                ->join(array('r' => 'return_of_recency_results'),'d.patient_barcode_id=r.patient_barcode_id',array('date_returned_to_anc','date_returned_to_participant','reason_for_not_returning'),'left')
+                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=d.anc_site',array('anc_site_name','anc_site_code'),'left');
+        $q = $sql->getSqlStringForSqlObject($qry);
+        $result = $dbAdapter->query($q, $dbAdapter::QUERY_MODE_EXECUTE);
+        
+
+        $reasons =    array("1" => "Woman has not returned for follow-up",
+                            "2" =>"Woman returned for follow-up, but result had not yet been returned to ANC site at that time",
+                            "3" =>"Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result.",
+                            "4" =>"Other");
+
+        
+
+        //$dataEdit = '';
+        
+        //if($loginContainer->hasViewOnlyAccess != 'yes'){
+            
+            
+        //}
+                            
+                            
+        foreach($result as $row){
+            //\Zend\Debug\Debug::dump($row);
+            if($row->reason_for_not_returning != 4){
+                $reason = $reasons[$row->reason_for_not_returning];
+            }else{
+                $reason = $row->reason_for_not_returning_other;
+            }
+            $dataEdit = '<a href="/clinic/return-recency/edit/' . base64_encode($row->patient_barcode_id) . '/' . base64_encode($row->country) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';            
+            $response[$row->patient_barcode_id]['anc_date_anc'] = $row->date_returned_to_anc;
+            $response[$row->patient_barcode_id]['anc_date_patient'] = $row->date_returned_to_participant;
+            if(!isset($response[$row->patient_barcode_id]['anc_name'])){
+                $response[$row->patient_barcode_id]['anc_name'] = $row->anc_site_name." (".$row->anc_site_code.")";
+            }
+            $response[$row->patient_barcode_id]['edit_link'] = $dataEdit;
+            $response[$row->patient_barcode_id]['reason'] = $reason;
+        }
+        
+        $qry = $sql->select()
+                    ->from(array('d' => 'data_collection'))
+                    ->join(array('u' => 'ussd_survey'),'d.patient_barcode_id=u.patient_barcode_id',array('date_result_returned_clinic','date_returned_to_participant'),'left')
+                    ->join(array('anc'=>'anc_site'),'anc.anc_site_code=d.anc_site',array('anc_site_name','anc_site_code'),'left');
+
+        $q = $sql->getSqlStringForSqlObject($qry);
+        $result = $dbAdapter->query($q, $dbAdapter::QUERY_MODE_EXECUTE);
+        //\Zend\Debug\Debug::dump($result->toArray());die;
+        foreach($result as $row){
+
+            if(!isset($response[$row->patient_barcode_id]['anc_date_anc']) || $response[$row->patient_barcode_id]['anc_date_anc'] =='' || $response[$row->patient_barcode_id]['anc_date_anc'] ==null){
+                $response[$row->patient_barcode_id]['anc_date_anc'] = $row->date_result_returned_clinic;
+            }
+            if(!isset($response[$row->patient_barcode_id]['anc_date_patient']) || $response[$row->patient_barcode_id]['anc_date_patient'] =='' || $response[$row->patient_barcode_id]['anc_date_patient'] == null){
+                $response[$row->patient_barcode_id]['anc_date_patient'] = $row->date_returned_to_participant;
+            }
+            //$response[$row->patient_barcode_id]['ussd_date_anc'] = $row->date_result_returned_clinic;
+            //$response[$row->patient_barcode_id]['ussd_date_patient'] = $row->date_returned_to_participant;
+            if(!isset($response[$row->patient_barcode_id]['anc_name'])){
+                $response[$row->patient_barcode_id]['anc_name'] = $row->anc_site_name." (".$row->anc_site_code.")";
+            }            
+        }
+
+        return $response;
+        
     }
     
     public function fetchAllReturnOfRecencyResults($parameters){
@@ -267,7 +351,20 @@ class ReturnOfRecencyResultsTable extends AbstractTableGateway {
     }
     
     public function fetchSingleReturnOfRecencyResult($patientBarcodeId){
-        return $this->select(array('patient_barcode_id'=>$patientBarcodeId))->current();
+        
+        $dbAdapter = $this->adapter;
+        $sql = new Sql($dbAdapter); 
+        $qry = $sql->select()
+                ->from(array('d' => 'data_collection'))
+                //->columns(array('patient_barcode_id'))
+                ->join(array('r' => 'return_of_recency_results'),'d.patient_barcode_id=r.patient_barcode_id',array('anc_date_anc' => 'date_returned_to_anc','anc_date_participant' => 'date_returned_to_participant','reason_for_not_returning'),'left')
+                ->join(array('anc'=>'anc_site'),'anc.anc_site_id=d.anc_site',array('anc_site_name','anc_site_code'),'left')
+                ->join(array('u' => 'ussd_survey'),'d.patient_barcode_id=u.patient_barcode_id',array('ussd_date_anc' => 'date_result_returned_clinic','ussd_date_participant' => 'date_returned_to_participant'),'left')
+                ->where(array('d.patient_barcode_id'=>$patientBarcodeId));
+        $q = $sql->getSqlStringForSqlObject($qry);
+        return $dbAdapter->query($q, $dbAdapter::QUERY_MODE_EXECUTE)->current();;
+        
+        //return $this->select(array('patient_barcode_id'=>$patientBarcodeId))->current();
     }
     
 }

@@ -17,29 +17,29 @@ class AncSiteTable extends AbstractTableGateway {
     
     public function addAncSiteDetails($params){
         $lastInsertedId = 0;
-	if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
-	    $dbAdapter = $this->adapter;
-	    $sql = new Sql($dbAdapter);
-	    $locationDetailsDb = new LocationDetailsTable($dbAdapter);
-	    $province = null;
-	    $district = null;
-	    //set province
-	    if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
-		$sQuery = $sql->select()->from(array('l'=>'location_details'))
-			      ->where(array('l.location_name'=>trim($params['provinceNew']),'l.parent_location'=>0));
-		$sQuery = $sql->getSqlStringForSqlObject($sQuery);
-		$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-		if($sQueryResult){
-		   $province = $sQueryResult->location_id;
-		}else{
-		    $locationData = array(
-		                  'parent_location'=>0,
-		                  'location_name'=>$params['provinceNew'],
-		                  'country'=>base64_decode($params['country'])
-				);
-		    $locationDetailsDb->insert($locationData);
-		    $province = $locationDetailsDb->lastInsertValue;
-		}
+		if(isset($params['ancSiteName']) && trim($params['ancSiteName'])!= ''){
+			$dbAdapter = $this->adapter;
+			$sql = new Sql($dbAdapter);
+			$locationDetailsDb = new LocationDetailsTable($dbAdapter);
+			$province = null;
+			$district = null;
+			//set province
+			if(isset($params['provinceNew']) && trim($params['provinceNew'])!= ''){
+				$sQuery = $sql->select()->from(array('l'=>'location_details'))
+						->where(array('l.location_name'=>trim($params['provinceNew']),'l.parent_location'=>0));
+				$sQuery = $sql->getSqlStringForSqlObject($sQuery);
+				$sQueryResult = $dbAdapter->query($sQuery, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+			if($sQueryResult){
+				$province = $sQueryResult->location_id;
+			}else{
+				$locationData = array(
+							'parent_location'=>0,
+							'location_name'=>$params['provinceNew'],
+							'country'=>base64_decode($params['country'])
+					);
+				$locationDetailsDb->insert($locationData);
+				$province = $locationDetailsDb->lastInsertValue;
+			}
 	    }else if(isset($params['province']) && trim($params['province'])!= ''){
 		$province = base64_decode($params['province']);
 	    }

@@ -13,4 +13,9 @@ class USSDSurveyTable extends AbstractTableGateway {
     public function __construct(Adapter $adapter) {
         $this->adapter = $adapter;
     }
+
+    public function getUssdForBarcode($barcodeId){
+        $res = $this->select(array('patient_barcode_id'=>$barcodeId))->current();
+        return $res;
+    }    
 }

@@ -428,7 +428,9 @@ return array(
                         'action' => 'check-duplicate-data-report'
                     ),
                 ),
-            ),'return-recency' => array(
+            ),
+            
+            'return-recency' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '/clinic/return-recency[/][/:countryId]',
@@ -437,7 +439,19 @@ return array(
                         'action' => 'return-recency'
                     ),
                 ),
-            ),'add-return-recency' => array(
+            ),
+            'get-ussd-for-barcode' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/clinic/get-ussd-for-barcode',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Clinic',
+                        'action' => 'get-ussd-for-barcode'
+                    ),
+                ),
+            ),
+            
+            'add-return-recency' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' => '/clinic/return-recency/add',

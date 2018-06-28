@@ -18,30 +18,30 @@ class UserTable extends AbstractTableGateway {
     
     public function getUserLogin($params){
         $alertContainer = new Container('alert');
-	$common = new CommonService();
+		$common = new CommonService();
         $config = new \Zend\Config\Reader\Ini();
         $configResult = $config->fromFile(CONFIG_PATH . '/custom.config.ini');
         if(isset($params['userName']) && trim($params['userName'])!= ''){
             $dbAdapter = $this->adapter;
             $sql = new Sql($dbAdapter);
-	    $loginTrackerDb = new LoginTrackerTable($dbAdapter);
+	    	$loginTrackerDb = new LoginTrackerTable($dbAdapter);
             $userName = trim($params['userName']);
             $password = sha1(trim($params['password']).$configResult["password"]["salt"]);
-	    $isCountrySelected = false;
-	    if(isset($params['country']) && trim($params['country'])!= ''){
-	       $isCountrySelected = true;
-	       $selectedCountry = base64_decode($params['country']);
-	    }
+	    	$isCountrySelected = false;
+			if(isset($params['country']) && trim($params['country'])!= ''){
+				$isCountrySelected = true;
+				$selectedCountry = base64_decode($params['country']);
+			}
             $loginQuery = $sql->select()->from(array('u' => 'user'))
                               ->join(array('r'=>'role'),'r.role_id=u.role',array('role_code'))
                               ->where(array('u.user_name' => $userName, 'u.password' => $password));
             $loginQueryStr = $sql->getSqlStringForSqlObject($loginQuery);
             $loginResult = $dbAdapter->query($loginQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
             if($loginResult){
-		if($loginResult->status== 'inactive'){
-		    $alertContainer->msg = 'Your account seems to inactive. Please contact admin to reactivate your account..';
-		    return 'login';
-		}
+			if($loginResult->status== 'inactive'){
+				$alertContainer->msg = 'Your account seems to inactive. Please contact admin to reactivate your account..';
+				return 'login';
+			}
 		$loginContainer = new Container('user');
 		$userCountry = array();
 		$userClinic = array();

@@ -249,9 +249,7 @@ class ClinicController extends AbstractActionController{
         $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $parameters = $request->getPost();
-            $result = $dataCollectionService->fetchAllReturnOfRecencyResults($parameters);
-            return $this->getResponse()->setContent(Json::encode($result));
+
         }else{
             $countryId = base64_decode($this->params()->fromRoute('countryId'));
             if(isset($countryId) && trim($countryId)!= ''){
@@ -288,6 +286,18 @@ class ClinicController extends AbstractActionController{
             $params = $request->getPost();
             $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
             $response = $dataCollectionService->exportEnrollmentReportInExcel($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
+    public function getUssdForBarcodeAction(){
+        $request = $this->getRequest();
+        $dataCollectionService = $this->getServiceLocator()->get('DataCollectionService');
+        if ($request->isPost()) {
+            $parameters = $request->getPost();
+            $response = $dataCollectionService->fetchAllReturnOfRecencyResults($parameters);
             $viewModel = new ViewModel();
             $viewModel->setVariables(array('response' =>$response));
             $viewModel->setTerminal(true);

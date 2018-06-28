@@ -1386,7 +1386,7 @@ if(isset($date) && trim($date)!= ''){
 		$.post("<?php echo $this->url('export-rsot-pdf'); ?>", { },
 		function(data){
 			if(data === "" || data === null || data === undefined){
-			alert('Error-Oops, Unable to generate pdf');
+			alert('Error. Unable to generate pdf');
 			$.unblockUI();
 			}else if(data == "na"){
 			alert('Print data not available');

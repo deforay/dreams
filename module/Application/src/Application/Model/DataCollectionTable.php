@@ -175,11 +175,11 @@ class DataCollectionTable extends AbstractTableGateway {
 			* you want to insert a non-database field (for example a counter or static image)
 			*/
 		if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-			$aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"","","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name');
-			$orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','','','da_c.added_on','u.user_name');
+			$aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"date_returned_to_anc","r.date_returned_to_participant","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name');
+			$orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"date_returned_to_anc","r.date_returned_to_participant",'da_c.added_on','u.user_name');
 		}else{
-			$aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"","","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name','c.country_name');
-			$orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','','','da_c.added_on','u.user_name','c.country_name');
+			$aColumns = array('da_c.patient_barcode_id','t.test_status_name',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"date_returned_to_anc","r.date_returned_to_participant","DATE_FORMAT(da_c.added_on,'%d-%b-%Y')",'u.user_name','c.country_name');
+			$orderColumns = array('da_c.patient_barcode_id','t.test_status_name','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.lab_specimen_id','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy',"date_returned_to_anc","r.date_returned_to_participant",'da_c.added_on','u.user_name','c.country_name');
 		}
 
        /*
@@ -707,46 +707,48 @@ class DataCollectionTable extends AbstractTableGateway {
     }
 	
     public function lockDataCollectionDetails($params){
-	$loginContainer = new Container('user');
-	$common = new CommonService();
-	$dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
-	$data = array(
-	    'status'=>2,
-	    'locked_on'=>$common->getDateTime(),
-	    'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
-	);
-        $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
-                                           ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
-				           ->order('da_c_e.data_collection_event_log_id desc');
-	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
-	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-	if(isset($result->data_collection_event_log_id)){
-	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-	    $dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
-	}
-      return $this->update($data,array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
+		$loginContainer = new Container('user');
+		$common = new CommonService();
+		$dbAdapter = $this->adapter;
+		$sql = new Sql($dbAdapter);
+		$data = array(
+			'status'=>2,
+			'locked_on'=>$common->getDateTime(),
+			'locked_by'=>(isset($loginContainer->userId))?$loginContainer->userId:NULL
+		);
+	
+		$dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
+											->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
+											->order('da_c_e.data_collection_event_log_id desc');
+							
+		$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
+		$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if(isset($result->data_collection_event_log_id)){
+			$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+			$dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+		}
+      	return $this->update($data,array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
     public function unlockDataCollectionDetails($params){
-	$loginContainer = new Container('user');
-	$common = new CommonService();
-	$dbAdapter = $this->adapter;
-        $sql = new Sql($dbAdapter);
-	$data = array(
-	    'status'=>3,
-	    'unlocked_on'=>$common->getDateTime(),
-	    'unlocked_by'=>$loginContainer->userId
-	);
+		$loginContainer = new Container('user');
+		$common = new CommonService();
+		$dbAdapter = $this->adapter;
+			$sql = new Sql($dbAdapter);
+		$data = array(
+			'status'=>3,
+			'unlocked_on'=>$common->getDateTime(),
+			'unlocked_by'=>$loginContainer->userId
+		);
         $dataCollectionEventLogQuery = $sql->select()->from(array('da_c_e' => 'data_collection_event_log'))
-                                           ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
-				           ->order('da_c_e.data_collection_event_log_id desc');
-	$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
-	$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
-	if(isset($result->data_collection_event_log_id)){
-	    $dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
-	    $dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
-	}
+										   ->where(array('da_c_e.data_collection_id'=>base64_decode($params['dataCollectionId'])))
+										   ->order('da_c_e.data_collection_event_log_id desc');
+		$dataCollectionEventLogQueryStr = $sql->getSqlStringForSqlObject($dataCollectionEventLogQuery);
+		$result = $dbAdapter->query($dataCollectionEventLogQueryStr, $dbAdapter::QUERY_MODE_EXECUTE)->current();
+		if(isset($result->data_collection_event_log_id)){
+			$dataCollectionEventLogDb = new DataCollectionEventLogTable($dbAdapter);
+			$dataCollectionEventLogDb->update($data,array('data_collection_event_log_id'=>$result->data_collection_event_log_id));
+		}
       return $this->update($data,array('data_collection_id'=>base64_decode($params['dataCollectionId'])));
     }
     
@@ -762,11 +764,11 @@ class DataCollectionTable extends AbstractTableGateway {
 			* you want to insert a non-database field (for example a counter or static image)
 			*/
 		if(isset($parameters['countryId']) && trim($parameters['countryId'])!= ''){
-			$aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"","");
-			$orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','','');
+			$aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"date_returned_to_anc","r.date_returned_to_participant");
+			$orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name',"date_returned_to_anc","date_returned_to_participant");
 		}else{
-			$aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"","",'c.country_name');
-			$orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','c.country_name','','');
+			$aColumns = array('da_c.patient_barcode_id',"DATE_FORMAT(da_c.specimen_collected_date,'%d-%b-%Y')",'anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age',"DATE_FORMAT(da_c.specimen_picked_up_date_at_anc,'%d-%b-%Y')",'f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code',"DATE_FORMAT(da_c.receipt_date_at_central_lab,'%d-%b-%Y')",'lab_tech_name',"DATE_FORMAT(da_c.date_of_test_completion,'%d-%b-%Y')","DATE_FORMAT(da_c.result_dispatched_date_to_clinic,'%d-%b-%Y')",'da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments',"DATE_FORMAT(da_c.added_on,'%d-%b-%Y %H:%i:%s')",'u_a.full_name',"DATE_FORMAT(da_c.updated_on,'%d-%b-%Y %H:%i:%s')",'u_u.full_name','test_status_name',"date_returned_to_anc","r.date_returned_to_participant",'c.country_name');
+			$orderColumns = array('da_c.patient_barcode_id','da_c.specimen_collected_date','anc.anc_site_name','anc.anc_site_code','da_c.anc_patient_id','da_c.age','da_c.gestational_age','da_c.specimen_picked_up_date_at_anc','f.facility_name','f.facility_code'/*,'da_c.lab_specimen_id'*/,'r_r.rejection_code','da_c.receipt_date_at_central_lab','lab_tech_name','da_c.date_of_test_completion','da_c.result_dispatched_date_to_clinic','da_c.final_lag_avidity_odn','da_c.lag_avidity_result','da_c.hiv_rna','da_c.is_dbs_available','da_c.recent_infection','da_c.asante_rapid_recency_assy','da_c.asante_rapid_recency_assy','da_c.comments','da_c.added_on','u_a.full_name','da_c.updated_on','u_u.full_name','test_status_name','c.country_name',"date_returned_to_anc","date_returned_to_participant");
 		}
 
        /*

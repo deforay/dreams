@@ -13,15 +13,21 @@ if(isset($date) && trim($date)!= ''){
 
 
 
-$dateReturnedToPatient = '';
-if(isset($result->date_returned_to_participant) && trim($result->date_returned_to_participant)!= '' && $result->date_returned_to_participant!= '0000-00-00'){
-    $dateReturnedToPatient = $common->viewDateFormat($result->date_returned_to_participant);
-}
 $dateReturnedToANC = '';
-if(isset($result->date_returned_to_anc) && trim($result->date_returned_to_anc)!= '' && $result->date_returned_to_anc!= '0000-00-00'){
-    $dateReturnedToANC = $common->viewDateFormat($result->date_returned_to_anc);
+if(isset($result->anc_date_anc) && trim($result->anc_date_anc)!= '' && $result->anc_date_anc!= '0000-00-00' && $result->anc_date_anc!= NULL){
+    $dateReturnedToANC = $common->viewDateFormat($result->anc_date_anc);
+}else if(isset($result->ussd_date_anc) && trim($result->ussd_date_anc)!= '' && $result->ussd_date_anc!= '0000-00-00' && $result->ussd_date_anc!= NULL){
+    $arr = explode(" ",$result->ussd_date_anc);
+    $dateReturnedToANC = $common->viewDateFormat($arr[0]);
 }
 
+$dateReturnedToPatient = '';
+if(isset($result->anc_date_participant) && trim($result->anc_date_participant)!= '' && $result->anc_date_participant!= '0000-00-00' && $result->anc_date_participant!= NULL){
+    $dateReturnedToPatient = $common->viewDateFormat($result->anc_date_participant);
+}else if(isset($result->ussd_date_participant) && trim($result->ussd_date_participant)!= '' && $result->ussd_date_participant!= '0000-00-00' && $result->ussd_date_participant!= NULL){
+    $arr = explode(" ",$result->ussd_date_participant);
+    $dateReturnedToPatient = $common->viewDateFormat($arr[0]);
+}
 
 
 ?>
@@ -201,7 +207,7 @@ if(isset($result->date_returned_to_anc) && trim($result->date_returned_to_anc)!=
                                         <?php
                                         foreach($ancSites as $ancSite){
                                         ?>
-                                        <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"   <?php echo($result->anc == $ancSite['anc_site_id'])?'selected="selected"':''; ?>   ><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+                                        <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"   <?php echo($result->anc_site == $ancSite['anc_site_id'])?'selected="selected"':''; ?>   ><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -261,110 +267,7 @@ if(isset($result->date_returned_to_anc) && trim($result->date_returned_to_anc)!=
 	    </div>
 	</div>
     <?php } ?>
-    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 5px 5px 5px;height:250px;background:#e0e0e0;">
-	<div class="col m12">
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol1"> Status</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol3">ANC Site</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol4">ANC Site Code</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol5">ANC Patient ID</label>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="age" class="showhideCheckBox" /> <label for="iCol6">Age</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="gestational_age" class="showhideCheckBox" /> <label for="iCol7">Gestation Age (Weeks)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol8">Specimen Pick Up Date at ANC</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol9">Lab/Facility</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol10">Lab/Facility Code</label> <br>
-	    </div>
-	    <!--<div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol11">Lab Specimen ID</label> <br>
-	    </div>-->
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code At Central Lab</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol13">Lab Tech. Name/ID</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol14">Date of Test Completion</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity ODn</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol17">Lab LAg Recency (Based on LAg ODn)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol18">HIV RNA (cp/ml)</label> <br>
-	    </div>
-	    <!--<div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol19">HIV RNA > 1000 <br>
-	    </div>-->
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol19">Lab LAg Recency (Based on algorithm)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol20">Asante Positive Verification Line Reader Value (log10)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol21">Asante Positive Verification Line (Visual)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol22">Asante Long Term Line Reader Value (log10)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol23">Asante Long Term Line (Visual)</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol24" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol24">Date Result Returned at Clinic</label> <br>
-	    </div>
-	      <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol25">Date Returned to Participant</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol26">Added On</label> <br>
-	    </div>
-	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol27">Added by</label> <br>
-	    </div>
-	    <?php
-	    if(trim($countryId) == ''){
-	    ?>
-	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="28"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol26">Country Name</label> <br>
-	    </div>
-	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="27"/>
-	    <?php } ?>
-	</div>
-    </div>
+    
 
     
 </div>
