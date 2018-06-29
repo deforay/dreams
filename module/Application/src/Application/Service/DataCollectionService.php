@@ -300,18 +300,32 @@ class DataCollectionService {
                         }
                         $dateResultReturnedatClinic = '';
                         $timeResultReturnedatClinic = '';
-                        if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
-                            $dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+                        if(isset($aRow['ancDateResultReturnedClinic']) && trim($aRow['ancDateResultReturnedClinic'])!= '' && $aRow['ancDateResultReturnedClinic']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['ancDateResultReturnedClinic']);
+                            $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);	
+                        }else if(isset($aRow['dateResultReturnedClinic']) && trim($aRow['dateResultReturnedClinic'])!= '' && $aRow['dateResultReturnedClinic']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['dateResultReturnedClinic']);
                             $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);
-                            $timeResultReturnedatClinic = $dateArray[1];
                         }
+                        // if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+                        //     $dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+                        //     $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);
+                        //     $timeResultReturnedatClinic = $dateArray[1];
+                        // }
                         $dateReturnedtoParticipant = '';
                         $timeReturnedtoParticipant = '';
-                        if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
-                            $dateArray = explode(" ",$aRow['date_returned_to_participant']);
+                        if(isset($aRow['ancDateReturnedtoParticipant']) && trim($aRow['ancDateReturnedtoParticipant'])!= '' && $aRow['ancDateReturnedtoParticipant']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['ancDateReturnedtoParticipant']);
+                            $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);			
+                        }else if(isset($aRow['dateReturnedtoParticipant']) && trim($aRow['dateReturnedtoParticipant'])!= '' && $aRow['dateReturnedtoParticipant']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['dateReturnedtoParticipant']);
                             $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);
-                            $timeReturnedtoParticipant = $dateArray[1];
                         }
+                        // if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+                        //     $dateArray = explode(" ",$aRow['date_returned_to_participant']);
+                        //     $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);
+                        //     $timeReturnedtoParticipant = $dateArray[1];
+                        // }
                         $rejectionCode = '';
                         if(isset($aRow['rejection_code']) && (int)$aRow['rejection_code'] > 1){
                             $rejectionCode = $aRow['rejection_code'];
@@ -1555,17 +1569,35 @@ class DataCollectionService {
                             $dateofTestCompletion = $common->humanDateFormat($aRow['date_of_test_completion']);
                         }
                         //date result return at clinic
-                        if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
-                            $dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+                        if(isset($aRow['ancDateResultReturnedClinic']) && trim($aRow['ancDateResultReturnedClinic'])!= '' && $aRow['ancDateResultReturnedClinic']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['ancDateResultReturnedClinic']);
+                            $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);	
+                            $timeResultReturnedatClinic = '';		
+                        }else if(isset($aRow['dateResultReturnedClinic']) && trim($aRow['dateResultReturnedClinic'])!= '' && $aRow['dateResultReturnedClinic']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['dateResultReturnedClinic']);
                             $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);
-                            $timeResultReturnedatClinic = $dateArray[1];
+                            $timeResultReturnedatClinic = '';
                         }
+                        // if(isset($aRow['date_result_returned_clinic']) && trim($aRow['date_result_returned_clinic'])!= '' && $aRow['date_result_returned_clinic']!= '0000-00-00 00:00:00'){
+                        //     $dateArray = explode(" ",$aRow['date_result_returned_clinic']);
+                        //     $dateResultReturnedatClinic = $common->humanDateFormat($dateArray[0]);
+                        //     $timeResultReturnedatClinic = $dateArray[1];
+                        // }
                         //date returned to participant
-                        if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
-                            $dateArray = explode(" ",$aRow['date_returned_to_participant']);
+                        if(isset($aRow['ancDateReturnedtoParticipant']) && trim($aRow['ancDateReturnedtoParticipant'])!= '' && $aRow['ancDateReturnedtoParticipant']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['ancDateReturnedtoParticipant']);
+                            $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);	
+                            $timeReturnedtoParticipant = '';		
+                        }else if(isset($aRow['dateReturnedtoParticipant']) && trim($aRow['dateReturnedtoParticipant'])!= '' && $aRow['dateReturnedtoParticipant']!= '0000-00-00 00:00:00'){
+                            $dateArray = explode(" ",$aRow['dateReturnedtoParticipant']);
                             $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);
-                            $timeReturnedtoParticipant = $dateArray[1];
+                            $timeReturnedtoParticipant = '';
                         }
+                        // if(isset($aRow['date_returned_to_participant']) && trim($aRow['date_returned_to_participant'])!= '' && $aRow['date_returned_to_participant']!= '0000-00-00 00:00:00'){
+                        //     $dateArray = explode(" ",$aRow['date_returned_to_participant']);
+                        //     $dateReturnedtoParticipant = $common->humanDateFormat($dateArray[0]);
+                        //     $timeReturnedtoParticipant = $dateArray[1];
+                        // }
                         //status
                         if(isset($aRow['test_status_name']) && $aRow['test_status_name']!= null && trim($aRow['test_status_name'])!= ''){
                            $status = ucfirst($aRow['test_status_name']);
