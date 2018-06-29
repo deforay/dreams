@@ -1,0 +1,484 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.css' ?>"/>
+<style>
+    .ranges{display: none;}
+    .daterangepicker .ranges{
+	width: 190px;
+    }
+    @font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url('../assets/fonts/glyphicons-halflings-regular.eot');
+	src: url('../assets/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../assets/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../assets/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../assets/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    }
+    .glyphicon {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-family: 'Glyphicons Halflings';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+    
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .glyphicon-arrow-left:before {
+      content: "\e091";
+    }
+    .glyphicon-arrow-right:before {
+      content: "\e092";
+    }
+    .glyphicon-arrow-up:before {
+      content: "\e093";
+    }
+    .glyphicon-arrow-down:before {
+      content: "\e094";
+    }
+    * {
+      -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	      box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+      -webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+	      box-sizing: border-box;
+    }
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+    }
+    .select-wrapper{
+	width:100%;
+    }
+    #labLogbookDataTable_wrapper{
+	overflow-x: scroll;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:4px 4px 4px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
+    }
+    .redTxt{
+	color:#F44336 !important;
+    }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Print Lab Logbook</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Print Lab Logbook</a>
+       </div>
+    </div>
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 0px 5px 5px;height:250px;background:#e0e0e0;">
+	<div class="col m12">
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol0">Receipt Date at Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol1">Patient Barcode ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol3">ANC Site</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol4">ANC Site Code</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol5">ANC Patient ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="age" class="showhideCheckBox" /> <label for="iCol6">Age</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="age" class="showhideCheckBox" /> <label for="iCol7">Gestation Age (Weeks)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol8">Specimen Pick Up Date at ANC</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol9">Lab/Facility</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol10">Lab/Facility Code</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol11">Lab Specimen ID</label> <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code At Central Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol12">Lab Tech. Name/ID</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol13">Date of Test Completion</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol14">Result Dispatched Date to Clinic</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol15">LAg Avidity ODn</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol16">Lab LAg Recency (Based on LAg ODn)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol17">HIV RNA (cp/ml)</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol18">HIV RNA > 1000 <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol18">Lab LAg Recency (Based on algorithm)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol19">Positive Verification Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="asante_rapid_recency_assy" class="showhideCheckBox" /> <label for="iCol20">Long Term Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="comments" class="showhideCheckBox" /> <label for="iCol21">Comments</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol22">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="hidden" id="countColumn" value="23"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol23">Date Returned to Participant</label> <br>
+	    </div>
+	</div>
+    </div>
+    <div class="row" style="max-width:1109px;">
+	<form id="searchFilterForm" action="#">
+	    <div class="row">
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<input id="receiptDateAtCentralLab" name="receiptDateAtCentralLab" type="text" title="Please enter receipt date at lab" onclick="selectDate();" readonly>
+			<label for="receiptDateAtCentralLab">Receipt Date at Lab </label>
+		     </div>
+		</div>
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="anc" name="anc" title="Please select anc">
+			    <option value="">All ANCs</option>
+			    <?php
+			    foreach($ancSites as $anc){
+				?>
+				<option value="<?php echo base64_encode($anc['anc_site_id']);?>"><?php echo $anc['anc_site_code'].' - '.ucwords($anc['anc_site_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+			<label for="anc">ANC Site </label>
+		     </div>
+		</div>
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="lab" name="lab" title="Please select lab">
+			    <option data-lab-name="" value="">All Labs/Facilities</option>
+			    <?php
+			    foreach($facilities as $lab){
+				?>
+				<option data-lab-name="<?php echo ucwords($lab['facility_name']); ?>" value="<?php echo base64_encode($lab['facility_id']);?>"><?php echo $lab['facility_code'].' - '.ucwords($lab['facility_name']);?></option>
+				<?php
+			    }
+			    ?>
+			</select>
+			<label for="lab">Lab/Facility </label>
+		     </div>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col s4">
+		     <div class="input-field col m12 s12">
+			<select class="material-select" id="status" name="status" title="Please select test status">
+			    <option value="">All Tests</option>
+			    <option value="completed" selected>Completed Tests</option>
+			    <option value="pending">Pending Tests</option>
+			</select>
+			<label for="status">Result Reported </label>
+		     </div>
+		</div>
+	    </div>
+	    <div class="col l12 m12 s12" style="text-align:center;">
+		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="searchLabLogbookData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="generateLabLogbookPDF();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange"><i class="zmdi zmdi-collection-pdf"></i> Export PDF</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:void(0);" onclick="exportLabLogbookData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>
+	    </div>
+	</form>
+    </div>
+    <div class="row content-container">
+        <div class="col l12 m12 s12">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Logbook List
+		  <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
+		</div>
+                <div class="card-content clearfix">
+                    <table id="labLogbookDataTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+				<th>Receipt Date at Lab</th>
+                                <th>Patient Barcode ID</th>
+                                <th>Specimen Collected Date</th>
+				<th>ANC Site Name</th>
+				<th>ANC Site Code</th>
+				<th>ANC Patient ID</th>
+                                <th>Age</th>
+				<th>Gestation Age (Weeks)</th>
+                                <th>Specimen Pick Up Date at ANC</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
+                               <!-- <th>Lab Specimen ID</th>-->
+				<th>Rejection Code At Central Lab</th>
+				<th>Lab Tech. Name/ID</th>
+				<th>Date of Test Completion</th>
+				<th>Result Dispatched Date to Clinic</th>
+				<th>LAg Avidity</th>
+                                <th>Lab LAg Recency (Based on LAg ODn)</th>
+				<th>HIV RNA (cp/ml)</th>
+                                <!--<th>HIV RNA > 1000</th>-->
+				<th>Lab LAg Recency (Based on algorithm)</th>
+                                <th>Positive Verification Line (Visual)</th>
+                                <th>Long Term Line (Visual)</th>
+				<th>Comments</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
+                            </tr>
+                        </thead>
+			<tfoot>
+                            <tr>
+				<th>Receipt Date at Lab</th>
+                                <th>Patient Barcode ID</th>
+                                <th>Specimen Collected Date</th>
+				<th>ANC Site Name</th>
+				<th>ANC Site Code</th>
+				<th>ANC Patient ID</th>
+                                <th>Age</th>
+				<th>Gestation Age (Weeks)</th>
+                                <th>Specimen Pick Up Date at ANC</th>
+	                        <th>Lab/Facility</th>
+	                        <th>Lab/Facility Code</th>
+                                <!--<th>Lab Specimen ID</th>-->
+				<th>Rejection Code At Central Lab</th>
+				<th>Lab Tech. Name/ID</th>
+				<th>Date of Test Completion</th>
+				<th>Result Dispatched Date to Clinic</th>
+				<th>LAg Avidity</th>
+                                <th>Lab LAg Recency (Based on LAg ODn)</th>
+				<th>HIV RNA (cp/ml)</th>
+                                <!--<th>HIV RNA > 1000</th>-->
+				<th>Lab LAg Recency (Based on algorithm)</th>
+                                <th>Positive Verification Line (Visual)</th>
+                                <th>Long Term Line (Visual)</th>
+				<th>Comments</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/daterangepicker/daterangepicker.js' ?>"></script>
+<script>
+    $(document).ready(function() {
+	selectDate();
+	oTable = $('#labLogbookDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		//{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"}
+            ],
+	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		if($.trim(aData[11])!= ''){
+		    $(nRow).addClass("blueTxt");
+		}else{
+		   if(aData[19] =='Absent' || (aData[18] == 'Long Term' && aData[20] == 'Absent') || (aData[18] == 'Recent' && aData[20] == 'Present')){ $(nRow).addClass("redTxt"); }
+		}
+	    },
+            "aaSorting": [[0, "asc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('print-lab-logbook'); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+		aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>' });
+		aoData.push({"name": "receiptDateAtCentralLab", "value": $("#receiptDateAtCentralLab").val() });
+		aoData.push({"name": "anc", "value": $("#anc").val() });
+		aoData.push({"name": "lab", "value": $("#lab").val() });
+		aoData.push({"name": "status", "value": $("#status").val() });
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+       
+       $("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')});
+        for(colNo=0;colNo <=$("#countColumn").val();colNo++){
+            $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+        }
+       
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $(document).on('keyup', "input[type='text']", function(){
+	    oTable.fnFilter($(this).val());
+       });
+    });
+    
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    }
+	
+    function selectDate(){
+	$(".ranges").show();
+        $(".left").css({"float":"none !important"});
+        $('#receiptDateAtCentralLab').daterangepicker({
+            format: 'DD-MMM-YYYY',
+	    separator: ' to ',
+            maxDate: moment(),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+            },
+        },function(start, end) {
+            startDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+            $('label[for="receiptDateAtCentralLab"]').css("transform", "translateY(-140%)");
+        });
+        $('.applyBtn').addClass('waves-effect waves-light btn-small white-text blue margin-bottom-10');
+        $('.cancelBtn').addClass('waves-effect waves-light btn-small btn blue-text custom-btn custom-btn-blue margin-bottom-10');
+    }
+    
+    function searchLabLogbookData(){
+       oTable.fnDraw(false);
+    }
+    
+    function clearSearchFields(){
+        $('#searchFilterForm')[0].reset();
+        searchLabLogbookData();
+    }
+    
+    function generateLabLogbookPDF(){
+	$.blockUI();
+	$.post("<?php echo $this->url('generate-logbook-pdf'); ?>", {countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name') },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate pdf');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Print data not available');
+		$.unblockUI();
+	    }else{
+	        $.unblockUI();
+	        window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+    
+    function exportLabLogbookData(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-data-collection'); ?>", { countryId:'<?php echo $countryId; ?>',date:$("#receiptDateAtCentralLab").val(),lab:$("#lab").val(),status:$("#status").val(),labName:$('#lab').find(':selected').data('lab-name'),frmSrc:'log'},
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+</script>

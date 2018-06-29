@@ -1,0 +1,248 @@
+<?php
+use Zend\Session\Container;
+$alertContainer = new Container('alert');
+$common = new \Application\Service\CommonService();
+if(count($logbookResult) >0){
+    $labs = '-';
+    $receiptDateatLab = '-';
+    $resultReported = 'Completed Tests, Pending Tests';
+    $alertContainer->headerSize = 46;
+    //set labs
+    if(isset($params['labName']) && trim($params['labName'])!= ''){
+	$labs = $params['labName'];
+    }else if(isset($facilities) && count($facilities) > 0){
+	$allLabs = array();
+	foreach($facilities as $facility){
+	    $allLabs[] = ' '.ucwords($facility['facility_name']);
+	}
+        $labs = implode(',',$allLabs);
+    }
+    //set receipt date at lab
+    if(trim($params['date'])!= ''){
+	$receiptDateatLab = $params['date'];
+    }
+    //set result reported
+    if(trim($params['status']) == 'completed'){
+	$resultReported = 'Completed Tests';
+    }else if(trim($params['status']) == 'pending'){
+	$resultReported = 'Pending Tests';
+    }
+    $filterContent = '';
+    $filterContent .='<table>';
+    $filterContent .='<tr><td colspan="4" style="line-height:30px;"></td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;"><br><br>Lab Site/Facility</td><td colspan="3" style="width:35%;font-size:14px;font-weight:normal;text-align:left;"><br><br>'.$labs.'</td></tr>';
+    $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
+    $filterContent .='<tr><td style="width:15%;font-size:14px;text-align:left;">Receipt Date at Lab</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$receiptDateatLab.'</td><td style="width:15%;font-size:14px;text-align:left;">Result Reported</td><td style="width:35%;font-size:14px;font-weight:normal;text-align:left;">'.$resultReported.'</td></tr>';
+    $filterContent .='<tr><td colspan="4" style="line-height:6px;"></td></tr>';
+    $filterContent .='</table>';
+    
+    //header and footer
+    class MYPDF extends TCPDF {
+        public function setSchemeName($heading,$logo,$filterContent) {
+	  $this->heading = $heading;
+	  $this->logo = $logo;
+	  $this->filterContent = $filterContent;
+        }
+	
+        //Page header
+        public function Header() {
+	    $alertContainer = new Container('alert');
+            // Logo
+            $image_file = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'images'. DIRECTORY_SEPARATOR . $this->logo;
+            $this->Image($image_file, 12,3, 20, '', 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+             //Set font
+            $this->SetFont('helvetica', 'B', 20);
+             //Title
+            $this->writeHTMLCell(0,'',36,10,$this->heading,0,1,false,true,'C',true);
+	    $this->writeHTMLCell(0,'','','',$this->filterContent,0,1,false,true,'C',true);
+	    $alertContainer->headerSize = $this->GetY();
+        }
+    
+        // Page footer
+        public function Footer() {
+            // Position at 15 mm from bottom
+            $this->SetY(-15);
+            // Set font
+            $this->SetFont('helvetica', '', 8);
+            // Page number
+            $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+    // create new PDF document
+    //$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'A3', true, 'UTF-8', false);
+    $pdf->setPageOrientation('L');
+    $pdf->setSchemeName('Logbook for Recency Test','dreams-small-logo.png',$filterContent);
+    // set document information
+    $pdf->SetCreator('HIV Recency');
+    //$pdf->SetAuthor('Dream');
+    $pdf->SetTitle('Logbook for HIV Recency Test');
+    //$pdf->SetSubject('TCPDF Tutorial');
+    //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+    
+    // set default header data
+    $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+    
+    // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+    
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+    
+    // set margins
+    //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_RIGHT);
+    //$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    //$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+    
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+    
+    // set image scale factor
+    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+    
+    // set some language-dependent strings (optional)
+    //if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+    //    require_once(dirname(__FILE__).'/lang/eng.php');
+    //    $pdf->setLanguageArray($l);
+    //}
+    
+    // ---------------------------------------------------------
+    
+    // set font
+    $pdf->SetFont('helvetica', '', 10);
+    
+    $pdf->AddPage();
+    $pdf->SetMargins(10, $alertContainer->headerSize, 10, true);
+    //$pdf->SetFooterMargin(10);
+    $pdf->SetY($alertContainer->headerSize,true,false);
+    //pdf content
+    $html = '';
+      $html.='<table border="1" style="padding:2px;">';
+          $html .='<thead>';
+           $html .='<tr>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Receipt Date at Lab</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Patient Barcode ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Specimen Collected Date</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Site</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Site Code</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Encrypted ANC Patient ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>ANC Patient ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Age</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Specimen Pick Up Date at ANC</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab/Facility Code</strong></th>';
+	    //$html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Specimen ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Rejection Code At Central Lab</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Lab Tech. Name/ID</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Date of Test Completion</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Result Dispatched Date to Clinic</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>HIV RNA (cp/ml)</strong></th>';
+	    $html .='<th colspan="2"  style="white-space: nowrap;text-align:center;"><br><strong>LAg Assay </strong></th>';
+	    $html .='<th colspan="4"  style="white-space: nowrap;text-align:center;"><br><strong>Rapid Recency Assay </strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Comments</strong></th>';
+	    $html .='<th rowspan="2" style="white-space: nowrap;text-align:center;"><br><br><strong>Manager\'s Approval</strong></th>';
+           $html .='</tr>';
+	   $html .='<tr>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>LAg Avidity ODn</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Lab LAg Recency (Based on algorithm)</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line Reader Value (log10)</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Positive Verification Line (Visual)</strong></th>';
+	    $html .='<th style="white-space: nowrap;text-align:center;"><strong>Long Term Line Reader Value (log10)</strong></th>';
+            $html .='<th style="white-space: nowrap;text-align:center;"><strong>Long Term Line (Visual)</strong></th>';
+	   $html .='</tr>';
+          $html .='</thead>';
+          $html .='<tbody>';
+          foreach($logbookResult as $row){
+            $specimenCollectedDate = '';
+	    $specimenPickUpDateatAnc = '';
+	    $receiptDateAtCentralLab = '';
+	    $testCompletionDate = '';
+	    $resultDispatchedDateToClinic = '';
+	    if(isset($row['specimen_collected_date']) && trim($row['specimen_collected_date'])!= '' && $row['specimen_collected_date']!= '0000-00-00'){
+	      $specimenCollectedDate = $common->viewDateFormat($row['specimen_collected_date']);
+	    }if(isset($row['specimen_picked_up_date_at_anc']) && trim($row['specimen_picked_up_date_at_anc'])!= '' && $row['specimen_picked_up_date_at_anc']!= '0000-00-00'){
+	      $specimenPickUpDateatAnc = $common->viewDateFormat($row['specimen_picked_up_date_at_anc']);
+	    }if(isset($row['receipt_date_at_central_lab']) && trim($row['receipt_date_at_central_lab'])!= '' && $row['receipt_date_at_central_lab']!= '0000-00-00'){
+	      $receiptDateAtCentralLab = $common->viewDateFormat($row['receipt_date_at_central_lab']);
+	    }if(isset($row['date_of_test_completion']) && trim($row['date_of_test_completion'])!= '' && $row['date_of_test_completion']!= '0000-00-00'){
+	      $testCompletionDate = $common->viewDateFormat($row['date_of_test_completion']);
+	    }if(isset($row['result_dispatched_date_to_clinic']) && trim($row['result_dispatched_date_to_clinic'])!= '' && $row['result_dispatched_date_to_clinic']!= '0000-00-00'){
+	      $resultDispatchedDateToClinic = $common->viewDateFormat($row['result_dispatched_date_to_clinic']);
+	    }
+	    $rejectionCode = '';
+	    if(isset($row['rejection_code']) && (int)$row['rejection_code'] > 1){
+		$rejectionCode = $row['rejection_code'];
+	    }
+	    //$hIVRNAResult = '';
+	    //if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='yes'){
+	    //  $hIVRNAResult = 'High Viral Load';
+	    //}else if(trim($row['hiv_rna_gt_1000'])!= '' && $row['hiv_rna_gt_1000'] =='no'){
+	    //  $hIVRNAResult = 'Low Viral Load';
+	    //}
+	    $finalLagRecencyInfection = '';
+	    if(isset($row['recent_infection']) && $row['recent_infection'] != null){
+		if($row['recent_infection'] == 'yes'){
+		    $finalLagRecencyInfection = 'Recent';
+		}else if($row['recent_infection'] == 'no'){
+		    $finalLagRecencyInfection = 'Long Term';
+		}else{
+		    $finalLagRecencyInfection = 'Incomplete';
+		}
+	    }
+	    $rapidRecencyAssay = '';
+	    $diagnosisReaderLogVal = '';
+	    $rapidRecencyAssayDuration = '';
+	    $recencyReaderLogVal = '';
+	    if(trim($row['asante_rapid_recency_assy'])!= ''){
+		$asanteRapidRecencyAssy = json_decode($row['asante_rapid_recency_assy'],true);
+		if(isset($asanteRapidRecencyAssy['rrdt'])){
+		    $rapidRecencyAssay = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
+		    $diagnosisReaderLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+		}if(isset($asanteRapidRecencyAssy['rrr'])){
+		    $rapidRecencyAssayDuration = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+		    $recencyReaderLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+		}
+	    }
+	    $redTxt='';
+	    if($rapidRecencyAssay == 'Absent' || ($finalLagRecencyInfection == 'Long Term' && $rapidRecencyAssayDuration == 'Absent') || ($finalLagRecencyInfection == 'Recent' && $rapidRecencyAssayDuration == 'Present')){
+		$redTxt = 'color:#F44336;';
+	    }
+            $html .='<tr style="'.$redTxt.'">';
+	      $html .='<td>'.$receiptDateAtCentralLab.'</td>';
+              $html .='<td>'.$row['patient_barcode_id'].'</td>';
+              $html .='<td>'.$specimenCollectedDate.'</td>';
+              $html .='<td>'.ucwords($row['anc_site_name']).'</td>';
+	      $html .='<td>'.$row['anc_site_code'].'</td>';
+	      $html .='<td>'.$row['enc_anc_patient_id'].'</td>';
+              $html .='<td></td>';//empty value
+              $html .='<td style="text-align:center;">'.$row['age'].'</td>';
+              $html .='<td>'.$specimenPickUpDateatAnc.'</td>';
+              $html .='<td>'.ucwords($row['facility_name']).'</td>';
+	      $html .='<td>'.$row['facility_code'].'</td>';
+              //$html .='<td>'.$row['lab_specimen_id'].'</td>';
+              $html .='<td>'.$rejectionCode.'</td>';
+	      $html .='<td>'.ucwords($row['lab_tech_name']).'</td>';
+              $html .='<td>'.$testCompletionDate.'</td>';
+              $html .='<td>'.$resultDispatchedDateToClinic.'</td>';
+	      $html .='<td>'.$row['hiv_rna'].'</td>';
+              $html .='<td style="text-align:center;">'.$row['final_lag_avidity_odn'].'</td>';
+              $html .='<td>'.$finalLagRecencyInfection.'</td>';
+	      $html .='<td style="text-align:center;">'.$diagnosisReaderLogVal.'</td>';
+              $html .='<td>'.$rapidRecencyAssay.'</td>';
+	      $html .='<td style="text-align:center;">'.$recencyReaderLogVal.'</td>';
+              $html .='<td>'.$rapidRecencyAssayDuration.'</td>';
+	      $html .='<td>'.ucfirst($row['comments']).'</td>';
+	      $html .='<td></td>';//empty value
+            $html .='</tr>';
+          }
+          $html .='</tbody>';
+      $html.='</table>';
+    $pdf->writeHTML(utf8_encode($html),true,0,true,0);
+    $filename = 'Lab-Logbook-HIV-Recency-'.date('d-M-Y-H-i-s').'-'.rand().'.pdf';
+    $pdf->Output(TEMP_UPLOAD_PATH . DIRECTORY_SEPARATOR . $filename,"F");
+    echo $filename;
+}else{
+    echo 'na';
+}
+?>

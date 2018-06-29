@@ -281,6 +281,12 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                             <li class="odkSupervisoryAuditMenu<?php echo $country['country_id']; ?> menuAll">
                                                                 <a class="odkSupervisoryAuditMenu<?php echo $country['country_id']; ?>" href="/odk-supervisory-audit/<?php echo base64_encode($country['country_id']); ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-collection-text"></i> ODK Supervisory Audit</a>
                                                             </li>
+                                                            <li class="admincountryDataCollectionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/data-collection-admin/<?php echo base64_encode($country['country_id']); ?>" class="admincountryDataCollectionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-comment-edit"></i> Lab Data Reporting 2</a>
+                                                            </li>
+                                                            <li class="admincountryDataExtractionMenu<?php echo $country['country_id']; ?> menuAll">
+                                                                <a href="/data-extraction-admin/<?php echo base64_encode($country['country_id']); ?>" class="countryDataExtractionMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> Lab Data Download 2</a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </li>
@@ -778,6 +784,28 @@ if($loginContainer->roleCode== 'ANCSC'){
             $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
             $(".ancAsanteResultMenu"+atob(splits)).addClass("active");
             $(".ancAsanteResultMenu"+atob(splits)).css("color","#fff");
+        }else if(urlArray[1]=='data-collection-admin'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+            $(".countryAdminMenu"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
+            $(".admincountryDataCollectionMenu"+atob(splits)).addClass("active");
+            $(".admincountryDataCollectionMenu"+atob(splits)).css("color","#fff");
+        }else if(urlArray[1]=='data-extraction-admin'){
+            var splits = str.substr(str.lastIndexOf('/') + 1);
+            $(".countryMenu"+atob(splits)).addClass("active");
+            $(".collapsibleCountryMenu"+atob(splits)).css("display","block");
+            $(".collapsibleCountryAdminMenu"+atob(splits)).css("display","block");
+            $(".countryAdminMenu"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).addClass("active");
+            $(".countryAdminMenuSecond"+atob(splits)).css("background-color","#ededed");
+            $(".countryAdminMenuSecond"+atob(splits)).css("color","#ff69b4");
+            $(".admincountryDataExtractionMenu"+atob(splits)).addClass("active");
+            $(".admincountryDataExtractionMenu"+atob(splits)).css("color","#fff");
         }else if(urlArray[1]=='study-files'){
             var splits = str.substr(str.lastIndexOf('/') + 1);
             $(".countryMenu"+atob(splits)).addClass("active");

@@ -12,6 +12,7 @@ use Application\Service\FacilityTypeService;
 use Application\Service\AncSiteService;
 use Application\Service\DataCollectionService;
 use Application\Service\RiskAssessmentService;
+use Application\Service\DataCollectionAdminService;
 
 use Application\Model\RoleTable;
 use Application\Model\UserTable;
@@ -41,6 +42,7 @@ use Application\Model\USSDSurveyTable;
 use Application\Model\USSDImportStatusTable;
 use Application\Model\USSDNotEnrolledTable;
 use Application\Model\ReturnOfRecencyResultsTable;
+use Application\Model\DataCollectionAdminTable;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -213,6 +215,8 @@ class Module{
                     return new DataCollectionService($sm);
                 },'RiskAssessmentService' => function($sm) {
                     return new RiskAssessmentService($sm);
+                },'DataCollectionAdminService' => function($sm) {
+                    return new DataCollectionAdminService($sm);
                 },
                 
                 'RoleTable' => function($sm) {
@@ -330,6 +334,10 @@ class Module{
                 },'ReturnOfRecencyResultsTable' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $table = new ReturnOfRecencyResultsTable($dbAdapter);
+                    return $table;
+                },'DataCollectionAdminTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new DataCollectionAdminTable($dbAdapter);
                     return $table;
                 }
             ),

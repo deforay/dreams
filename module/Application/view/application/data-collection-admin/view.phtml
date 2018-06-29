@@ -1,0 +1,332 @@
+<?php
+use Application\Service\CommonService;
+$common = new CommonService();
+if(isset($countryId) && trim($countryId)!= ''){
+    $link = "/data-collection-admin/".base64_encode($countryId);
+}else{
+    $link = "/data-collection";
+}
+$specimenCollectedDate = '';
+if(isset($row->specimen_collected_date) && trim($row->specimen_collected_date)!= '' && $row->specimen_collected_date!= '0000-00-00'){
+    $specimenCollectedDate = $common->viewDateFormat($row->specimen_collected_date);
+}
+$specimenPickedUpDateAtAnc = '';
+if(isset($row->specimen_picked_up_date_at_anc) && trim($row->specimen_picked_up_date_at_anc)!= '' && $row->specimen_picked_up_date_at_anc!= '0000-00-00'){
+    $specimenPickedUpDateAtAnc = $common->viewDateFormat($row->specimen_picked_up_date_at_anc);
+}
+$patientDOB = '';
+if(isset($row->patient_dob) && trim($row->patient_dob)!= '' && $row->patient_dob!= '0000-00-00'){
+    $patientDOB = $common->viewDateFormat($row->patient_dob);
+}
+$receiptDateAtCentralLab = '';
+if(isset($row->receipt_date_at_central_lab) && trim($row->receipt_date_at_central_lab)!= '' && $row->receipt_date_at_central_lab!= '0000-00-00'){
+    $receiptDateAtCentralLab = $common->viewDateFormat($row->receipt_date_at_central_lab);
+}
+$testCompletionDate = '';
+if(isset($row->date_of_test_completion) && trim($row->date_of_test_completion)!= '' && $row->date_of_test_completion!= '0000-00-00'){
+    $testCompletionDate = $common->viewDateFormat($row->date_of_test_completion);
+}
+$resultDispatchedDateToClinic = '';
+if(isset($row->result_dispatched_date_to_clinic) && trim($row->result_dispatched_date_to_clinic)!= '' && $row->result_dispatched_date_to_clinic!= '0000-00-00'){
+    $resultDispatchedDateToClinic = $common->viewDateFormat($row->result_dispatched_date_to_clinic);
+}
+$lAgAvidityResult = '';
+if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'long term'){
+    $lAgAvidityResult = 'Long Term';
+}else if(trim($row->lag_avidity_result)!= '' && $row->lag_avidity_result == 'recent'){
+    $lAgAvidityResult = 'Recent';
+}
+$hIVRNAResult = '';
+if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='yes'){
+    $hIVRNAResult = 'High Viral Load';
+}else if(trim($row->hiv_rna_gt_1000)!= '' && $row->hiv_rna_gt_1000 =='no'){
+    $hIVRNAResult = 'Low Viral Load';
+}
+
+$asanteRapidRecencyAssayPn = '';
+$readerValueRRDTLogVal = '';
+//$readerValueRRDTLogValText = '';
+$asanteRapidRecencyAssayRlt = '';
+$readerValueRRRLogVal = '';
+//$readerValueRRRLogValText = '';
+$asanteRapidRecencyAssy = ($row->asante_rapid_recency_assy!= null && trim($row->asante_rapid_recency_assy)!= '')?json_decode($row->asante_rapid_recency_assy,true):'';
+if(isset($asanteRapidRecencyAssy['rrdt'])){
+    $asanteRapidRecencyAssayPn = (isset($asanteRapidRecencyAssy['rrdt']['assay']))?ucwords($asanteRapidRecencyAssy['rrdt']['assay']):'';
+    $readerValueRRDTLog = (isset($asanteRapidRecencyAssy['rrdt']['reader']))?$asanteRapidRecencyAssy['rrdt']['reader']:'';
+    $readerValueRRDTLogVal = (isset($asanteRapidRecencyAssy['rrdt']['reader']))? "log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrdt']['reader']:'';
+    //$readerValueRRDTLogValText = (trim($readerValueRRDTLog)!= '' && (float)$readerValueRRDTLog >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+}if(isset($asanteRapidRecencyAssy['rrr'])){
+    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
+    $readerValueRRRLog = (isset($asanteRapidRecencyAssy['rrr']['reader']))?$asanteRapidRecencyAssy['rrr']['reader']:'';
+    $readerValueRRRLogVal = (isset($asanteRapidRecencyAssy['rrr']['reader']))?"log<sub>10</sub> : ". $asanteRapidRecencyAssy['rrr']['reader']:'';
+    //$readerValueRRRLogValText = (trim($readerValueRRRLog)!= '' && (int)$readerValueRRRLog >= 3)?'Long Term Line Present':'Long Term Line Absent';
+}
+?>
+<style>
+    .data-collection-view .row{
+        margin-bottom:0 !important;
+    }
+    .input-field{
+        margin-top:0;
+        height:56px;
+    }
+    .box-1,.box-2{
+	float:left;
+	width:<?php echo($asanteRapidRecencyAssayPn == 'Absent')?'74%;':'44%;'; ?>
+    }
+    .box-11,.box-21{
+	float:left;
+	width:100%;
+	border:2px dotted #333;
+        margin-top:12px !important;
+        min-height:60px !important;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+        padding-top:2vh;
+    }
+    #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
+        text-align: center !important;
+        font-size:14px;
+    }
+    #readerValueRRDTLogValText/*, #readerValueRRRLogValText*/{
+        font-weight:bold;
+        font-size:13px;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Lab Data Reporting View</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="<?php echo $link; ?>" class="breadcrumb">Lab Data Reporting</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Lab Data Reporting View</a>
+        </div>
+    </div>
+    <div class="row content-container" style="padding: 0 20px;">
+        <div class="data-collection-view card">
+            <fieldset style="border-color:#88C542;border-style: solid;">
+               <legend>SURVEILLANCE/SAMPLE INFORMATION <span id="serialNo"></span></legend>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="patientBarcodeId" class="">Patient Barcode ID </label><br>
+                            <p><?php echo $row->patient_barcode_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="specimenCollectedDate" class="">Date Specimen Collected </label><br>
+                            <p><?php echo $specimenCollectedDate; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancSite">ANC site name </label><br>
+                            <p><?php echo $row->anc_site_code.' - '.ucwords($row->anc_site_name); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                   <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label><br>
+                            <p><?php echo $specimenPickedUpDateAtAnc; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="specimenType" class="">Specimen Type </label><br>
+                            <p>
+                                <?php
+                                if($row->specimen_type == 1){
+                                    echo 'Venous';
+                                }if($row->specimen_type == 2){
+                                    echo 'Plasma';
+                                }if($row->specimen_type == 3){
+                                    echo 'DBS';
+                                }
+                                ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset style="border-color:#ff9800;border-style: solid;">
+               <legend>PATIENT INFORMATION</legend>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancPatientId" class="">ANC Patient ID </label><br>
+                            <p><?php echo $row->anc_patient_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="ancPatientId" class="">ART Number </label><br>
+                            <p><?php echo $row->art_patient_id; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="encAncPatientId" class="">Encrypted ANC Patient ID </label><br>
+                            <p><?php echo $row->enc_anc_patient_id; ?></p>
+                        </div>
+                    </div>
+                     
+                </div>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="age" class="">DOB </label><br>
+                            <p><?php echo $patientDOB; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="age" class="">Age </label><br>
+                            <p><?php echo $row->age; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="gestationalAge" class="">Gestation Age (Weeks) </label><br>
+                            <p><?php echo $row->gestational_age; ?></p>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset style="border-color:#2196F3 ;border-style: solid;">
+               <legend>LABORATORY INFORMATION</legend>
+               <div class="row">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="lab">Lab site code/name </label><br>
+                             <p><?php echo $row->facility_code.' - '.ucwords($row->facility_name); ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="rejectionReason">Rejection Code At Central Lab </label><br>
+                            <p><?php if(isset($row->rejection_name)){ echo $row->rejection_code.' - '.ucwords($row->rejection_name); } ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label><br>
+                            <p><?php echo $receiptDateAtCentralLab; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+		    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="labTechName" class="">Lab Tech. Name/ID </label><br>
+                            <p><?php echo ucwords($row->lab_tech_name); ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="dateOfTestCompletion" class="">Date of Test Completion </label><br>
+                            <p><?php echo $testCompletionDate; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label><br>
+                            <p><?php echo $resultDispatchedDateToClinic; ?></p>
+                        </div>
+                    </div>
+                    <!--<div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="labSpecimenId" class="">Lab Specimen ID </label><br>
+                            <p>< ?php echo $row->lab_specimen_id; ?></p>
+                        </div>
+                    </div>-->
+                </div>
+            </fieldset>
+            <fieldset style="border-color:#F44336;border-style: solid;<?php if(isset($row->rejection_reason) && $row->rejection_reason!= null && trim($row->rejection_reason)!= '' && (int)$row->rejection_reason != 1 && (int)$row->rejection_reason != 5 && (int)$row->rejection_reason != 8){ ?>display:none;<?php } ?>">
+               <legend>TEST RESULT</legend>
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="finalLagAvidityOdn" class="">LAg Avidity ODn </label><br>
+                            <p><?php echo $row->final_lag_avidity_odn; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                            <label for="hivRna" class="">HIV RNA (copies/ml) </label><br>
+                            <p><?php echo $row->hiv_rna; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="background-color:#ff69b4;border-radius:30px;margin-top:10px;">
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                          <label for="lagAvidityResult" class="" style="color:#fff;"><strong>LAg Avidity Result</strong> </label><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo $lAgAvidityResult; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4" style="<?php echo(trim($hIVRNAResult) == '')?'display:none;':''; ?>">
+                        <div class="input-field col m12 s12">
+                          <label for="hivRnaGT1000" class="" style="color:#fff;"><strong>HIV RNA > 1000 (copies/ml)</strong> </label><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo $hIVRNAResult; ?></p>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                          <label for="recentInfection" class="" style="color:#fff;"><strong>Recent Infection (LAg-R & RNA > 1000)</strong> </label><br>
+                          <p style="font-size:13px;color:#fff;"><?php echo ucfirst($row->recent_infection); ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom:10px;">
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante)</span>
+                </div>
+                <div class="row">
+                    <div class="col <?php echo(trim($asanteRapidRecencyAssayPn) == 'Absent')?'s6':'s8'; ?>">
+                        <div class="input-padding col m12 s12 l12">
+                          <div class="box-1"><div class="box-11" style="text-align:center;"><strong>Positive Verification Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayPn; ?><br></div></div>
+			  <?php if($asanteRapidRecencyAssayPn !='Absent'){ ?>
+                            <div id="box-breaker">&rArr;</div>
+                            <div class="box-2"><div class="box-21" style="text-align:center;"><strong>Long Term Line (Visual)</strong><br><?php echo $asanteRapidRecencyAssayRlt; ?><br></div></div>
+		          <?php } ?>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="input-field col m12 s12">
+                          <label for="status" class=""> Status </label><br>
+                          <p><?php echo ucwords($row->test_status_name); ?></p>
+                        </div>
+                    </div>
+                </div>
+		<div class="row">
+                    <div class="col <?php echo(trim($asanteRapidRecencyAssayPn) == 'Absent')?'s6':'s8'; ?>">
+                        <div class="input-padding col m12 s12 l12">
+                          <div class="box-1 readerValueRRDTLog" style="<?php echo(trim($readerValueRRDTLog) == '')?'visibility:hidden;':''; ?>"><div class="box-11" style="text-align:center;"><strong>Positive Verification Line (Visual) Reader Value</strong><br><div id="readerValueRRDTLogVal"><?php echo $readerValueRRDTLogVal; ?></div></div></div>
+			 <?php if($asanteRapidRecencyAssayPn !='Absent'){ ?>
+                            <div id="box-breaker"></div>
+                            <div class="box-2 readerValueRRRLog" style="<?php echo(trim($readerValueRRRLog) == '')?'visibility:hidden;':''; ?>"><div class="box-21" style="text-align:center;"><strong>Long Term Line (Visual) Reader Value</strong><br><div id="readerValueRRRLogVal"><?php echo $readerValueRRRLogVal; ?></div></div></div>
+			  <?php } ?>
+                        </div>
+                    </div>
+		</div>
+            </fieldset>
+            <div class="row" style="padding-bottom:20px !important;">
+                <div class="col s4">
+                    <div class="input-field col m12 s12">
+                      <label for="comments" class=""> Comments </label><br>
+                      <p><?php echo ucfirst($row->comments); ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12" style="margin-top:20px;">
+                <a href="<?php echo $link; ?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Go back </a>
+            </div>
+        </div>
+    </div>
+</div>

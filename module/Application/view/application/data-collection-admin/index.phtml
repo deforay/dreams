@@ -1,0 +1,1402 @@
+<?php
+use Zend\Session\Container;
+$loginContainer = new Container('user');
+if(isset($date) && trim($date)!= ''){
+    $link = "/";
+}else if(isset($countryId) && trim($countryId)!= ''){
+    $link = "/data-collection-admin/".base64_encode($countryId);
+}else{
+    $link = "/data-collection";
+}
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->basePath() .'/assets/css/chosen.min.css' ?>"/>
+<style>
+    .card-default {
+        border: 1px solid #eaeaea;
+    }
+    .card-default .card-header {
+        background-color: #eaeaea;
+        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+    }
+    #search-items{
+        display: inline-block;
+        background: transparent none repeat scroll 0 0;
+        font-size: 16px;
+        line-height: 40px;
+        height: 40px;
+        color: black;
+        transition: border-color 0.3s ease 0s;
+    }
+    .search-div i{
+        display: inline-block;
+        position: absolute;
+        bottom: 20px;
+        margin-left: -24px;
+        color: #000000;
+    }
+    .search-div label {
+        margin-left: 0;
+        left: -184px;
+    }
+    #dataReportingDataTable_wrapper{
+	overflow-x:scroll;
+    }
+    .dataTable_noWrap{
+	white-space: nowrap;
+        overflow: hidden;
+    }
+    table.dataTable tbody td{
+	padding:2px 4px 2px 4px;
+    }
+    @media only screen and (max-width: 1024px){
+	table.dataTable.display tbody tr:first-child td {
+	    border-top: 1px solid #ddd;
+        }
+	table.dataTable tbody td{
+	    padding: 6px 4px 6px 4px;
+	}
+    }
+    .box-1,.box-2{
+	float:left;
+	width:44%;
+    }
+    .box-11,.box-21{
+	float:left;
+	width:100%;
+	border:2px dotted #333;
+	margin-top:8px !important;
+    }
+    #box-breaker{
+	float:left;
+	width:12%;
+	font-size:40px;
+	text-align:center;
+	padding-top:3vh;
+    }
+    @media (max-width: 460px) {
+	.hideDataTable{
+	    display: none;
+	}
+    }
+    /*.unlocKbtn:hover{
+	position:relative;
+    }
+    .unlocKbtn[title]:hover:after {
+	content: attr(title);
+	position: absolute;
+	left: -600px;
+	top: 100%;
+	white-space: nowrap;
+	z-index: 1;
+	background:red;
+    }*/
+    .redTxt{
+	color:#F44336 !important;
+    }
+    .yellowTxt,.remove_sorting_1_style{
+	background-color:#FFFF00 !important;
+    }
+    .blueTxt{
+	color:#3792a8 !important;
+    }
+    .no_bgColor{
+	background-color:#fff;
+    }
+    #readerValueRRDTLogVal, /*#readerValueRRDTLogValText,*/ #readerValueRRRLogVal/*, #readerValueRRRLogValText*/{
+        text-align: center !important;
+        font-size:14px;
+    }
+    #readerValueRRDTLogValText/*, #readerValueRRRLogValText*/{
+        font-weight:bold;
+        font-size:13px;
+    }
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td{
+	text-align:center;
+    }
+    table.dataTable thead th, table.dataTable thead td,
+    table.dataTable tfoot th, table.dataTable tfoot td,
+    table.dataTable.row-border tbody th, 
+    table.dataTable.row-border tbody td, 
+    table.dataTable.display tbody th, 
+    table.dataTable.display tbody td{
+	border: 1px solid #eeeeef;
+    }
+    .chosen-container-single .chosen-search input[type="text"]{
+	padding:4px 0px 4px 0px !important;
+    }
+</style>
+<div id="page-content">
+    <div class="row section-header">
+        <div class="col m6 s12 left-align" style="font-size: 34px;font-weight:400;">Lab Data Reporting 2</div>
+        <div class="col m6 s12 classic-breadcrumbs right-align">
+            <a href="<?php echo $this->url('home'); ?>" class="breadcrumb">Home</a>
+            <a href="javascript:void(0);" class="breadcrumb" style="cursor:default;">Lab Data Reporting 2</a>
+       </div>
+    </div>
+    <?php
+    if($loginContainer->hasViewOnlyAccess!= 'yes') { ?>
+	<div class="formContainer row content-container" style="margin-bottom:20px;padding: 0 20px;">
+	    <a class="formHide waves-effect waves-light btn-small  white-text pink margin-bottom-10" style="font-size:13px;"><?php echo (trim($type)!= '')?'Show this form':'Hide this form'; ?></a>
+	    <form id="addDataReportingForm" name="addDataReportingForm" method="post" action="<?php echo $this->url('add-data-collection-admin',array('action'=>'add')); ?>" style="display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
+		<div class="card">
+		    <fieldset style="border-color:#88C542;border-style:solid;">
+		       <legend>SURVEILLANCE/SAMPLE INFORMATION <span id="serialNo"></span></legend>
+			    <?php
+			    if(trim($countryId) == ''){
+			    ?>
+			    <div class="row" style="margin-bottom:0;">
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<select id="country" name="country" class="material-select isRequired" title="Please select country" onchange="getCountriesLabAnc();checkPatientRecord();">
+					    <option data-code="" value=""> -- Select -- </option>
+					    <?php
+					    foreach($countries as $country){
+					    ?>
+					      <option data-code="<?php echo $country['country_code']; ?>" value="<?php echo base64_encode($country['country_id']); ?>"><?php echo ucwords($country['country_name']); ?></option>
+					    <?php } ?>
+					</select>
+					<label for="country">Country **</label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord();">
+					<label for="patientBarcodeId" class="">Patient Barcode ID **</label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker isRequired" title="Please enter specimen collected date">
+					<label for="specimenCollectedDate" class="">Date Specimen Collected **</label>
+				    </div>
+				</div>
+			    </div>
+			    <div class="row" style="margin-bottom:0;">
+				<div class="col s4">
+				    <div class="input-field col m12 s12 ancSiteSection">
+					<span>ANC site name **</span>
+					<select id="ancSite" name="ancSite" class="ancSite isRequired" title="Please select ANC site">
+					    <option data-anc-site-code="" value=""> -- Select -- </option>
+					    <?php
+					    foreach($ancSites as $ancSite){
+					    ?>
+					      <option data-anc-site-code="<?php echo $ancSite['anc_site_code']; ?>" value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+					    <?php } ?>
+					</select>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
+					<label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<select id="specimenType" name="specimenType" class="material-select isRequired" title="Please select specimen type">
+					    <option value=""> -- Select -- </option>
+					    <option value="1">Venous</option>
+					    <option value="2">Plasma</option>
+					    <option value="3">DBS</option>
+					</select>
+					<label for="specimenType">Specimen Type **</label>
+				    </div>
+				</div>
+				<div class="col s4" style="display:none;" id="isDbsAvailableDiv">
+					<div class="input-field col m12 s12">
+						<select id="isDbsAvailable" name="isDbsAvailable" class="material-select" title="Please select if DBS is available">
+							<option value=""> -- Select -- </option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+						<label for="isDbsAvailableDiv">Is DBS also available ? **</label>
+						</div>
+					</div>
+			    </div>
+			    </div>
+			<?php } else { ?>
+			    <div class="row" style="margin-bottom:0;">
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<input id="patientBarcodeId" name="patientBarcodeId" type="text" class="validate isRequired" title="Please enter patient barcode id" onblur="checkPatientRecord();">
+					<label for="patientBarcodeId" class="">Patient Barcode ID **</label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<input id="specimenCollectedDate" name="specimenCollectedDate" type="text" class="validate datepicker " title="Please enter specimen collected date">
+					<label for="specimenCollectedDate" class="">Date Specimen Collected **</label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<span>ANC site name **</span>
+					<select id="ancSite" name="ancSite" class="ancSite " title="Please select ANC site">
+					    <option data-anc-site-code="" value=""> -- Select -- </option>
+					    <?php
+					    foreach($ancSites as $ancSite){
+					    ?>
+					      <option value="<?php echo base64_encode($ancSite['anc_site_id']); ?>"><?php echo $ancSite['anc_site_code'].' - '.ucwords($ancSite['anc_site_name']); ?></option>
+					    <?php } ?>
+					</select>
+				    </div>
+				</div>
+			    </div>
+			    <div class="row" style="margin-bottom:0;">
+				<div class="col s4">
+				    <div class="input-field col m12 s12" >
+					<input id="specimenPickedUpDateAtAnc" name="specimenPickedUpDateAtAnc" type="text" class="validate datepicker" title="Please enter specimen picked up date at anc">
+					<label for="specimenPickedUpDateAtAnc" class="">Date Specimen Picked Up at ANC </label>
+				    </div>
+				</div>
+				<div class="col s4">
+				    <div class="input-field col m12 s12">
+					<select id="specimenType" name="specimenType" class="material-select " title="Please select specimen type">
+					    <option value=""> -- Select -- </option>
+					    <option value="1">Venous</option>
+					    <option value="2">Plasma</option>
+					    <option value="3">DBS</option>
+					</select>
+					<label for="specimenType">Specimen Type **</label>
+				    </div>
+				</div>
+				<div class="col s4" style="display:none;" id="isDbsAvailableDiv">
+					<div class="input-field col m12 s12">
+						<select id="isDbsAvailable" name="isDbsAvailable" class="material-select" title="Please select if DBS is available">
+							<option value=""> -- Select -- </option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+						<label for="isDbsAvailableDiv">Is DBS also available ? **</label>
+						</div>
+					</div>
+			    </div>
+			<?php } ?>
+		    </fieldset>
+		    <fieldset style="border-color:#ff9800;border-style: solid;"> 
+		       <legend>PATIENT INFORMATION</legend>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				    <input id="ancPatientId" name="ancPatientId" type="text" class="validate " title="Please enter ANC patient ID">
+				    <label for="ancPatientId" class="">ANC Patient ID ** </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				    <input id="artPatientId" name="artPatientId" type="text" class="validate" title="Please enter ART number">
+				    <label for="artPatientId" class="">ART Number </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				       <input id="encAncPatientId" name="encAncPatientId" type="hidden">
+				       <label for="encAncPatientId">Encrypted ANC Patient ID </label>
+				       <p class="encAncPatientId" style="width:100%;border-bottom:1px solid #eee;padding-top:30px;"></p>
+				</div>
+			    </div>
+			</div>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				    <input id="dob" name="dob" type="text" class="validate datepicker " title="Please enter DOB" onchange="getAge();">
+				    <label for="dob" class="">DOB **</label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				    <input id="age" name="age" type="text" class="validate " title="Please enter patient age" maxlength="3">
+				    <label for="age" class="">Age **</label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0.5rem;">
+				    <input id="gestationalAge" name="gestationalAge" type="text" class="checkNum validate" title="Please enter gestation age">
+				    <label for="gestationalAge" class="">Gestation Age (Weeks) </label>
+				</div>
+			    </div>
+		       </div>
+		    </fieldset>
+		    <fieldset style="border-color:#2196F3 ;border-style: solid;">
+		       <legend>LABORATORY INFORMATION</legend>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+				<div class="input-field col m12 s12 labSection">
+				    <select id="lab" name="lab" class="material-select" title="Please select lab site code/name">
+					<option value=""> -- Select -- </option>
+					<?php
+					foreach($facilities as $facility){
+					?>
+					  <option value="<?php echo base64_encode($facility['facility_id']); ?>"><?php echo $facility['facility_code'].' - '.ucwords($facility['facility_name']); ?></option>
+					<?php } ?>
+				    </select>
+				    <label for="lab">Lab site code/name **</label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12">
+				    <select id="rejectionReason" name="rejectionReason" class="material-select" title="Please select rejection code" onchange="emptyTestResultSection();">
+					<?php
+					foreach($rejectionReasons as $rejection){
+					?>
+					  <option value="<?php echo base64_encode($rejection['rejection_reason_id']); ?>"><?php echo $rejection['rejection_code']." - ".$rejection['rejection_reason']; ?></option>
+					<?php } ?>
+				    </select>
+				    <label for="rejectionReason">Rejection Code At Central Lab </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="dateOfReceiptAtCentralLab" name="dateOfReceiptAtCentralLab" type="text" class="validate datepicker" title="Please enter date of receipt at lab">
+				    <label for="dateOfReceiptAtCentralLab" class="">Receipt Date at Lab </label>
+				</div>
+			    </div>
+			</div>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="labTechName" name="labTechName" type="text" class="validate " title="Please enter lab tech name/ID">
+				    <label for="labTechName" class="">Lab Tech. Name/ID **</label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="dateOfTestCompletion" name="dateOfTestCompletion" type="text" class="validate datepicker" title="Please enter date of test completion">
+				    <label for="dateOfTestCompletion" class="">Date of Test Completion </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="dateOfResultDispatchedToClinic" name="dateOfResultDispatchedToClinic" type="text" class="validate datepicker" title="Please enter date of result dispatched to clinic">
+				    <label for="dateOfResultDispatchedToClinic" class="">Date of Result Dispatched to Clinic </label>
+				</div>
+			    </div>
+			    <!--<div class="col s4">
+				<div class="input-field col m12 s12" style="margin-top:0;">
+				    <input id="labSpecimenId" name="labSpecimenId" type="text" class="validate" title="Please enter lab specimen ID">
+				    <label for="labSpecimenId" class="">Lab Specimen ID </label>
+				</div>
+			    </div>-->
+			</div>
+		    </fieldset>
+		    <fieldset id="resultSection" style="border-color:#F44336;border-style:solid;">
+		       <legend>TEST RESULT</legend>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s4">
+					<div class="input-field col m12 s12" style="">
+						<input id="finalLagAvidityOdn" name="finalLagAvidityOdn" type="text" class="validate checkNum testResultSection" title="Please enter LAg avidity ODn">
+						<label for="finalLagAvidityOdn" class="">LAg Avidity ODn *</label>
+					</div>
+			    </div>
+			    <div class="col s4">
+					<div class="input-field col m12 s12" style="">
+						<input id="hivRna" name="hivRna" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA">
+						<label for="hivRna" class="">HIV RNA (copies/ml) *</label>
+					</div>
+			    </div>
+			    <div class="col s4" style="display:none;" id="vlSpecimenTypeDiv">
+				    <div class="input-field col m12 s12">
+					<select id="vlSpecimenType" name="vlSpecimenType" class="material-select" title="Please select viral load lab specimen type">
+					    <option value=""> -- Select -- </option>
+					    <option value="1">Venous</option>
+				    	<option value="2">Plasma</option>
+				    	<option value="3">DBS</option>
+					</select>
+					<label for="vlSpecimenType">VL Specimen Type **<label>
+				    </div>
+				</div>
+		    </div>
+			    
+			</div>
+			<div class="row">
+
+					<div class="col s6">
+						<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel">Click here to view the algorithm for Lab Data Reporting</a>
+					</div>			
+
+			</div>
+			<div class="row prePopulateSection" style="background-color:#ff69b4;color:#fff;border-radius:30px;margin-bottom:10px;">
+			    <div class="col s4">
+				<div class="input-padding col m10 s10 prePopulateAvidity" style="visibility:hidden;">
+				  <strong>LAg Avidity Result</strong> <br>
+				  <label for="lagAvidityResult" style="font-size:13px;color:#fff;"></label>
+				  <input id="lagAvidityResultRecent" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" value="recent" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="lagAvidityResultRecent" style="pointer-events:none !important;display:none;">R </label>&nbsp;
+				  <input id="lagAvidityResultLongTerm" class="with-gap testResultSectionRadio" name="lagAvidityResult" type="radio" value="long term" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="lagAvidityResultLongTerm" style="pointer-events:none !important;display:none;">LT </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-padding col m10 s10 prePopulateHIVRNA" style="visibility:hidden;">
+				  <strong>HIV RNA > 1000 (copies/ml)</strong> <br>
+				  <label for="hivRnaGT1000" style="font-size:13px;color:#fff;"></label>
+				  <input id="hivRnaGT1000Yes" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="hivRnaGT1000Yes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+				  <input id="hivRnaGT1000No" class="with-gap testResultSectionRadio" name="hivRnaGT1000" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="hivRnaGT1000No" style="pointer-events:none !important;display:none;">No </label>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-padding col m12 s12 prePopulateRecentInfection" style="visibility:hidden;">
+				  <strong>Recent Infection (LAg-R & RNA > 1000)</strong><br>
+				  <label for="recentInfection" style="font-size:13px;color:#fff;"></label>
+				  <input id="recentInfectionYes" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" value="yes" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="recentInfectionYes" style="pointer-events:none !important;display:none;">Yes </label>&nbsp;
+				  <input id="recentInfectionNo" class="with-gap testResultSectionRadio" name="recentInfection" type="radio" value="no" onclick="this.checked = false;" style="pointer-events:none !important;display:none;"/>
+				  <label for="recentInfectionNo" style="pointer-events:none !important;display:none;">No </label>
+				</div>
+			    </div>
+			</div>
+			<div class="row" style="margin-bottom:10px;">
+			    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rapid Recency Assay (Eg. Asante) &nbsp;&nbsp;<a class="modal-trigger waves-effect waves-light product-panel-trigger" href="#panel2">Click here to view the algorithm for Rapid Recency Assay</a></span>
+			</div>
+			<div class="row" style="margin-bottom:0;">
+			    <div class="col s8">
+			       <div class="input-padding col m12 s12 l12">
+				  <div class="box-1">
+				    <div class="box-11">
+				      <strong>Positive Verification Line (Visual)</strong><br>	
+				      <input id="asanteRapidRecencyAssayP" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="present"/>
+				      <label for="asanteRapidRecencyAssayP">Present </label><br>
+				      <input id="asanteRapidRecencyAssayN" class="with-gap testResultSectionRadio" name="asanteRapidRecencyAssayPn" type="radio" value="absent"/>
+				      <label for="asanteRapidRecencyAssayN">Absent </label>
+				    </div>
+				  </div>
+				  <div id="box-breaker">&rArr;</div>
+				  <div class="box-2">
+				    <div class="box-21">
+				      <strong>Long Term Line (Visual)</strong><br>	
+				      <input id="asanteRapidRecencyAssayR" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="absent"/>
+				      <label for="asanteRapidRecencyAssayR" class="asanteRapidRecencyAssayRlt">Absent </label><br>
+				      <input id="asanteRapidRecencyAssayLt" class="with-gap asanteRapidRecencyAssayRlt testResultSectionRadio" name="asanteRapidRecencyAssayRlt" type="radio" value="present"/>
+				      <label for="asanteRapidRecencyAssayLt" class="asanteRapidRecencyAssayRlt">Present </label>
+				    </div>
+				  </div>
+				</div>
+			    </div>
+			    <div class="col s4">
+				<div class="input-field col m12 s12">
+				    <input id="hivRnaNew" name="hivRnaNew" type="text" class="validate checkNum testResultSection" title="Please enter HIV RNA">
+				    <label for="hivRnaNew">HIV RNA (copies/ml) *</label>
+				</div>
+			    </div>
+			</div>
+			<div class="row readerValueLogSection" style="margin-bottom:0;margin-top:10px;">
+			    <div class="col s8">
+			       <div class="input-padding col m12 s12 l12">
+				  <div class="box-1 readerValueRRDTLog">
+				    <div class="box-11">
+				      <strong>Positive Verification Line (Visual) Reader Value</strong>
+				      <input type="hidden" class="testResultSection" id="readerValueRRDTLog" name="readerValueRRDTLog"/>
+				      <input type="text" class="checkNum testResultSection" id="readerValueRRDT" name="readerValueRRDT" placeholder="Reader Value in log"/>
+				      <br><div id="readerValueRRDTLogVal"></div>
+				      <!--<br><div id="readerValueRRDTLogValText"></div>-->
+				    </div>
+				  </div>
+				  <div id="box-breaker"></div>
+				  <div class="box-2 readerValueRRRLog">
+				    <div class="box-21">
+				      <strong>Long Term Line (Visual) Reader Value</strong>
+				      <input type="hidden" class="testResultSection" id="readerValueRRRLog" name="readerValueRRRLog"/>
+				      <input type="text" class="checkNum testResultSection" id="readerValueRRR" name="readerValueRRR" placeholder="Reader Value in log"/>
+				      <br><div id="readerValueRRRLogVal"></div>
+				      <!--<br><div id="readerValueRRRLogValText"></div>-->
+				    </div>
+				  </div>
+				</div>
+			    </div>
+			</div>
+		    </fieldset>
+		    <div class="row">
+			<div class="col s4">
+			    <div class="input-field col m12 s12">
+				<textarea id="comments" name="comments" class="materialize-textarea"></textarea>
+				<label for="comments">Comments</label>
+			    </div>
+			</div>
+		    </div>
+		    <div class="col s6">
+			<input type="hidden" name="chosenCountry" id="chosenCountry" value="<?php echo (trim($countryId)!= '')?base64_encode($countryId):'';?>"/>
+			<input type="hidden" name="redirectUrl" id="redirectUrl" value="<?php echo $link;?>"/>
+			<input type="hidden" name="lDCId" id="lDCId" value="<?php echo (isset($latestDataCollectionInfo->data_collection_id))?$latestDataCollectionInfo->data_collection_id:'';?>"/>
+			<input type="hidden" name="cCode" id="cCode" value="<?php echo (isset($choosedCountryInfo->country_code))?$choosedCountryInfo->country_code:'';?>"/>
+			<input type="hidden" name="surveillanceId" id="surveillanceId"/>
+			<a href="<?php echo $link;?>" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-10">Cancel</a>
+			<a id="addBtn" href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="addDataReporting();">ADD</a>&nbsp;&nbsp;
+		    </div>
+		    <div class="col s6" style="text-align:right;">
+			** required for Sample Registration<br>
+                        * required for Completion of Form
+		    </div>
+		</div>
+	    </form>
+	</div>
+    <?php } ?>
+    <div id="showhide" class="row" style="display: none;position:absolute;z-index: 9999 !important;color:#333;font-size:12px;font-weight:bold;padding: 5px 5px 5px 5px;height:250px;background:#e0e0e0;">
+	<div class="col m12">
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol1"> Status</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="anc_site_name" class="showhideCheckBox"  /> <label for="iCol3">ANC Site</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="anc_site_code" class="showhideCheckBox"  /> <label for="iCol4">ANC Site Code</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="anc_patient_id" class="showhideCheckBox"  /> <label for="iCol5">ANC Patient ID</label>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="age" class="showhideCheckBox" /> <label for="iCol6">Age</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="gestational_age" class="showhideCheckBox" /> <label for="iCol7">Gestation Age (Weeks)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="specimen_picked_up_date_at_anc" class="showhideCheckBox" /> <label for="iCol8">Specimen Pick Up Date at ANC</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="facility_name" class="showhideCheckBox" /> <label for="iCol9">Lab/Facility</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="facility_code" class="showhideCheckBox" /> <label for="iCol10">Lab/Facility Code</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="lab_specimen_id" class="showhideCheckBox" /> <label for="iCol11">Lab Specimen ID</label> <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="11" id="iCol11" data-showhide="rejection_code" class="showhideCheckBox" /> <label for="iCol11">Rejection Code At Central Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="13" id="iCol13" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol13">Lab Tech. Name/ID</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="14" id="iCol14" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol14">Date of Test Completion</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="16" id="iCol16" data-showhide="final_lag_avidity_odn" class="showhideCheckBox" /> <label for="iCol16">LAg Avidity ODn</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="17" id="iCol17" data-showhide="lag_avidity_result" class="showhideCheckBox" /> <label for="iCol17">Lab LAg Recency (Based on LAg ODn)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="18" id="iCol18" data-showhide="hiv_rna" class="showhideCheckBox" /> <label for="iCol18">HIV RNA (cp/ml)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="is_dbs_available" class="showhideCheckBox" /> <label for="iCol19">Is DBS Available?</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="20" id="iCol20" data-showhide="is_dbs_available" class="showhideCheckBox" /> <label for="iCol20">VL Specimen</label> <br>
+	    </div>
+	    <!--<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="19" id="iCol19" data-showhide="hiv_rna_gt_1000" class="showhideCheckBox" /> <label for="iCol19">HIV RNA > 1000 <br>
+	    </div>-->
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol21">Lab LAg Recency (Based on algorithm)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="22" id="iCol22" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol22">Asante Positive Verification Line Reader Value (log10)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="23" id="iCol23" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol23">Asante Positive Verification Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="24" id="iCol23" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol24">Asante Long Term Line Reader Value (log10)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="25" id="iCol25" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol25">Asante Long Term Line (Visual)</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol26">Date Result Returned at Clinic</label> <br>
+	    </div>
+	      <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol27">Date Returned to Participant</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol28">Added On</label> <br>
+	    </div>
+	    <div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="29" id="iCol29" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol29">Added by</label> <br>
+	    </div>
+	    <?php
+	    if(trim($countryId) == ''){
+	    ?>
+	    <div class="col m3">
+		<input type="hidden" id="countColumn" value="30"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="30" id="iCol30" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol30">Country Name</label> <br>
+	    </div>
+	    <?php } else { ?>
+	      <input type="hidden" id="countColumn" value="30"/>
+	    <?php } ?>
+	</div>
+    </div>
+    <div id="showListButton" class="row content-container" style="padding: 0 20px;margin-bottom: 10px;display:<?php echo (trim($type)!= '')?'none':'block'; ?>;">
+       <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadLabDataList();">Show Lab Data List</a>
+    </div>
+    <div class="row content-container hideDataTable" id="labDataList" style="padding: 0 20px;display:none;">
+	<div class="col l12 m12 s12" style="padding:0;">
+	    <a href="javascript:void(0);" onclick="generateRSOT();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange" style="float:right;"><i class="zmdi zmdi-collection-pdf"></i> Export Recency Study Outstanding Test List PDF</a>
+	</div>
+        <div class="col l12 m12 s12" style="padding:0;">
+            <div class="card card-default table-height">
+                <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
+		   <span style="float:right;"><a href="javascript:void(0)" onclick="$('#showhide').fadeToggle();return false;" style="color:#fff;"><i class="zmdi zmdi-plus-circle-o-duplicate"></i> Manage Columns</a></span>
+		</div>
+                <div class="card-content clearfix">
+                    <table id="dataReportingDataTable" class="responsive-table display dataTable">
+                        <thead>
+                            <tr>
+				<th>Patient<br>Barcode<br>ID</th>
+				<th>Status</th>
+				<th>Specimen<br>Collection<br>Date</th>
+				<th>ANC Site</th>
+				<th>ANC<br>Site Code</th>
+				<th>ANC<br>Patient ID</th>
+				<th>Age</th>
+				<th>Gestation <br>Age (Weeks)</th>
+				<th>Specimen<br>Pick Up<br>Date at ANC</th>
+				<th>Lab/Facility</th>
+				<th>Lab/Facility<br>Code</th>
+				<!--<th>Lab<br>Specimen ID</th>-->
+				<th>Rejection Code <br>At Central Lab</th>
+				<th>Receipt Date<br>at Lab</th>
+				<th>Lab Tech.<br>Name/ID</th>
+				<th>Date of Test<br>Completion</th>
+				<th>Result<br>Dispatched<br>Date to Clinic</th>
+				<th>LAg Avidity</th>
+				<th>Lab LAg Recency <br>(Based on LAg ODn)</th>
+				<th>HIV RNA<br>(cp/ml)</th>
+				<th>Is DBS Available?</th>
+				<th>VL Specimen Type</th>
+				<!--<th>HIV RNA > 1000</th>-->
+				<th>Lab LAg Recency<br> (Based on algorithm)</th>
+				<th>Asante Positive<br> Verification <br>Line Reader <br>Value (log10)</th>
+				<th>Asante Positive<br>Verification<br>Line<br>(Visual)</th>
+				<th>Asante Long Term <br>Line Reader <br>Value (log10)</th>
+				<th>Asante Long<br>Term<br>Line<br>(Visual)</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
+				<th>Added On</th>
+				<th>Added by</th>
+				<?php
+				if(trim($countryId)== ''){
+				?>
+				<th>Country</th>
+				<?php } ?>
+				<th style="width:120px !important;text-align:center;">Action</th>
+				</tr>
+				</thead>
+				<tfoot>
+				<tr>
+				<th>Patient<br>Barcode<br>ID</th>
+				<th>Status</th>
+				<th>Specimen<br>Collection<br>Date</th>
+				<th>ANC Site</th>
+				<th>ANC Site<br>Code</th>
+				<th>ANC<br>Patient ID</th>
+				<th>Age</th>
+				<th>Gestation <br>Age (Weeks)</th>
+				<th>Specimen<br>Pick Up<br>Date at ANC</th>
+				<th>Lab/Facility</th>
+				<th>Lab/Facility<br>Code</th>
+				<!--<th>Lab<br>Specimen ID</th>-->
+				<th>Rejection Code <br>At Central Lab</th>
+				<th>Receipt Date<br>at Lab</th>
+				<th>Lab Tech.<br>Name/ID</th>
+				<th>Date of Test<br>Completion</th>
+				<th>Result<br>Dispatched<br>Date to Clinic</th>
+				<th>LAg Avidity</th>
+				<th>Lab LAg Recency <br>(Based on LAg ODn)</th>
+				<th>HIV RNA<br>(cp/ml)</th>
+				<th>Is DBS Available?</th>
+				<th>VL Specimen Type</th>
+				<!--<th>HIV RNA > 1000</th>-->
+				<th>Lab LAg Recency<br> (Based on algorithm)</th>
+				<th>Asante Positive<br> Verification <br>Line Reader <br>Value (log10)</th>
+				<th>Asante Positive<br>Verification<br>Line<br>(Visual)</th>
+				<th>Asante Long Term <br>Line Reader <br>Value (log10)</th>
+				<th>Asante Long<br>Term<br>Line<br>(Visual)</th>
+				<th>Date Result Returned at Clinic</th>
+				<th>Date Returned to Participant</th>
+				<th>Added On</th>
+				<th>Added by</th>
+				<?php
+				if(trim($countryId)== ''){
+				?>
+				<th>Country</th>
+				<?php } ?>
+				<th style="text-align:center;">Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/moment.min.js' ?>"></script>
+<script type="text/javascript" src="<?php echo $this->basePath() .'/assets/js/chosen.jquery.js' ?>"></script>
+<script>
+    var oTable = null;
+    function loadLabDataList(){
+	$("#labDataList").show();
+	$("#showListButton").hide();
+	oTable = $('#dataReportingDataTable').dataTable({
+	    "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ records per page"
+            },
+	    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	    "iDisplayLength": 25,
+            "aoColumns": [
+                {"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				//{"sClass":"dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"center dataTable_noWrap"},
+				{"sClass":"dataTable_noWrap"},
+				<?php
+				if(trim($countryId) == ''){
+				?>
+		  		{"sClass":"dataTable_noWrap"},
+				<?php } ?>
+				{"sClass":"dataTable_noWrap","bSortable":false}
+            ],
+	    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+		if($.trim(aData[11])!= ''){
+		    $(nRow).addClass("blueTxt");
+		}else{
+		    if(aData[1] == 'Incomplete'){ $("td:eq(2)", nRow).addClass("remove_sorting_1_style"); $(nRow).addClass("yellowTxt"); $("td:eq(28)", nRow).addClass('no_bgColor'); }
+		    if(aData[21] =='Absent' || (aData[19] == 'Long Term' && aData[23] == 'Absent') || (aData[19] == 'Recent' && aData[23] == 'Present')){ $(nRow).addClass("redTxt"); }
+		}
+	    },
+            "aaSorting": [[2, "desc"]],
+            "bProcessing": true,
+            "bServerSide": true,
+            "sAjaxSource": "<?php echo $this->url('data-collection-admin',array('action' => 'index')); ?>",
+            "fnServerData": function(sSource, aoData, fnCallback) {
+                aoData.push({"name": "countryId", "value": '<?php echo $countryId; ?>'});
+                aoData.push({"name": "type", "value": '<?php echo $type; ?>'});
+				aoData.push({"name": "dateSrc", "value": '<?php echo $dateSrc; ?>'});
+                aoData.push({"name": "date", "value": '<?php echo $date; ?>'});
+				aoData.push({"name": "dashLab", "value": '<?php echo $dashLab; ?>'});
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                });
+            }
+        });
+        
+	$("#showhide").hover(function(){}, function(){$(this).fadeOut('slow')}); 
+	for(colNo=0;colNo <=$("#countColumn").val();colNo++){
+            $("#iCol"+colNo).attr("checked",oTable.fnSettings().aoColumns[parseInt(colNo)].bVisible);
+        }
+       
+       $('.dataTables_filter').empty(); // clears the content generated
+       $('.dataTables_filter').append(
+                "<div class='input-field col s6 search-div right' style='width: 250px'>" +
+                "    <i class='material-icons search-icon'>search</i> "+
+                "    <input id='search-items' type='text' class='validate' />" +
+                "    <label for='icon_prefix' class='search-label'>Search</label>   "+
+                "</div>");
+       $('#search-items').on('keyup', function(){
+            oTable.fnFilter($(this).val());
+       });
+    }									
+
+    $(document).ready(function() {
+
+		$("#specimenType").on('change',function(){
+			if($(this).val() == 1 || $(this).val() == 2){
+				$("#isDbsAvailableDiv").show();
+				//$("#isDbsAvailable").addClass('isRequired');
+			}else{
+				$("#isDbsAvailableDiv").hide();
+				//$("#isDbsAvailable").removeClass('isRequired');
+				$("#isDbsAvailable").val('');
+			}
+		});
+
+		$("#hivRna, #hivRnaNew").on('keyup',function(){
+			if($(this).val()==''){
+				//$("#vlSpecimenType").removeClass('isRequired');
+				$("#vlSpecimenTypeDiv").hide();
+				$("#vlSpecimenType").val('');
+			}else{
+				$("#vlSpecimenTypeDiv").show();
+				//$("#vlSpecimenType").addClass('isRequired');
+			}
+		});
+
+        $(".ancSite").chosen({
+	    	placeholder_text_single:"Select ANC", 
+	    	width:"100%"
+		});
+
+		<?php if(trim($type)!= '' || $loginContainer->hasViewOnlyAccess == 'yes') { ?>
+			loadLabDataList();
+		<?php } ?>
+	
+       <?php if(trim($countryId)!= ''){ ?>
+	    var latestCollId = $('#lDCId').val();
+	    var countryCode = $('#cCode').val();
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
+	    var siddigit = '0000';
+            var biddigit = '000000';
+	    var ctxt = '' + count;
+	    //$('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
+	    $('#surveillanceId').val(countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt);
+	    //$('#serialNo').html(' ('+countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt+')');
+       <?php } ?>
+    });
+    
+    function generateSurveillanceID(cObj){
+	var latestCollId = $('#lDCId').val();
+	var countryCode = $(cObj).find(':selected').data('code');
+	if ($.trim(countryCode)!='') {
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
+	    var siddigit = '0000';
+	    var ctxt = '' + count;
+	    $('#surveillanceId').val(countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt);
+	    $('#serialNo').html(" ("+countryCode + siddigit.substr(0, siddigit.length - ctxt.length) + ctxt+")");
+	}else{
+	    $('#surveillanceId').val('');
+	    $('#serialNo').html('');
+	}
+    }
+    
+    function generatePatientBarcodeID(cObj){
+	var latestCollId = $('#lDCId').val();
+	var countryCode = $(cObj).find(':selected').data('code');
+	if ($.trim(countryCode)!='') {
+	    var count = ($.trim(latestCollId)!= '')?parseInt(latestCollId)+parseInt(1):1;
+	    var biddigit = '000000';
+	    var ctxt = '' + count;
+	    $('#patientBarcodeId').val(countryCode + biddigit.substr(0, biddigit.length - ctxt.length) + ctxt);
+	    $('label[for="patientBarcodeId"]').css("transform", "translateY(-140%)");
+	}else{
+	    $('#patientBarcodeId').val('');
+	    $('label[for="patientBarcodeId"]').css("transform", "translateY(0%)");
+	}
+    }
+    
+    function fnShowHide(iCol){
+        var bVis = oTable.fnSettings().aoColumns[iCol].bVisible;
+        oTable.fnSetColumnVis( iCol, bVis ? false : true );
+    }
+
+    function lockDataCollection(ID){
+	var conf = confirm("Are you sure you want to lock this data reporting?");
+	if(conf){
+	    $.post("<?php echo $this->url('lock-data-collection-admin'); ?>", {dataCollectionId:ID},
+		function(data){
+		    if(data == undefined || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
+    
+    function unlockDataCollection(ID){
+	var conf = confirm("Are you sure you want to unlock this data reporting?");
+	if(conf){
+	    $.post("<?php echo $this->url('unlock-data-collection-admin'); ?>", {dataCollectionId:ID},
+		function(data){
+		    if(data == undefined || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
+    
+    function requestToUnlock(ID){
+	var conf = confirm("Are you sure you want to send request to unlock this data reporting?");
+	if(conf){
+	    $.post("<?php echo $this->url('data-collection-admin',array('action'=>'send-request')); ?>", {dataCollectionId:ID},
+		function(data){
+		    if(data == undefined || data == null || data == "" || data == 0){
+		      alert("Error-Oops, something went wrong!!");
+		    }else{
+		      oTable.fnDraw(false);
+		    }
+		});
+	}
+    }
+    
+    $(document).ready(function(){
+	$('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 100, // Creates a dropdown of 100 years to control year
+            format: 'dd/mm/yyyy',
+	    	max: new Date('Today'),
+		    closeOnSelect: true,
+		    closeOnClear: true,
+		    onSet: function(e){
+			validateDataReportingDates();
+			if(e.select != undefined && e.select != null){
+			    $('.picker__close').click();
+			}
+		    }
+        });
+    });
+    
+    $('#hivRnaNew').on('keyup', function() {
+		$('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
+		if($.trim($('#hivRnaNew').val())!= ''){
+			$('label[for="hivRna"]').css("transform", "translateY(-140%)");  
+			$('#hivRna').val($('#hivRnaNew').val());
+		}else{
+			$('label[for="hivRna"]').css("transform", "translateY(0%)");  
+			$('label[for="hivRnaNew"]').css("transform", "translateY(0%)");  
+			$('#hivRna').val('');
+		}
+		populateResult('');
+    });
+    
+    $('#hivRna').on('keyup', function() {
+	$('label[for="hivRna"]').css("transform", "translateY(-140%)"); 
+        if($.trim($('#hivRna').val())!= ''){
+	   $('label[for="hivRnaNew"]').css("transform", "translateY(-140%)"); 
+	   $('#hivRnaNew').val($('#hivRna').val());
+	}else{
+	   $('label[for="hivRnaNew"]').css("transform", "translateY(0%)");
+	   $('label[for="hivRna"]').css("transform", "translateY(0%)");
+	   $('#hivRnaNew').val('');
+	}
+	populateResult('');
+    });
+    
+    //For Pre-populate Result
+    $('#finalLagAvidityOdn').on('keyup', function() {
+		populateResult('');
+    });
+    
+    function populateResult(fromSource){
+		if($.trim($('#finalLagAvidityOdn').val())== '' && $.trim($('#hivRna').val())== ''){
+			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+			$('.prePopulateAvidity').css('visibility','hidden');
+			$('.prePopulateHIVRNA').css('visibility','hidden');
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+			$('#lagAvidityResultRecent').prop('checked',false);
+			$('#lagAvidityResultLongTerm').prop('checked',false);
+			$('#hivRnaGT1000Yes').prop('checked',false);
+			$('#hivRnaGT1000No').prop('checked',false);
+			$('#recentInfectionYes').prop('checked',false);
+			$('#recentInfectionNo').prop('checked',false);
+			$('label[for="lagAvidityResult"]').html('');
+			$('label[for="hivRnaGT1000"]').html('');
+			$('label[for="recentInfection"]').html('');
+		}else{
+			if(parseFloat($('#finalLagAvidityOdn').val()) >2){
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml)');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml)');
+				$('.prePopulateAvidity').css('visibility','visible');
+				$('label[for="lagAvidityResult"]').html('Long Term (LAg ODn > 2.0)');
+				$('#lagAvidityResultLongTerm').prop('checked',true);
+			}else if(parseFloat($('#finalLagAvidityOdn').val()) <= 2){
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+				if(parseInt($('#hivRna').val()) <= 1000){
+					$('.prePopulateAvidity').css('visibility','visible');
+					// $('label[for="lagAvidityResult"]').html('Long Term (LAg ODn <= 2.0 and HIV RNA <= 1000 cp/mL)');
+					// $('#lagAvidityResultLongTerm').prop('checked',true);
+
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+
+				}else if(parseInt($('#hivRna').val()) > 1000){
+					$('.prePopulateAvidity').css('visibility','visible');
+					// $('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0 and HIV RNA > 1000 cp/mL)');
+					// $('#lagAvidityResultRecent').prop('checked',true);
+
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+
+				}else{
+					$('.prePopulateAvidity').css('visibility','visible');
+					$('label[for="lagAvidityResult"]').html('Recent (LAg ODn <= 2.0)');
+					$('#lagAvidityResultRecent').prop('checked',true);
+				}
+			}else{
+				$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+				$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+				$('.prePopulateAvidity').css('visibility','hidden');
+				$('label[for="lagAvidityResult"]').html('');
+				$('#lagAvidityResultRecent').prop('checked',false);
+				$('#lagAvidityResultLongTerm').prop('checked',false);
+			}
+			//Gt1000
+			if(parseInt($('#hivRna').val()) > 1000){
+				$('.prePopulateHIVRNA').css('visibility','visible');
+				$('label[for="hivRnaGT1000"]').html('High Viral Load (> 1000 cp/mL)');
+				$('#hivRnaGT1000Yes').prop('checked',true);
+			}else if(parseInt($('#hivRna').val()) <= 1000){
+				$('.prePopulateHIVRNA').css('visibility','visible');
+				$('label[for="hivRnaGT1000"]').html('Low Viral Load (<= 1000 cp/mL)');
+				$('#hivRnaGT1000No').prop('checked',true);
+			}else{
+				$('.prePopulateHIVRNA').css('visibility','hidden');
+				$('label[for="hivRnaGT1000"]').html('');
+				$('#hivRnaGT1000Yes').prop('checked',false);
+				$('#hivRnaGT1000No').prop('checked',false);
+			}
+			
+			//Recent infection
+			if($('#lagAvidityResultRecent').is(':checked') && $('#hivRnaGT1000Yes').is(':checked')) {
+			$('label[for="recentInfection"]').html('Yes');
+			$('#recentInfectionYes').prop('checked',true);
+			}else{
+			$('label[for="recentInfection"]').html('No');
+			$('#recentInfectionNo').prop('checked',true);
+			}
+			//Showing result section
+			if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() > 2){
+			$('.prePopulateRecentInfection').css('visibility','visible');
+			}else if($('#finalLagAvidityOdn').val()!= '' && $('#finalLagAvidityOdn').val() <= 2){
+			if($('#hivRna').val() == ''){
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+			}else{
+			$('.prePopulateRecentInfection').css('visibility','visible');
+			}
+			}else{
+			$('.prePopulateRecentInfection').css('visibility','hidden');
+			}
+			
+			//hiv rna mandatory
+			if($('#lagAvidityResultLongTerm').is(':checked') && $('#asanteRapidRecencyAssayR').is(':checked')) {
+			$('label[for="hivRna"]').html('HIV RNA (copies/ml) *');
+			$('label[for="hivRnaNew"]').html('HIV RNA (copies/ml) *');
+			}
+		}
+    }
+    
+    function getCountriesLabAnc(){
+		$.post("<?php echo $this->url('get-countries-lab-anc-admin'); ?>", {country: $('#country').val()},
+				function(data) {
+			var dataArray = data.split('divider');
+			$('.ancSiteSection').html(dataArray[0]);
+			$(".ancSite").chosen({ placeholder_text_single:"Select ANC",  width:"100%" });
+			$('.labSection').html(dataArray[1]);
+			$('#lab').material_select();
+			});
+		}
+		
+		$('input[type=radio][name=asanteRapidRecencyAssayPn]').change(function() {
+		if(this.value == 'present') {
+			$('.box-2,#box-breaker').css('visibility','visible');
+		}else if(this.value == 'absent'){
+			$('.box-2,#box-breaker').css('visibility','hidden');
+			$('#asanteRapidRecencyAssayLt').prop('checked',false);
+			$('#asanteRapidRecencyAssayR').prop('checked',false);
+			$('#readerValueRRR').val('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
+		populateResult('');
+    });
+    
+    $('input[type=radio][name=asanteRapidRecencyAssayRlt]').change(function() {
+		populateResult('');
+    });
+    
+    function validateDataReportingDates(){
+		var specimenCollectedDate = $('#specimenCollectedDate').val();
+		var specimenPickedUpDateAtAnc = $('#specimenPickedUpDateAtAnc').val();
+		var patientDOB = $('#dob').val();
+		var dateOfReceiptAtcentralLab = $('#dateOfReceiptAtCentralLab').val();
+		var dateOfTestCompletion = $('#dateOfTestCompletion').val();
+		var dateOfResultDispatchedToClinic = $('#dateOfResultDispatchedToClinic').val();
+		var specimenCollectedDateArray = specimenCollectedDate.split('/');
+		var specimenPickedUpDateAtAncArray = specimenPickedUpDateAtAnc.split('/');
+		var patientDOBArray = patientDOB.split('/');
+		var receiptAtCentralLabDateArray = dateOfReceiptAtcentralLab.split('/');
+		var testCompletionDateArray = dateOfTestCompletion.split('/');
+		var resultDispatchedToClinicDateArray = dateOfResultDispatchedToClinic.split('/');
+		specimenCollectedDate = specimenCollectedDateArray[2]+'-'+specimenCollectedDateArray[1]+'-'+specimenCollectedDateArray[0];
+		specimenPickedUpDateAtAnc = specimenPickedUpDateAtAncArray[2]+'-'+specimenPickedUpDateAtAncArray[1]+'-'+specimenPickedUpDateAtAncArray[0];
+		patientDOB = patientDOBArray[2]+'-'+patientDOBArray[1]+'-'+patientDOBArray[0];
+		dateOfReceiptAtcentralLab = receiptAtCentralLabDateArray[2]+'-'+receiptAtCentralLabDateArray[1]+'-'+receiptAtCentralLabDateArray[0];
+		dateOfTestCompletion = testCompletionDateArray[2]+'-'+testCompletionDateArray[1]+'-'+testCompletionDateArray[0];
+		dateOfResultDispatchedToClinic = resultDispatchedToClinicDateArray[2]+'-'+resultDispatchedToClinicDateArray[1]+'-'+resultDispatchedToClinicDateArray[0];
+		//check specimen coll./specimen picked up date at mnc
+		if($.trim(specimenCollectedDate)!= '' && $.trim(specimenPickedUpDateAtAnc)!= ''){
+			if(moment(specimenCollectedDate).isAfter(specimenPickedUpDateAtAnc)) {
+				alert('Specimen picked up date at anc cannot be earlier than specimen collection date!');
+				$('#specimenPickedUpDateAtAnc').val('');
+			}
+		}
+		//check patient dob/specimen coll. date
+		if($.trim(patientDOB)!= '' && $.trim(specimenCollectedDate)!= ''){
+			if(moment(patientDOB).isAfter(specimenCollectedDate)) {
+				alert('Specimen collection date cannot be earlier than patient\'s date of birth!');
+				$('#dob').val('');
+			}
+		}
+		//check specimen picked up date at anc/receipt at lab
+		if($.trim(specimenPickedUpDateAtAnc)!= '' && $.trim(dateOfReceiptAtcentralLab)!= ''){
+			if(moment(specimenPickedUpDateAtAnc).isAfter(dateOfReceiptAtcentralLab)) {
+				alert('Date of receipt at lab cannot be earlier than specimen picked up date!');
+				$('#dateOfReceiptAtCentralLab').val('');
+			}
+		}
+		//check receipt at lab/test completion
+		if($.trim(dateOfReceiptAtcentralLab)!= '' && $.trim(dateOfTestCompletion)!= ''){
+			if(moment(dateOfReceiptAtcentralLab).isAfter(dateOfTestCompletion)) {
+				alert('Test completion date cannot be earlier than date of receipt at lab!');
+				$('#dateOfTestCompletion').val('');
+			}
+		}
+		//check test completion/result dispatched to clinic
+		if($.trim(dateOfTestCompletion)!= '' && $.trim(dateOfResultDispatchedToClinic)!= ''){
+			if(moment(dateOfTestCompletion).isAfter(dateOfResultDispatchedToClinic)) {
+				alert('Date of result dispatched to clinic cannot be earlier than test completion date!');
+				$('#dateOfResultDispatchedToClinic').val('');
+			}
+		}
+    }
+    
+    function addDataReporting(){
+	
+        flag = deforayValidator.init({
+            formId: 'addDataReportingForm'
+        });
+		// if($("#surveillanceId").val()!=''){
+	    // if($("#ancSite").val()==''){
+		// alert("Please choose ANC site name");
+		// $("#ancSite").css("background-color","#ffff99");
+		// return false;
+	    // }
+		// if($("#lab").val()==''){
+		// alert("Please select lab site code/name");
+		// $("#lab").css("background-color","#ffff99");
+		// return false;
+	    // }
+		//}
+        if(flag){
+	    $("#addBtn").css("pointer-events","none");
+	    $("#addBtn").css("background-color","#f3cdcd !important");
+            document.getElementById('addDataReportingForm').submit();
+        }
+    }
+	
+    function checkPatientRecord(){
+		checkPatientBarcodeId();
+    }
+    
+    function checkPatientBarcodeId(){
+		var patientBarcodeId = $('#patientBarcodeId').val();
+		var countryId = $('#chosenCountry').val();
+        var optCountryId = ($('#country').length) ? $('#country').val():'';
+		if($.trim(patientBarcodeId)!= '' && ($.trim(countryId)!= '' || $.trim(optCountryId)!= '')){
+				$.post("<?php echo $this->url('check-patient-record-admin'); ?>", {patientBarcodeId: patientBarcodeId,countryId:countryId,optCountryId:optCountryId,type:'lab'},
+				function(data) {
+					if ($.trim(data)!= '') { $.blockUI(); document.location.href = data; }
+				});
+		}
+    }
+    
+    $("a.formHide").click(function(){
+		$("#addDataReportingForm").toggle();
+		if ($.trim($(this).text()) === 'Hide this form') {
+			$(this).text('Show this form');
+		$('.formContainer').css('margin-bottom','0px');
+		} else {
+		$(this).text('Hide this form');
+		$('.formContainer').css('margin-bottom','20px');
+		}
+		return false;
+		});
+		
+		$('#ancPatientId').on('keyup',function(){
+		if(this.value == ''){
+		$('label[for="encAncPatientId"]').css("transform", "translateY(0%)");
+		$('.encAncPatientId').css('padding-top','30px');
+		$('.encAncPatientId').html('');
+		$('#encAncPatientId').val('');
+		}else{
+		$('label[for="encAncPatientId"]').css("transform", "translateY(-140%)");
+		$.post("<?php echo $this->url('rot47-admin'); ?>", {pId: this.value},
+			function(data) {
+			$('.encAncPatientId').css('padding-top','10px');
+			$('.encAncPatientId').html(data);	
+			$('#encAncPatientId').val(data);
+			});
+		}
+    });
+    
+    //get age
+    function getAge(){
+      var dob = $("#dob").val();
+      if($.trim(dob) == ""){
+        $("#age").val("");
+        return false;
+      }
+      //calculate age
+      var dobArray = dob.split("/");
+      dob = dobArray[2]+'-'+dobArray[1]+'-'+dobArray[0];
+      var years = moment().diff(dob, 'years',false);
+      $('label[for="age"]').css("transform", "translateY(-140%)"); 
+      $("#age").val(years); // Gives difference as year
+    }
+    
+    dcid = [];
+    function printDataCollection(ID){
+		dcid.push(ID);
+		$.blockUI();
+		$.post("<?php echo $this->url('result-email-pdf'); ?>", {dataCollection:dcid,printSrc:'lab'},
+			function(data){
+				if(data === "" || data === null || data === undefined){
+					dcid = [];
+					alert('Error-Oops, Unable to generate pdf');
+					$.unblockUI();
+				}else if(data == "na"){
+					alert('Print data not available');
+					$.unblockUI();
+				}else{
+					dcid = [];
+					$.unblockUI();
+					window.open("/temporary/"+data, "_blank");
+				}
+			});
+    }
+    
+    function emptyTestResultSection() {
+		var rejectionReason = $("#rejectionReason").val();
+		if (base64_decode(rejectionReason) == 1 || base64_decode(rejectionReason) == 5 || base64_decode(rejectionReason) == 8) {
+			$('#resultSection').show();
+			$(".testResultSection:not(#readerValueRRDT,#readerValueRRDTLog,#readerValueRRR,#readerValueRRRLog)").attr('readonly',false);
+			$("#readerValueRRDT,#readerValueRRR").attr('readonly',false);
+			$(".testResultSectionRadio").attr('disabled',false);
+		}else{
+			$('#resultSection').hide();
+			$(".testResultSection").val('').attr('readonly',true);
+			$(".testResultSectionRadio").prop('checked',false).attr('disabled',true);
+			$('.prePopulateAvidity,.prePopulateHIVRNA,.prePopulateRecentInfection').css('visibility','hidden');
+			$('#readerValueRRDTLogVal').html('');
+			//$('#readerValueRRDTLogValText').html('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
+    }
+    
+    $('#gestationalAge').on('change',function(){
+		if($('#gestationalAge').val()!= '' && ($('#gestationalAge').val() < 1 || $('#gestationalAge').val() > 50)){
+			alert('Gestational Age can only be between 1 to 50 Weeks');
+			$('#gestationalAge').val('');
+		}
+    });
+    
+    $('#readerValueRRDT').on('blur',function(){
+		var readerValueRRDT = $('#readerValueRRDT').val();
+		if($.trim(readerValueRRDT)!= '' && !isNaN(readerValueRRDT)){
+		//var readerValueRRDTLogVal = Math.log10(readerValueRRDT).toFixed(1);
+		var readerValueRRDTLogVal = readerValueRRDT;
+		//var readerValueRRDTLogValText = (readerValueRRDTLogVal >= 2.8)?'Positive Verification Line Present':'Positive Verification Line Absent';
+		$('.readerValueRRDTLog').css('visibility','visible');
+		$('#readerValueRRDTLog').val(readerValueRRDTLogVal);
+		$('#readerValueRRDTLogVal').html("log<sub>10</sub> : "+ readerValueRRDTLogVal);
+		//$('#readerValueRRDTLogValText').html(readerValueRRDTLogValText);
+		}else{
+		$('#readerValueRRDTLog').val('');
+		$('#readerValueRRDTLogVal').html('');
+		//$('#readerValueRRDTLogValText').html('');
+		}
+    });
+    
+    $('#readerValueRRR').on('blur',function(){
+		var readerValueRRR = $('#readerValueRRR').val();
+		if($.trim(readerValueRRR)!= '' && !isNaN(readerValueRRR)){
+		//var readerValueRRRLogVal = Math.log10(readerValueRRR).toFixed(1);
+		var readerValueRRRLogVal = readerValueRRR;
+		//var readerValueRRRLogValText = (readerValueRRRLogVal >= 3)?'Long Term Line Present':'Long Term Line Absent';
+		$('#readerValueRRRLog').val(readerValueRRRLogVal);
+		$('#readerValueRRRLogVal').html("log<sub>10</sub> : "+ readerValueRRRLogVal);
+		//$('#readerValueRRRLogValText').html(readerValueRRRLogValText);
+		}else{
+			$('#readerValueRRRLog').val('');
+			$('#readerValueRRRLogVal').html('');
+			//$('#readerValueRRRLogValText').html('');
+		}
+    });
+    
+    $('#age').on('blur',function(){
+        var age = $('#age').val();
+        var dob = $('#dob').val();
+        if($.trim(age)!= ''){
+			$('label[for="dob"]').html('DOB');
+			$('#dob').val('');
+			//$('#dob').removeClass('isRequired');
+        }else{
+	  		$('label[for="dob"]').html('DOB **');
+	  		//$('#dob').addClass('isRequired');
+        }
+    });
+    
+    function generateRSOT(){
+		$.blockUI();
+		$.post("<?php echo $this->url('export-rsot-pdf-admin'); ?>", { },
+		function(data){
+			if(data === "" || data === null || data === undefined){
+			alert('Error. Unable to generate pdf');
+			$.unblockUI();
+			}else if(data == "na"){
+			alert('Print data not available');
+			$.unblockUI();
+			}else{
+			dcid = [];
+			$.unblockUI();
+			window.open("/temporary/"+data, "_blank");
+			}
+		});
+    }
+</script>

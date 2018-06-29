@@ -823,7 +823,135 @@ return array(
                         'action' => 'export-enrollment-report',
                     ),
                 ),
-            )
+            ),
+            'data-collection-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection-admin[/][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'add-data-collection-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection-admin/add',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'add'
+                    ),
+                ),
+            ),'edit-data-collection-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection-admin/edit[/:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'edit'
+                    ),
+                ),
+            ),'lock-data-collection-admin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-collection-admin/lock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'lock'
+                    ),
+                ),
+            ),'unlock-data-collection-admin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-collection-admin/unlock',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'unlock'
+                    ),
+                ),
+            ),'view-data-collection-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-collection-admin/view[/][:id][/][:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'view'
+                    ),
+                ),
+            ),'get-countries-lab-anc-admin' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/get-countries-lab-anc',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'get-countries-lab-anc'
+                    ),
+                ),
+            ),'check-patient-record-admin' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/check-patient-record',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'check-patient-record'
+                    ),
+                ),
+            ),'rot47-admin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/rot47',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'rot47'
+                    ),
+                ),
+            ),'export-rsot-pdf-admin' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-rsot-pdf',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataCollectionAdmin',
+                        'action' => 'export-rsot-pdf',
+                    ),
+                ),
+            ),
+            'data-extraction-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/data-extraction-admin[/][/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtractionAdmin',
+                        'action' => 'index'
+                    ),
+                ),
+            ),'export-data-collection-admin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/data-extraction-admin/export-excel',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtractionAdmin',
+                        'action' => 'export-excel'
+                    ),
+                ),
+            ),'print-lab-logbook-admin' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/print-lab-logbook[/:countryId]',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtractionAdmin',
+                        'action' => 'print-lab-logbook'
+                    ),
+                ),
+            ),'generate-logbook-pdf-admin' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/generate-logbook-pdf',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\DataExtractionAdmin',
+                        'action' => 'generate-logbook-pdf'
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -857,7 +985,9 @@ return array(
             'Application\Controller\RiskAssessmentV2' => 'Application\Controller\RiskAssessmentV2Controller',
             'Application\Controller\Ussd' => 'Application\Controller\UssdController',
             'Application\Controller\OdkSupervisoryAudit' => 'Application\Controller\OdkSupervisoryAuditController',
-            'Application\Controller\Cron' => 'Application\Controller\CronController'
+            'Application\Controller\Cron' => 'Application\Controller\CronController',
+            'Application\Controller\DataCollectionAdmin' => 'Application\Controller\DataCollectionAdminController',
+            'Application\Controller\DataExtractionAdmin' => 'Application\Controller\DataExtractionAdminController',
         ),
     ),
     'controller_plugins' => array(

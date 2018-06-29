@@ -1,0 +1,20 @@
+<?php
+$anc = '';
+$lab = '';
+//For ANC Site
+$anc.='<span>ANC site name **</span>';
+$anc.='<select id="ancSite" name="ancSite" class="ancSite isRequired" title="Please select ANC site">';
+$anc.='<option data-anc-site-code="" value=""> -- Select -- </option>';
+        foreach($response['ancsites'] as $ancSite){
+          $anc.='<option data-anc-site-code="'.$ancSite['anc_site_code'].'" value="'.base64_encode($ancSite['anc_site_id']).'">'.$ancSite['anc_site_code']." - ".ucwords($ancSite['anc_site_name']).'</option>';
+        }
+$anc.='</select>';
+//For Lab Site
+$lab.='<select id="lab" name="lab" class="material-select" title="Please select lab site code/name">';
+$lab.='<option value=""> -- Select -- </option>';
+        foreach($response['labs'] as $facility){
+          $lab.='<option value="'.base64_encode($facility['facility_id']).'">'.$facility['facility_code']." - ".ucwords($facility['facility_name']).'</option>';
+        }
+$lab.='</select>';
+$lab.='<label for="lab">Lab site code/name *</label>';
+echo $anc.'divider'.$lab;
