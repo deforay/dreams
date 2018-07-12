@@ -2497,7 +2497,7 @@ class DataCollectionService {
     }
     
     public function importUSSDData(){
-        $ussdFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd";
+        $ussdFilesPath = "/home/databackup/ussd_exports"; //UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd";
         $ussdSyncedFilesPath = UPLOAD_PATH . DIRECTORY_SEPARATOR . "ussd-synced";
         $ussdFiles = scandir($ussdFilesPath, SCANDIR_SORT_DESCENDING);
         if(sizeof($ussdFiles) > 0){
