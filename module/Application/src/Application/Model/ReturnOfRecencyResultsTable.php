@@ -339,11 +339,9 @@ class ReturnOfRecencyResultsTable extends AbstractTableGateway {
             //data edit
             $dataEdit = '<a href="/clinic/return-recency/edit/' . base64_encode($aRow['patient_barcode_id']) . '/' . base64_encode($parameters['countryId']) . '" class="waves-effect waves-light btn-small btn pink-text custom-btn custom-btn-pink margin-bottom-1" title="Edit"><i class="zmdi zmdi-edit"></i> Edit</a>&nbsp;&nbsp;';
 
-            
             if($loginContainer->hasViewOnlyAccess!= 'yes'){
               $row[] = $dataEdit;
             }
-
             
             $output['aaData'][] = $row;
        }

@@ -262,6 +262,10 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
+                    $reasons =    array("1" => "Woman has not returned for follow-up",
+                                        "2" =>"Woman returned for follow-up, but result had not yet been returned to ANC site at that time",
+                                        "3" =>"Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result.",
+                                        "4" =>"Other");
                     foreach ($sResult as $aRow) {
                         $row = array();
                         $ancSiteDistrict = '';
@@ -408,6 +412,12 @@ class DataCollectionService {
                         $row[] = $timeResultReturnedatClinic;
 	                $row[] = $dateReturnedtoParticipant;
                         $row[] = $timeReturnedtoParticipant;
+                        if($aRow['reason_for_not_returning'] != 4){
+                            $reason = $reasons[$aRow['reason_for_not_returning']];
+                       }else{
+                           $reason = $aRow['reason_for_not_returning_other'];
+                       }
+                        $row[] = $reason;
                         if(!isset($params['countryId']) || trim($params['countryId']) == ''){
                             $row[] = ucfirst($aRow['country_name']);
                         }
@@ -568,27 +578,29 @@ class DataCollectionService {
                         $sheet->setCellValue('AG'.$headerRow, html_entity_decode('Time Result Returned at Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AH'.$headerRow, html_entity_decode('Date Returned to Participant', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AI'.$headerRow, html_entity_decode('Time Returned to Participant', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AJ'.$headerRow, html_entity_decode('Reason for not returning Result', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }else{
                         $sheet->setCellValue('AD'.$headerRow, html_entity_decode('Date Result Returned at Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AE'.$headerRow, html_entity_decode('Time Result Returned at Clinic', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AF'.$headerRow, html_entity_decode('Date Returned to Participant', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AG'.$headerRow, html_entity_decode('Time Returned to Participant', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AH'.$headerRow, html_entity_decode('Time Returned to Participant', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                        $cellName = (!isset($params['frmSrc']))?'AJ':'AH';
+                        $cellName = (!isset($params['frmSrc']))?'AK':'AI';
                         $sheet->setCellValue($cellName.$headerRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->setCellValue('AI'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                          $sheet->setCellValue('AJ'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING); 
+                          $sheet->setCellValue('AJ'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                          $sheet->setCellValue('AK'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING); 
                         }else{
                           $sheet->setCellValue('AK'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->setCellValue('AH'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                          $sheet->setCellValue('AI'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);  
-                        }else{
+                          $sheet->setCellValue('AI'.$headerRow, html_entity_decode('Manager\'s Approval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                           $sheet->setCellValue('AJ'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);  
+                        }else{
+                          $sheet->setCellValue('AK'.$headerRow, html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);  
                         }
                     }
                     
@@ -643,27 +655,29 @@ class DataCollectionService {
                         $sheet->getStyle('AG'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AH'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AI'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AJ'.$headerRow)->applyFromArray($styleArray);
                     }else{
                         $sheet->getStyle('AD'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AE'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AF'.$headerRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AG'.$headerRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AH'.$headerRow)->applyFromArray($styleArray);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                        $cellName = (!isset($params['frmSrc']))?'AJ':'AH';
+                        $cellName = (!isset($params['frmSrc']))?'AK':'AI';
                         $sheet->getStyle($cellName.$headerRow)->applyFromArray($styleArray);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                         $sheet->getStyle('AI'.$headerRow)->applyFromArray($styleArray);
                          $sheet->getStyle('AJ'.$headerRow)->applyFromArray($styleArray);
+                         $sheet->getStyle('AK'.$headerRow)->applyFromArray($styleArray);
                         }else{
-                          $sheet->getStyle('AK'.$headerRow)->applyFromArray($styleArray);
+                          $sheet->getStyle('AL'.$headerRow)->applyFromArray($styleArray);
                         }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->getStyle('AH'.$headerRow)->applyFromArray($styleArray);
                           $sheet->getStyle('AI'.$headerRow)->applyFromArray($styleArray);
+                          $sheet->getStyle('AJ'.$headerRow)->applyFromArray($styleArray);
                         }else{
-                          $sheet->getStyle('AJ'.$headerRow)->applyFromArray($styleArray);  
+                          $sheet->getStyle('AK'.$headerRow)->applyFromArray($styleArray);  
                         }
                     }
                     
@@ -704,27 +718,29 @@ class DataCollectionService {
                         $sheet->setCellValue('AG'.$currentRow, html_entity_decode('timeresultreturnedclinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AH'.$currentRow, html_entity_decode('datereturnedtoparticipant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AI'.$currentRow, html_entity_decode('timereturnedtoparticipant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('reasonfornotreturning ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }else{
                         $sheet->setCellValue('AD'.$currentRow, html_entity_decode('dateresultreturnedclinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AE'.$currentRow, html_entity_decode('timeresultreturnedclinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AF'.$currentRow, html_entity_decode('datereturnedtoparticipant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AG'.$currentRow, html_entity_decode('timereturnedtoparticipant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AH'.$currentRow, html_entity_decode('reasonfornotreturning ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                        $cellName = (!isset($params['frmSrc']))?'AJ':'AH';
+                        $cellName = (!isset($params['frmSrc']))?'AK':'AI';
                         $sheet->setCellValue($cellName.$currentRow, html_entity_decode('Country', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                           $sheet->setCellValue('AI'.$currentRow, html_entity_decode('ManagersApproval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                           $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        }else{
+                           $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('ManagersApproval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                            $sheet->setCellValue('AK'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }else{
+                           $sheet->setCellValue('AL'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->setCellValue('AH'.$currentRow, html_entity_decode('ManagersApproval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                          $sheet->setCellValue('AI'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        }else{
+                          $sheet->setCellValue('AI'.$currentRow, html_entity_decode('ManagersApproval', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                           $sheet->setCellValue('AJ'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        }else{
+                          $sheet->setCellValue('AK'.$currentRow, html_entity_decode('ancdistrict', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         }
                     }
                     
@@ -764,27 +780,29 @@ class DataCollectionService {
                         $sheet->getStyle('AG'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AH'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AI'.$currentRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AJ'.$currentRow)->applyFromArray($styleArray);
                     }else{
                         $sheet->getStyle('AD'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AE'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AF'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AG'.$currentRow)->applyFromArray($styleArray);
+                        $sheet->getStyle('AH'.$currentRow)->applyFromArray($styleArray);
                     }
                     if(!isset($params['countryId']) || trim($params['countryId']) == ''){
-                      $cellName = (!isset($params['frmSrc']))?'AJ':'AH';  
+                      $cellName = (!isset($params['frmSrc']))?'AK':'AI';  
                       $sheet->getStyle($cellName.$currentRow)->applyFromArray($styleArray);
                       if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                        $sheet->getStyle('AI'.$currentRow)->applyFromArray($styleArray);
                         $sheet->getStyle('AJ'.$currentRow)->applyFromArray($styleArray);
-                      }else{
                         $sheet->getStyle('AK'.$currentRow)->applyFromArray($styleArray);
+                      }else{
+                        $sheet->getStyle('AL'.$currentRow)->applyFromArray($styleArray);
                       }
                     }else{
                         if(isset($params['frmSrc']) && trim($params['frmSrc']) == 'log'){
-                          $sheet->getStyle('AH'.$currentRow)->applyFromArray($styleArray);
                           $sheet->getStyle('AI'.$currentRow)->applyFromArray($styleArray);
+                          $sheet->getStyle('AJ'.$currentRow)->applyFromArray($styleArray);
                         }else{
-                          $sheet->getStyle('AJ'.$currentRow)->applyFromArray($styleArray);  
+                          $sheet->getStyle('AK'.$currentRow)->applyFromArray($styleArray);  
                         }
                     }
                     $currentRow = (isset($params['frmSrc']) && trim($params['frmSrc']) == 'log')?6:3;
@@ -1501,6 +1519,10 @@ class DataCollectionService {
                     $sheet = $excel->getActiveSheet();
                     $sheet->getSheetView()->setZoomScale(80);
                     $output = array();
+                    $reasons =    array("1" => "Woman has not returned for follow-up",
+                            "2" =>"Woman returned for follow-up, but result had not yet been returned to ANC site at that time",
+                            "3" =>"Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result.",
+                            "4" =>"Other");
                     foreach ($sResult as $key=>$aRow) {
                         $ancSiteName = '';
                         $ancSiteDistrict = '';
@@ -1739,6 +1761,14 @@ class DataCollectionService {
                            $row[] = $dateReturnedtoParticipant;
                            $row[] = $timeReturnedtoParticipant;
                         }
+                        if(count($sor_Columns) == 0 || in_array('reason_for_not_returning',$sor_Columns)){
+                            if($aRow['reason_for_not_returning'] != 4){
+                                $reason = $reasons[$aRow['reason_for_not_returning']];
+                           }else{
+                               $reason = $aRow['reason_for_not_returning_other'];
+                           }
+                            $row[] = $reason;
+                         }
                         $row[] = $ancSiteDistrict;
                       $output[] = $row;
                     }
@@ -1815,7 +1845,8 @@ class DataCollectionService {
                         $sheet->setCellValue('AC1', html_entity_decode('Time Result Returned at Clinic ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AD1', html_entity_decode('Date Returned to Participant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $sheet->setCellValue('AE1', html_entity_decode('Time Returned to Participant ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
-                        $sheet->setCellValue('AF1', html_entity_decode('ANC District ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AF1', html_entity_decode('Reason for not returning Result ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->setCellValue('AG1', html_entity_decode('ANC District ', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         
                         $sheet->getStyle('A1')->applyFromArray($styleArray);
                         $sheet->getStyle('B1')->applyFromArray($styleArray);
@@ -1849,6 +1880,7 @@ class DataCollectionService {
                         $sheet->getStyle('AD1')->applyFromArray($styleArray);
                         $sheet->getStyle('AE1')->applyFromArray($styleArray);
                         $sheet->getStyle('AF1')->applyFromArray($styleArray);
+                        $sheet->getStyle('AG1')->applyFromArray($styleArray);
                     }else{
                         $j=0;
                         for($col=0;$col < count($manage_Columns);$col++){
@@ -1881,8 +1913,11 @@ class DataCollectionService {
                                 }
                             }
                         }
-                        $sheet->getCellByColumnAndRow($j, 1)->setValueExplicit(html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $sheet->getCellByColumnAndRow($j, 1)->setValueExplicit(html_entity_decode('Reason for not returning Result', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
                         $cellName = $sheet->getCellByColumnAndRow($j, 1)->getColumn();
+                        $sheet->getStyle($cellName . '1')->applyFromArray($styleArray);
+                        $sheet->getCellByColumnAndRow($j++, 1)->setValueExplicit(html_entity_decode('ANC District', ENT_QUOTES, 'UTF-8'), \PHPExcel_Cell_DataType::TYPE_STRING);
+                        $cellName = $sheet->getCellByColumnAndRow($j--, 1)->getColumn();
                         $sheet->getStyle($cellName . '1')->applyFromArray($styleArray);
                     }
                     

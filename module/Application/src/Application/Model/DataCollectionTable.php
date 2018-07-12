@@ -871,7 +871,7 @@ class DataCollectionTable extends AbstractTableGateway {
 					->join(array('f' => 'facility'), "f.facility_id=da_c.lab",array('facility_name','facility_code'),'left')
 					->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejection_code'),'left')
 					->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>'date_result_returned_clinic','dateReturnedtoParticipant'=>'date_returned_to_participant'),'left')
-					->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)')),'left');
+					->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)'),'reason_for_not_returning'),'left');
 	             //->where('da_c.status IN (2)');
 	if($loginContainer->roleCode== 'LDEO' || $loginContainer->roleCode== 'LS'){
 	    if(trim($parameters['lab']) ==''){
@@ -956,6 +956,10 @@ class DataCollectionTable extends AbstractTableGateway {
 
 	$vlSpecimenTypes = array( '1' => 'Venous', '2' => 'Plasma', '3' => 'DBS');
 
+	$reasons =    array("1" => "Woman has not returned for follow-up",
+	"2" =>"Woman returned for follow-up, but result had not yet been returned to ANC site at that time",
+	"3" =>"Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result.",
+	"4" =>"Other");
 
 	foreach ($rResult as $aRow) {
 	    $row = array();
@@ -1033,7 +1037,12 @@ class DataCollectionTable extends AbstractTableGateway {
 		}if(isset($asanteRapidRecencyAssy['rrr'])){
 		    $asanteRapidRecencyAssayRlt = (isset($asanteRapidRecencyAssy['rrr']['assay']))?ucwords($asanteRapidRecencyAssy['rrr']['assay']):'';
 		}
-	    }
+		}
+		if($aRow['reason_for_not_returning'] != 4){
+			$reason = $reasons[$aRow['reason_for_not_returning']];
+	   }else{
+		   $reason = $aRow['reason_for_not_returning_other'];
+	   }
 	    
 	    $row[] = $aRow['patient_barcode_id'];
 	    $row[] = $specimenCollectedDate;
@@ -1067,7 +1076,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = (isset($aRow['updatedBy']))?ucwords($aRow['updatedBy']):'';
 	    $row[] = ucwords($aRow['test_status_name']);
 	    $row[] = $dateResultReturnedatClinic;
-	    $row[] = $dateReturnedtoParticipant;
+		$row[] = $dateReturnedtoParticipant;
+		$row[] = $reason;
 	    if($parameters['countryId']== ''){
 	       $row[] = ucwords($aRow['country_name']);
 	    }
@@ -2145,7 +2155,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
 				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(ussd_s.date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(ussd_s.date_returned_to_participant)')),'left')
-				 ->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)')),'left')
+				 ->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)'),'reason_for_not_returning'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 
 
@@ -2161,7 +2171,7 @@ class DataCollectionTable extends AbstractTableGateway {
 				 ->join(array('l_d'=>'location_details'),'l_d.location_id=f.province',array('location_name'),'left')
 				 ->join(array('r_r' => 'specimen_rejection_reason'), "r_r.rejection_reason_id=da_c.rejection_reason",array('rejectionReasonName'=>'rejection_reason'),'left')
 				 ->join(array('ussd_s' => 'ussd_survey'), "ussd_s.patient_barcode_id=da_c.patient_barcode_id",array('dateResultReturnedClinic'=>new Expression('DATE(ussd_s.date_result_returned_clinic)'),'dateReturnedtoParticipant'=>new Expression('DATE(ussd_s.date_returned_to_participant)')),'left')
-				 ->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)')),'left')
+				 ->join(array('r' => 'return_of_recency_results'), "r.patient_barcode_id=da_c.patient_barcode_id",array('ancDateResultReturnedClinic'=>new Expression('DATE(r.date_returned_to_anc)'),'ancDateReturnedtoParticipant'=>new Expression('DATE(r.date_returned_to_participant)'),'reason_for_not_returning'),'left')
 				 ->where('da_c.country = '.$parameters['country'].' OR r_a.country = '.$parameters['country']);
 	$select1->combine($select2);
 	$sQuery = $sql->select()->from(array('result' => $select1));
@@ -2263,6 +2273,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	    "iTotalDisplayRecords" => $iFilteredTotal,
 	    "aaData" => array()
 	);
+	$reasons =    array("1" => "Woman has not returned for follow-up",
+                            "2" =>"Woman returned for follow-up, but result had not yet been returned to ANC site at that time",
+                            "3" =>"Woman returned for follow-up after recency result was returned to ANC site, but staff did not return recency result.",
+                            "4" =>"Other");
 	foreach ($rResult as $aRow) {
 	    $ancSiteName = '';
 	    $patientBarcodeID = '';
@@ -2391,7 +2405,12 @@ class DataCollectionTable extends AbstractTableGateway {
 		}else if(isset($aRow['recency_line']) && trim($aRow['recency_line']) == 'invalid') {
 		    $ancRecencyVerificationClassification = 'Invalid';
 		}
-	    //}
+		//}
+		if($aRow['reason_for_not_returning'] != 4){
+			$reason = $reasons[$aRow['reason_for_not_returning']];
+	   }else{
+		   $reason = $aRow['reason_for_not_returning_other'];
+	   }
 	    $row = array();
 	    $row[] = (isset($aRow['location_name']) && $aRow['location_name']!= null && trim($aRow['location_name'])!= '')?ucwords($aRow['location_name']):'';
 	    $row[] = $patientBarcodeID;
@@ -2422,7 +2441,8 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $status;
 	    $row[] = (isset($aRow['r_assessment_id']) && $aRow['r_assessment_id']!= null && trim($aRow['r_assessment_id'])!= '')?'<a href="/clinic/risk-assessment/view/' . base64_encode($aRow['r_assessment_id']). '/' . base64_encode($aRow['r_country']) . '" style="text-decoration:underline;" target="_blank" title="View data"> Yes</a>':'No';
 	    $row[] = $dateResultReturnedatClinic;
-	    $row[] = $dateReturnedtoParticipant;
+		$row[] = $dateReturnedtoParticipant;
+		$row[] = $reason;
 	    $output['aaData'][] = $row;
 	}
       return $output;

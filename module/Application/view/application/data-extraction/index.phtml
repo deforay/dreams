@@ -206,12 +206,15 @@
 	      <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="28" id="iCol28" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol28">Date Returned to Participant</label> <br>
 	    </div>
+		<div class="col m3">
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="29" id="iCol29" data-showhide="result_for_not_returrning" class="showhideCheckBox" /> <label for="iCol29">Reason for not returning Result</label> <br>
+	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
 		<input type="hidden" id="countColumn" value="29"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="29" id="iCol29" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol29">Country Name</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="30" id="iCol30" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol29">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
 	      <input type="hidden" id="countColumn" value="28"/>
@@ -323,6 +326,7 @@
 				<th>Status</th>
 				<th>Date Result Returned at Clinic</th>
 				<th>Date Returned to Participant</th>
+				<th>Reason for not returning Result</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -363,6 +367,7 @@
 				<th>Status</th>
 				<th>Date Result Returned at Clinic</th>
 				<th>Date Returned to Participant</th>
+				<th>Reason for not returning Result</th>
 				<?php
                                 if(trim($countryId)== ''){
                                 ?>
@@ -414,6 +419,7 @@
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"dataTable_noWrap"},
+		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
 		{"sClass":"center dataTable_noWrap"},
