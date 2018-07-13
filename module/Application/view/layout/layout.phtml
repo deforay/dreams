@@ -346,6 +346,7 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                 <li class="countryClinicEnrollmentReportMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/enrollment-report/<?php echo base64_encode($country['country_id']); ?>" class="countryClinicEnrollmentReportMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> ANC Enrollment</a>
                                                                 </li>
+                                                                <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show') { ?>    
                                                                 <li class="returnRecencyMenu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/return-recency/<?php echo base64_encode($country['country_id']); ?>" class="returnRecencyMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-cloud-download"></i> Recency Result Return</a>
                                                                 </li>                                                                

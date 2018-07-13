@@ -945,6 +945,7 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $tQuery = $tQuery->where('da_c.country IN ("' . implode('", "', $loginContainer->country) . '")');
 	}
 	$tQueryStr = $sql->getSqlStringForSqlObject($tQuery); // Get the string of the Sql, instead of the Select-instance
+	//echo 
 	$tResult = $dbAdapter->query($tQueryStr, $dbAdapter::QUERY_MODE_EXECUTE);
 	$iTotal = count($tResult);
 	$output = array(
@@ -1063,10 +1064,10 @@ class DataCollectionTable extends AbstractTableGateway {
 	    $row[] = $aRow['final_lag_avidity_odn'];
 	    $row[] = $lAgAvidityResult;
 	    $row[] = $aRow['hiv_rna'];
-	    $row[] = $aRow['is_dbs_available'];
-	    $row[] = isset($vlSpecimenTypes[$aRow['lab_specimen_id']]) ?  $vlSpecimenTypes[$aRow['lab_specimen_id']] : null;
+	    $row[] = ucwords($aRow['is_dbs_available']);
+	    //$row[] = isset($vlSpecimenTypes[$aRow['lab_specimen_id']]) ?  $vlSpecimenTypes[$aRow['lab_specimen_id']] : null;
 	    //$row[] = $hIVRNAResult;
-	    $row[] = $finalLagRecencyInfection;
+	    //$row[] = $finalLagRecencyInfection;
 	    $row[] = $asanteRapidRecencyAssayPn;
 	    $row[] = $asanteRapidRecencyAssayRlt;
 	    $row[] = ucfirst($aRow['comments']);
