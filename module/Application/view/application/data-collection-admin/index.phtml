@@ -539,10 +539,10 @@ if(isset($date) && trim($date)!= ''){
 	    <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="0" id="iCol0" data-showhide="patient_barcode_id" class="showhideCheckBox" /> <label for="iCol0">Patient Barcode ID</label>
 	    </div>
-	    <div class="col m3">
+	    <!--<div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="test_status_name" class="showhideCheckBox" /> <label for="iCol1"> Status</label> <br>
 	    </div>
-	    <!-- <div class="col m3">
+	     <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="specimen_collected_date" class="showhideCheckBox"  /> <label for="iCol2">Specimen Collected Date</label>
 	    </div>
 	    <div class="col m3">
@@ -579,10 +579,10 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="12" id="iCol12" data-showhide="receipt_date_at_central_lab" class="showhideCheckBox" /> <label for="iCol12">Receipt Date at Lab</label> <br>
 	    </div> -->
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol2">Lab Tech. Name/ID</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="1" id="iCol1" data-showhide="lab_tech_name" class="showhideCheckBox" /> <label for="iCol1">Lab Tech. Name/ID</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol3">Date of Test Completion</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="2" id="iCol2" data-showhide="date_of_test_completion" class="showhideCheckBox" /> <label for="iCol2">Date of Test Completion</label> <br>
 	    </div>
 	    <!-- <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="15" id="iCol15" data-showhide="result_dispatched_date_to_clinic" class="showhideCheckBox" /> <label for="iCol15">Result Dispatched Date to Clinic</label> <br>
@@ -609,16 +609,16 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="21" id="iCol21" data-showhide="recent_infection" class="showhideCheckBox" /> <label for="iCol21">Lab LAg Recency (Based on algorithm)</label> <br>
 	    </div> -->
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol4">Asante Positive Verification Line Reader Value (log10)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="3" id="iCol3" data-showhide="asante_rapid_recency_assy_rrdt_reader_value" class="showhideCheckBox" /> <label for="iCol3">Asante Positive Verification Line Reader Value (log10)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol5">Asante Positive Verification Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="4" id="iCol4" data-showhide="asante_rapid_recency_assy_rrdt" class="showhideCheckBox" /> <label for="iCol4">Asante Positive Verification Line (Visual)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol6">Asante Long Term Line Reader Value (log10)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="5" id="iCol5" data-showhide="asante_rapid_recency_assy_rrr_reader_value" class="showhideCheckBox" /> <label for="iCol5">Asante Long Term Line Reader Value (log10)</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol7">Asante Long Term Line (Visual)</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="6" id="iCol6" data-showhide="asante_rapid_recency_assy_rrr" class="showhideCheckBox" /> <label for="iCol6">Asante Long Term Line (Visual)</label> <br>
 	    </div>
 	    <!-- <div class="col m3">
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="26" id="iCol26" data-showhide="date_result_returned_clinic" class="showhideCheckBox" /> <label for="iCol26">Date Result Returned at Clinic</label> <br>
@@ -627,20 +627,20 @@ if(isset($date) && trim($date)!= ''){
 		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="27" id="iCol27" data-showhide="date_returned_to_participant" class="showhideCheckBox" /> <label for="iCol27">Date Returned to Participant</label> <br>
 	    </div> -->
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol8">Added On</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="7" id="iCol7" data-showhide="added_on" class="showhideCheckBox" /> <label for="iCol7">Added On</label> <br>
 	    </div>
 	    <div class="col m3">
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol9">Added by</label> <br>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="8" id="iCol8" data-showhide="user_name" class="showhideCheckBox" /> <label for="iCol8">Added by</label> <br>
 	    </div>
 	    <?php
 	    if(trim($countryId) == ''){
 	    ?>
 	    <div class="col m3">
-		<input type="hidden" id="countColumn" value="10"/>
-		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="10" id="iCol10" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol10">Country Name</label> <br>
+		<input type="hidden" id="countColumn" value="9"/>
+		<input type="checkbox" onclick="javascript:fnShowHide(this.value);" value="9" id="iCol9" data-showhide="country_name" class="showhideCheckBox" /> <label for="iCol9">Country Name</label> <br>
 	    </div>
 	    <?php } else { ?>
-	      <input type="hidden" id="countColumn" value="10"/>
+	      <input type="hidden" id="countColumn" value="9"/>
 	    <?php } ?>
 	</div>
     </div>
@@ -648,9 +648,9 @@ if(isset($date) && trim($date)!= ''){
        <a href="javascript:void(0);" class="waves-effect waves-light btn-small white-text pink margin-bottom-10" onclick="loadLabDataList();">Show Lab Data List</a>
     </div>
     <div class="row content-container hideDataTable" id="labDataList" style="padding: 0 20px;display:none;">
-	<div class="col l12 m12 s12" style="padding:0;">
+	<!-- <div class="col l12 m12 s12" style="padding:0;">
 	    <a href="javascript:void(0);" onclick="generateRSOT();" class="waves-effect waves-light btn-small btn orange-text custom-btn custom-btn-orange" style="float:right;"><i class="zmdi zmdi-collection-pdf"></i> Export Recency Study Outstanding Test List PDF</a>
-	</div>
+	</div> -->
         <div class="col l12 m12 s12" style="padding:0;">
             <div class="card card-default table-height">
                 <div class="card-header dataTable-header"><i class="zmdi zmdi-filter-list"></i> Lab Data Reporting List
@@ -661,8 +661,8 @@ if(isset($date) && trim($date)!= ''){
                         <thead>
                             <tr>
 				<th>Patient<br>Barcode<br>ID</th>
-				<th>Status</th>
-				<!--<th>Specimen<br>Collection<br>Date</th>
+				<!--<th>Status</th>
+				<th>Specimen<br>Collection<br>Date</th>
 				<th>ANC Site</th>
 				<th>ANC<br>Site Code</th>
 				<th>ANC<br>Patient ID</th>
@@ -703,8 +703,8 @@ if(isset($date) && trim($date)!= ''){
 				<tfoot>
 				<tr>
 				<th>Patient<br>Barcode<br>ID</th>
-				<th>Status</th>
-				<!--<th>Specimen<br>Collection<br>Date</th>
+				<!--<th>Status</th>
+				<th>Specimen<br>Collection<br>Date</th>
 				<th>ANC Site</th>
 				<th>ANC Site<br>Code</th>
 				<th>ANC<br>Patient ID</th>
@@ -767,7 +767,7 @@ if(isset($date) && trim($date)!= ''){
 	    "iDisplayLength": 25,
             "aoColumns": [
                 {"sClass":"dataTable_noWrap"},
-				{"sClass":"center dataTable_noWrap"},
+				//{"sClass":"center dataTable_noWrap"},
 				//{"sClass":"center dataTable_noWrap"},
 				// {"sClass":"dataTable_noWrap"},
 				// {"sClass":"center dataTable_noWrap"},
@@ -812,7 +812,7 @@ if(isset($date) && trim($date)!= ''){
 		    //if(aData[21] =='Absent' || (aData[19] == 'Long Term' && aData[23] == 'Absent') || (aData[19] == 'Recent' && aData[23] == 'Present')){ $(nRow).addClass("redTxt"); }
 		//}
 	    },
-            "aaSorting": [[2, "desc"]],
+            "aaSorting": [[1, "desc"]],
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": "<?php echo $this->url('data-collection-admin',array('action' => 'index')); ?>",

@@ -170,7 +170,10 @@ if(isset($date) && trim($date)!= ''){
 		<a href="javascript:void(0);" onclick="clearSearchFields();" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red"><i class="zmdi zmdi-refresh"></i> Reset Filters</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="searchRiskAssessmentData();" class="waves-effect waves-light btn-small btn black-text custom-btn custom-btn-black"><i class="zmdi zmdi-search"></i> Search</a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:void(0);" onclick="exportRiskAssessmentData();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel</a>&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="javascript:void(0);" onclick="exportIPVReport();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export IPV Report</a>
+		<a href="javascript:void(0);" onclick="exportIPVReport();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export IPV Report</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<?php if($loginContainer->roleCode=='CSC' || $loginContainer->roleCode=='CC'){ ?>
+		<a href="javascript:void(0);" onclick="exportRiskAssessmentDataAdmin();" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green"><i class="zmdi zmdi-collection-text"></i> Export Excel V2</a>
+<?php } ?>
 	    </div>
 	</form>
     </div>
@@ -354,6 +357,22 @@ if(isset($date) && trim($date)!= ''){
     function exportRiskAssessmentData(){
 	$.blockUI();
 	$.post("<?php echo $this->url('export-risk-assessment-excel'); ?>", { },
+	function(data){
+	    if(data == "" || data == null || data == undefined){
+		alert('Error-Oops, Unable to generate excel');
+		$.unblockUI();
+	    }else if(data == "na"){
+		alert('Export data not available');
+		$.unblockUI();
+	    }else{
+		$.unblockUI();
+		window.open("/temporary/"+data, "_blank");
+	    }
+	});
+    }
+	function exportRiskAssessmentDataAdmin(){
+	$.blockUI();
+	$.post("<?php echo $this->url('export-risk-assessment-excel-admin'); ?>", { },
 	function(data){
 	    if(data == "" || data == null || data == undefined){
 		alert('Error-Oops, Unable to generate excel');

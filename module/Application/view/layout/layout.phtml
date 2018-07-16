@@ -355,9 +355,9 @@ if($loginContainer->roleCode== 'ANCSC'){
                                                                     <a href="/lab-report/<?php echo base64_encode($country['country_id']); ?>?frmSrc=anc" class="countryClinicResultMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-print"></i> Lab LAg Rec. Results</a>
                                                                 </li>
                                                             <?php } if($loginContainer->roleCode== 'CSC' || $loginContainer->roleCode== 'CC' || $DRAccess == 'show'){ ?>
-                                                                <li class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?> menuAll">
-                                                                    <a href="/clinic/risk-assessment/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment V1</a>
-                                                                </li>
+                                                                <!-- <li class="countryRiskAssessmentMenu< ?php echo $country['country_id']; ?> menuAll">
+                                                                    <a href="/clinic/risk-assessment/< ?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentMenu< ?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment V1</a>
+                                                                </li> -->
                                                                 <li class="countryRiskAssessmentV2Menu<?php echo $country['country_id']; ?> menuAll">
                                                                     <a href="/clinic/risk-assessment/v2/<?php echo base64_encode($country['country_id']); ?>" class="countryRiskAssessmentV2Menu<?php echo $country['country_id']; ?>" style="padding-left:22%;color:#444;font-size:13px;"><i class="zmdi zmdi-assignment"></i> Risk Assessment V2</a>
                                                                 </li>

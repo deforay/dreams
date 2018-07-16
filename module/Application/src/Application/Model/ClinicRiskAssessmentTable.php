@@ -539,7 +539,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 		      ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
-		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left')
+		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','control_line','HIV_diagnostic_line','recency_line'),'left')
 		      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array('age'),'left');
 	if(count($ancs) >0){
 	   $sQuery = $sQuery->where('r_a.anc IN ("' . implode('", "', $ancs) . '")');
@@ -600,7 +600,7 @@ class ClinicRiskAssessmentTable extends AbstractTableGateway {
 		      ->join(array('anc_l_d'=>'location_details'),'anc_l_d.location_id=anc.district',array('anc_site_district'=>'location_name'),'left')
 		      ->join(array('ot' => 'occupation_type'), "ot.occupation_id=r_a.patient_occupation",array('occupationName'=>'occupation','occupation_code'),'left')
 		      ->join(array('u_u' => 'user'), "u_u.user_id=r_a.updated_by",array('updatedBy'=>'full_name'),'left')
-		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array(),'left')
+		      ->join(array('anc_r_r'=>'anc_rapid_recency'),'anc_r_r.assessment_id=r_a.assessment_id',array('has_patient_had_rapid_recency_test','control_line','HIV_diagnostic_line','recency_line'),'left')
 		      ->join(array('da_c' => 'data_collection'), "da_c.patient_barcode_id=r_a.patient_barcode_id",array('age'),'left');
 	if($loginContainer->roleCode == 'ANCSC'){
 	   $tQuery = $tQuery->where(array('r_a.added_by'=>$loginContainer->userId));

@@ -504,11 +504,11 @@ class DataCollectionAdminTable extends AbstractTableGateway {
 	    }
 	    //data lock
 	    if($loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'completed'){
-		$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-1" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
+		//$dataLock = '<a href="javascript:void(0);" onclick="lockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn green-text custom-btn custom-btn-green margin-bottom-1" title="Lock"><i class="zmdi zmdi-lock-outline"></i> Lock</a>&nbsp;&nbsp;';
 	    }
 	    //data unlock(csc/cc)
 	    if(($loginContainer->roleCode == 'CSC' || $loginContainer->roleCode == 'CC') && $loginContainer->hasViewOnlyAccess != 'yes' && $aRow['test_status_name'] == 'locked'){
-		$dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
+		//$dataUnlock = '<a href="javascript:void(0);" onclick="unlockDataCollection(\''.base64_encode($aRow['data_collection_id']).'\');" class="waves-effect waves-light btn-small btn red-text custom-btn custom-btn-red margin-bottom-1" title="Unlock"><i class="zmdi zmdi-lock-open"></i> Unlock</a>&nbsp;&nbsp;';
 	    }
 	    $dataLockUnlock = (trim($dataLock)!= '')?$dataLock:$dataUnlock;
 	    //individual result pdf
@@ -518,7 +518,7 @@ class DataCollectionAdminTable extends AbstractTableGateway {
 	    $addedDate = explode(" ",$aRow['added_on']);
 	    $row = array();
 	    $row[] = $aRow['patient_barcode_id'];
-	    $row[] = ucwords($aRow['test_status_name']);
+	    //$row[] = ucwords($aRow['test_status_name']);
 	    //$row[] = $specimenCollectedDate;
 	    //$row[] = ucwords($aRow['anc_site_name']);
 	    //$row[] = $aRow['anc_site_code'];

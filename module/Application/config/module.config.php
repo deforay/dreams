@@ -553,6 +553,15 @@ return array(
                         'action' => 'export-excel'
                     ),
                 ),
+            ),'export-risk-assessment-excel-admin' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/export-risk-assessment-excel-admin',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\RiskAssessment',
+                        'action' => 'export-excel-ra-admin'
+                    ),
+                ),
             ),'generate-risk-assessment-pdf' => array(
                 'type' => 'literal',
                 'options' => array(

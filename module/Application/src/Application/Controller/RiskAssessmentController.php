@@ -226,4 +226,16 @@ class RiskAssessmentController extends AbstractActionController{
             return $viewModel;
         }
     }
+    public function exportExcelRaAdminAction(){
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $riskAssessmentService = $this->getServiceLocator()->get('RiskAssessmentService');
+            $response = $riskAssessmentService->exportRiskAssessmentInExcelAdmin($params);
+            $viewModel = new ViewModel();
+            $viewModel->setVariables(array('response' =>$response));
+            $viewModel->setTerminal(true);
+            return $viewModel;
+        }
+    }
 }
