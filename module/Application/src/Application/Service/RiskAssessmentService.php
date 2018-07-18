@@ -1530,15 +1530,15 @@ class RiskAssessmentService {
                         $occupationOther = '';
                         if($aRow['form_version'] == 2){
                             if(isset($aRow['occupationName']) && $aRow['occupation_code']!= 1111){
-                               $occupation = strtolower($aRow['occupationName']);
+                               $occupation = strtolower($aRow['occupation_code'].'-'.$aRow['occupationName']);
                             }else{
-                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupation_code'].'-'.$aRow['occupationName']):'';
                             }
                         }else{
                             if(isset($aRow['occupationName']) && strtolower($aRow['occupationName'])!= 'farmer' && $aRow['occupation_code']!= 1111){
-                               $occupation = strtolower($aRow['occupationName']);
+                               $occupation = strtolower($aRow['occupation_code'].'-'.$aRow['occupationName']);
                             }else{
-                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupationName']):'';
+                               $occupationOther = (isset($aRow['occupationName']))?strtolower($aRow['occupation_code'].'-'.$aRow['occupationName']):'';
                             }
                         }
                         //patient schooling details
@@ -2084,7 +2084,7 @@ class RiskAssessmentService {
                             }else if(trim($hasPatientAbusedBy)!= '' && (int)$hasPatientAbusedBy == 2222){
                                 $hasPatientEverBeenAbusedBySomeone = "999-rna";
                             }
-                            
+
                             if(isset($patientAbusedBydata['who_abused']) && trim($patientAbusedBydata['who_abused'])!= '' && $patientAbusedBydata['who_abused'][0] == '@'){
                                 $patientAbusedBy = 'other';
                                 $patientAbusedByOther = substr($patientAbusedBydata['who_abused'],1);
@@ -2094,7 +2094,7 @@ class RiskAssessmentService {
                                 for($i=0;$i<count($abusedppl);$i++){
                                     $abusedGroup[] = $keyArray[$abusedppl[$i]];
                                 }
-                                $patientAbusedBy = str_replace(',',', ',implode(',',$abusedGroup));
+                                $patientAbusedBy = $patientAbusedBydata['who_abused']."-".str_replace(',',', ',implode(',',$abusedGroup));
                             }
                             
                             if(isset($patientAbusedBydata['no_of_times']) && trim($patientAbusedBydata['no_of_times'])!= '' && $patientAbusedBydata['no_of_times'][0] == '@'){
@@ -2136,7 +2136,7 @@ class RiskAssessmentService {
                                 for($i=0;$i<count($hurtedppl);$i++){
                                     $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
                                 }
-                                $patientHurtByWithinLastYear = str_replace(',',', ',implode(',',$hurtedGroup));
+                                $patientHurtByWithinLastYear = $patientHurtBydata['who_hurt']."-".str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
                             if(isset($patientHurtBydata['no_of_times']) && trim($patientHurtBydata['no_of_times'])!='' && $patientHurtBydata['no_of_times'][0] == '@'){
@@ -2178,7 +2178,7 @@ class RiskAssessmentService {
                                 for($i=0;$i<count($hurtedppl);$i++){
                                     $hurtedGroup[] = $keyArray[$hurtedppl[$i]];
                                 }
-                                $patientHurtByDuringPregnancy = str_replace(',',', ',implode(',',$hurtedGroup));
+                                $patientHurtByDuringPregnancy = $patientHurtByDuringPregnancydata['who_hurt']."-".str_replace(',',', ',implode(',',$hurtedGroup));
                             }
                             
                             if(isset($patientHurtByDuringPregnancydata['no_of_times']) && trim($patientHurtByDuringPregnancydata['no_of_times'])!='' && $patientHurtByDuringPregnancydata['no_of_times'][0] == '@'){
@@ -2220,7 +2220,7 @@ class RiskAssessmentService {
                                 for($i=0;$i<count($forcedbyppl);$i++){
                                     $forcedbyGroup[] = $keyArray[$forcedbyppl[$i]];
                                 }
-                                $patientForcedforSexBy = str_replace(',',', ',implode(',',$forcedbyGroup));
+                                $patientForcedforSexBy = $patientForcedforSexdata['who_forced']."-".str_replace(',',', ',implode(',',$forcedbyGroup));
                             }
                             
                             if(isset($patientForcedforSexdata['no_of_times']) && trim($patientForcedforSexdata['no_of_times'])!='' && $patientForcedforSexdata['no_of_times'][0] == '@'){
@@ -2243,7 +2243,7 @@ class RiskAssessmentService {
                                 for($i=0;$i<count($patientAfraidofPeople);$i++){
                                     $patientAfraidofGroup[] = $keyArray[$patientAfraidofPeople[$i]];
                                 }
-                                $patientAfraidofAnyone = str_replace(',',', ',implode(',',$patientAfraidofGroup));
+                                $patientAfraidofAnyone = $aRow['is_patient_afraid_of_anyone']."-".str_replace(',',', ',implode(',',$patientAfraidofGroup));
                             }else if($aRow['patient_afraid_of_other']!= null && trim($aRow['patient_afraid_of_other'])!= ''){
                                $patientAfraidofAnyone = 'other';
                                $patientAfraidofOther = $aRow['patient_afraid_of_other'];
