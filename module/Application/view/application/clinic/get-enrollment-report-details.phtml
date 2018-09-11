@@ -406,7 +406,7 @@ $anc20to24 = array_unique($anc20to24);
         <td>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
         <td><?php echo count($months[$months[$m]]['anc']); ?></td>
         <td><?php echo $months[$months[$m]]['overall_enroll']."/".$months[$months[$m]]['overall_eligible']; ?></td>
-        <td><?php echo ($enrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_enroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
+        <td><?php echo ($months[$months[$m]]['overall_eligible'] > 0)?round(($months[$months[$m]]['overall_enroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalEnrollment = 0;
@@ -572,7 +572,7 @@ $anc20to24 = array_unique($anc20to24);
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo ucfirst($months[$m]); ?></td>
         <td><?php echo count($months[$months[$m]]['anc']); ?></td>
         <td><?php echo $months[$months[$m]]['overall_notenroll']."/".$months[$months[$m]]['overall_eligible']; ?></td>
-        <td><?php echo ($notenrolledinRecentStudyOverall > 0)?round(($months[$months[$m]]['overall_notenroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
+        <td><?php echo ($months[$months[$m]]['overall_eligible'] > 0)?round(($months[$months[$m]]['overall_notenroll']/$months[$months[$m]]['overall_eligible'])*100,2):0; ?>%</td>
         <?php if(isset($provinces) && count($provinces) > 0){
             foreach($provinces as $province){
                 $totalNotenrollment = 0;
